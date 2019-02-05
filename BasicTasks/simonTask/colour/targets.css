@@ -1,0 +1,31 @@
+.square_blue_left {
+  width: 100px;
+  height: 100px;
+  background: blue;
+  position: relative;
+  left: -200px
+}
+
+.square_red_left {
+  width: 100px;
+  height: 100px;
+  background: red;
+  position: relative;
+  left: -200px
+}
+
+.square_blue_right {
+  width: 100px;
+  height: 100px;
+  background: blue;
+  position: relative;
+  right: -200px
+}
+
+.square_red_right {
+  width: 100px;
+  height: 100px;
+  background: red;
+  position: relative;
+  right: -200px
+}
