@@ -1,2 +1,1 @@
-## 
-Example Online Behavioural Psychology Experiments using jsPsych (https://www.jspsych.org/)
+### Online Behavioural Psychology Experiments using jsPsych (https://www.jspsych.org/)
