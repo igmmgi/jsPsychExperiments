@@ -26,9 +26,9 @@ var prms = {
 ////////////////////////////////////////////////////////////////////////
 //                      Participant Infomration                       //
 ////////////////////////////////////////////////////////////////////////
-var vpNum = genVpNum();
+const vpNum = genVpNum();
 
-var vpInfoForm = {
+const vpInfoForm = {
     type: "html",
     url: "vpInfoForm.html",
     cont_btn: "start",
@@ -38,17 +38,17 @@ var vpInfoForm = {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-var welcome = {
+const welcome = {
     type: "html-keyboard-response",
     stimulus: "<H1>Welcome. Press any key to continue.</H1>",
     on_finish: function () {
         "use strict";
-        var date = new Date()
+        const date = new Date()
         jsPsych.data.addProperties({date: date.toISOString()});
     }
 };
 
-var task_instructions = {
+const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<H1 align='center'>Welcome:</H1><br>" +
               "<H2 align='center'>Respond to the meaning of the text.</H2><br>" +
@@ -56,7 +56,7 @@ var task_instructions = {
     post_trial_gap: prms.waitDur
 };
 
-var debrief = {
+const debrief = {
     type: 'html-keyboard-response',
     stimulus: "<H1>The experiment is finished.</H1>" + "<H2>Press any key to end the experiment!</H2>",
     response_ends_trial: true,
@@ -67,7 +67,7 @@ var debrief = {
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
-var fixation_cross = {
+const fixation_cross = {
     type: 'html-keyboard-response',
     stimulus: '<div style="font-size:60px;">+</div>',
     choices: jsPsych.NO_KEYS,
@@ -76,7 +76,7 @@ var fixation_cross = {
     data: {stim: "fixation"},
 }
 
-var affnegs = [
+const affnegs = [
     "<h1>now left</h1>",
     "<h1>now right</h1>",
     "<h1>not left</h1>",
@@ -84,7 +84,7 @@ var affnegs = [
 ]
 
 
-var affneg_stimulus = {
+const affneg_stimulus = {
     type: 'html-keyboard-response',
     stimulus: jsPsych.timelineVariable('affneg'), 
     trial_duration: prms.tooSlow,
@@ -100,7 +100,7 @@ var affneg_stimulus = {
     on_finish: function() { codeTrial(); }
 }
 
-var trial_feedback = {
+const trial_feedback = {
     type: 'html-keyboard-response',
     stimulus: '',
     trial_duration: prms.fbDur,
@@ -112,14 +112,14 @@ var trial_feedback = {
     }
 }
 
-var block_feedback = {
+const block_feedback = {
     type: 'html-keyboard-response',
     stimulus: blockFeedbackTxt,
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
 };
 
-var trial_timeline = {
+const trial_timeline = {
     timeline: [
         fixation_cross,
         affneg_stimulus,
@@ -135,7 +135,7 @@ var trial_timeline = {
     repetitions: 4 / prms.nTrls
 }
 
-var save = {
+const save = {
     type: "call-function",
     func: saveData,
     timing_post_trial: 50
@@ -145,7 +145,7 @@ var save = {
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
-var EXP = genExpSeq();
+const EXP = genExpSeq();
 
 jsPsych.init({
     timeline: EXP,

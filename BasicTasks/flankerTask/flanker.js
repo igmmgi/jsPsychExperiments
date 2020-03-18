@@ -7,9 +7,9 @@
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
-var prms = {
+const prms = {
     nTrls: 4,
-    nBlks: 1,
+    nBlks: 2,
     fixDur: 750,
     fbDur: 750,
     waitDur: 1000,
@@ -23,11 +23,11 @@ var prms = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                      Participant Infomration                       //
+//                      Participant Information                       //
 ////////////////////////////////////////////////////////////////////////
-var vpNum = genVpNum();
+const vpNum = genVpNum();
 
-var vpInfoForm = {
+const vpInfoForm = {
     type: "html",
     url: "vpInfoForm.html",
     cont_btn: "start",
@@ -37,17 +37,17 @@ var vpInfoForm = {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-var welcome = {
+const welcome = {
     type: "html-keyboard-response",
     stimulus: "<H1>Welcome. Press any key to continue.</H1>",
     on_finish: function () {
         "use strict";
-        var date = new Date()
+        let date = new Date()
         jsPsych.data.addProperties({date: date.toISOString()});
     }
 };
 
-var task_instructions = {
+const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<H1 align='center'>Welcome:</H1><br>" +
     "<H2 align='center'>Respond to the direction of the central arrow</H2><br>" +
@@ -55,7 +55,7 @@ var task_instructions = {
     post_trial_gap: prms.waitDur
 };
 
-var debrief = {
+const debrief = {
     type: 'html-keyboard-response',
     stimulus: "<H1>The experiment is finished.</H1>" + "<H2>Press any key to end the experiment!</H2>",
     response_ends_trial: true,
@@ -65,7 +65,7 @@ var debrief = {
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
-var fixation_cross = {
+const fixation_cross = {
     type: 'html-keyboard-response',
     stimulus: '<div style="font-size:60px;">+</div>',
     choices: jsPsych.NO_KEYS,
@@ -74,7 +74,7 @@ var fixation_cross = {
     data: {stim: "fixation"},
 }
 
-var flankers = [
+const flankers = [
     [
         "<div class='left' style='float: left'></div>" +
         "<div class='left' style='float: left'></div>" +
@@ -97,14 +97,14 @@ var flankers = [
     ],
 ]
 
-// var flankers = [
+// const flankers = [
 //     ['<div style="font-size:100px;"> <<<<< </div>'],
 //     ['<div style="font-size:100px;"> >><>> </div>'],
 //     ['<div style="font-size:100px;"> >>>>> </div>'],
 //     ['<div style="font-size:100px;"> <<><< </div>']
 // ]
 
-var flanker_stimulus = {
+const flanker_stimulus = {
     type: 'html-keyboard-response',
     stimulus: jsPsych.timelineVariable('flanker'), 
     trial_duration: prms.tooSlow,
@@ -119,7 +119,7 @@ var flanker_stimulus = {
     on_finish: function() { codeTrial(); }
 }
 
-var trial_feedback = {
+const trial_feedback = {
     type: 'html-keyboard-response',
     stimulus: '',
     trial_duration: prms.fbDur,
@@ -131,7 +131,7 @@ var trial_feedback = {
     }
 }
 
-var block_feedback = {
+const block_feedback = {
     type: 'html-keyboard-response',
     stimulus: blockFeedbackTxt,
     response_ends_trial: true,
@@ -139,7 +139,7 @@ var block_feedback = {
 };
 
 
-var trial_timeline = {
+const trial_timeline = {
     timeline: [
         fixation_cross,
         flanker_stimulus,
@@ -155,7 +155,7 @@ var trial_timeline = {
     repetitions: 4 / prms.nTrls
 }
 
-var save = {
+const save = {
     type: "call-function",
     func: saveData,
     timing_post_trial: 50
@@ -164,7 +164,7 @@ var save = {
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
-var EXP = genExpSeq();
+const EXP = genExpSeq();
 
 jsPsych.init({
     timeline: EXP,
