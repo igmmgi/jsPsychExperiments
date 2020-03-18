@@ -43,7 +43,7 @@ const welcome = {
     stimulus: "<H1>Welcome. Press any key to continue.</H1>",
     on_finish: function () {
         "use strict";
-        const date = new Date()
+        const date = new Date();
         jsPsych.data.addProperties({date: date.toISOString()});
     }
 };
@@ -64,8 +64,6 @@ const debrief = {
 };
 
 
-
-
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
@@ -76,15 +74,14 @@ const fixation_cross = {
     trial_duration: prms.fixDur,
     post_trial_gap: 0,
     data: {stim: "fixation"},
-}
+};
 
 const simons = [
     "<div class='square_blue_left'></div>",
     "<div class='square_blue_right'></div>",
     "<div class='square_red_left'></div>",
     "<div class='square_red_right'></div>",
-]
-
+];
 
 const simon_stimulus = {
     type: 'html-keyboard-response',
@@ -100,7 +97,7 @@ const simon_stimulus = {
         corrResp: jsPsych.timelineVariable('key')
     },
     on_finish: function() { codeTrial(); }
-}
+};
 
 const trial_feedback = {
     type: 'html-keyboard-response',
@@ -112,7 +109,7 @@ const trial_feedback = {
     on_start: function(trial) {
         trial.stimulus = trialFeedbackTxt();
     }
-}
+};
 
 const block_feedback = {
     type: 'html-keyboard-response',
@@ -130,19 +127,18 @@ const trial_timeline = {
     timeline_variables:[
         { simon: simons[0], comp: 'comp',  side: 'left',  key: prms.respKeys[0]},
         { simon: simons[1], comp: 'incomp',side: 'left',  key: prms.respKeys[0]},
-        { simon: simons[2], comp: 'comp',  side: 'right'  key: prms.respKeys[1]},
+        { simon: simons[2], comp: 'comp',  side: 'right', key: prms.respKeys[1]},
         { simon: simons[3], comp: 'incomp',side: 'right', key: prms.respKeys[1]}
     ],
     randomize_order:true,
     repetitions: 4 / prms.nTrls
-}
+};
 
 const save = {
     type: "call-function",
     func: saveData,
     timing_post_trial: 50
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //

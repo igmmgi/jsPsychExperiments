@@ -43,7 +43,7 @@ const welcome = {
     stimulus: "<H1>Welcome. Press any key to continue.</H1>",
     on_finish: function () {
         "use strict";
-        const date = new Date()
+        const date = new Date();
         jsPsych.data.addProperties({date: date.toISOString()});
     }
 };
@@ -64,8 +64,6 @@ const debrief = {
 };
 
 
-
-
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
@@ -76,15 +74,14 @@ const fixation_cross = {
     trial_duration: prms.fixDur,
     post_trial_gap: 0,
     data: {stim: "fixation"},
-}
+};
 
 const simons = [
     "<div class='square_left'></div>",
     "<div class='circle_left'></div>",
     "<div class='square_right'></div>",
     "<div class='circle_right'></div>",
-]
-
+];
 
 const simon_stimulus = {
     type: 'html-keyboard-response',
@@ -100,7 +97,7 @@ const simon_stimulus = {
         corrResp: jsPsych.timelineVariable('key')
     },
     on_finish: function() { codeTrial(); }
-}
+};
 
 const trial_feedback = {
     type: 'html-keyboard-response',
@@ -112,7 +109,7 @@ const trial_feedback = {
     on_start: function(trial) {
         trial.stimulus = trialFeedbackTxt();
     }
-}
+};
 
 const block_feedback = {
     type: 'html-keyboard-response',
@@ -135,14 +132,13 @@ const trial_timeline = {
     ],
     randomize_order:true,
     repetitions: 4 / prms.nTrls
-}
+};
 
 const save = {
     type: "call-function",
     func: saveData,
     timing_post_trial: 50
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //

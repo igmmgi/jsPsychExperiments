@@ -93,7 +93,7 @@ function saveData() {
         url: "write_data.php",
         data: {filename: fname, filedata: dat}
     });
-};
+}
 
 function genExpSeq() {
     "use strict";

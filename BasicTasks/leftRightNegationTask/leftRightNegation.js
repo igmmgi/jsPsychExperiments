@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
-var prms = {
+const prms = {
     nTrls: 4,
     nBlks: 1,
     fixDur: 750,
@@ -43,7 +43,7 @@ const welcome = {
     stimulus: "<H1>Welcome. Press any key to continue.</H1>",
     on_finish: function () {
         "use strict";
-        const date = new Date()
+        const date = new Date();
         jsPsych.data.addProperties({date: date.toISOString()});
     }
 };
@@ -63,7 +63,6 @@ const debrief = {
     post_trial_gap: prms.waitDur,
 };
 
-
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
@@ -74,15 +73,14 @@ const fixation_cross = {
     trial_duration: prms.fixDur,
     post_trial_gap: 0,
     data: {stim: "fixation"},
-}
+};
 
 const affnegs = [
     "<h1>now left</h1>",
     "<h1>now right</h1>",
     "<h1>not left</h1>",
     "<h1>not right</h1>",
-]
-
+];
 
 const affneg_stimulus = {
     type: 'html-keyboard-response',
@@ -98,7 +96,7 @@ const affneg_stimulus = {
         corrResp: jsPsych.timelineVariable('key')
     },
     on_finish: function() { codeTrial(); }
-}
+};
 
 const trial_feedback = {
     type: 'html-keyboard-response',
@@ -110,7 +108,7 @@ const trial_feedback = {
     on_start: function(trial) {
         trial.stimulus = trialFeedbackTxt();
     }
-}
+};
 
 const block_feedback = {
     type: 'html-keyboard-response',
@@ -133,14 +131,13 @@ const trial_timeline = {
     ],
     randomize_order:true,
     repetitions: 4 / prms.nTrls
-}
+};
 
 const save = {
     type: "call-function",
     func: saveData,
     timing_post_trial: 50
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //

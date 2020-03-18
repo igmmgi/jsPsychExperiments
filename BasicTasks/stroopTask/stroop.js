@@ -45,7 +45,7 @@ const welcome = {
     stimulus: "<H1>Welcome. Press any key to continue.</H1>",
     on_finish: function () {
         "use strict";
-        const date = new Date()
+        const date = new Date();
         jsPsych.data.addProperties({date: date.toISOString()});
     }
 };
@@ -87,14 +87,14 @@ const fixation_cross = {
     trial_duration: prms.fixDur,
     post_trial_gap: 0,
     data: {stim: "fixation"},
-}
+};
 
 const stroops = [
     "<h1 style='color:red'>red</h1>",
     "<h1 style='color:red'>blue</h1>",
     "<h1 style='color:blue'>blue</h1>",
     "<h1 style='color:blue'>red</h1>",
-]
+];
 
 
 const stroop_stimulus = {
@@ -112,7 +112,7 @@ const stroop_stimulus = {
         corrResp: jsPsych.timelineVariable('key')
     },
     on_finish: function() { codeTrial(); }
-}
+};
 
 const trial_feedback = {
     type: 'html-keyboard-response',
@@ -124,7 +124,7 @@ const trial_feedback = {
     on_start: function(trial) {
         trial.stimulus = trialFeedbackTxt();
     }
-}
+};
 
 const block_feedback = {
     type: 'html-keyboard-response',
@@ -147,14 +147,13 @@ const trial_timeline = {
     ],
     randomize_order:true,
     repetitions: 4 / prms.nTrls
-}
+};
 
 const save = {
     type: "call-function",
     func: saveData,
     timing_post_trial: 50
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
