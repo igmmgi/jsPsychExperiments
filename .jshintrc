@@ -1,7 +1,0 @@
-{
-  "globals": {
-    "$": true,
-    "jQuery": true
-  },
-  "esversion": 6
-}
