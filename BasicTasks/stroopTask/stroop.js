@@ -1,16 +1,14 @@
-/*
- Simon Task:
- VPs respond to the colour of the presented stimulus using
- left and right key responses.
-*/
-
+// Simon Task:
+// VPs respond to the colour of the presented stimulus using
+// left and right key responses.
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrls: 4,
-    nBlks: 1,
+    nTrlsP: 4,  // number of trials in first block (practice)
+    nTrlsE: 8,  // number of trials in subsequent blocks 
+    nBlks: 2,
     fixDur: 750,
     fbDur: 750,
     waitDur: 1000,
@@ -52,7 +50,7 @@ const welcome = {
 
 if (prms.mapping === 1) {
     prms.respKeys = ["D", "J", 27];
-    const task_instructions = {
+    var task_instructions = {
         type: "html-keyboard-response",
         stimulus: "<H1 align='center'>Welcome:</H1><br>" +
                   "<H2 align='center'>Respond to the colour of the font </H2><br>" +
@@ -61,7 +59,7 @@ if (prms.mapping === 1) {
     };
 } else {
     prms.respKeys = ["J", "D", 27];
-    const task_instructions = {
+    var task_instructions = {
         type: "html-keyboard-response",
         stimulus: "<H1 align='center'>Welcome:</H1><br>" +
                   "<H2 align='center'>Respond to the colour of the font </H2><br>" +
@@ -105,7 +103,7 @@ const stroop_stimulus = {
     choices: prms.respKeys,
     post_trial_gap: 0,
     data: {
-        stim: "simon", 
+        stim: "stroop", 
         word: jsPsych.timelineVariable('word'), 
         color: jsPsych.timelineVariable('colour'), 
         comp: jsPsych.timelineVariable('comp'), 
@@ -122,15 +120,18 @@ const trial_feedback = {
     post_trial_gap: prms.iti,
     data: {stim: "feedback"},
     on_start: function(trial) {
-        trial.stimulus = trialFeedbackTxt();
+        trial.stimulus = trialFeedbackTxt(prms.fbTxt);
     }
 };
 
 const block_feedback = {
     type: 'html-keyboard-response',
-    stimulus: blockFeedbackTxt,
+    stimulus: '',
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
+    on_start: function(trial) {
+        trial.stimulus = blockFeedbackTxt({stim: "stroop"})
+    },
 };
 
 const trial_timeline = {
@@ -146,23 +147,42 @@ const trial_timeline = {
         { stroop: stroops[3], word: 'red',  colour: 'blue', comp: 'incomp', key: prms.respKeys[1]}
     ],
     randomize_order:true,
-    repetitions: 4 / prms.nTrls
-};
-
-const save = {
-    type: "call-function",
-    func: saveData,
-    timing_post_trial: 50
 };
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
+function genExpSeq() {
+    "use strict";
+
+    let exp = [];
+
+    exp.push(welcome);
+    //exp.push(vpInfoForm);
+    exp.push(task_instructions);
+
+    for (let blk = 0; blk < prms.nBlks; blk += 1) {
+        if (blk === 0) {
+            trial_timeline.repetitions = 4 / prms.nTrlsP
+        } else {
+            trial_timeline.repetitions = 4 / prms.nTrlsE
+        }
+        exp.push(trial_timeline);  // trials within a block
+        exp.push(block_feedback);  // show previous block performance 
+    }
+    exp.push(debrief);
+    return exp;
+
+}
 const EXP = genExpSeq();
+const datname = "stroop_" + vpNum + ".csv";
 
 jsPsych.init({
     timeline: EXP,
     fullscreen: false,
-    show_progress_bar: false
+    show_progress_bar: false,
+    on_finish: function(){ 
+        saveData(datname, {stim: "stroop"}); 
+    }
 });
 

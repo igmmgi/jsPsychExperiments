@@ -1,13 +1,13 @@
-// Simon Task:
-// VPs respond to the colour of the presented stimulus using
-// left and right key responses.
+// Negation Task:
+// VPs respond to the meaning of the presented text using
+// key responses ("D" and "J").
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 4,
-    nTrlsE: 8,
+    nTrlsP: 4,  // number of trials in first block (practice)
+    nTrlsE: 8,  // number of trials in subsequent blocks 
     nBlks: 2,
     fixDur: 750,
     fbDur: 750,
@@ -49,8 +49,8 @@ const welcome = {
 const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-              "<H2 align='center'>Respond to the colour of the presented square</H2>" +
-              "<H2 align='center'>Square = 'D' key &emsp; Circle = 'J' key</H2>", 
+              "<H2 align='center'>Respond to the meaning of the text.</H2><br>" +
+              "<H2 align='center'>LEFT = 'D' key &emsp; RIGHT = 'J' </H2>", 
     post_trial_gap: prms.waitDur
 };
 
@@ -60,7 +60,6 @@ const debrief = {
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -74,23 +73,23 @@ const fixation_cross = {
     data: {stim: "fixation"},
 };
 
-const simons = [
-    "<div class='square_left'></div>",
-    "<div class='circle_left'></div>",
-    "<div class='square_right'></div>",
-    "<div class='circle_right'></div>",
+const affnegs = [
+    "<h1>now left</h1>",
+    "<h1>now right</h1>",
+    "<h1>not left</h1>",
+    "<h1>not right</h1>",
 ];
 
-const simon_stimulus = {
+const affneg_stimulus = {
     type: 'html-keyboard-response',
-    stimulus: jsPsych.timelineVariable('simon'), 
+    stimulus: jsPsych.timelineVariable('affneg'), 
     trial_duration: prms.tooSlow,
     response_ends_trial: true,
     choices: prms.respKeys,
     post_trial_gap: 0,
     data: {
-        stim: "simon", 
-        comp: jsPsych.timelineVariable('comp'), 
+        stim: "affneg", 
+        type: jsPsych.timelineVariable('type'), 
         side: jsPsych.timelineVariable('side'), 
         corrResp: jsPsych.timelineVariable('key')
     },
@@ -111,25 +110,29 @@ const trial_feedback = {
 
 const block_feedback = {
     type: 'html-keyboard-response',
-    stimulus: blockFeedbackTxt,
+    stimulus: '',
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
+    on_start: function(trial) {
+        trial.stimulus = blockFeedbackTxt({stim: "affneg"})
+    },
 };
 
 const trial_timeline = {
     timeline: [
         fixation_cross,
-        simon_stimulus,
+        affneg_stimulus,
         trial_feedback
     ],
     timeline_variables:[
-        { simon: simons[0], comp: 'comp',   side: 'left',  key: prms.respKeys[0]},
-        { simon: simons[1], comp: 'incomp', side: 'left',  key: prms.respKeys[1]},
-        { simon: simons[2], comp: 'comp',   side: 'right', key: prms.respKeys[0]},
-        { simon: simons[3], comp: 'incomp', side: 'right', key: prms.respKeys[0]}
+        { affneg: affnegs[0], type: 'aff', side: 'left',  key: prms.respKeys[0]},
+        { affneg: affnegs[1], type: 'aff', side: 'right', key: prms.respKeys[1]},
+        { affneg: affnegs[2], type: 'neg', side: 'left',  key: prms.respKeys[1]},
+        { affneg: affnegs[3], type: 'neg', side: 'right', key: prms.respKeys[0]}
     ],
     randomize_order:true,
 };
+
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -157,14 +160,14 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = "simon_" + vpNum + ".csv";
+const datname = "negation_" + vpNum + ".csv";
 
 jsPsych.init({
     timeline: EXP,
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
-        saveData(datname, {stim: "simon"}); 
+        saveData(datname, {stim: "affneg"}); 
     }
 });
 
