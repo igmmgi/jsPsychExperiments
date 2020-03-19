@@ -28,7 +28,7 @@ const vpNum = genVpNum();
 
 const vpInfoForm = {
     type: "html",
-    url: "vpInfoForm.html",
+    url: "../vpInfoForm.html",
     cont_btn: "start",
     check_fn: checkVpInfoForm
 };
@@ -114,7 +114,7 @@ const block_feedback = {
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt({stim: "affneg"})
+        trial.stimulus = blockFeedbackTxt({stim: "affneg"});
     },
 };
 
@@ -148,9 +148,9 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         if (blk === 0) {
-            trial_timeline.repetitions = 4 / prms.nTrlsP
+            trial_timeline.repetitions = 4 / prms.nTrlsP;
         } else {
-            trial_timeline.repetitions = 4 / prms.nTrlsE
+            trial_timeline.repetitions = 4 / prms.nTrlsE;
         }
         exp.push(trial_timeline);  // trials within a block
         exp.push(block_feedback);  // show previous block performance 

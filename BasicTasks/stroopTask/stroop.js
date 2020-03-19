@@ -30,7 +30,7 @@ const vpNum = genVpNum();
 
 const vpInfoForm = {
     type: "html",
-    url: "vpInfoForm.html",
+    url: "../vpInfoForm.html",
     cont_btn: "start",
     check_fn: checkVpInfoForm
 };
@@ -48,22 +48,23 @@ const welcome = {
     }
 };
 
+let task_instructions = "";
 if (prms.mapping === 1) {
     prms.respKeys = ["D", "J", 27];
-    var task_instructions = {
+    task_instructions = {
         type: "html-keyboard-response",
         stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-                  "<H2 align='center'>Respond to the colour of the font </H2><br>" +
-                  "<H2 align='center'> red = 'D' key &emsp; blue = 'J' key</H2>",
+            "<H2 align='center'>Respond to the colour of the font </H2><br>" +
+            "<H2 align='center'> red = 'D' key &emsp; blue = 'J' key</H2>",
         post_trial_gap: prms.waitDur
     };
 } else {
     prms.respKeys = ["J", "D", 27];
-    var task_instructions = {
+    task_instructions = {
         type: "html-keyboard-response",
         stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-                  "<H2 align='center'>Respond to the colour of the font </H2><br>" +
-                  "<H2 align='center'> blue = 'D' key &emsp; red = 'J' key</H2>",
+            "<H2 align='center'>Respond to the colour of the font </H2><br>" +
+            "<H2 align='center'> blue = 'D' key &emsp; red = 'J' key</H2>",
         post_trial_gap: prms.waitDur
     };
 }
@@ -130,7 +131,7 @@ const block_feedback = {
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt({stim: "stroop"})
+        trial.stimulus = blockFeedbackTxt({stim: "stroop"});
     },
 };
 
@@ -163,9 +164,9 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         if (blk === 0) {
-            trial_timeline.repetitions = 4 / prms.nTrlsP
+            trial_timeline.repetitions = 4 / prms.nTrlsP;
         } else {
-            trial_timeline.repetitions = 4 / prms.nTrlsE
+            trial_timeline.repetitions = 4 / prms.nTrlsE;
         }
         exp.push(trial_timeline);  // trials within a block
         exp.push(block_feedback);  // show previous block performance 
