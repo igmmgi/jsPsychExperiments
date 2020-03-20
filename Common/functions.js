@@ -90,3 +90,23 @@ function saveData(datname, filter_options) {
     });
 }
 
+function generateRandomString(length) {
+    let chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let randomString = "";
+    for (let i = length; i > 0; --i)
+        randomString += chars[Math.round(Math.random()*(chars.length - 1))];
+    return randomString;
+}
+
+function saveRandomCode(fname, code){
+    $.ajax({
+        type:"post",
+        cache: false,
+        url: "write_code.php",
+        data: {filename: fname, filedata: code}
+    });
+};
+
+
+
+
