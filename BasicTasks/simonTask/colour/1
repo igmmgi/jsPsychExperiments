@@ -8,7 +8,7 @@
 const prms = {
     nTrlsP: 4,  // number of trials in first block (practice)
     nTrlsE: 8,  // number of trials in subsequent blocks 
-    nBlks: 2,
+    nBlks: 2,   
     fixDur: 750,
     fbDur: 750,
     waitDur: 1000,
@@ -19,9 +19,7 @@ const prms = {
     fbTxt: ["Correct", "Error", "Too Slow", "Too Fast"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    mapping: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                      Participant Infomration                       //
@@ -30,7 +28,7 @@ const vpNum = genVpNum();
 
 const vpInfoForm = {
     type: "html",
-    url: "../vpInfoForm.html",
+    url: "../../vpInfoForm.html",
     cont_btn: "start",
     check_fn: checkVpInfoForm
 };
@@ -48,26 +46,13 @@ const welcome = {
     }
 };
 
-let task_instructions = "";
-if (prms.mapping === 1) {
-    prms.respKeys = ["D", "J", 27];
-    task_instructions = {
-        type: "html-keyboard-response",
-        stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-            "<H2 align='center'>Respond to the colour of the font </H2><br>" +
-            "<H2 align='center'> red = 'D' key &emsp; blue = 'J' key</H2>",
-        post_trial_gap: prms.waitDur
-    };
-} else {
-    prms.respKeys = ["J", "D", 27];
-    task_instructions = {
-        type: "html-keyboard-response",
-        stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-            "<H2 align='center'>Respond to the colour of the font </H2><br>" +
-            "<H2 align='center'> blue = 'D' key &emsp; red = 'J' key</H2>",
-        post_trial_gap: prms.waitDur
-    };
-}
+const task_instructions = {
+    type: "html-keyboard-response",
+    stimulus: "<H1 align='center'>Welcome:</H1><br>" +
+              "<H2 align='center'>Respond to the colour of the presented square</H2>" +
+              "<H2 align='center'>BLUE squares = 'D' key &emsp; RED squares = 'J' key</H2>", 
+    post_trial_gap: prms.waitDur
+};
 
 const debrief = {
     type: 'html-keyboard-response',
@@ -75,6 +60,7 @@ const debrief = {
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
 };
+
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -88,26 +74,24 @@ const fixation_cross = {
     data: {stim: "fixation"},
 };
 
-const stroops = [
-    "<h1 style='color:red'>red</h1>",
-    "<h1 style='color:red'>blue</h1>",
-    "<h1 style='color:blue'>blue</h1>",
-    "<h1 style='color:blue'>red</h1>",
+const simons = [
+    "<div class='square_blue_left'></div>",
+    "<div class='square_blue_right'></div>",
+    "<div class='square_red_left'></div>",
+    "<div class='square_red_right'></div>",
 ];
 
-
-const stroop_stimulus = {
+const simon_stimulus = {
     type: 'html-keyboard-response',
-    stimulus: jsPsych.timelineVariable('stroop'), 
+    stimulus: jsPsych.timelineVariable('simon'), 
     trial_duration: prms.tooSlow,
     response_ends_trial: true,
     choices: prms.respKeys,
     post_trial_gap: 0,
     data: {
-        stim: "stroop", 
-        word: jsPsych.timelineVariable('word'), 
-        color: jsPsych.timelineVariable('colour'), 
+        stim: "simon", 
         comp: jsPsych.timelineVariable('comp'), 
+        side: jsPsych.timelineVariable('side'), 
         corrResp: jsPsych.timelineVariable('key')
     },
     on_finish: function() { codeTrial(); }
@@ -131,21 +115,21 @@ const block_feedback = {
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt({stim: "stroop"});
+        trial.stimulus = blockFeedbackTxt({stim: "simon"});
     },
 };
 
 const trial_timeline = {
     timeline: [
         fixation_cross,
-        stroop_stimulus,
+        simon_stimulus,
         trial_feedback
     ],
     timeline_variables:[
-        { stroop: stroops[0], word: 'red',  colour: 'red',  comp: 'comp',   key: prms.respKeys[0]},
-        { stroop: stroops[1], word: 'blue', colour: 'red',  comp: 'incomp', key: prms.respKeys[0]},
-        { stroop: stroops[2], word: 'blue', colour: 'blue', comp: 'comp',   key: prms.respKeys[1]},
-        { stroop: stroops[3], word: 'red',  colour: 'blue', comp: 'incomp', key: prms.respKeys[1]}
+        { simon: simons[0], comp: 'comp',  side: 'left',  key: prms.respKeys[0]},
+        { simon: simons[1], comp: 'incomp',side: 'left',  key: prms.respKeys[0]},
+        { simon: simons[2], comp: 'comp',  side: 'right', key: prms.respKeys[1]},
+        { simon: simons[3], comp: 'incomp',side: 'right', key: prms.respKeys[1]}
     ],
     randomize_order:true,
 };
@@ -163,24 +147,34 @@ function genExpSeq() {
     exp.push(task_instructions);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
-        let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
-        exp.push(blk_timeline);    // trials within a block
+        blk_trial_timeline = {...trial_timeline};
+        blk_trial_timeline.repetitions = (blk === 0) ? (prms.nTrlsP / 4) : (prms.nTrlsE / 4);
+        
+        console.log(trial_timeline.repetitions) 
+        // if (blk === 0) {
+        //     trial_timeline.repetitions = 4 / prms.nTrlsP;
+        // } else {
+        //     trial_timeline.repetitions = 4 / prms.nTrlsE;
+        // }
+        exp.push(blk_trial_timeline);  // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
     exp.push(debrief);
+    for (let i in exp){
+        console.log(exp[i]);
+    }
     return exp;
 
 }
 const EXP = genExpSeq();
-const datname = "stroop_" + vpNum + ".csv";
+const datname = "simon_" + vpNum + ".csv";
 
 jsPsych.init({
     timeline: EXP,
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
-        saveData(datname, {stim: "stroop"}); 
+        saveData(datname, {stim: "simon"}); 
     }
 });
 

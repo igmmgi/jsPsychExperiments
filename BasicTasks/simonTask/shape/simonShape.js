@@ -144,12 +144,10 @@ function genExpSeq() {
     exp.push(task_instructions);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
-        if (blk === 0) {
-            trial_timeline.repetitions = 4 / prms.nTrlsP;
-        } else {
-            trial_timeline.repetitions = 4 / prms.nTrlsE;
-        }
-        exp.push(trial_timeline);  // trials within a block
+        for (let blk = 0; blk < prms.nBlks; blk += 1) {
+        let blk_timeline = {...trial_timeline};
+        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
     exp.push(debrief);
