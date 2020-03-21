@@ -1,4 +1,4 @@
-// Standard Stroop combined with a negation language task (not left vs now left)
+﻿// Standard Stroop combined with a negation language task (not left vs now left)
 // VPs respond to font colour in the stroop task and phrase meaning in the
 // negation task using the "C" and "M" keys.
 
@@ -23,6 +23,7 @@ const prms = {
 
 prms.colours = prms.mapping === 1 ? ["ROT", "BLAU"] : ["BLAU", "ROT"];
 prms.respKeys = prms.mapping === 1 ? ["C", "M", 27] : ["M", "C", 27];
+
 
 ////////////////////////////////////////////////////////////////////////
 //                      Participant Information                       //
@@ -52,7 +53,7 @@ const welcome = {
 const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<h1 style='text-align:center;'>Aufgabe:</h1>" +
-              "<h2 style='text-align:center;'>Reagieren Sie auf die Schriftfarbe bzw. auf die Bedeutung des Texts:</h2><br>" +
+              "<h2 style='text-align:center;'>Reagieren Sie auf die Schriftfarbe bzw. auf die Bedeutung des Texts:</h2>" +
               "<h2 style='text-align:center;'>" + prms.colours[0] + " bzw. Links = C Taste</h2>" +
               "<h2 style='text-align:center;'>" + prms.colours[1] + " bzw. Rechts = M Taste</h2>" +
               "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
@@ -65,7 +66,6 @@ const debrief= {
     "<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>",
     post_trial_gap: prms.waitDur,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -81,9 +81,17 @@ const fixation_cross = {
 
 const stims = [
     ['<h1 style="color:red">rot</h1>'],
-    ['<h1 style="color:red">blau</h1>'],
+    ['<h1 style="color:red">rot</h1>'],
+    ['<h1 style="color:red">grün</h1>'],
+    ['<h1 style="color:red">gelb</h1>'],
     ['<h1 style="color:blue">blau</h1>'],
-    ['<h1 style="color:blue">rot</h1>'],
+    ['<h1 style="color:blue">blau</h1>'],
+    ['<h1 style="color:blue">grün</h1>'],
+    ['<h1 style="color:blue">gelb</h1>'],
+    ['<h1>jetzt links</h1>'],
+    ['<h1>jetzt rechts</h1>'],
+    ['<h1>nicht links</h1>'],
+    ['<h1>nicht rechts</h1>'],
     ['<h1>jetzt links</h1>'],
     ['<h1>jetzt rechts</h1>'],
     ['<h1>nicht links</h1>'],
@@ -135,13 +143,21 @@ const trial_timeline = {
     ],
     timeline_variables:[
         {stimulus: stims[ 0], task: 'stroop', comp: "comp",    key: prms.respKeys[0]},
-        {stimulus: stims[ 1], task: 'stroop', comp: "incomp",  key: prms.respKeys[0]},
-        {stimulus: stims[ 2], task: 'stroop', comp: "comp",    key: prms.respKeys[1]},
-        {stimulus: stims[ 3], task: 'stroop', comp: "incomp",  key: prms.respKeys[1]},
-        {stimulus: stims[ 4], task: 'affneg', comp: "comp",    key: 'C'},
-        {stimulus: stims[ 5], task: 'affneg', comp: "comp",    key: 'M'},
-        {stimulus: stims[ 6], task: 'affneg', comp: "incomp",  key: 'M'},
-        {stimulus: stims[ 7], task: 'affneg', comp: "incomp",  key: 'C'},
+        {stimulus: stims[ 1], task: 'stroop', comp: "comp",    key: prms.respKeys[0]},
+        {stimulus: stims[ 2], task: 'stroop', comp: "incomp",  key: prms.respKeys[0]},
+        {stimulus: stims[ 3], task: 'stroop', comp: "incomp",  key: prms.respKeys[0]},
+        {stimulus: stims[ 4], task: 'stroop', comp: "comp",    key: prms.respKeys[1]},
+        {stimulus: stims[ 5], task: 'stroop', comp: "comp",    key: prms.respKeys[1]},
+        {stimulus: stims[ 6], task: 'stroop', comp: "incomp",  key: prms.respKeys[1]},
+        {stimulus: stims[ 7], task: 'stroop', comp: "incomp",  key: prms.respKeys[1]},
+        {stimulus: stims[ 8], task: 'affneg', comp: "comp",    key: 'C'},
+        {stimulus: stims[ 9], task: 'affneg', comp: "comp",    key: 'M'},
+        {stimulus: stims[10], task: 'affneg', comp: "incomp",  key: 'M'},
+        {stimulus: stims[11], task: 'affneg', comp: "incomp",  key: 'C'},
+        {stimulus: stims[12], task: 'affneg', comp: "comp",    key: 'C'},
+        {stimulus: stims[13], task: 'affneg', comp: "comp",    key: 'M'},
+        {stimulus: stims[14], task: 'affneg', comp: "incomp",  key: 'M'},
+        {stimulus: stims[15], task: 'affneg', comp: "incomp",  key: 'C'},
     ],
     randomize_order:true,
 };
@@ -157,6 +173,7 @@ const alphaNum = {
     "<h1>Code:" + randomString + "</h1>" +
     '<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>'
 };
+
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -182,8 +199,8 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const expname = "Exp4_negStroop"  + ".csv";
-const datname = "Exp4_negStroop" + vpNum + ".csv";
+const expname = "Exp5_negStroop"  + ".csv";
+const datname = "Exp5_negStroop" + vpNum + ".csv";
 
 jsPsych.init({
     timeline: EXP,
