@@ -107,6 +107,13 @@ function saveRandomCode(fname, code){
     });
 };
 
+function recordScreenSize() {
+    jsPsych.data.addProperties({
+        screenHeight: screen.height,
+        screenWidth: screen.width,
+        aspectRatio: screen.width / screen.height
+    });
+}
 
 
 

@@ -1,0 +1,20 @@
+:root {
+  --flank-colour: black;
+  --posx: 0px;
+  --posy: 0px;
+}
+.flank {
+  position: relative;
+  left: var(--posx);
+  top: var(--posy);
+  font-size: 5em;
+  text-align: center;
+}
+
+.feedback {
+  margin: 0 auto;
+  position: relative;
+  left: var(--posx);
+  top: var(--posy);
+  font-size: 3em;
+}
