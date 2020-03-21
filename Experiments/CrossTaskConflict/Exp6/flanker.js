@@ -1,6 +1,6 @@
-﻿// Standard Flanker Task with vertical and horizontal stimulus arrays:
-// VPs respond to the direction of the central arrow whilst
-// ignoring the surrounding arrows using key responses ("C" and "M").
+﻿// Standard Flanker Task with horizontal arrow and letter stimulus arrays:
+// VPs respond to the direction of the central arrow/letter whilst
+// ignoring the surrounding arrows/letters using key responses ("X" and "M").
 // Feedback provided during the practice block
 
 ////////////////////////////////////////////////////////////////////////
@@ -16,11 +16,15 @@ const prms = {
     iti: 500,
     tooFast: 150,
     tooSlow: 1500,
+    mapping: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
     respKeys: ["C", "M", 27],
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,
     cBlk: 1
 };
+
+prms.stimMap = prms.mapping === 1 ? ["H", "S"] : ["S", "H"];
+prms.respKeys = prms.mapping === 1 ? ["C", "M", "C", "M", 27] : ["C", "M", "M", "C", 27];
 
 ////////////////////////////////////////////////////////////////////////
 //                      Participant Information                       //
@@ -49,11 +53,11 @@ const welcome = {
 
 const task_instructions = {
     type: "html-keyboard-response",
-    stimulus: "<h1 style='text-align:center;'>Aufgabe:</h1>" +
-        "<h2 style='text-align:center;'>Reagieren Sie auf die Ausrichtung des mittleren Pfeils:</h2>" +
-        "<h2 style='text-align:center;'>LINKS  = C Taste</h2>" +
-        "<h2 style='text-align:center;'>RECHTS = M Taste</h2>" +
-        "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    stimulus: "<h1 align='left'>Aufgabe:</h1>" +
+    "<h2 style='text-align:center;'>Reagieren Sie auf die Ausrichtung des mittleren Pfeils oder des mittleren Buchstabe:</h2>" +
+    "<h2 style='text-align:center;'>LINKS oder " + prms.stimMap[0] + " = C Taste</h2>" +
+    "<h2 style='text-align:center;'>RECHTS oder " + prms.stimMap[1] + " = M Taste</h2>" +
+    "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     post_trial_gap: prms.waitDur
 };
 
@@ -77,47 +81,24 @@ const fixation_cross = {
 };
 
 const flankers = [
-    [
-        "<div class='left' style='float: left'></div>" + 
-        "<div class='left' style='float: left'></div>" + 
-        "<div class='left' style='float: right'></div>"
-    ],
-    [
-        "<div class='right' style='float: left'></div>" + 
-        "<div class='left'  style='float: left'></div>" + 
-        "<div class='right' style='float: right'></div>"
-    ],
-    [
-        "<div class='right' style='float: left'></div>" + 
-        "<div class='right' style='float: left'></div>" + 
-        "<div class='right' style='float: right'></div>"
-    ],
-    [
-        "<div class='left'  style='float: left'></div>" + 
-        "<div class='right' style='float: left'></div>" + 
-        "<div class='left'  style='float: right'></div>"
-    ],
-    [
-        "<div class='left'></div>" + 
-        "<div class='left'></div>" + 
-        "<div class='left'></div>"
-    ],
-    [
-        "<div class='right'></div>" + 
-        "<div class='left'></div>"  + 
-        "<div class='right'></div>"
-    ],
-    [
-        "<div class='right'></div>" + 
-        "<div class='right'></div>" + 
-        "<div class='right'></div>"
-    ],
-    [
-        "<div class='left'></div>" + 
-        "<div class='right'></div>" + 
-        "<div class='left'></div>"
-    ]
-];
+    ["<div class='left' style='float: left'></div>" +
+     "<div class='left' style='float: left'></div>" +
+     "<div class='left' style='float: right'></div>"],
+    ["<div class='right' style='float: left'></div>" +
+     "<div class='left'  style='float: left'></div>" +
+     "<div class='right' style='float: right'></div>"],
+    ["<div class='right' style='float: left'></div>" +
+     "<div class='right' style='float: left'></div>" +
+     "<div class='right' style='float: right'></div>"],
+    ["<div class='left' style='float: left'></div>" +
+     "<div class='right' style='float: left'></div>" +
+     "<div class='left'  style='float: right'></div>"],
+    ["<div style='font-size:3.0cm'>H H H</div>"],
+    ["<div style='font-size:3.0cm'>S H S</div>"],
+    ["<div style='font-size:3.0cm'>S S S</div>"],
+    ['<div style="font-size:3.0cm">H S H</div>']
+]
+
 
 const flanker_stimulus = {
     type: 'html-keyboard-response',
@@ -128,7 +109,7 @@ const flanker_stimulus = {
     post_trial_gap: 0,
     data: {
         stimulus: "flanker", 
-        dimension: jsPsych.timelineVariable('dim'),  
+        type: jsPsych.timelineVariable('type'),  
         compatibility: jsPsych.timelineVariable('comp'), 
         direction: jsPsych.timelineVariable('dir'), 
         corrResp: jsPsych.timelineVariable('key')
@@ -157,6 +138,7 @@ const block_feedback = {
     post_trial_gap: prms.waitDur,
 };
 
+
 const trial_timeline = {
     timeline: [
         fixation_cross,
@@ -164,14 +146,14 @@ const trial_timeline = {
         trial_feedback
     ],
     timeline_variables:[
-        { flanker: flankers[0], dim: 'hor', comp: 'comp',   dir: 'left',  key: prms.respKeys[0]},
-        { flanker: flankers[1], dim: 'hor', comp: 'incomp', dir: 'left',  key: prms.respKeys[0]},
-        { flanker: flankers[2], dim: 'hor', comp: 'comp',   dir: 'right', key: prms.respKeys[1]},
-        { flanker: flankers[3], dim: 'hor', comp: 'incomp', dir: 'right', key: prms.respKeys[1]},
-        { flanker: flankers[4], dim: 'ver', comp: 'comp',   dir: 'left',  key: prms.respKeys[0]},
-        { flanker: flankers[5], dim: 'ver', comp: 'incomp', dir: 'left',  key: prms.respKeys[0]},
-        { flanker: flankers[6], dim: 'ver', comp: 'comp',   dir: 'right', key: prms.respKeys[1]},
-        { flanker: flankers[7], dim: 'ver', comp: 'incomp', dir: 'right', key: prms.respKeys[1]}
+        { flanker: flankers[0], type: 'arrow',  comp: 'comp',   dir: 'left',  key: prms.respKeys[0]},
+        { flanker: flankers[1], type: 'arrow',  comp: 'incomp', dir: 'left',  key: prms.respKeys[0]},
+        { flanker: flankers[2], type: 'arrow',  comp: 'comp',   dir: 'right', key: prms.respKeys[1]},
+        { flanker: flankers[3], type: 'arrow',  comp: 'incomp', dir: 'right', key: prms.respKeys[1]},
+        { flanker: flankers[4], type: 'letter', comp: 'comp',   dir: 'left',  key: prms.respKeys[1]},
+        { flanker: flankers[5], type: 'letter', comp: 'incomp', dir: 'left',  key: prms.respKeys[1]},
+        { flanker: flankers[6], type: 'letter', comp: 'comp',   dir: 'right', key: prms.respKeys[0]},
+        { flanker: flankers[7], type: 'letter', comp: 'incomp', dir: 'right', key: prms.respKeys[0]}
     ],
     randomize_order:true,
 };
@@ -212,8 +194,8 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const expname = "Exp1_flanker"  + ".csv";
-const datname = "Exp1_flanker_" + vpNum + ".csv";
+const expname = "Exp6_flanker"  + ".csv";
+const datname = "Exp6_flanker_" + vpNum + ".csv";
 
 jsPsych.init({
     timeline: EXP,
