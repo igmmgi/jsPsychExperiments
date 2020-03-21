@@ -1,7 +1,8 @@
-﻿// Standard Flanker Task with vertical and horizontal stimulus arrays:
-// VPs respond to the direction of the central arrow whilst
-// ignoring the surrounding arrows using key responses ("C" and "M").
-// Feedback provided during the practice block
+// Horizontal flanker task using arrow stimuli combined
+// with a negation language task (not left vs now left)
+// VPs respond to orientation of the central arrows in
+// the flanker task and phrase meaning in the negation
+// task using the "C" and "M" keys.
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -19,7 +20,7 @@ const prms = {
     respKeys: ["C", "M", 27],
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,
-    cBlk: 1
+    cBlk: 1,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -50,10 +51,10 @@ const welcome = {
 const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<h1 style='text-align:center;'>Aufgabe:</h1>" +
-        "<h2 style='text-align:center;'>Reagieren Sie auf die Ausrichtung des mittleren Pfeils:</h2>" +
-        "<h2 style='text-align:center;'>LINKS  = C Taste</h2>" +
-        "<h2 style='text-align:center;'>RECHTS = M Taste</h2>" +
-        "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h2 style='text-align:center;'>Reagieren Sie auf die Ausrichtung des mittleren Pfeils bzw. auf die Bedeutung des Texts:</h2>" +
+    "<h2 style='text-align:center;'>LINKS = C Taste</h2>" +
+    "<h2 style='text-align:center;'>RECHTS = M Taste</h2>" +
+    "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     post_trial_gap: prms.waitDur
 };
 
@@ -63,6 +64,7 @@ const debrief= {
     "<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>",
     post_trial_gap: prms.waitDur,
 };
+
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -76,61 +78,29 @@ const fixation_cross = {
     data: {stim: "fixation"},
 };
 
-const flankers = [
-    [
-        "<div class='left' style='float: left'></div>" + 
-        "<div class='left' style='float: left'></div>" + 
-        "<div class='left' style='float: right'></div>"
-    ],
-    [
-        "<div class='right' style='float: left'></div>" + 
-        "<div class='left'  style='float: left'></div>" + 
-        "<div class='right' style='float: right'></div>"
-    ],
-    [
-        "<div class='right' style='float: left'></div>" + 
-        "<div class='right' style='float: left'></div>" + 
-        "<div class='right' style='float: right'></div>"
-    ],
-    [
-        "<div class='left'  style='float: left'></div>" + 
-        "<div class='right' style='float: left'></div>" + 
-        "<div class='left'  style='float: right'></div>"
-    ],
-    [
-        "<div class='left'></div>" + 
-        "<div class='left'></div>" + 
-        "<div class='left'></div>"
-    ],
-    [
-        "<div class='right'></div>" + 
-        "<div class='left'></div>"  + 
-        "<div class='right'></div>"
-    ],
-    [
-        "<div class='right'></div>" + 
-        "<div class='right'></div>" + 
-        "<div class='right'></div>"
-    ],
-    [
-        "<div class='left'></div>" + 
-        "<div class='right'></div>" + 
-        "<div class='left'></div>"
-    ]
+const stims = [
+    ["<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: right'></div>"],
+    ["<div class='right' style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: right'></div>"],
+    ["<div class='right' style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='right' style='float: right'></div>"],
+    ["<div class='left'  style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: right'></div>"],
+    ["<h1>jetzt links</h1>"],
+    ["<h1>jetzt rechts</h1>"],
+    ["<h1>nicht links</h1>"],
+    ["<h1>nicht rechts</h1>"]
 ];
 
-const flanker_stimulus = {
+const trial_stimulus = {
     type: 'html-keyboard-response',
-    stimulus: jsPsych.timelineVariable('flanker'), 
+    stimulus: jsPsych.timelineVariable('stimulus'), 
     trial_duration: prms.tooSlow,
     response_ends_trial: true,
     choices: prms.respKeys,
     post_trial_gap: 0,
     data: {
-        stimulus: "flanker", 
-        dimension: "dim", 
+        stimulus: "negFlank", 
+        task: jsPsych.timelineVariable('task'), 
         compatibility: jsPsych.timelineVariable('comp'), 
-        direction: jsPsych.timelineVariable('dir'), 
+        respDir: jsPsych.timelineVariable('dir'), 
         corrResp: jsPsych.timelineVariable('key')
     },
     on_finish: function() { codeTrial(); }
@@ -160,18 +130,18 @@ const block_feedback = {
 const trial_timeline = {
     timeline: [
         fixation_cross,
-        flanker_stimulus,
+        trial_stimulus,
         trial_feedback
     ],
     timeline_variables:[
-        { flanker: flankers[0], dim: 'hor', comp: 'comp',   dit: 'left',  key: prms.respKeys[0]},
-        { flanker: flankers[1], dim: 'hor', comp: 'incomp', dit: 'left',  key: prms.respKeys[0]},
-        { flanker: flankers[2], dim: 'hor', comp: 'comp',   dit: 'right', key: prms.respKeys[1]},
-        { flanker: flankers[3], dim: 'hor', comp: 'incomp', dit: 'right', key: prms.respKeys[1]},
-        { flanker: flankers[4], dim: 'ver', comp: 'comp',   dit: 'left',  key: prms.respKeys[0]},
-        { flanker: flankers[5], dim: 'ver', comp: 'incomp', dit: 'left',  key: prms.respKeys[0]},
-        { flanker: flankers[6], dim: 'ver', comp: 'comp',   dit: 'right', key: prms.respKeys[1]},
-        { flanker: flankers[7], dim: 'ver', comp: 'incomp', dit: 'right', key: prms.respKeys[1]}
+        {stimulus: stims[ 0], task: 'flanker', comp: "comp",    dir: 'left',  key: prms.respKeys[0]},
+        {stimulus: stims[ 1], task: 'flanker', comp: "incomp",  dir: 'left',  key: prms.respKeys[0]},
+        {stimulus: stims[ 2], task: 'flanker', comp: "comp",    dir: 'right', key: prms.respKeys[1]},
+        {stimulus: stims[ 3], task: 'flanker', comp: "incomp",  dir: 'right', key: prms.respKeys[1]},
+        {stimulus: stims[ 4], task: 'affneg',  comp: "comp",    dir: 'left',  key: prms.respKeys[0]},
+        {stimulus: stims[ 5], task: 'affneg',  comp: "comp",    dir: 'right', key: prms.respKeys[1]},
+        {stimulus: stims[ 6], task: 'affneg',  comp: "incomp",  dir: 'right', key: prms.respKeys[1]},
+        {stimulus: stims[ 7], task: 'affneg',  comp: "incomp",  dir: 'left',  key: prms.respKeys[0]},
     ],
     randomize_order:true,
 };
@@ -183,9 +153,9 @@ const alphaNum = {
     stimulus: "<h1>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h1>" +
     "<h1>benötigen, kopieren Sie den folgenden zufällig generierten Code</h1>" +
     "<h1>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h1>" +
-    "<h2>ian.mackenzie@uni.tuebingen.de</h2>" +
+    '<h2>XXX@XXXe</h2>' +
     "<h1>Code:" + randomString + "</h1>" +
-    "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
+    '<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>'
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -202,7 +172,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/16) : (prms.nTrlsE/16);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
@@ -212,8 +182,8 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const expname = "Exp1_flanker"  + ".csv";
-const datname = "Exp1_flanker_" + vpNum + ".csv";
+const expname = "Exp3_negFlank"  + ".csv";
+const datname = "Exp3_negFlank" + vpNum + ".csv";
 
 jsPsych.init({
     timeline: EXP,
@@ -221,7 +191,8 @@ jsPsych.init({
     show_progress_bar: false,
     on_finish: function(){ 
         saveRandomCode(expname); 
-        saveData(datname, {stim: "flanker"}); 
+        saveData(datname, {stim: "snarcSimon"}); 
     }
 });
+
 

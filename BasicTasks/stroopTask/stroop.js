@@ -53,18 +53,18 @@ if (prms.mapping === 1) {
     prms.respKeys = ["D", "J", 27];
     task_instructions = {
         type: "html-keyboard-response",
-        stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-            "<H2 align='center'>Respond to the colour of the font </H2><br>" +
-            "<H2 align='center'> red = 'D' key &emsp; blue = 'J' key</H2>",
+        stimulus: "<H1 style='text-align: center;'>Welcome:</H1><br>" +
+                  "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
+                  "<H2 style='text-align: center;'>red = 'D' key &emsp; blue = 'J' key</H2>",
         post_trial_gap: prms.waitDur
     };
 } else {
     prms.respKeys = ["J", "D", 27];
     task_instructions = {
         type: "html-keyboard-response",
-        stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-            "<H2 align='center'>Respond to the colour of the font </H2><br>" +
-            "<H2 align='center'> blue = 'D' key &emsp; red = 'J' key</H2>",
+        stimulus: "<H1 style='text-align: center;'>Welcome:</H1><br>" +
+                  "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
+                  "<H2 style='text-align: center;'>blue = 'D' key &emsp; red = 'J' key</H2>",
         post_trial_gap: prms.waitDur
     };
 }

@@ -49,9 +49,9 @@ const welcome = {
 
 const task_instructions = {
     type: "html-keyboard-response",
-    stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-    "<H2 align='center'>Respond to the direction of the central arrow</H2><br>" +
-    "<H2 align='center'>LEFT = 'D' key &emsp; RIGHT = 'J' key</H2>",
+    stimulus: "<H1 style='text:align=center;'>Welcome:</H1><br>" +
+        "<H2 style='text:align=center;'>Respond to the direction of the central arrow</H2><br>" +
+        "<H2 style='text:align=center;'>LEFT = 'D' key &emsp; RIGHT = 'J' key</H2>",
     post_trial_gap: prms.waitDur
 };
 

@@ -48,9 +48,9 @@ const welcome = {
 
 const task_instructions = {
     type: "html-keyboard-response",
-    stimulus: "<H1 align='center'>Welcome:</H1><br>" +
-              "<H2 align='center'>Respond to the colour of the presented square</H2>" +
-              "<H2 align='center'>Square = 'D' key &emsp; Circle = 'J' key</H2>", 
+    stimulus: "<H1 style='text-align=center;'>Welcome:</H1><br>" +
+              "<H2 style='text-align=center;'>Respond to the colour of the presented square</H2>" +
+              "<H2 style='text-align=center;'>Square = 'D' key &emsp; Circle = 'J' key</H2>",
     post_trial_gap: prms.waitDur
 };
 
@@ -145,10 +145,11 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         for (let blk = 0; blk < prms.nBlks; blk += 1) {
-        let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
-        exp.push(blk_timeline);    // trials within a block
-        exp.push(block_feedback);  // show previous block performance 
+            let blk_timeline = {...trial_timeline};
+            blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP / 4) : (prms.nTrlsE / 4);
+            exp.push(blk_timeline);    // trials within a block
+            exp.push(block_feedback);  // show previous block performance
+        }
     }
     exp.push(debrief);
     return exp;
