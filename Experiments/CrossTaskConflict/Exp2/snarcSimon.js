@@ -5,7 +5,7 @@
 // 1, 2, 8, 9 (normal/italics)
 // X in green or left to the left or right of fixation
 
-const expName = console.log(getFileName());
+const expName = getFileName();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //

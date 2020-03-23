@@ -3,7 +3,7 @@
 // ignoring the surrounding arrows using key responses ("C" and "M"). Feedback provided
 // during the practice block.
 
-const expName = console.log(getFileName());
+const expName = getFileName();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //

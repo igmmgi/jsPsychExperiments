@@ -3,7 +3,7 @@
 // ignoring the surrounding arrows using key responses ("D" and "J").
 // ignoring the surrounding arrows using key responses ("D" and "J").
 
-const expName = console.log(getFileName());
+const expName = getFileName();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //

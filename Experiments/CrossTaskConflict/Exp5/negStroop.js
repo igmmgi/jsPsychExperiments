@@ -2,7 +2,7 @@
 // VPs respond to font colour in the stroop task and phrase meaning in the
 // negation task using the "C" and "M" keys.
 
-const expName = console.log(getFileName());
+const expName = getFileName();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //

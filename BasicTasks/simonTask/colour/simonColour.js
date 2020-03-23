@@ -2,7 +2,7 @@
 // VPs respond to the colour of the presented stimulus using
 // left and right key responses.
 
-const expName = console.log(getFileName());
+const expName = getFileName();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //

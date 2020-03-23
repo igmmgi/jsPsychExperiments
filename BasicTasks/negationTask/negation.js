@@ -2,7 +2,7 @@
 // VPs respond to the meaning of the presented text using
 // key responses ("D" and "J").
 
-const expName = console.log(getFileName());
+const expName = getFileName();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
