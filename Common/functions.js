@@ -79,15 +79,12 @@ function blockFeedbackTxt(filter_options) {
     return blockFbTxt;
 }
 
-function saveData(datname, filter_options) {
-    "use strict";
-    let dat = jsPsych.data.get().filter(filter_options).csv();
-    $.ajax({
-        type: "post",
-        cache: false,
-        url: "write_data.php",
-        data: {filename: datname, filedata: dat}
-    });
+function saveData(datFile, datFilter){
+    let dat = jsPsych.data.get().filter(datFilter).csv();
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'write_data.php'); 
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({filename: datFile, filedata: dat}));
 }
 
 function generateRandomString(length) {

@@ -179,14 +179,13 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = "flanker_" + vpNum + ".csv";
+const datname = "flanker_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
-        console.log("pre save data");
         saveData(datname, {stim: "flanker"}); 
     }
 });
