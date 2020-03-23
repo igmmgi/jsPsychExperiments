@@ -8,8 +8,8 @@
 ////////////////////////////////////////////////////////////////////////
 const prms = {
     nTrlsP: 4,  // number of trials in first block (practice)
-    nTrlsE: 8,  // number of trials in subsequent blocks 
-    nBlks: 2,
+    nTrlsE: 4,  // number of trials in subsequent blocks 
+    nBlks: 1,
     fixDur: 750,
     fbDur: 750,
     waitDur: 1000,
@@ -186,7 +186,7 @@ jsPsych.init({
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
+        console.log("pre save data");
         saveData(datname, {stim: "flanker"}); 
     }
 });
-

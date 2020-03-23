@@ -134,7 +134,6 @@ const flanker_stimulus = {
     },
     on_start: function() {
         setRandomPosition();
-        console.log("hello");
     },
     on_finish: function() { 
         codeTrial(); 
