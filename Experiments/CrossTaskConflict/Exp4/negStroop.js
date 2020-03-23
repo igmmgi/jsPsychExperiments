@@ -2,6 +2,8 @@
 // VPs respond to font colour in the stroop task and phrase meaning in the
 // negation task using the "C" and "M" keys.
 
+const expName = console.log(getFileName());
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -182,8 +184,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const expname = "Exp4_negStroop"  + ".csv";
-const datname = "Exp4_negStroop" + vpNum + ".csv";
+const datname = expName + "_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,

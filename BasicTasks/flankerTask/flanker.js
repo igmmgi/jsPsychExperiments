@@ -3,6 +3,8 @@
 // ignoring the surrounding arrows using key responses ("D" and "J").
 // ignoring the surrounding arrows using key responses ("D" and "J").
 
+const expName = console.log(getFileName());
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -179,7 +181,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = "flanker_" + vpNum;
+const datname = expName + "_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,

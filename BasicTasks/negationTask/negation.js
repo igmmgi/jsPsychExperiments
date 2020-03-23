@@ -2,6 +2,8 @@
 // VPs respond to the meaning of the presented text using
 // key responses ("D" and "J").
 
+const expName = console.log(getFileName());
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -157,7 +159,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = "negation_" + vpNum + ".csv";
+const datname = expName + "_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,

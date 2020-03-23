@@ -2,6 +2,8 @@
 // VPs respond to the colour of the presented stimulus using
 // left and right key responses.
 
+const expName = console.log(getFileName());
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -156,7 +158,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = "simon_" + vpNum + ".csv";
+const datname = expName + "_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,

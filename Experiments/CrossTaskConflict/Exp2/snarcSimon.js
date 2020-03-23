@@ -5,6 +5,8 @@
 // 1, 2, 8, 9 (normal/italics)
 // X in green or left to the left or right of fixation
 
+const expName = console.log(getFileName());
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -200,8 +202,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const expname = "Exp2_snarcSimon"  + ".csv";
-const datname = "Exp2_snarcSimon_" + vpNum + ".csv";
+const datname = expName + "_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,

@@ -3,6 +3,8 @@
 // ignoring the surrounding arrows using key responses ("C" and "M"). Feedback provided
 // during the practice block.
 
+const expName = console.log(getFileName());
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -227,8 +229,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const expname = "flankerExp2"  + ".csv";
-const datname = "flankerExp2_" + vpNum + ".csv";
+const datname = expName + "_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,

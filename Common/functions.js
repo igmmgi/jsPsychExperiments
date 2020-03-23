@@ -1,3 +1,9 @@
+function getFileName()   {
+    let fn = document.currentScript.src;
+    return fn.match(/^.*?([^\\/.]*)[^\\/]*$/)[1];
+}
+
+
 function genVpNum() {
     "use strict";
     let num = new Date();

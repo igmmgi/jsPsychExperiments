@@ -4,6 +4,8 @@
 // the flanker task and phrase meaning in the negation
 // task using the "C" and "M" keys.
 
+const expName = console.log(getFileName());
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -182,8 +184,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const expname = "Exp3_negFlank"  + ".csv";
-const datname = "Exp3_negFlank" + vpNum + ".csv";
+const datname = expName + "_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,
