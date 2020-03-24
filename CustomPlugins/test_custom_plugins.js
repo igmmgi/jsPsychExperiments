@@ -38,15 +38,7 @@ const fixation_cross = {
     trial_duration: 500,
     translate_origin: true,
     canvas_border: "2px solid black",
-    func: function(){ drawFixation(); },
-};
-
-const line = {
-    type: 'static-canvas-keyboard-response',
-    trial_duration: 500,
-    translate_origin: true,
-    canvas_border: "4px solid black",
-    func: function(){ drawLine(); },
+    func: drawFixation
 };
 
 const circle = {
@@ -54,7 +46,7 @@ const circle = {
     trial_duration: 500,
     translate_origin: true,
     canvas_border: "6px solid red",
-    func: function(){ drawCircle(); },
+    func: [function(){ drawCircle(); }],
 };
 
 const text = {
@@ -62,7 +54,7 @@ const text = {
     trial_duration: 500,
     translate_origin: true,
     canvas_border: "8px solid green",
-    func: function(){ drawText(); },
+    func: drawText
 };
 
 const combined = {
@@ -70,11 +62,11 @@ const combined = {
     trial_duration: 500,
     translate_origin: true,
     canvas_border: "10px solid blue",
-    func: function(){ 
+    func: function() {
         drawFixation(); 
         drawCircle(); 
         drawText(); 
-    },
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////

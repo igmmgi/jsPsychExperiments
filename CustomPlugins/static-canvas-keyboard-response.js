@@ -8,6 +8,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         parameters: {
             func: {
                 type: jsPsych.plugins.parameterType.FUNCTION,
+                array: true,
                 pretty_name: 'Function',
                 default: undefined,
                 description: 'Function to call'
@@ -38,21 +39,27 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 default: jsPsych.ALL_KEYS,
                 description: 'The keys the subject is allowed to press to respond to the stimulus.'
             },
+            stimulus_onset: {
+                type: jsPsych.plugins.parameterType.INT,
+                array: true,
+                pretty_name: 'StimulusOnset',
+                default: [0],
+            },
             stimulus_duration: {
                 type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Stimulus duration',
+                pretty_name: 'StimulusDuration',
                 default: null,
                 description: 'How long to hide the stimulus.'
             },
             trial_duration: {
                 type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Trial duration',
+                pretty_name: 'TrialDuration',
                 default: null,
                 description: 'How long to show trial before it ends.'
             },
             response_ends_trial: {
                 type: jsPsych.plugins.parameterType.BOOL,
-                pretty_name: 'Response ends trial',
+                pretty_name: 'ResponseEndsTrial',
                 default: true,
                 description: 'If true, then trial will end when user responds.'
             },
@@ -67,14 +74,20 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         canvas.width  = trial.canvas_size[0]; 
         canvas.height = trial.canvas_size[1];
         canvas.style.border = trial.canvas_border;
+       
+        if (typeof trial.func === "function") {
+            trial.func = [trial.func];
+        }
+        if (typeof trial.stimulus_onset === "number") {
+            trial.stimulus_onset = [trial.stimulus_onset];
+        }
+        // if (trial.func.length !== trial.stimulus_onset.length) {
+        // }
         
         if (trial.translate_origin) {
             let ctx = document.getElementById('canvas').getContext('2d');
             ctx.translate(canvas.width/2, canvas.height/2);  // make center (0, 0)
         }
-
-        // draw
-        trial.func();
         
         // store response
         var response = {
@@ -100,9 +113,8 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 "key_press": response.key
             };
 
-            // clear the display and stop animation
-            display_element.innerHTML = '';
-            //window.cancelAnimationFrame(frame);
+            // clear the display 
+            display_element.innerHTML = "<canvas id='canvas'></canvas>";
 
             // move on to the next trial
             jsPsych.finishTrial(trial_data);
@@ -142,6 +154,13 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
             jsPsych.pluginAPI.setTimeout(function() {
                 end_trial();
             }, trial.trial_duration);
+        }
+
+        // draw stimulus/stimuli
+        for (let i in trial.func) {
+            jsPsych.pluginAPI.setTimeout(function() {
+                trial.func[i]();
+            }, trial.stimulus_onset[i]);
         }
 
     };
