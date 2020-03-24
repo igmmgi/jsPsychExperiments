@@ -46,7 +46,7 @@ const circle = {
     trial_duration: 500,
     translate_origin: true,
     canvas_border: "6px solid red",
-    func: [function(){ drawCircle(); }],
+    func: drawCircle
 };
 
 const text = {
@@ -69,6 +69,15 @@ const combined = {
     }
 }
 
+const combined_sequential = {
+    type: 'static-canvas-keyboard-response',
+    trial_duration: 5000,
+    translate_origin: true,
+    canvas_border: "10px solid blue",
+    stimulus_onset: [0, 1500, 3000],
+    func: [ drawFixation, drawCircle, drawText ]
+}
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -77,14 +86,14 @@ function genExpSeq() {
 
     let exp = [];
 
-    for (let i = 0; i < 10; i++) {
-        exp.push(fixation_cross);
-        exp.push(circle);
-        exp.push(fixation_cross);
-        exp.push(text);
-        exp.push(fixation_cross);
-        exp.push(combined);
-    }
+    exp.push(fixation_cross);
+    exp.push(circle);
+    exp.push(fixation_cross);
+    exp.push(text);
+    exp.push(fixation_cross);
+    exp.push(combined);
+    exp.push(combined_sequential);
+
     return exp;
 
 }

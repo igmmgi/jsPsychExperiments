@@ -74,7 +74,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         canvas.width  = trial.canvas_size[0]; 
         canvas.height = trial.canvas_size[1];
         canvas.style.border = trial.canvas_border;
-       
+
         if (typeof trial.func === "function") {
             trial.func = [trial.func];
         }
@@ -83,12 +83,12 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         }
         // if (trial.func.length !== trial.stimulus_onset.length) {
         // }
-        
+
         if (trial.translate_origin) {
             let ctx = document.getElementById('canvas').getContext('2d');
             ctx.translate(canvas.width/2, canvas.height/2);  // make center (0, 0)
         }
-        
+
         // store response
         var response = {
             rt: null,
@@ -97,7 +97,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
 
         // function to end trial when it is time
         var end_trial = function() {
-            
+
             // kill any remaining setTimeout handlers
             jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -157,7 +157,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         }
 
         // draw stimulus/stimuli
-        for (let i in trial.func) {
+        for (let i = 0; i < trial.func.length; i++) {
             jsPsych.pluginAPI.setTimeout(function() {
                 trial.func[i]();
             }, trial.stimulus_onset[i]);
