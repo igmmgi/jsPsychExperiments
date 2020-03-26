@@ -127,11 +127,11 @@ function generateRandomString(length) {
     return randomString;
 }
 
-function saveRandomCode(fname, code){
+function saveRandomCode(url, fname, code){
     $.ajax({
         type:"post",
         cache: false,
-        url: "write_code.php",
+        url: url, 
         data: {filename: fname, filedata: code}
     });
 };

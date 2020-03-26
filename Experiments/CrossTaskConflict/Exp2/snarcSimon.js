@@ -6,6 +6,7 @@
 // X in green or left to the left or right of fixation
 
 const expName = getFileName();
+const dirName = getDirName();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -202,7 +203,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = expName + "_" + vpNum;
+const datname = dirName + "data/" + expName + "_" + genVpNum();
 
 jsPsych.init({
     timeline: EXP,
@@ -210,7 +211,7 @@ jsPsych.init({
     show_progress_bar: false,
     on_finish: function(){ 
         saveRandomCode(expname); 
-        saveData(datname, {stim: "snarcSimon"}); 
+        saveData("/Common/write_data.php", datname, {stim: "snarcSimon"}); 
     }
 });
 

@@ -4,6 +4,7 @@
 // ignoring the surrounding arrows using key responses ("D" and "J").
 
 const expName = getFileName();
+const dirName = getDirName();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -181,13 +182,13 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = expName + "_" + vpNum;
+const datname = dirName + "data/" + expName + "_" + genVpNum();
 
 jsPsych.init({
     timeline: EXP,
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
-        saveData(datname, {stim: "flanker"}); 
+        saveData("/Common/write_data.php", datname, {stim: "flanker"}); 
     }
 });
