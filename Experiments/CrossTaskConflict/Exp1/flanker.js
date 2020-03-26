@@ -5,6 +5,7 @@
 
 const expName = getFileName();
 const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -26,30 +27,8 @@ const prms = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                      Participant Information                       //
-////////////////////////////////////////////////////////////////////////
-const vpNum = genVpNum();
-
-const vpInfoForm = {
-    type: "html",
-    url: "vpInfoForm.html",
-    cont_btn: "start",
-    check_fn: checkVpInfoForm
-};
-
-////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const welcome = {
-    type: "html-keyboard-response",
-    stimulus: "<h1>Willkommen. Drücken Sie eine beliebige Taste, um fortzufahren!</h1>",
-    on_finish: function(){
-        "use strict";
-        let date = new Date();
-        jsPsych.data.addProperties({date: date.toISOString()});
-    }
-};
-
 const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<h1 style='text-align:center;'>Aufgabe:</h1>" +
@@ -58,13 +37,6 @@ const task_instructions = {
         "<h2 style='text-align:center;'>RECHTS = M Taste</h2>" +
         "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     post_trial_gap: prms.waitDur
-};
-
-const debrief= {
-    type: "html-keyboard-response",
-    stimulus: "<h1>Das Experiment ist beendet.</h1>" +
-    "<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>",
-    post_trial_gap: prms.waitDur,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -199,7 +171,7 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(welcome);
+    exp.push(welcome_de);
     //exp.push(vpInfoForm);
     exp.push(task_instructions);
 
@@ -209,7 +181,7 @@ function genExpSeq() {
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
-    exp.push(debrief);
+    exp.push(debrief_de);
     exp.push(alphaNum);
     return exp;
 

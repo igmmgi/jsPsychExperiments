@@ -70,6 +70,12 @@ function checkVpInfoForm() {
     }
 
 }
+const vpInfoForm = {
+    type: "external-html",
+    url: "/Common/vpInfoForm.html",
+    cont_btn: "start",
+    check_fn: checkVpInfoForm
+};
 
 function codeTrial() {
     "use strict";
@@ -144,4 +150,51 @@ function recordScreenSize() {
         aspectRatio: screen.width / screen.height
     });
 }
+
+////////////////////////////////////////////////////////////////////////
+//                          Common Variables                          //
+////////////////////////////////////////////////////////////////////////
+const welcome_en = {
+    type: "html-keyboard-response",
+    stimulus: "<H1>Welcome. Press any key to continue.</H1>",
+    response_ends_trial: true,
+    on_finish: function () {
+        "use strict";
+        let date = new Date();
+        jsPsych.data.addProperties({date: date.toISOString()});
+    }
+};
+
+const welcome_de = {
+    type: "html-keyboard-response",
+    stimulus: "<h1>Willkommen. Drücken Sie eine beliebige Taste, um fortzufahren!</h1>",
+    on_finish: function(){
+        "use strict";
+        let date = new Date();
+        jsPsych.data.addProperties({date: date.toISOString()});
+    }
+};
+
+const resize_de = {
+    type: 'resize',
+    item_width: 3 + 3/8,
+    item_height: 2 + 1/8,
+    prompt: "<p>Klicken Sie und ziehen Sie die untere rechte Ecke bis der Kasten die gleiche Größe wie eine Bankkarte oder Ihr Universitätsausweis hat.</p>",
+    pixels_per_unit: 150
+};
+
+const debrief_en = {
+    type: 'html-keyboard-response',
+    stimulus: "<H1>The experiment is finished.</H1>" + "<H2>Press any key to end the experiment!</H2>",
+    response_ends_trial: true
+};
+
+const debrief_de = {
+    type: "html-keyboard-response",
+    stimulus: "<h1>Das Experiment ist beendet.</h1>" +
+    "<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>",
+    response_ends_trial: true
+};
+
+
 

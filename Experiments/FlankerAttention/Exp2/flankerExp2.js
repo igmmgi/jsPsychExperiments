@@ -5,6 +5,7 @@
 
 const expName = getFileName();
 const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -24,18 +25,6 @@ const prms = {
     order: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-};
-
-////////////////////////////////////////////////////////////////////////
-//                      Participant Information                       //
-////////////////////////////////////////////////////////////////////////
-const vpNum = genVpNum();
-
-const vpInfoForm = {
-    type: "html",
-    url: "vpInfoForm.html",
-    cont_btn: "start",
-    check_fn: checkVpInfoForm
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -69,20 +58,9 @@ function setCentrePositions() {
     document.documentElement.style.setProperty('--posy', 0 + 'px');
 }
 
-
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const welcome = {
-    type: "html-keyboard-response",
-    stimulus: "<h1>Willkommen. Drücken Sie eine beliebige Taste, um fortzufahren!</h1>",
-    on_finish: function(){
-        "use strict";
-        let date = new Date();
-        jsPsych.data.addProperties({date: date.toISOString()});
-    }
-};
-
 const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<h1 style='text-align:center;'>Aufgabe:</h1>" +
@@ -91,22 +69,6 @@ const task_instructions = {
     "<h2 style='text-align:center;'>Bitte reagieren Sie so schnell und korrekt wie möglich</h2><br>" +
     "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     timing_post_trial: prms.waitDur
-};
-
-const debrief= {
-    type: "html-keyboard-response",
-    stimulus: "<h1>Das Experiment ist beendet.</h1>" +
-    "<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>",
-    post_trial_gap: prms.waitDur,
-};
-
-/////////////////////////////// Resize ////////////////////////////////////////
-const resize = {
-    type: 'resize',
-    item_width: 3 + 3/8,
-    item_height: 2 + 1/8,
-    prompt: "<p>Klicken Sie und ziehen Sie die untere rechte Ecke bis der Kasten die gleiche Größe wie eine Bankkarte oder Ihr Universitätsausweis hat.</p>",
-    pixels_per_unit: 150
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -199,7 +161,7 @@ const alphaNum = {
     stimulus: "<h1>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h1>" +
     "<h1>benötigen, kopieren Sie den folgenden zufällig generierten Code</h1>" +
     "<h1>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h1>" +
-    "<h2>ian.mackenzie@uni.tuebingen.de</h2>" +
+    "<h2>XXX@XXX</h2>" +
     "<h1>Code:" + randomString + "</h1>" +
     "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
 };
@@ -213,9 +175,9 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(welcome);
+    exp.push(welcome_de);
     //exp.push(vpInfoForm);
-    exp.push(resize);
+    exp.push(resize_de);
     exp.push(task_instructions);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -224,7 +186,7 @@ function genExpSeq() {
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
-    exp.push(debrief);
+    exp.push(debrief_de);
     exp.push(alphaNum);
     return exp;
 

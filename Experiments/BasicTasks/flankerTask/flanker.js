@@ -1,10 +1,10 @@
 // Standard Flanker Task:
 // VPs respond to the direction of the central arrow whilst
 // ignoring the surrounding arrows using key responses ("D" and "J").
-// ignoring the surrounding arrows using key responses ("D" and "J").
 
 const expName = getFileName();
 const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -26,43 +26,14 @@ const prms = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                      Participant Information                       //
-////////////////////////////////////////////////////////////////////////
-const vpNum = genVpNum();
-
-const vpInfoForm = {
-    type: "html",
-    url: "../vpInfoForm.html",
-    cont_btn: "start",
-    check_fn: checkVpInfoForm
-};
-
-////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const welcome = {
-    type: "html-keyboard-response",
-    stimulus: "<H1>Welcome. Press any key to continue.</H1>",
-    on_finish: function () {
-        "use strict";
-        let date = new Date();
-        jsPsych.data.addProperties({date: date.toISOString()});
-    }
-};
-
 const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<H1 style='text:align=center;'>Welcome:</H1><br>" +
         "<H2 style='text:align=center;'>Respond to the direction of the central arrow</H2><br>" +
         "<H2 style='text:align=center;'>LEFT = 'D' key &emsp; RIGHT = 'J' key</H2>",
     post_trial_gap: prms.waitDur
-};
-
-const debrief = {
-    type: 'html-keyboard-response',
-    stimulus: "<H1>The experiment is finished.</H1>" + "<H2>Press any key to end the experiment!</H2>",
-    response_ends_trial: true,
-    post_trial_gap: prms.waitDur,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -167,8 +138,8 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(welcome);
-    //exp.push(vpInfoForm);
+    exp.push(welcome_en);
+    exp.push(vpInfoForm);
     exp.push(task_instructions);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -177,7 +148,7 @@ function genExpSeq() {
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
-    exp.push(debrief);
+    exp.push(debrief_en);
     return exp;
 
 }
