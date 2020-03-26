@@ -101,11 +101,12 @@ function trialFeedbackTxt(feedback_text) {
 function blockFeedbackTxt(filter_options) {
     "use strict";
     let dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk});
+    let nTotal = dat.count();
     let nError = dat.select("corrCode").values.filter(function (x) { return x !== 1; }).length;
     dat = jsPsych.data.get().filter({...filter_options, corrCode: 1});
     let blockFbTxt = "<H1>Block: " + prms.cBlk + " of " + prms.nBlks + "</H1>" +
         "<H1>Mean RT: " + Math.round(dat.select("rt").mean()) + " ms </H1>" +
-        "<H1>Error Rate: " + Math.round((nError / dat.count()) * 100) + " %</H1>" +
+        "<H1>Error Rate: " + Math.round((nError / nTotal) * 100) + " %</H1>" +
         "<H2>Press any key to continue the experiment!</H2>";
     prms.cBlk += 1;
     return blockFbTxt;
