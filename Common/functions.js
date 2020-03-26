@@ -1,14 +1,40 @@
-function getFileName()   {
-    let fn = document.currentScript.src;
-    return fn.match(/^.*?([^\\/.]*)[^\\/]*$/)[1];
+function getDirName() {
+    let name = document.currentScript.src;
+    let server = location.protocol + "//" + document.location.host;
+    name = name.slice(server.length, name.length);
+    return name.substring(0, name.lastIndexOf("/")+1); 
 }
 
+function getFileName()   {
+    let name = document.currentScript.src;
+    return name.substring(name.lastIndexOf("/")+1, name.lastIndexOf("."));
+}
+
+function getNumberOfFiles(url, datDir) {
+    var numDataFiles;
+    $.ajax({
+        url: url,
+        type: "POST",
+        async: false,
+        data:{"dir": datDir}
+    }).done(function(data) {
+        numDataFiles = data;
+    });
+    return numDataFiles;
+}
 
 function genVpNum() {
     "use strict";
     let num = new Date();
     num = num.getTime();
     return num;
+}
+
+function getVersionNumber(vpNumber, numberOfVersions) {
+    if (vpNumber === 0) {
+        vpNumber = 1;
+    }
+    return ((vpNumber - 1) % numberOfVersions) + 1;
 }
 
 function checkVpInfoForm() {
@@ -85,10 +111,10 @@ function blockFeedbackTxt(filter_options) {
     return blockFbTxt;
 }
 
-function saveData(datFile, datFilter){
+function saveData(url, datFile, datFilter = {}){
     let dat = jsPsych.data.get().filter(datFilter).csv();
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'write_data.php'); 
+    xhr.open('POST', url); 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({filename: datFile, filedata: dat}));
 }
@@ -117,6 +143,4 @@ function recordScreenSize() {
         aspectRatio: screen.width / screen.height
     });
 }
-
-
 
