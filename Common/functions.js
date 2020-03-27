@@ -1,3 +1,6 @@
+////////////////////////////////////////////////////////////////////////
+//                             Functions                              //
+////////////////////////////////////////////////////////////////////////
 function getDirName() {
     let name = document.currentScript.src;
     let server = location.protocol + "//" + document.location.host;
@@ -11,7 +14,7 @@ function getFileName()   {
 }
 
 function getNumberOfFiles(url, datDir) {
-    var numDataFiles;
+    let numDataFiles = 0;
     $.ajax({
         url: url,
         type: "POST",
@@ -27,6 +30,7 @@ function genVpNum() {
     "use strict";
     let num = new Date();
     num = num.getTime();
+    jsPsych.data.addProperties({vpNum: num});
     return num;
 }
 
@@ -62,7 +66,7 @@ function checkVpInfoForm() {
     }
 
     if (consent && age !== "" && gender !== "" && hand !== "") {
-        jsPsych.data.addProperties({vpNum: vpNum, age: age, gender: gender, handedness: hand});
+        jsPsych.data.addProperties({age: age, gender: gender, handedness: hand});
         return true;
     } else {
         window.alert("Please answer all questions and click the consent box to continue!");
@@ -70,12 +74,7 @@ function checkVpInfoForm() {
     }
 
 }
-const vpInfoForm = {
-    type: "external-html",
-    url: "/Common/vpInfoForm.html",
-    cont_btn: "start",
-    check_fn: checkVpInfoForm
-};
+
 
 function codeTrial() {
     "use strict";
@@ -91,7 +90,7 @@ function codeTrial() {
     } else if (dat.rt <= prms.tooFast) {
         corrCode = 4; // too false
     }
-    jsPsych.data.addDataToLastTrial({corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
+    jsPsych.data.addDataToLastTrial({date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
     prms.cTrl += 1;
     if (dat.key_press === 27) {
         jsPsych.endExperiment();
@@ -118,12 +117,14 @@ function blockFeedbackTxt(filter_options) {
     return blockFbTxt;
 }
 
-function saveData(url, datFile, datFilter = {}){
-    let dat = jsPsych.data.get().filter(datFilter).csv();
+function saveData(url, filename, rows = {}, 
+                  colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed']){
+
+    let dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).csv();
     let xhr = new XMLHttpRequest();
     xhr.open('POST', url); 
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({filename: datFile, filedata: dat}));
+    xhr.send(JSON.stringify({filename: filename, filedata: dat}));
 }
 
 function generateRandomString(length) {
@@ -141,7 +142,7 @@ function saveRandomCode(url, fname, code){
         url: url, 
         data: {filename: fname, filedata: code}
     });
-};
+}
 
 function recordScreenSize() {
     jsPsych.data.addProperties({
@@ -160,8 +161,7 @@ const welcome_en = {
     response_ends_trial: true,
     on_finish: function () {
         "use strict";
-        let date = new Date();
-        jsPsych.data.addProperties({date: date.toISOString()});
+        jsPsych.data.addProperties({date: Date()});
     }
 };
 
@@ -170,8 +170,7 @@ const welcome_de = {
     stimulus: "<h1>Willkommen. Drücken Sie eine beliebige Taste, um fortzufahren!</h1>",
     on_finish: function(){
         "use strict";
-        let date = new Date();
-        jsPsych.data.addProperties({date: date.toISOString()});
+        jsPsych.data.addProperties({date: Date()});
     }
 };
 
@@ -181,6 +180,19 @@ const resize_de = {
     item_height: 2 + 1/8,
     prompt: "<p>Klicken Sie und ziehen Sie die untere rechte Ecke bis der Kasten die gleiche Größe wie eine Bankkarte oder Ihr Universitätsausweis hat.</p>",
     pixels_per_unit: 150
+};
+
+const screenInfo = {
+    type: "call-function",
+    func: recordScreenSize,
+    timing_post_trial: 50
+};
+
+const vpInfoForm = {
+    type: "external-html",
+    url: "/Common/vpInfoForm.html",
+    cont_btn: "start",
+    check_fn: checkVpInfoForm
 };
 
 const debrief_en = {

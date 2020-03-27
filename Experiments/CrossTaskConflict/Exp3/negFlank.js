@@ -156,7 +156,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = dirName + "data/" + expName + "_" + genVpNum();
+const filename = dirName + "data/" + expName + "_" + genVpNum();
 
 jsPsych.init({
     timeline: EXP,
@@ -164,7 +164,7 @@ jsPsych.init({
     show_progress_bar: false,
     on_finish: function(){ 
         saveRandomCode(expname); 
-        saveData("/Common/write_data.php", datname, {stim: "negFlank"}); 
+        saveData("/Common/write_data.php", filename, rows = {stim: "negFlank"}); 
     }
 });
 

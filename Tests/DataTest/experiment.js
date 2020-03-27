@@ -18,16 +18,6 @@ const prms = {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const welcome = {
-    type: "html-keyboard-response",
-    stimulus: "<H1>Welcome. Press any key to continue.</H1>",
-    on_finish: function () {
-        "use strict";
-        let date = new Date();
-        jsPsych.data.addProperties({date: date.toISOString()});
-    }
-};
-
 const task_instructions = {
     type: "html-keyboard-response",
     stimulus: "<H1 style='text:align=center;'>Welcome To Experiment: Version " + versionNumber + "</H1>" 
@@ -41,7 +31,7 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(welcome);
+    exp.push(welcome_en);
     exp.push(task_instructions);
 
     return exp;

@@ -122,10 +122,10 @@ const trial_timeline = {
         trial_feedback
     ],
     timeline_variables:[
-        { flanker: flankers[0], comp: 'comp',   key: prms.respKeys[0]},
-        { flanker: flankers[1], comp: 'incomp', key: prms.respKeys[0]},
-        { flanker: flankers[2], comp: 'comp',   key: prms.respKeys[1]},
-        { flanker: flankers[3], comp: 'incomp', key: prms.respKeys[1]}
+        { flanker: flankers[0], comp: 'comp',   key: prms.respKeys[0] },
+        { flanker: flankers[1], comp: 'incomp', key: prms.respKeys[0] },
+        { flanker: flankers[2], comp: 'comp',   key: prms.respKeys[1] },
+        { flanker: flankers[3], comp: 'incomp', key: prms.respKeys[1] }
     ],
     randomize_order:true
 };
@@ -153,13 +153,14 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const datname = dirName + "data/" + expName + "_" + genVpNum();
+const filename = dirName + "data/" + expName + "_" + genVpNum();
 
 jsPsych.init({
     timeline: EXP,
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
-        saveData("/Common/write_data.php", datname, {stim: "flanker"}); 
+        saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 
     }
 });
+
