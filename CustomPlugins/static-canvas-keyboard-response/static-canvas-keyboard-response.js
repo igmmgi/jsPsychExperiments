@@ -81,8 +81,9 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         if (typeof trial.stimulus_onset === "number") {
             trial.stimulus_onset = [trial.stimulus_onset];
         }
-        // if (trial.func.length !== trial.stimulus_onset.length) {
-        // }
+        if (trial.func.length !== trial.stimulus_onset.length) {
+            // TO DO
+        }
 
         if (trial.translate_origin) {
             let ctx = document.getElementById('canvas').getContext('2d');
