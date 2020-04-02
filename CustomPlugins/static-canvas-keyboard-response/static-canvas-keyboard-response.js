@@ -6,6 +6,13 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         name: 'static-canvas-keyboard-response',
         description: '',
         parameters: {
+            func_args: {
+                type: jsPsych.plugins.parameterType.DICT,
+                array: true,
+                pretty_name: 'Function',
+                default: {},
+                description: 'Function arguments'
+            },
             func: {
                 type: jsPsych.plugins.parameterType.FUNCTION,
                 array: true,
@@ -17,7 +24,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 type: jsPsych.plugins.parameterType.INT,
                 array: true,
                 pretty_name: 'Size',
-                default: [640, 480],
+                default: [1640, 1480],
                 description: 'Canvas size.'
             },
             canvas_border:{
@@ -81,6 +88,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         if (typeof trial.stimulus_onset === "number") {
             trial.stimulus_onset = [trial.stimulus_onset];
         }
+        
         if (trial.func.length !== trial.stimulus_onset.length) {
             // TO DO
         }
@@ -160,7 +168,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         // draw stimulus/stimuli
         for (let i = 0; i < trial.func.length; i++) {
             jsPsych.pluginAPI.setTimeout(function() {
-                trial.func[i]();
+                trial.func[i](trial.func_args[i]);
             }, trial.stimulus_onset[i]);
         }
 
