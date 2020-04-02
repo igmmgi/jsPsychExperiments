@@ -9,7 +9,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
             func_args: {
                 type: jsPsych.plugins.parameterType.DICT,
                 array: true,
-                pretty_name: 'Function',
+                pretty_name: 'Args',
                 default: {},
                 description: 'Function arguments'
             },
@@ -24,7 +24,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 type: jsPsych.plugins.parameterType.INT,
                 array: true,
                 pretty_name: 'Size',
-                default: [1640, 1480],
+                default: [1280, 960],
                 description: 'Canvas size.'
             },
             canvas_border:{

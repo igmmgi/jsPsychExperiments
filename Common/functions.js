@@ -151,6 +151,44 @@ function recordScreenSize() {
     });
 }
 
+function loadImages(imagefiles) {
+
+    loadcount = 0;
+    loadtotal = imagefiles.length;
+    preloaded = false;
+ 
+    // Load the images
+    let loadedimages = [];
+    for (let i = 0; i < imagefiles.length; i++) {
+        var image = new Image();
+        image.onload = function () {
+            loadcount++;
+            if (loadcount == loadtotal) {
+                preloaded = true;
+            }
+        };
+ 
+        // set the source and save 
+        image.src = imagefiles[i];
+        loadedimages[i] = image;
+
+    }
+ 
+    return loadedimages;
+}
+
+// Returns a random number between min (inclusive) and max (exclusive)
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+// Returns a random int number between min (inclusive) and max (exclusive)
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 ////////////////////////////////////////////////////////////////////////
 //                          Common Variables                          //
 ////////////////////////////////////////////////////////////////////////
