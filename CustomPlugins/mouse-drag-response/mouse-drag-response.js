@@ -92,6 +92,7 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
         var start_loc;
         var end_rt;
         var end_loc;
+        var npresses = 0;
 
         // some text objects
         var text = {
@@ -125,9 +126,10 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
                 "start_rt": start_rt,
                 "start_loc": start_loc,
                 "end_rt": end_rt,
-                "loc": end_loc,
+                "end_loc": end_loc,
                 "end_x": text.x,
-                "end_y": text.y
+                "end_y": text.y,
+                "nPresses": npresses 
             };
 
             // clear the display 
@@ -149,6 +151,7 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
         }
 
         function handleMouseDown(e){
+            npresses++;
             e.preventDefault();
             startX = parseInt(e.clientX - offsetX);
             startY = parseInt(e.clientY - offsetY);
