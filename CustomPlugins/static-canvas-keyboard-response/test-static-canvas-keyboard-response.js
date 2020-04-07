@@ -1,10 +1,11 @@
 function drawFixation() {
     let ctx = document.getElementById('canvas').getContext('2d');
-    ctx.moveTo(-50, 0);
-    ctx.lineTo( 50, 0);
+    ctx.lineWidth = 5;
+    ctx.moveTo(-25, 0);
+    ctx.lineTo( 25, 0);
     ctx.stroke(); 
-    ctx.moveTo(0, -50);
-    ctx.lineTo(0,  50);
+    ctx.moveTo(0, -25);
+    ctx.lineTo(0,  25);
     ctx.stroke(); 
 }
 
@@ -33,7 +34,6 @@ function drawText() {
     ctx.fillText("Hello World", 0, 0); 
 }
 
-
 function drawImage(args) {
     // args should be dict with imageNum, x, y, h and w fields
     let ctx = document.getElementById('canvas').getContext('2d');
@@ -44,7 +44,7 @@ const fixation_cross = {
     type: 'static-canvas-keyboard-response',
     trial_duration: 500,
     translate_origin: true,
-    canvas_border: "2px solid black",
+    canvas_border: "10px solid black",
     func: drawFixation
 };
 
@@ -85,7 +85,6 @@ const combined_sequential = {
     func: [ drawFixation, drawCircle, drawText ]
 }
 
-
 const images = loadImages(["../../img/h1.bmp", "../../img/h2.bmp"]);
 
 const image_grid = {
@@ -111,9 +110,9 @@ const image_sequential = {
     stimulus_onset: [0, 500, 1000],
     func: [drawImage, drawImage, drawImage],
     func_args: [
-        {"imageNum": 0, "x": -200,  "y": -200,  "h":400, "w":400}, 
-        {"imageNum": 1, "x": -200,  "y": -200,  "h":400, "w":400}, 
-        {"imageNum": 0, "x": -200,  "y": -200,  "h":400, "w":400}
+        {"imageNum": 0, "x": -200, "y": -200, "h":400, "w":400}, 
+        {"imageNum": 1, "x": -200, "y": -200, "h":400, "w":400}, 
+        {"imageNum": 0, "x": -200, "y": -200, "h":400, "w":400}
     ]
 }
 
@@ -124,7 +123,6 @@ const image_timeline1 = {
     ],
 };
 
-
 const image_variable = {
     type: 'static-canvas-keyboard-response',
     trial_duration: 250,
@@ -134,10 +132,10 @@ const image_variable = {
     func: drawImage,
     func_args: [
         {"imageNum": jsPsych.timelineVariable('imageNum'), 
-         "x": jsPsych.timelineVariable('x'), 
-         "y": jsPsych.timelineVariable('y'), 
-         "h": 200, 
-         "w": 200}
+            "x": jsPsych.timelineVariable('x'), 
+            "y": jsPsych.timelineVariable('y'), 
+            "h": 200, 
+            "w": 200}
     ]
 }
 

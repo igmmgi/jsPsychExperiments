@@ -20,6 +20,13 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 default: undefined,
                 description: 'Function to call'
             },
+            clear_screen: {
+                type: jsPsych.plugins.parameterType.BOOL,
+                array: true,
+                pretty_name: 'Clear',
+                default: [false],
+                description: 'Clear the screen'
+            },
             canvas_size:{
                 type: jsPsych.plugins.parameterType.INT,
                 array: true,
@@ -75,6 +82,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
 
     plugin.trial = function(display_element, trial){
 
+        
         // setup canvas
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
         canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
@@ -82,8 +90,13 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         canvas.height = trial.canvas_size[1];
         canvas.style.border = trial.canvas_border;
 
+        let ctx = document.getElementById('canvas').getContext('2d');
+        
         if (typeof trial.func === "function") {
             trial.func = [trial.func];
+        }
+        if (typeof trial.stimulus_onset === "bool") {
+            trial.clear_screen = [trial.clear_screen];
         }
         if (typeof trial.stimulus_onset === "number") {
             trial.stimulus_onset = [trial.stimulus_onset];
@@ -94,7 +107,6 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         }
 
         if (trial.translate_origin) {
-            let ctx = document.getElementById('canvas').getContext('2d');
             ctx.translate(canvas.width/2, canvas.height/2);  // make center (0, 0)
         }
 
@@ -155,6 +167,10 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         if (trial.stimulus_duration !== null) {
             jsPsych.pluginAPI.setTimeout(function() {
                 display_element.innerHTML = "<canvas id='canvas'></canvas>";
+                canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
+                canvas.width  = trial.canvas_size[0]; 
+                canvas.height = trial.canvas_size[1];
+                canvas.style.border = trial.canvas_border;
             }, trial.stimulus_duration);
         }
 
@@ -168,6 +184,13 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         // draw stimulus/stimuli
         for (let i = 0; i < trial.func.length; i++) {
             jsPsych.pluginAPI.setTimeout(function() {
+                if (trial.clear_screen[i]) {
+                    if (trial.translate_origin) {
+                        ctx.clearRect(-canvas.width/2, -canvas.height/2, ctx.canvas.width, ctx.canvas.height);
+                    } else {
+                        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    }
+                }
                 trial.func[i](trial.func_args[i]);
             }, trial.stimulus_onset[i]);
         }
