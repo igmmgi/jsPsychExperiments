@@ -1,133 +1,220 @@
-// 1st attempt at drag-drop type response//
-// addapted from jspsych-free-sort
+// cusotm jspsych mouse drag response using code adapted from:
+// https://stackoverflow.com/questions/21605942/drag-element-on-canvas
 
-jsPsych.plugins['mouse-drag-response'] = (function() {
+jsPsych.plugins['mouse-drag-response'] = (function(){
 
     var plugin = {};
-
-    jsPsych.pluginAPI.registerPreload('free-sort', 'stimuli', 'image');
 
     plugin.info = {
         name: 'mouse-drag-response',
         description: '',
         parameters: {
-            stimuli: {
+            func_args: {
+                type: jsPsych.plugins.parameterType.DICT,
+                array: true,
+                pretty_name: 'Args',
+                default: {},
+                description: 'Function arguments'
+            },
+            canvas_size:{
+                type: jsPsych.plugins.parameterType.INT,
+                array: true,
+                pretty_name: 'Size',
+                default: [1280, 960],
+                description: 'Canvas size.'
+            },
+            canvas_border:{
                 type: jsPsych.plugins.parameterType.STRING,
-                pretty_name: 'Stimuli',
-                default: undefined,
-                array: false,
-                description: 'Image to be displayed.'
+                pretty_name: 'Border',
+                default: "0px solid black",
+                description: 'Border style'
             },
-            stim_height: {
+            response_border:{
                 type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Stimulus height',
-                default: 100,
-                description: 'Height of images in pixels.'
+                array: true,
+                pretty_name: 'ResponseBorder',
+                default: [100, 860],
+                description: 'Border style'
             },
-            stim_width: {
-                type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Stimulus width',
-                default: 100,
-                description: 'Width of images in pixels'
+            word:{
+                type: jsPsych.plugins.parameterType.STRING,
+                pretty_name: 'Word',
+                default: "Hello, world!",
+                description: 'StimulusText'
             },
-            sort_area_height: {
-                type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Sort area height',
-                default: 800,
-                description: 'The height of the container that subjects can move the stimuli in.'
+            colour:{
+                type: jsPsych.plugins.parameterType.STRING,
+                pretty_name: 'Colour',
+                default: "black",
+                description: 'StimulusColour'
             },
-            sort_area_width: {
-                type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Sort area width',
-                default: 800,
-                description: 'The width of the container that subjects can move the stimuli in.'
+            font:{
+                type: jsPsych.plugins.parameterType.STRING,
+                pretty_name: 'Colour',
+                default: "80px arial",
+                description: 'Font'
             },
-            y_resp_limits: {
+            trial_duration: {
                 type: jsPsych.plugins.parameterType.INT,
-                pretty_name: 'Response area top/bottom',
-                default: [20, 860],
-                description: 'The width of the container that subjects can move the stimuli in.'
+                pretty_name: 'TrialDuration',
+                default: null,
+                description: 'How long to show trial before it ends.'
             },
         }
     }
 
-    plugin.trial = function(display_element, trial) {
+    plugin.trial = function(display_element, trial){
 
-        var start_time = performance.now();
+        // setup canvas
+        display_element.innerHTML = "<canvas id='canvas'></canvas>";
 
-        var html = '<div '+
-            'id="jspsych-free-sort-arena" '+
-            'class="jspsych-free-sort-arena" '+
-            'style="position: relative; width:'+trial.sort_area_width+'px; height:'+trial.sort_area_height+'px; border:4px solid;"'+
-            '></div>';
+        canvas.style        = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
+        canvas.width        = trial.canvas_size[0]; 
+        canvas.height       = trial.canvas_size[1];
+        canvas.style.border = trial.canvas_border;
 
-        display_element.innerHTML = html;
-      
-        // show response region
-        var canvas = document.createElement('canvas'),
-        div = document.getElementById('jspsych-free-sort-arena');
-        canvas.id    = "canvas";
-        canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
-        canvas.width  = 1280;
-        canvas.height = 760;
-        canvas.style.border   = "1px dashed";
-        div.appendChild(canvas);
+        let ctx = document.getElementById('canvas').getContext('2d');
 
-        var coords = {
-            x: (trial.sort_area_width/2) - (trial.stim_width/2),
-            y: (trial.sort_area_height/2) - (trial.stim_height/2)
+        // canvas mouse events
+        $("#canvas").mousedown(function(e){handleMouseDown(e);});
+        $("#canvas").mousemove(function(e){handleMouseMove(e);});
+        $("#canvas").mouseup(function(e){handleMouseUp(e);});
+        $("#canvas").mouseout(function(e){handleMouseOut(e);});
+
+        var canvasOffset = $(canvas).offset();
+        var offsetX      = canvasOffset.left;
+        var offsetY      = canvasOffset.top;
+        var selectedText = false;
+        var startX;
+        var startY;
+        var movement_initiated = false;
+        var start_rt;
+        var start_loc;
+        var end_rt;
+        var end_loc;
+
+        // some text objects
+        var text = {
+            text: trial.word, 
+            x: canvas.width/2, 
+            y: canvas.height/2, 
+            font: trial.font,
         };
 
-        display_element.querySelector("#jspsych-free-sort-arena").innerHTML += '<img '+
-            'src="'+trial.stimuli+'" '+
-            'data-src="'+trial.stimuli+'" '+
-            'class="jspsych-free-sort-draggable" '+
-            'draggable="false" '+
-            'style="position: absolute; cursor: move; width:'+trial.stim_width+'px; height:'+trial.stim_height+'px; top:'+coords.y+'px; left:'+coords.x+'px;">'+
-            '</img>';
+        ctx.font         = text.font;
+        ctx.textAlign    = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle    = trial.colour;
 
-        var draggable = display_element.querySelectorAll('.jspsych-free-sort-draggable');
+        // calculate width of each text for hit-testing purposes
+        text.width       = ctx.measureText(text.text).width;
+        text.height      = parseInt(text.font);
 
-        draggable[0].addEventListener('mousedown', function(event){
+        // initial draw
+        var start_time = performance.now();
+        draw();
 
-            var elem = event.currentTarget;
-            var x = event.pageX - event.currentTarget.offsetLeft;
-            var y = event.pageY - event.currentTarget.offsetTop - window.scrollY;
+        // function to end trial when it is time
+        var end_trial = function() {
 
-            var mouseup = function(e) {
-                var xpos = parseInt(elem.style.top)
-                if (xpos < trial.y_resp_limits[0] || xpos > trial.y_resp_limits[1]) {
-                    let loc = xpos < trial.y_resp_limits[0] ? 'top' : 'bottom';
-                    end_trial(loc);
-                }
-            }
-            document.addEventListener('mouseup', mouseup);
+            end_rt = performance.now() - start_time;
+            end_loc = text.y < canvas.height/2 ? "top" : "bottom";
 
-            var mousemoveevent = function(e){
-                elem.style.top =  Math.min(trial.sort_area_height - trial.stim_height, Math.max(0,(e.clientY - y))) + 'px';
-                elem.style.left = Math.min(trial.sort_area_width  - trial.stim_width,  Math.max(0,(e.clientX - x))) + 'px';
-            }
-            document.addEventListener('mousemove', mousemoveevent);
-
-        });
-
-        var end_trial = function(loc){
-           
-            var end_time = performance.now();
-            var rt = end_time - start_time;
-
+            // gather the data to store for the trial
             var trial_data = {
-                "rt": rt,
-                "location": loc
+                "start_rt": start_rt,
+                "start_loc": start_loc,
+                "end_rt": end_rt,
+                "loc": end_loc,
+                "end_x": text.x,
+                "end_y": text.y
             };
 
-            // advance to next part
-            display_element.innerHTML = html; //"<canvas id='canvas'></canvas>";
+            // clear the display 
+            display_element.innerHTML = "<canvas id='canvas'></canvas>";
+
+            // move on to the next trial
             jsPsych.finishTrial(trial_data);
 
+        };
+
+        // dragging
+        function handleMouseUp(e){
+            e.preventDefault();
+            selectedText = false;
+        }
+        function handleMouseOut(e){
+            e.preventDefault();
+            selectedText = false;
+        }
+
+        function handleMouseDown(e){
+            e.preventDefault();
+            startX = parseInt(e.clientX - offsetX);
+            startY = parseInt(e.clientY - offsetY);
+            if(textHittest(startX, startY)){
+                selectedText = true;
+            }
+        }
+
+        function handleMouseMove(e){
+
+            if(selectedText === false){return;}
+
+            e.preventDefault();
+            mouseX=parseInt(e.clientX-offsetX);
+            mouseY=parseInt(e.clientY-offsetY);
+
+            // Put your mousemove stuff here
+            let dx = mouseX - startX;
+            let dy = mouseY - startY;
+
+            startX = mouseX;
+            startY = mouseY;
+
+            text.x += dx;
+            text.y += dy;
+
+            if (text.y < (trial.response_border[0] - (text.height/2)) || text.y > (trial.response_border[1] + (text.height/2))) {
+                end_trial();
+            } else {
+                draw();
+            }
+
+            if (!movement_initiated) {
+                start_rt  = performance.now() - start_time;
+                start_loc = text.y < canvas.height/2 ? "top" : "bottom";
+                movement_initiated = true;
+            }
+
+        }
+
+        // clear the canvas and draw text
+        function draw(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.rect(0, trial.response_border[0], canvas.width, trial.response_border[1] - trial.response_border[0]);
+            ctx.stroke();
+            ctx.fillText(text.text, text.x, text.y);
+        }
+
+        // test if x, y is inside the bounding box of the text
+        function textHittest(x, y) {
+            return(x >= text.x - text.width/2 && 
+                x <= text.x + text.width/2 &&
+                y >= text.y - text.height/2 && 
+                y <= text.y + text.height/2);
+        }
+
+        // end trial if trial_duration is set
+        if (trial.trial_duration !== null) {
+            jsPsych.pluginAPI.setTimeout(function() {
+                end_trial();
+            }, trial.trial_duration);
         }
 
     };
 
     return plugin;
+
 })();

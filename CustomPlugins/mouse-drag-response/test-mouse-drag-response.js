@@ -1,3 +1,5 @@
+// Stroop-like task with VPs required to drag words up/down according to colour
+
 function drawFixation() {
     let ctx = document.getElementById('canvas').getContext('2d');
     ctx.lineWidth = 5;
@@ -9,16 +11,6 @@ function drawFixation() {
     ctx.stroke(); 
 }
 
-// const fixation_cross = {
-//     type: 'html-keyboard-response',
-//     stimulus: '<div style="font-size:60px;">+</div>',
-//     choices: jsPsych.NO_KEYS,
-//     trial_duration: 500,
-//     post_trial_gap: 0,
-//     data: {stim: "fixation"},
-// };
-
-
 const fixation_cross = {
     type: 'static-canvas-keyboard-response',
     trial_duration: 500,
@@ -27,14 +19,13 @@ const fixation_cross = {
     func: drawFixation
 };
 
-var trial = {
+const trial = {
     type: 'mouse-drag-response',
-    stim_height: 80,
-    stim_width: 200,
-    sort_area_height: 960,
-    sort_area_width: 1280,
-    stimuli: jsPsych.timelineVariable('word'), 
+    canvas_border: "4px solid black",
+    word: jsPsych.timelineVariable('word'), 
+    colour: jsPsych.timelineVariable('colour'), 
 };
+
 
 
 const trial_timeline = {
@@ -43,25 +34,25 @@ const trial_timeline = {
         trial,
     ],
     timeline_variables:[
-        { word: 'img/cloud_blue.png'},
-        { word: 'img/cloud_green.png'},
-        { word: 'img/cloud_red.png'},
-        { word: 'img/cloud_yellow.png'},
-        { word: 'img/grass_blue.png'},
-        { word: 'img/grass_green.png'},
-        { word: 'img/grass_red.png'},
-        { word: 'img/grass_yellow.png'},
-        { word: 'img/sun_blue.png'},
-        { word: 'img/sun_green.png'},
-        { word: 'img/sun_red.png'},
-        { word: 'img/sun_yellow.png'},
-        { word: 'img/worm_blue.png'},
-        { word: 'img/worm_green.png'},
-        { word: 'img/worm_red.png'},
-        { word: 'img/worm_yellow.png'}
+        { word: 'cloud', colour: 'blue'},
+        { word: 'cloud', colour: 'green'},
+        { word: 'cloud', colour: 'red'},
+        { word: 'cloud', colour: 'orange'},
+        { word: 'grass', colour: 'blue'},
+        { word: 'grass', colour: 'green'},
+        { word: 'grass', colour: 'red'},
+        { word: 'grass', colour: 'orange'},
+        { word: 'sun',   colour: 'blue'},
+        { word: 'sun',   colour: 'green'},
+        { word: 'sun',   colour: 'red'},
+        { word: 'sun',   colour: 'orange'},
+        { word: 'worm',  colour: 'blue'},
+        { word: 'worm',  colour: 'green'},
+        { word: 'worm',  colour: 'red'},
+        { word: 'worm',  colour: 'orange'}
     ],
     randomize_order:true,
-    repetitions: 9
+    repetitions: 16
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -72,10 +63,7 @@ function genExpSeq() {
 
     let exp = [];
 
-    // just draw stuff
-    exp.push(fixation_cross);
     exp.push(trial_timeline);
-
     return exp;
 
 }
