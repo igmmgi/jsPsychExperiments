@@ -1,18 +1,19 @@
 // Stroop-like task with VPs required to drag words up/down according to colour
 
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 16,  // number of trials in first block (practice)
     nTrlsE: 64,  // number of trials in subsequent blocks 
-    nBlks: 4,
-    fixDur: 750,
-    fbDur: 750,
+    nBlks: 1,
+    fixDur: 1000,
+    fbDur: 1000,
     waitDur: 1000,
     iti: 1000,
-    tooFast: 150,
-    tooSlow: 5000,
     fbTxt: ["Correct", "Error", "Too Slow", "Too Fast"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
@@ -54,6 +55,8 @@ const words_lower_en = shuffle([
     "swamp", "tunnel"," underworld", "worm" 
 ]);
 
+const words = words_upper_de.concat(words_lower_de);
+
 const resp_mapping_location = ["top", "top", "bottom", "bottom"];
 const resp_mapping_color    = shuffle(["red", "blue", "green", "orange"]);
 const colours = ["red", "blue", "green", "orange"];
@@ -71,20 +74,13 @@ const task_instructions = {
 };
 
 function create_timeline(cpos) {
-    t = [];
-    for (word in words_upper_de) {
+    "use strict"
+    let t = [];
+    for (let i = 0; i < words.length; i++) {
         t.push({
-            "word": words_upper_de[word], 
+            "word": words[i], 
             "colour": colours[cpos], 
-            "word_loc": "up",
-            "resp_loc": resp_mapping_location[resp_mapping_color.findIndex(x => x === colours[cpos])]})
-        cpos = (cpos + 1) % 4;
-    }
-    for (word in words_lower_de) {
-        t.push({
-            "word": words_lower_de[word], 
-            "colour": colours[cpos], 
-            "word_loc": "down", 
+            "word_loc": (i < words_upper_de.length) ? "up" : "down",
             "resp_loc": resp_mapping_location[resp_mapping_color.findIndex(x => x === colours[cpos])]})
         cpos = (cpos + 1) % 4;
     }
@@ -92,6 +88,7 @@ function create_timeline(cpos) {
 }
 
 function drawFixation() {
+    "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     ctx.lineWidth = 5;
     ctx.moveTo(-25, 0);
@@ -103,6 +100,7 @@ function drawFixation() {
 }
 
 function drawFeedback() {
+    "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
     ctx.font = "80px Arial";
@@ -219,15 +217,19 @@ function genExpSeq() {
         exp.push(block_feedback);  // show previous block performance 
     }
     exp.push(debrief_en);
-    exp.push(fullscreen_on);
+    exp.push(fullscreen_off);
     return exp;
 
 }
 const EXP = genExpSeq();
+const filename = dirName + "data/" + expName + "_" + genVpNum();
 
 jsPsych.init({
     timeline: EXP,
     fullscreen_mode: true,
     show_progress_bar: false,
+    on_finish: function(){ 
+        saveData("/Common/write_data.php", filename, rows = {stim: "stroop"}); 
+    }
 });
 

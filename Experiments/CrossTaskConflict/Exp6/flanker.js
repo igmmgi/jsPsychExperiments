@@ -35,7 +35,7 @@ prms.respKeys = prms.mapping === 1 ? ["C", "M", "C", "M", 27] : ["C", "M", "M", 
 ////////////////////////////////////////////////////////////////////////
 const task_instructions = {
     type: "html-keyboard-response",
-    stimulus: "<h1 align='left'>Aufgabe:</h1>" +
+    stimulus: "<h1 style='text-align:center;'>Aufgabe:</h1>" +
     "<h2 style='text-align:center;'>Reagieren Sie auf die Ausrichtung des mittleren Pfeils oder des mittleren Buchstabe:</h2>" +
     "<h2 style='text-align:center;'>LINKS oder " + prms.stimMap[0] + " = C Taste</h2>" +
     "<h2 style='text-align:center;'>RECHTS oder " + prms.stimMap[1] + " = M Taste</h2>" +
