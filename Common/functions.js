@@ -79,7 +79,6 @@ function codeTrial() {
     "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
     let corrCode = 0;
-    console.log(dat)
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
     if (dat.key_press === corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
         corrCode = 1;  // correct
@@ -266,6 +265,4 @@ const debrief_de = {
     "<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>",
     response_ends_trial: true
 };
-
-
 
