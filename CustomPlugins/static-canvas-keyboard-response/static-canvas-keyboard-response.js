@@ -27,6 +27,13 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 default: [false],
                 description: 'Clear the screen'
             },
+            canvas_colour:{
+                type: jsPsych.plugins.parameterType.STRING,
+                array: false,
+                pretty_name: 'Colour',
+                default: "white",
+                description: 'Canvas colour.'
+            },
             canvas_size:{
                 type: jsPsych.plugins.parameterType.INT,
                 array: true,
@@ -81,16 +88,19 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
     }
 
     plugin.trial = function(display_element, trial){
-
         
         // setup canvas
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
         canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
+        canvas.fillStyle  = "green"; 
         canvas.width  = trial.canvas_size[0]; 
         canvas.height = trial.canvas_size[1];
         canvas.style.border = trial.canvas_border;
 
         let ctx = document.getElementById('canvas').getContext('2d');
+        
+        ctx.fillStyle = trial.canvas_colour;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         if (typeof trial.func === "function") {
             trial.func = [trial.func];
