@@ -1,4 +1,4 @@
-// Simon Task:
+// Stroop Task:
 // VPs respond to the colour of the presented stimulus using
 // left and right key responses.
 
