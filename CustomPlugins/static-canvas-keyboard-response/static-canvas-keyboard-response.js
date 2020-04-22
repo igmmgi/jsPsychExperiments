@@ -144,6 +144,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 "key_press": response.key
             };
 
+            console.log(trial_data)
             // clear the display 
             display_element.innerHTML = "<canvas id='canvas'></canvas>";
 
