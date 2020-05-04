@@ -106,6 +106,7 @@ function drawFeedback() {
     ctx.font = "80px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+    ctx.fillStyle = "black";
     ctx.fillText(prms.fbTxt[dat.corrCode], dat.end_x, dat.end_y); 
 }
 
