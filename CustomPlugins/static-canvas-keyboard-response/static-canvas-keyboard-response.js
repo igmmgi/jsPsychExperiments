@@ -92,13 +92,11 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         // setup canvas
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
         canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
-        canvas.fillStyle  = "green"; 
         canvas.width  = trial.canvas_size[0]; 
         canvas.height = trial.canvas_size[1];
         canvas.style.border = trial.canvas_border;
 
         let ctx = document.getElementById('canvas').getContext('2d');
-        
         ctx.fillStyle = trial.canvas_colour;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
@@ -144,7 +142,6 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 "key_press": response.key
             };
 
-            console.log(trial_data)
             // clear the display 
             display_element.innerHTML = "<canvas id='canvas'></canvas>";
 
@@ -178,9 +175,9 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         if (trial.stimulus_duration !== null) {
             jsPsych.pluginAPI.setTimeout(function() {
                 display_element.innerHTML = "<canvas id='canvas'></canvas>";
-                canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
-                canvas.width  = trial.canvas_size[0]; 
-                canvas.height = trial.canvas_size[1];
+                canvas.style        = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
+                canvas.width        = trial.canvas_size[0]; 
+                canvas.height       = trial.canvas_size[1];
                 canvas.style.border = trial.canvas_border;
             }, trial.stimulus_duration);
         }
@@ -197,9 +194,11 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
             jsPsych.pluginAPI.setTimeout(function() {
                 if (trial.clear_screen[i]) {
                     if (trial.translate_origin) {
-                        ctx.clearRect(-canvas.width/2, -canvas.height/2, ctx.canvas.width, ctx.canvas.height);
+                        ctx.fillStyle = trial.canvas_colour;
+                        ctx.fillRect(-canvas.width/2, -canvas-height/2, ctx.canvas.width, ctx.vanvas.height);
                     } else {
-                        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                        ctx.fillStyle = trial.canvas_colour;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
                     }
                 }
                 trial.func[i](trial.func_args[i]);

@@ -3,7 +3,7 @@
 // control, Cognition, 129, 637-651
 
 // Main finding: difficult to interpret sentences (i.e., high conflict) reduces
-// the compatibility effect if a subseuqent stroop trial
+// the compatibility effect if a subsequent stroop trial.
 //
 // Experiment Overview:
 // Stoop task with three ink colours (blue, green, yellow) with 6 words (blue, green,
@@ -65,6 +65,7 @@ const prms = {
     tooSlow: 1000,
     respKeysSentence: ["Space", 27],
     respKeysStroop: ["G", "H", "J", 27],
+    respKeysQuestion: ["T", "F", 27],
     fbTxt: ["Correct", "Error", "Too Slow", "Too Fast"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
@@ -176,6 +177,30 @@ const exp_sentences = [
     "The new salesman insulted the stranger and she left the store.",
 ]
 
+const filler_questions = [
+    "Question 1?",
+    "Question 2?",
+    "Question 3?",
+    "Question 4?",
+    "Question 5?",
+    "Question 6?",
+    "Question 7?",
+    "Question 8?",
+    "Question 9?",
+    "Question 10?",
+    "Question 11?",
+    "Question 12?",
+    "Question 13?",
+    "Question 14?",
+    "Question 15?",
+    "Question 16?",
+    "Question 17?",
+    "Question 18?",
+    "Question 19?",
+    "Question 20?",
+    "Question 21?",
+]
+
 ////////////////////////////////////////////////////////////////////////
 //                        jsPsych type stimuli                        //
 ////////////////////////////////////////////////////////////////////////
@@ -197,6 +222,13 @@ const iti = {
     func: function() {}
 };
 
+const iti_filler = {
+    type: 'static-canvas-keyboard-response',
+    trial_duration: 1500,
+    canvas_colour: "lightgrey",
+    canvas_border: "10px solid black",
+    func: function() {}
+};
 
 const stroop_stimulus = {
     type: 'static-canvas-keyboard-response',
@@ -212,6 +244,23 @@ const stroop_stimulus = {
         {
             word: jsPsych.timelineVariable('word'), 
             colour: jsPsych.timelineVariable('colour')
+        }
+    ]
+};
+
+
+const question_stimulus = {
+    type: 'static-canvas-keyboard-response',
+    translate_origin: true,
+    choices: prms["respKeysQuestion"],
+    canvas_colour: "lightgrey",
+    canvas_border: "10px solid black",
+    word: jsPsych.timelineVariable('word'), 
+    colour: jsPsych.timelineVariable('colour'),
+    func: drawQuestion,
+    func_args: [
+        {
+            question: jsPsych.timelineVariable('question'), 
         }
     ]
 };
@@ -242,7 +291,7 @@ const fullscreen_off = {
 function create_sentence_sequence(sentence) {
     const txt = sentence.split(' ');
     let seq = [];
-    for (var i = -1; i < txt.length; i++) {
+    for (let i = -1; i < txt.length; i++) {
         seq.push({sentence: sentence, word_num: i, length: txt.length});
     }
     return seq;
@@ -260,6 +309,20 @@ function create_sentence_items(sentences) {
     return shuffle(items);
 }
 
+
+function create_question_items(questions) {
+    let items = [];
+    for (let i = 0; i < sentences.length; i++) {
+        const tmp = {
+            timeline: [moving_window_text],
+            timeline_variables: create_sentence_sequence(sentences[i]),
+        }
+        items.push(tmp);
+    }
+    return shuffle(items);
+}
+
+
 function create_stroop_items(nreps) {
     let items = [];
     for (let i = 0; i < nreps; i++) {
@@ -276,7 +339,7 @@ function create_stroop_items(nreps) {
 
 function add_fix_iti(items) {
     let seq = []
-    for (var i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         seq.push(fixation_cross)
         seq.push(items[i])
         seq.push(iti)
@@ -307,13 +370,22 @@ function drawStroop(args) {
     ctx.fillText(args["word"], 0, 0); 
 }
 
+function drawQuestion(args) {
+    let ctx = document.getElementById('canvas').getContext('2d');
+    ctx.font         = "50px monospaced";
+    ctx.textAlign    = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle    = "black";
+    ctx.fillText(args["question"], 0, 0); 
+}
+
 ////////////////////////////////////////////////////////////////////////
 //                     Create required timelines                      //
 ////////////////////////////////////////////////////////////////////////
 // Create items needed for each phase of the experiment
 // The timeline of items are shuffled with the addition of a fixation 
-const prac_items_stroop     = add_fix_iti(create_stroop_items(2))
-const baseline_items_stroop = add_fix_iti(create_stroop_items(25))
+const prac_items_stroop = add_fix_iti(create_stroop_items(2))
+const base_items_stroop = add_fix_iti(create_stroop_items(25))
 
 // just take the first item as the item form the moving window familiarisation routine
 const prac_items_sentences  = create_sentence_items(prac_sentences)
@@ -321,20 +393,27 @@ const prac_items_sentences1 = add_fix_iti(prac_items_sentences.slice(0, 1))
 const prac_items_sentences2 = prac_items_sentences.slice(1)
 const prac_items_combined   = add_fix_iti(shuffle(prac_items_sentences2.concat(create_stroop_items(3))))
 
+const exp_items_sentences = create_sentence_items(exp_sentences)
+const exp_items_stroop    = create_stroop_items(20)
+const exp_items_combined  = add_fix_iti(shuffle(exp_items_sentences.concat(exp_items_stroop)))
+
 
 const prac_trials_stroop = {
     timeline: prac_items_stroop
 }
-const baseline_trials_stroop = {
-    timeline: baseline_items_stroop
+const base_trials_stroop = {
+    timeline: base_items_stroop
 }
-const practice_trial_sentence = {
+const prac_trial_sentence = {
     timeline: prac_items_sentences1
 }
-const practice_trial_combined = {
+const prac_trial_combined = {
     timeline: prac_items_combined
 }
 
+const exp_trial_combined = {
+    timeline: exp_items_combined
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -346,12 +425,13 @@ function genExpSeq() {
     //exp.push(fullscreen_on);
    
     // Practice/training phase of experiment
-    exp.push(prac_trials_stroop);
-    exp.push(baseline_trials_stroop);
-    exp.push(practice_trial_sentence);
-    exp.push(practice_trial_combined);
+    // exp.push(prac_trials_stroop);
+    // exp.push(base_trials_stroop);
+    // exp.push(prac_trial_sentence);
+    // exp.push(prac_trial_combined);
 
     // Experiment
+    exp.push(exp_trial_combined);
     
     return exp;
 
