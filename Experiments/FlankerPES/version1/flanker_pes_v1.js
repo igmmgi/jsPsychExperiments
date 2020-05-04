@@ -3,10 +3,11 @@
 // ignoring the surrounding letters using key responses ("X" and "M"). 
 // AAEAA (comp) vs. AAHAA (incomp)
 // Flanker != Target (e.g., no AAAAA, TTTTT)
-// Feedback is provided in colour "Correct" in green, "Error" in red
-// On approx 20% of trials feedback colour is manipulated. For example, 
-// when the participant responds correctly, they are provided with the
-// feedback "Correct" but it is in red.
+// Feedback (Correct, Error, Too Slow, Too Fast) is provided in 
+//  colour "Correct" in green, "Error","Too Slow", "Too Fast" in red
+// On approx 20% of trials correct feedback colour is manipulated. For example, 
+//  when the participant responds correctly, they are provided with the
+//  feedback "Correct" but it is in red.
 
 const expName = getFileName();
 const dirName = getDirName();
@@ -59,7 +60,7 @@ const task_instructions1 = {
               "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
               "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
               "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    timing_post_trial: prms.waitDur
+    timing_post_trial: prms.waitDur,
 };
 
 const task_instructions2 = {
@@ -84,11 +85,11 @@ function drawFixation() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     ctx.lineWidth = 5;
-    ctx.moveTo(-25, 0);
-    ctx.lineTo( 25, 0);
+    ctx.moveTo(-20, 0);
+    ctx.lineTo( 20, 0);
     ctx.stroke(); 
-    ctx.moveTo(0, -25);
-    ctx.lineTo(0,  25);
+    ctx.moveTo(0, -20);
+    ctx.lineTo(0,  20);
     ctx.stroke(); 
 }
 
@@ -317,6 +318,23 @@ const alphaNum = {
     "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
 };
 
+const fullscreen_on = {
+    type: 'fullscreen',
+    fullscreen_mode: true,
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
+}
+
+const fullscreen_off = {
+    type: 'fullscreen',
+    fullscreen_mode: false,
+    on_start: function() {
+        $('body').css('cursor', 'default')
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -324,7 +342,7 @@ const alphaNum = {
         "use strict";
 
         let exp = [];
-
+        exp.push(fullscreen_on);
         exp.push(welcome_de);
         exp.push(task_instructions1);
         exp.push(task_instructions2);
@@ -335,17 +353,23 @@ const alphaNum = {
             exp.push(blk_timeline);    // trials within a block
             exp.push(block_feedback);  // show previous block performance 
         }
-        exp.push(debrief_en);
+        exp.push(debrief_de);
+        exp.push(alphaNum);
         return exp;
 
     }
 const EXP = genExpSeq();
 const filename = dirName + "data/" + expName + "_" + genVpNum();
 
+
 jsPsych.init({
     timeline: EXP,
-    fullscreen: false,
+    fullscreen: true,
     show_progress_bar: false,
+    exclusions: {
+        min_width:1280,
+        min_height:960,
+    },
     on_finish: function(){ 
         saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 
     }

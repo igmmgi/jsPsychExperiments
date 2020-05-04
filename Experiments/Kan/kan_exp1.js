@@ -422,7 +422,7 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
-    //exp.push(fullscreen_on);
+    exp.push(fullscreen_on);
    
     // Practice/training phase of experiment
     // exp.push(prac_trials_stroop);
