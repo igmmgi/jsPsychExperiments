@@ -96,6 +96,7 @@ const fixation_cross = {
     canvas_colour: "lightgrey",
     trial_duration: 500,
     translate_origin: true,
+    canvas_size: [960, 720],
     canvas_border: "4px solid black",
     func: drawFixation
 };
@@ -127,7 +128,7 @@ const trial_feedback = {
     canvas_colour: "lightgrey",
     trial_duration: 500,
     translate_origin: true,
-    canvas_size: [960 720],
+    canvas_size: [960, 720],
     canvas_border: "4px solid black",
     func: drawFeedback
 };
@@ -278,7 +279,7 @@ const flanker_stimulus = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: "lightgrey",
     canvas_border: "4px solid black",
-    canvas_size: [960 720],
+    canvas_size: [960, 720],
     trial_duration: prms.tooSlow,
     translate_origin: true,
     stimulus_onset: [0, 100],
