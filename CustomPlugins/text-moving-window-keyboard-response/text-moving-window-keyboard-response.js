@@ -24,7 +24,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
                 type: jsPsych.plugins.parameterType.INT,
                 array: false,
                 pretty_name: 'LineHeight',
-                default: 50,
+                default: 30,
                 description: 'Line Height'
             },
             canvas_colour:{
@@ -83,7 +83,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
         ctx.translate(canvas.width/2, canvas.height/2);  // make center (0, 0)
 
         // basic font style
-        ctx.font         = "50px monospace";
+        ctx.font         = "20px monospace";
         ctx.textAlign    = "left";
         ctx.textBaseline = "middle";
         ctx.fillStyle    = "black";

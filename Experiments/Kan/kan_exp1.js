@@ -269,6 +269,7 @@ const moving_window_text = {
     type: 'text-moving-window-keyboard-response',
     sentence: jsPsych.timelineVariable('sentence'),
     word_number: jsPsych.timelineVariable('word_num'),
+    max_width: 1000,
     choices: prms["respKeysSentence"],
     canvas_colour: "lightgrey",
     canvas_border: "10px solid black",

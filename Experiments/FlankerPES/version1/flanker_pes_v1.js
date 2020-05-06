@@ -17,12 +17,12 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 48,  
+    nTrlsP: 48, // determined by number of stimulus combinations
     nTrlsE: 96,
-    nBlks: 1,
+    nBlks: 11,
     flankerDur: 150,
-    fbDur: 200,
-    waitDur: 750,
+    fbDur: 250,
+    waitDur: 1000,
     iti: 1000,
     tooFast:  250,   //  100 ms in total (150 ms flanker duration)
     tooSlow: 1150,   // 1000 ms in total (150 ms flanker duration)
@@ -84,12 +84,12 @@ const task_instructions2 = {
 function drawFixation() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    ctx.lineWidth = 5;
-    ctx.moveTo(-20, 0);
-    ctx.lineTo( 20, 0);
+    ctx.lineWidth = 2;
+    ctx.moveTo(-15, 0);
+    ctx.lineTo( 15, 0);
     ctx.stroke(); 
-    ctx.moveTo(0, -20);
-    ctx.lineTo(0,  20);
+    ctx.moveTo(0, -15);
+    ctx.lineTo(0,  15);
     ctx.stroke(); 
 }
 
@@ -98,6 +98,7 @@ const fixation_cross = {
     canvas_colour: "lightgrey",
     trial_duration: 500,
     translate_origin: true,
+    canvas_size: [960 720],
     canvas_border: "4px solid black",
     func: drawFixation
 };
@@ -129,6 +130,7 @@ const trial_feedback = {
     canvas_colour: "lightgrey",
     trial_duration: 500,
     translate_origin: true,
+    canvas_size: [960 720],
     canvas_border: "4px solid black",
     func: drawFeedback
 };
@@ -278,6 +280,7 @@ const timeline = generate_timeline_variables(stimuli);
 const flanker_stimulus = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: "lightgrey",
+    canvas_size: [960 720],
     canvas_border: "4px solid black",
     trial_duration: prms.tooSlow,
     translate_origin: true,
@@ -367,8 +370,8 @@ jsPsych.init({
     fullscreen: true,
     show_progress_bar: false,
     exclusions: {
-        min_width:1280,
-        min_height:960,
+        min_width:960,
+        min_height:720,
     },
     on_finish: function(){ 
         saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 
