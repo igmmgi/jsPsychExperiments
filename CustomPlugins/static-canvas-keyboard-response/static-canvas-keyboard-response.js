@@ -91,15 +91,16 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         
         // setup canvas
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
-        canvas.style = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
-        canvas.width  = trial.canvas_size[0]; 
-        canvas.height = trial.canvas_size[1];
+
+        canvas.style        = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
+        canvas.width        = trial.canvas_size[0]; 
+        canvas.height       = trial.canvas_size[1];
         canvas.style.border = trial.canvas_border;
 
         let ctx = document.getElementById('canvas').getContext('2d');
         ctx.fillStyle = trial.canvas_colour;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
+
         if (typeof trial.func === "function") {
             trial.func = [trial.func];
         }
@@ -195,7 +196,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 if (trial.clear_screen[i]) {
                     if (trial.translate_origin) {
                         ctx.fillStyle = trial.canvas_colour;
-                        ctx.fillRect(-canvas.width/2, -canvas-height/2, ctx.canvas.width, ctx.vanvas.height);
+                        ctx.fillRect(-canvas.width/2, -canvas.height/2, ctx.canvas.width, ctx.canvas.height);
                     } else {
                         ctx.fillStyle = trial.canvas_colour;
                         ctx.fillRect(0, 0, canvas.width, canvas.height);

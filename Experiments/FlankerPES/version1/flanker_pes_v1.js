@@ -9,6 +9,16 @@
 //  when the participant responds correctly, they are provided with the
 //  feedback "Correct" but it is in red.
 
+////////////////////////////////////////////////////////////////////////
+//                         Canvas Properties                          //
+////////////////////////////////////////////////////////////////////////
+const canvas_colour = "rgba(200, 200, 200, 1)";
+const canvas_size = [960, 720];
+const canvas_border = "5px solid black";
+
+////////////////////////////////////////////////////////////////////////
+//                             Experiment                             //
+////////////////////////////////////////////////////////////////////////
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
@@ -19,11 +29,11 @@ const vpNum = genVpNum();
 const prms = {
     nTrlsP: 48, // determined by number of stimulus combinations
     nTrlsE: 96,
-    nBlks: 11,
-    flankerDur: 150,
-    fbDur: 250,
+    nBlks: 5, //13,
+    fixDur: 500,
+    flankerDur: 100,
+    fbDur: 300,
     waitDur: 1000,
-    iti: 1000,
     tooFast:  250,   //  100 ms in total (150 ms flanker duration)
     tooSlow: 1150,   // 1000 ms in total (150 ms flanker duration)
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
@@ -47,35 +57,41 @@ if (prms.respMapping === 1) {
 ////////////////////////////////////////////////////////////////////////
 let respText = ""
 if (prms.respMapping === 1) {
-    respText = "<h3 align='left'>Handelt es sich bei dem mittleren Buchstaben um einen <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h2>" +
-               "<h3 align='left'>Handelt es sich bei dem mittleren Buchstaben um einen <b>Konsonanten (B, H, T oder S)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h2>";
+    respText = "<h4 align='left'>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
+               "<h4 align='left'>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
 } else {
-    respText = "<h3 align='left'>Handelt es sich bei dem mittleren Buchstaben um einen <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h2>" +
-               "<h3 align='left'>Handelt es sich bei dem mittleren Buchstaben um einen <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste M</b> (rechten Zeigefinger).</h2>";
+    respText = "<h4 align='left'>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
+               "<h4 align='left'>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
 }
 
 const task_instructions1 = {
-    type: "html-keyboard-response",
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     stimulus: "<h2 align='center'>Willkommen bei unserem Experiment:</h2><br>" +
               "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
               "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
               "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    timing_post_trial: prms.waitDur,
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const task_instructions2 = {
-    type: "html-keyboard-response",
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     stimulus: 
-    "<h1 align='center'>Aufgabe:</h1><br>" +
-    "<h3 align='left'>Dieses Experiment besteht aus insgesamt 11 Blöcken. Jeder Block besteht wiederum aus mehreren Durchgängen.</h3>" +
-    "<h3 align='left'>Sie werden in jedem Durchgang des Experiments eine Reihe von 5 Buchstaben sehen (z.B. BBHBB, AABAA).</h3>" +
-    "<h3 align='left'>Bitte reagieren Sie immer auf den Buchstaben in der Mitte, die anderen Buchstaben sollen Sie möglichst ignorieren.</h3>" +
+    "<h2 align='center'>Aufgabe:</h2><br>" +
+    "<h4 align='left'>Sie werden 5 Buchstaben sehen (z.B. BBHBB, AABAA).</h4>" +
+    "<h4 align='left'>Bitte reagieren Sie nur auf den mittleren Buchstaben.</h4>" +
     respText +
-    "<h3 align='left'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h3>" +
-    "<h3 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h3>" +
-    "<h3 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h3><br>" +
+    "<h4 align='left'>Reagieren Sie bitte so schnell und so akkurat wie möglich.</h4>" +
+    "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
+    "<h4 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h4><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    timing_post_trial: prms.waitDur
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -95,11 +111,12 @@ function drawFixation() {
 
 const fixation_cross = {
     type: 'static-canvas-keyboard-response',
-    canvas_colour: "lightgrey",
-    trial_duration: 500,
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    trial_duration: prms.fixDur,
     translate_origin: true,
-    canvas_size: [960, 720],
-    canvas_border: "4px solid black",
+    response_ends_trial: false,
     func: drawFixation
 };
 
@@ -127,19 +144,22 @@ function drawFlanker(args) {
 
 const trial_feedback = {
     type: 'static-canvas-keyboard-response',
-    canvas_colour: "lightgrey",
-    trial_duration: 500,
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    trial_duration: prms.fbDur,
     translate_origin: true,
-    canvas_size: [960, 720],
-    canvas_border: "4px solid black",
+    response_ends_trial: false,
     func: drawFeedback
 };
 
 const block_feedback = {
-    type: 'html-keyboard-response',
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     stimulus: blockFeedbackTxtPES,
     response_ends_trial: true,
-    post_trial_gap: prms.waitDur,
     data: { stim: "block_feedback" },
 };
 
@@ -223,7 +243,7 @@ function codeTrialPES() {
         corrCode   = 1;
         corrColour = "green";
         if (prms.cBlk > 1 && false_feedback_allowed) {  // only give false feedback after practice blocks
-            corrColour = (Math.random() >= 0.8) ? "red" : "green";
+            corrColour = (Math.random() >= 0.8) ? "blue" : "green";
         }
     } else if (data.key_press !== corrKeyNum && data.rt > prms.tooFast && data.rt < prms.tooSlow) {
         corrCode   = 2;
@@ -279,12 +299,14 @@ const timeline = generate_timeline_variables(stimuli);
 
 const flanker_stimulus = {
     type: 'static-canvas-keyboard-response',
-    canvas_colour: "lightgrey",
-    canvas_size: [960, 720],
-    canvas_border: "4px solid black",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     trial_duration: prms.tooSlow,
     translate_origin: true,
-    stimulus_onset: [0, 100],
+    stimulus_onset: [0, prms.flankerDur],
+    response_ends_trial: true,
+    choices: prms.respKeys,
     func: [drawFlanker, drawFlanker],
     func_args:[
         {"text": jsPsych.timelineVariable("flankerArray")},
@@ -312,7 +334,10 @@ const trial_timeline = {
 const randomString = generateRandomString(16);
 
 const alphaNum = {
-    type: 'html-keyboard-response',
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     stimulus: "<h1>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h1>" +
     "<h1>benötigen, kopieren Sie den folgenden zufällig generierten Code</h1>" +
     "<h1>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h1>" +
@@ -324,9 +349,6 @@ const alphaNum = {
 const fullscreen_on = {
     type: 'fullscreen',
     fullscreen_mode: true,
-    on_finish: function() {
-        $('body').css('cursor', 'none'); 
-    },
 }
 
 const fullscreen_off = {
@@ -347,6 +369,7 @@ const fullscreen_off = {
         let exp = [];
         exp.push(fullscreen_on);
         exp.push(welcome_de);
+        exp.push(vpInfoForm);
         exp.push(task_instructions1);
         exp.push(task_instructions2);
 
@@ -358,6 +381,8 @@ const fullscreen_off = {
         }
         exp.push(debrief_de);
         exp.push(alphaNum);
+        exp.push(fullscreen_off);
+
         return exp;
 
     }
@@ -370,8 +395,8 @@ jsPsych.init({
     fullscreen: true,
     show_progress_bar: false,
     exclusions: {
-        min_width:960,
-        min_height:720,
+        min_width:canvas_size[0],
+        min_height:canvas_size[1],
     },
     on_finish: function(){ 
         saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 

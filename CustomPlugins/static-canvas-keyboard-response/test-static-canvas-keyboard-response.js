@@ -89,10 +89,11 @@ const images = loadImages(["../../img/h1.bmp", "../../img/h2.bmp"]);
 
 const image_grid = {
     type: 'static-canvas-keyboard-response',
-    trial_duration: 500,
+    trial_duration: 5000,
     translate_origin: true,
     canvas_border: "10px solid blue",
-    stimulus_onset: 0,
+    stimulus_onset: [0, 200, 400, 600],
+    clear_screen: [0, 1, 0, 1],
     func: [drawImage, drawImage, drawImage, drawImage],
     func_args: [
         {"imageNum": 0, "x": -400, "y":  200, "h": 200, "w": 200},
@@ -165,19 +166,19 @@ function genExpSeq() {
     let exp = [];
 
     // just draw stuff
-    exp.push(fixation_cross);
-    exp.push(circle);
-    exp.push(fixation_cross);
-    exp.push(text);
-    exp.push(fixation_cross);
-    exp.push(combined);
-    exp.push(combined_sequential);
-    exp.push(fixation_cross);
+    //exp.push(fixation_cross);
+    //exp.push(circle);
+    //exp.push(fixation_cross);
+    //exp.push(text);
+    //exp.push(fixation_cross);
+    //exp.push(combined);
+    //exp.push(combined_sequential);
+    //exp.push(fixation_cross);
     exp.push(image_grid);
-    exp.push(fixation_cross);
-    exp.push(image_sequential);
-    exp.push(image_timeline1);
-    exp.push(image_timeline2);
+    //exp.push(fixation_cross);
+    //exp.push(image_sequential);
+    //exp.push(image_timeline1);
+    //exp.push(image_timeline2);
 
     return exp;
 
