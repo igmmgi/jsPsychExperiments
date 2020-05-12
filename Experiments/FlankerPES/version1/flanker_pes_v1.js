@@ -90,7 +90,8 @@ const task_instructions2 = {
     respText +
     "<h4 align='left'>Reagieren Sie bitte so schnell und so akkurat wie möglich.</h4>" +
     "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
-    "<h4 align='left'>Das Experiment besteht aus 13 Blöcken. Nach jedem Block haben Sie die Möglichkeit, eine kleine Pause zu machen.</h4><br>" +
+    "<h4 align='left'>Das Experiment besteht aus 13 Blöcken.</h4>" +
+    "<h4 align='left'>Nach jedem Block haben Sie die Möglichkeit, eine kleine Pause zu machen.</h4><br><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
