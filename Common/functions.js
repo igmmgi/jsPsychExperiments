@@ -41,7 +41,7 @@ function getVersionNumber(vpNumber, numberOfVersions) {
     return ((vpNumber - 1) % numberOfVersions) + 1;
 }
 
-function checkVpInfoForm() {
+function checkVpInfoForm_en() {
     // get age, gender, handedness and VPs consent
     "use strict";
     let age = document.getElementById("age").value;
@@ -51,6 +51,8 @@ function checkVpInfoForm() {
         gender = "male";
     } else if ($("#female").is(":checked")) {
         gender = "female";
+    } else if ($("#divers").is(":checked")) {
+        gender = "na";
     }
 
     let hand = "";
@@ -74,6 +76,46 @@ function checkVpInfoForm() {
     }
 
 }
+
+function checkVpInfoForm_de() {
+    // get age, gender, handedness and VPs consent
+    "use strict";
+    let age = document.getElementById("age").value;
+
+    let gender = "";
+    if ($("#male").is(":checked")) {
+        gender = "male";
+    } else if ($("#female").is(":checked")) {
+        gender = "female";
+    } else if ($("#divers").is(":checked")) {
+        gender = "na";
+    }
+
+    let hand = "";
+    if ($("#left").is(":checked")) {
+        hand = "left";
+    } else if ($("#right").is(":checked")) {
+        hand = "right";
+    }
+
+    let consent = false;
+    if ($("#consent_checkbox").is(":checked")) {
+        consent = true;
+    }
+
+    if (consent && age !== "" && gender !== "" && hand !== "") {
+        jsPsych.data.addProperties({age: age, gender: gender, handedness: hand});
+        return true;
+    } else {
+        window.alert("Bitte beantworten Sie alle Fragen!");
+        return false;
+    }
+
+}
+
+
+
+
 
 function codeTrial() {
     "use strict";
@@ -115,6 +157,22 @@ function blockFeedbackTxt(filter_options) {
     prms.cBlk += 1;
     return blockFbTxt;
 }
+
+function blockFeedbackTxt_de(filter_options) {
+    "use strict";
+    let dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk});
+    let nTotal = dat.count();
+    let nError = dat.select("corrCode").values.filter(function (x) { return x !== 1; }).length;
+    dat = jsPsych.data.get().filter({...filter_options, corrCode: 1});
+    let blockFbTxt = "<H1>Block: " + prms.cBlk + " von " + prms.nBlks + "</H1>" +
+        "<H1>Mittlere Reaktionszeit: " + Math.round(dat.select("rt").mean()) + " ms </H1>" +
+        "<H1>Fehlerrate: " + Math.round((nError / nTotal) * 100) + " %</H1>" +
+        "<H2>Drücken Sie eine beliebige Taste, um fortzufahren!</H2>";
+    prms.cBlk += 1;
+    return blockFbTxt;
+}
+
+
 
 function saveData(url, filename, rows = {}, 
                   colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed']){
@@ -246,11 +304,18 @@ const screenInfo = {
     timing_post_trial: 50
 };
 
-const vpInfoForm = {
+const vpInfoForm_en = {
     type: "external-html",
-    url: "/Common/vpInfoForm.html",
+    url: "/Common/vpInfoForm_en.html",
     cont_btn: "start",
-    check_fn: checkVpInfoForm
+    check_fn: checkVpInfoForm_en
+};
+
+const vpInfoForm_de = {
+    type: "external-html",
+    url: "/Common/vpInfoForm_de.html",
+    cont_btn: "start",
+    check_fn: checkVpInfoForm_de
 };
 
 const debrief_en = {

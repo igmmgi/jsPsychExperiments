@@ -90,7 +90,7 @@ const task_instructions2 = {
     respText +
     "<h4 align='left'>Reagieren Sie bitte so schnell und so akkurat wie möglich.</h4>" +
     "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
-    "<h4 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h4><br>" +
+    "<h4 align='left'>Das Experiment besteht aus 13 Blöcken. Nach jedem Block haben Sie die Möglichkeit, eine kleine Pause zu machen.</h4><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -338,12 +338,14 @@ const alphaNum = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h1>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h1>" +
-    "<h1>benötigen, kopieren Sie den folgenden zufällig generierten Code</h1>" +
-    "<h1>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h1>" +
+    stimulus: "<h2 align='left'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
+    "<h2 align='left'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
+    "<h2 align='left'Code und senden Sie diesen</h2>" +
+    "<h2 align='left'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
+    "<h2 align='left'>per Email an:</h2></br>" +
     "<h2>XXX@XXX</h2>" +
-    "<h1>Code:" + randomString + "</h1>" +
-    "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
+    "<h2>Code: " + randomString + "</h2></br></br>" +
+    "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
 };
 
 const fullscreen_on = {
@@ -369,7 +371,7 @@ const fullscreen_off = {
         let exp = [];
         exp.push(fullscreen_on);
         exp.push(welcome_de);
-        exp.push(vpInfoForm);
+        exp.push(vpInfoForm_de);
         exp.push(task_instructions1);
         exp.push(task_instructions2);
 
