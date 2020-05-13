@@ -20,6 +20,13 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
                 default: 1000,
                 description: 'Maximum width of the sentence before line-break'
             },
+            font: {
+                type: jsPsych.plugins.parameterType.STRING,
+                array: false,
+                pretty_name: 'Font',
+                default: "40px monospace",
+                description: 'Font'
+            },
             line_height: {
                 type: jsPsych.plugins.parameterType.INT,
                 array: false,
@@ -83,7 +90,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
         ctx.translate(canvas.width/2, canvas.height/2);  // make center (0, 0)
 
         // basic font style
-        ctx.font         = "20px monospace";
+        ctx.font         = trial.font;
         ctx.textAlign    = "left";
         ctx.textBaseline = "middle";
         ctx.fillStyle    = "black";

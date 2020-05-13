@@ -58,7 +58,7 @@ function drawFixation() {
 function drawStroop(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    ctx.font = "30px Arial";
+    ctx.font = "30px monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = args["fontcolour"]; 

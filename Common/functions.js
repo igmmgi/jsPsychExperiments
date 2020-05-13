@@ -114,9 +114,6 @@ function checkVpInfoForm_de() {
 }
 
 
-
-
-
 function codeTrial() {
     "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
