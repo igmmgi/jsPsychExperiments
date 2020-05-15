@@ -37,7 +37,7 @@ const prms = {
     respColours: ["red", "green"],
     fixWidth: 3,
     fixSize: 15,
-    fbSize: "30px monospace"
+    fbSize: "30px monospace",
     respKeys: [],
 };
 

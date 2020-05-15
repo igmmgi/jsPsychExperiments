@@ -249,8 +249,6 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
-
-    let exp = [];
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     // exp.push(vpInfoForm_de);
