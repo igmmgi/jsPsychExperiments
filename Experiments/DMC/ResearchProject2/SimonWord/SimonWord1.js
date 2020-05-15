@@ -261,7 +261,7 @@ const trial_timeline = {
         { cue: "LIFE", word: "Algen",     size: "small", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysLife[0]},
         { cue: "LIFE", word: "Kamel",     size: "large", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysLife[0]},
         { cue: "LIFE", word: "Armband",   size: "small", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysLife[1]},
-        { cue: "LIFE", word: "Badewanne"  size: "large", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "LIFE", word: "Badewanne", size: "large", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysLife[1]},
         { cue: "LIFE", word: "Meise",     size: "small", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysLife[0]},
         { cue: "LIFE", word: "Delhin",    size: "large", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysLife[0]},
         { cue: "LIFE", word: "Groschen",  size: "small", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysLife[1]},

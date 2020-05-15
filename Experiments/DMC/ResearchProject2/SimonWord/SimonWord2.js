@@ -289,7 +289,7 @@ const trial_timeline = {
         { cue: "red",  word: "Algen",     size: "small", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
         { cue: "red",  word: "Kamel",     size: "large", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
         { cue: "red",  word: "Armband",   size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "red",  word: "Badewanne"  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
+        { cue: "red",  word: "Badewanne", size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
         { cue: "red",  word: "Meise",     size: "small", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
         { cue: "red",  word: "Delhin",    size: "large", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
         { cue: "red",  word: "Groschen",  size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
