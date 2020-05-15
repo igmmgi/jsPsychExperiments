@@ -27,7 +27,7 @@ const prms = {
     nTrlsE: 64,  // number of trials in subsequent blocks 
     nBlks: 11,
     fixDur: 500,
-    fbDur: [500, 1000],
+    fbDur: [500, 1000, 1000, 1000],
     cueDur: 500,
     iti: 500,
     tooFast:    0,
@@ -76,6 +76,9 @@ const task_instructions1 = {
     "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
     "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const task_instructions2 = {
@@ -159,7 +162,6 @@ function drawWord(args) {
             ctx.fillText(args["cue"], 0, 0);
             break;
     }
- 
 }
 
 const word_stimulus = {

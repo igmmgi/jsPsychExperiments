@@ -10,7 +10,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size = [960, 720];
+const canvas_size   = [960, 720];
 const canvas_border = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -24,44 +24,40 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 4,  // number of trials in first block (practice)
-    nTrlsE: 4,  // number of trials in subsequent blocks 
+    nTrlsP: 32,  // number of trials in first block (practice)
+    nTrlsE: 96,  // number of trials in subsequent blocks 
     nBlks: 1,
-    fixDur: 750,
-    flankDur: 100,
-    fbDur: 750,
-    waitDur: 1000,
+    fixDur: 500,
+    flankDur: 200,
+    fbDur: [500, 1000, 1000, 1000],
     iti: 1000,
-    tooFast: 150,
-    tooSlow: 1500,
+    tooFast:    0,  //  200 ms
+    tooSlow: 1300,  // 1500 ms
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    respMapping: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
     respKeys: [],
-    respDir: []
+    fixWidth: 3,
+    fixSize: 15,
+    flankSize: "50px monospace",
+    fbSize: "30px monospace"
 };
 
-if (prms.respMapping === 1) {
+const versionNumber = getVersionNumber(vpNum, 2)
+let respText = ""
+if (versionNumber === 1) {
     prms.respKeys = ["D", "J", 27];
-    prms.respDir  = ["left", "right", 27];
+    respText      = "<h4 align='center'><b>H = Taste D</b> (linken Zeigefinger).</h4>" +
+                    "<h4 align='center'><b>S = Taste J</b> (rechten Zeigefinger).</h4>";
 } else {
     prms.respKeys = ["J", "D", 27];
-    prms.respDir  = ["right", "left", 27];
+    respText      = "<h4 align='center'><b>S = Taste D</b> (linken Zeigefinger).</h4>" +
+                    "<h4 align='center'><b>H = Taste J</b> (rechten Zeigefinger).</h4>";
 }
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-let respText = ""
-if (prms.respMapping === 1) {
-    respText = "<h4 align='left'><b>H</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='left'><b>S</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
-} else {
-    respText = "<h4 align='left'><b>S</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='left'><b>H</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
-}
-
 const task_instructions1 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
@@ -71,9 +67,10 @@ const task_instructions1 = {
               "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
               "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
               "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    timing_post_trial: prms.waitDur,
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
-
 
 const task_instructions2 = {
     type: "html-keyboard-response-canvas",
@@ -81,16 +78,16 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h2 align='center'>Aufgabe:</h2><br>" +
-    "<h4 align='left'>Dieses Experiment besteht aus insgesamt 13 Blöcken. Jeder Block besteht wiederum aus mehreren Durchgängen.</h4>" +
-    "<h4 align='left'>Sie werden in jedem Durchgang des Experiments eine Reihe von 5 Buchstaben sehen (z.B. HHHHH, HHSHH).</h4>" +
-    "<h4 align='left'>Bitte reagieren Sie immer auf den Buchstaben in der Mitte, die anderen Buchstaben sollen Sie möglichst ignorieren.</h4>" +
+    "<h2 align='center'>Aufgabe:</h2>" +
+    "<h4 align='left'>Dieses Experiment besteht aus insgesamt X Blöcken.</h4>" +
+    "<h4 align='left'>Jeder Block besteht wiederum aus mehreren Durchgängen.</h4>" +
+    "<h4 align='left'>Sie werden in jedem Durchgang eine Reihe von 5 Buchstaben sehen (z.B. HHHHH, HHSHH).</h4>" +
+    "<h4 align='left'>Bitte reagieren Sie immer auf den Buchstaben in der Mitte.</h4>" +
     respText +
     "<h4 align='left'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
     "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
     "<h4 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h4><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    timing_post_trial: prms.waitDur
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -99,12 +96,12 @@ const task_instructions2 = {
 function drawFixation() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    ctx.lineWidth = 2;
-    ctx.moveTo(-15, 0);
-    ctx.lineTo( 15, 0);
+    ctx.lineWidth = prms.fixWidth;
+    ctx.moveTo(-prms.fixSize, 0);
+    ctx.lineTo( prms.fixSize, 0);
     ctx.stroke(); 
-    ctx.moveTo(0, -15);
-    ctx.lineTo(0,  15);
+    ctx.moveTo(0, -prms.fixSize);
+    ctx.lineTo(0,  prms.fixSize);
     ctx.stroke(); 
 }
 
@@ -123,19 +120,18 @@ function drawFeedback() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = "40px monospace";
+    ctx.font = prms.fbSize;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
     ctx.fillText(prms.fbTxt[dat.corrCode-1], 0, 0); 
 }
 
-
 function drawFlanker(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = "50px monospace";
+    ctx.font = prms.flankSize;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
@@ -147,10 +143,13 @@ const trial_feedback = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    trial_duration: prms.fbDur,
     translate_origin: true,
     response_ends_trial: false,
-    func: drawFeedback
+    func: drawFeedback,
+    on_start: function(trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = prms.fbDur[dat.corrCode - 1]; 
+    }
 };
 
 const block_feedback = {
@@ -163,7 +162,6 @@ const block_feedback = {
     data: { stim: "block_feedback" },
 };
 
-
 const flanker_stimulus = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: canvas_colour,
@@ -172,6 +170,8 @@ const flanker_stimulus = {
     trial_duration: prms.tooSlow,
     translate_origin: true,
     stimulus_onset: [0, prms.flankDur, prms.flankDur*2],
+    response_ends_trial: true,
+    choices: prms.respKeys,
     clear_screen: [0, 1, 1],
     func: [drawFlanker, drawFlanker, drawFlanker],
     func_args:[
@@ -196,14 +196,14 @@ const trial_timeline = {
         trial_feedback
     ],
     timeline_variables:[
-        { flanker: "HHH", flanker1: " H ", flanker2: "H H", flanker3: " ", comp: "comp",   order: "TF", corrResp: prms.respKeys[0] },
-        { flanker: "SSS", flanker1: " S ", flanker2: "S S", flanker3: " ", comp: "comp",   order: "TF", corrResp: prms.respKeys[1] },
-        { flanker: "SHS", flanker1: " H ", flanker2: "S S", flanker3: " ", comp: "incomp", order: "TF", corrResp: prms.respKeys[1] },
-        { flanker: "HSH", flanker1: " S ", flanker2: "H H", flanker3: " ", comp: "incomp", order: "TF", corrResp: prms.respKeys[0] },
-        { flanker: "HHH", flanker1: "H H", flanker2: " H ", flanker3: " ", comp: "comp",   order: "FT", corrResp: prms.respKeys[1] },
-        { flanker: "SSS", flanker1: "S S", flanker2: " S ", flanker3: " ", comp: "comp",   order: "FT", corrResp: prms.respKeys[0] },
-        { flanker: "HSH", flanker1: "H H", flanker2: " S ", flanker3: " ", comp: "incomp", order: "FT", corrResp: prms.respKeys[0] },
-        { flanker: "SHS", flanker1: "S S", flanker2: " H ", flanker3: " ", comp: "incomp", order: "FT", corrResp: prms.respKeys[1] },
+        { flanker: "HHHHH", flanker1: "  H  ", flanker2: "HH HH", flanker3: "", comp: "comp",   order: "TF", corrResp: prms.respKeys[0] },
+        { flanker: "SSSSS", flanker1: "  S  ", flanker2: "SS SS", flanker3: "", comp: "comp",   order: "TF", corrResp: prms.respKeys[1] },
+        { flanker: "SSHSS", flanker1: "  H  ", flanker2: "SS SS", flanker3: "", comp: "incomp", order: "TF", corrResp: prms.respKeys[0] },
+        { flanker: "HHSHH", flanker1: "  S  ", flanker2: "HH HH", flanker3: "", comp: "incomp", order: "TF", corrResp: prms.respKeys[1] },
+        { flanker: "HHHHH", flanker1: "HH HH", flanker2: "  H  ", flanker3: "", comp: "comp",   order: "FT", corrResp: prms.respKeys[0] },
+        { flanker: "SSSSS", flanker1: "SS SS", flanker2: "  S  ", flanker3: "", comp: "comp",   order: "FT", corrResp: prms.respKeys[1] },
+        { flanker: "HHSHH", flanker1: "HH HH", flanker2: "  S  ", flanker3: "", comp: "incomp", order: "FT", corrResp: prms.respKeys[1] },
+        { flanker: "SSHSS", flanker1: "SS SS", flanker2: "  H  ", flanker3: "", comp: "incomp", order: "FT", corrResp: prms.respKeys[0] },
     ],
     randomize_order:true,
 };
@@ -248,15 +248,15 @@ function genExpSeq() {
 
     let exp = [];
 
-    //exp.push(fullscreen_on);
-    //exp.push(welcome_de);
+    exp.push(fullscreen_on);
+    exp.push(welcome_de);
     //exp.push(vpInfoForm);
-    //exp.push(task_instructions1);
-    //exp.push(task_instructions2);
+    exp.push(task_instructions1);
+    exp.push(task_instructions2);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

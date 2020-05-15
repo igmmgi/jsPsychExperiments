@@ -29,7 +29,7 @@ const prms = {
     nTrlsE: 96,  // number of trials in subsequent blocks 
     nBlks: 11,
     fixDur: 500,
-    fbDur: 500,
+    fbDur: [500, 1000, 1000, 1000],
     iti: 500,
     tooFast:    0,
     tooSlow: 2000,
@@ -53,6 +53,9 @@ const task_instructions1 = {
               "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
               "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
               "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const task_instructions2 = {
@@ -123,6 +126,7 @@ const number_stimulus = {
     trial_duration: prms.tooSlow,
     translate_origin: true,
     response_ends_trial: true,
+    choices: prms.respKeys,
     func: drawNumber,
     func_args:[ 
         { "number": jsPsych.timelineVariable("number"), "position": jsPsych.timelineVariable("position") }, 
@@ -156,10 +160,13 @@ const trial_feedback = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    trial_duration: prms.fbDur,
     translate_origin: true,
     response_ends_trial: false,
-    func: drawFeedback
+    func: drawFeedback,
+    on_start: function(trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = prms.fbDur[dat.corrCode - 1]; 
+    }
 };
 
 const iti = {
