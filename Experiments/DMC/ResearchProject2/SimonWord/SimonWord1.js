@@ -23,9 +23,9 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 96,  // number of trials in first block (practice)
-    nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 1,
+    nTrlsP: 32,  // number of trials in first block (practice)
+    nTrlsE: 64,  // number of trials in subsequent blocks 
+    nBlks: 11,
     fixDur: 500,
     fbDur: [500, 1000],
     cueDur: 500,
@@ -44,27 +44,27 @@ const prms = {
     stimSize: "50px monospace"
 };
 
-const versionNumber = getVersionNumber(1, 4)
+const versionNumber = getVersionNumber(vpNum, 4)
 if (versionNumber === 1) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["S", "K", 27];
-    respText = "<h4 align='left'>Living = S Non-living = K</h4>" +
-               "<h4 align='left'>Small = S Large = K</h4>";
+    respText = "<h4 align='center'>Living = S Non-living = K</h4>" +
+               "<h4 align='center'>Small = S Large = K</h4>";
 } else if (versionNumber === 2) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["K", "S", 27];
-    respText = "<h4 align='left'>Living = S Non-living = K</h4>" +
-               "<h4 align='left'>Large = S Small = K</h4>";
+    respText = "<h4 align='center'>Living = S Non-living = K</h4>" +
+               "<h4 align='center'>Large = S Small = K</h4>";
 } else if (versionNumber === 3) {
     prms.respKeysLife = ["K", "S", 27];
     prms.respKeysSize = ["K", "S", 27];
-    respText = "<h4 align='left'>Non-Living = S Living = K</h4>" +
-               "<h4 align='left'>Large = S Small = K</h4>";
+    respText = "<h4 align='center'>Non-Living = S Living = K</h4>" +
+               "<h4 align='center'>Large = S Small = K</h4>";
 } else if (versionNumber === 4) {
     prms.respKeysLife = ["K", "S", 27];
     prms.respKeysSize = ["S", "K", 27];
-    respText = "<h4 align='left'>Non-Living = S Living = K</h4>" +
-               "<h4 align='left'>Small = S Large = K</h4>";
+    respText = "<h4 align='center'>Non-Living = S Living = K</h4>" +
+               "<h4 align='center'>Small = S Large = K</h4>";
 }
 
 const task_instructions1 = {
@@ -125,7 +125,7 @@ function drawWordCue(args) {
     ctx.fillStyle = "black"
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(args["cue"],  0, 0);
+    ctx.fillText(args["cue"], 0, 0);
 }
 
 const word_cue = {
@@ -137,28 +137,26 @@ const word_cue = {
     translate_origin: true,
     response_ends_trial: false,
     func: drawWordCue,
-    func_args:[ 
-        { "cue": jsPsych.timelineVariable("cue") }, 
-    ],
+    func_args:[ { "cue": jsPsych.timelineVariable("cue") } ],
 };
 
 function drawWord(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
 
-    ctx.fillStyle = "black"
-    ctx.textAlign = "center";
+    ctx.fillStyle    = "black"
+    ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
+    ctx.font         = prms.stimSize;
 
-    ctx.font = prms.stimSize;
     switch (args["position"]) {
         case "left":
             ctx.fillText(args["word"], -prms.stimPosX, prms.stimPosY);
             ctx.fillText(args["cue"], 0, 0);
             break;
         case "right":
-            ctx.fillText(args["word"],  prms.stimPosX, prms.stimPosY);
-            ctx.fillText(args["cue"],  0, 0);
+            ctx.fillText(args["word"], prms.stimPosX, prms.stimPosY);
+            ctx.fillText(args["cue"], 0, 0);
             break;
     }
  
@@ -286,6 +284,37 @@ const trial_timeline = {
     randomize_order:true,
 };
 
+const randomString = generateRandomString(16);
+
+const alphaNum = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<h2 align='left'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
+    "<h2 align='left'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
+    "<h2 align='left'Code und senden Sie diesen</h2>" +
+    "<h2 align='left'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
+    "<h2 align='left'>per Email an:</h2></br>" +
+    "<h2>XXX@XXX</h2>" +
+    "<h2>Code: " + randomString + "</h2></br></br>" +
+    "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
+};
+
+
+const fullscreen_on = {
+    type: 'fullscreen',
+    fullscreen_mode: true,
+}
+
+const fullscreen_off = {
+    type: 'fullscreen',
+    fullscreen_mode: false,
+    on_start: function() {
+        $('body').css('cursor', 'default')
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -294,19 +323,22 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
-
+    exp.push(fullscreen_on);
     exp.push(welcome_de);
+    // exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = 1;
+        blk_timeline.repetitions = (blk === 0) ? prms.nTrlsP/32 : prms.nTrlsE/32;
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
+    exp.push(debrief_de);
+    exp.push(alphaNum);
+    exp.push(fullscreen_off);
 
-    exp.push(trial_timeline);
     return exp;
 
 }
@@ -325,5 +357,4 @@ jsPsych.init({
         saveData("/Common/write_data.php", filename, rows = {stim: "SimonWord"}); 
     }
 });
-
 

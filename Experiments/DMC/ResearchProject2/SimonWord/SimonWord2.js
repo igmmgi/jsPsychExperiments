@@ -9,7 +9,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size = [960, 720];
+const canvas_size   = [960, 720];
 const canvas_border = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -23,9 +23,9 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 96,  // number of trials in first block (practice)
-    nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 1,
+    nTrlsP: 32,  // number of trials in first block (practice)
+    nTrlsE: 64,  // number of trials in subsequent blocks 
+    nBlks: 11,
     fixDur: 500,
     fbDur: [500, 1000],
     cueDur: 500,
@@ -44,31 +44,31 @@ const prms = {
     stimSize: "50px monospace"
 };
 
-const versionNumber = getVersionNumber(1, 4)
+const versionNumber = getVersionNumber(vpNum, 4)
 if (versionNumber === 1) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["S", "K", 27];
-    respText = "<h4 align='left'>Red = Living vs. Non-living, Blue = small vs. large</h4>" +
-               "<h4 align='left'>Living = S Non-living = K</h4>" +
-               "<h4 align='left'>Small = S Large = K</h4>";
+    respText = "<h4 align='center'>Red = Living vs. Non-living, Blue = Small vs. Large</h4>" +
+               "<h4 align='center'>Living = S Non-living = K</h4>" +
+               "<h4 align='center'>Small = S Large = K</h4>";
 } else if (versionNumber === 2) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["K", "S", 27];
-    respText = "<h4 align='left'>Red = Living vs. Non-living, Blue = small vs. large</h4>" +
-               "<h4 align='left'>Living = S Non-living = K</h4>" +
-               "<h4 align='left'>Large = S Small = K</h4>";
+    respText = "<h4 align='center'>Red = Living vs. Non-living, Blue = Small vs. Large</h4>" +
+               "<h4 align='center'>Living = S Non-living = K</h4>" +
+               "<h4 align='center'>Large = S Small = K</h4>";
 } else if (versionNumber === 3) {
     prms.respKeysLife = ["K", "S", 27];
     prms.respKeysSize = ["K", "S", 27];
-    respText = "<h4 align='left'>Red = Living vs. Non-living, Blue = small vs. large</h4>" +
-               "<h4 align='left'>Non-Living = S Living = K</h4>" +
-               "<h4 align='left'>Large = S Small = K</h4>";
+    respText = "<h4 align='center'>Red = Living vs. Non-living, Blue = Small vs. Large</h4>" +
+               "<h4 align='center'>Non-Living = S Living = K</h4>" +
+               "<h4 align='center'>Large = S Small = K</h4>";
 } else if (versionNumber === 4) {
     prms.respKeysLife = ["K", "S", 27];
     prms.respKeysSize = ["S", "K", 27];
-    respText = "<h4 align='left'>Red = Living vs. Non-living, Blue = small vs. large</h4>" +
-               "<h4 align='left'>Non-Living = S Living = K</h4>" +
-               "<h4 align='left'>Small = S Large = K</h4>";
+    respText = "<h4 align='center'>Red = Living vs. Non-living, Blue = Small vs. Large</h4>" +
+               "<h4 align='center'>Non-Living = S Living = K</h4>" +
+               "<h4 align='center'>Small = S Large = K</h4>";
 }
 
 const task_instructions1 = {
@@ -80,6 +80,9 @@ const task_instructions1 = {
     "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
     "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const task_instructions2 = {
@@ -168,22 +171,18 @@ const fixation_cue = {
     translate_origin: true,
     response_ends_trial: false,
     func: drawFixationCue,
-    func_args:[ 
-        { "cue": jsPsych.timelineVariable("cue") }, 
-    ],
+    func_args:[ { "cue": jsPsych.timelineVariable("cue") } ],
 };
-
-
 
 function drawWord(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
 
-    ctx.fillStyle = "black"
-    ctx.textAlign = "center";
+    ctx.fillStyle    = "black"
+    ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
-
-    ctx.font = prms.stimSize;
+    ctx.font         = prms.stimSize;
+    
     switch (args["position"]) {
         case "left":
             ctx.fillText(args["word"], -prms.stimPosX, prms.stimPosY);
@@ -210,10 +209,7 @@ const word_stimulus = {
             "word": jsPsych.timelineVariable("word"), 
             "position": jsPsych.timelineVariable("position") 
         }, 
-        { 
-            "cue": jsPsych.timelineVariable("cue"), 
-        }, 
-
+        { "cue": jsPsych.timelineVariable("cue") }, 
     ],
     data: {
         stim: "SimonWord",
@@ -228,10 +224,8 @@ const word_stimulus = {
     on_finish: function() { codeTrial(); }
 };
 
-
 function drawFeedback() {
     "use strict"
-    console.log("here")
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
     ctx.font = "40px monospace";
@@ -274,53 +268,6 @@ const block_feedback = {
     response_ends_trial: true,
     data: { stim: "block_feedback" },
 };
-
-// const trial_timeline = {
-//     timeline: [
-//         fixation_cross,
-//         cue,
-//         word_stimulus,
-//         trial_feedback,
-//         iti
-//     ],
-//     timeline_variables:[
-//         { cue: "LIFE", word: "algae",    size: "small", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-//         { cue: "LIFE", word: "camel",    size: "large", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-//         { cue: "LIFE", word: "bracelet", size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-//         { cue: "LIFE", word: "bathtub",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-//         { cue: "LIFE", word: "chikadee", size: "small", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-//         { cue: "LIFE", word: "dolphin",  size: "large", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-//         { cue: "LIFE", word: "dime",     size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-//         { cue: "LIFE", word: "boulder",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-//         { cue: "LIFE", word: "algae",    size: "small", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-//         { cue: "LIFE", word: "camel",    size: "large", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-//         { cue: "LIFE", word: "bracelet", size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-//         { cue: "LIFE", word: "bathtub",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-//         { cue: "LIFE", word: "chikadee", size: "small", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-//         { cue: "LIFE", word: "dolphin",  size: "large", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-//         { cue: "LIFE", word: "dime",     size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-//         { cue: "LIFE", word: "boulder",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-//         { cue: "SIZE", word: "algae",    size: "small", life: "living",    position: "left",  corrResp: prms.respKeysSize[0]},
-//         { cue: "SIZE", word: "camel",    size: "large", life: "living",    position: "left",  corrResp: prms.respKeysSize[1]},
-//         { cue: "SIZE", word: "bracelet", size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[0]},
-//         { cue: "SIZE", word: "bathtub",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[1]},
-//         { cue: "SIZE", word: "chikadee", size: "small", life: "living",    position: "left",  corrResp: prms.respKeysSize[0]},
-//         { cue: "SIZE", word: "dolphin",  size: "large", life: "living",    position: "left",  corrResp: prms.respKeysSize[1]},
-//         { cue: "SIZE", word: "dime",     size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[0]},
-//         { cue: "SIZE", word: "boulder",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[1]},
-//         { cue: "SIZE", word: "algae",    size: "small", life: "living",    position: "right", corrResp: prms.respKeysSize[0]},
-//         { cue: "SIZE", word: "camel",    size: "large", life: "living",    position: "right", corrResp: prms.respKeysSize[1]},
-//         { cue: "SIZE", word: "bracelet", size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysSize[0]},
-//         { cue: "SIZE", word: "bathtub",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysSize[1]},
-//         { cue: "SIZE", word: "chikadee", size: "small", life: "living",    position: "right", corrResp: prms.respKeysSize[0]},
-//         { cue: "SIZE", word: "dolphin",  size: "large", life: "living",    position: "right", corrResp: prms.respKeysSize[1]},
-//         { cue: "SIZE", word: "dime",     size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysSize[0]},
-//         { cue: "SIZE", word: "boulder",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysSize[1]},
-//    ],
-//     randomize_order:true,
-// };
-
-
 
 const trial_timeline = {
     timeline: [
@@ -367,6 +314,35 @@ const trial_timeline = {
     randomize_order:true,
 };
 
+const randomString = generateRandomString(16);
+
+const alphaNum = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<h2 align='left'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
+    "<h2 align='left'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
+    "<h2 align='left'Code und senden Sie diesen</h2>" +
+    "<h2 align='left'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
+    "<h2 align='left'>per Email an:</h2></br>" +
+    "<h2>XXX@XXX</h2>" +
+    "<h2>Code: " + randomString + "</h2></br></br>" +
+    "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
+};
+
+const fullscreen_on = {
+    type: 'fullscreen',
+    fullscreen_mode: true,
+}
+
+const fullscreen_off = {
+    type: 'fullscreen',
+    fullscreen_mode: false,
+    on_start: function() {
+        $('body').css('cursor', 'default')
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -375,19 +351,22 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
-
+    exp.push(fullscreen_on);
     exp.push(welcome_de);
+    // exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = 1;
+        blk_timeline.repetitions = (blk === 0) ? prms.nTrlsP/32 : prms.nTrlsE/32;
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
+    exp.push(debrief_de);
+    exp.push(alphaNum);
+    exp.push(fullscreen_off);
 
-    exp.push(trial_timeline);
     return exp;
 
 }
@@ -406,5 +385,4 @@ jsPsych.init({
         saveData("/Common/write_data.php", filename, rows = {stim: "SimonWord"}); 
     }
 });
-
 

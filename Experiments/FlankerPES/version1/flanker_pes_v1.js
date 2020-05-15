@@ -39,6 +39,8 @@ const prms = {
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,
     cBlk: 1,
+    fixWidth: 3,
+    fixSize: 15,
     respMapping: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
     respKeys: [],
     respDir: []
@@ -101,12 +103,12 @@ const task_instructions2 = {
 function drawFixation() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    ctx.lineWidth = 2;
-    ctx.moveTo(-15, 0);
-    ctx.lineTo( 15, 0);
+    ctx.lineWidth = prms.fixWidth;
+    ctx.moveTo(-prms.fixSize, 0);
+    ctx.lineTo( prms.fixSize, 0);
     ctx.stroke(); 
-    ctx.moveTo(0, -15);
-    ctx.lineTo(0,  15);
+    ctx.moveTo(0, -prms.fixSize);
+    ctx.lineTo(0,  prms.fixSize);
     ctx.stroke(); 
 }
 
@@ -382,7 +384,6 @@ const fullscreen_off = {
             exp.push(blk_timeline);    // trials within a block
             exp.push(block_feedback);  // show previous block performance 
         }
-
         exp.push(debrief_de);
         exp.push(alphaNum);
         exp.push(fullscreen_off);
@@ -392,7 +393,6 @@ const fullscreen_off = {
     }
 const EXP = genExpSeq();
 const filename = dirName + "data/" + expName + "_" + genVpNum();
-
 
 jsPsych.init({
     timeline: EXP,

@@ -11,7 +11,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size = [960, 720];
+const canvas_size   = [960, 720];
 const canvas_border = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -27,19 +27,19 @@ const vpNum   = genVpNum();
 const prms = {
     nTrlsP: 96,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 1,
-    fixDur: 750,
-    fbDur: 750,
-    iti: 1000,
+    nBlks: 11,
+    fixDur: 500,
+    fbDur: 500,
+    iti: 500,
     tooFast:    0,
-    tooSlow: 1500,
+    tooSlow: 2000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
     respKeys: ["S", "K", 27],
-    fixWidth: 2,
-    fixSize: 10,
-    stimPosX: 200,
+    fixWidth: 3,
+    fixSize: 15,
+    stimPosX: 300,
     stimPosY:   0,
     stimSize: "50px monospace"
 };
@@ -50,9 +50,9 @@ const task_instructions1 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<h2 align='center'>Willkommen bei unserem Experiment:</h2><br>" +
-    "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-    "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-    "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+              "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+              "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+              "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 const task_instructions2 = {
@@ -99,11 +99,11 @@ function drawNumber(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
 
-    ctx.fillStyle = "black"
-    ctx.textAlign = "center";
+    ctx.fillStyle    = "black"
+    ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
-
-    ctx.font = prms.stimSize;
+    ctx.font         = prms.stimSize;
+    
     switch (args["position"]) {
         case "left":
             ctx.fillText(args["number"], -prms.stimPosX, prms.stimPosY);
@@ -291,6 +291,35 @@ const trial_timeline = {
     randomize_order:true,
 };
 
+const randomString = generateRandomString(16);
+
+const alphaNum = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<h2 align='left'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
+    "<h2 align='left'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
+    "<h2 align='left'Code und senden Sie diesen</h2>" +
+    "<h2 align='left'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
+    "<h2 align='left'>per Email an:</h2></br>" +
+    "<h2>XXX@XXX</h2>" +
+    "<h2>Code: " + randomString + "</h2></br></br>" +
+    "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
+};
+
+const fullscreen_on = {
+    type: 'fullscreen',
+    fullscreen_mode: true,
+}
+
+const fullscreen_off = {
+    type: 'fullscreen',
+    fullscreen_mode: false,
+    on_start: function() {
+        $('body').css('cursor', 'default')
+    }
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -300,8 +329,9 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
-
+    exp.push(fullscreen_on);
     exp.push(welcome_de);
+    // exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
@@ -311,8 +341,10 @@ function genExpSeq() {
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
+    exp.push(debrief_de);
+    exp.push(alphaNum);
+    exp.push(fullscreen_off);
 
-    exp.push(trial_timeline);
     return exp;
 
 }
@@ -324,12 +356,11 @@ jsPsych.init({
     fullscreen: true,
     show_progress_bar: false,
     exclusions: {
-        min_width:canvas_size[0],
-        min_height:canvas_size[1],
+        min_width:  canvas_size[0],
+        min_height: canvas_size[1],
     },
     on_finish: function(){ 
         saveData("/Common/write_data.php", filename, rows = {stim: "SimonNumber"}); 
     }
 });
-
 
