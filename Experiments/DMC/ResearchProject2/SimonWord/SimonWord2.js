@@ -203,6 +203,7 @@ const word_stimulus = {
     trial_duration: prms.tooSlow,
     translate_origin: true,
     response_ends_trial: true,
+    choices: prms.respKeysSize,
     func: [drawWord, drawFixationCue],
     func_args:[ 
         { 
