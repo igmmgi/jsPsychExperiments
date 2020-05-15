@@ -26,25 +26,25 @@ const prms = {
     nTrlsP: 96,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
     nBlks: 1,
-    fixDur: 750,
-    fbDur: 750,
-    cueDur: 750,
-    iti: 1000,
+    fixDur: 500,
+    fbDur: [500, 1000],
+    cueDur: 500,
+    iti: 500,
     tooFast:    0,
-    tooSlow: 1500,
+    tooSlow: 3000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
     respKeysLife: [],
     respKeysSize: [],
-    fixWidth: 2,
-    fixSize: 10,
-    stimPosX: 200,
+    fixWidth: 3,
+    fixSize: 15,
+    stimPosX: 300,
     stimPosY:   0,
     stimSize: "50px monospace"
 };
 
-const versionNumber = getVersionNumber(4, 4)
+const versionNumber = getVersionNumber(1, 4)
 if (versionNumber === 1) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["S", "K", 27];
@@ -67,8 +67,6 @@ if (versionNumber === 1) {
                "<h4 align='left'>Small = S Large = K</h4>";
 }
 
-
-
 const task_instructions1 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
@@ -79,8 +77,6 @@ const task_instructions1 = {
     "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
-
-
 
 const task_instructions2 = {
     type: "html-keyboard-response-canvas",
@@ -122,7 +118,7 @@ const fixation_cross = {
     func: drawFixation
 };
 
-function drawCue(args) {
+function drawWordCue(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     ctx.font = prms.stimSize;
@@ -132,7 +128,7 @@ function drawCue(args) {
     ctx.fillText(args["cue"],  0, 0);
 }
 
-const cue = {
+const word_cue = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
@@ -140,7 +136,7 @@ const cue = {
     trial_duration: prms.cueDur,
     translate_origin: true,
     response_ends_trial: false,
-    func: drawCue,
+    func: drawWordCue,
     func_args:[ 
         { "cue": jsPsych.timelineVariable("cue") }, 
     ],
@@ -162,7 +158,7 @@ function drawWord(args) {
             break;
         case "right":
             ctx.fillText(args["word"],  prms.stimPosX, prms.stimPosY);
-            ctx.fillText(args["cue"], 0, 0);
+            ctx.fillText(args["cue"],  0, 0);
             break;
     }
  
@@ -179,9 +175,9 @@ const word_stimulus = {
     func: drawWord,
     func_args:[ 
         { 
-            "cue": jsPsych.timelineVariable("cue"), 
             "word": jsPsych.timelineVariable("word"), 
-            "position": jsPsych.timelineVariable("position") 
+            "position": jsPsych.timelineVariable("position"),
+            "cue": jsPsych.timelineVariable("cue"), 
         }, 
     ],
     data: {
@@ -191,8 +187,8 @@ const word_stimulus = {
         size: jsPsych.timelineVariable('size'), 
         life: jsPsych.timelineVariable('life'), 
         position: jsPsych.timelineVariable('position'), 
-        cong: ((jsPsych.timelineVariable('position') === "left" && jsPsych.timelineVariable("corrResp") === "S") || (jsPsych.timelineVariable('position') === "right" && jsPsych.timelineVariable("corrResp") === "K")) ? "cong" : "incong", 
-        corrResp: jsPsych.timelineVariable('corrResp'), 
+        cong: jsPsych.timelineVariable('cong'), 
+        corrResp: jsPsych.timelineVariable('corrResp') 
     },
     on_finish: function() { codeTrial(); }
 };
@@ -200,6 +196,7 @@ const word_stimulus = {
 
 function drawFeedback() {
     "use strict"
+    console.log("here")
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
     ctx.font = "40px monospace";
@@ -214,10 +211,13 @@ const trial_feedback = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    trial_duration: prms.fbDur,
     translate_origin: true,
     response_ends_trial: false,
-    func: drawFeedback
+    func: drawFeedback,
+    on_start: function(trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = prms.fbDur[dat.corrCode - 1]; 
+    }
 };
 
 const iti = {
@@ -243,48 +243,48 @@ const block_feedback = {
 const trial_timeline = {
     timeline: [
         fixation_cross,
-        cue,
+        word_cue,
         word_stimulus,
         trial_feedback,
         iti
     ],
     timeline_variables:[
-        { cue: "LIFE", word: "algae",    size: "small", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-        { cue: "LIFE", word: "camel",    size: "large", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-        { cue: "LIFE", word: "bracelet", size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-        { cue: "LIFE", word: "bathtub",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-        { cue: "LIFE", word: "chikadee", size: "small", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-        { cue: "LIFE", word: "dolphin",  size: "large", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-        { cue: "LIFE", word: "dime",     size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-        { cue: "LIFE", word: "boulder",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-        { cue: "LIFE", word: "algae",    size: "small", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-        { cue: "LIFE", word: "camel",    size: "large", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-        { cue: "LIFE", word: "bracelet", size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "LIFE", word: "bathtub",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "LIFE", word: "chikadee", size: "small", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-        { cue: "LIFE", word: "dolphin",  size: "large", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-        { cue: "LIFE", word: "dime",     size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "LIFE", word: "boulder",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "SIZE", word: "algae",    size: "small", life: "living",    position: "left",  corrResp: prms.respKeysSize[0]},
-        { cue: "SIZE", word: "camel",    size: "large", life: "living",    position: "left",  corrResp: prms.respKeysSize[1]},
-        { cue: "SIZE", word: "bracelet", size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[0]},
-        { cue: "SIZE", word: "bathtub",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[1]},
-        { cue: "SIZE", word: "chikadee", size: "small", life: "living",    position: "left",  corrResp: prms.respKeysSize[0]},
-        { cue: "SIZE", word: "dolphin",  size: "large", life: "living",    position: "left",  corrResp: prms.respKeysSize[1]},
-        { cue: "SIZE", word: "dime",     size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[0]},
-        { cue: "SIZE", word: "boulder",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[1]},
-        { cue: "SIZE", word: "algae",    size: "small", life: "living",    position: "right", corrResp: prms.respKeysSize[0]},
-        { cue: "SIZE", word: "camel",    size: "large", life: "living",    position: "right", corrResp: prms.respKeysSize[1]},
-        { cue: "SIZE", word: "bracelet", size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysSize[0]},
-        { cue: "SIZE", word: "bathtub",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysSize[1]},
-        { cue: "SIZE", word: "chikadee", size: "small", life: "living",    position: "right", corrResp: prms.respKeysSize[0]},
-        { cue: "SIZE", word: "dolphin",  size: "large", life: "living",    position: "right", corrResp: prms.respKeysSize[1]},
-        { cue: "SIZE", word: "dime",     size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysSize[0]},
-        { cue: "SIZE", word: "boulder",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysSize[1]},
-
+        { cue: "LIFE", word: "algae",    size: "small", life: "living",    position: "left", cong: "cong",   corrResp: prms.respKeysLife[0]},
+        { cue: "LIFE", word: "camel",    size: "large", life: "living",    position: "left", cong: "cong",   corrResp: prms.respKeysLife[0]},
+        { cue: "LIFE", word: "bracelet", size: "small", life: "nonliving", position: "left", cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "LIFE", word: "bathtub",  size: "large", life: "nonliving", position: "left", cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "LIFE", word: "chikadee", size: "small", life: "living",    position: "left", cong: "cong",   corrResp: prms.respKeysLife[0]},
+        { cue: "LIFE", word: "dolphin",  size: "large", life: "living",    position: "left", cong: "cong",   corrResp: prms.respKeysLife[0]},
+        { cue: "LIFE", word: "dime",     size: "small", life: "nonliving", position: "left", cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "LIFE", word: "boulder",  size: "large", life: "nonliving", position: "left", cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "LIFE", word: "algae",    size: "small", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysLife[0]},
+        { cue: "LIFE", word: "camel",    size: "large", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysLife[0]},
+        { cue: "LIFE", word: "bracelet", size: "small", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "LIFE", word: "bathtub",  size: "large", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "LIFE", word: "chikadee", size: "small", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysLife[0]},
+        { cue: "LIFE", word: "dolphin",  size: "large", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysLife[0]},
+        { cue: "LIFE", word: "dime",     size: "small", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "LIFE", word: "boulder",  size: "large", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysLife[1]},
+        { cue: "SIZE", word: "algae",    size: "small", life: "living",    position: "left", cong: "cong",   corrResp: prms.respKeysSize[0]},
+        { cue: "SIZE", word: "camel",    size: "large", life: "living",    position: "left", cong: "incong", corrResp: prms.respKeysSize[1]},
+        { cue: "SIZE", word: "bracelet", size: "small", life: "nonliving", position: "left", cong: "cong",   corrResp: prms.respKeysSize[0]},
+        { cue: "SIZE", word: "bathtub",  size: "large", life: "nonliving", position: "left", cong: "incong", corrResp: prms.respKeysSize[1]},
+        { cue: "SIZE", word: "chikadee", size: "small", life: "living",    position: "left", cong: "cong",   corrResp: prms.respKeysSize[0]},
+        { cue: "SIZE", word: "dolphin",  size: "large", life: "living",    position: "left", cong: "incong", corrResp: prms.respKeysSize[1]},
+        { cue: "SIZE", word: "dime",     size: "small", life: "nonliving", position: "left", cong: "cong",   corrResp: prms.respKeysSize[0]},
+        { cue: "SIZE", word: "boulder",  size: "large", life: "nonliving", position: "left", cong: "incong", corrResp: prms.respKeysSize[1]},
+        { cue: "SIZE", word: "algae",    size: "small", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysSize[0]},
+        { cue: "SIZE", word: "camel",    size: "large", life: "living",    position: "right",cong: "incong", corrResp: prms.respKeysSize[1]},
+        { cue: "SIZE", word: "bracelet", size: "small", life: "nonliving", position: "right",cong: "cong",   corrResp: prms.respKeysSize[0]},
+        { cue: "SIZE", word: "bathtub",  size: "large", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysSize[1]},
+        { cue: "SIZE", word: "chikadee", size: "small", life: "living",    position: "right",cong: "cong",   corrResp: prms.respKeysSize[0]},
+        { cue: "SIZE", word: "dolphin",  size: "large", life: "living",    position: "right",cong: "incong", corrResp: prms.respKeysSize[1]},
+        { cue: "SIZE", word: "dime",     size: "small", life: "nonliving", position: "right",cong: "cong",   corrResp: prms.respKeysSize[0]},
+        { cue: "SIZE", word: "boulder",  size: "large", life: "nonliving", position: "right",cong: "incong", corrResp: prms.respKeysSize[1]},
    ],
     randomize_order:true,
 };
+
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
