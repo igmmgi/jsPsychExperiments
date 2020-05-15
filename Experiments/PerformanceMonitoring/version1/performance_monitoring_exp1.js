@@ -8,7 +8,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size = [960, 720];
+const canvas_size   = [960, 720];
 const canvas_border = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -28,8 +28,7 @@ const prms = {
     fixDur: 500,
     fbDur: 500,
     iti: 500,
-    waitDur: 1000,
-    tooFast:  250,   
+    tooFast:  150,   
     tooSlow: 1500,   
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     respKeys: ["S", "D", "K", "L"],
@@ -37,9 +36,9 @@ const prms = {
     fixSize: 15,
     fixWidth: 3,
     shapeSize: 50,
+    fbSize: "40px monospace",
     cTrl: 1,
     cBlk: 1,
-    respMapping: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -61,11 +60,11 @@ function drawInstructions() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
 
-    ctx.fillStyle = "black"
-    ctx.textAlign = "center";
+    ctx.font         = "30px monospace";
+    ctx.fillStyle    = "black"
+    ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
 
-    ctx.font = "30px monospace";
     ctx.fillText("Respond to the following shapes", 0, -200);
     ctx.fillText("with the corresponding keys", 0, -150); 
     ctx.save();
@@ -152,10 +151,12 @@ function drawFeedback() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = "40px monospace";
-    ctx.textAlign = "center";
+
+    ctx.font         = prms.fbSize; 
+    ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = "black";
+    ctx.fillStyle    = "black";
+    
     ctx.fillText(prms.fbTxt[dat.corrCode-1], 0, 0); 
 }
 
@@ -295,7 +296,7 @@ jsPsych.init({
         min_height:canvas_size[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 
+        saveData("/Common/write_data.php", filename, rows = {stim: "shape"}); 
     }
 });
 
