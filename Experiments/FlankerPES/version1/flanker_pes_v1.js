@@ -382,6 +382,7 @@ const fullscreen_off = {
             exp.push(blk_timeline);    // trials within a block
             exp.push(block_feedback);  // show previous block performance 
         }
+
         exp.push(debrief_de);
         exp.push(alphaNum);
         exp.push(fullscreen_off);

@@ -67,7 +67,6 @@ const task_instructions1 = {
               "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
               "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
               "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    timing_post_trial: prms.waitDur,
 };
 
 const task_instructions2 = {
@@ -85,7 +84,6 @@ const task_instructions2 = {
     "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
     "<h4 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h4><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    timing_post_trial: prms.waitDur
 };
 
 ////////////////////////////////////////////////////////////////////////
