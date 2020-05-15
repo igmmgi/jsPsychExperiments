@@ -16,57 +16,57 @@ const cb = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const expName = getFileName();
 const dirName = getDirName();
-const vpNum = genVpNum();
+const vpNum   = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 4,  // number of trials in first block (practice)
+    nTrlsP: 8,  // number of trials in first block (practice)
     nTrlsE: 8,  // number of trials in subsequent blocks 
     nBlks: 2,   
-    fixDur: 750,
+    fixDur: 500,
+    fbDur: [500, 1000, 1000, 1000],
     simonDur: 100,
-    fbDur: 750,
-    waitDur: 1000,
-    iti: 1000,
+    iti: 500,
     tooFast: 150,
-    tooSlow: 1500,
+    tooSlow: 2000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    respMapping: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
     respColours: ["red", "green"],
+    fixWidth: 3,
+    fixSize: 15,
+    fbSize: "30px monospace"
     respKeys: [],
 };
 
-if (prms.respMapping === 1) {
+const versionNumber = getVersionNumber(vpNum, 2)
+if (versionNumber === 1) {
     prms.respKeys = ["D", "J", 27];
+    respText = "<h4 align='left'><b>BLUE</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
+               "<h4 align='left'><b>RED</b>  drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
 } else {
     prms.respKeys = ["J", "D", 27];
+    respText = "<h4 align='left'><b>RED</b>  drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
+               "<h4 align='left'><b>BLUE</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
 }
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-let respText = ""
-if (prms.respMapping === 1) {
-    respText = "<h4 align='left'><b>BLUE</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='left'><b>RED</b>  drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
-} else {
-    respText = "<h4 align='left'><b>RED</b>  drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='left'><b>BLUE</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
-}
-
 const task_instructions1 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: cc,
     canvas_size: cs,
     canvas_border: cb,
     stimulus: "<h2 align='center'>Willkommen bei unserem Experiment:</h2><br>" +
-              "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-              "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-              "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+    "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+    "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const task_instructions2 = {
@@ -92,12 +92,12 @@ const task_instructions2 = {
 function drawFixation() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    ctx.lineWidth = 2;
-    ctx.moveTo(-15, 0);
-    ctx.lineTo( 15, 0);
+    ctx.lineWidth = prms.fixWidth;
+    ctx.moveTo(-prms.fixSize, 0);
+    ctx.lineTo( prms.fixSize, 0);
     ctx.stroke(); 
-    ctx.moveTo(0, -15);
-    ctx.lineTo(0,  15);
+    ctx.moveTo(0, -prms.fixSize);
+    ctx.lineTo(0,  prms.fixSize);
     ctx.stroke(); 
 }
 
@@ -116,7 +116,7 @@ function drawFeedback() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = "40px monospace";
+    ctx.font = prms.fbSize;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
@@ -129,16 +129,16 @@ function drawSimon(args) {
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
 
-    // left rectangle
-    ctx.fillStyle = args["sl"];
+    // left
+    ctx.fillStyle = args["left"];
     ctx.fillRect(-100, -25, 50, 50);
-
-    // middle rectangle
-    ctx.fillStyle = args["sm"];
+   
+    // middle
+    ctx.fillStyle = args["middle"];
     ctx.fillRect(-25, -25, 50, 50);
-
-    // right rectangle
-    ctx.fillStyle = args["sr"];
+   
+    // right
+    ctx.fillStyle = args["right"];
     ctx.fillRect(50, -25, 50, 50);
 
 }
@@ -148,10 +148,23 @@ const trial_feedback = {
     canvas_colour: cc,
     canvas_size: cs,
     canvas_border: cb,
-    trial_duration: prms.fbDur,
     translate_origin: true,
     response_ends_trial: false,
-    func: drawFeedback
+    func: drawFeedback,
+    on_start: function(trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = prms.fbDur[dat.corrCode - 1]; 
+    }
+};
+
+const iti = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    trial_duration: prms.iti,
+    response_ends_trial: false,
+    func: function() {}
 };
 
 const block_feedback = {
@@ -164,7 +177,6 @@ const block_feedback = {
     data: { stim: "block_feedback" },
 };
 
-
 const simon_stimulus = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: cc,
@@ -172,13 +184,23 @@ const simon_stimulus = {
     canvas_border: cb,
     trial_duration: prms.tooSlow,
     translate_origin: true,
-    stimulus_onset: [0, 100, 200, 300],
-    func: [drawSimon, drawSimon, drawSimon, drawSimon],
+    stimulus_onset: [0, 200],
+    clear_screen: [1, 1],
+    stimulus_duration: 400,
+    response_ends_trial: true,
+    choices: prms.respKeys,
+    func: [drawSimon, drawSimon],
     func_args:[
-        {"sl": jsPsych.timelineVariable("sl1"), "sm": jsPsych.timelineVariable("sm1"), "sr": jsPsych.timelineVariable("sr1")},
-        {"sl": jsPsych.timelineVariable("sl2"), "sm": jsPsych.timelineVariable("sm2"), "sr": jsPsych.timelineVariable("sr2")},
-        {"sl": jsPsych.timelineVariable("sl3"), "sm": jsPsych.timelineVariable("sm3"), "sr": jsPsych.timelineVariable("sr3")},
-        {"sl": jsPsych.timelineVariable("sl4"), "sm": jsPsych.timelineVariable("sm4"), "sr": jsPsych.timelineVariable("sr4")}
+        { 
+            "left":   jsPsych.timelineVariable("left1") ,
+            "middle": jsPsych.timelineVariable("middle1") ,
+            "right":  jsPsych.timelineVariable("right1") ,
+        },
+        { 
+            "left":   jsPsych.timelineVariable("left2") ,
+            "middle": jsPsych.timelineVariable("middle2") ,
+            "right":  jsPsych.timelineVariable("right2") ,
+        },
     ],
     data: {
         stim: "simon",
@@ -193,17 +215,18 @@ const trial_timeline = {
     timeline: [
         fixation_cross,
         simon_stimulus,
-        trial_feedback
+        trial_feedback,
+        iti,
     ],
     timeline_variables:[
-        { sl1: "black", sm1: cc, sr1: cc,      sl2: cc, sm2: prms.respColours[0], sr2: cc, sl3: cc,      sm3: cc, sr3: cc,      sl4: cc, sm4: cc, sr4: cc, comp: "comp",    order: "BA", corrResp: prms.respKeys[0] },
-        { sl1: "black", sm1: cc, sr1: cc,      sl2: cc, sm2: prms.respColours[1], sr2: cc, sl3: cc,      sm3: cc, srr: cc,      sl4: cc, sm4: cc, sr4: cc, comp: "incomp",  order: "BA", corrResp: prms.respKeys[1] },
-        { sl1: cc,      sm1: cc, sr1: "black", sl2: cc, sm2: prms.respColours[0], sr2: cc, sl3: cc,      sm3: cc, sr3: cc,      sl4: cc, sm4: cc, sr4: cc, comp: "incomp",  order: "BA", corrResp: prms.respKeys[0] },
-        { sl1: cc,      sm1: cc, sr1: "black", sl2: cc, sm2: prms.respColours[1], sr2: cc, sl3: cc,      sm3: cc, sr3: cc,      sl4: cc, sm4: cc, sr4: cc, comp: "comp",    order: "BA", corrResp: prms.respKeys[1] },
-        { sl1: cc,      sm1: cc, sr1: cc,      sl2: cc, sm2: prms.respColours[0], sr2: cc, sl3: "black", sm3: cc, sr3: cc,      sl4: cc, sm4: cc, sr4: cc, comp: "comp",    order: "AB", corrResp: prms.respKeys[0] },
-        { sl1: cc,      sm1: cc, sr1: cc,      sl2: cc, sm2: prms.respColours[1], sr2: cc, sl3: "black", sm3: cc, sr3: cc,      sl4: cc, sm4: cc, sr4: cc, comp: "incomp",  order: "AB", corrResp: prms.respKeys[1] },
-        { sl1: cc,      sm1: cc, sr1: cc,      sl2: cc, sm2: prms.respColours[0], sr2: cc, sl3: cc,      sm3: cc, sr3: "black", sl4: cc, sm4: cc, sr4: cc, comp: "incomp",  order: "AB", corrResp: prms.respKeys[0] },
-        { sl1: cc,      sm1: cc, sr1: cc,      sl2: cc, sm2: prms.respColours[1], sr2: cc, sl3: cc,      sm3: cc, sr3: "black", sl4: cc, sm4: cc, sr4: cc, comp: "comp",    order: "AB", corrResp: prms.respKeys[1] },
+        { left1: "black", middle1: cc,                  right1: cc,      left2: cc,      middle2: prms.respColours[0], right2: cc,      comp: "comp",   order: "BA", corrResp: prms.respKeys[0] },
+        { left1: cc,      middle1: cc,                  right1: "black", left2: cc,      middle2: prms.respColours[0], right2: cc,      comp: "incomp", order: "BA", corrResp: prms.respKeys[0] },
+        { left1: "black", middle1: cc,                  right1: cc,      left2: cc,      middle2: prms.respColours[1], right2: cc,      comp: "comp",   order: "BA", corrResp: prms.respKeys[1] },
+        { left1: cc,      middle1: cc,                  right1: "black", left2: cc,      middle2: prms.respColours[1], right2: cc,      comp: "incomp", order: "BA", corrResp: prms.respKeys[1] },
+        { left1: cc,      middle1: prms.respColours[0], right1: cc,      left2: "black", middle2: cc,                  right2: cc,      comp: "comp",   order: "AB", corrResp: prms.respKeys[0] },
+        { left1: cc,      middle1: prms.respColours[0], right1: cc,      left2: cc,      middle2: cc,                  right2: "black", comp: "incomp", order: "AB", corrResp: prms.respKeys[0] },
+        { left1: cc,      middle1: prms.respColours[1], right1: cc,      left2: "black", middle2: cc,                  right2: cc,      comp: "comp",   order: "AB", corrResp: prms.respKeys[1] },
+        { left1: cc,      middle1: prms.respColours[1], right1: cc,      left2: cc,      middle2: cc,                  right2: "black", comp: "incomp", order: "AB", corrResp: prms.respKeys[1] },
     ],
     randomize_order:true,
 };
@@ -247,16 +270,15 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
-
-    //exp.push(fullscreen_on);
-    //exp.push(welcome_de);
-    //exp.push(vpInfoForm);
-    //exp.push(task_instructions1);
-    //exp.push(task_instructions2);
+    exp.push(fullscreen_on);
+    exp.push(welcome_de);
+    // exp.push(vpInfoForm_de);
+    exp.push(task_instructions1);
+    exp.push(task_instructions2);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
@@ -279,7 +301,7 @@ jsPsych.init({
         min_height:cs[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 
+        saveData("/Common/write_data.php", filename, rows = {stim: "simon"}); 
     }
 });
 

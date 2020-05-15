@@ -18,7 +18,7 @@ const canvas_border = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const expName = getFileName();
 const dirName = getDirName();
-const vpNum = genVpNum();
+const vpNum   = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -150,6 +150,16 @@ const trial_feedback = {
         let dat = jsPsych.data.get().last(1).values()[0];
         trial.trial_duration = prms.fbDur[dat.corrCode - 1]; 
     }
+};
+
+const iti = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    trial_duration: prms.iti,
+    response_ends_trial: false,
+    func: function() {}
 };
 
 const block_feedback = {
