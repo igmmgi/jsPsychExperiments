@@ -29,11 +29,10 @@ const vpNum = genVpNum();
 const prms = {
     nTrlsP: 48, // determined by number of stimulus combinations
     nTrlsE: 96,
-    nBlks: 5, //13,
+    nBlks: 13,
     fixDur: 500,
     flankerDur: 100,
     fbDur: 300,
-    waitDur: 1000,
     tooFast:  250,   //  100 ms in total (150 ms flanker duration)
     tooSlow: 1150,   // 1000 ms in total (150 ms flanker duration)
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],

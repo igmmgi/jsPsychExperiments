@@ -26,7 +26,7 @@ const vpNum   = genVpNum();
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 1,
+    nBlks: 11,
     fixDur: 500,
     flankDur: 200,
     fbDur: [500, 1000, 1000, 1000],
