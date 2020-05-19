@@ -24,14 +24,14 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP:  8, 
+    nTrlsP:  20, 
     nTrlsE: 100,
     nBlks: 5, 
     fixDur: 500,
-    fbDur: 500,
+    fbDur: 1000,
     iti: 500,
     tooFast:  150,   
-    tooSlow: 1500,   
+    tooSlow: 2000,   
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     fbSize: "40px monospace",
     perFbTxt: ["Faster than average", "Slower than average"],
@@ -182,7 +182,7 @@ function codeTrial() {
     } else if (dat.rt === null) {
         corrCode = 3; // too slow
     } else if (dat.rt <= prms.tooFast) {
-        corrCode = 4; // too false
+        corrCode = 4; // too fast
     }
 
     jsPsych.data.addDataToLastTrial( 
@@ -358,8 +358,8 @@ function genExpSeq() {
 
     let exp = [];
     
-    exp.push(fullscreen_on);
-    exp.push(welcome_de);
+    // exp.push(fullscreen_on);
+    // exp.push(welcome_de);
     // exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
 

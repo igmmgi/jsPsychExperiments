@@ -1,4 +1,4 @@
-﻿// Performance Monitoring V1 
+﻿// Performance Monitoring V2
 // Speeded reaction time task with standard feedback (e.g., Correct/Incorrect) and
 //  more informative feedback (e.g., Correct/Incorrect + faster/slower than average).
 //  The feedback manipulation (termed "partial" vs. "full") is manipulated blockwise.
@@ -24,14 +24,14 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP:  8, 
+    nTrlsP:  20, 
     nTrlsE: 100,
     nBlks: 5, 
     fixDur: 500,
-    fbDur: 500,
+    fbDur: 1000,
     iti: 500,
     tooFast:  150,   
-    tooSlow: 1500,   
+    tooSlow: 2000,   
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     fbSize: "40px monospace",
     perFbTxt: ["Faster than average", "Slower than average"],
@@ -163,14 +163,21 @@ function codeTrial() {
 
     // data from last X trials to calculate mean performance
     // 1 (2) = current trial faster (slower) than mean of previous X trials
-    let perfDat  = jsPsych.data.get().filter({stim: "shape"}).last(prms.nMeanTrl);
-    let perfCode = null;
+    let perfDat   = jsPsych.data.get().filter({stim: "shape"}).last(prms.nMeanTrl);
+    let perfCodeR = null;
+    let perfCodeF = null;
     try {
         prms.meanRt = perfDat.select("rt").mean();
-        perfCode = (dat.rt <= prms.meanRt) ? 1 : 2
+        perfCodeR   = (dat.rt <= prms.meanRt) ? 1 : 2
+        if (Math.random() >= 0.8) {
+            perfCodeF = (perCodeR === 1) ? 2 : 1;
+        } else {
+            perfCodeF = perfCodeR
+        }
     } catch {
         prms.meanRt = null;  // not enough trials to calculate mean from x trials
     }
+    console.log(perfCodeF)
 
     // Code Correct (1), Incorrect (2), Too Slow (3), Too Fast (4)
     let corrCode = 0;
@@ -191,7 +198,8 @@ function codeTrial() {
             blockNum: prms.cBlk, 
             trialNum: prms.cTrl,
             corrCode: corrCode, 
-            perfCode: perfCode, 
+            perfCodeR: perfCodeR, 
+            perfCodeF: perfCodeF, 
             meanPerf: prms.meanRt, 
         }
     );
@@ -211,8 +219,8 @@ function drawFeedback() {
 
     // feedback text 
     let fbText   = prms.fbTxt[dat.corrCode-1];
-    let givePerf = (dat.fbType === "full" && dat.corrCode === 1 && dat.perfCode !== null)
-    let perfTxt  = (givePerf) ? prms.perFbTxt[dat.perfCode-1] : ""
+    let givePerf = (dat.fbType === "full" && dat.corrCode === 1 && dat.perfCodeF !== null)
+    let perfTxt  = (givePerf) ? prms.perFbTxt[dat.perfCodeF-1] : ""
 
     ctx.font         = prms.fbSize; 
     ctx.textAlign    = "center";
@@ -302,24 +310,7 @@ const block_feedback = {
     },
 };
 
-const trial_timeline_partial = {
-    timeline: [
-        fixation_cross,
-        shape_stimulus,
-        trial_feedback,
-        iti,
-    ],
-    timeline_variables:[
-        { shape: prms.respShapes[0], corrResp: prms.respKeys[0] },
-        { shape: prms.respShapes[1], corrResp: prms.respKeys[1] },
-        { shape: prms.respShapes[2], corrResp: prms.respKeys[2] },
-        { shape: prms.respShapes[3], corrResp: prms.respKeys[3] },
-    ],
-    data: {fbType: "partial"},
-    randomize_order: true,
-};
-
-const trial_timeline_full = {
+const trial_timeline = {
     timeline: [
         fixation_cross,
         shape_stimulus,
@@ -358,21 +349,14 @@ function genExpSeq() {
 
     let exp = [];
     
-    exp.push(fullscreen_on);
+    // exp.push(fullscreen_on);
     exp.push(welcome_de);
     // exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
 
-    // random order following initial partial/full practice blocks
-    // let order = ["P", "F"];
-    // order = order.concat(shuffle(new Array(prms.nBlks-2).fill(["P", "F"]).flat()));
-
-    // or keep alternating partial -> full -> partial ...
-    let order = new Array(prms.nBlks).fill(["P", "F"]).flat();
-
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
-        let blk_timeline = (order[blk] === "P") ? {...trial_timeline_partial} : {...trial_timeline_full}
-        blk_timeline.repetitions = (blk < 2) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        let blk_timeline = {...trial_timeline} ;
+        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
