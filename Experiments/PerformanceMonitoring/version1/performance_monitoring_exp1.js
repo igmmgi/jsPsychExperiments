@@ -358,9 +358,9 @@ function genExpSeq() {
 
     let exp = [];
     
-    // exp.push(fullscreen_on);
-    // exp.push(welcome_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(fullscreen_on);
+    exp.push(welcome_de);
+    exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
 
     // random order following initial partial/full practice blocks
