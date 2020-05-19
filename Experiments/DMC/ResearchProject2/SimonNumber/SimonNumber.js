@@ -184,9 +184,11 @@ const block_feedback = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: blockFeedbackTxt,
+    stimulus: "",
     response_ends_trial: true,
-    data: { stim: "block_feedback" },
+    on_start: function(trial) {
+        trial.stimulus = blockFeedbackTxt_de({stim: "SimonNumber"});
+    },
 };
 
 

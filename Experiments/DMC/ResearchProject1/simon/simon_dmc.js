@@ -172,9 +172,11 @@ const block_feedback = {
     canvas_colour: cc,
     canvas_size: cs,
     canvas_border: cb,
-    stimulus: blockFeedbackTxt,
+    stimulus: "",
     response_ends_trial: true,
-    data: { stim: "block_feedback" },
+    on_start: function(trial) {
+        trial.stimulus = blockFeedbackTxt_de({stim: "simon"});
+    },
 };
 
 const simon_stimulus = {

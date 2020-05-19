@@ -139,7 +139,7 @@ function genExpSeq() {
     let exp = [];
 
     exp.push(welcome_en);
-    exp.push(vpInfoForm);
+    //exp.push(vpInfoForm_en);
     exp.push(task_instructions);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {

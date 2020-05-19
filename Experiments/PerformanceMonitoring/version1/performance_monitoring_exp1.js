@@ -1,6 +1,8 @@
 ﻿// Performance Monitoring V1 
-// Speeded reaction time task with partial (e.g., Correct/Incorrect) and
-//  full feedback (e.g., Correct/Incorrect + faster/slower than average)
+// Speeded reaction time task with standard feedback (e.g., Correct/Incorrect) and
+//  more informative feedback (e.g., Correct/Incorrect + faster/slower than average).
+//  The feedback manipulation (termed "partial" vs. "full") is manipulated blockwise.
+// Current performance is determined by the mean rt in the previous X trials.
 // Task: Repond to shapes (square, circle triangle, star) with one of
 //  four response keys (S, D, K, L)
 
@@ -22,7 +24,7 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP:  20, 
+    nTrlsP:  8, 
     nTrlsE: 100,
     nBlks: 5, 
     fixDur: 500,
@@ -31,14 +33,18 @@ const prms = {
     tooFast:  150,   
     tooSlow: 1500,   
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
+    fbSize: "40px monospace",
+    perFbTxt: ["Faster than average", "Slower than average"],
+    perFbCol: shuffle(["orange", "purple"]),
     respKeys: ["S", "D", "K", "L"],
     respShapes: shuffle(["square", "circle", "triangle", "star"]),
     fixSize: 15,
     fixWidth: 3,
     shapeSize: 50,
-    fbSize: "40px monospace",
     cTrl: 1,
     cBlk: 1,
+    nMeanTrl: 10,  // current performance determined by previous x trials for full feedback
+    meanRt: null,  // mean performance in previous nMeanTrl
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -56,6 +62,42 @@ function drawFixation() {
     ctx.stroke(); 
 }
 
+function drawSquare(ctx, size) {
+    "use strict"
+    ctx.fillRect(-size, -size, size*2, size*2)
+}
+
+function drawCircle(ctx, size) {
+    "use strict"
+    ctx.beginPath();
+    ctx.arc(0, 0, size, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function drawTriangle(ctx, size) {
+    "use strict"
+    ctx.beginPath();
+    ctx.moveTo(0, -size);
+    ctx.lineTo(-size, size);
+    ctx.lineTo( size, size);
+    ctx.fill();
+}
+
+function drawStar(ctx, size) {
+    "use strict"
+    let points = 5;
+    let inset = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(0, -size);
+    for (let i = 0; i < points; i++) {
+        ctx.rotate(Math.PI / points);
+        ctx.lineTo(0, 0 - (size*inset));
+        ctx.rotate(Math.PI / points);
+        ctx.lineTo(0, -size);
+    }
+    ctx.fill();
+}
+
 function drawInstructions() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
@@ -66,39 +108,22 @@ function drawInstructions() {
     ctx.textBaseline = "middle";
 
     ctx.fillText("Respond to the following shapes", 0, -200);
-    ctx.fillText("with the corresponding keys", 0, -150); 
+    ctx.fillText("with the corresponding keys",     0, -150); 
     ctx.save();
 
     ctx.translate(-300, 0);
     for (let i = 0; i < 4; i++) {
         if (prms.respShapes[i] == "square") {
-            ctx.fillRect(-prms.shapeSize, -prms.shapeSize, prms.shapeSize*2, prms.shapeSize*2)
+            drawSquare(ctx, prms.shapeSize)
             ctx.fillText(prms.respKeys[i], 0, prms.shapeSize * 1.5); 
         } else if (prms.respShapes[i] == "circle") {
-            ctx.beginPath();
-            ctx.arc(0, 0, prms.shapeSize, 0, Math.PI * 2);
-            ctx.fill();
+            drawCircle(ctx, prms.shapeSize)
             ctx.fillText(prms.respKeys[i], 0, prms.shapeSize * 1.5); 
         } else if (prms.respShapes[i] == "triangle") {
-            ctx.beginPath();
-            ctx.moveTo(0, -prms.shapeSize);
-            ctx.lineTo(-prms.shapeSize, prms.shapeSize);
-            ctx.lineTo( prms.shapeSize, prms.shapeSize);
-            ctx.fill();
+            drawTriangle(ctx, prms.shapeSize)
             ctx.fillText(prms.respKeys[i], 0, prms.shapeSize * 1.5); 
         } else if (prms.respShapes[i] == "star") {
-            let points = 5;
-            let size = prms.shapeSize * 1.2;
-            let inset = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(0, -size);
-            for (let i = 0; i < points; i++) {
-                ctx.rotate(Math.PI / points);
-                ctx.lineTo(0, 0 - (size*inset));
-                ctx.rotate(Math.PI / points);
-                ctx.lineTo(0, -size);
-            }
-            ctx.fill();
+            drawStar(ctx, prms.shapeSize * 1.2)
             ctx.fillText(prms.respKeys[i], 0, prms.shapeSize * 1.5); 
         }
         ctx.translate(200, 0);
@@ -116,50 +141,92 @@ function drawShape(args) {
     ctx.fillStyle = "black"
     switch (args["shape"]) {
         case "square":
-            ctx.fillRect(-prms.shapeSize, -prms.shapeSize, prms.shapeSize*2, prms.shapeSize*2)
+            drawSquare(ctx, prms.shapeSize);
             break;
         case "circle":
-            ctx.beginPath();
-            ctx.arc(0, 0, prms.shapeSize, 0, Math.PI * 2);
-            ctx.fill();
+            drawCircle(ctx, prms.shapeSize);
             break;
         case "triangle":
-            ctx.beginPath();
-            ctx.moveTo(0, -prms.shapeSize);
-            ctx.lineTo(-prms.shapeSize, prms.shapeSize);
-            ctx.lineTo( prms.shapeSize, prms.shapeSize);
-            ctx.fill();
+            drawTriangle(ctx, prms.shapeSize);
             break;
         case "star":
-            let points = 5;
-            let size = prms.shapeSize * 1.2;
-            let inset = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(0, -size);
-            for (let i = 0; i < points; i++) {
-                ctx.rotate(Math.PI / points);
-                ctx.lineTo(0, 0 - (size*inset));
-                ctx.rotate(Math.PI / points);
-                ctx.lineTo(0, -size);
-            }
-            ctx.fill();
+            drawStar(ctx, prms.shapeSize * 1.2);
             break;
     }
 }
 
+function codeTrial() {
+    "use strict";
+
+    // data from last trial
+    let dat = jsPsych.data.get().last(1).values()[0];
+
+    // data from last X trials to calculate mean performance
+    // 1 (2) = current trial faster (slower) than mean of previous X trials
+    let perfDat  = jsPsych.data.get().filter({stim: "shape"}).last(prms.nMeanTrl);
+    let perfCode = null;
+    try {
+        prms.meanRt = perfDat.select("rt").mean();
+        perfCode = (dat.rt <= prms.meanRt) ? 1 : 2
+    } catch {
+        prms.meanRt = null;  // not enough trials to calculate mean from x trials
+    }
+
+    // Code Correct (1), Incorrect (2), Too Slow (3), Too Fast (4)
+    let corrCode = 0;
+    let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
+    if (dat.key_press === corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+        corrCode = 1; // correct
+    } else if (dat.key_press !== corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+        corrCode = 2; // choice error
+    } else if (dat.rt === null) {
+        corrCode = 3; // too slow
+    } else if (dat.rt <= prms.tooFast) {
+        corrCode = 4; // too false
+    }
+
+    jsPsych.data.addDataToLastTrial( 
+        { 
+            date: Date(), 
+            blockNum: prms.cBlk, 
+            trialNum: prms.cTrl,
+            corrCode: corrCode, 
+            perfCode: perfCode, 
+            meanPerf: prms.meanRt, 
+        }
+    );
+
+    prms.cTrl += 1;
+    if (dat.key_press === 27) {
+        jsPsych.endExperiment();
+    }
+
+}
+
 function drawFeedback() {
     "use strict"
+
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
+
+    // feedback text 
+    let fbText   = prms.fbTxt[dat.corrCode-1];
+    let givePerf = (dat.fbType === "full" && dat.corrCode === 1 && dat.perfCode !== null)
+    let perfTxt  = (givePerf) ? prms.perFbTxt[dat.perfCode-1] : ""
 
     ctx.font         = prms.fbSize; 
     ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle    = "black";
-    
-    ctx.fillText(prms.fbTxt[dat.corrCode-1], 0, 0); 
-}
 
+    // standard feedback (Correct, Error, Too Slow, Too Fast)
+    ctx.fillText(fbText, 0, 0); 
+   
+    // informative feedback (faster, slower)
+    ctx.fillStyle = perfTxt === prms.perFbTxt[0] ? prms.perFbCol[0] : prms.perFbCol[1];
+    ctx.fillText(perfTxt, 0, 50);
+
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                              jsPsych stimuli                       //
@@ -192,7 +259,7 @@ const task_instructions1 = {
     canvas_border: canvas_border,
     translate_origin: true,
     response_ends_trial: true,
-    func: [drawInstructions]
+    func: drawInstructions
 };
 
 const shape_stimulus = {
@@ -228,12 +295,14 @@ const block_feedback = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: blockFeedbackTxt,
+    stimulus: "",
     response_ends_trial: true,
-    data: { stim: "block_feedback" },
+    on_start: function(trial) {
+        trial.stimulus = blockFeedbackTxt_de({stim: "shape"});
+    },
 };
 
-const trial_timeline = {
+const trial_timeline_partial = {
     timeline: [
         fixation_cross,
         shape_stimulus,
@@ -246,8 +315,27 @@ const trial_timeline = {
         { shape: prms.respShapes[2], corrResp: prms.respKeys[2] },
         { shape: prms.respShapes[3], corrResp: prms.respKeys[3] },
     ],
-    randomize_order:true,
+    data: {fbType: "partial"},
+    randomize_order: true,
 };
+
+const trial_timeline_full = {
+    timeline: [
+        fixation_cross,
+        shape_stimulus,
+        trial_feedback,
+        iti,
+    ],
+    timeline_variables:[
+        { shape: prms.respShapes[0], corrResp: prms.respKeys[0] },
+        { shape: prms.respShapes[1], corrResp: prms.respKeys[1] },
+        { shape: prms.respShapes[2], corrResp: prms.respKeys[2] },
+        { shape: prms.respShapes[3], corrResp: prms.respKeys[3] },
+    ],
+    data: {fbType: "full"},
+    randomize_order: true,
+};
+
 
 const fullscreen_on = {
     type: 'fullscreen',
@@ -269,12 +357,22 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
+    
+    exp.push(fullscreen_on);
     exp.push(welcome_de);
+    // exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
-   
+
+    // random order following initial partial/full practice blocks
+    // let order = ["P", "F"];
+    // order = order.concat(shuffle(new Array(prms.nBlks-2).fill(["P", "F"]).flat()));
+
+    // or keep alternating partial -> full -> partial ...
+    let order = new Array(prms.nBlks).fill(["P", "F"]).flat();
+
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
-        let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        let blk_timeline = (order[blk] === "P") ? {...trial_timeline_partial} : {...trial_timeline_full}
+        blk_timeline.repetitions = (blk < 2) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

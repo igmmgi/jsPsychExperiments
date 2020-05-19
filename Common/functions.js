@@ -146,10 +146,10 @@ function blockFeedbackTxt(filter_options) {
     let dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk});
     let nTotal = dat.count();
     let nError = dat.select("corrCode").values.filter(function (x) { return x !== 1; }).length;
-    dat = jsPsych.data.get().filter({...filter_options, corrCode: 1});
-    let blockFbTxt = "<H1>Block: " + prms.cBlk + " of " + prms.nBlks + "</H1>" +
+    dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk, corrCode: 1});
+    let blockFbTxt = "<H1>Block: " + prms.cBlk + " of " + prms.nBlks + "</H1><br>" +
         "<H1>Mean RT: " + Math.round(dat.select("rt").mean()) + " ms </H1>" +
-        "<H1>Error Rate: " + Math.round((nError / nTotal) * 100) + " %</H1>" +
+        "<H1>Error Rate: " + Math.round((nError / nTotal) * 100) + " %</H1><br>" +
         "<H2>Press any key to continue the experiment!</H2>";
     prms.cBlk += 1;
     return blockFbTxt;
@@ -160,10 +160,10 @@ function blockFeedbackTxt_de(filter_options) {
     let dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk});
     let nTotal = dat.count();
     let nError = dat.select("corrCode").values.filter(function (x) { return x !== 1; }).length;
-    dat = jsPsych.data.get().filter({...filter_options, corrCode: 1});
-    let blockFbTxt = "<H1>Block: " + prms.cBlk + " von " + prms.nBlks + "</H1>" +
+    dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk, corrCode: 1});
+    let blockFbTxt = "<H1>Block: " + prms.cBlk + " von " + prms.nBlks + "</H1><br>" +
         "<H1>Mittlere Reaktionszeit: " + Math.round(dat.select("rt").mean()) + " ms </H1>" +
-        "<H1>Fehlerrate: " + Math.round((nError / nTotal) * 100) + " %</H1>" +
+        "<H1>Fehlerrate: " + Math.round((nError / nTotal) * 100) + " %</H1><br>" +
         "<H2>Drücken Sie eine beliebige Taste, um fortzufahren!</H2>";
     prms.cBlk += 1;
     return blockFbTxt;
@@ -171,14 +171,18 @@ function blockFeedbackTxt_de(filter_options) {
 
 
 
-function saveData(url, filename, rows = {}, 
-                  colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed']){
+function saveData(
+    url, 
+    filename, 
+    rows = {}, 
+    colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed']) {
 
     let dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).csv();
     let xhr = new XMLHttpRequest();
     xhr.open('POST', url); 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({filename: filename, filedata: dat}));
+
 }
 
 function generateRandomString(length) {
