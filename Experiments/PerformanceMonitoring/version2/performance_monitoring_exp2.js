@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = "rgba(200, 200, 200, 1)";
+const canvas_colour = "rgba(220, 220, 220, 1)";
 const canvas_size   = [960, 720];
 const canvas_border = "5px solid black";
 
@@ -26,7 +26,7 @@ const vpNum   = genVpNum();
 const prms = {
     nTrlsP:  20, 
     nTrlsE: 100,
-    nBlks: 5, 
+    nBlks: 4, 
     fixDur: 500,
     fbDur: 1000,
     iti: 500,
@@ -35,7 +35,8 @@ const prms = {
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     fbSize: "40px monospace",
     perFbTxt: ["Faster than average", "Slower than average"],
-    perFbCol: shuffle(["orange", "purple"]),
+    percentageCorrect: 0.6,
+    perFbCol: shuffle(["Chocolate", "DodgerBlue"]),
     respKeys: ["S", "D", "K", "L"],
     respShapes: shuffle(["square", "circle", "triangle", "star"]),
     fixSize: 15,
@@ -169,7 +170,7 @@ function codeTrial() {
     try {
         prms.meanRt = perfDat.select("rt").mean();
         perfCodeR   = (dat.rt <= prms.meanRt) ? 1 : 2
-        if (Math.random() >= 0.8) {
+        if (Math.random() >= prms.percentageCorrect) {
             perfCodeF = (perCodeR === 1) ? 2 : 1;
         } else {
             perfCodeF = perfCodeR
@@ -267,7 +268,10 @@ const task_instructions1 = {
     canvas_border: canvas_border,
     translate_origin: true,
     response_ends_trial: true,
-    func: drawInstructions
+    func: drawInstructions,
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const shape_stimulus = {
@@ -349,9 +353,9 @@ function genExpSeq() {
 
     let exp = [];
     
-    // exp.push(fullscreen_on);
+    exp.push(fullscreen_on);
     exp.push(welcome_de);
-    // exp.push(vpInfoForm_de);
+    //exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -359,6 +363,7 @@ function genExpSeq() {
         blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
+        exp.push(task_instructions1);  // task-mapping reminder
     }
     exp.push(debrief_de);
     exp.push(fullscreen_off);

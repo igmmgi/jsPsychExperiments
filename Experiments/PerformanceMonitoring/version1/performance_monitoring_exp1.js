@@ -259,7 +259,10 @@ const task_instructions1 = {
     canvas_border: canvas_border,
     translate_origin: true,
     response_ends_trial: true,
-    func: drawInstructions
+    func: drawInstructions,
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const shape_stimulus = {
