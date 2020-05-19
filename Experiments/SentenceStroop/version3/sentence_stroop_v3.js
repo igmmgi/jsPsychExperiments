@@ -174,9 +174,21 @@ const stroops = [
     {type: "stroop", word: "blue",   colour: "blue",   cong: "cong",   key:prms.respKeysStroop[0]},
     {type: "stroop", word: "green",  colour: "green",  cong: "cong",   key:prms.respKeysStroop[1]},
     {type: "stroop", word: "yellow", colour: "yellow", cong: "cong",   key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "blue",   colour: "blue",   cong: "cong",   key:prms.respKeysStroop[0]},
+    {type: "stroop", word: "green",  colour: "green",  cong: "cong",   key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "yellow", colour: "yellow", cong: "cong",   key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "blue",   colour: "blue",   cong: "cong",   key:prms.respKeysStroop[0]},
+    {type: "stroop", word: "green",  colour: "green",  cong: "cong",   key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "yellow", colour: "yellow", cong: "cong",   key:prms.respKeysStroop[2]},
     {type: "stroop", word: "brown",  colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
     {type: "stroop", word: "orange", colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
-    {type: "stroop", word: "red",    colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]}
+    {type: "stroop", word: "red",    colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "brown",  colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "orange", colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
+    {type: "stroop", word: "red",    colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "brown",  colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "orange", colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "red",    colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]}
 ]
 
 // 11 practice sentences
@@ -487,7 +499,7 @@ function create_sentence_items(sentences) {
 function create_stroop_items_feedback(nreps) {
     let items = [];
     for (let i = 0; i < nreps; i++) {
-        for (let j = 0; j < 6; j++) {
+        for (let j = 0; j < 18; j++) {
             let tmp = {
                 timeline: [stroop_stimulus, trial_feedback],
                 timeline_variables: [stroops[j]],
@@ -501,7 +513,7 @@ function create_stroop_items_feedback(nreps) {
 function create_stroop_items(nreps) {
     let items = [];
     for (let i = 0; i < nreps; i++) {
-        for (let j = 0; j < 6; j++) {
+        for (let j = 0; j < 18; j++) {
             let tmp = {
                 timeline: [stroop_stimulus],
                 timeline_variables: [stroops[j]],
