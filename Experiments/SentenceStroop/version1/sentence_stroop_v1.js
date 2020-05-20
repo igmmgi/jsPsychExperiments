@@ -578,7 +578,6 @@ function drawQuestion(args) {
 function constrained_shuffle(items) {
     constraints_met = false;
     while (constraints_met == false) {
-        console.log("here")
         items = shuffle(items)
         constraints_met = true;
         for (i in items) {

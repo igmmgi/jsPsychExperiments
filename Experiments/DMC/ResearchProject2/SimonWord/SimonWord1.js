@@ -195,7 +195,6 @@ const word_stimulus = {
 
 function drawFeedback() {
     "use strict"
-    console.log("here")
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
     ctx.font = "40px monospace";

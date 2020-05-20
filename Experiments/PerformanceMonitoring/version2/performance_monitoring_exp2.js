@@ -178,7 +178,6 @@ function codeTrial() {
     } catch {
         prms.meanRt = null;  // not enough trials to calculate mean from x trials
     }
-    console.log(perfCodeF)
 
     // Code Correct (1), Incorrect (2), Too Slow (3), Too Fast (4)
     let corrCode = 0;

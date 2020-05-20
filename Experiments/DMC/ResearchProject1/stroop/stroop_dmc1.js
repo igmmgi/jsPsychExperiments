@@ -119,7 +119,6 @@ function drawFeedback() {
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
     ctx.fillText(prms.fbTxt[dat.corrCode-1], 0, 0); 
-    console.log("here")
 }
 
 function drawStroop(args) {
