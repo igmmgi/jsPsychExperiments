@@ -102,6 +102,11 @@ jsPsych.plugins["html-keyboard-response-canvas"] = (function() {
 
         // draw
         display_element.innerHTML = new_html; 
+
+        // make sure canvas still centered
+        var offsetWidth = document.getElementById('jspsych-html-keyboard-response-stimulus').offsetWidth;
+        canvas.style.left = ((offsetWidth - canvas.width) / 2) + "px";
+        
         display_element.appendChild(canvas); 
         
         // store response

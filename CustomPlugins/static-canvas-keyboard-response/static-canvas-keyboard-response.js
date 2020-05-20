@@ -92,10 +92,11 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         // setup canvas
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
 
-        canvas.style        = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
+        canvas.style        = "position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;";
         canvas.width        = trial.canvas_size[0]; 
         canvas.height       = trial.canvas_size[1];
         canvas.style.border = trial.canvas_border;
+        canvas.style.left   = (-trial.canvas_size[0]/2) + "px";
 
         let ctx = document.getElementById('canvas').getContext('2d');
         ctx.fillStyle = trial.canvas_colour;
@@ -181,6 +182,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 canvas.width        = trial.canvas_size[0]; 
                 canvas.height       = trial.canvas_size[1];
                 canvas.style.border = trial.canvas_border;
+                canvas.style.left   = (-trial.canvas_size[0]/2) + "px";
                 
                 let ctx = document.getElementById('canvas').getContext('2d');
                 ctx.fillStyle = trial.canvas_colour;

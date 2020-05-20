@@ -1,8 +1,10 @@
 // Modified version of a Simon Task:
-// VPs respond to the colour of a centrally presented square whilst ignoring
-//  laterally presented squares. The laterally presented squares 
-// VPs respond to the colour of the presented stimulus using
-// left and right key responses.
+// VPs respond to the colour of the presented stimulus and ignore the text
+//  using left and right key-presses ("D" and "J")
+// 50% of trials involve the presentation of the "word" 
+//  first followed by the presentation of the "colour" word -> colour 
+// 50% of trials involve the presentation of the "colour" 
+//  first followed by the presentation of the "word" colour -> word 
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -24,19 +26,19 @@ const vpNum   = genVpNum();
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 11,   
+    nBlks: 2,
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
-    simonDur: 100,
+    stroopDur: 400,
     iti: 500,
     tooFast: 150,
     tooSlow: 2000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    respColours: ["red", "green"],
     fixWidth: 3,
     fixSize: 15,
+    stroopSize: "60px monospace",
     fbSize: "30px monospace",
     respKeys: [],
 };
@@ -44,12 +46,12 @@ const prms = {
 const versionNumber = getVersionNumber(vpNum, 2)
 if (versionNumber === 1) {
     prms.respKeys = ["D", "J", 27];
-    respText = "<h4 align='left'><b>BLUE</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='left'><b>RED</b>  drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
+    respText = "<h4 align='center'><b>BLAU</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
+               "<h4 align='center'><b>GRÜN</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
 } else {
     prms.respKeys = ["J", "D", 27];
-    respText = "<h4 align='left'><b>RED</b>  drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='left'><b>BLUE</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
+    respText = "<h4 align='center'><b>GRÜN</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
+               "<h4 align='center'><b>BLAU</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -61,13 +63,14 @@ const task_instructions1 = {
     canvas_size: cs,
     canvas_border: cb,
     stimulus: "<h2 align='center'>Willkommen bei unserem Experiment:</h2><br>" +
-    "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-    "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-    "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+              "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+              "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+              "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     on_finish: function() {
         $('body').css('cursor', 'none'); 
     },
 };
+
 
 const task_instructions2 = {
     type: "html-keyboard-response-canvas",
@@ -76,13 +79,8 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 align='center'>Aufgabe:</h2><br>" +
-    "<h4 align='left'>Dieses Experiment besteht aus insgesamt 13 Blöcken. Jeder Block besteht wiederum aus mehreren Durchgängen.</h4>" +
-    "<h4 align='left'>Sie werden in jedem Durchgang des Experiments eine Reihe von 5 Buchstaben sehen (z.B. HHHHH, HHSHH).</h4>" +
-    "<h4 align='left'>Bitte reagieren Sie immer auf den Buchstaben in der Mitte, die anderen Buchstaben sollen Sie möglichst ignorieren.</h4>" +
     respText +
-    "<h4 align='left'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
-    "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
-    "<h4 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h4><br>" +
+    "<h4 align='center'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -121,26 +119,52 @@ function drawFeedback() {
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
     ctx.fillText(prms.fbTxt[dat.corrCode-1], 0, 0); 
+    console.log("here")
 }
 
-
-function drawSimon(args) {
+function drawStroop(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
 
-    // left
-    ctx.fillStyle = args["left"];
-    ctx.fillRect(-100, -25, 50, 50);
-   
-    // middle
-    ctx.fillStyle = args["middle"];
-    ctx.fillRect(-25, -25, 50, 50);
-   
-    // right
-    ctx.fillStyle = args["right"];
-    ctx.fillRect(50, -25, 50, 50);
+    // draw word
+    ctx.font = prms.stroopSize;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = args["colour"];
+    ctx.fillText("####", 0, 0); 
 
+    // draw word
+    ctx.font = prms.stroopSize;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "black";
+    ctx.fillText(args["word"], 0, 0); 
+
+}
+
+function codeTrial() {
+    "use strict";
+    let dat = jsPsych.data.get().last(1).values()[0];
+    let corrCode = 0;
+    let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
+
+    let rt = (dat.order === "RI") ? dat.rt : dat.rt - prms.stroopDur;
+
+    if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
+        corrCode = 1;  // correct
+    } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
+        corrCode = 2;  // choice error
+    } else if (rt === null) {
+        corrCode = 3; // too slow
+    } else if (rt <= prms.tooFast) {
+        corrCode = 4; // too false
+    }
+    jsPsych.data.addDataToLastTrial({date: Date(), rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
+    prms.cTrl += 1;
+    if (dat.key_press === 27) {
+        jsPsych.endExperiment();
+    }
 }
 
 const trial_feedback = {
@@ -175,40 +199,39 @@ const block_feedback = {
     stimulus: "",
     response_ends_trial: true,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt_de({stim: "simon"});
+        trial.stimulus = blockFeedbackTxt_de({stim: "stroop"});
     },
 };
 
-const simon_stimulus = {
+const stroop_stimulus = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: cc,
     canvas_size: cs,
     canvas_border: cb,
     trial_duration: prms.tooSlow,
     translate_origin: true,
-    stimulus_onset: [0, 200],
-    clear_screen: [1, 1],
-    stimulus_duration: 400,
-    response_ends_trial: true,
-    choices: prms.respKeys,
-    func: [drawSimon, drawSimon],
+    stimulus_onset: [0, 400],
+    stimulus_duration: 800,
+    clear_screen: [0, 1],
+    func: [drawStroop, drawStroop],
     func_args:[
-        { 
-            "left":   jsPsych.timelineVariable("left1") ,
-            "middle": jsPsych.timelineVariable("middle1") ,
-            "right":  jsPsych.timelineVariable("right1") ,
-        },
-        { 
-            "left":   jsPsych.timelineVariable("left2") ,
-            "middle": jsPsych.timelineVariable("middle2") ,
-            "right":  jsPsych.timelineVariable("right2") ,
-        },
+        {"word": jsPsych.timelineVariable("w1"), "colour": jsPsych.timelineVariable("c1")},
+        {"word": jsPsych.timelineVariable("w2"), "colour": jsPsych.timelineVariable("c2")},
     ],
     data: {
-        stim: "simon",
+        stim: "stroop",
+        word: jsPsych.timelineVariable('word'), 
+        colour: jsPsych.timelineVariable('colour'), 
         comp: jsPsych.timelineVariable('comp'), 
         order: jsPsych.timelineVariable('order'), 
         corrResp: jsPsych.timelineVariable('corrResp')
+    },
+    on_start: function(trial) {
+        if (trial.data.order === "RI") {
+            trial.trial_duration = prms.tooSlow;
+        } else {
+            trial.trial_duration = prms.tooSlow + prms.stroopDur;
+        }
     },
     on_finish: function() { codeTrial(); }
 };
@@ -216,23 +239,22 @@ const simon_stimulus = {
 const trial_timeline = {
     timeline: [
         fixation_cross,
-        simon_stimulus,
+        stroop_stimulus,
         trial_feedback,
-        iti,
+        iti
     ],
     timeline_variables:[
-        { left1: "black", middle1: cc,                  right1: cc,      left2: cc,      middle2: prms.respColours[0], right2: cc,      comp: "comp",   order: "BA", corrResp: prms.respKeys[0] },
-        { left1: cc,      middle1: cc,                  right1: "black", left2: cc,      middle2: prms.respColours[0], right2: cc,      comp: "incomp", order: "BA", corrResp: prms.respKeys[0] },
-        { left1: "black", middle1: cc,                  right1: cc,      left2: cc,      middle2: prms.respColours[1], right2: cc,      comp: "comp",   order: "BA", corrResp: prms.respKeys[1] },
-        { left1: cc,      middle1: cc,                  right1: "black", left2: cc,      middle2: prms.respColours[1], right2: cc,      comp: "incomp", order: "BA", corrResp: prms.respKeys[1] },
-        { left1: cc,      middle1: prms.respColours[0], right1: cc,      left2: "black", middle2: cc,                  right2: cc,      comp: "comp",   order: "AB", corrResp: prms.respKeys[0] },
-        { left1: cc,      middle1: prms.respColours[0], right1: cc,      left2: cc,      middle2: cc,                  right2: "black", comp: "incomp", order: "AB", corrResp: prms.respKeys[0] },
-        { left1: cc,      middle1: prms.respColours[1], right1: cc,      left2: "black", middle2: cc,                  right2: cc,      comp: "comp",   order: "AB", corrResp: prms.respKeys[1] },
-        { left1: cc,      middle1: prms.respColours[1], right1: cc,      left2: cc,      middle2: cc,                  right2: "black", comp: "incomp", order: "AB", corrResp: prms.respKeys[1] },
+        { word: "blau", colour: "blue",  w1: "blau", c1: cc,      w2: "",     c2: "blue" , comp: 'comp',   order: "IR", corrResp: prms.respKeys[0]},
+        { word: "blau", colour: "green", w1: "blau", c1: cc,      w2: "",     c2: "green", comp: 'incomp', order: "IR", corrResp: prms.respKeys[1]},
+        { word: "grün", colour: "green", w1: "grün", c1: cc,      w2: "",     c2: "green", comp: 'comp',   order: "IR", corrResp: prms.respKeys[1]},
+        { word: "grün", colour: "blue",  w1: "grün", c1: cc,      w2: "",     c2: "blue",  comp: 'incomp', order: "IR", corrResp: prms.respKeys[0]},
+        { word: "blau", colour: "blue",  w1: "" ,    c1: "blue" , w2: "blau", c2:cc,       comp: 'comp',   order: "RI", corrResp: prms.respKeys[0]},
+        { word: "blau", colour: "green", w1: "" ,    c1: "green", w2: "blau", c2:cc,       comp: 'incomp', order: "RI", corrResp: prms.respKeys[1]},
+        { word: "grün", colour: "green", w1: "",     c1: "green", w2: "grün", c2:cc,       comp: 'comp',   order: "RI", corrResp: prms.respKeys[1]},
+        { word: "grün", colour: "blue",  w1: "",     c1: "blue",  w2: "grün", c2:cc,       comp: 'incomp', order: "RI", corrResp: prms.respKeys[0]}
     ],
     randomize_order:true,
 };
-
 
 const randomString = generateRandomString(16);
 
@@ -249,12 +271,10 @@ const alphaNum = {
     "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
 };
 
+
 const fullscreen_on = {
     type: 'fullscreen',
     fullscreen_mode: true,
-    on_finish: function() {
-        $('body').css('cursor', 'none'); 
-    },
 }
 
 const fullscreen_off = {
@@ -274,7 +294,8 @@ function genExpSeq() {
     let exp = [];
     exp.push(fullscreen_on);
     exp.push(welcome_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(resize_de);
+    exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
@@ -303,7 +324,7 @@ jsPsych.init({
         min_height:cs[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "simon"}); 
+        saveData("/Common/write_data.php", filename, rows = {stim: "stroop"}); 
     }
 });
 

@@ -1,8 +1,18 @@
 // Stroop-like task with VPs required to drag words up/down according to colour
 
+////////////////////////////////////////////////////////////////////////
+//                         Canvas Properties                          //
+////////////////////////////////////////////////////////////////////////
+const canvas_colour = "rgba(200, 200, 200, 1)";
+const canvas_size   = [1280, 960];
+const canvas_border = "5px solid black";
+
+////////////////////////////////////////////////////////////////////////
+//                             Experiment                             //
+////////////////////////////////////////////////////////////////////////
 const expName = getFileName();
 const dirName = getDirName();
-const vpNum = genVpNum();
+const vpNum   = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -112,9 +122,11 @@ function drawFeedback() {
 
 const fixation_cross = {
     type: 'static-canvas-keyboard-response',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     trial_duration: 500,
     translate_origin: true,
-    canvas_border: "4px solid black",
     func: drawFixation
 };
 
@@ -134,9 +146,12 @@ function codeTrial() {
 
 const trial_stimulus = {
     type: 'mouse-drag-response',
-    canvas_border: "4px solid black",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     word: jsPsych.timelineVariable('word'), 
     colour: jsPsych.timelineVariable('colour'), 
+    scale_factor: null,
     data: {
         stim: "stroop",
         word: jsPsych.timelineVariable('word'), 
@@ -144,14 +159,20 @@ const trial_stimulus = {
         word_loc: jsPsych.timelineVariable('word_loc'),
         resp_loc: jsPsych.timelineVariable('resp_loc') 
     },
+    on_start: function(trial) { 
+         let dat = jsPsych.data.get().last(1).values()[0];
+         trial.scale_factor = dat.scale_factor
+    },
     on_finish: function() { codeTrial(); }
 };
 
 const trial_feedback = {
     type: 'static-canvas-keyboard-response',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     trial_duration: 500,
     translate_origin: false,
-    canvas_border: "4px solid black",
     func: drawFeedback
 };
 
@@ -160,7 +181,7 @@ function blockFeedbackTxt(filter_options) {
     let dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk});
     let nTotal = dat.count();
     let nError = dat.select("corrCode").values.filter(function (x) { return x !== 0; }).length;
-    dat = jsPsych.data.get().filter({...filter_options, corrCode: 1});
+    dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk, corrCode: 1});
     let blockFbTxt = "<H1>Block: " + prms.cBlk + " of " + prms.nBlks + "</H1>" +
         "<H1>Mean RT: " + Math.round(dat.select("end_rt").mean()) + " ms </H1>" +
         "<H1>Error Rate: " + Math.round((nError / nTotal) * 100) + " %</H1>" +
@@ -168,6 +189,16 @@ function blockFeedbackTxt(filter_options) {
     prms.cBlk += 1;
     return blockFbTxt;
 }
+
+const iti = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    trial_duration: prms.iti,
+    response_ends_trial: false,
+    func: function() {}
+};
 
 const block_feedback = {
     type: 'html-keyboard-response',
@@ -184,6 +215,7 @@ const trial_timeline = {
         fixation_cross,
         trial_stimulus,
         trial_feedback,
+        iti,
     ],
     randomize_order:true,
     repetitions: 1 
@@ -208,6 +240,8 @@ function genExpSeq() {
     let exp = [];
     exp.push(fullscreen_on);
     exp.push(welcome_en);
+    exp.push(resize_en);
+    
     // exp.push(vpInfoForm);
     exp.push(task_instructions);
 
@@ -219,6 +253,7 @@ function genExpSeq() {
     }
     exp.push(debrief_en);
     exp.push(fullscreen_off);
+    
     return exp;
 
 }

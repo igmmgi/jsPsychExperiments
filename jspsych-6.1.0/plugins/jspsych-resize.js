@@ -131,7 +131,7 @@ jsPsych.plugins["resize"] = (function() {
     var final_height_px, final_width_px;
     function scale() {
       final_width_px = scale_div.offsetWidth;
-      //final_height_px = scale_div.offsetHeight;
+      final_height_px = scale_div.offsetHeight;
 
       var pixels_unit_screen = final_width_px / trial.item_width;
 
@@ -151,14 +151,15 @@ jsPsych.plugins["resize"] = (function() {
       display_element.innerHTML = '';
 
       // finishes trial
-
       var trial_data = {
         'final_height_px': final_height_px,
         'final_width_px': final_width_px,
         'scale_factor': scale_factor
       }
 
-      jsPsych.finishTrial(trial_data);
+        jsPsych.data.addProperties({ scale_factor: scale_factor });
+        jsPsych.finishTrial(trial_data);
+
     }
   };
 

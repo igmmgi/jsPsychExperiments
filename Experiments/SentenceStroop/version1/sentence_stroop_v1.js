@@ -1,7 +1,7 @@
 // JavaScript (jsPsych) version of Exp1 from Kan et al. (2013)
 // To adapt or not to adapt: The question of domain-general cognitive 
 // control, Cognition, 129, 637-651
-
+//
 // Main finding: difficult to interpret sentences (i.e., high conflict) reduces
 // the compatibility effect if a subsequent stroop trial.
 //
@@ -80,7 +80,8 @@ const prms = {
     respKeysStroop: shuffle(["G", "H", "J"]),
     respKeysQuestion: ["T", "F"],
     fbTxt: ["Correct", "Error"],  
-    font_sentence: "20px monospace",
+    font_sentence: "30px monospace",
+    line_height: 40,
     sentence_width: 800,
     font_question: "30px monospace",
     font_stroop: "40px monospace",
@@ -210,7 +211,7 @@ const prac_sentences = [
 // 42 experimental items (21/21 congruent ingongruent)
 // list refers to the original item list number used in Kan et al. (2013)
 const exp_sentences = [
-    {num:  1, list: 2, type: "exp", cong: "cong",   sent: "The CIA director confirmed that the rumor should habe been stopped sooner.",             question: ""},
+    {num:  1, list: 2, type: "exp", cong: "cong",   sent: "The CIA director confirmed that the rumor should have been stopped sooner.",             question: ""},
     {num:  1, list: 1, type: "exp", cong: "incong", sent: "The CIA director confirmed the rumor should have been stopped sooner.",                  question: ""},
     {num:  2, list: 1, type: "exp", cong: "cong",   sent: "The French explorers discovered that the treasure had caused a vicious battle.",         question: ""},
     {num:  2, list: 2, type: "exp", cong: "incong", sent: "The French explorers discovered the treasure had caused a vicious battle.",              question: ""},
@@ -305,7 +306,7 @@ const filler_sentences = [
     {num:  5, type: "filler", cong: "cong", sent: "The bargain shopper saw the beautiful and expensive raincoat after the sale was over.",   question: "Was the shopper careless with cash?"},
     {num:  6, type: "filler", cong: "cong", sent: "The bored librarian painted her fingernails after shelving several books.",               question: "Was the librarian very busy?"},
     {num:  7, type: "filler", cong: "cong", sent: "The church workers offered the kids a free bible and some coloring books.",               question: "Did the workers offer them food?" },
-    {num:  8, type: "filler", cong: "cong", sent: "The clerck at the records office clarified the confusing statement on the application.",  question: ""},
+    {num:  8, type: "filler", cong: "cong", sent: "The clerk at the records office clarified the confusing statement on the application.",  question: ""},
     {num:  9, type: "filler", cong: "cong", sent: "The curious girl comprehended the answer but asked the question again.",                  question: "Did the girl understand the first time?"},
     {num: 10, type: "filler", cong: "cong", sent: "The exuberant team planned a huge and extravagant party for after the game.",             question: ""},
     {num: 11, type: "filler", cong: "cong", sent: "The flight attendent clarified the instructions when the passengers asked questions.",    question: ""},
@@ -328,7 +329,6 @@ const filler_sentences = [
     {num: 28, type: "filler", cong: "cong", sent: "The wealthy investor regretted the decision once he realized the consequences.",          question: "Was the investor rich?"},
     {num: 29, type: "filler", cong: "cong", sent: "The worried mother determined the explanation for why her son had been avoiding her.",    question: ""}
 ]
-
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -450,6 +450,7 @@ const moving_window_text = {
     word_number: jsPsych.timelineVariable('word_num'),
     font: prms.font_sentence,
     max_width: prms.sentence_width,
+    line_height: prms.line_height,
     choices: prms["respKeysSentence"],
     data: {
         stim: "SentenceStroop"
@@ -577,6 +578,7 @@ function drawQuestion(args) {
 function constrained_shuffle(items) {
     constraints_met = false;
     while (constraints_met == false) {
+        console.log("here")
         items = shuffle(items)
         constraints_met = true;
         for (i in items) {
@@ -620,8 +622,8 @@ function add_filler_questions(items) {
 
 // 1st phase is a short Stroop practice followed by a longer Stroop baseline phase
 // The timeline of items are shuffled with the addition of a fixation 
-const prac_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items_feedback(2)) }
-const base_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items(25)) }
+const prac_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items_feedback(1)) }
+const base_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items(8)) }
 
 // 2nd phase is a short practice with the moving window text alone (1 trial)
 // just take the first item as the item for the moving window familiarisation routine
@@ -631,7 +633,7 @@ const prac_trial_sentence_timeline = { timeline: prac_items_sentences1 }
 
 // 3rd phase is short combined stroop + sentence combination
 const prac_items_sentences2        = prac_items_sentences.slice(1)
-const prac_items_combined          = add_fix_iti(shuffle(prac_items_sentences2.concat(create_stroop_items(3))))
+const prac_items_combined          = add_fix_iti(shuffle(prac_items_sentences2.concat(create_stroop_items(1))))
 const prac_trial_combined_timeline = { timeline: prac_items_combined }
 
 // 4th phase: Experiment
@@ -639,7 +641,7 @@ const prac_trial_combined_timeline = { timeline: prac_items_combined }
 const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list == 1) 
 
 const exp_items_sentences = create_sentence_items(exp_sentences_filtered)
-const exp_items_stroop    = create_stroop_items(20)
+const exp_items_stroop    = create_stroop_items(7)
 const exp_items_fillers   = create_sentence_items(filler_sentences)
 const exp_items_all       = add_fix_iti(constrained_shuffle(exp_items_sentences.concat(exp_items_stroop, exp_items_fillers)))
 const exp_items           = add_filler_questions(exp_items_all)

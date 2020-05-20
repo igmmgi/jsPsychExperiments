@@ -80,7 +80,8 @@ const prms = {
     respKeysStroop: shuffle(["G", "H", "J"]),
     respKeysQuestion: ["T", "F"],
     fbTxt: ["Correct", "Error"],  
-    font_sentence: "20px monospace",
+    font_sentence: "30px monospace",
+    line_height: 40,
     sentence_width: 800,
     font_question: "30px monospace",
     font_stroop: "40px monospace",
@@ -447,7 +448,11 @@ const moving_window_text = {
     word_number: jsPsych.timelineVariable('word_num'),
     font: prms.font_sentence,
     max_width: prms.sentence_width,
+    line_height: prms.line_height,
     choices: prms["respKeysSentence"],
+    data: {
+        stim: "SentenceStroop"
+    },
 };
 
 const fullscreen_on = {

@@ -1,10 +1,10 @@
-// Modified version of a Simon Task:
-// VPs respond to the colour of the presented stimulus and ignore the text
-//  using left and right key-presses ("D" and "J")
-// 50% of trials involve the presentation of the "word" 
-//  first followed by the presentation of the "colour" word -> colour 
-// 50% of trials involve the presentation of the "colour" 
-//  first followed by the presentation of the "word" colour -> word 
+// Modified version of a Flanker Task:
+// VPs respond to the central letter within a 5-letter array (e.g., HHHHH, SSHSS)
+//  whilst ignoring the surrounding letters using left and right key-presses ("D" and "J").
+// 50% of trials involve the presentation of the "flankers" 
+//  first followed by the presentation of the "target" HH HH -> H
+// 50% of trials involve the presentation of the "target" 
+//  first followed by the presentation of the "flankers" H -> HH HH
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -26,32 +26,33 @@ const vpNum   = genVpNum();
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 11,
+    nBlks: 2,
     fixDur: 500,
+    flankDur: 200,
     fbDur: [500, 1000, 1000, 1000],
-    stroopDur: 200,
     iti: 500,
-    tooFast: 150,
-    tooSlow: 2000,
+    tooFast:  150,  
+    tooSlow: 2000,  
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
+    respKeys: [],
     fixWidth: 3,
     fixSize: 15,
-    stroopSize: "30px monospace",
-    fbSize: "30px monospace",
-    respKeys: [],
+    flankSize: "100px monospace",
+    fbSize: "30px monospace"
 };
 
 const versionNumber = getVersionNumber(vpNum, 2)
+let respText = ""
 if (versionNumber === 1) {
     prms.respKeys = ["D", "J", 27];
-    respText = "<h4 align='left'><b>RED</b>   drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='left'><b>GREEN</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
+    respText      = "<h4 align='center'><b>GRÜN = Taste D</b> (linken Zeigefinger).</h4>" +
+                    "<h4 align='center'><b>BLAU = Taste J</b> (rechten Zeigefinger).</h4>";
 } else {
     prms.respKeys = ["J", "D", 27];
-    respText = "<h4 align='left'><b>GREEN</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='left'><b>RED</b>   drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
+    respText      = "<h4 align='center'><b>BLAU = Taste D</b> (linken Zeigefinger).</h4>" +
+                    "<h4 align='center'><b>GRÜN = Taste J</b> (rechten Zeigefinger).</h4>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -71,7 +72,6 @@ const task_instructions1 = {
     },
 };
 
-
 const task_instructions2 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: cc,
@@ -79,13 +79,9 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 align='center'>Aufgabe:</h2><br>" +
-    "<h4 align='left'>Dieses Experiment besteht aus insgesamt 13 Blöcken. Jeder Block besteht wiederum aus mehreren Durchgängen.</h4>" +
-    "<h4 align='left'>Sie werden in jedem Durchgang des Experiments eine Reihe von 5 Buchstaben sehen (z.B. HHHHH, HHSHH).</h4>" +
-    "<h4 align='left'>Bitte reagieren Sie immer auf den Buchstaben in der Mitte, die anderen Buchstaben sollen Sie möglichst ignorieren.</h4>" +
+    "<h4 align='center'>Bitte reagieren Sie immer auf den Farbe in der Mitte.</h4>" +
     respText +
-    "<h4 align='left'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
-    "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
-    "<h4 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h4><br>" +
+    "<h4 align='center'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -126,22 +122,47 @@ function drawFeedback() {
     ctx.fillText(prms.fbTxt[dat.corrCode-1], 0, 0); 
 }
 
-function drawStroop(args) {
+function drawFlanker(args) {
     "use strict"
-    console.log("here")
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
-
-    // fill rectangle
-    ctx.fillStyle = args["colour"];
-    ctx.fillRect(-75, -25, 150, 50);
-
-    // draw word
-    ctx.font = prms.stroopSize;
+    ctx.font = prms.flankSize;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = "black";
-    ctx.fillText(args["word"], 0, 0); 
+    
+    // draw target
+    ctx.fillStyle = args["tCol"];
+    ctx.fillText("#", 0, 0); 
+
+    // draw flankers
+    ctx.fillStyle = args["fCol"];
+    ctx.fillText("## ##", 0, 0); 
+
+}
+
+function codeTrial() {
+    "use strict";
+    let dat = jsPsych.data.get().last(1).values()[0];
+    let corrCode = 0;
+    let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
+
+    let rt = (dat.order === "RI") ? dat.rt : dat.rt - prms.flankDur;
+    
+    if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
+        corrCode = 1;  // correct
+    } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
+        corrCode = 2;  // choice error
+    } else if (rt === null) {
+        corrCode = 3; // too slow
+    } else if (rt <= prms.tooFast) {
+        corrCode = 4; // too fast
+    }
+    
+    jsPsych.data.addDataToLastTrial({date: Date(), rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
+    prms.cTrl += 1;
+    if (dat.key_press === 27) {
+        jsPsych.endExperiment();
+    }
 }
 
 const trial_feedback = {
@@ -149,10 +170,23 @@ const trial_feedback = {
     canvas_colour: cc,
     canvas_size: cs,
     canvas_border: cb,
-    trial_duration: prms.fbDur,
     translate_origin: true,
     response_ends_trial: false,
-    func: drawFeedback
+    func: drawFeedback,
+    on_start: function(trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = prms.fbDur[dat.corrCode - 1]; 
+    }
+};
+
+const iti = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    trial_duration: prms.iti,
+    response_ends_trial: false,
+    func: function() {}
 };
 
 const block_feedback = {
@@ -163,32 +197,39 @@ const block_feedback = {
     stimulus: "",
     response_ends_trial: true,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt_de({stim: "stroop"});
+        trial.stimulus = blockFeedbackTxt_de({stim: "flanker"});
     },
 };
 
-const stroop_stimulus = {
+const flanker_stimulus = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: cc,
     canvas_size: cs,
     canvas_border: cb,
-    trial_duration: prms.tooSlow,
-    translate_origin: true,
-    stimulus_onset: [0, 200],
+    translate_origin: true, 
+    stimulus_onset: [0, prms.flankDur],
+    response_ends_trial: true,
+    choices: prms.respKeys,
+    clear_screen: [0, 1],
     stimulus_duration: 400,
-    clear_screen: [1, 1],
-    func: [drawStroop, drawStroop],
+    func: [drawFlanker, drawFlanker],
     func_args:[
-        {"word": jsPsych.timelineVariable("w1"), "colour": jsPsych.timelineVariable("c1")},
-        {"word": jsPsych.timelineVariable("w2"), "colour": jsPsych.timelineVariable("c2")},
+        {"fCol": jsPsych.timelineVariable("f1Col"), "tCol": jsPsych.timelineVariable("t1Col")},
+        {"fCol": jsPsych.timelineVariable("f2Col"), "tCol": jsPsych.timelineVariable("t2Col")},
     ],
     data: {
-        stim: "stroop",
-        word: jsPsych.timelineVariable('word'), 
-        colour: jsPsych.timelineVariable('colour'), 
+        stim: "flanker",
+        flanker: jsPsych.timelineVariable('flanker'), 
         comp: jsPsych.timelineVariable('comp'), 
         order: jsPsych.timelineVariable('order'), 
         corrResp: jsPsych.timelineVariable('corrResp')
+    },
+    on_start: function(trial) {
+        if (trial.data.order === "RI") {
+            trial.trial_duration = prms.tooSlow;
+        } else {
+            trial.trial_duration = prms.tooSlow + prms.flankDur;
+        }
     },
     on_finish: function() { codeTrial(); }
 };
@@ -196,18 +237,19 @@ const stroop_stimulus = {
 const trial_timeline = {
     timeline: [
         fixation_cross,
-        stroop_stimulus,
-        trial_feedback
+        flanker_stimulus,
+        trial_feedback,
+        iti
     ],
     timeline_variables:[
-        { word: "red",   colour: "red",   w1: "red" ,  c1: cc,      w2: "",      c2: "red" ,  comp: 'comp',   order: "WC", corrResp: prms.respKeys[0]},
-        { word: "red",   colour: "green", w1: "red" ,  c1: cc,      w2: "",      c2: "green", comp: 'incomp', order: "WC", corrResp: prms.respKeys[1]},
-        { word: "green", colour: "green", w1: "green", c1: cc,      w2: "",      c2: "green", comp: 'comp',   order: "WC", corrResp: prms.respKeys[1]},
-        { word: "green", colour: "red",   w1: "green", c1: cc,      w2: "",      c2: "red",   comp: 'incomp', order: "WC", corrResp: prms.respKeys[0]},
-        { word: "red",   colour: "red",   w1: "" ,     c1: "red" ,  w2: "red",   c2:cc,       comp: 'comp',   order: "CW", corrResp: prms.respKeys[0]},
-        { word: "red",   colour: "green", w1: "" ,     c1: "green", w2: "red" ,  c2:cc,       comp: 'incomp', order: "CW", corrResp: prms.respKeys[1]},
-        { word: "green", colour: "green", w1: "",      c1: "green", w2: "green", c2:cc,       comp: 'comp',   order: "CW", corrResp: prms.respKeys[1]},
-        { word: "green", colour: "red",   w1: "",      c1: "red",   w2: "green", c2:cc,       comp: 'incomp', order: "CW", corrResp: prms.respKeys[0]}
+        { flanker: "#####", f1Col: cc,      t1Col: "green", f2Col: "green", t2Col: cc,      comp: "comp",   order: "RI", corrResp: prms.respKeys[0] },
+        { flanker: "#####", f1Col: cc,      t1Col: "blue",  f2Col: "blue",  t2Col: cc,      comp: "comp",   order: "RI", corrResp: prms.respKeys[1] },
+        { flanker: "#####", f1Col: cc,      t1Col: "green", f2Col: "blue",  t2Col: cc,      comp: "incomp", order: "RI", corrResp: prms.respKeys[0] },
+        { flanker: "#####", f1Col: cc,      t1Col: "blue",  f2Col: "green", t2Col: cc,      comp: "incomp", order: "RI", corrResp: prms.respKeys[1] },
+        { flanker: "#####", f1Col: "green", t1Col: cc,      f2Col: cc,      t2Col: "green", comp: "comp",   order: "IR", corrResp: prms.respKeys[0] },
+        { flanker: "#####", f1Col: "blue",  t1Col: cc,      f2Col: cc,      t2Col: "blue",  comp: "comp",   order: "IR", corrResp: prms.respKeys[1] },
+        { flanker: "#####", f1Col: "green", t1Col: cc,      f2Col: cc,      t2Col: "blue",  comp: "incomp", order: "IR", corrResp: prms.respKeys[1] },
+        { flanker: "#####", f1Col: "blue",  t1Col: cc,      f2Col: cc,      t2Col: "green", comp: "incomp", order: "IR", corrResp: prms.respKeys[0] },
     ],
     randomize_order:true,
 };
@@ -227,13 +269,9 @@ const alphaNum = {
     "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
 };
 
-
 const fullscreen_on = {
     type: 'fullscreen',
     fullscreen_mode: true,
-    on_finish: function() {
-        $('body').css('cursor', 'none'); 
-    },
 }
 
 const fullscreen_off = {
@@ -251,9 +289,11 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
+
     exp.push(fullscreen_on);
     exp.push(welcome_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(resize_de) 
+    exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
@@ -266,7 +306,7 @@ function genExpSeq() {
     exp.push(debrief_de);
     exp.push(alphaNum);
     exp.push(fullscreen_off);
-    
+
     return exp;
 
 }
@@ -282,7 +322,7 @@ jsPsych.init({
         min_height:cs[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "stroop"}); 
+        saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 
     }
 });
 

@@ -9,7 +9,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size   = [960, 720];
+const canvas_size = [960, 720];
 const canvas_border = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -23,15 +23,15 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 32,  // number of trials in first block (practice)
-    nTrlsE: 64,  // number of trials in subsequent blocks 
-    nBlks: 11,
+    nTrlsP: 80,  // number of trials in first block (practice)
+    nTrlsE: 80,  // number of trials in subsequent blocks 
+    nBlks: 2,
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
-    cueDur: 500,
+    cueDur: 800,
     iti: 500,
     tooFast:    0,
-    tooSlow: 3000,
+    tooSlow: 5000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
@@ -48,27 +48,23 @@ const versionNumber = getVersionNumber(vpNum, 4)
 if (versionNumber === 1) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["S", "K", 27];
-    respText = "<h4 align='center'>Red = Living vs. Non-living, Blue = Small vs. Large</h4>" +
-               "<h4 align='center'>Living = S Non-living = K</h4>" +
-               "<h4 align='center'>Small = S Large = K</h4>";
+    respText = "<h4 align='center'>Leben: Living = S    Dead = K</h4>" +
+               "<h4 align='center'>Große: Small = S    Large  = K</h4>";
 } else if (versionNumber === 2) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["K", "S", 27];
-    respText = "<h4 align='center'>Red = Living vs. Non-living, Blue = Small vs. Large</h4>" +
-               "<h4 align='center'>Living = S Non-living = K</h4>" +
-               "<h4 align='center'>Large = S Small = K</h4>";
+    respText = "<h4 align='center'>Leben: Living = S    Non-living = K</h4>" +
+               "<h4 align='center'>Große: Large = S    Small = K</h4>";
 } else if (versionNumber === 3) {
     prms.respKeysLife = ["K", "S", 27];
     prms.respKeysSize = ["K", "S", 27];
-    respText = "<h4 align='center'>Red = Living vs. Non-living, Blue = Small vs. Large</h4>" +
-               "<h4 align='center'>Non-Living = S Living = K</h4>" +
-               "<h4 align='center'>Large = S Small = K</h4>";
+    respText = "<h4 align='center'>Leben: Non-Living = S    Living = K</h4>" +
+               "<h4 align='center'>Große: Large = S    Small = K</h4>";
 } else if (versionNumber === 4) {
     prms.respKeysLife = ["K", "S", 27];
     prms.respKeysSize = ["S", "K", 27];
-    respText = "<h4 align='center'>Red = Living vs. Non-living, Blue = Small vs. Large</h4>" +
-               "<h4 align='center'>Non-Living = S Living = K</h4>" +
-               "<h4 align='center'>Small = S Large = K</h4>";
+    respText = "<h4 align='center'>Leben: Non-Living = S    Living = K</h4>" +
+               "<h4 align='center'>Große: Small = S    Large = K</h4>";
 }
 
 const task_instructions1 = {
@@ -94,8 +90,6 @@ const task_instructions2 = {
     "<h2 align='center'>Aufgabe:</h2><br>" +
     "<h4 align='left'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
     respText + 
-    "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
-    "<h4 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h4><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -132,7 +126,7 @@ function drawWordCue(args) {
     ctx.fillStyle = "black"
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(args["cue"],  0, 0);
+    ctx.fillText(args["cue"], 0, 0);
 }
 
 const word_cue = {
@@ -144,33 +138,6 @@ const word_cue = {
     translate_origin: true,
     response_ends_trial: false,
     func: drawWordCue,
-    func_args:[ 
-        { "cue": jsPsych.timelineVariable("cue") }, 
-    ],
-};
-
-function drawFixationCue(args) {
-    "use strict"
-    let ctx = document.getElementById('canvas').getContext('2d');
-    ctx.strokeStyle = args["cue"];
-    ctx.lineWidth = prms.fixWidth;
-    ctx.moveTo(-prms.fixSize, 0);
-    ctx.lineTo( prms.fixSize, 0);
-    ctx.stroke(); 
-    ctx.moveTo(0, -prms.fixSize);
-    ctx.lineTo(0,  prms.fixSize);
-    ctx.stroke(); 
-}
-
-const fixation_cue = {
-    type: 'static-canvas-keyboard-response',
-    canvas_colour: canvas_colour,
-    canvas_size: canvas_size,
-    canvas_border: canvas_border,
-    trial_duration: prms.cueDur,
-    translate_origin: true,
-    response_ends_trial: false,
-    func: drawFixationCue,
     func_args:[ { "cue": jsPsych.timelineVariable("cue") } ],
 };
 
@@ -182,16 +149,17 @@ function drawWord(args) {
     ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
     ctx.font         = prms.stimSize;
-    
+
     switch (args["position"]) {
         case "left":
             ctx.fillText(args["word"], -prms.stimPosX, prms.stimPosY);
+            ctx.fillText(args["cue"], 0, 0);
             break;
         case "right":
-            ctx.fillText(args["word"],  prms.stimPosX, prms.stimPosY);
+            ctx.fillText(args["word"], prms.stimPosX, prms.stimPosY);
+            ctx.fillText(args["cue"], 0, 0);
             break;
     }
- 
 }
 
 const word_stimulus = {
@@ -203,13 +171,13 @@ const word_stimulus = {
     translate_origin: true,
     response_ends_trial: true,
     choices: prms.respKeysSize,
-    func: [drawWord, drawFixationCue],
+    func: drawWord,
     func_args:[ 
         { 
             "word": jsPsych.timelineVariable("word"), 
-            "position": jsPsych.timelineVariable("position") 
+            "position": jsPsych.timelineVariable("position"),
+            "cue": jsPsych.timelineVariable("cue"), 
         }, 
-        { "cue": jsPsych.timelineVariable("cue") }, 
     ],
     data: {
         stim: "SimonWord",
@@ -218,14 +186,16 @@ const word_stimulus = {
         size: jsPsych.timelineVariable('size'), 
         life: jsPsych.timelineVariable('life'), 
         position: jsPsych.timelineVariable('position'), 
-        cong: ((jsPsych.timelineVariable('position') === "left" && jsPsych.timelineVariable("corrResp") === "S") || (jsPsych.timelineVariable('position') === "right" && jsPsych.timelineVariable("corrResp") === "K")) ? "cong" : "incong", 
-        corrResp: jsPsych.timelineVariable('corrResp'), 
+        cong: jsPsych.timelineVariable('cong'), 
+        corrResp: jsPsych.timelineVariable('corrResp') 
     },
     on_finish: function() { codeTrial(); }
 };
 
+
 function drawFeedback() {
     "use strict"
+    console.log("here")
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
     ctx.font = "40px monospace";
@@ -274,44 +244,92 @@ const block_feedback = {
 const trial_timeline = {
     timeline: [
         fixation_cross,
-        fixation_cue,
+        word_cue,
         word_stimulus,
         trial_feedback,
         iti
     ],
     timeline_variables:[
-        { cue: "red",  word: "Algen",     size: "small", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-        { cue: "red",  word: "Kamel",     size: "large", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-        { cue: "red",  word: "Armband",   size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-        { cue: "red",  word: "Badewanne", size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-        { cue: "red",  word: "Meise",     size: "small", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-        { cue: "red",  word: "Delhin",    size: "large", life: "living",    position: "left",  corrResp: prms.respKeysLife[0]},
-        { cue: "red",  word: "Groschen",  size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-        { cue: "red",  word: "Findling",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysLife[1]},
-        { cue: "red",  word: "Algen",     size: "small", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-        { cue: "red",  word: "Kamel",     size: "large", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-        { cue: "red",  word: "Armband",   size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "red",  word: "Badewanne", size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "red",  word: "Meise",     size: "small", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-        { cue: "red",  word: "Delhin",    size: "large", life: "living",    position: "right", corrResp: prms.respKeysLife[0]},
-        { cue: "red",  word: "Groschen",  size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "red",  word: "Findling",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysLife[1]},
-        { cue: "blue", word: "Algen",     size: "small", life: "living",    position: "left",  corrResp: prms.respKeysSize[0]},
-        { cue: "blue", word: "Kamel",     size: "large", life: "living",    position: "left",  corrResp: prms.respKeysSize[1]},
-        { cue: "blue", word: "Armband",   size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[0]},
-        { cue: "blue", word: "Badewanne", size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[1]},
-        { cue: "blue", word: "Meise",     size: "small", life: "living",    position: "left",  corrResp: prms.respKeysSize[0]},
-        { cue: "blue", word: "Delhin",    size: "large", life: "living",    position: "left",  corrResp: prms.respKeysSize[1]},
-        { cue: "blue", word: "Groschen",  size: "small", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[0]},
-        { cue: "blue", word: "Findling",  size: "large", life: "nonliving", position: "left",  corrResp: prms.respKeysSize[1]},
-        { cue: "blue", word: "Algen",     size: "small", life: "living",    position: "right", corrResp: prms.respKeysSize[0]},
-        { cue: "blue", word: "Kamel",     size: "large", life: "living",    position: "right", corrResp: prms.respKeysSize[1]},
-        { cue: "blue", word: "Armband",   size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysSize[0]},
-        { cue: "blue", word: "Badewanne", size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysSize[1]},
-        { cue: "blue", word: "Meise",     size: "small", life: "living",    position: "right", corrResp: prms.respKeysSize[0]},
-        { cue: "blue", word: "Delhin",    size: "large", life: "living",    position: "right", corrResp: prms.respKeysSize[1]},
-        { cue: "blue", word: "Groschen",  size: "small", life: "nonliving", position: "right", corrResp: prms.respKeysSize[0]},
-        { cue: "blue", word: "Findling",  size: "large", life: "nonliving", position: "right", corrResp: prms.respKeysSize[1]},
+        { cue: "LEBEN", word: "Spinne",   size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Ameise",   size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Mücke",    size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Schnecke", size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Wespe",    size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Spinne",   size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Ameise",   size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Mücke",    size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Schnecke", size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Wespe",    size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "GROßE", word: "Spinne",   size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Ameise",   size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Mücke",    size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Schnecke", size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Wespe",    size: "small", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Spinne",   size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Ameise",   size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Mücke",    size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Schnecke", size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Wespe",    size: "small", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "LEBEN", word: "Kamel",    size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Delfin",   size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Elefant",  size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Zebra",    size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Esel",     size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Kamel",    size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Delfin",   size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Elefant",  size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Zebra",    size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "LEBEN", word: "Esel",     size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysLife[0]},        
+        { cue: "GROßE", word: "Kamel",    size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Delfin",   size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Elefant",  size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Zebra",    size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Esel",     size: "large", life: "living",    position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Kamel",    size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Delfin",   size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Elefant",  size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Zebra",    size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Esel",     size: "large", life: "living",    position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "LEBEN", word: "Armband",  size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Socke",    size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Perle",    size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Zigarre",  size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Löffel",   size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Armband",  size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Socke",    size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Perle",    size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Zigarre",  size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Löffel",   size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "GROßE", word: "Armband",  size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Socke",    size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Perle",    size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Zigarre",  size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Löffel",   size: "small", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Armband",  size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Socke",    size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Perle",    size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Zigarre",  size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "GROßE", word: "Löffel",   size: "small", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[0]},        
+        { cue: "LEBEN", word: "Eisberg",  size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Sofa",     size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Tuba",     size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Asteroid", size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Kanu",     size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Eisberg",  size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Sofa",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Tuba",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Asteroid", size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "LEBEN", word: "Kanu",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysLife[1]},        
+        { cue: "GROßE", word: "Eisberg",  size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Sofa",     size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Tuba",     size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Asteroid", size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Kanu",     size: "large", life: "nonliving", position: "left",  cong: "cong",   corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Eisberg",  size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Sofa",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Tuba",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Asteroid", size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
+        { cue: "GROßE", word: "Kanu",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
    ],
     randomize_order:true,
 };
@@ -333,6 +351,7 @@ const alphaNum = {
     "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
 };
 
+
 const fullscreen_on = {
     type: 'fullscreen',
     fullscreen_mode: true,
@@ -346,6 +365,7 @@ const fullscreen_off = {
     }
 }
 
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -355,7 +375,8 @@ function genExpSeq() {
     let exp = [];
     exp.push(fullscreen_on);
     exp.push(welcome_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(resize_de);
+    exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 

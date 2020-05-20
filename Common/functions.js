@@ -291,12 +291,20 @@ const welcome_de = {
     }
 };
 
+const resize_en = {
+    type: 'resize',
+    item_width: 3 + 3/8,
+    item_height: 2 + 1/8,
+    prompt: "<p>Resize the rectangle (click and drag bottom right corner) until it is the same size as a standard bankcard.</p>",
+    pixels_per_unit:100,
+};
+
 const resize_de = {
     type: 'resize',
     item_width: 3 + 3/8,
     item_height: 2 + 1/8,
     prompt: "<p>Klicken Sie und ziehen Sie die untere rechte Ecke bis der Kasten die gleiche Größe wie eine Bankkarte oder Ihr Universitätsausweis hat.</p>",
-    pixels_per_unit: 1000
+    pixels_per_unit:100,
 };
 
 const screenInfo = {

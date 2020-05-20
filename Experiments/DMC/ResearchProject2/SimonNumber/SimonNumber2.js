@@ -27,13 +27,14 @@ const vpNum   = genVpNum();
 const prms = {
     nTrlsP: 96,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 11,
+    nBlks: 2,
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
     iti: 500,
-    tooFast:    0,
+    tooFast:  150,
     tooSlow: 2000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
+    fbSize: "40px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
     respKeys: ["S", "K", 27],
@@ -41,7 +42,7 @@ const prms = {
     fixSize: 15,
     stimPosX: 300,
     stimPosY:   0,
-    stimSize: "50px monospace"
+    stimSize: "150px monospace"
 };
 
 const task_instructions1 = {
@@ -65,9 +66,9 @@ const task_instructions2 = {
     canvas_border: canvas_border,
     stimulus: 
     "<h2 align='center'>Aufgabe:</h2><br>" +
-    "<h4 align='left'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
-    "<h4 align='left'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
-    "<h4 align='left'>Am Ende jedes Blocks haben Sie die Möglichkeit eine kleine Pause zu machen.</h4><br>" +
+    "<h2 align='center'> <45 = S Key</h2>" +
+    "<h2 align='center'> >45 = K Key</h2>" +
+    "<h2 align='center'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h2><br>" +
     "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -148,7 +149,7 @@ function drawFeedback() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = "40px monospace";
+    ctx.font = prms.fbSize;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
@@ -340,7 +341,8 @@ function genExpSeq() {
     let exp = [];
     exp.push(fullscreen_on);
     exp.push(welcome_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(resize_de);
+    exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
