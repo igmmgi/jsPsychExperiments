@@ -355,7 +355,8 @@ function genExpSeq() {
     
     exp.push(fullscreen_on);
     exp.push(welcome_de);
-    exp.push(vpInfoForm_de);
+    exp.push(resize_de);
+    // exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
