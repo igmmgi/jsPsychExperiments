@@ -48,23 +48,23 @@ const versionNumber = getVersionNumber(vpNum, 4)
 if (versionNumber === 1) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["S", "K", 27];
-    respText = "<h4 align='center'>Leben: Living = S    Dead = K</h4>" +
-               "<h4 align='center'>Große: Small = S    Large  = K</h4>";
+    respText = "<h4 style='text-align: center;'>Leben: Living = S    Dead = K</h4>" +
+               "<h4 style='text-align: center;'>Große: Small = S    Large  = K</h4>";
 } else if (versionNumber === 2) {
     prms.respKeysLife = ["S", "K", 27];
     prms.respKeysSize = ["K", "S", 27];
-    respText = "<h4 align='center'>Leben: Living = S    Non-living = K</h4>" +
-               "<h4 align='center'>Große: Large = S    Small = K</h4>";
+    respText = "<h4 style='text-align: center;'>Leben: Living = S    Non-living = K</h4>" +
+               "<h4 style='text-align: center;'>Große: Large = S    Small = K</h4>";
 } else if (versionNumber === 3) {
     prms.respKeysLife = ["K", "S", 27];
     prms.respKeysSize = ["K", "S", 27];
-    respText = "<h4 align='center'>Leben: Non-Living = S    Living = K</h4>" +
-               "<h4 align='center'>Große: Large = S    Small = K</h4>";
+    respText = "<h4 style='text-align: center;'>Leben: Non-Living = S    Living = K</h4>" +
+               "<h4 style='text-align: center;'>Große: Large = S    Small = K</h4>";
 } else if (versionNumber === 4) {
     prms.respKeysLife = ["K", "S", 27];
     prms.respKeysSize = ["S", "K", 27];
-    respText = "<h4 align='center'>Leben: Non-Living = S    Living = K</h4>" +
-               "<h4 align='center'>Große: Small = S    Large = K</h4>";
+    respText = "<h4 style='text-align: center;'>Leben: Non-Living = S    Living = K</h4>" +
+               "<h4 style='text-align: center;'>Große: Small = S    Large = K</h4>";
 }
 
 const task_instructions1 = {
@@ -72,10 +72,10 @@ const task_instructions1 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 align='center'>Willkommen bei unserem Experiment:</h2><br>" +
-    "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-    "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-    "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    stimulus: "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
+    "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+    "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     on_finish: function() {
         $('body').css('cursor', 'none'); 
     },
@@ -87,10 +87,10 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h2 align='center'>Aufgabe:</h2><br>" +
-    "<h4 align='left'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
+    "<h2 style='text-align: center;'>Aufgabe:</h2><br>" +
+    "<h4 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
     respText + 
-    "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 ////////////////////////////////////////////////////////////////////////
