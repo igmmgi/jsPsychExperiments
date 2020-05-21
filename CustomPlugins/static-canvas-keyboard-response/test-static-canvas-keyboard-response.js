@@ -64,26 +64,26 @@ const text = {
     func: drawText
 };
 
-const combined = {
-    type: 'static-canvas-keyboard-response',
-    trial_duration: 500,
-    translate_origin: true,
-    canvas_border: "10px solid blue",
-    func: function() {
-        drawFixation(); 
-        drawCircle(); 
-        drawText(); 
-    }
-}
+// const combined = {
+//     type: 'static-canvas-keyboard-response',
+//     trial_duration: 500,
+//     translate_origin: true,
+//     canvas_border: "10px solid blue",
+//     func: function() {
+//         drawFixation();
+//         drawCircle();
+//         drawText();
+//     }
+// }
 
-const combined_sequential = {
-    type: 'static-canvas-keyboard-response',
-    trial_duration: 5000,
-    translate_origin: true,
-    canvas_border: "10px solid blue",
-    stimulus_onset: [0, 1500, 3000],
-    func: [ drawFixation, drawCircle, drawText ]
-}
+// const combined_sequential = {
+//     type: 'static-canvas-keyboard-response',
+//     trial_duration: 5000,
+//     translate_origin: true,
+//     canvas_border: "10px solid blue",
+//     stimulus_onset: [0, 1500, 3000],
+//     func: [ drawFixation, drawCircle, drawText ]
+// }
 
 const images = loadImages(["../../img/h1.bmp", "../../img/h2.bmp"]);
 
@@ -103,42 +103,42 @@ const image_grid = {
     ]
 }
 
-const image_sequential = {
-    type: 'static-canvas-keyboard-response',
-    trial_duration: 2000,
-    translate_origin: true,
-    canvas_border: "10px solid blue",
-    stimulus_onset: [0, 500, 1000],
-    func: [drawImage, drawImage, drawImage],
-    func_args: [
-        {"imageNum": 0, "x": -200, "y": -200, "h":400, "w":400}, 
-        {"imageNum": 1, "x": -200, "y": -200, "h":400, "w":400}, 
-        {"imageNum": 0, "x": -200, "y": -200, "h":400, "w":400}
-    ]
-}
+// const image_sequential = {
+//     type: 'static-canvas-keyboard-response',
+//     trial_duration: 2000,
+//     translate_origin: true,
+//     canvas_border: "10px solid blue",
+//     stimulus_onset: [0, 500, 1000],
+//     func: [drawImage, drawImage, drawImage],
+//     func_args: [
+//         {"imageNum": 0, "x": -200, "y": -200, "h":400, "w":400},
+//         {"imageNum": 1, "x": -200, "y": -200, "h":400, "w":400},
+//         {"imageNum": 0, "x": -200, "y": -200, "h":400, "w":400}
+//     ]
+// }
 
-const image_timeline1 = {
-    timeline: [
-        image_grid,
-        image_sequential
-    ],
-};
+// const image_timeline1 = {
+//     timeline: [
+//         image_grid,
+//         image_sequential
+//     ],
+// };
 
-const image_variable = {
-    type: 'static-canvas-keyboard-response',
-    trial_duration: 250,
-    translate_origin: true,
-    canvas_border: "5px solid black",
-    stimulus_onset: 0,
-    func: drawImage,
-    func_args: [
-        {"imageNum": jsPsych.timelineVariable('imageNum'), 
-            "x": jsPsych.timelineVariable('x'), 
-            "y": jsPsych.timelineVariable('y'), 
-            "h": 200, 
-            "w": 200}
-    ]
-}
+//const image_variable = {
+//    type: 'static-canvas-keyboard-response',
+//    trial_duration: 250,
+//    translate_origin: true,
+//    canvas_border: "5px solid black",
+//    stimulus_onset: 0,
+//    func: drawImage,
+//    func_args: [
+//        {"imageNum": jsPsych.timelineVariable('imageNum'),
+//            "x": jsPsych.timelineVariable('x'),
+//            "y": jsPsych.timelineVariable('y'),
+//            "h": 200,
+//            "w": 200}
+//    ]
+//}
 
 const randomTimeline = [];
 for (let i = 0; i < 100; i++) {
@@ -149,13 +149,13 @@ for (let i = 0; i < 100; i++) {
     })
 }
 
-const image_timeline2 = {
-    timeline: [
-        image_variable
-    ],
-    timeline_variables: randomTimeline,
-    repetitions: 1
-};
+//const image_timeline2 = {
+//    timeline: [
+//        image_variable
+//    ],
+//    timeline_variables: randomTimeline,
+//    repetitions: 1
+//};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //

@@ -3,7 +3,7 @@
 
 jsPsych.plugins['mouse-drag-response'] = (function(){
 
-    var plugin = {};
+    let plugin = {};
 
     plugin.info = {
         name: 'mouse-drag-response',
@@ -81,6 +81,7 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
        
         // setup canvas
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
+        let canvas = document.getElementById("canvas")
 
         canvas.style        = "position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;";
         canvas.width        = trial.canvas_size[0]; 
@@ -94,24 +95,24 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
         $("#canvas").mousedown(function(e){handleMouseDown(e);});
         $("#canvas").mousemove(function(e){handleMouseMove(e);});
         $("#canvas").mouseup(function(e){handleMouseUp(e);});
-        $("#canvas").mouseout(function(e){handleMouseOut(e);});
+        //$("#canvas").mouseout(function(e){handleMouseOut(e);});
 
-        var canvasOffset = $(canvas).offset();
-        var offsetX      = canvasOffset.left; 
+        let canvasOffset = $(canvas).offset();
+        let offsetX      = canvasOffset.left;
 
-        var offsetY      = canvasOffset.top; 
-        var selectedText = false;
-        var startX;
-        var startY;
-        var movement_initiated = false;
-        var start_rt;
-        var start_loc;
-        var end_rt;
-        var end_loc;
-        var npresses = 0;
+        let offsetY      = canvasOffset.top;
+        let selectedText = false;
+        let startX;
+        let startY;
+        let movement_initiated = false;
+        let start_rt;
+        let start_loc;
+        let end_rt;
+        let end_loc;
+        let npresses = 0;
 
         // some text objects
-        var text = {
+        let text = {
             text: trial.word, 
             x: (canvas.width/2), 
             y: (canvas.height/2), 
@@ -127,17 +128,17 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
         text.height = parseInt(text.font);
         
         // initial draw
-        var start_time = performance.now();
+        let start_time = performance.now();
         draw();
 
         // function to end trial when it is time
-        var end_trial = function() {
+        let end_trial = function() {
 
             end_rt = performance.now() - start_time;
             end_loc = text.y < canvas.height/2 ? "top" : "bottom";
 
             // gather the data to store for the trial
-            var trial_data = {
+            let trial_data = {
                 "start_rt": start_rt,
                 "start_loc": start_loc,
                 "end_rt": end_rt,
@@ -168,8 +169,8 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
         function handleMouseDown(e){
             npresses++;
             e.preventDefault();
-            startX = parseInt(e.clientX - offsetX) / trial.scale_factor;
-            startY = parseInt(e.clientY - offsetY) / trial.scale_factor;
+            startX = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
+            startY = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
             if(textHittest(startX, startY)){
                 selectedText = true;
             }
@@ -180,8 +181,8 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
             if(selectedText === false){return;}
 
             e.preventDefault();
-            mouseX=parseInt(e.clientX-offsetX) / trial.scale_factor;
-            mouseY=parseInt(e.clientY-offsetY) / trial.scale_factor;
+            let mouseX = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
+            let mouseY = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
 
             // Put your mousemove stuff here
             let dx = (mouseX - startX) ;

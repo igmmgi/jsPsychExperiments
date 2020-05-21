@@ -1,6 +1,6 @@
 jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
 
-    var plugin = {};
+    let plugin = {};
 
     plugin.info = {
         name: 'text-moving-window-keyboard-response',
@@ -104,7 +104,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
         // keep adding word until it is too long
         let line = '';
         for(let n = 0; n < words.length; n++) {
-            let word = (n == trial.word_number) ? words[n] : textMask(words[n]);
+            let word = (n === trial.word_number) ? words[n] : textMask(words[n]);
             let tmp = line + word + ' ';
             if (ctx.measureText(tmp).width > trial.max_width && n > 0) {
                 ctx.fillText(line, xpos, ypos);
@@ -164,7 +164,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
         };
 
         // start the response listener
-        if (trial.choices != jsPsych.NO_KEYS) {
+        if (trial.choices !== jsPsych.NO_KEYS) {
             const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
                 callback_function: after_response,
                 valid_responses: trial.choices,

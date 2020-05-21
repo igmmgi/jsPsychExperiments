@@ -1,6 +1,6 @@
 jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
 
-    var plugin = {};
+    let plugin = {};
 
     plugin.info = {
         name: 'static-canvas-keyboard-response',
@@ -91,6 +91,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         
         // setup canvas
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
+        let canvas = document.getElementById("canvas")
 
         canvas.style        = "position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;";
         canvas.width        = trial.canvas_size[0]; 
@@ -105,7 +106,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         if (typeof trial.func === "function") {
             trial.func = [trial.func];
         }
-        if (typeof trial.stimulus_onset === "bool") {
+        if (typeof trial.stimulus_onset === "boolean") {
             trial.clear_screen = [trial.clear_screen];
         }
         if (typeof trial.stimulus_onset === "number") {
@@ -121,13 +122,13 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         }
 
         // store response
-        var response = {
+        let response = {
             rt: null,
             key: null
         };
 
         // function to end trial when it is time
-        var end_trial = function() {
+        let end_trial = function() {
 
             // kill any remaining setTimeout handlers
             jsPsych.pluginAPI.clearAllTimeouts();
@@ -138,7 +139,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
             }
 
             // gather the data to store for the trial
-            var trial_data = {
+            let trial_data = {
                 "rt": response.rt,
                 "stimulus": trial.stimulus,
                 "key_press": response.key
@@ -153,7 +154,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         };
 
         // function to handle responses by the subject
-        var after_response = function(info) {
+        let after_response = function(info) {
             if (response.key == null) { 
                 response = info;
             }
@@ -163,8 +164,8 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         };
 
         // start the response listener
-        if (trial.choices != jsPsych.NO_KEYS) {
-            var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+        if (trial.choices !== jsPsych.NO_KEYS) {
+            const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
                 callback_function: after_response,
                 valid_responses: trial.choices,
                 rt_method: 'performance',

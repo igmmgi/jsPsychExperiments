@@ -38,14 +38,14 @@ const words_upper_de = shuffle([
     "Gipfel", "Stern", "Sonne", "Spitze", "Turm", "Weltall"
 ]);
 
-const words_upper_en = shuffle([ 
-    "alps", "balloon", "bird", "castle", "ceiling", "cloud",
-    "comet", "crown", "eagle", "gable", "gallery",
-    "hawk", "height", "highlands", "hill", "kite",
-    "maximum", "moon", "mountains", "nest", "plane",
-    "planet", "roof", "satellite", "sky", "skyscraper",
-    "summit", "star", "sun", "top", "tower", "universe"
-]);
+//const words_upper_en = shuffle([
+//    "alps", "balloon", "bird", "castle", "ceiling", "cloud",
+//    "comet", "crown", "eagle", "gable", "gallery",
+//    "hawk", "height", "highlands", "hill", "kite",
+//    "maximum", "moon", "mountains", "nest", "plane",
+//    "planet", "roof", "satellite", "sky", "skyscraper",
+//    "summit", "star", "sun", "top", "tower", "universe"
+//]);
 
 const words_lower_de = shuffle([
     "Abgrund", "Schlucht", "Teppich", "Keller", "Klee",
@@ -56,14 +56,14 @@ const words_lower_de = shuffle([
     "Sumpf", "Tunnel", "Unterwelt", "Wurm"
 ]);
 
-const words_lower_en = shuffle([ 
-    "abyss" , "canyon" , "carpet" ," cellar" ," clover" ,
-    "depth", "ditch"," diver" , "earth", "floor", "foot" ,
-    "grass", "grave"," ground" , "hell", "mole", "mouse" ,
-    "rails", "river"," root", "sidewalk", "soil"," sole" ,
-    "stone", "street"," subfont", "submarine", "subway" ,
-    "swamp", "tunnel"," underworld", "worm" 
-]);
+// const words_lower_en = shuffle([
+//     "abyss" , "canyon" , "carpet" ," cellar" ," clover" ,
+//     "depth", "ditch"," diver" , "earth", "floor", "foot" ,
+//     "grass", "grave"," ground" , "hell", "mole", "mouse" ,
+//     "rails", "river"," root", "sidewalk", "soil"," sole" ,
+//     "stone", "street"," subfont", "submarine", "subway" ,
+//     "swamp", "tunnel"," underworld", "worm"
+// ]);
 
 const words = words_upper_de.concat(words_lower_de);
 

@@ -2,7 +2,7 @@
 
 jsPsych.plugins["html-keyboard-response-canvas"] = (function() {
 
-    var plugin = {};
+    let plugin = {};
 
     plugin.info = {
         name: 'html-keyboard-response-canvas',
@@ -77,7 +77,7 @@ jsPsych.plugins["html-keyboard-response-canvas"] = (function() {
 
     plugin.trial = function(display_element, trial) {
 
-        var canvas = document.createElement('canvas');
+        let canvas = document.createElement('canvas');
  
         canvas.style        = "position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; z-index:-1;";
         canvas.width        = trial.canvas_size[0];
@@ -93,7 +93,7 @@ jsPsych.plugins["html-keyboard-response-canvas"] = (function() {
             ctx.translate(canvas.width/2, canvas.height/2);  // make center (0, 0)
         }
 
-        var new_html = '<div id="jspsych-html-keyboard-response-stimulus">' + trial.stimulus + '</div>';
+        let new_html = '<div id="jspsych-html-keyboard-response-stimulus">' + trial.stimulus + '</div>';
 
         // add prompt
         if(trial.prompt !== null){
@@ -104,19 +104,19 @@ jsPsych.plugins["html-keyboard-response-canvas"] = (function() {
         display_element.innerHTML = new_html; 
 
         // make sure canvas still centered
-        var offsetWidth = document.getElementById('jspsych-html-keyboard-response-stimulus').offsetWidth;
+        let offsetWidth = document.getElementById('jspsych-html-keyboard-response-stimulus').offsetWidth;
         canvas.style.left = ((offsetWidth - canvas.width) / 2) + "px";
         
         display_element.appendChild(canvas); 
         
         // store response
-        var response = {
+        let response = {
             rt: null,
             key: null
         };
 
         // function to end trial when it is time
-        var end_trial = function() {
+        let end_trial = function() {
 
             // kill any remaining setTimeout handlers
             jsPsych.pluginAPI.clearAllTimeouts();
@@ -127,7 +127,7 @@ jsPsych.plugins["html-keyboard-response-canvas"] = (function() {
             }
 
             // gather the data to store for the trial
-            var trial_data = {
+            let trial_data = {
                 "rt": response.rt,
                 "stimulus": trial.stimulus,
                 "key_press": response.key
@@ -141,7 +141,7 @@ jsPsych.plugins["html-keyboard-response-canvas"] = (function() {
         };
 
         // function to handle responses by the subject
-        var after_response = function(info) {
+        let after_response = function(info) {
 
             // after a valid response, the stimulus will have the CSS class 'responded'
             // which can be used to provide visual feedback that a response was recorded
@@ -158,8 +158,8 @@ jsPsych.plugins["html-keyboard-response-canvas"] = (function() {
         };
 
         // start the response listener
-        if (trial.choices != jsPsych.NO_KEYS) {
-            var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+        if (trial.choices !== jsPsych.NO_KEYS) {
+            const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
                 callback_function: after_response,
                 valid_responses: trial.choices,
                 rt_method: 'performance',
