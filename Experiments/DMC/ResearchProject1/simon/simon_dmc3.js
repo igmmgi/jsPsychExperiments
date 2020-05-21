@@ -122,7 +122,6 @@ function drawFeedback() {
 function drawSimon(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    let dat = jsPsych.data.get().last(1).values()[0];
 
     // left
     ctx.fillStyle = args["left"];

@@ -125,7 +125,6 @@ function drawFeedback() {
 function drawFlanker(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    let dat = jsPsych.data.get().last(1).values()[0];
     ctx.font = prms.flankSize;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -317,7 +316,7 @@ jsPsych.init({
         min_height:canvas_size[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 
+        saveData("/Common/write_data.php", filename, {stim: "flanker"});
     }
 });
 

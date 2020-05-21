@@ -166,7 +166,7 @@ jsPsych.init({
     show_progress_bar: false,
     on_finish: function(){ 
         saveRandomCode(expname); 
-        saveData("/Common/write_data.php", filename, rows = {stim: "negFlank"}); 
+        saveData("/Common/write_data.php", filename, {stim: "negFlank"});
     }
 });
 

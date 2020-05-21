@@ -156,7 +156,7 @@ jsPsych.init({
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "stroop"}); 
+        saveData("/Common/write_data.php", filename, {stim: "stroop"});
     }
 });
 

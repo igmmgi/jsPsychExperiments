@@ -595,7 +595,7 @@ function constrained_shuffle(items) {
 // only somme of the filler items have questions
 function add_filler_questions(items) {
     let final_items = []
-    for (i in items) {
+    for (let i in items) {
         final_items.push(items[i])
         if (items[i].timeline_variables === undefined) {
             continue
@@ -697,7 +697,7 @@ jsPsych.init({
         min_height:canvas_size[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "SentenceStroop"}); 
+        saveData("/Common/write_data.php", filename, {stim: "SentenceStroop"});
     }
 });
 

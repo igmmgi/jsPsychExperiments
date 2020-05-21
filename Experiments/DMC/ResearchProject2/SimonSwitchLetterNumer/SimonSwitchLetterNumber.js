@@ -330,7 +330,7 @@ jsPsych.init({
         min_height:canvas_size[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "SimonLetterNumber"}); 
+        saveData("/Common/write_data.php", filename, {stim: "SimonLetterNumber"});
     }
 });
 

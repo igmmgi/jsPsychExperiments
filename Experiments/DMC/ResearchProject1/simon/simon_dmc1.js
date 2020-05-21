@@ -122,7 +122,6 @@ function drawFeedback() {
 function drawSimon(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    let dat = jsPsych.data.get().last(1).values()[0];
 
     // left
     ctx.fillStyle = args["left"];
@@ -331,7 +330,7 @@ jsPsych.init({
         min_height:cs[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "simon"}); 
+        saveData("/Common/write_data.php", filename, {stim: "simon"});
     }
 });
 

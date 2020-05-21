@@ -254,7 +254,7 @@ jsPsych.init({
         min_height:720,
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "negStroop"}); 
+        saveData("/Common/write_data.php", filename, {stim: "negStroop"});
     }
 });
 

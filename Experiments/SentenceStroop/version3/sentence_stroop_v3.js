@@ -635,7 +635,7 @@ const prac_trial_combined_timeline = { timeline: prac_items_combined }
 
 // 4th phase: Experiment
 // list 1 vs. list 2
-const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list == 1) 
+const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === 1)
 
 const exp_items_sentences = create_sentence_items(exp_sentences_filtered)
 const exp_items_stroop    = create_stroop_items(20)

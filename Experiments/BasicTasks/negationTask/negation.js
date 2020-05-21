@@ -140,7 +140,7 @@ jsPsych.init({
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "affneg"}); 
+        saveData("/Common/write_data.php", filename, {stim: "affneg"});
     }
 });
 

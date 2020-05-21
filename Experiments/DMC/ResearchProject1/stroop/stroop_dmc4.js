@@ -124,7 +124,6 @@ function drawFeedback() {
 function drawStroop(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    let dat = jsPsych.data.get().last(1).values()[0];
 
     // draw word
     ctx.font = prms.stroopSize;
@@ -325,7 +324,7 @@ jsPsych.init({
         min_height:cs[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "stroop"}); 
+        saveData("/Common/write_data.php", filename, {stim: "stroop"});
     }
 });
 

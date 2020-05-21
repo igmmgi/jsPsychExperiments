@@ -197,7 +197,7 @@ jsPsych.init({
     show_progress_bar: false,
     on_finish: function(){ 
         saveRandomCode(expname); 
-        saveData("/Common/write_data.php", filename, rows = {stim: "flanker"}); 
+        saveData("/Common/write_data.php", filename, {stim: "flanker"});
     }
 });
 
