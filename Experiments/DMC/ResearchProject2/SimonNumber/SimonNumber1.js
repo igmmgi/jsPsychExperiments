@@ -50,10 +50,10 @@ const task_instructions1 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 align='center'>Willkommen bei unserem Experiment:</h2><br>" +
-              "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-              "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-              "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    stimulus: "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
+              "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+              "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+              "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     on_finish: function() {
         $('body').css('cursor', 'none'); 
     },
@@ -65,11 +65,11 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h2 align='center'>Aufgabe:</h2><br>" +
-    "<h2 align='center'> <45 = S Key</h2>" +
-    "<h2 align='center'> >45 = K Key</h2>" +
-    "<h2 align='center'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h2><br>" +
-    "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h2 style='text-align: center;'>Aufgabe:</h2><br>" +
+    "<h2 style='text-align: center;'> <45 = S Key</h2>" +
+    "<h2 style='text-align: center;'> >45 = K Key</h2>" +
+    "<h2 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h2><br>" +
+    "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -308,11 +308,11 @@ const alphaNum = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 align='left'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
-    "<h2 align='left'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
-    "<h2 align='left'>Code und senden Sie diesen</h2>" +
-    "<h2 align='left'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
-    "<h2 align='left'>per Email an:</h2></br>" +
+    stimulus: "<h2 style='text-align: left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
+    "<h2 style='text-align: left;'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
+    "<h2 style='text-align: left;'>Code und senden Sie diesen</h2>" +
+    "<h2 style='text-align: left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
+    "<h2 style='text-align: left;'>per Email an:</h2></br>" +
     "<h2>XXX@XXX</h2>" +
     "<h2>Code: " + randomString + "</h2></br></br>" +
     "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"

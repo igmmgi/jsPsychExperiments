@@ -44,12 +44,12 @@ const prms = {
 const versionNumber = getVersionNumber(vpNum, 2)
 if (versionNumber === 1) {
     prms.respKeys = ["D", "J", 27];
-    respText = "<h4 align='center'><b>BLAU</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='center'><b>GRÜN</b>  drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
+    respText = "<h4 style='text-align: center;'><b>BLAU</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
+               "<h4 style='text-align: center;'><b>GRÜN</b>  drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
 } else {
     prms.respKeys = ["J", "D", 27];
-    respText = "<h4 align='center'><b>GRÜN</b>  drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
-               "<h4 align='center'><b>BLAU</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
+    respText = "<h4 style='text-align: center;'><b>GRÜN</b>  drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
+               "<h4 style='text-align: center;'><b>BLAU</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -60,10 +60,10 @@ const task_instructions1 = {
     canvas_colour: cc,
     canvas_size: cs,
     canvas_border: cb,
-    stimulus: "<h2 align='center'>Willkommen bei unserem Experiment:</h2><br>" +
-    "<h3 align='center'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-    "<h3 align='center'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-    "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    stimulus: "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
+    "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+    "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     on_finish: function() {
         $('body').css('cursor', 'none'); 
     },
@@ -75,10 +75,10 @@ const task_instructions2 = {
     canvas_size: cs,
     canvas_border: cb,
     stimulus: 
-    "<h2 align='center'>Aufgabe:</h2><br>" +
+    "<h2 style='text-align: center;'>Aufgabe:</h2><br>" +
     respText +
-    "<h4 align='center'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
-    "<h2 align='center'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h4 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
+    "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 ////////////////////////////////////////////////////////////////////////

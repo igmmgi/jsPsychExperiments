@@ -97,8 +97,8 @@ const task_instructions1 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 align='center'>Welcome to our Experiment:</h2><br>" +
-              "<h2 align='center'>Press any key to continue!</h2>"
+    stimulus: "<h2 style='text:align=center;'>Welcome to our Experiment:</h2><br>" +
+              "<h2 style='text:align=center;'>Press any key to continue!</h2>"
 };
 
 const cols = ["blue", "green", "yellow"]
@@ -111,7 +111,7 @@ task_instructions2 = {
     stimulus: "<H1 style='text-align: center;'>Part 1:</H1><br>" +
     "<H2 style='text-align: center;'>Respond to the colour of the font with your dominant hand</H2><br>" +
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<h2 align='center'>Press any key to continue!</h2>"
+    "<h2 style='text:align=center;'>Press any key to continue!</h2>"
 };
 
 task_instructions3 = {
@@ -122,7 +122,7 @@ task_instructions3 = {
     stimulus: "<H1 style='text-align: center;'>Part 2:</H1><br>" +
     "<H2 style='text-align: center;'>Respond to the colour of the font with your dominant hand</H2><br>" +
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<h2 align='center'>Press any key to continue!</h2>"
+    "<h2 style='text-align=center;'>Press any key to continue!</h2>"
 };
 
 
@@ -131,9 +131,9 @@ task_instructions4 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align: center;'>Part 3:</H1><br>" +
-    "<H2 style='text-align: center;'>Press the spacebar with your non-dominant hand to reveal the sentence word-by-word.</H2><br>" +
-    "<h2 align='center'>Press any key to continue!</h2>"
+    stimulus: "<H1 style='text:align=center;;'>Part 3:</H1><br>" +
+    "<H2 style='text:align=center;;'>Press the spacebar with your non-dominant hand to reveal the sentence word-by-word.</H2><br>" +
+    "<h2 style='text:align=center;'>Press any key to continue!</h2>"
 };
 
 
@@ -146,7 +146,7 @@ task_instructions5 = {
     "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
     "<H2 style='text-align: center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
-    "<h2 align='center'>Press any key to continue!</h2>"
+    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
 };
 
 
@@ -160,7 +160,7 @@ task_instructions6 = {
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
     "<H2 style='text-align: center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
     "<H2 style='text-align: center;'>Answer and questions with the T (TRUE) and F (FALSE) keys.</H2><br>" +
-    "<h2 align='center'>Press any key to continue!</h2>"
+    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
 };
 
 
