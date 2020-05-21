@@ -25,7 +25,7 @@ const prms = {
     cBlk: 1,
 };
 
-prms.colours = prms.mapping === 1 ? ["ROT", "BLAU"] : ["BLAU", "ROT"];
+prms.colours  = prms.mapping === 1 ? ["ROT", "BLAU"] : ["BLAU", "ROT"];
 prms.respKeys = prms.mapping === 1 ? ["C", "M", 27] : ["M", "C", 27];
 
 ////////////////////////////////////////////////////////////////////////
@@ -117,7 +117,9 @@ const trial_timeline = {
         {stimulus: stims[ 6], task: 'affneg', comp: "incomp",  key: 'M'},
         {stimulus: stims[ 7], task: 'affneg', comp: "incomp",  key: 'C'},
     ],
-    randomize_order:true,
+    sample: {
+        type: "with-replacement"
+    }
 };
 
 const randomString = generateRandomString(16);
@@ -146,7 +148,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/16) : (prms.nTrlsE/16);
+        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

@@ -258,7 +258,9 @@ const trial_timeline = {
         { l1: cc,      m1: prms.respCols[1], r1: cc,      l2: "black", m2: cc,               r2: cc,      comp: "comp",   order: "RI", corrResp: prms.respKeys[1] },
         { l1: cc,      m1: prms.respCols[1], r1: cc,      l2: cc,      m2: cc,               r2: "black", comp: "incomp", order: "RI", corrResp: prms.respKeys[1] },
     ],
-    randomize_order:true,
+    sample: {
+        type: "with-replacement"
+    }
 };
 
 
@@ -306,7 +308,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8);
+        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

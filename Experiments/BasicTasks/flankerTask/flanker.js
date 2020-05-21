@@ -10,9 +10,9 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 4,  // number of trials in first block (practice)
-    nTrlsE: 4,  // number of trials in subsequent blocks 
-    nBlks: 1,
+    nTrlsP: 8,  // number of trials in first block (practice)
+    nTrlsE: 8,  // number of trials in subsequent blocks 
+    nBlks: 2,
     fixDur: 750,
     fbDur: 750,
     waitDur: 1000,
@@ -127,7 +127,9 @@ const trial_timeline = {
         { flanker: flankers[2], comp: 'comp',   key: prms.respKeys[1] },
         { flanker: flankers[3], comp: 'incomp', key: prms.respKeys[1] }
     ],
-    randomize_order:true
+    sample: {
+        type: "fixed-repetitions"
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -144,7 +146,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

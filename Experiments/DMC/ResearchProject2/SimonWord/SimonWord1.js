@@ -329,8 +329,10 @@ const trial_timeline = {
         { cue: "GROßE", word: "Tuba",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
         { cue: "GROßE", word: "Asteroid", size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
         { cue: "GROßE", word: "Kanu",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
-   ],
-    randomize_order:true,
+    ],
+    sample:{
+        type: "with-replacement"
+    }
 };
 
 const randomString = generateRandomString(16);
@@ -381,7 +383,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? prms.nTrlsP/32 : prms.nTrlsE/32;
+        blk_timeline.sample.size = (blk === 0) ? prms.nTrlsP/80 : prms.nTrlsE/80;
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

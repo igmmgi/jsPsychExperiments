@@ -202,7 +202,9 @@ const trial_timeline = {
         { text: "not yellow", fontcolour: "green",  affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
         { text: "not yellow", fontcolour: "blue",   affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
     ],
-    randomize_order:true
+    sample: {
+        type: "with-replacement"
+    }
 };
 
 const fullscreen_on = {
@@ -230,7 +232,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? 1 : 2;
+        blk_timeline.sample.size = (blk === 0) ? 1 : 2;
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
         exp.push(iti);

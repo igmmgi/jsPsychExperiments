@@ -142,7 +142,9 @@ const trial_timeline_fixation_cross = {
         { flanker: flankers[2], fix: 1, comp: 'comp',   dir: 'right', key: prms.respKeys[1]},
         { flanker: flankers[3], fix: 1, comp: 'incomp', dir: 'right', key: prms.respKeys[1]},
     ],
-    randomize_order:true,
+    sample: {
+        type: "with-replacment"
+    }
 };
         
 const trial_timeline_fixation_blank = {
@@ -193,7 +195,7 @@ function genExpSeq() {
         } else {
             blk_timeline = {...trial_timeline_fixation_blank};
         }
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

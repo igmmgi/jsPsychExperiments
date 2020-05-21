@@ -4,7 +4,7 @@
 
 const expName = getFileName();
 const dirName = getDirName();
-const vpNum = genVpNum();
+const vpNum   = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -105,7 +105,9 @@ const trial_timeline = {
         { simon: simons[2], comp: 'comp',  side: 'right', key: prms.respKeys[1]},
         { simon: simons[3], comp: 'incomp',side: 'right', key: prms.respKeys[1]}
     ],
-    randomize_order:true,
+    sample: {
+        type: "fixed-repetitions"
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -122,7 +124,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

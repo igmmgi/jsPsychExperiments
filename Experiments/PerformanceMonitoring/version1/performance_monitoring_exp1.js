@@ -319,7 +319,9 @@ const trial_timeline_partial = {
         { shape: prms.respShapes[3], corrResp: prms.respKeys[3] },
     ],
     data: {fbType: "partial"},
-    randomize_order: true,
+    sample: {
+        type: "with-repalcement"
+    }
 };
 
 const trial_timeline_full = {
@@ -336,7 +338,9 @@ const trial_timeline_full = {
         { shape: prms.respShapes[3], corrResp: prms.respKeys[3] },
     ],
     data: {fbType: "full"},
-    randomize_order: true,
+    sample: {
+        type: "with-repalcement"
+    }
 };
 
 
@@ -376,7 +380,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = (order[blk] === "P") ? {...trial_timeline_partial} : {...trial_timeline_full}
-        blk_timeline.repetitions = (blk < 2) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.sample.size = (blk < 2) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);        // trials within a block
         exp.push(block_feedback);      // show previous block performance 
         exp.push(task_instructions1);  // task-mapping reminder

@@ -11,7 +11,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size = [960, 720];
+const canvas_size   = [960, 720];
 const canvas_border = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -326,7 +326,9 @@ const trial_timeline = {
         trial_feedback
     ],
     timeline_variables: timeline,
-    randomize_order:true,
+    sample: {
+        type: "with-replacement"
+    }
 };
 
 const randomString = generateRandomString(16);
@@ -376,7 +378,7 @@ const fullscreen_off = {
 
         for (let blk = 0; blk < prms.nBlks; blk += 1) {
             let blk_timeline = {...trial_timeline};
-            blk_timeline.repetitions = (blk === 0) ? 1 : 2;
+            blk_timeline.sample.size = (blk === 0) ? 1 : 2;
             exp.push(blk_timeline);    // trials within a block
             exp.push(block_feedback);  // show previous block performance 
         }

@@ -251,7 +251,9 @@ const trial_timeline = {
         { flanker: "#####", f1Col: "green", t1Col: cc,      f2Col: cc,      t2Col: "blue",  comp: "incomp", order: "IR", corrResp: prms.respKeys[1] },
         { flanker: "#####", f1Col: "blue",  t1Col: cc,      f2Col: cc,      t2Col: "green", comp: "incomp", order: "IR", corrResp: prms.respKeys[0] },
     ],
-    randomize_order:true,
+    sample:{
+        type: "with-replacement"
+    }
 };
 
 const randomString = generateRandomString(16);
@@ -299,7 +301,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8);
+        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

@@ -130,7 +130,9 @@ const trial_timeline = {
         { flanker: flankers[6], type: 'letter', comp: 'comp',   dir: 'right', key: prms.respKeys[0]},
         { flanker: flankers[7], type: 'letter', comp: 'incomp', dir: 'right', key: prms.respKeys[0]}
     ],
-    randomize_order:true,
+    sample: {
+        type: "with-replacment"
+    }
 };
 
 const randomString = generateRandomString(16);
@@ -140,7 +142,7 @@ const alphaNum = {
     stimulus: "<h1>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h1>" +
     "<h1>benötigen, kopieren Sie den folgenden zufällig generierten Code</h1>" +
     "<h1>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h1>" +
-    "<h2>ian.mackenzie@uni.tuebingen.de</h2>" +
+    "<h2>XXX@XXX</h2>" +
     "<h1>Code:" + randomString + "</h1>" +
     "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
 };
@@ -159,7 +161,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.repetitions = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
