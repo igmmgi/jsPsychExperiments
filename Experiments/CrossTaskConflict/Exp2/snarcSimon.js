@@ -184,7 +184,7 @@ jsPsych.init({
     fullscreen: false,
     show_progress_bar: false,
     on_finish: function(){ 
-        saveRandomCode(expname); 
+        saveRandomCode(expName);
         saveData("/Common/write_data.php", filename, {stim: "snarcSimon"});
     }
 });

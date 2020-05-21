@@ -329,7 +329,7 @@ jsPsych.init({
         min_height:cs[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, rows = {stim: "simon"}); 
+        saveData("/Common/write_data.php", filename, {stim: "simon"});
     }
 });
 

@@ -342,7 +342,7 @@ const alphaNum = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<h2 style='text:align=left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
-    "<h2 alignstyle='text:align=left;'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
+    "<h2 style='text:align=left;'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
     "<h2 style='text:align=left;'>Code und senden Sie diesen</h2>" +
     "<h2 style='text:align=left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
     "<h2 style='text:align=left;'>per Email an:</h2></br>" +

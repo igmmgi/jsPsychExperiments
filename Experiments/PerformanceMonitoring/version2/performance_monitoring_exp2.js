@@ -171,7 +171,7 @@ function codeTrial() {
         prms.meanRt = perfDat.select("rt").mean();
         perfCodeR   = (dat.rt <= prms.meanRt) ? 1 : 2
         if (Math.random() >= prms.percentageCorrect) {
-            perfCodeF = (perCodeR === 1) ? 2 : 1;
+            perfCodeF = (perfCodeR === 1) ? 2 : 1;
         } else {
             perfCodeF = perfCodeR
         }

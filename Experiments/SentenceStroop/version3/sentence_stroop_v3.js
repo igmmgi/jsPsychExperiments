@@ -593,7 +593,7 @@ function constrained_shuffle(items) {
 // only somme of the filler items have questions
 function add_filler_questions(items) {
     let final_items = []
-    for (i in items) {
+    for (let i in items) {
         final_items.push(items[i])
         if (items[i].timeline_variables === undefined) {
             continue
