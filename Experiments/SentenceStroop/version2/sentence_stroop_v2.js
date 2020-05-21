@@ -113,7 +113,7 @@ task_instructions2 = {
     stimulus: "<H1 style='text-align: center;'>Part 1:</H1><br>" +
     "<H2 style='text-align: center;'>Respond to the colour of the font with your dominant hand</H2><br>" +
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<h2 align='center'>Press any key to continue!</h2>"
+    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
 };
 
 task_instructions3 = {
