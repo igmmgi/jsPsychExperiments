@@ -114,16 +114,16 @@ function drawInstructions() {
 
     ctx.translate(-300, 0);
     for (let i = 0; i < 4; i++) {
-        if (prms.respShapes[i] == "square") {
+        if (prms.respShapes[i] === "square") {
             drawSquare(ctx, prms.shapeSize)
             ctx.fillText(prms.respKeys[i], 0, prms.shapeSize * 1.5); 
-        } else if (prms.respShapes[i] == "circle") {
+        } else if (prms.respShapes[i] === "circle") {
             drawCircle(ctx, prms.shapeSize)
             ctx.fillText(prms.respKeys[i], 0, prms.shapeSize * 1.5); 
-        } else if (prms.respShapes[i] == "triangle") {
+        } else if (prms.respShapes[i] === "triangle") {
             drawTriangle(ctx, prms.shapeSize)
             ctx.fillText(prms.respKeys[i], 0, prms.shapeSize * 1.5); 
-        } else if (prms.respShapes[i] == "star") {
+        } else if (prms.respShapes[i] === "star") {
             drawStar(ctx, prms.shapeSize * 1.2)
             ctx.fillText(prms.respKeys[i], 0, prms.shapeSize * 1.5); 
         }

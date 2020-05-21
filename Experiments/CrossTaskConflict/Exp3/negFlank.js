@@ -119,8 +119,7 @@ const trial_timeline = {
     ],
     sample: {
         type: "with-replacement"
-    }
-    randomize_order:true,
+    },
 };
 
 const randomString = generateRandomString(16);

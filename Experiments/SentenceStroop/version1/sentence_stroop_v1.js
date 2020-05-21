@@ -576,13 +576,13 @@ function drawQuestion(args) {
 
 // brute force shuffle and check seems quick enough?
 function constrained_shuffle(items) {
-    constraints_met = false;
-    while (constraints_met == false) {
+    let constraints_met = false;
+    while (constraints_met === false) {
         items = shuffle(items)
         constraints_met = true;
-        for (i in items) {
+        for (let i in items) {
             if (i > 0) {
-                if (items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] == "exp" && items[i-1]["timeline_variables"][0]["type"] == "exp") {
+                if (items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] === "exp" && items[i-1]["timeline_variables"][0]["type"] === "exp") {
                     constraints_met = false;
                     break
                 }
@@ -637,7 +637,7 @@ const prac_trial_combined_timeline = { timeline: prac_items_combined }
 
 // 4th phase: Experiment
 // list 1 vs. list 2
-const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list == 1) 
+const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === 1)
 
 const exp_items_sentences = create_sentence_items(exp_sentences_filtered)
 const exp_items_stroop    = create_stroop_items(7)

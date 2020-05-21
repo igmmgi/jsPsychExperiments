@@ -73,9 +73,9 @@ function drawFeedback() {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black"; 
-    if (prms.cBlk == 1) {
+    if (prms.cBlk === 1) {
         ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0); 
-    } else if (prms.cBlk > 1 & dat.corrCode != 1) {
+    } else if (prms.cBlk > 1 && dat.corrCode !== 1) {
         ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0); 
     }
 }
