@@ -98,7 +98,10 @@ const task_instructions1 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<h2 style='text:align=center;'>Welcome to our Experiment:</h2><br>" +
-              "<h2 style='text:align=center;'>Press any key to continue!</h2>"
+              "<h2 style='text:align=center;'>Press any key to continue!</h2>",
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const cols = ["blue", "green", "yellow"]
@@ -657,7 +660,7 @@ function genExpSeq() {
 
     exp.push(fullscreen_on);
     exp.push(welcome_en);
-    exp.push(resize_de);
+    exp.push(resize_en);
     exp.push(vpInfoForm_en);
     exp.push(task_instructions1);
 

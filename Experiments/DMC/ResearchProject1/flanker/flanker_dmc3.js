@@ -45,7 +45,7 @@ const prms = {
 };
 
 const nVersion = getVersionNumber(nFiles, 2)
-jsPsych.data.addProperties({versionNumber: versionNumber});
+jsPsych.data.addProperties({version: nVersion});
 let respText;
 if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];

@@ -383,7 +383,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         if (blk > 0) {
-            exp.push(task_instructions)
+            exp.push(task_instructions1)
         }
         let blk_timeline = (order[blk] === "P") ? {...trial_timeline_partial} : {...trial_timeline_full}
         blk_timeline.sample.size = (blk < 2) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
