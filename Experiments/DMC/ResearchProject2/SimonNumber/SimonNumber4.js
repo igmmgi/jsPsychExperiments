@@ -20,6 +20,7 @@ const canvas_border = "5px solid black";
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum   = genVpNum();
+const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -342,7 +343,8 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
+    exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
@@ -360,7 +362,9 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const filename = dirName + "data/" + expName + "_" + genVpNum();
+
+const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -371,7 +375,8 @@ jsPsych.init({
         min_height: canvas_size[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, {stim: "SimonNumber"});
+        saveData("/Common/write_data.php", data_filename, {stim: "SimonNumber"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });
 

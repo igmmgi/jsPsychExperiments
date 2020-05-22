@@ -18,6 +18,7 @@ const canvas_border = "5px solid black";
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum   = genVpNum();
+const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -43,27 +44,28 @@ const prms = {
     stimSize: "50px monospace"
 };
 
-const versionNumber = getVersionNumber(vpNum, 4)
-if (versionNumber === 1) {
+const nVersion = getVersionNumber(nFiles, 2)
+jsPsych.data.addProperties({nVersion: nVersion});
+if (nVersion === 1) {
     prms.respKeysNumber = ["S", "K", 27];
     prms.respKeysLetter = ["S", "K", 27];
-    respText = "<h4 style='text-align: center;'>Odd = S    Even = K</h4>" +
-               "<h4 style='text-align: center;'>Vowel = S    Consonant = K</h4>";
-} else if (versionNumber === 2) {
+    respText = "<h4 style='text-align: center;'>Odd = S &emsp; Even = K</h4>" +
+               "<h4 style='text-align: center;'>Vowel = S &emsp; Consonant = K</h4><br>";
+} else if (nVersion === 2) {
     prms.respKeysNumber = ["S", "K", 27];
     prms.respKeysLetter = ["K", "S", 27];
-    respText = "<h4 style='text-align: center;'>Odd = S    Even = K</h4>" +
-               "<h4 style='text-align: center;'>Consonant = S    Vowel = K</h4>";
-} else if (versionNumber === 3) {
+    respText = "<h4 style='text-align: center;'>Odd = S &emsp; Even = K</h4>" +
+               "<h4 style='text-align: center;'>Consonant = S &emsp; Vowel = K</h4><br>";
+} else if (nVersion === 3) {
     prms.respKeysNumber = ["K", "S", 27];
     prms.respKeysLetter = ["K", "S", 27];
-    respText = "<h4 style='text-align: center;'>Even = S    Odd = K</h4>" +
-               "<h4 style='text-align: center;'>Vowel = S    Consonant = K</h4>";
-} else if (versionNumber === 4) {
+    respText = "<h4 style='text-align: center;'>Even = S &emsp; Odd = K</h4>" +
+               "<h4 style='text-align: center;'>Vowel = S &emsp; Consonant = K</h4><br>";
+} else if (nVersion === 4) {
     prms.respKeysNumber = ["K", "S", 27];
     prms.respKeysLetter = ["S", "K", 27];
-    respText = "<h4 style='text-align: center;'>Even = S    Odd = K</h4>" +
-               "<h4 style='text-align: center;'>Consonant = S    Vowel = K</h4>";
+    respText = "<h4 style='text-align: center;'>Even = S &emsp; Odd = K</h4>" +
+               "<h4 style='text-align: center;'>Consonant = S &emsp; Vowel = K</h4><br>";
 }
 
 const task_instructions1 = {
@@ -86,9 +88,9 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h2 style='text-align: center;'>Aufgabe:</h2><br>" +
-    "<h4 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4>" +
+    "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     respText + 
+    "<h3 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h3>" +
     "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -155,7 +157,7 @@ const stimulus = {
     ],
     data: {
         stim: "SimonLetterNumber",
-        stimulus: jsPsych.timelineVariable('stimulus'), 
+        target: jsPsych.timelineVariable('stimulus'), 
         type: jsPsych.timelineVariable('type'), 
         category: jsPsych.timelineVariable('category'), 
         position: jsPsych.timelineVariable('position'), 
@@ -266,16 +268,15 @@ const alphaNum = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text-align: left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
-    "<h2 style='text-align: left;'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
-    "<h2 style='text-align: left;'>Code und senden Sie diesen</h2>" +
-    "<h2 style='text-align: left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
-    "<h2 style='text-align: left;'>per Email an:</h2></br>" +
-    "<h2>XXX@XXX</h2>" +
-    "<h2>Code: " + randomString + "</h2></br></br>" +
-    "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
+    response_ends_trial: true,
+    choices: [32],
+    stimulus: "<h3 style='text-align:left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h3>" +
+              "<h3 style='text-align:left;'>benötigen, kopieren Sie den folgenden zufällig generierten Code</h3>" +
+              "<h3 style='text-align:left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h3><br>" +
+              "<h2>XXX@XXX</h2>" +
+              "<h1>Code: " + randomString + "</h1><br>" +
+              "<h2 align='left'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
 };
-
 
 const fullscreen_on = {
     type: 'fullscreen',
@@ -290,7 +291,6 @@ const fullscreen_off = {
     }
 }
 
-
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -301,7 +301,8 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
+    exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
@@ -319,7 +320,9 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const filename = dirName + "data/" + expName + "_" + genVpNum();
+
+const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -330,7 +333,8 @@ jsPsych.init({
         min_height:canvas_size[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, {stim: "SimonLetterNumber"});
+        saveData("/Common/write_data.php", data_filename, {stim: "SimonLetterNumber"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });
 

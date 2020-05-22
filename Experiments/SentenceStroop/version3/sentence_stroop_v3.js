@@ -656,7 +656,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_en);
     exp.push(resize_de);
-    // exp.push(vpInfoForm_en);
+    exp.push(vpInfoForm_en);
     exp.push(task_instructions1);
 
     // 1st phase (practice stroop + baseline stroop)

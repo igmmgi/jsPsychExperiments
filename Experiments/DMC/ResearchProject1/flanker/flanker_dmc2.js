@@ -19,6 +19,7 @@ const canvas_border = "5px solid black";
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum   = genVpNum();
+const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -43,9 +44,10 @@ const prms = {
     fbSize: "30px monospace"
 };
 
-const versionNumber = getVersionNumber(vpNum, 2)
+const nVersion = getVersionNumber(nFiles, 2)
+jsPsych.data.addProperties({versionNumber: versionNumber});
 let respText;
-if (versionNumber === 1) {
+if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];
     respText      = "<h4 style='text:align=center;'><b>H = Taste D</b> (linken Zeigefinger).</h4>" +
                     "<h4 style='text:align=center;'><b>S = Taste J</b> (rechten Zeigefinger).</h4>";
@@ -211,7 +213,7 @@ const flanker_stimulus = {
     ],
     data: {
         stim: "flanker",
-        flanker: jsPsych.timelineVariable('flanker'), 
+        flanker: jsPsych.timelineVariable('stimulus'), 
         comp: jsPsych.timelineVariable('comp'), 
         order: jsPsych.timelineVariable('order'), 
         corrResp: jsPsych.timelineVariable('corrResp')
@@ -234,14 +236,14 @@ const trial_timeline = {
         iti
     ],
     timeline_variables:[
-        { flanker: "HHHHH", flanker1: "  H  ", flanker2: "HH HH", comp: "comp",   order: "IR", corrResp: prms.respKeys[0] },
-        { flanker: "SSSSS", flanker1: "  S  ", flanker2: "SS SS", comp: "comp",   order: "IR", corrResp: prms.respKeys[1] },
-        { flanker: "SSHSS", flanker1: "  H  ", flanker2: "SS SS", comp: "incomp", order: "IR", corrResp: prms.respKeys[0] },
-        { flanker: "HHSHH", flanker1: "  S  ", flanker2: "HH HH", comp: "incomp", order: "IR", corrResp: prms.respKeys[1] },
-        { flanker: "HHHHH", flanker1: "HH HH", flanker2: "  H  ", comp: "comp",   order: "RI", corrResp: prms.respKeys[0] },
-        { flanker: "SSSSS", flanker1: "SS SS", flanker2: "  S  ", comp: "comp",   order: "RI", corrResp: prms.respKeys[1] },
-        { flanker: "HHSHH", flanker1: "HH HH", flanker2: "  S  ", comp: "incomp", order: "RI", corrResp: prms.respKeys[1] },
-        { flanker: "SSHSS", flanker1: "SS SS", flanker2: "  H  ", comp: "incomp", order: "RI", corrResp: prms.respKeys[0] },
+        { stimulus: "HHHHH", flanker1: "  H  ", flanker2: "HH HH", comp: "comp",   order: "IR", corrResp: prms.respKeys[0] },
+        { stimulus: "SSSSS", flanker1: "  S  ", flanker2: "SS SS", comp: "comp",   order: "IR", corrResp: prms.respKeys[1] },
+        { stimulus: "SSHSS", flanker1: "  H  ", flanker2: "SS SS", comp: "incomp", order: "IR", corrResp: prms.respKeys[0] },
+        { stimulus: "HHSHH", flanker1: "  S  ", flanker2: "HH HH", comp: "incomp", order: "IR", corrResp: prms.respKeys[1] },
+        { stimulus: "HHHHH", flanker1: "HH HH", flanker2: "  H  ", comp: "comp",   order: "RI", corrResp: prms.respKeys[0] },
+        { stimulus: "SSSSS", flanker1: "SS SS", flanker2: "  S  ", comp: "comp",   order: "RI", corrResp: prms.respKeys[1] },
+        { stimulus: "HHSHH", flanker1: "HH HH", flanker2: "  S  ", comp: "incomp", order: "RI", corrResp: prms.respKeys[1] },
+        { stimulus: "SSHSS", flanker1: "SS SS", flanker2: "  H  ", comp: "incomp", order: "RI", corrResp: prms.respKeys[0] },
     ],
     sample:{
         type: "fixed-repetitions"
@@ -255,12 +257,14 @@ const alphaNum = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h1>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h1>" +
-    "<h1>benötigen, kopieren Sie den folgenden zufällig generierten Code</h1>" +
-    "<h1>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h1>" +
-    "<h2>XXX@XXX</h2>" +
-    "<h1>Code:" + randomString + "</h1>" +
-    "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
+    response_ends_trial: true,
+    choices: [32],
+    stimulus: "<h3 style='text-align:left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h3>" +
+              "<h3 style='text-align:left;'>benötigen, kopieren Sie den folgenden zufällig generierten Code</h3>" +
+              "<h3 style='text-align:left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h3><br>" +
+              "<h2>XXX@XXX</h2>" +
+              "<h1>Code: " + randomString + "</h1><br>" +
+              "<h2 align='left'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
 };
 
 const fullscreen_on = {
@@ -287,7 +291,8 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de) 
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
+    exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
@@ -305,7 +310,9 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const filename = dirName + "data/" + expName + "_" + genVpNum();
+
+const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -316,7 +323,8 @@ jsPsych.init({
         min_height:canvas_size[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, {stim: "flanker"});
+        saveData("/Common/write_data.php", data_filename, {stim: "flanker"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });
 

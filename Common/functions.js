@@ -34,11 +34,8 @@ function genVpNum() {
     return num;
 }
 
-function getVersionNumber(vpNumber, numberOfVersions) {
-    if (vpNumber === 0) {
-        vpNumber = 1;
-    }
-    return ((vpNumber - 1) % numberOfVersions) + 1;
+function getVersionNumber(num, numberOfVersions) {
+    return (num % numberOfVersions) + 1;
 }
 
 function checkVpInfoForm_en() {
@@ -193,12 +190,12 @@ function generateRandomString(length) {
     return randomString;
 }
 
-function saveRandomCode(url, fname, code){
+function saveRandomCode(url, filename, code){
     $.ajax({
         type:"post",
         cache: false,
         url: url, 
-        data: {filename: fname, filedata: code}
+        data: {filename: filename, filedata: code}
     });
 }
 

@@ -19,6 +19,7 @@ const cb = "5px solid black";
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum   = genVpNum();
+const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -43,8 +44,10 @@ const prms = {
     respKeys: [],
 };
 
-const versionNumber = getVersionNumber(vpNum, 2)
-if (versionNumber === 1) {
+
+const nVersion = getVersionNumber(nFiles, 2)
+jsPsych.data.addProperties({nVersion: nVersion});
+if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];
     respText = "<h4 style='text-align: center;'><b>BLAU</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
                "<h4 style='text-align: center;'><b>GRÜN</b> drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
@@ -295,7 +298,8 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
+    exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
@@ -313,7 +317,9 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const filename = dirName + "data/" + expName + "_" + genVpNum();
+
+const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -324,7 +330,8 @@ jsPsych.init({
         min_height:cs[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, {stim: "stroop"});
+        saveData("/Common/write_data.php", data_filename, {stim: "stroop"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });
 

@@ -177,8 +177,11 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
         // hide stimulus if stimulus_duration is set
         if (trial.stimulus_duration !== null) {
             jsPsych.pluginAPI.setTimeout(function() {
+                
                 // reset canvas
                 display_element.innerHTML = "<canvas id='canvas'></canvas>";
+                let canvas = document.getElementById("canvas")
+                
                 canvas.style        = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
                 canvas.width        = trial.canvas_size[0]; 
                 canvas.height       = trial.canvas_size[1];
@@ -186,6 +189,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
                 canvas.style.left   = (-trial.canvas_size[0]/2) + "px";
                 
                 let ctx = document.getElementById('canvas').getContext('2d');
+                
                 ctx.fillStyle = trial.canvas_colour;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 

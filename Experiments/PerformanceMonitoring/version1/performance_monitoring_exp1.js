@@ -107,8 +107,8 @@ function drawInstructions() {
     ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
 
-    ctx.fillText("Respond to the following shapes", 0, -200);
-    ctx.fillText("with the corresponding keys",     0, -150); 
+    ctx.fillText("Reagieren Sie auf folgende Formen",  0, -200);
+    ctx.fillText("mit den entsprechenden Tasten:",     0, -150); 
     ctx.save();
 
     ctx.translate(-300, 0);
@@ -130,7 +130,8 @@ function drawInstructions() {
     }
     ctx.restore();
 
-    ctx.fillText("Press any key to continue!", 0, 200);
+    ctx.fillText("Antworten Sie möglichst schnell und fehlerfrei!", 0, 150);
+    ctx.fillText("Weiter mit beliebiger Taste.", 0, 250);
 
 }
 
@@ -271,6 +272,8 @@ const shape_stimulus = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     trial_duration: prms.tooSlow,
+    response_ends_trial: true,
+    choices: prms.respKeys,
     translate_origin: true,
     func: drawShape,
     func_args:[ { "shape": jsPsych.timelineVariable("shape") }, ],
@@ -379,6 +382,9 @@ function genExpSeq() {
     let order = new Array(prms.nBlks).fill(["P", "F"]).flat();
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
+        if (blk > 0) {
+            exp.push(task_instructions)
+        }
         let blk_timeline = (order[blk] === "P") ? {...trial_timeline_partial} : {...trial_timeline_full}
         blk_timeline.sample.size = (blk < 2) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);        // trials within a block

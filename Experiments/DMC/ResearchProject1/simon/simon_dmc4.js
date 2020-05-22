@@ -17,6 +17,7 @@ const cb = "5px solid black";
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum   = genVpNum();
+const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -41,8 +42,9 @@ const prms = {
     respKeys: [],
 };
 
-const versionNumber = getVersionNumber(vpNum, 2)
-if (versionNumber === 1) {
+const nVersion = getVersionNumber(nFiles, 2)
+jsPsych.data.addProperties({nVersion: nVersion});
+if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];
     respText = "<h4 style='text-align: center;'><b>BLAU</b> drücken Sie die <b>Taste D</b> (linken Zeigefinger).</h4>" +
                "<h4 style='text-align: center;'><b>GRÜN</b>  drücken Sie die <b>Taste J</b> (rechten Zeigefinger).</h4>";
@@ -269,12 +271,14 @@ const alphaNum = {
     canvas_colour: cc,
     canvas_size: cs,
     canvas_border: cb,
-    stimulus: "<h1>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h1>" +
-    "<h1>benötigen, kopieren Sie den folgenden zufällig generierten Code</h1>" +
-    "<h1>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h1>" +
-    "<h2>XXX@XXX</h2>" +
-    "<h1>Code:" + randomString + "</h1>" +
-    "<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
+    response_ends_trial: true,
+    choices: [32],
+    stimulus: "<h3 style='text-align:left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h3>" +
+              "<h3 style='text-align:left;'>benötigen, kopieren Sie den folgenden zufällig generierten Code</h3>" +
+              "<h3 style='text-align:left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h3><br>" +
+              "<h2>XXX@XXX</h2>" +
+              "<h1>Code: " + randomString + "</h1><br>" +
+              "<h2 align='left'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
 };
 
 const fullscreen_on = {
@@ -300,7 +304,8 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
+    exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
@@ -318,7 +323,9 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
-const filename = dirName + "data/" + expName + "_" + genVpNum();
+
+const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -329,7 +336,8 @@ jsPsych.init({
         min_height:cs[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, {stim: "simon"});
+        saveData("/Common/write_data.php", data_filename, {stim: "simon"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });
 

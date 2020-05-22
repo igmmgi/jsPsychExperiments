@@ -24,8 +24,8 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP:  20, 
-    nTrlsE: 100,
+    nTrlsP:   20,
+    nTrlsE:  100,
     nBlks: 4, 
     fixDur: 500,
     fbDur: 1000,
@@ -108,8 +108,8 @@ function drawInstructions() {
     ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
 
-    ctx.fillText("Respond to the following shapes", 0, -200);
-    ctx.fillText("with the corresponding keys",     0, -150); 
+    ctx.fillText("Reagieren Sie auf folgende Formen",  0, -200);
+    ctx.fillText("mit den entsprechenden Tasten:",     0, -150); 
     ctx.save();
 
     ctx.translate(-300, 0);
@@ -131,7 +131,8 @@ function drawInstructions() {
     }
     ctx.restore();
 
-    ctx.fillText("Press any key to continue!", 0, 200);
+    ctx.fillText("Antworten Sie möglichst schnell und fehlerfrei!", 0, 150);
+    ctx.fillText("Weiter mit beliebiger Taste.", 0, 250);
 
 }
 
@@ -361,11 +362,13 @@ function genExpSeq() {
     exp.push(task_instructions1);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
+        if (blk > 0) {
+            exp.push(task_instructions1)
+        }
         let blk_timeline = {...trial_timeline} ;
         blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
         exp.push(blk_timeline);        // trials within a block
         exp.push(block_feedback);      // show previous block performance 
-        exp.push(task_instructions1);  // task-mapping reminder
     }
     exp.push(debrief_de);
     exp.push(fullscreen_off);
