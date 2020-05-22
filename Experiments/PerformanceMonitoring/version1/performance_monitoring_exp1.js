@@ -320,7 +320,7 @@ const trial_timeline_partial = {
     ],
     data: {fbType: "partial"},
     sample: {
-        type: "with-repalcement"
+        type: "fixed-repetitions"
     }
 };
 
@@ -339,7 +339,7 @@ const trial_timeline_full = {
     ],
     data: {fbType: "full"},
     sample: {
-        type: "with-repalcement"
+        type: "fixed-repetitions"
     }
 };
 

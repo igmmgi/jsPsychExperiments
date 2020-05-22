@@ -134,7 +134,7 @@ const trial_timeline = {
         {stimulus: stims[15], task: 'affneg', comp: "incomp",  key: 'C'},
     ],
     sample: {
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 

@@ -243,7 +243,7 @@ const trial_timeline = {
         { flanker: "SSHSS", flanker1: "SS SS", flanker2: "  H  ", comp: "incomp", order: "IR", corrResp: prms.respKeys[0] },
     ],
     sample:{
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 

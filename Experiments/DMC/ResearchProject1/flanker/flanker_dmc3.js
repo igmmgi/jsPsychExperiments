@@ -251,7 +251,7 @@ const trial_timeline = {
         { flanker: "#####", f1Col: "blue",  t1Col: cc,      f2Col: cc,      t2Col: "green", comp: "incomp", order: "IR", corrResp: prms.respKeys[0] },
     ],
     sample:{
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 

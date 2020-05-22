@@ -137,7 +137,7 @@ const trial_timeline = {
         {stimulus: stims[11], task: 'snarc', comp: prms.comp[0], colour: "black", side: 'middle', font: 'italic', key: prms.respKeys[1]}
     ],
     sample: {
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 

@@ -203,7 +203,7 @@ const trial_timeline = {
         { text: "not yellow", fontcolour: "blue",   affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
     ],
     sample: {
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 

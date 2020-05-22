@@ -122,7 +122,7 @@ const trial_timeline = {
         { stroop: stroops[3], word: 'red',  colour: 'blue', comp: 'incomp', key: prms.respKeys[1]}
     ],
     sample: {
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 

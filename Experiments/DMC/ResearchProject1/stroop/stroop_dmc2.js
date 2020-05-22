@@ -252,7 +252,7 @@ const trial_timeline = {
         { word: "grün", colour: "blue",  w1: "",     c1: "blue",  w2: "grün", c2:cc,       comp: 'incomp', order: "RI", corrResp: prms.respKeys[0]}
     ],
     sample:{
-        type:"with-replacement"
+        type:"fixed-repetitions"
     },
 };
 

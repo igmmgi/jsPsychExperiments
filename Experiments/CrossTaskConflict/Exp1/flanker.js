@@ -149,7 +149,7 @@ const trial_timeline = {
         { flanker: flankers[7], dim: 'ver', comp: 'incomp', dir: 'right', key: prms.respKeys[1]}
     ],
     sample: {
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 

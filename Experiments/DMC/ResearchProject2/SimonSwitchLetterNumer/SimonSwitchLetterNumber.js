@@ -1,6 +1,6 @@
 // B.Sc. Project DMC SimonWord
 // ResearchProject 2.2
-// Simon task with letters (A,E,O,U,B,F,R,S) and numbers (1,2,3,4,6,7,8,9)
+// Simon task with letters (A,E,I,U,G,K,M,R) and numbers (2,3,4,5,6,7,8,9)
 // presented to the left and right screen location. VPs
 // should respond with left and right key-presses according
 // to 1) vowel vs. consonant or 2) odd vs. even 
@@ -221,41 +221,41 @@ const trial_timeline = {
         iti
     ],
     timeline_variables:[
-        { stimulus: "odd",       type: "number", category: "odd",        position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "even",      type: "number", category: "even",       position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "odd",       type: "number", category: "odd",        position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "even",      type: "number", category: "even",       position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "odd",       type: "number", category: "odd",        position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "even",      type: "number", category: "even",       position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "odd",       type: "number", category: "odd",        position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "even",      type: "number", category: "even",       position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "odd",       type: "number", category: "odd",        position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "even",      type: "number", category: "even",       position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "odd",       type: "number", category: "odd",        position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "even",      type: "number", category: "even",       position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "odd",       type: "number", category: "odd",        position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "even",      type: "number", category: "even",       position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "odd",       type: "number", category: "odd",        position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "even",      type: "number", category: "even",       position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "vowel",     type: "letter", category: "vowel",      position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "vowel",     type: "letter", category: "vowel",      position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "vowel",     type: "letter", category: "vowel",      position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "vowel",     type: "letter", category: "vowel",      position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "consonant", type: "letter", category: "consonant",  position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "consonant", type: "letter", category: "consonant",  position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "consonant", type: "letter", category: "consonant",  position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "consonant", type: "letter", category: "consonant",  position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "vowel",     type: "letter", category: "vowel",      position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "vowel",     type: "letter", category: "vowel",      position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "vowel",     type: "letter", category: "vowel",      position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "vowel",     type: "letter", category: "vowel",      position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "consonant", type: "letter", category: "consonant",  position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "consonant", type: "letter", category: "consonant",  position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "consonant", type: "letter", category: "consonant",  position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "consonant", type: "letter", category: "consonant",  position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "2", type: "number", category: "even",       position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "3", type: "number", category: "odd",        position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "4", type: "number", category: "even",       position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "5", type: "number", category: "odd",        position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "6", type: "number", category: "even",       position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "7", type: "number", category: "odd",        position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "8", type: "number", category: "even",       position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "9", type: "number", category: "odd",        position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "2", type: "number", category: "even",       position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "3", type: "number", category: "odd",        position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "4", type: "number", category: "even",       position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "5", type: "number", category: "odd",        position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "6", type: "number", category: "even",       position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "7", type: "number", category: "odd",        position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "8", type: "number", category: "even",       position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "9", type: "number", category: "odd",        position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "A", type: "letter", category: "vowel",      position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "E", type: "letter", category: "vowel",      position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "I", type: "letter", category: "vowel",      position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "U", type: "letter", category: "vowel",      position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "G", type: "letter", category: "consonant",  position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "K", type: "letter", category: "consonant",  position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "M", type: "letter", category: "consonant",  position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "R", type: "letter", category: "consonant",  position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "A", type: "letter", category: "vowel",      position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "E", type: "letter", category: "vowel",      position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "I", type: "letter", category: "vowel",      position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "U", type: "letter", category: "vowel",      position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "G", type: "letter", category: "consonant",  position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "K", type: "letter", category: "consonant",  position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "M", type: "letter", category: "consonant",  position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "R", type: "letter", category: "consonant",  position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[1] },        
    ],
     sample:{
-        type:"with-replacement"
+        type:"fixed-repetitions"
     }
 };
 

@@ -330,7 +330,7 @@ const trial_timeline = {
     ],
     timeline_variables: timeline,
     sample:{
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 

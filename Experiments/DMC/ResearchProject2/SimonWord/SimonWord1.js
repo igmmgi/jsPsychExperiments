@@ -331,7 +331,7 @@ const trial_timeline = {
         { cue: "GROßE", word: "Kanu",     size: "large", life: "nonliving", position: "right", cong: "incong", corrResp: prms.respKeysSize[1]},        
     ],
     sample:{
-        type: "with-replacement"
+        type: "fixed-repetitions"
     }
 };
 
