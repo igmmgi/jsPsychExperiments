@@ -77,6 +77,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
     plugin.trial = function(display_element, trial){
 
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
+        let canvas = document.getElementById("canvas")
 
         // setup canvas
         canvas.style        = "position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;";
@@ -143,10 +144,6 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
                 "word": words[trial.word_number],
                 "key_press": response.key
             };
-            console.log(trial_data)
-
-            // clear the display 
-            //display_element.innerHTML = "<canvas id='canvas'></canvas>";
 
             // move on to the next trial
             jsPsych.finishTrial(trial_data);
@@ -165,7 +162,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
 
         // start the response listener
         if (trial.choices !== jsPsych.NO_KEYS) {
-            const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+           var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
                 callback_function: after_response,
                 valid_responses: trial.choices,
                 rt_method: 'performance',

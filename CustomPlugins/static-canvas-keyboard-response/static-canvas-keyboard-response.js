@@ -165,7 +165,7 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function(){
 
         // start the response listener
         if (trial.choices !== jsPsych.NO_KEYS) {
-            const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+            var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
                 callback_function: after_response,
                 valid_responses: trial.choices,
                 rt_method: 'performance',

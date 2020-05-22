@@ -178,7 +178,7 @@ jsPsych.plugins['mouse-drag-response'] = (function(){
 
         function handleMouseMove(e){
 
-            if(selectedText === false){return;}
+            if (selectedText === false) {return;}
 
             e.preventDefault();
             let mouseX = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
