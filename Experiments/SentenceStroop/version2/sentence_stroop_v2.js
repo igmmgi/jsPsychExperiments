@@ -2,15 +2,13 @@
 // To adapt or not to adapt: The question of domain-general cognitive 
 // control, Cognition, 129, 637-651
 //
-// 1 minor modification: Stimulus based to response based stroop conflict
-//
 // Main finding: difficult to interpret sentences (i.e., high conflict) reduces
 // the compatibility effect if a subsequent stroop trial.
 //
 // Experiment Overview:
-// Stoop task with three ink colours (blue, green, yellow) with 6 words (blue, green,
-// yellow, brown, orange, red). Colours mapped to three adjacent keys and responded to
-// with the index, middle and ring fiingers of the dominant hand.
+// Stroop task with three ink colors (blue, green, yellow) with 6 words (blue, green,
+// yellow, brown, orange, red). Colors mapped to three adjacent keys and responded to
+// with the index, middle and ring fingers of the dominant hand.
 //
 // Sentence task with materials adapted from Garnsey et al. (1997). Some items (21) 
 // were difficult to process (ambiguous/incongurnet) whilst others (21) were easy
@@ -37,7 +35,7 @@
 //  10 random filler sentences.
 //
 // Trial Procedure:
-// 500 mx fixation cross
+// 500 ms fixation cross
 // Stroop/Sentence stimulus
 // 1000 ms blank inter-trial-interval (ITI)
 //
@@ -99,8 +97,11 @@ const task_instructions1 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text-align: center;'>Welcome to our Experiment:</h2><br>" +
-              "<h2 style='text-align: center;'>Press any key to continue!</h2>"
+    stimulus: "<h2 style='text:align=center;'>Welcome to our Experiment:</h2><br>" +
+              "<h2 style='text:align=center;'>Press any key to continue!</h2>",
+    on_finish: function() {
+        $('body').css('cursor', 'none'); 
+    },
 };
 
 const cols = ["blue", "green", "yellow"]
@@ -111,9 +112,9 @@ task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<H1 style='text-align: center;'>Part 1:</H1><br>" +
-    "<H2 style='text-align: center;'>Respond to the colour of the font with your dominant hand</H2><br>" +
+    "<H2 style='text-align: center;'>Respond to the color of the font with your dominant hand</H2><br>" +
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
+    "<h2 style='text:align=center;'>Press any key to continue!</h2>"
 };
 
 task_instructions3 = {
@@ -122,9 +123,9 @@ task_instructions3 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<H1 style='text-align: center;'>Part 2:</H1><br>" +
-    "<H2 style='text-align: center;'>Respond to the colour of the font with your dominant hand</H2><br>" +
+    "<H2 style='text-align: center;'>Respond to the color of the font with your dominant hand</H2><br>" +
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
+    "<h2 style='text-align=center;'>Press any key to continue!</h2>"
 };
 
 
@@ -133,9 +134,9 @@ task_instructions4 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align: center;'>Part 3:</H1><br>" +
-    "<H2 style='text-align: center;'>Press the spacebar with your non-dominant hand to reveal the sentence word-by-word.</H2><br>" +
-    "<h2 style='text-align: center;>Press any key to continue!</h2>"
+    stimulus: "<H1 style='text:align=center;;'>Part 3:</H1><br>" +
+    "<H2 style='text:align=center;;'>Press the spacebar with your non-dominant hand to reveal the sentence word-by-word.</H2><br>" +
+    "<h2 style='text:align=center;'>Press any key to continue!</h2>"
 };
 
 
@@ -148,7 +149,7 @@ task_instructions5 = {
     "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
     "<H2 style='text-align: center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
-    "<h2 style='text-align: center;>Press any key to continue!</h2>"
+    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
 };
 
 
@@ -161,8 +162,8 @@ task_instructions6 = {
     "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
     "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
     "<H2 style='text-align: center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
-    "<H2 style='text-align: center;'>Answer and questions with the T (TRUE) and F (FALSE) keys.</H2><br>" +
-    "<h2 style='text-align: center;>Press any key to continue!</h2>"
+    "<H2 style='text-align: center;'>Answer the questions with the T (TRUE) and F (FALSE) keys.</H2><br>" +
+    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
 };
 
 
@@ -180,40 +181,34 @@ const stroops = [
     {type: "stroop", word: "blue",   colour: "blue",   cong: "cong",   key:prms.respKeysStroop[0]},
     {type: "stroop", word: "green",  colour: "green",  cong: "cong",   key:prms.respKeysStroop[1]},
     {type: "stroop", word: "yellow", colour: "yellow", cong: "cong",   key:prms.respKeysStroop[2]},
-    {type: "stroop", word: "blue",   colour: "blue",   cong: "cong",   key:prms.respKeysStroop[0]},
-    {type: "stroop", word: "green",  colour: "green",  cong: "cong",   key:prms.respKeysStroop[1]},
-    {type: "stroop", word: "yellow", colour: "yellow", cong: "cong",   key:prms.respKeysStroop[2]},
-    {type: "stroop", word: "brown",  colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
-    {type: "stroop", word: "orange", colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
-    {type: "stroop", word: "red",    colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
-    {type: "stroop", word: "brown",  colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
-    {type: "stroop", word: "orange", colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
-    {type: "stroop", word: "red",    colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
-    {type: "stroop", word: "brown",  colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
-    {type: "stroop", word: "orange", colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
-    {type: "stroop", word: "red",    colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]}
+    {type: "stroop", word: "blue",   colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "blue",   colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "green",  colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
+    {type: "stroop", word: "green",  colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "yellow", colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
+    {type: "stroop", word: "yellow", colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
 ]
 
 // 11 practice sentences
 // Select 1 random sentence as the training phase for the moving-window procedure
 const prac_sentences = [
-    {num:  1, type: "prac", cong: "cong", sent: "The Governor’s daughter felt that he was being too hard on juvenile criminals.",           question: ""},
-    {num:  2, type: "prac", cong: "cong", sent: "The careless shipper never looked for the best bargain and would buy things on impulse.",  question: ""},
-    {num:  3, type: "prac", cong: "cong", sent: "The clumsy postal worker damaged the package full of priceless antique china.",            question: ""},
-    {num:  4, type: "prac", cong: "cong", sent: "The family’s new home had a gaping hole in the wall and leaks in the cracked ceilings.",   question: ""},
-    {num:  5, type: "prac", cong: "cong", sent: "The good dog fetched the stick for his owner.",                                            question: ""},
-    {num:  6, type: "prac", cong: "cong", sent: "The local supermarket closed early every night and never had what you needed.",            question: ""},
-    {num:  7, type: "prac", cong: "cong", sent: "The old banker was extremely rich and donated millions of dollars to area charities.",     question: ""},
-    {num:  8, type: "prac", cong: "cong", sent: "The pizza deliveryman always made his delivery on time and earned large tips.",            question: ""},
-    {num:  9, type: "prac", cong: "cong", sent: "The racecar driver slowed down too much at the last turn and almost didn’t win the race.", question: ""},
-    {num: 10, type: "prac", cong: "cong", sent: "The subway car went around a turn too fast and came dangerously close to derailing.",      question: ""},
-    {num: 11, type: "prac", cong: "cong", sent: "The thick haze remained over the large city for an entire week in July.",                  question: ""}
+    {num:  1, type: "prac", cong: "cong", sent: "The Governor’s daughter felt that he was being too hard on juvenile criminals.",            question: ""},
+    {num:  2, type: "prac", cong: "cong", sent: "The careless shipper never looked for the best bargain and would buy things on impulse.",   question: ""},
+    {num:  3, type: "prac", cong: "cong", sent: "The clumsy postal worker damaged the package full of priceless antique china.",             question: ""},
+    {num:  4, type: "prac", cong: "cong", sent: "The family’s new home had a gaping hole in the wall and leaks in the cracked ceilings.",    question: ""},
+    {num:  5, type: "prac", cong: "cong", sent: "The good dog fetched the stick for his owner.",                                             question: ""},
+    {num:  6, type: "prac", cong: "cong", sent: "The local supermarket closed early every night and never had what you needed.",             question: ""},
+    {num:  7, type: "prac", cong: "cong", sent: "The old banker was extremely rich and donated millions of dollars to area charities.",      question: ""},
+    {num:  8, type: "prac", cong: "cong", sent: "The pizza deliveryman always made his delivery on time and earned large tips.",             question: ""},
+    {num:  9, type: "prac", cong: "cong", sent: "The race car driver slowed down too much at the last turn and almost didn’t win the race.", question: ""},
+    {num: 10, type: "prac", cong: "cong", sent: "The subway car went around a turn too fast and came dangerously close to derailing.",       question: ""},
+    {num: 11, type: "prac", cong: "cong", sent: "The thick haze remained over the large city for an entire week in July.",                   question: ""}
 ]
 
-// 42 experimental items (21/21 congruent ingongruent)
+// 42 experimental items (21/21 congruent incongruent)
 // list refers to the original item list number used in Kan et al. (2013)
 const exp_sentences = [
-    {num:  1, list: 2, type: "exp", cong: "cong",   sent: "The CIA director confirmed that the rumor should habe been stopped sooner.",             question: ""},
+    {num:  1, list: 2, type: "exp", cong: "cong",   sent: "The CIA director confirmed that the rumor should have been stopped sooner.",             question: ""},
     {num:  1, list: 1, type: "exp", cong: "incong", sent: "The CIA director confirmed the rumor should have been stopped sooner.",                  question: ""},
     {num:  2, list: 1, type: "exp", cong: "cong",   sent: "The French explorers discovered that the treasure had caused a vicious battle.",         question: ""},
     {num:  2, list: 2, type: "exp", cong: "incong", sent: "The French explorers discovered the treasure had caused a vicious battle.",              question: ""},
@@ -233,8 +228,8 @@ const exp_sentences = [
     {num:  9, list: 1, type: "exp", cong: "incong", sent: "The basketball star accepted the contract would have to be negotiated.",                 question: ""},
     {num: 10, list: 2, type: "exp", cong: "cong",   sent: "The chemistry student learned that the equations could make measurement more precise.",  question: ""},
     {num: 10, list: 1, type: "exp", cong: "incong", sent: "The chemistry student learned the equations could make measurement more precise.",       question: ""},
-    {num: 11, list: 1, type: "exp", cong: "cong",   sent: "The coast guard confirmed that the downing could not have been avoided.",                question: ""},
-    {num: 11, list: 2, type: "exp", cong: "incong", sent: "The coast guard confirmed the downing could not have been avoided.",                     question: ""},
+    {num: 11, list: 1, type: "exp", cong: "cong",   sent: "The coast guard confirmed that the drowning could not have been avoided.",               question: ""},
+    {num: 11, list: 2, type: "exp", cong: "incong", sent: "The coast guard confirmed the drowning could not have been avoided.",                    question: ""},
     {num: 12, list: 2, type: "exp", cong: "cong",   sent: "The concerned priest asserted that the belief would be hard to explain.",                question: ""},
     {num: 12, list: 1, type: "exp", cong: "incong", sent: "The concerned priest asserted the belief would be hard to explain.",                     question: ""},
     {num: 13, list: 2, type: "exp", cong: "cong",   sent: "The confident engineer maintained that the machinery would be hard to destroy.",         question: ""},
@@ -259,8 +254,8 @@ const exp_sentences = [
     {num: 22, list: 2, type: "exp", cong: "incong", sent: "The journal editor printed the article had been slanderous to him.",                     question: ""},
     {num: 23, list: 2, type: "exp", cong: "cong",   sent: "The lab technician proposed that the idea might be worth another try.",                  question: ""},
     {num: 23, list: 1, type: "exp", cong: "incong", sent: "The lab technician proposed the idea might be worth another try.",                       question: ""},
-    {num: 24, list: 2, type: "exp", cong: "cong",   sent: "The local publisher printed that the quote hand not been accurately reported.",          question: ""},
-    {num: 24, list: 1, type: "exp", cong: "incong", sent: "The local publisher printed the quote hand not been accurately reported.",               question: ""},
+    {num: 24, list: 2, type: "exp", cong: "cong",   sent: "The local publisher printed that the quote had not been accurately reported.",           question: ""},
+    {num: 24, list: 1, type: "exp", cong: "incong", sent: "The local publisher printed the quote had not been accurately reported.",                question: ""},
     {num: 25, list: 1, type: "exp", cong: "cong",   sent: "The new house-sitter forgot that the key would be under the doormat.",                   question: ""},
     {num: 25, list: 2, type: "exp", cong: "incong", sent: "The new house-sitter forgot the key would be under the doormat.",                        question: ""},
     {num: 26, list: 2, type: "exp", cong: "cong",   sent: "The new mayor advocated that the strategy could be implemented next year.",              question: ""},
@@ -279,8 +274,8 @@ const exp_sentences = [
     {num: 32, list: 1, type: "exp", cong: "incong", sent: "The primary suspect established the alibi had been a total lie.",                        question: ""},
     {num: 33, list: 2, type: "exp", cong: "cong",   sent: "The school counsellor advised that the student take time off before college.",           question: ""},
     {num: 33, list: 1, type: "exp", cong: "incong", sent: "The school counsellor advised the student take time off before college.",                question: ""},
-    {num: 34, list: 1, type: "exp", cong: "cong",   sent: "The scuba diver discovered that the wreck was caused by a collusion.",                   question: ""},
-    {num: 34, list: 2, type: "exp", cong: "incong", sent: "The scuba diver discovered the wreck was caused by a collusion.",                        question: ""},
+    {num: 34, list: 1, type: "exp", cong: "cong",   sent: "The scuba diver discovered that the wreck was caused by a collision.",                   question: ""},
+    {num: 34, list: 2, type: "exp", cong: "incong", sent: "The scuba diver discovered the wreck was caused by a collision.",                        question: ""},
     {num: 35, list: 1, type: "exp", cong: "cong",   sent: "The store manager established that the policy had been a blatant fraud.",                question: ""},
     {num: 35, list: 2, type: "exp", cong: "incong", sent: "The store manager established the policy had been a blatant fraud.",                     question: ""},
     {num: 36, list: 1, type: "exp", cong: "cong",   sent: "The stuttering child repeated that the threat was highly unnecessary and hurtful.",      question: ""},
@@ -308,10 +303,10 @@ const filler_sentences = [
     {num:  5, type: "filler", cong: "cong", sent: "The bargain shopper saw the beautiful and expensive raincoat after the sale was over.",   question: "Was the shopper careless with cash?"},
     {num:  6, type: "filler", cong: "cong", sent: "The bored librarian painted her fingernails after shelving several books.",               question: "Was the librarian very busy?"},
     {num:  7, type: "filler", cong: "cong", sent: "The church workers offered the kids a free bible and some coloring books.",               question: "Did the workers offer them food?" },
-    {num:  8, type: "filler", cong: "cong", sent: "The clerck at the records office clarified the confusing statement on the application.",  question: ""},
+    {num:  8, type: "filler", cong: "cong", sent: "The clerk at the records office clarified the confusing statement on the application.",   question: ""},
     {num:  9, type: "filler", cong: "cong", sent: "The curious girl comprehended the answer but asked the question again.",                  question: "Did the girl understand the first time?"},
     {num: 10, type: "filler", cong: "cong", sent: "The exuberant team planned a huge and extravagant party for after the game.",             question: ""},
-    {num: 11, type: "filler", cong: "cong", sent: "The flight attendent clarified the instructions when the passengers asked questions.",    question: ""},
+    {num: 11, type: "filler", cong: "cong", sent: "The flight attendant clarified the instructions when the passengers asked questions.",    question: ""},
     {num: 12, type: "filler", cong: "cong", sent: "The foreign students sat down but couldn’t understand the lecture.",                      question: ""},
     {num: 13, type: "filler", cong: "cong", sent: "The handsome prince offered but his bride’s family declined the fortune.",                question: ""},
     {num: 14, type: "filler", cong: "cong", sent: "The injured man imagined the attack while in the emergency room.",                        question: ""},
@@ -331,7 +326,6 @@ const filler_sentences = [
     {num: 28, type: "filler", cong: "cong", sent: "The wealthy investor regretted the decision once he realized the consequences.",          question: "Was the investor rich?"},
     {num: 29, type: "filler", cong: "cong", sent: "The worried mother determined the explanation for why her son had been avoiding her.",    question: ""}
 ]
-
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -410,7 +404,7 @@ const stroop_stimulus = {
         }
     ],
     data: {
-        stim: "stroop", 
+        stim: "SentenceStroop", 
         word: jsPsych.timelineVariable('word'), 
         color: jsPsych.timelineVariable('colour'), 
         comp: jsPsych.timelineVariable('comp'), 
@@ -438,7 +432,10 @@ const question_stimulus = {
     translate_origin: true,
     choices: prms["respKeysQuestion"],
     func: drawQuestion,
-    func_args: [ { question: jsPsych.timelineVariable('question'), } ]
+    func_args: [ { question: jsPsych.timelineVariable('question'), } ],
+    data: {
+        stim: "SentenceStroop"
+    },
 };
 
 const moving_window_text = {
@@ -621,8 +618,8 @@ function add_filler_questions(items) {
 
 // 1st phase is a short Stroop practice followed by a longer Stroop baseline phase
 // The timeline of items are shuffled with the addition of a fixation 
-const prac_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items_feedback(2)) }
-const base_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items(25)) }
+const prac_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items_feedback(1)) }
+const base_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items(8)) }
 
 // 2nd phase is a short practice with the moving window text alone (1 trial)
 // just take the first item as the item for the moving window familiarisation routine
@@ -632,7 +629,7 @@ const prac_trial_sentence_timeline = { timeline: prac_items_sentences1 }
 
 // 3rd phase is short combined stroop + sentence combination
 const prac_items_sentences2        = prac_items_sentences.slice(1)
-const prac_items_combined          = add_fix_iti(shuffle(prac_items_sentences2.concat(create_stroop_items(3))))
+const prac_items_combined          = add_fix_iti(shuffle(prac_items_sentences2.concat(create_stroop_items(1))))
 const prac_trial_combined_timeline = { timeline: prac_items_combined }
 
 // 4th phase: Experiment
@@ -640,7 +637,7 @@ const prac_trial_combined_timeline = { timeline: prac_items_combined }
 const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === 1)
 
 const exp_items_sentences = create_sentence_items(exp_sentences_filtered)
-const exp_items_stroop    = create_stroop_items(20)
+const exp_items_stroop    = create_stroop_items(7)
 const exp_items_fillers   = create_sentence_items(filler_sentences)
 const exp_items_all       = add_fix_iti(constrained_shuffle(exp_items_sentences.concat(exp_items_stroop, exp_items_fillers)))
 const exp_items           = add_filler_questions(exp_items_all)
@@ -657,8 +654,8 @@ function genExpSeq() {
 
     exp.push(fullscreen_on);
     exp.push(welcome_en);
-    exp.push(resize_de);
-    exp.push(vpInfoForm_en);
+    exp.push(resize_en);
+    //exp.push(vpInfoForm_en);
     exp.push(task_instructions1);
 
     // 1st phase (practice stroop + baseline stroop)
@@ -696,5 +693,8 @@ jsPsych.init({
         min_width:canvas_size[0],
         min_height:canvas_size[1],
     },
+    on_finish: function(){ 
+        saveData("/Common/write_data.php", filename, {stim: "SentenceStroop"});
+    }
 });
 
