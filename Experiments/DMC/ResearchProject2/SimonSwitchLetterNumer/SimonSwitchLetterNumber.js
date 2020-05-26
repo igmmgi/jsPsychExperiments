@@ -256,9 +256,6 @@ const trial_timeline = {
         { stimulus: "M", type: "letter", category: "consonant",  position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[1] },        
         { stimulus: "R", type: "letter", category: "consonant",  position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[1] },        
    ],
-    sample:{
-        type:"fixed-repetitions"
-    }
 };
 
 const randomString = generateRandomString(16);
@@ -308,7 +305,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.sample.size = (blk === 0) ? prms.nTrlsP/32 : prms.nTrlsE/32;
+        blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? (prms.nTrlsP/32) : (prms.nTrlsE/32)}
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

@@ -117,9 +117,6 @@ const trial_timeline = {
         {stimulus: stims[ 6], task: 'affneg',  comp: "incomp",  dir: 'right', key: prms.respKeys[1]},
         {stimulus: stims[ 7], task: 'affneg',  comp: "incomp",  dir: 'left',  key: prms.respKeys[0]},
     ],
-    sample: {
-        type: "fixed-repetitions"
-    },
 };
 
 const randomString = generateRandomString(16);
@@ -148,7 +145,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/16) : (prms.nTrlsE/16);
+        blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8)}
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

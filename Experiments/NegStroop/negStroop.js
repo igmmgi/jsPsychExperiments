@@ -8,7 +8,7 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 96,  // number of trials in practise blocks 
+    nTrlsP: 48,  // number of trials in practise blocks 
     nTrlsE: 96,  // number of trials in subsequent blocks 
     nBlks: 5,
     fixDur: 500,
@@ -224,20 +224,23 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
-    // exp.push(fullscreen_on);
-    // exp.push(welcome_en);
-    // exp.push(vpInfoForm);
+    
+    exp.push(fullscreen_on);
+    exp.push(welcome_de);
+    exp.push(resize_de);
+    // exp.push(vpInfoForm_de);
+    exp.push(screenInfo);
     exp.push(task_instructions);
     exp.push(iti);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.sample.size = (blk === 0) ? 1 : 2;
+        blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? (prms.nTrlsP/48) : (prms.nTrlsE/48)}
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
         exp.push(iti);
     }
-    exp.push(debrief_en);
+    exp.push(debrief_de);
     exp.push(fullscreen_off);
     return exp;
 

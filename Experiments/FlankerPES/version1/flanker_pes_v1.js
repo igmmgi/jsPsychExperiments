@@ -329,9 +329,6 @@ const trial_timeline = {
         trial_feedback
     ],
     timeline_variables: timeline,
-    sample:{
-        type: "fixed-repetitions"
-    }
 };
 
 const randomString = generateRandomString(16);
@@ -372,6 +369,7 @@ const fullscreen_off = {
         "use strict";
 
         let exp = [];
+
         exp.push(fullscreen_on);
         exp.push(welcome_de);
         exp.push(resize_de);
@@ -381,7 +379,7 @@ const fullscreen_off = {
 
         for (let blk = 0; blk < prms.nBlks; blk += 1) {
             let blk_timeline = {...trial_timeline};
-            blk_timeline.sample.size = (blk === 0) ? 1 : 2;
+            blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? 1 : 2}
             exp.push(blk_timeline);    // trials within a block
             exp.push(block_feedback);  // show previous block performance 
         }
@@ -405,6 +403,7 @@ jsPsych.init({
     },
     on_finish: function(){ 
         saveData("/Common/write_data.php", filename, {stim: "flanker"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });
 
