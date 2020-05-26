@@ -24,9 +24,9 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP:   20,
-    nTrlsE:  100,
-    nBlks: 4, 
+    nTrlsP: 40,
+    nTrlsE: 96,
+    nBlks: 11, 
     fixDur: 500,
     fbDur: 1000,
     iti: 500,
@@ -34,9 +34,9 @@ const prms = {
     tooSlow: 2000,   
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     fbSize: "40px monospace",
-    perFbTxt: ["Faster than average", "Slower than average"],
+    perFbTxt: ["Schneller als dein Durchschnitt", "Schneller als dein Durchschnitt"],
     percentageCorrect: 0.6,
-    perFbCol: shuffle(["Chocolate", "DodgerBlue"]),
+    perFbCol: shuffle(["DarkBlue", "DarkOrange"]),
     respKeys: ["S", "D", "K", "L"],
     respShapes: shuffle(["square", "circle", "triangle", "star"]),
     fixSize: 15,
@@ -157,6 +157,34 @@ function drawShape(args) {
     }
 }
 
+function drawFeedback() {
+    "use strict"
+
+    let ctx = document.getElementById('canvas').getContext('2d');
+    let dat = jsPsych.data.get().last(1).values()[0];
+
+    // feedback text 
+    let fbText   = prms.fbTxt[dat.corrCode-1];
+    let givePerf = (dat.fbType === "full" && dat.corrCode === 1 && dat.perfCodeF !== null)
+    let perfTxt  = (givePerf) ? prms.perFbTxt[dat.perfCodeF-1] : ""
+
+    ctx.font         = prms.fbSize; 
+    ctx.textAlign    = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle    = "black";
+
+    // standard feedback (Correct, Error, Too Slow, Too Fast)
+    ctx.fillText(fbText, 0, 0); 
+   
+    // informative feedback (faster, slower)
+    ctx.fillStyle = perfTxt === prms.perFbTxt[0] ? prms.perFbCol[0] : prms.perFbCol[1];
+    ctx.fillText(perfTxt, 0, 50);
+
+}
+
+////////////////////////////////////////////////////////////////////////
+//                        Trial/Block Feedback                        //
+////////////////////////////////////////////////////////////////////////
 function codeTrial() {
     "use strict";
 
@@ -212,29 +240,19 @@ function codeTrial() {
 
 }
 
-function drawFeedback() {
-    "use strict"
-
-    let ctx = document.getElementById('canvas').getContext('2d');
-    let dat = jsPsych.data.get().last(1).values()[0];
-
-    // feedback text 
-    let fbText   = prms.fbTxt[dat.corrCode-1];
-    let givePerf = (dat.fbType === "full" && dat.corrCode === 1 && dat.perfCodeF !== null)
-    let perfTxt  = (givePerf) ? prms.perFbTxt[dat.perfCodeF-1] : ""
-
-    ctx.font         = prms.fbSize; 
-    ctx.textAlign    = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle    = "black";
-
-    // standard feedback (Correct, Error, Too Slow, Too Fast)
-    ctx.fillText(fbText, 0, 0); 
-   
-    // informative feedback (faster, slower)
-    ctx.fillStyle = perfTxt === prms.perFbTxt[0] ? prms.perFbCol[0] : prms.perFbCol[1];
-    ctx.fillText(perfTxt, 0, 50);
-
+function blockFeedbackTxt_de(filter_options) {
+    "use strict";
+    let dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk});
+    let nTotal = dat.count();
+    let nError = dat.select("corrCode").values.filter(function (x) { return x !== 1; }).length;
+    dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk, corrCode: 1});
+    let blockFbTxt = "<H1>Block: " + prms.cBlk + " von " + prms.nBlks + "</H1><br>" +
+        "<H1>Mittlere Reaktionszeit: " + Math.round(dat.select("rt").mean()) + " ms </H1>" +
+        "<H1>Fehlerrate: " + Math.round((nError / nTotal) * 100) + " %</H1><br>" +
+        "<H2>Sie haben jetzt die Möglichkeit eine kurze Pause zu machen.</H2><br>" + 
+        "<H2>Drücken Sie eine beliebige Taste, um fortzufahren!</H2>";
+    prms.cBlk += 1;
+    return blockFbTxt;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -274,13 +292,34 @@ const task_instructions1 = {
     },
 };
 
+const task_instructions_practice = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<h2 style='text-align:center;'>The first block is a practice block.</h2><br>" +
+              "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+const task_instructions_real = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<h2 style='text-align:center;'>The following blocks are real blocks.</h2><br>" +
+              "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+
 const shape_stimulus = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    trial_duration: prms.tooSlow,
     translate_origin: true,
+    response_ends_trial: true,
+    choices: prms.respKeys,
+    trial_duration: prms.tooSlow,
     func: drawShape,
     func_args:[ { "shape": jsPsych.timelineVariable("shape") }, ],
     data: {
@@ -328,8 +367,25 @@ const trial_timeline = {
         { shape: prms.respShapes[3], corrResp: prms.respKeys[3] },
     ],
     data: {fbType: "full"},
-    sample: {
-        type: "fixed-repetitions"
+};
+
+const endQuestion = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<h2 style='text-align:center;'>Zum Abschluss möchten wir Ihnen noch eine Frage stellen.</h2><br>" +
+    "<h2 style='text-align:left;'>Während des Experiments erhielt eine Gruppe an Versuchspersonen </h2>" + 
+    "<h2 style='text-align:left;'>teilweise inkorrektes Feedback, während die andere Gruppe </h2>" +
+    "<h2 style='text-align:left;'>stets korrektes Feedback erhielt. </h2><br>" + 
+    "<h2 style='text-align:center;'>In welcher der beiden Gruppen denken Sie waren Sie?</h2>" +
+    "<h2 style='text-align:center;'>Accurate (A) &emsp;&emsp;Inaccurate(I)</h2>",
+    response_ends_trial: true,
+    choices: ["A", "I"],
+    on_finish: function(){ 
+        let dat = jsPsych.data.get().last(1).values()[0];
+        let resp = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(dat.key_press)
+        jsPsych.data.addProperties({group:resp});
     }
 };
 
@@ -358,18 +414,24 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
+    exp.push(screenInfo);
     exp.push(task_instructions1);
+    exp.push(task_instructions_practice);
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         if (blk > 0) {
             exp.push(task_instructions1)
         }
+        if (blk == 1) {
+            exp.push(task_instructions_real)
+        }
         let blk_timeline = {...trial_timeline} ;
-        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/4) : (prms.nTrlsE/4);
+        blk_timeline.sample = {type: "fixed-repetitions", size: (blk < 2) ? (prms.nTrlsP/4) : (prms.nTrlsE/4)}
         exp.push(blk_timeline);        // trials within a block
         exp.push(block_feedback);      // show previous block performance 
     }
+    exp.push(endQuestion);
     exp.push(debrief_de);
     exp.push(fullscreen_off);
 
