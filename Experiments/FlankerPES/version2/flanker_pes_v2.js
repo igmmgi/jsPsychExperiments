@@ -54,11 +54,11 @@ if (prms.respMapping === 1) {
 ////////////////////////////////////////////////////////////////////////
 let respText;
 if (prms.respMapping === 1) {
-    respText = "<h4 style='text:align=left;''>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
-               "<h4 style='text:align=left;''>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
+    respText = "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
+               "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
 } else {
-    respText = "<h4 style='text:align=left;''>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
-               "<h4 style='text:align=left;''>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
+    respText = "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
+               "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
 }
 
 const task_instructions1 = {
@@ -66,10 +66,10 @@ const task_instructions1 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text:align=center;'>Willkommen bei unserem Experiment:</h2><br>" +
-              "<h3 style='text:align=center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-              "<h3 style='text:align=center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-              "<h2 style='text:align=center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    stimulus: "<h2 style='text-align:center;'>Willkommen bei unserem Experiment:</h2><br>" +
+              "<h3 style='text-align:center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+              "<h3 style='text-align:center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+              "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     on_finish: function() {
         $('body').css('cursor', 'none'); 
     },
@@ -81,15 +81,15 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h2 style='text:align=center;'>Aufgabe:</h2><br>" +
-    "<h4 style='text:align=left;'>Sie werden 5 Buchstaben sehen (z.B. BBHBB, AABAA).</h4>" +
-    "<h4 style='text:align=left;'>Bitte reagieren Sie nur auf den mittleren Buchstaben.</h4>" +
+    "<h2 style='text-align:center;'>Aufgabe:</h2><br>" +
+    "<h4 style='text-align:left;'>Sie werden 5 Buchstaben sehen (z.B. BBHBB, AABAA).</h4>" +
+    "<h4 style='text-align:left;'>Bitte reagieren Sie nur auf den mittleren Buchstaben.</h4>" +
     respText +
-    "<h4 style='text:align=left;'>Reagieren Sie bitte so schnell und so akkurat wie möglich.</h4>" +
-    "<h4 style='text:align=left;'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
-    "<h4 style='text:align=left;'>Das Experiment besteht aus 13 Blöcken.</h4>" +
-    "<h4 style='text:align=left;'>Nach jedem Block haben Sie die Möglichkeit, eine kleine Pause zu machen.</h4><br><br>" +
-    "<h2 style='text:align=center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h4 style='text-align:left;'>Reagieren Sie bitte so schnell und so akkurat wie möglich.</h4>" +
+    "<h4 style='text-align:left;'>Nach jedem Tastendruck erhalten Sie die Rückmeldung, ob Ihre Antwort <b>richtig</b> oder <b>falsch</b> war.</h4>" +
+    "<h4 style='text-align:left;'>Das Experiment besteht aus 13 Blöcken.</h4>" +
+    "<h4 style='text-align:left;'>Nach jedem Block haben Sie die Möglichkeit, eine kleine Pause zu machen.</h4><br><br>" +
+    "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -334,14 +334,14 @@ const alphaNum = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text-align: left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
-    "<h2 style='text-align: left;'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
-    "<h2 style='text-align: left;'>Code und senden Sie diesen</h2>" +
-    "<h2 style='text-align: left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
-    "<h2 style='text-align: left;'>per Email an:</h2></br>" +
-    "<h2>XXX@XXX</h2>" +
-    "<h2>Code: " + randomString + "</h2></br></br>" +
-    "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
+    stimulus: "<h2 style='text-align:left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
+              "<h2 style='text-align:left;'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
+              "<h2 style='text-align:left;'>Code und senden Sie diesen</h2>" +
+              "<h2 style='text-align:left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
+              "<h2 style='text-align:left;'>per Email an:</h2></br>" +
+              "<h2>XXX@XXX</h2>" +
+              "<h2>Code: " + randomString + "</h2></br></br>" +
+              "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
 };
 
 const fullscreen_on = {

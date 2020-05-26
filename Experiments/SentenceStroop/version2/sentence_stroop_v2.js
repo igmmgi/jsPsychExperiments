@@ -59,6 +59,7 @@ const canvas_border = "5px solid black";
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum   = genVpNum();
+const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -97,8 +98,7 @@ const task_instructions1 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text:align=center;'>Welcome to our Experiment:</h2><br>" +
-              "<h2 style='text:align=center;'>Press any key to continue!</h2>",
+    stimulus: "<h2 style='text-align:center;'>Welcome: Press any key to continue!</h2><br>",
     on_finish: function() {
         $('body').css('cursor', 'none'); 
     },
@@ -111,10 +111,11 @@ task_instructions2 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align: center;'>Part 1:</H1><br>" +
-    "<H2 style='text-align: center;'>Respond to the color of the font with your dominant hand</H2><br>" +
-    "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<h2 style='text:align=center;'>Press any key to continue!</h2>"
+    stimulus: "<H1 style='text-align:center;'>Part 1:</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the color of the font with your dominant hand.</H2>" +
+              "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
+              "<H2 style='text-align:center;'>'G' key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; 'H' key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; 'J' key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+              "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
 task_instructions3 = {
@@ -122,10 +123,10 @@ task_instructions3 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align: center;'>Part 2:</H1><br>" +
-    "<H2 style='text-align: center;'>Respond to the color of the font with your dominant hand</H2><br>" +
-    "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<h2 style='text-align=center;'>Press any key to continue!</h2>"
+    stimulus: "<H1 style='text-align:center;'>Part 2:</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the color of the font with your dominant hand</H2><br>" +
+              "<H2 style='text-align:center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+              "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
 
@@ -134,9 +135,10 @@ task_instructions4 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text:align=center;;'>Part 3:</H1><br>" +
-    "<H2 style='text:align=center;;'>Press the spacebar with your non-dominant hand to reveal the sentence word-by-word.</H2><br>" +
-    "<h2 style='text:align=center;'>Press any key to continue!</h2>"
+    stimulus: "<H1 style='text-align:center;'>Part 3:</H1><br>" +
+              "<H2 style='text-align:center;'>Press the spacebar with your non-dominant</H2>" +
+              "<H2 style='text-align:center;'>hand to reveal the sentence word-by-word.</H2><br>" +
+              "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
 
@@ -145,11 +147,11 @@ task_instructions5 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align: center;'>Part 4:</H1><br>" +
-    "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
-    "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<H2 style='text-align: center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
-    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
+    stimulus: "<H1 style='text-align:center;'>Part 4:</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the colour of the font </H2><br>" +
+              "<H2 style='text-align:center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+              "<H2 style='text-align:center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
+              "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
 
@@ -159,11 +161,11 @@ task_instructions6 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<H1 style='text-align: center;'>Part 5:</H1><br>" +
-    "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
-    "<H2 style='text-align: center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<H2 style='text-align: center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
-    "<H2 style='text-align: center;'>Answer the questions with the T (TRUE) and F (FALSE) keys.</H2><br>" +
-    "<h2 style='text-align: center;'>Press any key to continue!</h2>"
+    "<H2 style='text-align:center;'>Respond to the colour of the font </H2><br>" +
+    "<H2 style='text-align:center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+    "<H2 style='text-align:center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
+    "<H2 style='text-align:center;'>Answer the questions with the T (TRUE) and F (FALSE) keys.</H2><br>" +
+    "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
 
@@ -181,12 +183,18 @@ const stroops = [
     {type: "stroop", word: "blue",   colour: "blue",   cong: "cong",   key:prms.respKeysStroop[0]},
     {type: "stroop", word: "green",  colour: "green",  cong: "cong",   key:prms.respKeysStroop[1]},
     {type: "stroop", word: "yellow", colour: "yellow", cong: "cong",   key:prms.respKeysStroop[2]},
-    {type: "stroop", word: "blue",   colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
-    {type: "stroop", word: "blue",   colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
-    {type: "stroop", word: "green",  colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
-    {type: "stroop", word: "green",  colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
-    {type: "stroop", word: "yellow", colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
-    {type: "stroop", word: "yellow", colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "blue",   colour: "blue",   cong: "cong",   key:prms.respKeysStroop[0]},
+    {type: "stroop", word: "green",  colour: "green",  cong: "cong",   key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "yellow", colour: "yellow", cong: "cong",   key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "brown",  colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
+    {type: "stroop", word: "orange", colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "red",    colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "brown",  colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "orange", colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]},
+    {type: "stroop", word: "red",    colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "brown",  colour: "green",  cong: "incong", key:prms.respKeysStroop[1]},
+    {type: "stroop", word: "orange", colour: "yellow", cong: "incong", key:prms.respKeysStroop[2]},
+    {type: "stroop", word: "red",    colour: "blue",   cong: "incong", key:prms.respKeysStroop[0]}
 ]
 
 // 11 practice sentences
@@ -634,7 +642,9 @@ const prac_trial_combined_timeline = { timeline: prac_items_combined }
 
 // 4th phase: Experiment
 // list 1 vs. list 2
-const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === 1)
+const listNum = (nFiles % 2 == 0) ? 1 : 2;
+jsPsych.data.addProperties({list:listNum});
+const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === listNum)
 
 const exp_items_sentences = create_sentence_items(exp_sentences_filtered)
 const exp_items_stroop    = create_stroop_items(7)
@@ -642,7 +652,7 @@ const exp_items_fillers   = create_sentence_items(filler_sentences)
 const exp_items_all       = add_fix_iti(constrained_shuffle(exp_items_sentences.concat(exp_items_stroop, exp_items_fillers)))
 const exp_items           = add_filler_questions(exp_items_all)
 
-const exp_timeline  = { timeline: exp_items }
+const exp_timeline = { timeline: exp_items }
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -655,7 +665,8 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_en);
     exp.push(resize_en);
-    //exp.push(vpInfoForm_en);
+    exp.push(task_instructions4);
+    exp.push(vpInfoForm_en);
     exp.push(task_instructions1);
 
     // 1st phase (practice stroop + baseline stroop)
@@ -685,6 +696,8 @@ function genExpSeq() {
 }
 EXP = genExpSeq();
 
+const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+
 jsPsych.init({
     timeline: EXP,
     fullscreen: true,
@@ -694,7 +707,7 @@ jsPsych.init({
         min_height:canvas_size[1],
     },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, {stim: "SentenceStroop"});
+        saveData("/Common/write_data.php", data_filename, {stim: "SentenceStroop"});
     }
 });
 

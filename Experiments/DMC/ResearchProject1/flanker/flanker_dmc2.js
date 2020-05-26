@@ -49,12 +49,12 @@ jsPsych.data.addProperties({version: nVersion});
 let respText;
 if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];
-    respText      = "<h4 style='text:align=center;'><b>H = Taste D</b> (linken Zeigefinger).</h4>" +
-                    "<h4 style='text:align=center;'><b>S = Taste J</b> (rechten Zeigefinger).</h4>";
+    respText      = "<h4 style='text-align:center;'><b>H = Taste D</b> (linken Zeigefinger).</h4>" +
+                    "<h4 style='text-align:center;'><b>S = Taste J</b> (rechten Zeigefinger).</h4>";
 } else {
     prms.respKeys = ["J", "D", 27];
-    respText      = "<h4 style='text:align=center;'><b>S = Taste D</b> (linken Zeigefinger).</h4>" +
-                    "<h4 style='text:align=center;'><b>H = Taste J</b> (rechten Zeigefinger).</h4>";
+    respText      = "<h4 style='text-align:center;'><b>S = Taste D</b> (linken Zeigefinger).</h4>" +
+                    "<h4 style='text-align:center;'><b>H = Taste J</b> (rechten Zeigefinger).</h4>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -65,10 +65,10 @@ const task_instructions1 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text:align=center;'>Willkommen bei unserem Experiment:</h2><br>" +
-              "<h3 style='text:align=center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-              "<h3 style='text:align=center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-              "<h2 style='text:align=center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    stimulus: "<h2 style='text-align:center;'>Willkommen bei unserem Experiment:</h2><br>" +
+              "<h3 style='text-align:center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+              "<h3 style='text-align:center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+              "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
     on_finish: function() {
         $('body').css('cursor', 'none'); 
     },
@@ -80,11 +80,11 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h2 style='text:align=center;'>Aufgabe:</h2><br>" +
-    "<h4 style='text:align=center;'>Bitte reagieren Sie immer auf den Buchstaben in der Mitte.</h4>" +
+    "<h2 style='text-align:center;'>Aufgabe:</h2><br>" +
+    "<h4 style='text-align:center;'>Bitte reagieren Sie immer auf den Buchstaben in der Mitte.</h4>" +
     respText +
-    "<h4 style='text:align=center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4><br>" +
-    "<h2 style='text:align=center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h4 style='text-align:center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h4><br>" +
+    "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ const alphaNum = {
               "<h3 style='text-align:left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h3><br>" +
               "<h2>XXX@XXX</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
-              "<h2 align='left'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
+              "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
 };
 
 const fullscreen_on = {

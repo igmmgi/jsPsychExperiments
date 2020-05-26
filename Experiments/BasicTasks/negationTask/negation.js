@@ -30,9 +30,9 @@ const prms = {
 ////////////////////////////////////////////////////////////////////////
 const task_instructions = {
     type: "html-keyboard-response",
-    stimulus: "<H1 style='text:align=center;'>Welcome:</H1><br>" +
-              "<H2 style='text:align=center;'>Respond to the meaning of the text.</H2><br>" +
-              "<H2 style='text:align=center;'>LEFT = 'D' key &emsp; RIGHT = 'J' </H2>",
+    stimulus: "<H1 style='text-align:center;'>Welcome:</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the meaning of the text.</H2><br>" +
+              "<H2 style='text-align:center;'>LEFT = 'D' key &emsp; RIGHT = 'J' </H2>",
     post_trial_gap: prms.waitDur
 };
 

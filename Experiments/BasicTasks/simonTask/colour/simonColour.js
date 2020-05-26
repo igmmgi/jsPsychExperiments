@@ -30,9 +30,9 @@ const prms = {
 ////////////////////////////////////////////////////////////////////////
 const task_instructions = {
     type: "html-keyboard-response",
-    stimulus: "<H1 style='text:align=center;'>Welcome:</H1><br>" +
-        "<H2 style='text:align=center;'>Respond to the colour of the presented square</H2>" +
-        "<H2 style='text:align=center;'>BLUE squares = 'D' key &emsp; RED squares = 'J' key</H2>",
+    stimulus: "<H1 style='text-align:center;'>Welcome:</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the colour of the presented square</H2>" +
+              "<H2 style='text-align:center;'>BLUE squares = 'D' key &emsp; RED squares = 'J' key</H2>",
     post_trial_gap: prms.waitDur
 };
 

@@ -375,11 +375,11 @@ const endQuestion = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<h2 style='text-align:center;'>Zum Abschluss möchten wir Ihnen noch eine Frage stellen.</h2><br>" +
-    "<h2 style='text-align:left;'>Während des Experiments erhielt eine Gruppe an Versuchspersonen </h2>" + 
-    "<h2 style='text-align:left;'>teilweise inkorrektes Feedback, während die andere Gruppe </h2>" +
-    "<h2 style='text-align:left;'>stets korrektes Feedback erhielt. </h2><br>" + 
-    "<h2 style='text-align:center;'>In welcher der beiden Gruppen denken Sie waren Sie?</h2>" +
-    "<h2 style='text-align:center;'>Accurate (A) &emsp;&emsp;Inaccurate(I)</h2>",
+              "<h2 style='text-align:left;'>Während des Experiments erhielt eine Gruppe an Versuchspersonen </h2>" + 
+              "<h2 style='text-align:left;'>teilweise inkorrektes Feedback, während die andere Gruppe </h2>" +
+              "<h2 style='text-align:left;'>stets korrektes Feedback erhielt. </h2><br>" + 
+              "<h2 style='text-align:center;'>In welcher der beiden Gruppen denken Sie waren Sie?</h2>" +
+              "<h2 style='text-align:center;'>Accurate (A) &emsp;&emsp;Inaccurate(I)</h2>",
     response_ends_trial: true,
     choices: ["A", "I"],
     on_finish: function(){ 
