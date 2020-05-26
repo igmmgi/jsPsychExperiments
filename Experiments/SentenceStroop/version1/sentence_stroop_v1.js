@@ -111,10 +111,11 @@ task_instructions2 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align:center;'>Part 1:</H1><br>" +
+    stimulus: "<H1 style='text-align:center;'>Part 1: Practice Color Task</H1><br>" +
               "<H2 style='text-align:center;'>Respond to the color of the font with your dominant hand.</H2>" +
               "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
               "<H2 style='text-align:center;'>'G' key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; 'H' key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; 'J' key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+              "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2><br>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
@@ -123,9 +124,11 @@ task_instructions3 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align:center;'>Part 2:</H1><br>" +
+    stimulus: "<H1 style='text-align:center;'>Part 2: Color Task</H1><br>" +
               "<H2 style='text-align:center;'>Respond to the color of the font with your dominant hand</H2><br>" +
-              "<H2 style='text-align:center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+              "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
+              "<H2 style='text-align:center;'>'G' key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; 'H' key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; 'J' key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+              "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!"</H2><br>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
@@ -135,9 +138,10 @@ task_instructions4 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align:center;'>Part 3:</H1><br>" +
+    stimulus: "<H1 style='text-align:center;'>Part 3: Practice Sentence Task</H1><br>" +
               "<H2 style='text-align:center;'>Press the spacebar with your non-dominant</H2>" +
               "<H2 style='text-align:center;'>hand to reveal the sentence word-by-word.</H2><br>" +
+              "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
@@ -147,10 +151,13 @@ task_instructions5 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align:center;'>Part 4:</H1><br>" +
-              "<H2 style='text-align:center;'>Respond to the colour of the font </H2><br>" +
+    stimulus: "<H1 style='text-align:center;'>Part 4:Practice Combined Color and Sentence Task</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the color of the font with your dominant hand.</H2>" +
+              "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
               "<H2 style='text-align:center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+              "<H2 style='text-align:center;'>Respond as quickly and accurately as possible in the color task!</H2><br>" +
               "<H2 style='text-align:center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
+              "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
@@ -160,12 +167,14 @@ task_instructions6 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align: center;'>Part 5:</H1><br>" +
-    "<H2 style='text-align:center;'>Respond to the colour of the font </H2><br>" +
-    "<H2 style='text-align:center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
-    "<H2 style='text-align:center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
-    "<H2 style='text-align:center;'>Answer the questions with the T (TRUE) and F (FALSE) keys.</H2><br>" +
-    "<h2 style='text-align:center;'>Press any key to continue!</h2>"
+    stimulus: "<H1 style='text-align:center;'>Part 5:Combine Color and Sentence Task</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the color of the font with your dominant hand.</H2>" +
+              "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
+              "<H2 style='text-align:center;'>G key = " + cols[prms.respKeysStroop.indexOf("G")] + "&emsp; H key = " + cols[prms.respKeysStroop.indexOf("H")] + "&emsp; J key = " + cols[prms.respKeysStroop.indexOf("J")] + "</H2><br>" +
+              "<H2 style='text-align:center;'>Respond as quickly and accurately as possible in the color task!</H2><br>" +
+              "<H2 style='text-align:center;'>Press the spacebar to reveal the sentence word-by-word.</H2><br>" +
+              "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
+              "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
 

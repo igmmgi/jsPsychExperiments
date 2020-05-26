@@ -24,8 +24,8 @@ const vpNum   = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 40,
-    nTrlsE: 96,
+    nTrlsP:  40,
+    nTrlsE: 100,
     nBlks: 11, 
     fixDur: 500,
     fbDur: 1000,
@@ -34,7 +34,7 @@ const prms = {
     tooSlow: 2000,   
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     fbSize: "40px monospace",
-    perFbTxt: ["Schneller als dein Durchschnitt", "Schneller als dein Durchschnitt"],
+    perFbTxt: ["Schneller als dein Durchschnitt", "Langsamer als dein Durchschnitt"],
     percentageCorrect: 0.6,
     perFbCol: shuffle(["DarkBlue", "DarkOrange"]),
     respKeys: ["S", "D", "K", "L"],
@@ -297,7 +297,7 @@ const task_instructions_practice = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text-align:center;'>The first block is a practice block.</h2><br>" +
+    stimulus: "<h2 style='text-align:center;'>Die ersten beiden Blöcke sind Übungsblöcke.</h2><br>" +
               "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -306,7 +306,7 @@ const task_instructions_real = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text-align:center;'>The following blocks are real blocks.</h2><br>" +
+    stimulus: "<h2 style='text-align:center;'>Es folgen die Experimentalblöcke.</h2><br>" +
               "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -369,19 +369,19 @@ const trial_timeline = {
     data: {fbType: "full"},
 };
 
-const endQuestion = {
+const endQuestion1 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text-align:center;'>Zum Abschluss möchten wir Ihnen noch eine Frage stellen.</h2><br>" +
+    stimulus: "<h2 style='text-align:center;'>Zum Abschluss möchten wir Ihnen noch einige Fragen stellen.</h2><br>" +
               "<h2 style='text-align:left;'>Während des Experiments erhielt eine Gruppe an Versuchspersonen </h2>" + 
               "<h2 style='text-align:left;'>teilweise inkorrektes Feedback, während die andere Gruppe </h2>" +
-              "<h2 style='text-align:left;'>stets korrektes Feedback erhielt. </h2><br>" + 
+              "<h2 style='text-align:left;'>stets korrektes Feedback erhielt.</h2><br>" + 
               "<h2 style='text-align:center;'>In welcher der beiden Gruppen denken Sie waren Sie?</h2>" +
-              "<h2 style='text-align:center;'>Accurate (A) &emsp;&emsp;Inaccurate(I)</h2>",
+              "<h2 style='text-align:center;'>Korrekt (K) &emsp;&emsp;Inkorrekt (I)</h2>",
     response_ends_trial: true,
-    choices: ["A", "I"],
+    choices: ["K", "I"],
     on_finish: function(){ 
         let dat = jsPsych.data.get().last(1).values()[0];
         let resp = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(dat.key_press)
@@ -389,6 +389,22 @@ const endQuestion = {
     }
 };
 
+
+const endQuestion2 = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<h2 style='text-align:center;'>Fanden Sie das Geschwindigkeits-Feedback hilfreich?</h2><br>" +
+              "<h2 style='text-align:center;'>Ja (J) &emsp;&emsp;Nein (N)</h2>",
+    response_ends_trial: true,
+    choices: ["J", "N"],
+    on_finish: function(){ 
+        let dat = jsPsych.data.get().last(1).values()[0];
+        let resp = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(dat.key_press)
+        jsPsych.data.addProperties({help:resp});
+    }
+};
 
 const fullscreen_on = {
     type: 'fullscreen',
@@ -410,7 +426,7 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
-    
+
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
@@ -431,7 +447,8 @@ function genExpSeq() {
         exp.push(blk_timeline);        // trials within a block
         exp.push(block_feedback);      // show previous block performance 
     }
-    exp.push(endQuestion);
+    exp.push(endQuestion1);
+    exp.push(endQuestion2);
     exp.push(debrief_de);
     exp.push(fullscreen_off);
 
