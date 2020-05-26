@@ -65,12 +65,7 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP_stroop: 10,  // number of practice stoop trials in isolation
-    nTrlsB_stroop: 145, // number of baseline stoop trials in isolation
-    nTrlsP_sentence: 1, // number of sentence trials in isolation
-    nTrlsP_comb: 20,    // number of intermixed stroop/sentence practice trials
-    nTrlsE: 162,        // number of intermixed stroop/sentence experiment trials
-    fixSize: 20,
+    fixSize: 15,
     fixWidth: 3,
     fixDur: 500,
     fbDur: 750,
@@ -683,7 +678,7 @@ function add_filler_questions(items) {
 // 1st phase is a short Stroop practice followed by a longer Stroop baseline phase
 // The timeline of items are shuffled with the addition of a fixation 
 const prac_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items_feedback(1)), data: {phase: "prac_trials_stroop"} }
-const base_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items(8)), data: {phase: "base_trials_stroop"} }
+const base_trials_stroop_timeline = { timeline: add_fix_iti(create_stroop_items(8)),          data: {phase: "base_trials_stroop"} }
 
 // 2nd phase is a short practice with the moving window text alone (1 trial)
 // just take the first item as the item for the moving window familiarisation routine
