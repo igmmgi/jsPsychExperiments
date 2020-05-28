@@ -39,8 +39,8 @@ const prms = {
     cBlk: 1,  // count blocks
     fixWidth: 3,
     fixSize: 15,
-    stroopSize: "40px monospace",
-    fbSize: "30px monospace",
+    stroopSize: "30px monospace",
+    fbSize: "20px monospace",
     respKeys: [],
 };
 
@@ -80,7 +80,7 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'>Bitte reagiere immer nur auf die Farbe der #### und ignoriere das Wort. Es gilt:</h3>" +
+    "<h3 style='text-align: center;'>Bitte reagiere immer nur auf die Farbe der „####“ und ignoriere das Wort. Es gilt:</h3>" +
     respText +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",

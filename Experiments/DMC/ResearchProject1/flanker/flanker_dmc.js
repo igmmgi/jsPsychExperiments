@@ -40,8 +40,8 @@ const prms = {
     respKeys: [],
     fixWidth: 3,
     fixSize: 15,
-    flankSize: "40px monospace",
-    fbSize: "30px monospace"
+    flankSize: "30px monospace",
+    fbSize: "20px monospace"
 };
 
 const nVersion = getVersionNumber(nFiles, 2)
@@ -81,7 +81,8 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'> Bitte reagiere nur auf den zentralen # in der Mitte und ignoriere die umliegenden. Es gilt:</h3>" +
+    "<h3 style='text-align: center;'>Bitte reagiere immer nur auf die Farbe des zentralen „#“-Zeichen </h3>" +
+    "<h3 style='text-align: center;'>in der Mitte und ignoriere die umliegenden „#-Zeichen“. Es gilt::</h3>" +
     respText +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
@@ -298,6 +299,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du) 
+    exp.push(task_instructions2);
     exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);

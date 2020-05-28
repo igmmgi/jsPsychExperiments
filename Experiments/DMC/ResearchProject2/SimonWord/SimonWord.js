@@ -32,9 +32,9 @@ const prms = {
     cueDur: 400,
     iti: 500,
     tooFast:    0,
-    tooSlow: 5000,
+    tooSlow: 3500,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
-    fbSize: "50px monospace",
+    fbSize: "30px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
     respKeysLife: [],
@@ -43,7 +43,7 @@ const prms = {
     fixSize: 15,
     stimPosX: 300,
     stimPosY:   0,
-    stimSize: "50px monospace"
+    stimSize: "40px monospace"
 };
 
 const nVersion = getVersionNumber(nFiles, 2)
@@ -83,7 +83,8 @@ const task_instructions2 = {
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h3 style='text-align: center;'>Im Folgenden musst du 2 Aufgaben bearbeiten. </h2>" +
-    "<h3 style='text-align:center;'>Wenn in der Mitte 'Größe' steht, entscheide ob das Objekt groß oder klein ist.</h2>" +
+    "<h3 style='text-align:center;'>Wenn in der Mitte 'Größe' steht, entscheide ob das Objekt groß </h2>" +
+    "<h3 style='text-align:center;'>oder klein ist (in Relation zur Größe eines Fußballs).</h2>" +
     "<h3 style='text-align:center;'>Wenn in der Mitte 'Leben' steht, entscheide ob das Objekt lebendig ist oder nicht.</h3>" +
     "<h3 style='text-align:center;'>Es gilt:</h3>" +
     respText +

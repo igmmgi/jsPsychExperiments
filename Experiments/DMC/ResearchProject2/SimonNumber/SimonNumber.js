@@ -35,7 +35,7 @@ const prms = {
     tooFast:  150,
     tooSlow: 2000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
-    fbSize: "50px monospace",
+    fbSize: "30px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
     respKeys: ["S", "K", 27],
@@ -66,9 +66,9 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h2 style='text-align: center;'>Aufgabe:</h2><br>" +
-    "<h3 style='text-align: center;'>Im Folgenden musst du entscheiden, ob die Zahl größer oder kleiner als 45 ist.</h2>" +
-    "<h3 style='text-align: center;'>Es gilt:</h3>" +
+    "<h2 style='text-align: center;'>Aufgabe:</h2>" +
+    "<h2 style='text-align: center;'>Im Folgenden musst du entscheiden, ob die Zahl </h2>" +
+    "<h2 style='text-align: center;'>größer oder kleiner als 45 ist. Es gilt:</h2>" +
     "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste</h2>" +
     "<h2 style='text-align: center;'>größer 45 = 'K' Taste</h2>" +
     "<h2 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h2><br>" +
@@ -84,7 +84,7 @@ const task_reminder = {
               "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
               "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
               "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste</h2>" +
-              "<h2 style='text-align: center;'>größer 45 = 'K' Taste</h2>" +
+              "<h2 style='text-align: center;'>größer 45 = 'K' Taste</h2><br>" +
               "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>"
 }
 
