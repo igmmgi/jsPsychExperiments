@@ -70,9 +70,6 @@ const task_instructions1 = {
               "<h3 style='text-align:center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
               "<h3 style='text-align:center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
               "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    on_finish: function() {
-        $('body').css('cursor', 'none'); 
-    },
 };
 
 const task_instructions2 = {
@@ -344,20 +341,6 @@ const alphaNum = {
               "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
 };
 
-const fullscreen_on = {
-    type: 'fullscreen',
-    fullscreen_mode: true,
-}
-
-const fullscreen_off = {
-    type: 'fullscreen',
-    fullscreen_mode: false,
-    on_start: function() {
-        $('body').css('cursor', 'default')
-    }
-}
-
-
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -369,6 +352,7 @@ const fullscreen_off = {
         exp.push(welcome_de);
         exp.push(resize_de);
         exp.push(vpInfoForm_de);
+        exp.push(hideMouseCursor);
         exp.push(task_instructions1);
         exp.push(task_instructions2);
 
@@ -380,6 +364,7 @@ const fullscreen_off = {
         }
         exp.push(debrief_de);
         exp.push(alphaNum);
+        exp.push(showMouseCursor);
         exp.push(fullscreen_off);
         
         return exp;
