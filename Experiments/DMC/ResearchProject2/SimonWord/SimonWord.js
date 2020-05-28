@@ -93,9 +93,9 @@ const task_instructions2 = {
 
 const task_reminder = {
     type: "html-keyboard-response-canvas",
-    canvas_colour: cc,
-    canvas_size: cs,
-    canvas_border: cb,
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     stimulus: "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
               "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
               "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
@@ -352,9 +352,9 @@ const randomString = generateRandomString(16);
 
 const alphaNum = {
     type: 'html-keyboard-response-canvas',
-    canvas_colour: cc,
-    canvas_size: cs,
-    canvas_border: cb,
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     response_ends_trial: true,
     choices: [32],
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
