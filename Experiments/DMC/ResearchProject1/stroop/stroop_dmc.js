@@ -39,7 +39,7 @@ const prms = {
     cBlk: 1,  // count blocks
     fixWidth: 3,
     fixSize: 15,
-    stroopSize: "60px monospace",
+    stroopSize: "40px monospace",
     fbSize: "30px monospace",
     respKeys: [],
 };

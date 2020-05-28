@@ -506,20 +506,6 @@ const moving_window_text = {
     }
 };
 
-const fullscreen_on = {
-    type: 'fullscreen',
-    fullscreen_mode: true
-}
-
-const fullscreen_off = {
-    type: 'fullscreen',
-    fullscreen_mode: false,
-    on_start: function() {
-        $('body').css('cursor', 'default')
-    }
-}
-
-
 ////////////////////////////////////////////////////////////////////////
 //                     Create timeline variables                      //
 ////////////////////////////////////////////////////////////////////////
@@ -717,6 +703,7 @@ function genExpSeq() {
     exp.push(welcome_en);
     exp.push(resize_en);
     exp.push(vpInfoForm_en);
+    exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
 
@@ -740,6 +727,7 @@ function genExpSeq() {
 
     // end phase
     exp.push(debrief_en);
+    exp.push(showMouseCursor);
     exp.push(fullscreen_off);
     
     return exp;

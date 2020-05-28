@@ -164,6 +164,8 @@ function codeTrial() {
     let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
     rt = (dat.order === "RI") ? rt : rt - prms.simonDur;
 
+    let comp = (dat.dirResp === dat.loc) ? "comp" : "incomp";
+
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
@@ -246,7 +248,8 @@ const simon_stimulus = {
     data: {
         stim: "simon",
         order: jsPsych.timelineVariable('order'), 
-        dirResp: jsPsych.timelineVariable('dirResp')
+        loc: jsPsych.timelineVariable('loc'),
+        dirResp: jsPsych.timelineVariable('dirResp'),
         corrResp: jsPsych.timelineVariable('corrResp')
     },
     on_start: function(trial) {
@@ -307,7 +310,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    exp.push(vpInfoForm_de);
+    //exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);

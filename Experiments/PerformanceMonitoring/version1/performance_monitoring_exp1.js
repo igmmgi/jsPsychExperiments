@@ -376,19 +376,6 @@ const trial_timeline_full = {
     data: {fbType: "full"},
 };
 
-const fullscreen_on = {
-    type: 'fullscreen',
-    fullscreen_mode: true,
-}
-
-const fullscreen_off = {
-    type: 'fullscreen',
-    fullscreen_mode: false,
-    on_start: function() {
-        $('body').css('cursor', 'default')
-    }
-}
-
 const endQuestion1 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
@@ -417,6 +404,7 @@ function genExpSeq() {
     exp.push(welcome_de);
     exp.push(resize_de);
     exp.push(vpInfoForm_de);
+    exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions_practice);
@@ -442,6 +430,7 @@ function genExpSeq() {
     }
     exp.push(endQuestion1);
     exp.push(debrief_de);
+    exp.push(showMouseCursor);
     exp.push(fullscreen_off);
 
     return exp;
