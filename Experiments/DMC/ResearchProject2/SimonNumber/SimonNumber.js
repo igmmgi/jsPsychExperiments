@@ -26,22 +26,22 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 96,  // number of trials in first block (practice)
-    nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 2,
-    fixDur: 500,
+    nTrlsP: 80,  // number of trials in first block (practice)
+    nTrlsE: 80,  // number of trials in subsequent blocks 
+    nBlks: 11,
+    fixDur: 400,
     fbDur: [500, 1000, 1000, 1000],
     iti: 500,
     tooFast:  150,
     tooSlow: 2000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
-    fbSize: "40px monospace",
+    fbSize: "50px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
     respKeys: ["S", "K", 27],
     fixWidth: 3,
     fixSize: 15,
-    stimPosX: 300,
+    stimPosX: 200,
     stimPosY:   0,
     stimSize: "50px monospace"
 };
@@ -53,11 +53,11 @@ const task_instructions1 = {
     canvas_border: canvas_border,
     stimulus: "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
               "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-              "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-              "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    on_finish: function() {
-        $('body').css('cursor', 'none'); 
-    },
+              "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
+              "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
+              "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
+              "<h3 style='text-align: center;'>Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.</h3><br>" +
+              "<h2 style='text-align: center;'>Drücke eine beliebige Taste um fortzufahren!</h2>",
 };
 
 const task_instructions2 = {
@@ -67,11 +67,26 @@ const task_instructions2 = {
     canvas_border: canvas_border,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2><br>" +
-    "<h2 style='text-align: center;'> <45 = S Key</h2>" +
-    "<h2 style='text-align: center;'> >45 = K Key</h2>" +
+    "<h3 style='text-align: center;'>Im Folgenden musst du entscheiden, ob die Zahl größer oder kleiner als 45 ist.</h2>" +
+    "<h3 style='text-align: center;'>Es gilt:</h3>" +
+    "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste</h2>" +
+    "<h2 style='text-align: center;'>größer 45 = 'K' Taste</h2>" +
     "<h2 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h2><br>" +
     "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
+
+const task_reminder = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    stimulus: "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
+              "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
+              "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
+              "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste</h2>" +
+              "<h2 style='text-align: center;'>größer 45 = 'K' Taste</h2>" +
+              "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>"
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -145,7 +160,6 @@ const number_stimulus = {
     on_finish: function() { codeTrial(); }
 };
 
-
 function drawFeedback() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
@@ -189,10 +203,9 @@ const block_feedback = {
     stimulus: "",
     response_ends_trial: true,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt_de({stim: "SimonNumber"});
+        trial.stimulus = blockFeedbackTxt_de_du({stim: "SimonNumber"});
     },
 };
-
 
 const trial_timeline = {
     timeline: [
@@ -319,19 +332,6 @@ const alphaNum = {
               "<h2 align='left'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
 };
 
-const fullscreen_on = {
-    type: 'fullscreen',
-    fullscreen_mode: true,
-}
-
-const fullscreen_off = {
-    type: 'fullscreen',
-    fullscreen_mode: false,
-    on_start: function() {
-        $('body').css('cursor', 'default')
-    }
-}
-
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -339,10 +339,12 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
+
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
     exp.push(vpInfoForm_de);
+    exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
@@ -350,12 +352,16 @@ function genExpSeq() {
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
         blk_timeline.repetitions = 1;
+        if (blk > 0) {
+            exp.push(task_reminder)
+        }
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }
     exp.push(debrief_de);
     exp.push(alphaNum);
     exp.push(fullscreen_off);
+    exp.push(showMouseCursor);
 
     return exp;
 

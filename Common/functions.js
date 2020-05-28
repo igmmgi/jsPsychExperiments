@@ -110,6 +110,41 @@ function checkVpInfoForm_de() {
 
 }
 
+function checkVpInfoForm_de_du() {
+    // get age, gender, handedness and VPs consent
+    "use strict";
+    let age = document.getElementById("age").value;
+
+    let gender = "";
+    if ($("#male").is(":checked")) {
+        gender = "male";
+    } else if ($("#female").is(":checked")) {
+        gender = "female";
+    } else if ($("#divers").is(":checked")) {
+        gender = "na";
+    }
+
+    let hand = "";
+    if ($("#left").is(":checked")) {
+        hand = "left";
+    } else if ($("#right").is(":checked")) {
+        hand = "right";
+    }
+
+    let consent = false;
+    if ($("#consent_checkbox").is(":checked")) {
+        consent = true;
+    }
+
+    if (consent && age !== "" && gender !== "" && hand !== "") {
+        jsPsych.data.addProperties({age: age, gender: gender, handedness: hand});
+        return true;
+    } else {
+        window.alert("Bitte beantworte alle Fragen!");
+        return false;
+    }
+
+}
 
 function codeTrial() {
     "use strict";
@@ -166,6 +201,19 @@ function blockFeedbackTxt_de(filter_options) {
     return blockFbTxt;
 }
 
+function blockFeedbackTxt_de_du(filter_options) {
+    "use strict";
+    let dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk});
+    let nTotal = dat.count();
+    let nError = dat.select("corrCode").values.filter(function (x) { return x !== 1; }).length;
+    dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk, corrCode: 1});
+    let blockFbTxt = "<H1>Block: " + prms.cBlk + " von " + prms.nBlks + "</H1><br>" +
+        "<H1>Mittlere Reaktionszeit: " + Math.round(dat.select("rt").mean()) + " ms </H1>" +
+        "<H1>Fehlerrate: " + Math.round((nError / nTotal) * 100) + " %</H1><br>" +
+        "<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>";
+    prms.cBlk += 1;
+    return blockFbTxt;
+}
 
 
 function saveData(
@@ -288,6 +336,15 @@ const welcome_de = {
     }
 };
 
+const welcome_de_du = {
+    type: "html-keyboard-response",
+    stimulus: "<h1>Willkommen. Drücke eine beliebige Taste, um fortzufahren!</h1>",
+    on_finish: function(){
+        "use strict";
+        jsPsych.data.addProperties({date: Date()});
+    }
+};
+
 const resize_en = {
     type: 'resize',
     item_width: 3 + 3/8,
@@ -304,11 +361,43 @@ const resize_de = {
     pixels_per_unit:100,
 };
 
+const resize_de_du = {
+    type: 'resize',
+    item_width: 3 + 3/8,
+    item_height: 2 + 1/8,
+    prompt: "<p>Klicke und ziehe die untere rechte Ecke bis der Kasten die gleiche Größe wie eine Bankkarte oder dein Universitätsausweis hat.</p>",
+    pixels_per_unit:100,
+};
+
 const screenInfo = {
     type: "call-function",
     func: recordScreenSize,
     timing_post_trial: 50
 };
+
+const fullscreen_on = {
+    type: 'fullscreen',
+    fullscreen_mode: true,
+}
+
+const fullscreen_off = {
+    type: 'fullscreen',
+    fullscreen_mode: false,
+}
+
+const hideMouseCursor = {
+    type: "call-function",
+    func: function() {
+        $('body').css('cursor', 'none'); 
+    }
+}
+
+const showMouseCursor = {
+    type: "call-function",
+    func: function() {
+        $('body').css('cursor', 'default')
+    }
+}
 
 const vpInfoForm_en = {
     type: "external-html",
@@ -333,7 +422,13 @@ const debrief_en = {
 const debrief_de = {
     type: "html-keyboard-response",
     stimulus: "<h1>Das Experiment ist beendet.</h1>" +
-    "<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>",
+               "<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>",
     response_ends_trial: true
 };
 
+const debrief_de_du = {
+    type: "html-keyboard-response",
+    stimulus: "<h1>Das Experiment ist beendet.</h1>" +
+               "<h2>Drücke eine beliebige Taste, um das Experiment zu beenden!</h2>",
+    response_ends_trial: true
+};

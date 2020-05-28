@@ -49,23 +49,23 @@ jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
     prms.respKeysNumber = ["S", "K", 27];
     prms.respKeysLetter = ["S", "K", 27];
-    respText = "<h4 style='text-align: center;'>Odd = S &emsp; Even = K</h4>" +
-               "<h4 style='text-align: center;'>Vowel = S &emsp; Consonant = K</h4><br>";
+    respText = "<h4 style='text-align: center;'>Odd = S &emsp;&emsp; Even = K</h4>" +
+               "<h4 style='text-align: center;'>Vowel = S &emsp;&emsp; Consonant = K</h4><br>";
 } else if (nVersion === 2) {
     prms.respKeysNumber = ["S", "K", 27];
     prms.respKeysLetter = ["K", "S", 27];
-    respText = "<h4 style='text-align: center;'>Odd = S &emsp; Even = K</h4>" +
-               "<h4 style='text-align: center;'>Consonant = S &emsp; Vowel = K</h4><br>";
+    respText = "<h4 style='text-align: center;'>Odd = S &emsp;&emsp; Even = K</h4>" +
+               "<h4 style='text-align: center;'>Consonant = S &emsp;&emsp; Vowel = K</h4><br>";
 } else if (nVersion === 3) {
     prms.respKeysNumber = ["K", "S", 27];
     prms.respKeysLetter = ["K", "S", 27];
-    respText = "<h4 style='text-align: center;'>Even = S &emsp; Odd = K</h4>" +
-               "<h4 style='text-align: center;'>Vowel = S &emsp; Consonant = K</h4><br>";
+    respText = "<h4 style='text-align: center;'>Even = S &emsp;&emsp; Odd = K</h4>" +
+               "<h4 style='text-align: center;'>Vowel = S &emsp;&emsp; Consonant = K</h4><br>";
 } else if (nVersion === 4) {
     prms.respKeysNumber = ["K", "S", 27];
     prms.respKeysLetter = ["S", "K", 27];
-    respText = "<h4 style='text-align: center;'>Even = S &emsp; Odd = K</h4>" +
-               "<h4 style='text-align: center;'>Consonant = S &emsp; Vowel = K</h4><br>";
+    respText = "<h4 style='text-align: center;'>Even = S &emsp;&emsp; Odd = K</h4>" +
+               "<h4 style='text-align: center;'>Consonant = S &emsp;&emsp; Vowel = K</h4><br>";
 }
 
 const task_instructions1 = {
@@ -74,12 +74,9 @@ const task_instructions1 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
-    "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-    "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-    "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-    on_finish: function() {
-        $('body').css('cursor', 'none'); 
-    },
+              "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+              "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
+              "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 const task_instructions2 = {
@@ -275,18 +272,7 @@ const alphaNum = {
               "<h2 align='left'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
 };
 
-const fullscreen_on = {
-    type: 'fullscreen',
-    fullscreen_mode: true,
-}
 
-const fullscreen_off = {
-    type: 'fullscreen',
-    fullscreen_mode: false,
-    on_start: function() {
-        $('body').css('cursor', 'default')
-    }
-}
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -295,10 +281,12 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
+
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
     exp.push(vpInfoForm_de);
+    exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
@@ -312,6 +300,7 @@ function genExpSeq() {
     exp.push(debrief_de);
     exp.push(alphaNum);
     exp.push(fullscreen_off);
+    exp.push(showMouseCursor);
 
     return exp;
 
