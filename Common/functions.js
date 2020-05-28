@@ -196,7 +196,7 @@ function blockFeedbackTxt_de(filter_options) {
     let blockFbTxt = "<H1>Block: " + prms.cBlk + " von " + prms.nBlks + "</H1><br>" +
         "<H1>Mittlere Reaktionszeit: " + Math.round(dat.select("rt").mean()) + " ms </H1>" +
         "<H1>Fehlerrate: " + Math.round((nError / nTotal) * 100) + " %</H1><br>" +
-        "<H2>Drücken Sie eine beliebige Taste, um fortzufahren!</H2>";
+        "<H2>Drücken Sie eine beliebige Taste um fortzufahren!</H2>";
     prms.cBlk += 1;
     return blockFbTxt;
 }
@@ -210,7 +210,7 @@ function blockFeedbackTxt_de_du(filter_options) {
     let blockFbTxt = "<H1>Block: " + prms.cBlk + " von " + prms.nBlks + "</H1><br>" +
         "<H1>Mittlere Reaktionszeit: " + Math.round(dat.select("rt").mean()) + " ms </H1>" +
         "<H1>Fehlerrate: " + Math.round((nError / nTotal) * 100) + " %</H1><br>" +
-        "<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>";
+        "<H2>Drücke eine beliebige Taste um fortzufahren!</H2>";
     prms.cBlk += 1;
     return blockFbTxt;
 }

@@ -50,11 +50,11 @@ let respText;
 if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];
     respText      = "<h3 style='text-align:center;'><b>GRÜN = Taste 'D'</b> (linken Zeigefinger).</h3>" +
-                    "<h3 style='text-align:center;'><b>BLAU = Taste 'J'</b> (rechten Zeigefinger).</h3>";
+                    "<h3 style='text-align:center;'><b>BLAU = Taste 'J'</b> (rechten Zeigefinger).</h3><br>";
 } else {
     prms.respKeys = ["J", "D", 27];
     respText      = "<h3 style='text-align:center;'><b>BLAU = Taste 'D'</b> (linken Zeigefinger).</h3>" +
-                    "<h3 style='text-align:center;'><b>GRÜN = Taste 'J'</b> (rechten Zeigefinger).</h3>";
+                    "<h3 style='text-align:center;'><b>GRÜN = Taste 'J'</b> (rechten Zeigefinger).</h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'> Bitte reagiere immer nur auf den zentralen # in der Mitte und ignoriere die umliegenden. Es gilt:</h3>" +
+    "<h3 style='text-align: center;'> Bitte reagiere nur auf den zentralen # in der Mitte und ignoriere die umliegenden. Es gilt:</h3>" +
     respText +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
@@ -159,13 +159,14 @@ function codeTrial() {
     let corrCode = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
 
-    let rt = (dat.order === "RI") ? dat.rt : dat.rt - prms.flankDur;
+    let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
+    rt = (dat.order === "RI") ? rt : rt - prms.flankDur;
     
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
-    } else if (rt === null) {
+    } else if (rt === prms.tooSlow) {
         corrCode = 3; // too slow
     } else if (rt <= prms.tooFast) {
         corrCode = 4; // too fast

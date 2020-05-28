@@ -161,13 +161,14 @@ function codeTrial() {
     let corrCode = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
 
-    let rt = (dat.order === "RI") ? dat.rt : dat.rt - prms.stroopDur;
+    let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
+    rt = (dat.order === "RI") ? rt : rt - prms.stroopDur;
 
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
-    } else if (rt === null) {
+    } else if (rt === prms.tooSlow) {
         corrCode = 3; // too slow
     } else if (rt <= prms.tooFast) {
         corrCode = 4; // too false
