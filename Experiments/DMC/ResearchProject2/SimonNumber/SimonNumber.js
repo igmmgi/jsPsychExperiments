@@ -71,8 +71,8 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>größer oder kleiner als 45 ist. Es gilt:</h2>" +
     "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste</h2>" +
     "<h2 style='text-align: center;'>größer 45 = 'K' Taste</h2>" +
-    "<h2 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h2><br>" +
-    "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 const task_reminder = {
@@ -319,17 +319,17 @@ const randomString = generateRandomString(16);
 
 const alphaNum = {
     type: 'html-keyboard-response-canvas',
-    canvas_colour: canvas_colour,
-    canvas_size: canvas_size,
-    canvas_border: canvas_border,
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
     response_ends_trial: true,
     choices: [32],
-    stimulus: "<h3 style='text-align:left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h3>" +
-              "<h3 style='text-align:left;'>benötigen, kopieren Sie den folgenden zufällig generierten Code</h3>" +
-              "<h3 style='text-align:left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h3><br>" +
+    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
+              "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
+              "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
               "<h2>XXX@XXX</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
-              "<h2 align='left'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
+              "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -341,8 +341,8 @@ function genExpSeq() {
     let exp = [];
 
     exp.push(fullscreen_on);
-    exp.push(welcome_de);
-    exp.push(resize_de);
+    exp.push(welcome_de_du);
+    exp.push(resize_de_du);
     exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);

@@ -49,12 +49,12 @@ jsPsych.data.addProperties({version: nVersion});
 let respText;
 if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];
-    respText      = "<h3 style='text-align:center;'><b>GRÜN = Taste 'D'</b> (linken Zeigefinger).</h3>" +
-                    "<h3 style='text-align:center;'><b>BLAU = Taste 'J'</b> (rechten Zeigefinger).</h3><br>";
+    respText      = "<h3 style='text-align:center;'><b>GRÜN = Taste 'D'</b> (linker Zeigefinger).</h3>" +
+                    "<h3 style='text-align:center;'><b>BLAU = Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
 } else {
     prms.respKeys = ["J", "D", 27];
-    respText      = "<h3 style='text-align:center;'><b>BLAU = Taste 'D'</b> (linken Zeigefinger).</h3>" +
-                    "<h3 style='text-align:center;'><b>GRÜN = Taste 'J'</b> (rechten Zeigefinger).</h3><br>";
+    respText      = "<h3 style='text-align:center;'><b>BLAU = Taste 'D'</b> (linker Zeigefinger).</h3>" +
+                    "<h3 style='text-align:center;'><b>GRÜN = Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ const task_instructions2 = {
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h3 style='text-align: center;'>Bitte reagiere immer nur auf die Farbe des zentralen „#“-Zeichen </h3>" +
-    "<h3 style='text-align: center;'>in der Mitte und ignoriere die umliegenden „#-Zeichen“. Es gilt::</h3>" +
+    "<h3 style='text-align: center;'>in der Mitte und ignoriere die umliegenden „#-Zeichen“. Es gilt:</h3>" +
     respText +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
@@ -283,7 +283,7 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>anne.benning@student.uni-tuebingen.de</h2>" +
+              "<h2>baflanker@web.de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
@@ -299,7 +299,6 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du) 
-    exp.push(task_instructions2);
     exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);

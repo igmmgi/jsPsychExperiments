@@ -48,12 +48,12 @@ const nVersion = getVersionNumber(nFiles, 2)
 jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];
-    respText = "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'D'</b> (linken Zeigefinger).</h3>" +
-               "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'J'</b> (rechten Zeigefinger).</h3><br>";
+    respText = "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'D'</b> (linker Zeigefinger).</h3>" +
+               "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
 } else {
     prms.respKeys = ["J", "D", 27];
-    respText = "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'D'</b> (linken Zeigefinger).</h3>" +
-               "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'J'</b> (rechten Zeigefinger).</h3><br>";
+    respText = "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'D'</b> (linker Zeigefinger).</h3>" +
+               "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
