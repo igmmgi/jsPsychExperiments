@@ -147,9 +147,6 @@ function drawStroop(args) {
     ctx.fillText("####", 0, 0); 
 
     // draw word
-    ctx.font = prms.stroopSize;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
     ctx.fillText(args["word"], 0, 0); 
 
