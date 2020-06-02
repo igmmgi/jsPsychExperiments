@@ -160,8 +160,9 @@ function codeTrial() {
     let corrCode = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
 
+    let offset = (dat.rt === null) ? 0 : prms.flankDur;
     let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
-    rt = (dat.order === "RI") ? rt : rt - prms.flankDur;
+    rt = (dat.order === "RI") ? rt : rt - offset;
     
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct

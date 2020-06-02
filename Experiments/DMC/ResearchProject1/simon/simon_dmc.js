@@ -161,8 +161,9 @@ function codeTrial() {
     let corrCode = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
 
+    let offset = (dat.rt === null) ? 0 : prms.simonDur;
     let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
-    rt = (dat.order === "RI") ? rt : rt - prms.simonDur;
+    rt = (dat.order === "RI") ? rt : rt - offset;
 
     let comp = (dat.dirResp === dat.loc) ? "comp" : "incomp";
 
@@ -171,9 +172,9 @@ function codeTrial() {
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
     } else if (rt === prms.tooSlow) {
-        corrCode = 3; // too slow
+        corrCode = 3;  // too slow
     } else if (rt <= prms.tooFast) {
-        corrCode = 4; // too false
+        corrCode = 4;  // too false
     }
 
     jsPsych.data.addDataToLastTrial({date: Date(), comp: comp, rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
@@ -310,7 +311,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    exp.push(vpInfoForm_de);
+    // exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
