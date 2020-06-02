@@ -25,13 +25,13 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 ////////////////////////////////////////////////////////////////////////
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
-    nTrlsE: 64,  // number of trials in subsequent blocks 
-    nBlks: 2,
+    nTrlsE: 96,  // number of trials in subsequent blocks 
+    nBlks: 9,
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
-    iti: 500,
+    iti: 300,
     tooFast:    0,
-    tooSlow: 5000,
+    tooSlow: 3500,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
@@ -44,7 +44,7 @@ const prms = {
     stimSize: "50px monospace"
 };
 
-const nVersion = getVersionNumber(nFiles, 2)
+const nVersion = getVersionNumber(nFiles, 4)
 jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
     prms.respKeysNumber = ["S", "K", 27];
@@ -91,6 +91,18 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
+const task_reminder = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
+              "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
+              "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
+               respText + 
+              "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>"
+}
+
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
@@ -136,6 +148,34 @@ function drawStimulus(args) {
     }
 }
 
+function codeTrial() {
+    "use strict";
+    let dat = jsPsych.data.get().last(1).values()[0];
+    let corrCode = 0;
+    let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
+
+    let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
+    let comp = ((dat.position === "left" & dat.corrResp === "S") | (dat.position === "right" & dat.corrResp === "K")) ? "comp" : "incomp";
+
+    if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
+        corrCode = 1;  // correct
+    } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
+        corrCode = 2;  // choice error
+    } else if (rt === prms.tooSlow) {
+        corrCode = 3; // too slow
+    } else if (rt <= prms.tooFast) {
+        corrCode = 4; // too false
+    }
+
+    jsPsych.data.addDataToLastTrial({date: Date(), comp: comp, rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
+    prms.cTrl += 1;
+    if (dat.key_press === 27) {
+        jsPsych.endExperiment();
+    }
+}
+
+
+
 const stimulus = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: canvas_colour,
@@ -158,7 +198,6 @@ const stimulus = {
         type: jsPsych.timelineVariable('type'), 
         category: jsPsych.timelineVariable('category'), 
         position: jsPsych.timelineVariable('position'), 
-        cong: jsPsych.timelineVariable('cong'), 
         corrResp: jsPsych.timelineVariable('corrResp') 
     },
     on_finish: function() { codeTrial(); }
@@ -208,7 +247,7 @@ const block_feedback = {
     stimulus: "",
     response_ends_trial: true,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt_de({stim: "SimonLetterNumber"});
+        trial.stimulus = blockFeedbackTxt_de_du({stim: "SimonLetterNumber"});
     },
 };
 
@@ -220,38 +259,38 @@ const trial_timeline = {
         iti
     ],
     timeline_variables:[
-        { stimulus: "2", type: "number", category: "even",       position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "3", type: "number", category: "odd",        position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "4", type: "number", category: "even",       position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "5", type: "number", category: "odd",        position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "6", type: "number", category: "even",       position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "7", type: "number", category: "odd",        position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "8", type: "number", category: "even",       position: "left",   cong: "cong",    corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "9", type: "number", category: "odd",        position: "left",   cong: "incong",  corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "2", type: "number", category: "even",       position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "3", type: "number", category: "odd",        position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "4", type: "number", category: "even",       position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "5", type: "number", category: "odd",        position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "6", type: "number", category: "even",       position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "7", type: "number", category: "odd",        position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "8", type: "number", category: "even",       position: "right",  cong: "incong",  corrResp: prms.respKeysNumber[1] },        
-        { stimulus: "9", type: "number", category: "odd",        position: "right",  cong: "cong",    corrResp: prms.respKeysNumber[0] },        
-        { stimulus: "A", type: "letter", category: "vowel",      position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "E", type: "letter", category: "vowel",      position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "I", type: "letter", category: "vowel",      position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "U", type: "letter", category: "vowel",      position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "G", type: "letter", category: "consonant",  position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "K", type: "letter", category: "consonant",  position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "M", type: "letter", category: "consonant",  position: "left",   cong: "cong",    corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "R", type: "letter", category: "consonant",  position: "left",   cong: "incong",  corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "A", type: "letter", category: "vowel",      position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "E", type: "letter", category: "vowel",      position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "I", type: "letter", category: "vowel",      position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "U", type: "letter", category: "vowel",      position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[0] },        
-        { stimulus: "G", type: "letter", category: "consonant",  position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "K", type: "letter", category: "consonant",  position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "M", type: "letter", category: "consonant",  position: "right",  cong: "cong",    corrResp: prms.respKeysLetter[1] },        
-        { stimulus: "R", type: "letter", category: "consonant",  position: "right",  cong: "incong",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "2", type: "number", category: "even",       position: "left",  corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "3", type: "number", category: "odd",        position: "left",  corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "4", type: "number", category: "even",       position: "left",  corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "5", type: "number", category: "odd",        position: "left",  corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "6", type: "number", category: "even",       position: "left",  corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "7", type: "number", category: "odd",        position: "left",  corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "8", type: "number", category: "even",       position: "left",  corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "9", type: "number", category: "odd",        position: "left",  corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "2", type: "number", category: "even",       position: "right", corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "3", type: "number", category: "odd",        position: "right", corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "4", type: "number", category: "even",       position: "right", corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "5", type: "number", category: "odd",        position: "right", corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "6", type: "number", category: "even",       position: "right", corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "7", type: "number", category: "odd",        position: "right", corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "8", type: "number", category: "even",       position: "right", corrResp: prms.respKeysNumber[1] },        
+        { stimulus: "9", type: "number", category: "odd",        position: "right", corrResp: prms.respKeysNumber[0] },        
+        { stimulus: "A", type: "letter", category: "vowel",      position: "left",  corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "E", type: "letter", category: "vowel",      position: "left",  corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "I", type: "letter", category: "vowel",      position: "left",  corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "U", type: "letter", category: "vowel",      position: "left",  corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "G", type: "letter", category: "consonant",  position: "left",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "K", type: "letter", category: "consonant",  position: "left",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "M", type: "letter", category: "consonant",  position: "left",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "R", type: "letter", category: "consonant",  position: "left",  corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "A", type: "letter", category: "vowel",      position: "right", corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "E", type: "letter", category: "vowel",      position: "right", corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "I", type: "letter", category: "vowel",      position: "right", corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "U", type: "letter", category: "vowel",      position: "right", corrResp: prms.respKeysLetter[0] },        
+        { stimulus: "G", type: "letter", category: "consonant",  position: "right", corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "K", type: "letter", category: "consonant",  position: "right", corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "M", type: "letter", category: "consonant",  position: "right", corrResp: prms.respKeysLetter[1] },        
+        { stimulus: "R", type: "letter", category: "consonant",  position: "right", corrResp: prms.respKeysLetter[1] },        
    ],
 };
 
@@ -283,8 +322,8 @@ function genExpSeq() {
     let exp = [];
 
     exp.push(fullscreen_on);
-    exp.push(welcome_de);
-    exp.push(resize_de);
+    exp.push(welcome_de_du);
+    exp.push(resize_de_du);
     exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
@@ -293,6 +332,9 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
+        if (blk > 0) {
+            exp.push(task_reminder)
+        }
         blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? (prms.nTrlsP/32) : (prms.nTrlsE/32)}
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 

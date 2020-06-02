@@ -309,10 +309,18 @@ function shuffle(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-
   return array;
+
 }
 
+function mean(array) {
+    var total = 0;
+    for (var i = 0; i < array.length; i++) {
+        total += array[i];
+    }
+    var avg = total / array.length;
+    return avg;
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                          Common Variables                          //

@@ -26,7 +26,7 @@ const vpNum   = genVpNum();
 const prms = {
     nTrlsP:  40, 
     nTrlsE: 100,
-    nBlks: 11, 
+    nBlks: 12, 
     fixDur: 500,
     fbDur: 1000,
     iti: 500,
@@ -189,14 +189,17 @@ function codeTrial() {
 
     // data from last trial
     let dat = jsPsych.data.get().last(1).values()[0];
+    let rt  = (dat.rt !== null) ? dat.rt : prms.tooSlow 
 
     // data from last X trials to calculate mean performance
     // 1 (2) = current trial faster (slower) than mean of previous X trials
-    let perfDat  = jsPsych.data.get().filter({stim: "shape"}).last(prms.nMeanTrl);
+    let perfDat  = jsPsych.data.get().filter({stim: "shape"}).last(prms.nMeanTrl+1);
     let perfCode = null;
     try {
-        prms.meanRt = perfDat.select("rt").mean();
-        perfCode = (dat.rt <= prms.meanRt) ? 1 : 2
+        let rts = perfDat.select("rt").values
+        rts.pop() // remove current trial
+        prms.meanRt = mean(rts)
+        perfCode = (rt <= prms.meanRt) ? 1 : 2
     } catch {
         prms.meanRt = null;  // not enough trials to calculate mean from x trials
     }
@@ -204,13 +207,13 @@ function codeTrial() {
     // Code Correct (1), Incorrect (2), Too Slow (3), Too Fast (4)
     let corrCode = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
-    if (dat.key_press === corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+    if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1; // correct
-    } else if (dat.key_press !== corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+    } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2; // choice error
-    } else if (dat.rt === null) {
+    } else if (rt === prms.tooSlow) {
         corrCode = 3; // too slow
-    } else if (dat.rt <= prms.tooFast) {
+    } else if (rt <= prms.tooFast) {
         corrCode = 4; // too fast
     }
 
@@ -219,6 +222,7 @@ function codeTrial() {
             date: Date(), 
             blockNum: prms.cBlk, 
             trialNum: prms.cTrl,
+            rt: rt,
             corrCode: corrCode, 
             perfCode: perfCode, 
             meanPerf: prms.meanRt, 
@@ -244,6 +248,7 @@ function blockFeedbackTxt_de(filter_options) {
         "<H2>Sie haben jetzt die Möglichkeit eine kurze Pause zu machen.</H2><br>" + 
         "<H2>Drücken Sie eine beliebige Taste, um fortzufahren!</H2>";
     prms.cBlk += 1;
+    prms.cTrl = 1;
     return blockFbTxt;
 }
 
@@ -403,7 +408,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
-    exp.push(vpInfoForm_de);
+    // exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);

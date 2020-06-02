@@ -190,6 +190,7 @@ function codeTrial() {
 
     // data from last trial
     let dat = jsPsych.data.get().last(1).values()[0];
+    let rt  = (dat.rt !== null) ? dat.rt : prms.tooSlow 
 
     // data from last X trials to calculate mean performance
     // 1 (2) = current trial faster (slower) than mean of previous X trials
@@ -197,8 +198,10 @@ function codeTrial() {
     let perfCodeR = null;
     let perfCodeF = null;
     try {
-        prms.meanRt = perfDat.select("rt").mean();
-        perfCodeR   = (dat.rt <= prms.meanRt) ? 1 : 2
+        let rts = perfDat.select("rt").values;
+        rts.pop() // remove current trial
+        prms.meanRt = mean(rts);
+        perfCodeR   = (rt <= prms.meanRt) ? 1 : 2
         if (Math.random() >= prms.percentageCorrect) {
             perfCodeF = (perfCodeR === 1) ? 2 : 1;
         } else {
@@ -211,13 +214,13 @@ function codeTrial() {
     // Code Correct (1), Incorrect (2), Too Slow (3), Too Fast (4)
     let corrCode = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
-    if (dat.key_press === corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+    if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1; // correct
-    } else if (dat.key_press !== corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+    } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2; // choice error
-    } else if (dat.rt === null) {
+    } else if (rt === null) {
         corrCode = 3; // too slow
-    } else if (dat.rt <= prms.tooFast) {
+    } else if (rt <= prms.tooFast) {
         corrCode = 4; // too false
     }
 
@@ -226,6 +229,7 @@ function codeTrial() {
             date: Date(), 
             blockNum: prms.cBlk, 
             trialNum: prms.cTrl,
+            rt: rt,
             corrCode: corrCode, 
             perfCodeR: perfCodeR, 
             perfCodeF: perfCodeF, 
@@ -252,6 +256,7 @@ function blockFeedbackTxt_de(filter_options) {
         "<H2>Sie haben jetzt die Möglichkeit eine kurze Pause zu machen.</H2><br>" + 
         "<H2>Drücken Sie eine beliebige Taste, um fortzufahren!</H2>";
     prms.cBlk += 1;
+    prms.cTrl = 1;
     return blockFbTxt;
 }
 
@@ -431,7 +436,7 @@ function genExpSeq() {
             exp.push(task_instructions_real)
         }
         let blk_timeline = {...trial_timeline} ;
-        blk_timeline.sample = {type: "fixed-repetitions", size: (blk < 2) ? (prms.nTrlsP/4) : (prms.nTrlsE/4)}
+        blk_timeline.sample = {type: "fixed-repetitions", size: (blk < 1) ? (prms.nTrlsP/4) : (prms.nTrlsE/4)}
         exp.push(blk_timeline);        // trials within a block
         exp.push(block_feedback);      // show previous block performance 
     }

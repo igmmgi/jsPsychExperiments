@@ -25,7 +25,7 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 72,  // number of trials in subsequent blocks 
-    nBlks: 13,   
+    nBlks: 14,   
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
     simonDur: 175,

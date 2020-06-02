@@ -28,7 +28,7 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 const prms = {
     nTrlsP: 80,  // number of trials in first block (practice)
     nTrlsE: 80,  // number of trials in subsequent blocks 
-    nBlks: 11,
+    nBlks: 12,
     fixDur: 400,
     fbDur: [500, 1000, 1000, 1000],
     iti: 500,
@@ -69,8 +69,8 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h2 style='text-align: center;'>Im Folgenden musst du entscheiden, ob die Zahl </h2>" +
     "<h2 style='text-align: center;'>größer oder kleiner als 45 ist. Es gilt:</h2>" +
-    "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste</h2>" +
-    "<h2 style='text-align: center;'>größer 45 = 'K' Taste</h2>" +
+    "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste (linker Zeigefinger) </h2>" +
+    "<h2 style='text-align: center;'>größer 45 = 'K' Taste (rechter Zeigefinger)</h2>" +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
@@ -83,8 +83,8 @@ const task_reminder = {
     stimulus: "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
               "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
               "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
-              "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste</h2>" +
-              "<h2 style='text-align: center;'>größer 45 = 'K' Taste</h2><br>" +
+              "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste (linker Zeigefinger)</h2>" +
+              "<h2 style='text-align: center;'>größer 45 = 'K' Taste (rechter Zeigefinger)</h2><br>" +
               "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>"
 }
 

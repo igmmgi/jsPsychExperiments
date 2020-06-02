@@ -27,7 +27,7 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 72,  // number of trials in subsequent blocks 
-    nBlks: 13,
+    nBlks: 14,
     fixDur: 500,
     flankDur: 175,
     fbDur: [500, 1000, 1000, 1000],
@@ -81,7 +81,7 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'>Bitte reagiere immer nur auf die Farbe des zentralen „#“-Zeichen </h3>" +
+    "<h3 style='text-align: center;'>Bitte reagiere immer nur auf die Farbe des zentralen „#“-Zeichens </h3>" +
     "<h3 style='text-align: center;'>in der Mitte und ignoriere die umliegenden „#-Zeichen“. Es gilt:</h3>" +
     respText +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
@@ -307,7 +307,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.sample.size = (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8);
+        blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8)}
         if (blk > 0) {
             exp.push(task_reminder)
         }
