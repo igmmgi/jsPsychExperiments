@@ -43,12 +43,12 @@ jsPsych.data.addProperties({version: nVersion});
 let respText;
 if (nVersion === 1) {
     prms.respKeys = ["D", "J", 27];
-    respText      = "<h3 style='text-align:center;'><b>Sensible = Taste 'D'</b> (linker Zeigefinger).</h3>" +
-                    "<h3 style='text-align:center;'><b>Not Sensible = Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
+    respText      = "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'D'</b> (linker Zeigefinger).</h2>" +
+                    "<h2 style='text-align:center;'><b>Sinnlos = Taste 'J'</b> (rechter Zeigefinger).</h2><br>";
 } else {
     prms.respKeys = ["J", "D", 27];
-    respText      = "<h3 style='text-align:center;'><b>Not Sensible = Taste 'D'</b> (linker Zeigefinger).</h3>" +
-                    "<h3 style='text-align:center;'><b>Sensible = Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
+    respText      = "<h2 style='text-align:center;'><b>Sinnlos = Taste 'D'</b> (linker Zeigefinger).</h2>" +
+                    "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'J'</b> (rechter Zeigefinger).</h2><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,10 @@ const task_instructions1 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<h2 style='text-align:center;'>Willkommen bei unserem Experiment:</h2><br>" 
+    stimulus: "<h2 style='text-align:left;'>Liebe Teilnehmer/innen,</h2><br>" +
+              "<h2 style='text-align:left;'>vielen Dank, dass Sie sich die Zeit zur</h2>" +
+              "<h2 style='text-align:left;'>Teilnahme an unserer B.Sc. Arbeit nehmen.</h2><br>" +
+              "<h2 style='text-align:left;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 const task_instructions2 = {
@@ -68,7 +71,13 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h2 style='text-align:center;'>Aufgabe:</h2><br>" 
+    "<h3 style='text-align:left;'>In der Studie sieht man ein Bild gefolgt von einem Satz.</h3>" +
+    "<h3 style='text-align:left;'>Ihre Aufgabe ist es nach jedem Satz zu entscheiden, ob dieser Satz </h3>" +
+    "<h3 style='text-align:left;'>sinnvoll war (z.B. 'Sie essen heute viel Kuchen.') oder keinen </h3>" +
+    "<h3 style='text-align:left;'>Sinn macht (z.B. 'Sie laufen heute keine Straße').</h3><br>" +
+    respText +
+    "<h3 style='text-align:center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
+    "<h2 style='text-align:center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>"
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -647,18 +656,18 @@ materials_ja_aff_selected = materials_ja_aff_selected.splice(0, 60)
 let materials_nein_aff_selected = shuffle(materials_nein_aff)
 materials_nein_aff_selected = materials_nein_aff_selected.splice(0, 60)
 
-let selected_ja_aff = materials_ja_aff_selected.map(o => o.num)
+let selected_ja_aff = materials_ja_aff_selected.map(o => o.sentNum)
 let materials_ja_neg_selected = []
 for (let i = 0; i < materials_ja_neg.length; i++) {
-    if (selected_ja_aff.includes(materials_ja_neg[i].num) === false) {
+    if (selected_ja_aff.includes(materials_ja_neg[i].sentNum) === false) {
         materials_ja_neg_selected.push(materials_ja_neg[i])
     }
 }
 
-let selected_nein_aff = materials_nein_aff_selected.map(o => o.num)
+let selected_nein_aff = materials_nein_aff_selected.map(o => o.sentNum)
 let materials_nein_neg_selected = []
 for (let i = 0; i < materials_nein_neg.length; i++) {
-    if (selected_nein_aff.includes(materials_nein_neg[i].num) === false) {
+    if (selected_nein_aff.includes(materials_nein_neg[i].sentNum) === false) {
         materials_nein_neg_selected.push(materials_nein_neg[i])
     }
 }
@@ -684,6 +693,11 @@ materials_nein_neg_selected = combinePictures(materials_nein_neg_selected)
 let materials = materials_ja_aff_selected.concat(materials_nein_aff_selected, materials_ja_neg_selected, materials_nein_neg_selected)
 materials = shuffle(materials)
 
+// split materials into 4 blocks of 60 trials
+let materials1 = materials.splice(0, 60)
+let materials2 = materials.splice(0, 60)
+let materials3 = materials.splice(0, 60)
+let materials4 = materials.splice(0, 60)
 
 function drawFixation() {                                     
     "use strict"                                               
@@ -767,7 +781,7 @@ const block_feedback = {
     stimulus: "",
     response_ends_trial: true,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt_de({stim: "PictureNegation"});
+        trial.stimulus = blockFeedbackTxt_de_du({stim: "PictureNegation"});
     },
 };
 
@@ -813,7 +827,7 @@ const sent_stim = {
     on_finish: function() { codeTrial(); }
 };
 
-const trial_timeline = {
+const trial_timeline1 = {
     timeline: [
         fixation_cross,
         pic_stim,
@@ -821,7 +835,74 @@ const trial_timeline = {
         trial_feedback,
         iti
     ],
-    timeline_variables: materials 
+    timeline_variables: materials1,
+    sample: {
+        type: "fixed-repetitions",
+        size: 1
+    }
+};
+
+const trial_timeline2 = {
+    timeline: [
+        fixation_cross,
+        pic_stim,
+        sent_stim,
+        trial_feedback,
+        iti
+    ],
+    timeline_variables: materials2,
+    sample: {
+        type: "fixed-repetitions",
+        size: 1
+    }
+};
+
+const trial_timeline3 = {
+    timeline: [
+        fixation_cross,
+        pic_stim,
+        sent_stim,
+        trial_feedback,
+        iti
+    ],
+    timeline_variables: materials3,
+    sample: {
+        type: "fixed-repetitions",
+        size: 1
+    }
+};
+
+const trial_timeline4 = {
+    timeline: [
+        fixation_cross,
+        pic_stim,
+        sent_stim,
+        trial_feedback,
+        iti
+    ],
+    timeline_variables: materials4,
+    sample: {
+        type: "fixed-repetitions",
+        size: 1
+    }
+};
+
+
+const randomString = generateRandomString(16);
+
+const alphaNum = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    response_ends_trial: true,
+    choices: [32],
+    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
+              "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
+              "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
+              "<h2>xxx.xxx@student.uni-tuebingen.de</h2>" +
+              "<h1>Code: " + randomString + "</h1><br>" +
+              "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
 
 
@@ -836,16 +917,22 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de) 
-    //exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
 
-    trial_timeline.sample = {type: "fixed-repetitions", size: 1}
-    exp.push(trial_timeline);
+    exp.push(trial_timeline1);
+    exp.push(block_feedback);  // show previous block performance 
+    exp.push(trial_timeline2);
+    exp.push(block_feedback);  // show previous block performance 
+    exp.push(trial_timeline3);
+    exp.push(block_feedback);  // show previous block performance 
+    exp.push(trial_timeline4);
     
     exp.push(debrief_de);
+    exp.push(alphaNum);
     exp.push(fullscreen_off);
     exp.push(showMouseCursor);
 
@@ -867,6 +954,7 @@ jsPsych.init({
     },
     on_finish: function(){ 
         saveData("/Common/write_data.php", data_filename, {stim: "PictureNegation"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });
 

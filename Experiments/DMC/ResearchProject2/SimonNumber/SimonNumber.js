@@ -319,9 +319,9 @@ const randomString = generateRandomString(16);
 
 const alphaNum = {
     type: 'html-keyboard-response-canvas',
-    canvas_colour: cc,
-    canvas_size: cs,
-    canvas_border: cb,
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
     response_ends_trial: true,
     choices: [32],
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +

@@ -28,12 +28,12 @@ const prms = {
     nTrlsE: 100,
     nBlks: 12, 
     fixDur: 500,
-    fbDur: 1000,
+    fbDur: 750,
     iti: 500,
     tooFast:  150,   
     tooSlow: 2000,   
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
-    fbSize: "40px monospace",
+    fbSize: "30px monospace",
     perFbTxt: ["Schneller als dein Durchschnitt", "Langsamer als dein Durchschnitt"],
     perFbCol: shuffle(["DarkBlue", "DarkOrange"]),
     respKeys: ["S", "D", "K", "L"],
@@ -408,7 +408,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de);
     exp.push(resize_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);

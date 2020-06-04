@@ -28,12 +28,12 @@ const prms = {
     nTrlsE: 100,
     nBlks: 11, 
     fixDur: 500,
-    fbDur: 1000,
+    fbDur: 750,
     iti: 500,
     tooFast:  150,   
     tooSlow: 2000,   
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
-    fbSize: "40px monospace",
+    fbSize: "30px monospace",
     perFbTxt: ["Schneller als dein Durchschnitt", "Langsamer als dein Durchschnitt"],
     percentageCorrect: 0.6,
     perFbCol: shuffle(["DarkBlue", "DarkOrange"]),
@@ -194,7 +194,7 @@ function codeTrial() {
 
     // data from last X trials to calculate mean performance
     // 1 (2) = current trial faster (slower) than mean of previous X trials
-    let perfDat   = jsPsych.data.get().filter({stim: "shape"}).last(prms.nMeanTrl);
+    let perfDat   = jsPsych.data.get().filter({stim: "shape"}).last(prms.nMeanTrl+1);
     let perfCodeR = null;
     let perfCodeF = null;
     try {
@@ -218,7 +218,7 @@ function codeTrial() {
         corrCode = 1; // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2; // choice error
-    } else if (rt === null) {
+    } else if (rt === prms.tooSlow) {
         corrCode = 3; // too slow
     } else if (rt <= prms.tooFast) {
         corrCode = 4; // too false
