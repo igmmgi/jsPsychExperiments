@@ -224,6 +224,8 @@ function codeTrialPES() {
     let corrCodeFB = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.corrResp);
 
+    let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
+
     // need to check that we don't give different feedback for direct 
     // stimulus + response repetitions
     let false_feedback_allowed = true;
@@ -233,25 +235,26 @@ function codeTrialPES() {
         }
     }
 
-    if (data.key_press === corrKeyNum && data.rt > prms.tooFast && data.rt < prms.tooSlow) {
+    if (data.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode   = 1;
         corrCodeFB = 1;
         if (prms.cBlk > 1 && false_feedback_allowed) {  // only give false feedback after practice blocks
             corrCodeFB = (Math.random() >= 0.8) ? 2 : 1;
         }
-    } else if (data.key_press !== corrKeyNum && data.rt > prms.tooFast && data.rt < prms.tooSlow) {
+    } else if (data.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode   = 2;
         corrCodeFB = 2;
-    } else if (data.rt === null) {
+    } else if (rt === prms.tooSlow) {
         corrCode   = 3;
         corrCodeFB = 3;
-    } else if (data.rt <= prms.tooFast) {
+    } else if (rt <= prms.tooFast) {
         corrCode   = 4;
         corrCodeFB = 4;
     }
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
+        rt:         rt,
         corrCode:   corrCode,
         corrCodeFB: corrCodeFB,
         blockNum:   prms.cBlk,
@@ -285,6 +288,7 @@ function blockFeedbackTxtPES() {
         errorRateTxt +                                                              
         "<h1>Drücken Sie eine beliebige Taste, um fortzufahren!</h1>";              
     prms.cBlk += 1;                                                                    
+    prms.cTrl = 1;                                                                    
     return fbTxtBlk;                                                              
 }                                   
 
@@ -336,7 +340,7 @@ const alphaNum = {
               "<h2 style='text-align:left;'>Code und senden Sie diesen</h2>" +
               "<h2 style='text-align:left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer</h2>" +
               "<h2 style='text-align:left;'>per Email an:</h2></br>" +
-              "<h2>XXX@XXX</h2>" +
+              "<h2>kath.lang@student.uni-tuebingen.de</h2>" +
               "<h2>Code: " + randomString + "</h2></br></br>" +
               "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
 };
@@ -353,6 +357,7 @@ const alphaNum = {
         exp.push(resize_de);
         exp.push(vpInfoForm_de);
         exp.push(hideMouseCursor);
+        exp.push(screenInfo);
         exp.push(task_instructions1);
         exp.push(task_instructions2);
 

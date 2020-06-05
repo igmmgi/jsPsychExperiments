@@ -151,16 +151,18 @@ function codeTrial() {
     let dat = jsPsych.data.get().last(1).values()[0];
     let corrCode = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
-    if (dat.key_press === corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+    let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
+
+    if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
-    } else if (dat.key_press !== corrKeyNum && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+    } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
-    } else if (dat.rt === null) {
+    } else if (rt === prms.tooSlow) {
         corrCode = 3; // too slow
-    } else if (dat.rt <= prms.tooFast) {
+    } else if (rt <= prms.tooFast) {
         corrCode = 4; // too false
     }
-    jsPsych.data.addDataToLastTrial({date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
+    jsPsych.data.addDataToLastTrial({date: Date(), rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
     prms.cTrl += 1;
     if (dat.key_press === 27) {
         jsPsych.endExperiment();
