@@ -21,7 +21,7 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 1,
+    nBlks: 4,
     fixDur: 500,
     picDur: 500,
     fbDur: 1000,
@@ -74,11 +74,21 @@ const task_instructions2 = {
     "<h3 style='text-align:left;'>In der Studie sieht man ein Bild gefolgt von einem Satz.</h3>" +
     "<h3 style='text-align:left;'>Ihre Aufgabe ist es nach jedem Satz zu entscheiden, ob dieser Satz </h3>" +
     "<h3 style='text-align:left;'>sinnvoll war (z.B. 'Sie essen heute viel Kuchen.') oder keinen </h3>" +
-    "<h3 style='text-align:left;'>Sinn macht (z.B. 'Sie laufen heute keine Straße').</h3><br>" +
+    "<h3 style='text-align:left;'>Sinn macht (z.B. 'Sie humpeln einen Schlauch.').</h3><br>" +
     respText +
     "<h3 style='text-align:center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align:center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>"
 };
+
+const task_reminder = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: 
+    "<h3 style='text-align:center;'>Erinnerung: :</h3>" +
+    respText
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -219,8 +229,8 @@ const materials_ja_aff = [
     { sentNum:  60, sentence: "Sie vermieten eine Wohnung.",                     sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  61, sentence: "Sie treffen heute ihre Familie.",                 sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  62, sentence: "Sie gehen heute zur Oma.",                        sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  63, sentence: "Sie benutzen eine Fernbedienung. ",               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  64, sentence: "Sie entwerfen eine Strategie." ,                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  63, sentence: "Sie benutzen eine Fernbedienung.",                sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  64, sentence: "Sie entwerfen eine Strategie.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  65, sentence: "Sie bestimmen heute die Richtung.",               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  66, sentence: "Sie flechten einen Zopf.",                        sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  67, sentence: "Sie finden einen Stein.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -240,7 +250,7 @@ const materials_ja_aff = [
     { sentNum:  81, sentence: "Sie rudern jetzt zum Ufer.",                      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  82, sentence: "Sie fällen einen Baum.",                          sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  83, sentence: "Sie trinken immer Wein.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  84, sentence: "Sie beginnen heute mit dem Text." ,               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  84, sentence: "Sie beginnen heute mit dem Text.",                sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  85, sentence: "Sie denken gerade an ihre Mutter.",               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  86, sentence: "Sie mögen sehr spezielles Bier.",                 sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  87, sentence: "Sie sehen eine Eule.",                            sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -258,7 +268,7 @@ const materials_ja_aff = [
     { sentNum:  99, sentence: "Sie pflücken jetzt die Blumen.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 100, sentence: "Sie zimmern eine Kommode.",                       sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 101, sentence: "Sie streicheln eine Katze.",                      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum: 102, sentence: "Sie sprinten jetzt zur Halle. ",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum: 102, sentence: "Sie sprinten jetzt zur Halle.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 103, sentence: "Sie errichten ein Gebäude.",                      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 104, sentence: "Sie kaufen eine Trompete.",                       sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 105, sentence: "Sie pflanzen heute die Tomaten.",                 sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -325,7 +335,7 @@ const materials_nein_aff = [
     { sentNum: 163, sentence: "Sie ringen eine Post.",                           sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 164, sentence: "Sie schleifen jetzt das Programm.",               sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 165, sentence: "Sie schlingen heute den Ausflug.",                sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 166, sentence: "Sie schwellen nun das Gestein. ",                 sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 166, sentence: "Sie schwellen nun das Gestein.",                  sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 167, sentence: "Sie stechen ein Ruder.",                          sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 168, sentence: "Sie stinken einen Friseur.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 169, sentence: "Sie trügen einen Deckel.",                        sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
@@ -370,21 +380,21 @@ const materials_nein_aff = [
     { sentNum: 208, sentence: "Sie graben eine Dose.",                           sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 209, sentence: "Sie greifen einen Zoo.",                          sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 210, sentence: "Sie schwitzen einen Kocher.",                     sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 211, sentence: "Sie tun eine Wolke.",                             sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 212, sentence: "Sie strecken heute den Fluss.",                   sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 213, sentence: "Sie begeben eine Lippe.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 214, sentence: "Sie joggen auf eine Tulpe.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 215, sentence: "Sie wandern einen Topf.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 216, sentence: "Sie aktivieren immer den Rasen.",                 sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 217, sentence: "Sie atmen einen Käfig.",                          sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 218, sentence: "Sie raten einen Brenner.",                        sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 219, sentence: "Sie renovieren jetzt die Hymne.",                 sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 220, sentence: "Sie decken eine Linse.",                          sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 221, sentence: "Sie hobeln einen Truthahn.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 222, sentence: "Sie sägen eine Hängematte.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 223, sentence: "Sie steigen jetzt in die Nadel.",                 sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 224, sentence: "Sie gären heute das Netz.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 225, sentence: "Sie wickeln einen Korken.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 211, sentence: "Sie strecken heute den Fluss.",                   sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 212, sentence: "Sie begeben eine Lippe.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 213, sentence: "Sie joggen auf eine Tulpe.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 214, sentence: "Sie wandern einen Topf.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 215, sentence: "Sie aktivieren immer den Rasen.",                 sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 216, sentence: "Sie atmen einen Käfig.",                          sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 217, sentence: "Sie raten einen Brenner.",                        sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 218, sentence: "Sie renovieren jetzt die Hymne.",                 sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 219, sentence: "Sie decken eine Linse.",                          sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 220, sentence: "Sie hobeln einen Truthahn.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 221, sentence: "Sie sägen eine Hängematte.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 222, sentence: "Sie steigen jetzt in die Nadel.",                 sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 223, sentence: "Sie gären heute das Netz.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 224, sentence: "Sie wickeln einen Korken.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 225, sentence: "Sie dürfen eine Binden.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 226, sentence: "Sie mähen immer den Atem.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 227, sentence: "Sie leuchten heute den Schuh.",                   sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 228, sentence: "Sie blamieren eine Taste.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
@@ -401,6 +411,9 @@ const materials_nein_aff = [
     { sentNum: 239, sentence: "Sie wühlen eine Ananas.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 240, sentence: "Sie klammern eine Bohne.",                        sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] }
 ]
+
+    
+
 
 const materials_ja_neg = [
     { sentNum:   1, sentence: "Sie trinken kein Glas Saft.",                     sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -486,7 +499,7 @@ const materials_ja_neg = [
     { sentNum:  81, sentence: "Sie rudern nicht zum Ufer.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  82, sentence: "Sie fällen keinen Baum.",                         sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  83, sentence: "Sie trinken keinen Wein.",                        sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum:  84, sentence: "Sie beginnen nicht mit dem Text." ,               sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum:  84, sentence: "Sie beginnen nicht mit dem Text.",                sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  85, sentence: "Sie denken nicht an ihre Mutter.",                sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  86, sentence: "Sie mögen kein spezielles Bier.",                 sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  87, sentence: "Sie sehen keine Eule.",                           sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -504,7 +517,7 @@ const materials_ja_neg = [
     { sentNum:  99, sentence: "Sie pflücken nicht die Blumen.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 100, sentence: "Sie zimmern keine Kommode.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 101, sentence: "Sie streicheln keine Katze.",                     sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum: 102, sentence: "Sie sprinten nicht zur Halle. ",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum: 102, sentence: "Sie sprinten nicht zur Halle.",                   sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 103, sentence: "Sie errichten kein Gebäude.",                     sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 104, sentence: "Sie kaufen keine Trompete.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 105, sentence: "Sie pflanzen nicht die Tomaten.",                 sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -593,7 +606,7 @@ const materials_nein_neg = [
     { sentNum: 185, sentence: "Sie tauchen nicht im Papagei.",                   sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 186, sentence: "Sie erfahren nicht eine Maus.",                   sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 187, sentence: "Sie rasieren nicht die Mauer.",                   sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
-    { sentNum: 188, sentence: "Sie kitzeln keinen Prozess",                      sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
+    { sentNum: 188, sentence: "Sie kitzeln keinen Prozess.",                     sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 189, sentence: "Sie verschlucken nicht den Fleiß.",               sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 190, sentence: "Sie rollen nicht die Ehre.",                      sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 191, sentence: "Sie benehmen keine Fantasie.",                    sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
@@ -681,6 +694,7 @@ function combinePictures(materials) {
     imageNumber = shuffle(imageNumber)
     for (let i = 0; i < materials.length; i++) {
         materials[i].imageNumber = imageNumber[i]
+        materials[i].imageName = imageFiles[imageNumber[i]].slice(7, -4)
     }
     return materials;
 }
@@ -818,6 +832,7 @@ const sent_stim = {
     data: {
         stim: "PictureNegation",
         "imageNumber": jsPsych.timelineVariable("imageNumber"),
+        "imageName": jsPsych.timelineVariable("imageName"),
         "sentNum": jsPsych.timelineVariable("sentNum"),
         "sentence": jsPsych.timelineVariable("sentence"),
         "sinn": jsPsych.timelineVariable("sinn"),
@@ -925,10 +940,13 @@ function genExpSeq() {
 
     exp.push(trial_timeline1);
     exp.push(block_feedback);  // show previous block performance 
+    exp.push(task_reminder);   // show response mapping 
     exp.push(trial_timeline2);
     exp.push(block_feedback);  // show previous block performance 
+    exp.push(task_reminder);   // show response mapping 
     exp.push(trial_timeline3);
     exp.push(block_feedback);  // show previous block performance 
+    exp.push(task_reminder);   // show response mapping 
     exp.push(trial_timeline4);
     
     exp.push(debrief_de);

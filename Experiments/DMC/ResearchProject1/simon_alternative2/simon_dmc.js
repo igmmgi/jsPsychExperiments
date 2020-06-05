@@ -140,25 +140,34 @@ function drawFeedback() {
 function drawSimon(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-
+    
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = prms.fixWidth;
+    ctx.moveTo(-prms.fixSize, 0);
+    ctx.lineTo( prms.fixSize, 0);
+    ctx.stroke(); 
+    ctx.moveTo(0, -prms.fixSize);
+    ctx.lineTo(0,  prms.fixSize);
+    ctx.stroke(); 
+    
     // frame
-    ctx.fillStyle = "black";
+    ctx.strokeStyle = args["middle"];
     ctx.beginPath();
     ctx.lineWidth = 10;
-    ctx.rect(-100, -100, 200, 200);
+    ctx.rect(-100, -50, 200, 100);
     ctx.stroke();
     
-    // middle
-    ctx.fillStyle = args["middle"];
-    ctx.fillRect(-100, -100, 200, 200);
+    // // middle
+    // ctx.fillStyle = args["middle"];
+    // ctx.fillRect(-100, -100, 200, 200);
     
     // left
     ctx.fillStyle = args["left"];
-    ctx.fillRect(-100, -25, 50, 50);
+    ctx.fillRect(-90, -25, 50, 50);
    
     // right
     ctx.fillStyle = args["right"];
-    ctx.fillRect(50, -25, 50, 50);
+    ctx.fillRect(40, -25, 50, 50);
 
 }
 
@@ -278,14 +287,14 @@ const trial_timeline = {
         iti,
     ],
     timeline_variables:[
-        { l1: "black",          m1: cc,               r1: cc,               l2: prms.respCols[0], m2: prms.respCols[0], r2: prms.respCols[0], order: "IR", loc: "left",  dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
-        { l1: cc,               m1: cc,               r1: "black",          l2: prms.respCols[0], m2: prms.respCols[0], r2: prms.respCols[0], order: "IR", loc: "right", dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
-        { l1: "black",          m1: cc,               r1: cc,               l2: prms.respCols[1], m2: prms.respCols[1], r2: prms.respCols[1], order: "IR", loc: "left",  dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
-        { l1: cc,               m1: cc,               r1: "black",          l2: prms.respCols[1], m2: prms.respCols[1], r2: prms.respCols[1], order: "IR", loc: "right", dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
-        { l1: prms.respCols[0], m1: prms.respCols[0], r1: prms.respCols[0], l2: "black",          m2: cc,               r2: cc,               order: "RI", loc: "left",  dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
-        { l1: prms.respCols[0], m1: prms.respCols[0], r1: prms.respCols[0], l2: cc,               m2: cc,               r2: "black",          order: "RI", loc: "right", dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
-        { l1: prms.respCols[1], m1: prms.respCols[1], r1: prms.respCols[1], l2: "black",          m2: cc,               r2: cc,               order: "RI", loc: "left",  dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
-        { l1: prms.respCols[1], m1: prms.respCols[1], r1: prms.respCols[1], l2: cc,               m2: cc,               r2: "black",          order: "RI", loc: "right", dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
+        { l1: "black", m1: cc,               r1: cc,      l2: cc,      m2: prms.respCols[0], r2: cc,      order: "IR", loc: "left",  dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
+        { l1: cc,      m1: cc,               r1: "black", l2: cc,      m2: prms.respCols[0], r2: cc,      order: "IR", loc: "right", dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
+        { l1: "black", m1: cc,               r1: cc,      l2: cc,      m2: prms.respCols[1], r2: cc,      order: "IR", loc: "left",  dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
+        { l1: cc,      m1: cc,               r1: "black", l2: cc,      m2: prms.respCols[1], r2: cc,      order: "IR", loc: "right", dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
+        { l1: cc,      m1: prms.respCols[0], r1: cc,      l2: "black", m2: cc,               r2: cc,      order: "RI", loc: "left",  dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
+        { l1: cc,      m1: prms.respCols[0], r1: cc,      l2: cc,      m2: cc,               r2: "black", order: "RI", loc: "right", dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
+        { l1: cc,      m1: prms.respCols[1], r1: cc,      l2: "black", m2: cc,               r2: cc,      order: "RI", loc: "left",  dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
+        { l1: cc,      m1: prms.respCols[1], r1: cc,      l2: cc,      m2: cc,               r2: "black", order: "RI", loc: "right", dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
     ],
 };
 
