@@ -500,6 +500,23 @@ const moving_window_text = {
     }
 };
 
+////////////////////////////////////////////////////////////////////////
+//                      Amazon Turk Random Code                       //
+////////////////////////////////////////////////////////////////////////
+const alphaNum = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    response_ends_trial: true,
+    choices: [32],
+    stimulus: "<h3 style='text-align: left;'>This is your participation code:</h3>" +
+              randomString +
+              "<h3 style='text-align: left;'>This is your participation code:</h3>" +
+              "<h3 style='text-align: left;'>Please copy the code and return to the MTurk page.</h3>" +
+              "<h3 style='text-align: left;'>Press the spacebar to end the experiment.</h3>" +
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 //                     Create timeline variables                      //
@@ -722,6 +739,7 @@ function genExpSeq() {
 
     // end phase
     exp.push(debrief_en);
+    exp.push(alphaNum);
     exp.push(showMouseCursor);
     exp.push(fullscreen_off);
     

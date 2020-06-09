@@ -61,11 +61,11 @@ if (nVersion === 1) {
     prms.respKeysNumber = ["P", "Q", 27];
     prms.respKeysLetter = ["P", "Q", 27];
     respText = "<h3 style='text-align: center;'>Gerade = Q &emsp;&emsp; Ungerade = P</h3>" +
-               "<h3 style='text-align: center;'>Vowel = Q &emsp;&emsp; Konsonant = P</h3><br>";
+               "<h3 style='text-align: center;'>Vokal = Q &emsp;&emsp; Konsonant = P</h3><br>";
 } else if (nVersion === 4) {
     prms.respKeysNumber = ["P", "Q", 27];
     prms.respKeysLetter = ["Q", "P", 27];
-    respText = "<h3 style='text-align: center;'>Vokal = Q &emsp;&emsp; Ungerade = P</h3>" +
+    respText = "<h3 style='text-align: center;'>Gerade = Q &emsp;&emsp; Ungerade = P</h3>" +
                "<h3 style='text-align: center;'>Konsonant = Q &emsp;&emsp; Vokal = P</h3><br>";
 }
 

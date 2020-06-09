@@ -917,7 +917,7 @@ const alphaNum = {
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
               "<h2>xxx.xxx@student.uni-tuebingen.de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
-              "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
+              "<h2 style='text-align:left;'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
 
 
