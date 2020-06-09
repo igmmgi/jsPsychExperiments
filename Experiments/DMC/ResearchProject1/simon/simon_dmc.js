@@ -81,7 +81,7 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'>Bitte reagiere immer auf die Farbe. Es gilt:</h3><br>" +
+    "<h3 style='text-align: center;'>Bitte reagiere immer auf die Farbe der linien. Es gilt:</h3><br>" +
     respText +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>"
@@ -158,11 +158,11 @@ function drawSimon(args) {
     ctx.lineTo(-100, +50);
     ctx.stroke();
 
-    // frame right
-    ctx.beginPath();
-    ctx.moveTo(100, -50);
-    ctx.lineTo(100, +50);
-    ctx.stroke();
+    // // frame right
+    // ctx.beginPath();
+    // ctx.moveTo(100, -50);
+    // ctx.lineTo(100, +50);
+    // ctx.stroke();
 
     // left
     ctx.fillStyle = args["left"];
