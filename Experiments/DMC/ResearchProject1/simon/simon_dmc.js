@@ -151,12 +151,19 @@ function drawSimon(args) {
     ctx.stroke(); 
     
     // frame left
-    ctx.strokeStyle = args["middle"];
     ctx.beginPath();
     ctx.lineWidth = 10;
-    ctx.moveTo(-100, -50);
-    ctx.lineTo(-100, +50);
+    ctx.strokeStyle = args["middle"];
+    ctx.rect(-150, -25, 50, 50);
     ctx.stroke();
+
+    // frame right
+    ctx.beginPath();
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = args["middle"];
+    ctx.rect(100, -25, 50, 50);
+    ctx.stroke();
+
 
     // // frame right
     // ctx.beginPath();
@@ -166,11 +173,11 @@ function drawSimon(args) {
 
     // left
     ctx.fillStyle = args["left"];
-    ctx.fillRect(-90, -25, 50, 50);
+    ctx.fillRect(-140, -15, 30, 30);
    
     // right
     ctx.fillStyle = args["right"];
-    ctx.fillRect(40, -25, 50, 50);
+    ctx.fillRect(110, -15, 30, 30);
 
 }
 
@@ -311,7 +318,7 @@ const alphaNum = {
     canvas_border: cb,
     response_ends_trial: true,
     choices: [32],
-    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
+    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
               "<h2>anne.benning@student.uni-tuebingen.de</h2>" +
@@ -330,7 +337,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);

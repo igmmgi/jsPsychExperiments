@@ -387,7 +387,7 @@ const block_feedback = {
     stimulus: "",
     response_ends_trial: true,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt_en({stim: "SentenceStroop"});
+        trial.stimulus = blockFeedbackTxt({stim: "SentenceStroop"});
     },
 };
 

@@ -275,7 +275,7 @@ const alphaNum = {
     canvas_border: cb,
     response_ends_trial: true,
     choices: [32],
-    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
+    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
               "<h2> cara (dot) limpaecher (at) student (dot) uni-tuebingen (dot) de</h2>" +

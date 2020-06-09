@@ -22,7 +22,7 @@ const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
     nBlks: 4,
-    fixDur: 500,
+    fixDur: 750,
     picDur: 500,
     fbDur: 1000,
     iti: 500,
@@ -42,13 +42,13 @@ const nVersion = getVersionNumber(nFiles, 2)
 jsPsych.data.addProperties({version: nVersion});
 let respText;
 if (nVersion === 1) {
-    prms.respKeys = ["D", "J", 27];
+    prms.respKeys = ["D", "K", 27];
     respText      = "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'D'</b> (linker Zeigefinger).</h2>" +
-                    "<h2 style='text-align:center;'><b>Sinnlos = Taste 'J'</b> (rechter Zeigefinger).</h2><br>";
+                    "<h2 style='text-align:center;'><b>Sinnlos = Taste 'K'</b> (rechter Zeigefinger).</h2><br>";
 } else {
-    prms.respKeys = ["J", "D", 27];
+    prms.respKeys = ["D", "K", 27];
     respText      = "<h2 style='text-align:center;'><b>Sinnlos = Taste 'D'</b> (linker Zeigefinger).</h2>" +
-                    "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'J'</b> (rechter Zeigefinger).</h2><br>";
+                    "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'K'</b> (rechter Zeigefinger).</h2><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -235,7 +235,7 @@ const materials_ja_aff = [
     { sentNum:  66, sentence: "Sie flechten einen Zopf.",                        sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  67, sentence: "Sie finden einen Stein.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  68, sentence: "Sie schieben jetzt den Wagen.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  69, sentence: "Sie mögen einen Kuchen.",                           sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  69, sentence: "Sie mögen einen Kuchen.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  70, sentence: "Sie liegen heute auf der Wiese.",                 sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  71, sentence: "Sie beladen jetzt das Auto.",                     sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  72, sentence: "Sie meiden heute den Kontakt.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -300,7 +300,7 @@ const materials_nein_aff = [
     { sentNum: 128, sentence: "Sie reißen immer den Computer.",                  sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 129, sentence: "Sie rufen ein Blech.",                            sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 130, sentence: "Sie saufen heute den Fleck.",                     sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 131, sentence: "Sie schaff en gerne das Gummi.",                  sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 131, sentence: "Sie schaffen gerne das Gummi.",                   sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 132, sentence: "Sie scheren immer den Sitz.",                     sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 133, sentence: "Sie schieben einen Raum.",                        sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 134, sentence: "Sie fahren heute das Müsli.",                     sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
@@ -740,6 +740,7 @@ function showPicture(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let num = args["imageNumber"];
+    console.log(images[num].width)
     ctx.drawImage(images[num], -images[num].width/2, -images[num].height/2)
 }
 
@@ -912,10 +913,10 @@ const alphaNum = {
     canvas_border: canvas_border,
     response_ends_trial: true,
     choices: [32],
-    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
+    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>xxx.xxx@student.uni-tuebingen.de</h2>" +
+              "<h2>sarah.ritter@student.uni-tuebingen.de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 style='text-align:left;'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
