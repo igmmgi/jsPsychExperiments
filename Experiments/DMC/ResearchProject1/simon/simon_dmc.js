@@ -28,7 +28,7 @@ const prms = {
     nBlks: 14,   
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
-    simonDur: 175,
+    simonDur: 150,
     iti: 500,
     tooFast: 100,
     tooSlow: 2000,
@@ -46,15 +46,15 @@ const prms = {
 const nVersion = getVersionNumber(nFiles, 2)
 jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
-    prms.respKeys = ["D", "J", 27];
+    prms.respKeys = ["Q", "P", 27];
     prms.respDir = ["left", "right"];
-    respText = "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'D'</b> (linker Zeigefinger).</h3>" +
-               "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
+    respText = "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'Q'</b> (linker Zeigefinger).</h3>" +
+               "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
 } else {
-    prms.respKeys = ["J", "D", 27];
+    prms.respKeys = ["P", "Q", 27];
     prms.respDir = ["right", "left"];
-    respText = "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'D'</b> (linker Zeigefinger).</h3>" +
-               "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
+    respText = "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'Q'</b> (linker Zeigefinger).</h3>" +
+               "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -228,9 +228,9 @@ const simon_stimulus = {
     canvas_border: cb,
     trial_duration: prms.tooSlow,
     translate_origin: true,
-    stimulus_onset: [0, 175],
+    stimulus_onset: [0, 150],
     clear_screen: [1, 1],
-    stimulus_duration: 350,
+    stimulus_duration: 300,
     response_ends_trial: true,
     choices: prms.respKeys,
     func: [drawSimon, drawSimon],

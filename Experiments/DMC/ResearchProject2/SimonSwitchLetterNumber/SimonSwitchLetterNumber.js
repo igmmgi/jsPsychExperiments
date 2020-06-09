@@ -26,20 +26,21 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 96,  // number of trials in subsequent blocks 
-    nBlks: 9,
+    nBlks: 11,
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
     iti: 300,
     tooFast:    0,
-    tooSlow: 3500,
+    tooSlow: 3000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
+    fbSize: "30px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    respKeysLife: [],
-    respKeysSize: [],
+    respKeysNumber: [],
+    respKeysLetter: [],
     fixWidth: 3,
     fixSize: 15,
-    stimPosX: 300,
+    stimPosX: 200,
     stimPosY:   0,
     stimSize: "50px monospace"
 };
@@ -47,25 +48,25 @@ const prms = {
 const nVersion = getVersionNumber(nFiles, 4)
 jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
-    prms.respKeysNumber = ["S", "K", 27];
-    prms.respKeysLetter = ["S", "K", 27];
-    respText = "<h4 style='text-align: center;'>Odd = S &emsp;&emsp; Even = K</h4>" +
-               "<h4 style='text-align: center;'>Vowel = S &emsp;&emsp; Consonant = K</h4><br>";
+    prms.respKeysNumber = ["Q", "P", 27];
+    prms.respKeysLetter = ["Q", "P", 27];
+    respText = "<h3 style='text-align: center;'>Ungerade = Q &emsp;&emsp; Gerade = P</h3>" +
+               "<h3 style='text-align: center;'>Vokal = Q &emsp;&emsp; Konsonant = P</h3><br>";
 } else if (nVersion === 2) {
-    prms.respKeysNumber = ["S", "K", 27];
-    prms.respKeysLetter = ["K", "S", 27];
-    respText = "<h4 style='text-align: center;'>Odd = S &emsp;&emsp; Even = K</h4>" +
-               "<h4 style='text-align: center;'>Consonant = S &emsp;&emsp; Vowel = K</h4><br>";
+    prms.respKeysNumber = ["Q", "P", 27];
+    prms.respKeysLetter = ["P", "Q", 27];
+    respText = "<h3 style='text-align: center;'>Ungerade = Q &emsp;&emsp; Gerade = P</h3>" +
+               "<h3 style='text-align: center;'>Konsonant = Q &emsp;&emsp; Vokal = P</h3><br>";
 } else if (nVersion === 3) {
-    prms.respKeysNumber = ["K", "S", 27];
-    prms.respKeysLetter = ["K", "S", 27];
-    respText = "<h4 style='text-align: center;'>Even = S &emsp;&emsp; Odd = K</h4>" +
-               "<h4 style='text-align: center;'>Vowel = S &emsp;&emsp; Consonant = K</h4><br>";
+    prms.respKeysNumber = ["P", "Q", 27];
+    prms.respKeysLetter = ["P", "Q", 27];
+    respText = "<h3 style='text-align: center;'>Gerade = Q &emsp;&emsp; Ungerade = P</h3>" +
+               "<h3 style='text-align: center;'>Vowel = Q &emsp;&emsp; Konsonant = P</h3><br>";
 } else if (nVersion === 4) {
-    prms.respKeysNumber = ["K", "S", 27];
-    prms.respKeysLetter = ["S", "K", 27];
-    respText = "<h4 style='text-align: center;'>Even = S &emsp;&emsp; Odd = K</h4>" +
-               "<h4 style='text-align: center;'>Consonant = S &emsp;&emsp; Vowel = K</h4><br>";
+    prms.respKeysNumber = ["P", "Q", 27];
+    prms.respKeysLetter = ["Q", "P", 27];
+    respText = "<h3 style='text-align: center;'>Vokal = Q &emsp;&emsp; Ungerade = P</h3>" +
+               "<h3 style='text-align: center;'>Konsonant = Q &emsp;&emsp; Vokal = P</h3><br>";
 }
 
 const task_instructions1 = {
@@ -74,9 +75,12 @@ const task_instructions1 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
-              "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-              "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
-              "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+    "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
+    "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
+    "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste um fortzufahren!</h2>",
 };
 
 const task_instructions2 = {
@@ -86,6 +90,10 @@ const task_instructions2 = {
     canvas_border: canvas_border,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
+    "<h3 style='text-align: center;'>Im Folgenden musst du 2 Aufgaben bearbeiten. </h2>" +
+    "<h3 style='text-align: center;'>Wenn du einen Buchstaben siehst, entscheide ob Vokal oder Konsonant.</h2>" +
+    "<h3 style='text-align: center;'>Wenn du eine Zahl siehst, entscheide ob Gerade oder Ungerade.</h2>" +
+    "<h3 style='text-align: center;'>Es gilt:</h3>" +
     respText + 
     "<h3 style='text-align: center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h3>" +
     "<h2 style='text-align: center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
@@ -155,7 +163,7 @@ function codeTrial() {
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
 
     let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
-    let comp = ((dat.position === "left" & dat.corrResp === "S") | (dat.position === "right" & dat.corrResp === "K")) ? "comp" : "incomp";
+    let comp = ((dat.position === "left" & dat.corrResp === "Q") | (dat.position === "right" & dat.corrResp === "P")) ? "comp" : "incomp";
 
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
@@ -208,7 +216,7 @@ function drawFeedback() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = "40px monospace";
+    ctx.font = prms.fbSize;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
@@ -303,12 +311,12 @@ const alphaNum = {
     canvas_border: canvas_border,
     response_ends_trial: true,
     choices: [32],
-    stimulus: "<h3 style='text-align:left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h3>" +
-              "<h3 style='text-align:left;'>benötigen, kopieren Sie den folgenden zufällig generierten Code</h3>" +
-              "<h3 style='text-align:left;'>und senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email an:</h3><br>" +
-              "<h2>XXX@XXX</h2>" +
+    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
+              "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
+              "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
+              "<h2>jul (dot) wiess (at) student (dot) uni-tuebingen (dot) de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
-              "<h2 align='left'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
+              "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
 
 

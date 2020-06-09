@@ -38,7 +38,7 @@ const prms = {
     fbSize: "30px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    respKeys: ["S", "K", 27],
+    respKeys: ["Q", "P", 27],
     fixWidth: 3,
     fixSize: 15,
     stimPosX: 200,
@@ -69,8 +69,8 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h2 style='text-align: center;'>Im Folgenden musst du entscheiden, ob die Zahl </h2>" +
     "<h2 style='text-align: center;'>größer oder kleiner als 45 ist. Es gilt:</h2>" +
-    "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste (linker Zeigefinger) </h2>" +
-    "<h2 style='text-align: center;'>größer 45 = 'K' Taste (rechter Zeigefinger)</h2>" +
+    "<h2 style='text-align: center;'>kleiner 45 = 'Q' Taste (linker Zeigefinger) </h2>" +
+    "<h2 style='text-align: center;'>größer 45 = 'P' Taste (rechter Zeigefinger)</h2>" +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
@@ -83,8 +83,8 @@ const task_reminder = {
     stimulus: "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
               "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
               "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
-              "<h2 style='text-align: center;'>kleiner 45 = 'S' Taste (linker Zeigefinger)</h2>" +
-              "<h2 style='text-align: center;'>größer 45 = 'K' Taste (rechter Zeigefinger)</h2><br>" +
+              "<h2 style='text-align: center;'>kleiner 45 = 'Q' Taste (linker Zeigefinger)</h2>" +
+              "<h2 style='text-align: center;'>größer 45 = 'P' Taste (rechter Zeigefinger)</h2><br>" +
               "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>"
 }
 
@@ -327,7 +327,7 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>XXX@XXX</h2>" +
+              "<h2>barbara (dot) doleschal (at) student (dot) uni-tuebingen (dot) de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };

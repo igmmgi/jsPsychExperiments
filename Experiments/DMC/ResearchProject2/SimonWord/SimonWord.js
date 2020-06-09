@@ -49,15 +49,15 @@ const prms = {
 const nVersion = getVersionNumber(nFiles, 2)
 jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
-    prms.respKeysLife = ["S", "K", 27];
-    prms.respKeysSize = ["S", "K", 27];
-    respText = "<h2 style='text-align: center;'>Leben: Lebendig = 'S' &emsp;&emsp; Nicht Lebendig = 'K'</h2>" +
-               "<h2 style='text-align: center;'>Größe: Klein = 'S' &emsp;&emsp; Groß = 'K'</h2><br>";
+    prms.respKeysLife = ["Q", "P", 27];
+    prms.respKeysSize = ["Q", "P", 27];
+    respText = "<h2 style='text-align: center;'>Leben: Lebendig = 'Q' &emsp;&emsp; Nicht Lebendig = 'P'</h2>" +
+               "<h2 style='text-align: center;'>Größe: Klein = 'Q' &emsp;&emsp; Groß = 'P'</h2><br>";
 } else if (nVersion === 2) {
-    prms.respKeysLife = ["K", "S", 27];
-    prms.respKeysSize = ["S", "K", 27];
-    respText = "<h2 style='text-align: center;'>Leben: Nicht Lebendig = 'S' &emsp;&emsp; Lebendig = 'K'</h4>" +
-               "<h2 style='text-align: center;'>Größe: Klein = 'S' &emsp;&emsp; Groß = 'K'</h4><br>";
+    prms.respKeysLife = ["P", "Q", 27];
+    prms.respKeysSize = ["Q", "P", 27];
+    respText = "<h2 style='text-align: center;'>Leben: Nicht Lebendig = 'Q' &emsp;&emsp; Lebendig = 'P'</h4>" +
+               "<h2 style='text-align: center;'>Größe: Klein = 'Q' &emsp;&emsp; Groß = 'P'</h4><br>";
 }
 
 const task_instructions1 = {
@@ -83,10 +83,10 @@ const task_instructions2 = {
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h3 style='text-align: center;'>Im Folgenden musst du 2 Aufgaben bearbeiten. </h2>" +
-    "<h3 style='text-align:center;'>Wenn in der Mitte 'Größe' steht, entscheide ob das Objekt groß </h2>" +
-    "<h3 style='text-align:center;'>oder klein ist (in Relation zur Größe eines Fußballs).</h2>" +
-    "<h3 style='text-align:center;'>Wenn in der Mitte 'Leben' steht, entscheide ob das Objekt lebendig ist oder nicht.</h3>" +
-    "<h3 style='text-align:center;'>Es gilt:</h3>" +
+    "<h3 style='text-align: center;'>Wenn in der Mitte 'Größe' steht, entscheide ob das Objekt groß </h2>" +
+    "<h3 style='text-align: center;'>oder klein ist (in Relation zur Größe eines Fußballs).</h2>" +
+    "<h3 style='text-align: center;'>Wenn in der Mitte 'Leben' steht, entscheide ob das Objekt lebendig ist oder nicht.</h3>" +
+    "<h3 style='text-align: center;'>Es gilt:</h3>" +
     respText +
     "<h3 style='text-align: center;'>Bediene 'S' mit deinem linken Zeigefinger und 'K' mit deinem rechten Zeigefinger.</h3><br>" +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
@@ -183,7 +183,7 @@ function codeTrial() {
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
 
     let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
-    let comp = ((dat.position === "left" & dat.corrResp === "S") | (dat.position === "right" & dat.corrResp === "K")) ? "comp" : "incomp";
+    let comp = ((dat.position === "left" & dat.corrResp === "Q") | (dat.position === "right" & dat.corrResp === "P")) ? "comp" : "incomp";
 
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
@@ -389,7 +389,7 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>XXX@XXX</h2>" +
+              "<h2>jul (dot) wiess (at) student (dot) uni-tuebingen (dot) de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };

@@ -1,6 +1,6 @@
 // Modified version of a Flanker Task:
 // VPs respond to the central letter within a 5-letter array (e.g., HHHHH, SSHSS)
-//  whilst ignoring the surrounding letters using left and right key-presses ("D" and "J").
+//  whilst ignoring the surrounding letters using left and right key-presses ("Q" and "P").
 // 50% of trials involve the presentation of the "flankers" 
 //  first followed by the presentation of the "target" HH HH -> H
 // 50% of trials involve the presentation of the "target" 
@@ -29,7 +29,7 @@ const prms = {
     nTrlsE: 72,  // number of trials in subsequent blocks 
     nBlks: 14,
     fixDur: 500,
-    flankDur: 175,
+    flankDur: 150,
     fbDur: [500, 1000, 1000, 1000],
     iti: 500,
     tooFast:  100,  
@@ -48,13 +48,13 @@ const nVersion = getVersionNumber(nFiles, 2)
 jsPsych.data.addProperties({version: nVersion});
 let respText;
 if (nVersion === 1) {
-    prms.respKeys = ["D", "J", 27];
-    respText      = "<h3 style='text-align:center;'><b>GRÜN = Taste 'D'</b> (linker Zeigefinger).</h3>" +
-                    "<h3 style='text-align:center;'><b>BLAU = Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
+    prms.respKeys = ["Q", "P", 27];
+    respText      = "<h3 style='text-align:center;'><b>GRÜN = Taste 'Q'</b> (linker Zeigefinger).</h3>" +
+                    "<h3 style='text-align:center;'><b>BLAU = Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
 } else {
-    prms.respKeys = ["J", "D", 27];
-    respText      = "<h3 style='text-align:center;'><b>BLAU = Taste 'D'</b> (linker Zeigefinger).</h3>" +
-                    "<h3 style='text-align:center;'><b>GRÜN = Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
+    prms.respKeys = ["P", "Q", 27];
+    respText      = "<h3 style='text-align:center;'><b>BLAU = Taste 'Q'</b> (linker Zeigefinger).</h3>" +
+                    "<h3 style='text-align:center;'><b>GRÜN = Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -223,11 +223,11 @@ const flanker_stimulus = {
     canvas_size: cs,
     canvas_border: cb,
     translate_origin: true, 
-    stimulus_onset: [0, 175],
+    stimulus_onset: [0, 150],
     response_ends_trial: true,
     choices: prms.respKeys,
     clear_screen: [1, 1],
-    stimulus_duration: 350,
+    stimulus_duration: 300,
     func: [drawFlanker, drawFlanker],
     func_args:[
         {"fCol": jsPsych.timelineVariable("f1Col"), "tCol": jsPsych.timelineVariable("t1Col")},
@@ -284,7 +284,7 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>baflanker@web.de</h2>" +
+              "<h2>BAflanker@web.de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };

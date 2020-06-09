@@ -30,7 +30,7 @@ const prms = {
     nBlks: 14,
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
-    stroopDur: 175,
+    stroopDur: 150,
     iti: 500,
     tooFast: 100,
     tooSlow: 2000,
@@ -47,13 +47,13 @@ const prms = {
 const nVersion = getVersionNumber(nFiles, 2)
 jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
-    prms.respKeys = ["D", "J", 27];
-    respText = "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'D'</b> (linker Zeigefinger).</h3>" +
-               "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
+    prms.respKeys = ["Q", "P", 27];
+    respText = "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'Q'</b> (linker Zeigefinger).</h3>" +
+               "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
 } else {
-    prms.respKeys = ["J", "D", 27];
-    respText = "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'D'</b> (linker Zeigefinger).</h3>" +
-               "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'J'</b> (rechter Zeigefinger).</h3><br>";
+    prms.respKeys = ["P", "Q", 27];
+    respText = "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'Q'</b> (linker Zeigefinger).</h3>" +
+               "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -221,8 +221,8 @@ const stroop_stimulus = {
     canvas_border: cb,
     trial_duration: prms.tooSlow,
     translate_origin: true,
-    stimulus_onset: [0, 175],
-    stimulus_duration: 350,
+    stimulus_onset: [0, 150],
+    stimulus_duration: 300,
     clear_screen: [1, 1],
     func: [drawStroop, drawStroop],
     func_args:[
@@ -278,7 +278,7 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>XXX@XXX</h2>" +
+              "<h2>marina (dot) hainbuch (at) student (dot) uni-tuebingen (dot) de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
