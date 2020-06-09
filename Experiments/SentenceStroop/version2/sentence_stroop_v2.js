@@ -731,6 +731,7 @@ function genExpSeq() {
 EXP = genExpSeq();
 
 const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -742,6 +743,7 @@ jsPsych.init({
     },
     on_finish: function(){ 
         saveData("/Common/write_data.php", data_filename, {stim: "SentenceStroop"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });
 
