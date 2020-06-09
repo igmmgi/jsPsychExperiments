@@ -81,7 +81,7 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'>Bitte reagiere immer auf die Farbe des Quadrats in der Mitte. Es gilt:</h3><br>" +
+    "<h3 style='text-align: center;'>Bitte reagiere immer auf die Farbe. Es gilt:</h3><br>" +
     respText +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>"
@@ -140,18 +140,37 @@ function drawFeedback() {
 function drawSimon(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
+    
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = prms.fixWidth;
+    ctx.moveTo(-prms.fixSize, 0);
+    ctx.lineTo( prms.fixSize, 0);
+    ctx.stroke(); 
+    ctx.moveTo(0, -prms.fixSize);
+    ctx.lineTo(0,  prms.fixSize);
+    ctx.stroke(); 
+    
+    // frame left
+    ctx.strokeStyle = args["middle"];
+    ctx.beginPath();
+    ctx.lineWidth = 10;
+    ctx.moveTo(-100, -50);
+    ctx.lineTo(-100, +50);
+    ctx.stroke();
+
+    // frame right
+    ctx.beginPath();
+    ctx.moveTo(100, -50);
+    ctx.lineTo(100, +50);
+    ctx.stroke();
 
     // left
     ctx.fillStyle = args["left"];
-    ctx.fillRect(-300, -75, 150, 150);
-   
-    // middle
-    ctx.fillStyle = args["middle"];
-    ctx.fillRect(-25, -25, 50, 50);
+    ctx.fillRect(-90, -25, 50, 50);
    
     // right
     ctx.fillStyle = args["right"];
-    ctx.fillRect(150, -75, 150, 150);
+    ctx.fillRect(40, -25, 50, 50);
 
 }
 
@@ -311,7 +330,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    exp.push(vpInfoForm_de);
+    // exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);

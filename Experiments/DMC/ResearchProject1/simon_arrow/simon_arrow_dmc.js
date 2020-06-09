@@ -1,8 +1,10 @@
 // Modified version of a Simon Task:
-// VPs respond to the colour of a centrally presented square whilst ignoring
-//  laterally presented squares. The laterally presented squares 
-// VPs respond to the colour of the presented stimulus using
-// left and right key responses.
+// VPs respond to the colour of the presented stimulus and ignore the text
+//  using left and right key-presses ("D" and "J")
+// 50% of trials involve the presentation of the "word" 
+//  first followed by the presentation of the "colour" word -> colour 
+// 50% of trials involve the presentation of the "colour" 
+//  first followed by the presentation of the "word" colour -> word 
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -25,7 +27,7 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 const prms = {
     nTrlsP: 32,  // number of trials in first block (practice)
     nTrlsE: 72,  // number of trials in subsequent blocks 
-    nBlks: 14,   
+    nBlks: 14,
     fixDur: 500,
     fbDur: [500, 1000, 1000, 1000],
     simonDur: 150,
@@ -35,24 +37,21 @@ const prms = {
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    respCols: ["blue", "green"],
     fixWidth: 3,
     fixSize: 15,
-    fbSize: "30px monospace",
+    simonSize: "30px monospace",
+    fbSize: "20px monospace",
     respKeys: [],
-    respDir: [],
 };
 
 const nVersion = getVersionNumber(nFiles, 2)
 jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
     prms.respKeys = ["Q", "P", 27];
-    prms.respDir = ["left", "right"];
     respText = "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'Q'</b> (linker Zeigefinger).</h3>" +
                "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
 } else {
     prms.respKeys = ["P", "Q", 27];
-    prms.respDir = ["right", "left"];
     respText = "<h3 style='text-align: center;'><b>GRÜN</b> drücke die <b>Taste 'Q'</b> (linker Zeigefinger).</h3>" +
                "<h3 style='text-align: center;'><b>BLAU</b> drücke die <b>Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
 }
@@ -66,12 +65,12 @@ const task_instructions1 = {
     canvas_size: cs,
     canvas_border: cb,
     stimulus: "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
-              "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-              "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
-              "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
-              "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
-              "<h3 style='text-align: center;'>Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.</h3><br>" +
-              "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>"
+    "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+    "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
+    "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
+    "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 const task_instructions2 = {
@@ -81,10 +80,10 @@ const task_instructions2 = {
     canvas_border: cb,
     stimulus: 
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'>Bitte reagiere immer auf die Farbe des Quadrats in der Mitte. Es gilt:</h3><br>" +
+    "<h3 style='text-align: center;'>Bitte reagiere immer nur auf die Farbe der „####“. Es gilt:</h3>" +
     respText +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
-    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>"
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 const task_reminder = {
@@ -96,7 +95,7 @@ const task_reminder = {
               "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
               "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
                respText + 
-              "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>"
+              "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>",
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -136,38 +135,20 @@ function drawFeedback() {
     ctx.fillText(prms.fbTxt[dat.corrCode-1], 0, 0); 
 }
 
-
-function drawSimon(args) {
+function drawStroop(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-    
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = prms.fixWidth;
-    ctx.moveTo(-prms.fixSize, 0);
-    ctx.lineTo( prms.fixSize, 0);
-    ctx.stroke(); 
-    ctx.moveTo(0, -prms.fixSize);
-    ctx.lineTo(0,  prms.fixSize);
-    ctx.stroke(); 
-    
-    // frame
-    ctx.strokeStyle = args["middle"];
-    ctx.beginPath();
-    ctx.lineWidth = 10;
-    ctx.rect(-100, -50, 200, 100);
-    ctx.stroke();
-    
-    // // middle
-    // ctx.fillStyle = args["middle"];
-    // ctx.fillRect(-100, -100, 200, 200);
-    
-    // left
-    ctx.fillStyle = args["left"];
-    ctx.fillRect(-90, -25, 50, 50);
-   
-    // right
-    ctx.fillStyle = args["right"];
-    ctx.fillRect(40, -25, 50, 50);
+
+    // draw target
+    ctx.font = prms.simonSize;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = args["colour"];
+    ctx.fillText("####", 0, 0); 
+
+    // draw distractor
+    ctx.fillStyle = "black";
+    ctx.fillText(args["word"], 0, 0); 
 
 }
 
@@ -181,25 +162,21 @@ function codeTrial() {
     let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
     rt = (dat.order === "RI") ? rt : rt - offset;
 
-    let comp = (dat.dirResp === dat.loc) ? "comp" : "incomp";
-
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
     } else if (rt === prms.tooSlow) {
-        corrCode = 3;  // too slow
+        corrCode = 3; // too slow
     } else if (rt <= prms.tooFast) {
-        corrCode = 4;  // too false
+        corrCode = 4; // too false
     }
-
-    jsPsych.data.addDataToLastTrial({date: Date(), comp: comp, rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
+    jsPsych.data.addDataToLastTrial({date: Date(), rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
     prms.cTrl += 1;
     if (dat.key_press === 27) {
         jsPsych.endExperiment();
     }
 }
-
 
 const trial_feedback = {
     type: 'static-canvas-keyboard-response',
@@ -245,28 +222,19 @@ const simon_stimulus = {
     trial_duration: prms.tooSlow,
     translate_origin: true,
     stimulus_onset: [0, 150],
-    clear_screen: [1, 1],
     stimulus_duration: 300,
-    response_ends_trial: true,
-    choices: prms.respKeys,
-    func: [drawSimon, drawSimon],
+    clear_screen: [1, 1],
+    func: [drawStroop, drawStroop],
     func_args:[
-        { 
-            "left":   jsPsych.timelineVariable("l1") ,
-            "middle": jsPsych.timelineVariable("m1") ,
-            "right":  jsPsych.timelineVariable("r1") ,
-        },
-        { 
-            "left":   jsPsych.timelineVariable("l2") ,
-            "middle": jsPsych.timelineVariable("m2") ,
-            "right":  jsPsych.timelineVariable("r2") ,
-        },
+        {"word": jsPsych.timelineVariable("w1"), "colour": jsPsych.timelineVariable("c1")},
+        {"word": jsPsych.timelineVariable("w2"), "colour": jsPsych.timelineVariable("c2")},
     ],
     data: {
         stim: "simon",
+        word: jsPsych.timelineVariable('word'), 
+        colour: jsPsych.timelineVariable('colour'), 
+        comp: jsPsych.timelineVariable('comp'), 
         order: jsPsych.timelineVariable('order'), 
-        loc: jsPsych.timelineVariable('loc'),
-        dirResp: jsPsych.timelineVariable('dirResp'),
         corrResp: jsPsych.timelineVariable('corrResp')
     },
     on_start: function(trial) {
@@ -284,20 +252,19 @@ const trial_timeline = {
         fixation_cross,
         simon_stimulus,
         trial_feedback,
-        iti,
+        iti
     ],
     timeline_variables:[
-        { l1: "black", m1: cc,               r1: cc,      l2: cc,      m2: prms.respCols[0], r2: cc,      order: "IR", loc: "left",  dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
-        { l1: cc,      m1: cc,               r1: "black", l2: cc,      m2: prms.respCols[0], r2: cc,      order: "IR", loc: "right", dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
-        { l1: "black", m1: cc,               r1: cc,      l2: cc,      m2: prms.respCols[1], r2: cc,      order: "IR", loc: "left",  dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
-        { l1: cc,      m1: cc,               r1: "black", l2: cc,      m2: prms.respCols[1], r2: cc,      order: "IR", loc: "right", dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
-        { l1: cc,      m1: prms.respCols[0], r1: cc,      l2: "black", m2: cc,               r2: cc,      order: "RI", loc: "left",  dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
-        { l1: cc,      m1: prms.respCols[0], r1: cc,      l2: cc,      m2: cc,               r2: "black", order: "RI", loc: "right", dirResp: prms.respDir[0], corrResp: prms.respKeys[0] },
-        { l1: cc,      m1: prms.respCols[1], r1: cc,      l2: "black", m2: cc,               r2: cc,      order: "RI", loc: "left",  dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
-        { l1: cc,      m1: prms.respCols[1], r1: cc,      l2: cc,      m2: cc,               r2: "black", order: "RI", loc: "right", dirResp: prms.respDir[1], corrResp: prms.respKeys[1] },
+        { word: ">>>>", colour: "blue",  w1: ">>>>", c1: cc,      w2: "",     c2: "blue" , comp: 'comp',   order: "IR", corrResp: prms.respKeys[0]},
+        { word: ">>>>", colour: "green", w1: ">>>>", c1: cc,      w2: "",     c2: "green", comp: 'incomp', order: "IR", corrResp: prms.respKeys[1]},
+        { word: "<<<<", colour: "green", w1: "<<<<", c1: cc,      w2: "",     c2: "green", comp: 'comp',   order: "IR", corrResp: prms.respKeys[1]},
+        { word: "<<<<", colour: "blue",  w1: "<<<<", c1: cc,      w2: "",     c2: "blue",  comp: 'incomp', order: "IR", corrResp: prms.respKeys[0]},
+        { word: ">>>>", colour: "blue",  w1: "" ,    c1: "blue" , w2: ">>>>", c2:cc,       comp: 'comp',   order: "RI", corrResp: prms.respKeys[0]},
+        { word: ">>>>", colour: "green", w1: "" ,    c1: "green", w2: ">>>>", c2:cc,       comp: 'incomp', order: "RI", corrResp: prms.respKeys[1]},
+        { word: "<<<<", colour: "green", w1: "",     c1: "green", w2: "<<<<", c2:cc,       comp: 'comp',   order: "RI", corrResp: prms.respKeys[1]},
+        { word: "<<<<", colour: "blue",  w1: "",     c1: "blue",  w2: "<<<<", c2:cc,       comp: 'incomp', order: "RI", corrResp: prms.respKeys[0]}
     ],
 };
-
 
 const randomString = generateRandomString(16);
 
@@ -311,10 +278,11 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>anne.benning@student.uni-tuebingen.de</h2>" +
+              "<h2> cara (dot) limpaecher (at) student (dot) uni-tuebingen (dot) de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
+
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -332,7 +300,7 @@ function genExpSeq() {
     exp.push(screenInfo);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
-    
+
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
         blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8)}
