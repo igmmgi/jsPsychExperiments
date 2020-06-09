@@ -503,6 +503,8 @@ const moving_window_text = {
 ////////////////////////////////////////////////////////////////////////
 //                      Amazon Turk Random Code                       //
 ////////////////////////////////////////////////////////////////////////
+const randomString = generateRandomString(16);
+
 const alphaNum = {
     type: 'html-keyboard-response-canvas',
     canvas_colour: canvas_colour,
@@ -514,7 +516,7 @@ const alphaNum = {
               randomString +
               "<h3 style='text-align: left;'>This is your participation code:</h3>" +
               "<h3 style='text-align: left;'>Please copy the code and return to the MTurk page.</h3>" +
-              "<h3 style='text-align: left;'>Press the spacebar to end the experiment.</h3>" +
+              "<h3 style='text-align: left;'>Press the spacebar to end the experiment.</h3>" 
 }
 
 
