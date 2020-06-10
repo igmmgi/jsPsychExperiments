@@ -27,6 +27,13 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
                 default: "40px monospace",
                 description: 'Font'
             },
+            text_align: {
+                type: jsPsych.plugins.parameterType.STRING,
+                array: false,
+                pretty_name: 'align',
+                default: "left",
+                description: 'Text Alignment'
+            },
             line_height: {
                 type: jsPsych.plugins.parameterType.INT,
                 array: false,
@@ -93,14 +100,14 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function(){
 
         // basic font style
         ctx.font         = trial.font;
-        ctx.textAlign    = "left";
+        ctx.textAlign    = trial.text_align;
         ctx.textBaseline = "middle";
         ctx.fillStyle    = "black";
 
         // text properties
         const numLines = Math.ceil(ctx.measureText(trial.sentence).width / trial.max_width);
         const words    = trial.sentence.split(' ');
-        const xpos     = -(trial.max_width/2);
+        const xpos     = (trial.text_align === "left") ? -(trial.max_width/2) : 0;
         let ypos       = -(trial.line_height * numLines)/2 + (trial.line_height/2);
 
         // keep adding word until it is too long

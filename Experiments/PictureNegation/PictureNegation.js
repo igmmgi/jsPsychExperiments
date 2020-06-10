@@ -549,7 +549,7 @@ const materials_nein_neg = [
     { sentNum: 128, sentence: "Sie reißen nicht den Computer.",                  sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 129, sentence: "Sie rufen kein Blech.",                           sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 130, sentence: "Sie saufen nicht den Fleck.",                     sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
-    { sentNum: 131, sentence: "Sie schaff en nicht das Gummi.",                  sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
+    { sentNum: 131, sentence: "Sie schaffen nicht das Gummi.",                   sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 132, sentence: "Sie scheren nicht den Sitz.",                     sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 133, sentence: "Sie schieben keinen Raum.",                       sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 134, sentence: "Sie fahren nicht das Müsli.",                     sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },

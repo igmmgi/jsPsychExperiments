@@ -50,7 +50,7 @@
 ////                         Canvas Properties                          //
 //////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size   = [960, 720];
+const canvas_size   = [1280, 960];
 const canvas_border = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -76,11 +76,11 @@ const prms = {
     respKeysStroop: shuffle(["G", "H", "J"]),
     respKeysQuestion: ["T", "F"],
     fbTxt: ["Correct", "Error"],  
-    font_sentence: "30px monospace",
+    font_sentence: "22px monospace",
     line_height: 40,
-    sentence_width: 800,
-    font_question: "30px monospace",
-    font_stroop: "40px monospace",
+    sentence_width: 1200,
+    font_question: "22 monospace",
+    font_stroop: "22px monospace",
     cTrl: 1,  // count trials
 };
 
@@ -475,6 +475,7 @@ const moving_window_text = {
     sentence: jsPsych.timelineVariable('sentence'),
     word_number: jsPsych.timelineVariable('word_num'),
     font: prms.font_sentence,
+    text_align: "center",
     max_width: prms.sentence_width,
     line_height: prms.line_height,
     choices: prms["respKeysSentence"],
