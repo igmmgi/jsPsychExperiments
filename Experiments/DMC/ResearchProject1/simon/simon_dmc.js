@@ -164,13 +164,6 @@ function drawSimon(args) {
     ctx.rect(100, -25, 50, 50);
     ctx.stroke();
 
-
-    // // frame right
-    // ctx.beginPath();
-    // ctx.moveTo(100, -50);
-    // ctx.lineTo(100, +50);
-    // ctx.stroke();
-
     // left
     ctx.fillStyle = args["left"];
     ctx.fillRect(-140, -15, 30, 30);

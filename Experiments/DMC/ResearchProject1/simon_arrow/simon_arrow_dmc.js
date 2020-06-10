@@ -162,6 +162,8 @@ function codeTrial() {
     let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
     rt = (dat.order === "RI") ? rt : rt - offset;
 
+    let comp = ((dat.word === "<<<<" & dat.corrResp === "Q") | (dat.word === ">>>>" & dat.corrResp === "Q")) ? "comp" : "incomp";
+    
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
@@ -171,7 +173,7 @@ function codeTrial() {
     } else if (rt <= prms.tooFast) {
         corrCode = 4; // too false
     }
-    jsPsych.data.addDataToLastTrial({date: Date(), rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
+    jsPsych.data.addDataToLastTrial({date: Date(), comp: comp, rt: rt, corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
     prms.cTrl += 1;
     if (dat.key_press === 27) {
         jsPsych.endExperiment();
@@ -233,7 +235,6 @@ const simon_stimulus = {
         stim: "simon",
         word: jsPsych.timelineVariable('word'), 
         colour: jsPsych.timelineVariable('colour'), 
-        comp: jsPsych.timelineVariable('comp'), 
         order: jsPsych.timelineVariable('order'), 
         corrResp: jsPsych.timelineVariable('corrResp')
     },
@@ -255,14 +256,14 @@ const trial_timeline = {
         iti
     ],
     timeline_variables:[
-        { word: ">>>>", colour: "blue",  w1: ">>>>", c1: cc,      w2: "",     c2: "blue" , comp: 'comp',   order: "IR", corrResp: prms.respKeys[0]},
-        { word: ">>>>", colour: "green", w1: ">>>>", c1: cc,      w2: "",     c2: "green", comp: 'incomp', order: "IR", corrResp: prms.respKeys[1]},
-        { word: "<<<<", colour: "green", w1: "<<<<", c1: cc,      w2: "",     c2: "green", comp: 'comp',   order: "IR", corrResp: prms.respKeys[1]},
-        { word: "<<<<", colour: "blue",  w1: "<<<<", c1: cc,      w2: "",     c2: "blue",  comp: 'incomp', order: "IR", corrResp: prms.respKeys[0]},
-        { word: ">>>>", colour: "blue",  w1: "" ,    c1: "blue" , w2: ">>>>", c2:cc,       comp: 'comp',   order: "RI", corrResp: prms.respKeys[0]},
-        { word: ">>>>", colour: "green", w1: "" ,    c1: "green", w2: ">>>>", c2:cc,       comp: 'incomp', order: "RI", corrResp: prms.respKeys[1]},
-        { word: "<<<<", colour: "green", w1: "",     c1: "green", w2: "<<<<", c2:cc,       comp: 'comp',   order: "RI", corrResp: prms.respKeys[1]},
-        { word: "<<<<", colour: "blue",  w1: "",     c1: "blue",  w2: "<<<<", c2:cc,       comp: 'incomp', order: "RI", corrResp: prms.respKeys[0]}
+        { word: ">>>>", colour: "blue",  w1: ">>>>", c1: cc,      w2: "",     c2: "blue" , order: "IR", corrResp: prms.respKeys[0]},
+        { word: ">>>>", colour: "green", w1: ">>>>", c1: cc,      w2: "",     c2: "green", order: "IR", corrResp: prms.respKeys[1]},
+        { word: "<<<<", colour: "green", w1: "<<<<", c1: cc,      w2: "",     c2: "green", order: "IR", corrResp: prms.respKeys[1]},
+        { word: "<<<<", colour: "blue",  w1: "<<<<", c1: cc,      w2: "",     c2: "blue",  order: "IR", corrResp: prms.respKeys[0]},
+        { word: ">>>>", colour: "blue",  w1: "" ,    c1: "blue" , w2: ">>>>", c2:cc,       order: "RI", corrResp: prms.respKeys[0]},
+        { word: ">>>>", colour: "green", w1: "" ,    c1: "green", w2: ">>>>", c2:cc,       order: "RI", corrResp: prms.respKeys[1]},
+        { word: "<<<<", colour: "green", w1: "",     c1: "green", w2: "<<<<", c2:cc,       order: "RI", corrResp: prms.respKeys[1]},
+        { word: "<<<<", colour: "blue",  w1: "",     c1: "blue",  w2: "<<<<", c2:cc,       order: "RI", corrResp: prms.respKeys[0]}
     ],
 };
 
@@ -295,7 +296,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    exp.push(vpInfoForm_de);
+    // exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);

@@ -412,9 +412,6 @@ const materials_nein_aff = [
     { sentNum: 240, sentence: "Sie klammern eine Bohne.",                        sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] }
 ]
 
-    
-
-
 const materials_ja_neg = [
     { sentNum:   1, sentence: "Sie trinken kein Glas Saft.",                     sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:   2, sentence: "Sie werfen keinen Ball.",                         sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -693,7 +690,7 @@ function combinePictures(materials) {
     }
     imageNumber = shuffle(imageNumber)
     for (let i = 0; i < materials.length; i++) {
-        materials[i].imageNumber = imageNumber[i]
+        materials[i].imageNumber = imageNumber[i+1]
         materials[i].imageName = imageFiles[imageNumber[i]].slice(7, -4)
     }
     return materials;
@@ -902,7 +899,6 @@ const trial_timeline4 = {
         size: 1
     }
 };
-
 
 const randomString = generateRandomString(16);
 
