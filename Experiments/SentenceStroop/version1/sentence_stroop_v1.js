@@ -379,7 +379,8 @@ function codeTrial() {
     let dat = jsPsych.data.get().last(1).values()[0];
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
     let corrCode = dat.key_press === corrKeyNum ? 1 : 2;
-    jsPsych.data.addDataToLastTrial({date: Date(), corrCode: corrCode, trialNum: prms.cTrl});
+    let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
+    jsPsych.data.addDataToLastTrial({date: Date(), rt: rt, corrCode: corrCode, trialNum: prms.cTrl});
     prms.cTrl += 1;
     if (dat.key_press === 27) {
         jsPsych.endExperiment();
@@ -468,7 +469,6 @@ const question_stimulus = {
         let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.answer);
         let corrCode = dat.key_press === corrKeyNum ? 1 : 2;
         jsPsych.data.addDataToLastTrial({date: Date(), corrCode: corrCode, trialNum: prms.cTrl});
-        console.log(corrCode)
         prms.cTrl += 1
     }
 };
