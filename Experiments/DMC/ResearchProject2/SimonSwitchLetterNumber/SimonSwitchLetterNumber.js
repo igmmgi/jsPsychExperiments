@@ -40,7 +40,7 @@ const prms = {
     fixSize: 15,
     stimPosX: 200,
     stimPosY:   0,
-    stimSize: "50px monospace"
+    stimSize: "50px monospace",
     respKeysNumber: [],
     respKeysLetter: [],
 };
