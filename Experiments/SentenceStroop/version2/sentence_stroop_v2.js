@@ -635,17 +635,19 @@ function constrained_shuffle(items) {
         constraints_met = true;
         for (let i in items) {
             if (i > 0) {
-                if (items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] === "exp" && items[i-1]["timeline_variables"][0]["type"] === "exp") {
-                    constraints_met = false;
-                    break
+                if (items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] === "exp") {
+                    if (items[i-1]["timeline_variables"][0]["type"] === "exp" | items[i-1]["timeline_variables"][0]["type"] === "filler") {
+                        constraints_met = false;
+                        break
+                    }
                 }
             }
         }
+        return(items)
     }
-    return(items)
 }
 
-// only somme of the filler items have questions
+// only some of the filler items have questions
 function add_filler_questions(items) {
     let final_items = []
     for (let i in items) {
