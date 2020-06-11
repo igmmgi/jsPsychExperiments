@@ -41,7 +41,7 @@ const prms = {
     respDir: []
 }
 
-jsPsych.data.addProperties({respMapping: respMapping});
+jsPsych.data.addProperties({respMapping: prms.respMapping});
 let respText;
 if (prms.respMapping === 1) {
     prms.respKeys = ["X", "M", 27];
