@@ -27,8 +27,8 @@ const prms = {
     nTrlsE: 72,  // number of trials in subsequent blocks 
     nBlks: 14,   
     fixDur: 500,
-    fbDur: [500, 1000, 1000, 1000],
     simonDur: 150,
+    fbDur: [500, 1000, 1000, 1000],
     iti: 500,
     tooFast: 100,
     tooSlow: 2000,
@@ -36,9 +36,9 @@ const prms = {
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
     respCols: ["blue", "green"],
-    fixWidth: 3,
-    fixSize: 15,
-    fbSize: "30px monospace",
+    fixWidth: 2,
+    fixSize: 10,
+    fbSize: "20px monospace",
     respKeys: [],
     respDir: [],
 };
@@ -190,7 +190,7 @@ function codeTrial() {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
-    } else if (rt === prms.tooSlow) {
+    } else if (rt >= prms.tooSlow) {
         corrCode = 3;  // too slow
     } else if (rt <= prms.tooFast) {
         corrCode = 4;  // too false
@@ -355,7 +355,7 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const data_filename = dirName + "data/" + expName + "_" + vpNum;
 const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({

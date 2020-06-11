@@ -29,16 +29,16 @@ const prms = {
     nTrlsE: 72,  // number of trials in subsequent blocks 
     nBlks: 14,
     fixDur: 500,
-    fbDur: [500, 1000, 1000, 1000],
     stroopDur: 150,
+    fbDur: [500, 1000, 1000, 1000],
     iti: 500,
     tooFast: 100,
     tooSlow: 2000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    fixWidth: 3,
-    fixSize: 15,
+    fixWidth: 2,
+    fixSize: 10,
     stroopSize: "30px monospace",
     fbSize: "20px monospace",
     respKeys: [],
@@ -166,7 +166,7 @@ function codeTrial() {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
-    } else if (rt === prms.tooSlow) {
+    } else if (rt >= prms.tooSlow) {
         corrCode = 3; // too slow
     } else if (rt <= prms.tooFast) {
         corrCode = 4; // too false
@@ -278,7 +278,7 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2> cara (dot) limpaecher (at) student (dot) uni-tuebingen (dot) de</h2>" +
+              "<h2>cara.limpaecher@student.uni-tuebingen.de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
@@ -320,7 +320,7 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const data_filename = dirName + "data/" + expName + "_" + vpNum;
 const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({

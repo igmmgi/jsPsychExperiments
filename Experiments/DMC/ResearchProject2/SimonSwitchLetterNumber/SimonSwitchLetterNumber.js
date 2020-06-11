@@ -45,7 +45,7 @@ const prms = {
     stimSize: "50px monospace"
 };
 
-const nVersion = 4; //getVersionNumber(nFiles, 4)
+const nVersion = getVersionNumber(nFiles, 4);
 jsPsych.data.addProperties({nVersion: nVersion});
 if (nVersion === 1) {
     prms.respKeysNumber = ["Q", "P", 27];

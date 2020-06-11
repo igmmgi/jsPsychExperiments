@@ -31,8 +31,8 @@ const prms = {
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     fixWidth: 3,
     fixSize: 15,
-    stimSize: "30px monospace",
-    fbSize: "30px monospace",
+    stimSize: "24px monospace",
+    fbSize: "24px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
 };
@@ -79,21 +79,20 @@ function drawStroop(args) {
     ctx.textBaseline = "middle";
     ctx.fillStyle = args["fontcolour"]; 
     ctx.fillText(args["text"], args["posx"], args["posy"]); 
-
 }
 
-function drawFeedback(args) {
+function drawFeedback() {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = "30px Arial";
+    ctx.font = prms.fbSize;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black"; 
     if (prms.cBlk === 1) {
-        ctx.fillText(prms.fbTxt[dat.corrCode - 1], args["posx"], args["posy"]); 
+        ctx.fillText(prms.fbTxt[dat.corrCode - 1], dat.posx, dat.posy); 
     } else if (prms.cBlk > 1 && dat.corrCode !== 1) {
-        ctx.fillText(prms.fbTxt[dat.corrCode - 1], args["posx"], args["posy"]); 
+        ctx.fillText(prms.fbTxt[dat.corrCode - 1], dat.posx, dat.posy); 
     }
 }
 
@@ -117,10 +116,9 @@ const trial_stimulus = {
     translate_origin: true,
     func: drawStroop,
     func_args:[
-        {"text": jsPsych.timelineVariable("text"),
+        {
+         "text": jsPsych.timelineVariable("text"),
          "fontcolour": jsPsych.timelineVariable('fontcolour'),
-         "posx": jsPsych.timelineVariable('posx'),
-         "posy": jsPsych.timelineVariable('posy')
         }
     ],
     data: {
@@ -128,9 +126,13 @@ const trial_stimulus = {
         text: jsPsych.timelineVariable('text'), 
         fontcolour: jsPsych.timelineVariable('fontcolour'), 
         affneg: jsPsych.timelineVariable('affneg'), 
-        posx: jsPsych.timelineVariable('posx'), 
-        posy: jsPsych.timelineVariable('posy'), 
         corrResp: jsPsych.timelineVariable('corrResp')
+    },
+    on_start: function(trial) {
+        trial.func_args[0]["posx"] = getRandomInt(-75, 75), 
+        trial.func_args[0]["posy"] = getRandomInt(-75, 75),
+        trial.data.posx = trial.func_args[0]["posx"],
+        trial.data.posy = trial.func_args[0]["posy"]
     },
     on_finish: function() { codeTrial(); }
 };
@@ -140,12 +142,10 @@ const trial_feedback = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    trial_duration: prms.fbDur,
     translate_origin: true,
+    trial_duration: prms.fbDur,
+    response_ends_trial: false,
     func: drawFeedback,
-    func_args:[
-        { "posx": jsPsych.timelineVariable('posx'), "posy": jsPsych.timelineVariable('posy') }
-    ],
     on_start: function(trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (prms.cBlk === 1) {
@@ -175,7 +175,7 @@ const block_feedback = {
     stimulus: '',
     response_ends_trial: true,
     on_start: function(trial) {
-        trial.stimulus = blockFeedbackTxt({stim: "stroop"});
+        trial.stimulus = blockFeedbackTxt_de({stim: "negStroop"});
     },
 };
 
@@ -187,54 +187,54 @@ const trial_timeline = {
         iti,
     ],
     timeline_variables:[
-        { text: "jetzt rot",  fontcolour: "red",    affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "jetzt rot",  fontcolour: "red",    affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "jetzt rot",  fontcolour: "red",    affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "jetzt rot",  fontcolour: "green",  affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "jetzt rot",  fontcolour: "blue",   affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "jetzt rot",  fontcolour: "yellow", affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "nicht rot",  fontcolour: "red",    affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "nicht rot",  fontcolour: "red",    affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "nicht rot",  fontcolour: "red",    affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "nicht rot",  fontcolour: "green",  affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "nicht rot",  fontcolour: "blue",   affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "nicht rot",  fontcolour: "yellow", affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "jetzt grün", fontcolour: "green",  affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "jetzt grün", fontcolour: "green",  affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "jetzt grün", fontcolour: "green",  affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "jetzt grün", fontcolour: "red",    affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "jetzt grün", fontcolour: "blue",   affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "jetzt grün", fontcolour: "yellow", affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "nicht grün", fontcolour: "green",  affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "nicht grün", fontcolour: "green",  affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "nicht grün", fontcolour: "green",  affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "nicht grün", fontcolour: "red",    affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "nicht grün", fontcolour: "blue",   affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "nicht grün", fontcolour: "yellow", affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "jetzt blau", fontcolour: "blue",   affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "jetzt blau", fontcolour: "blue",   affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "jetzt blau", fontcolour: "blue",   affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "jetzt blau", fontcolour: "red",    affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "jetzt blau", fontcolour: "green",  affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "jetzt blau", fontcolour: "yellow", affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "nicht blau", fontcolour: "blue",   affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "nicht blau", fontcolour: "blue",   affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "nicht blau", fontcolour: "blue",   affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "nicht blau", fontcolour: "red",    affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "nicht blau", fontcolour: "green",  affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "nicht blau", fontcolour: "yellow", affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "jetzt gelb", fontcolour: "yellow", affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "jetzt gelb", fontcolour: "yellow", affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "jetzt gelb", fontcolour: "yellow", affneg: "aff", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "jetzt gelb", fontcolour: "red",    affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "jetzt gelb", fontcolour: "green",  affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "jetzt gelb", fontcolour: "blue",   affneg: "aff", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
-        { text: "nicht gelb", fontcolour: "yellow", affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "nicht gelb", fontcolour: "yellow", affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "nicht gelb", fontcolour: "yellow", affneg: "neg", comp: 'comp',   posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["yellow"] },
-        { text: "nicht gelb", fontcolour: "red",    affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["red"] },
-        { text: "nicht gelb", fontcolour: "green",  affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["green"] },
-        { text: "nicht gelb", fontcolour: "blue",   affneg: "neg", comp: 'incomp', posx: getRandomInt(-300, 300), posy: getRandomInt(-300, 300), corrResp: respKey["blue"] },
+        { text: "jetzt rot",  fontcolour: "red",    affneg: "aff", comp: 'comp',   corrResp: respKey["red"] },
+        { text: "jetzt rot",  fontcolour: "red",    affneg: "aff", comp: 'comp',   corrResp: respKey["red"] },
+        { text: "jetzt rot",  fontcolour: "red",    affneg: "aff", comp: 'comp',   corrResp: respKey["red"] },
+        { text: "jetzt rot",  fontcolour: "green",  affneg: "aff", comp: 'incomp', corrResp: respKey["green"] },
+        { text: "jetzt rot",  fontcolour: "blue",   affneg: "aff", comp: 'incomp', corrResp: respKey["blue"] },
+        { text: "jetzt rot",  fontcolour: "yellow", affneg: "aff", comp: 'incomp', corrResp: respKey["yellow"] },
+        { text: "nicht rot",  fontcolour: "red",    affneg: "neg", comp: 'comp',   corrResp: respKey["red"] },
+        { text: "nicht rot",  fontcolour: "red",    affneg: "neg", comp: 'comp',   corrResp: respKey["red"] },
+        { text: "nicht rot",  fontcolour: "red",    affneg: "neg", comp: 'comp',   corrResp: respKey["red"] },
+        { text: "nicht rot",  fontcolour: "green",  affneg: "neg", comp: 'incomp', corrResp: respKey["green"] },
+        { text: "nicht rot",  fontcolour: "blue",   affneg: "neg", comp: 'incomp', corrResp: respKey["blue"] },
+        { text: "nicht rot",  fontcolour: "yellow", affneg: "neg", comp: 'incomp', corrResp: respKey["yellow"] },
+        { text: "jetzt grün", fontcolour: "green",  affneg: "aff", comp: 'comp',   corrResp: respKey["green"] },
+        { text: "jetzt grün", fontcolour: "green",  affneg: "aff", comp: 'comp',   corrResp: respKey["green"] },
+        { text: "jetzt grün", fontcolour: "green",  affneg: "aff", comp: 'comp',   corrResp: respKey["green"] },
+        { text: "jetzt grün", fontcolour: "red",    affneg: "aff", comp: 'incomp', corrResp: respKey["red"] },
+        { text: "jetzt grün", fontcolour: "blue",   affneg: "aff", comp: 'incomp', corrResp: respKey["blue"] },
+        { text: "jetzt grün", fontcolour: "yellow", affneg: "aff", comp: 'incomp', corrResp: respKey["yellow"] },
+        { text: "nicht grün", fontcolour: "green",  affneg: "neg", comp: 'comp',   corrResp: respKey["green"] },
+        { text: "nicht grün", fontcolour: "green",  affneg: "neg", comp: 'comp',   corrResp: respKey["green"] },
+        { text: "nicht grün", fontcolour: "green",  affneg: "neg", comp: 'comp',   corrResp: respKey["green"] },
+        { text: "nicht grün", fontcolour: "red",    affneg: "neg", comp: 'incomp', corrResp: respKey["red"] },
+        { text: "nicht grün", fontcolour: "blue",   affneg: "neg", comp: 'incomp', corrResp: respKey["blue"] },
+        { text: "nicht grün", fontcolour: "yellow", affneg: "neg", comp: 'incomp', corrResp: respKey["yellow"] },
+        { text: "jetzt blau", fontcolour: "blue",   affneg: "aff", comp: 'comp',   corrResp: respKey["blue"] },
+        { text: "jetzt blau", fontcolour: "blue",   affneg: "aff", comp: 'comp',   corrResp: respKey["blue"] },
+        { text: "jetzt blau", fontcolour: "blue",   affneg: "aff", comp: 'comp',   corrResp: respKey["blue"] },
+        { text: "jetzt blau", fontcolour: "red",    affneg: "aff", comp: 'incomp', corrResp: respKey["red"] },
+        { text: "jetzt blau", fontcolour: "green",  affneg: "aff", comp: 'incomp', corrResp: respKey["green"] },
+        { text: "jetzt blau", fontcolour: "yellow", affneg: "aff", comp: 'incomp', corrResp: respKey["yellow"] },
+        { text: "nicht blau", fontcolour: "blue",   affneg: "neg", comp: 'comp',   corrResp: respKey["blue"] },
+        { text: "nicht blau", fontcolour: "blue",   affneg: "neg", comp: 'comp',   corrResp: respKey["blue"] },
+        { text: "nicht blau", fontcolour: "blue",   affneg: "neg", comp: 'comp',   corrResp: respKey["blue"] },
+        { text: "nicht blau", fontcolour: "red",    affneg: "neg", comp: 'incomp', corrResp: respKey["red"] },
+        { text: "nicht blau", fontcolour: "green",  affneg: "neg", comp: 'incomp', corrResp: respKey["green"] },
+        { text: "nicht blau", fontcolour: "yellow", affneg: "neg", comp: 'incomp', corrResp: respKey["yellow"] },
+        { text: "jetzt gelb", fontcolour: "yellow", affneg: "aff", comp: 'comp',   corrResp: respKey["yellow"] },
+        { text: "jetzt gelb", fontcolour: "yellow", affneg: "aff", comp: 'comp',   corrResp: respKey["yellow"] },
+        { text: "jetzt gelb", fontcolour: "yellow", affneg: "aff", comp: 'comp',   corrResp: respKey["yellow"] },
+        { text: "jetzt gelb", fontcolour: "red",    affneg: "aff", comp: 'incomp', corrResp: respKey["red"] },
+        { text: "jetzt gelb", fontcolour: "green",  affneg: "aff", comp: 'incomp', corrResp: respKey["green"] },
+        { text: "jetzt gelb", fontcolour: "blue",   affneg: "aff", comp: 'incomp', corrResp: respKey["blue"] },
+        { text: "nicht gelb", fontcolour: "yellow", affneg: "neg", comp: 'comp',   corrResp: respKey["yellow"] },
+        { text: "nicht gelb", fontcolour: "yellow", affneg: "neg", comp: 'comp',   corrResp: respKey["yellow"] },
+        { text: "nicht gelb", fontcolour: "yellow", affneg: "neg", comp: 'comp',   corrResp: respKey["yellow"] },
+        { text: "nicht gelb", fontcolour: "red",    affneg: "neg", comp: 'incomp', corrResp: respKey["red"] },
+        { text: "nicht gelb", fontcolour: "green",  affneg: "neg", comp: 'incomp', corrResp: respKey["green"] },
+        { text: "nicht gelb", fontcolour: "blue",   affneg: "neg", comp: 'incomp', corrResp: respKey["blue"] },
     ],
 };
 
@@ -250,7 +250,7 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>xxx.xxx@student.uni-tuebingen.de</h2>" +
+              "<h2>carolin.dudschig@uni-tuebingen.de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
@@ -291,7 +291,7 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const data_filename = dirName + "data/" + expName + "_" + vpNum;
 const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({

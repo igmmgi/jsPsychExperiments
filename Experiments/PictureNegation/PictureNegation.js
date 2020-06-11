@@ -31,11 +31,11 @@ const prms = {
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    respKeys: [],
     fixWidth: 3,
     fixSize: 15,
     sentenceSize: "20px monospace",
     fbSize: "20px monospace"
+    respKeys: [],
 };
 
 const nVersion = getVersionNumber(nFiles, 2)
@@ -961,7 +961,7 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const data_filename = dirName + "data/" + expName + "_" + vpNum;
 const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({

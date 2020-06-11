@@ -157,7 +157,7 @@ function codeTrial() {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
-    } else if (rt === prms.tooSlow) {
+    } else if (rt >= prms.tooSlow) {
         corrCode = 3; // too slow
     } else if (rt <= prms.tooFast) {
         corrCode = 4; // too false

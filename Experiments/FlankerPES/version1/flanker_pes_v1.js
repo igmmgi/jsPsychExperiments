@@ -21,7 +21,7 @@ const canvas_border = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const expName = getFileName();
 const dirName = getDirName();
-const vpNum = genVpNum();
+const vpNum   = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -45,26 +45,23 @@ const prms = {
     respDir: []
 }
 
+jsPsych.data.addProperties({respMapping: respMapping});
+let respText;
 if (prms.respMapping === 1) {
     prms.respKeys = ["X", "M", 27];
     prms.respDir  = ["left", "right", 27];
+    respText = "<h4 style='text-align:center;'>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
+               "<h4 style='text-align:center;'>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
 } else {
     prms.respKeys = ["M", "X", 27];
     prms.respDir  = ["right", "left", 27];
+    respText = "<h4 style='text-align:center;'>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
+               "<h4 style='text-align:center;'>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
 }
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-let respText;
-if (prms.respMapping === 1) {
-    respText = "<h4 style='text-align:center;'>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
-               "<h4 style='text-align:center;'>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
-} else {
-    respText = "<h4 style='text-align:center;'>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
-               "<h4 style='text-align:center;'>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
-}
-
 const task_instructions1 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
@@ -248,7 +245,7 @@ function codeTrialPES() {
     } else if (data.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode   = 2;
         corrColour = "red"
-    } else if (rt === prms.tooSlow) {
+    } else if (rt >= prms.tooSlow) {
         corrCode   = 3;
         corrColour = "red"
     } else if (rt <= prms.tooFast) {
@@ -352,36 +349,37 @@ const alphaNum = {
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
-    function genExpSeq() {
-        "use strict";
+function genExpSeq() {
+    "use strict";
 
-        let exp = [];
+    let exp = [];
 
-        exp.push(fullscreen_on);
-        exp.push(welcome_de);
-        exp.push(resize_de);
-        exp.push(vpInfoForm_de);
-        exp.push(hideMouseCursor);
-        exp.push(screenInfo);
-        exp.push(task_instructions1);
-        exp.push(task_instructions2);
+    exp.push(fullscreen_on);
+    exp.push(welcome_de);
+    exp.push(resize_de);
+    exp.push(vpInfoForm_de);
+    exp.push(hideMouseCursor);
+    exp.push(screenInfo);
+    exp.push(task_instructions1);
+    exp.push(task_instructions2);
 
-        for (let blk = 0; blk < prms.nBlks; blk += 1) {
-            let blk_timeline = {...trial_timeline};
-            blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? 1 : 2}
-            exp.push(blk_timeline);    // trials within a block
-            exp.push(block_feedback);  // show previous block performance 
-        }
-        exp.push(debrief_de);
-        exp.push(alphaNum);
-        exp.push(showMouseCursor);
-        exp.push(fullscreen_off);
-
-        return exp;
-
+    for (let blk = 0; blk < prms.nBlks; blk += 1) {
+        let blk_timeline = {...trial_timeline};
+        blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? 1 : 2}
+        exp.push(blk_timeline);    // trials within a block
+        exp.push(block_feedback);  // show previous block performance 
     }
+    exp.push(debrief_de);
+    exp.push(alphaNum);
+    exp.push(showMouseCursor);
+    exp.push(fullscreen_off);
+
+    return exp;
+
+}
+
 const EXP = genExpSeq();
-const filename = dirName + "data/" + expName + "_" + genVpNum();
+const filename = dirName + "data/" + expName + "_" + vpNum;
 
 jsPsych.init({
     timeline: EXP,
