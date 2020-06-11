@@ -62,9 +62,9 @@ const task_instructions1 = {
     stimulus: "<h2 style='text-align:left;'>Liebe Teilnehmer/innen,</h2><br>" +
               "<h2 style='text-align:left;'>vielen Dank, dass Sie sich die Zeit zur</h2>" +
               "<h2 style='text-align:left;'>Teilnahme an unserer B.Sc. Arbeit nehmen.</h2><br>" +
-              "<h2 style='text-align:left;'>Bitte nur teilnahmen, wenn Sie mindestens 18 Jahre alt </h2>" +
+              "<h2 style='text-align:left;'>Bitte nehmen Sie nur teil, wenn Sie mindestens 18 Jahre alt </h2>" +
               "<h2 style='text-align:left;'>sind und Deutsch auf Muttersprachenniveau beherrschen. </h2><br>" + 
-              "<h2 style='text-align:left;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+              "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 const task_instructions2 = {
@@ -73,13 +73,13 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h3 style='text-align:left;'>In der Studie sieht man ein Bild gefolgt von einem Satz.</h3>" +
-    "<h3 style='text-align:left;'>Ihre Aufgabe ist es nach jedem Satz zu entscheiden, ob dieser Satz </h3>" +
-    "<h3 style='text-align:left;'>sinnvoll war (z.B. 'Sie essen heute viel Kuchen.') oder keinen </h3>" +
-    "<h3 style='text-align:left;'>Sinn macht (z.B. 'Sie humpeln einen Schlauch.').</h3><br>" +
+    "<h3 style='text-align:left;'>In der Studie sehen Sie in jedem Durchgang ein Bild gefolgt</h3>" +
+    "<h3 style='text-align:left;'>von einem Satz. Ihre Aufgabe ist es nach jedem Satz zu entscheiden,</h3>" +
+    "<h3 style='text-align:left;'>ob dieser Satz sinnvoll ist (z.B. 'Sie essen heute viel Kuchen.')</h3>" +
+    "<h3 style='text-align:left;'>oder nicht (z.B. 'Sie humpeln einen Schlauch.').</h3><br>" +
     respText +
-    "<h3 style='text-align:center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
-    "<h2 style='text-align:center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>"
+    "<h3 style='text-align:center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h3><br>" +
+    "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
 };
 
 const task_reminder = {
@@ -404,7 +404,7 @@ const materials_nein_aff = [
     { sentNum: 230, sentence: "Sie beenden eine Ziege.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 231, sentence: "Sie kaschieren eine Torte.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 232, sentence: "Sie vegetieren einen Lauf.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 233, sentence: "Sie schrauben kein Kissen.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 233, sentence: "Sie schrauben ein Kissen.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 234, sentence: "Sie flöten eine Pfanne.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 235, sentence: "Sie fauchen heute den Ast.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 236, sentence: "Sie massieren ein Wohnmobil.",                    sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
@@ -442,7 +442,7 @@ const materials_ja_neg = [
     { sentNum:  25, sentence: "Sie schreiben keinen Aufsatz.",                   sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  26, sentence: "Sie gehen nicht in die Kirche.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  27, sentence: "Sie essen keine Pizza.",                          sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum:  28, sentence: "Sie pflücken keine Erdbeeren.",                   sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum:  28, sentence: "Sie pflücken keine Erdbeere.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  29, sentence: "Sie biegen keinen Draht.",                        sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  30, sentence: "Sie fahren nicht nach Paris.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  31, sentence: "Sie bitten nicht um Hilfe.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -528,7 +528,7 @@ const materials_ja_neg = [
     { sentNum: 111, sentence: "Sie suchen nach keinem Schlüssel.",               sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 112, sentence: "Sie ändern nicht ihr Aussehen.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 113, sentence: "Sie überzeugen nicht den Mann.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum: 114, sentence: "Sie dichten kein Reim.",                          sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum: 114, sentence: "Sie dichten keinen Reim.",                        sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 115, sentence: "Sie knabbern an keiner Karotte.",                 sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 116, sentence: "Sie übernachten nicht bei dem Vater.",            sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 117, sentence: "Sie brechen keine Regel.",                        sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -650,7 +650,7 @@ const materials_nein_neg = [
     { sentNum: 230, sentence: "Sie beenden keine Ziege.",                        sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 231, sentence: "Sie kaschieren keine Torte.",                     sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 232, sentence: "Sie vegetieren keinen Lauf.",                     sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
-    { sentNum: 233, sentence: "Sie schrauben keinen Kissen.",                    sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
+    { sentNum: 233, sentence: "Sie schrauben kein Kissen.",                      sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 234, sentence: "Sie flöten keine Pfanne.",                        sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 235, sentence: "Sie fauchen nicht den Ast.",                      sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 236, sentence: "Sie massieren kein Wohnmobil.",                   sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
@@ -911,12 +911,16 @@ const alphaNum = {
     canvas_border: canvas_border,
     response_ends_trial: true,
     choices: [32],
-    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde (0,5) benötigst, </h3>" +
-              "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
-              "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>sarah.ritter@student.uni-tuebingen.de oder rebekka.hemmrich@student.uni-tuebingen.de </h2>" +
+    stimulus: "<h3 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h3>" +
+              "<h3 style='text-align:left;'>In unserer Studie untersuchen wir den Einfluss von Bildern auf </h3>" +
+              "<h3 style='text-align:left;'>die Verarbeitung von negierten Sätzen. Wenn Sie </h3>" +
+              "<h3 style='text-align:left;'>Versuchspersonenstunden (0,5) benötigen, kopieren Sie den folgenden </h3>" +
+              "<h3 style='text-align:left;'>zufällig generierten Code und senden Sie diesen zusammen mit Ihre </h3>" +
+              "<h3 style='text-align:left;'>Matrikelnummer per Email an:</h3><br>" +
+              "<h2>sarah.ritter@student.uni-tuebingen.de oder </h2>" +
+              "<h2>rebekka.hemmrich@student.uni-tuebingen.de </h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
-              "<h2 style='text-align:left;'>Drücke die Leertaste, um fortzufahren!</h2>",  
+              "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
 };
 
 ////////////////////////////////////////////////////////////////////////
