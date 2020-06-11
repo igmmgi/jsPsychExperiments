@@ -267,9 +267,6 @@ const trial_timeline = {
         { stimulus: "#####", f1Col: "green", t1Col: cc,      f2Col: cc,      t2Col: "blue",  comp: "incomp", order: "IR", corrResp: prms.respKeys[1] },
         { stimulus: "#####", f1Col: "blue",  t1Col: cc,      f2Col: cc,      t2Col: "green", comp: "incomp", order: "IR", corrResp: prms.respKeys[0] },
     ],
-    sample:{
-        type: "fixed-repetitions"
-    }
 };
 
 const randomString = generateRandomString(16);

@@ -372,10 +372,10 @@ function genExpSeq() {
     return exp;
 
 }
-
 const EXP = genExpSeq();
-const filename = dirName + "data/" + expName + "_" + vpNum;
 
+const data_filename = dirName + "data/" + expName + "_" + vpNum;
+const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -386,7 +386,7 @@ jsPsych.init({
         min_height:canvas_size[1],
    },
     on_finish: function(){ 
-        saveData("/Common/write_data.php", filename, {stim: "flanker"});
+        saveData("/Common/write_data.php", data_filename, {stim: "flanker"});
         saveRandomCode("/Common/write_code.php", code_filename, randomString);
     }
 });

@@ -36,13 +36,13 @@ const prms = {
     fbSize: "30px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
-    respKeysNumber: [],
-    respKeysLetter: [],
     fixWidth: 3,
     fixSize: 15,
     stimPosX: 200,
     stimPosY:   0,
     stimSize: "50px monospace"
+    respKeysNumber: [],
+    respKeysLetter: [],
 };
 
 const nVersion = getVersionNumber(nFiles, 4);
@@ -169,7 +169,7 @@ function codeTrial() {
         corrCode = 1;  // correct
     } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 2;  // choice error
-    } else if (rt === prms.tooSlow) {
+    } else if (rt >= prms.tooSlow) {
         corrCode = 3; // too slow
     } else if (rt <= prms.tooFast) {
         corrCode = 4; // too false
@@ -314,12 +314,10 @@ const alphaNum = {
     stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>jul (dot) wiess (at) student (dot) uni-tuebingen (dot) de</h2>" +
+              "<h2>jul.weiss@student.uni-tuebingen.de</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
-
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -332,7 +330,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    //exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
@@ -357,7 +355,7 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + "data/" + expName + "_" + genVpNum();
+const data_filename = dirName + "data/" + expName + "_" + vpNum;
 const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
