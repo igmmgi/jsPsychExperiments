@@ -62,6 +62,8 @@ const task_instructions1 = {
     stimulus: "<h2 style='text-align:left;'>Liebe Teilnehmer/innen,</h2><br>" +
               "<h2 style='text-align:left;'>vielen Dank, dass Sie sich die Zeit zur</h2>" +
               "<h2 style='text-align:left;'>Teilnahme an unserer B.Sc. Arbeit nehmen.</h2><br>" +
+              "<h2 style='text-align:left;'>Bitte nur teilnahmen, wenn Sie mindestens 18 Jahre alt </h2>" +
+              "<h2 style='text-align:left;'>sind und Deutsch auf Muttersprachenniveau beherrschen. </h2><br>" + 
               "<h2 style='text-align:left;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -86,7 +88,7 @@ const task_reminder = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: 
-    "<h3 style='text-align:center;'>Erinnerung: :</h3>" +
+    "<h3 style='text-align:center;'>Erinnerung:</h3>" +
     respText
 }
 
@@ -184,17 +186,17 @@ const materials_ja_aff = [
     { sentNum:  15, sentence: "Sie basteln einen Flieger.",                      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  16, sentence: "Sie machen eine Pause.",                          sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  17, sentence: "Sie bearbeiten eine Aufgabe.",                    sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  18, sentence: "Sie finden ein Rätsel.",                          sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  18, sentence: "Sie lösen ein Rätsel.",                           sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  19, sentence: "Sie skizzieren ein Tier.",                        sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  20, sentence: "Sie zeichnen ein Bild.",                          sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  21, sentence: "Sie hüpfen jetzt über den Stein.",                sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  22, sentence: "Sie feiern heute das Jubiläum.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  23, sentence: "Sie bauen ein Haus.",                             sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  23, sentence: "Sie packen einen Koffer.",                        sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  24, sentence: "Sie putzen heute das Bad.",                       sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  25, sentence: "Sie schreiben einen Aufsatz.",                    sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  26, sentence: "Sie gehen heute in die Kirche.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  27, sentence: "Sie essen eine Pizza.",                           sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  28, sentence: "Sie pflücken eine Erdbeeren.",                    sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  28, sentence: "Sie pflücken eine Erdbeere.",                     sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  29, sentence: "Sie biegen einen Draht.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  30, sentence: "Sie fahren heute nach Paris.",                    sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  31, sentence: "Sie bitten jetzt um Hilfe.",                      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -214,7 +216,7 @@ const materials_ja_aff = [
     { sentNum:  45, sentence: "Sie unternehmen eine Wanderung.",                 sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  46, sentence: "Sie schneiden eine Zwiebel.",                     sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  47, sentence: "Sie reiten jetzt über den Strand.",               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  48, sentence: "Sie pflücken einen Apfel.",                       sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  48, sentence: "Sie vergraben einen Schatz.",                     sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  49, sentence: "Sie brauchen eine Dusche.",                       sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  50, sentence: "Sie vergessen einen Termin.",                     sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  51, sentence: "Sie träumen heute vom Sommer.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -227,7 +229,7 @@ const materials_ja_aff = [
     { sentNum:  58, sentence: "Sie leiden an einer Krankheit.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  59, sentence: "Sie klauen jetzt das Geld.",                      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  60, sentence: "Sie vermieten eine Wohnung.",                     sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  61, sentence: "Sie treffen heute ihre Familie.",                 sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  61, sentence: "Sie verabreden sich heute mit der Familie.",      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  62, sentence: "Sie gehen heute zur Verwandtschaft.",             sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  63, sentence: "Sie benutzen eine Fernbedienung.",                sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  64, sentence: "Sie entwerfen eine Strategie.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -242,7 +244,7 @@ const materials_ja_aff = [
     { sentNum:  73, sentence: "Sie trinken einen Kaffee.",                       sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  74, sentence: "Sie essen heute die Lasagne.",                    sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  75, sentence: "Sie fliegen ein Flugzeug.",                       sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  76, sentence: "Sie riechen jetzt an der Blume.",                 sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  76, sentence: "Sie probieren heute die Frucht.",                 sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  77, sentence: "Sie halten eine Rede.",                           sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  78, sentence: "Sie stehen heute in der Schlange.",               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  79, sentence: "Sie knuddeln jetzt den Hund.",                    sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -259,13 +261,13 @@ const materials_ja_aff = [
     { sentNum:  90, sentence: "Sie überreden heute den Chef.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  91, sentence: "Sie fliegen heute in die USA.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  92, sentence: "Sie bestellen ein Sofa.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  93, sentence: "Sie schälen eine Kartoffeln.",                    sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  93, sentence: "Sie schälen eine Kartoffel.",                     sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  94, sentence: "Sie hämmern heute gegen die Wand.",               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  95, sentence: "Sie ziehen einen Zahn.",                          sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  96, sentence: "Sie klopfen heute gegen das Tor.",                sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  97, sentence: "Sie zählen heute die Schafe.",                    sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum:  98, sentence: "Sie baden immer in der Badewanne.",               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum:  99, sentence: "Sie pflücken jetzt die Blumen.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum:  99, sentence: "Sie bewundern nun das Gemälde.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 100, sentence: "Sie zimmern eine Kommode.",                       sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 101, sentence: "Sie streicheln eine Katze.",                      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 102, sentence: "Sie sprinten jetzt zur Halle.",                   sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -279,11 +281,11 @@ const materials_ja_aff = [
     { sentNum: 110, sentence: "Sie speisen heute im Restaurant.",                sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 111, sentence: "Sie suchen nach einem Schlüssel.",                sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 112, sentence: "Sie ändern heute ihr Aussehen.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum: 113, sentence: "Sie treffen einen Star.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum: 114, sentence: "Sie lesen ein Bücher.",                           sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum: 113, sentence: "Sie überzeugen heute den Mann.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum: 114, sentence: "Sie dichten einen Reim.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 115, sentence: "Sie knabbern an einer Karotte.",                  sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 116, sentence: "Sie übernachten heute bei dem Vater.",            sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
-    { sentNum: 117, sentence: "Sie treffen heute ihre Schwester.",               sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
+    { sentNum: 117, sentence: "Sie brechen eine Regel.",                         sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 118, sentence: "Sie recherchieren jetzt nach Sängern.",           sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 119, sentence: "Sie wollen ein Auto.",                            sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
     { sentNum: 120, sentence: "Sie füttern ein Kaninchen.",                      sinn: "ja",   pol: "aff", corrResp: prms.respKeys[0] },
@@ -311,7 +313,7 @@ const materials_nein_aff = [
     { sentNum: 139, sentence: "Sie schweigen eine Kanone.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 140, sentence: "Sie schwimmen einen Docht.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 141, sentence: "Sie schwingen ein Loch.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 142, sentence: "Sie schwören ein Gericht.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 142, sentence: "Sie schwören einen Gärtner.",                     sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 143, sentence: "Sie spinnen einen Hocker.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 144, sentence: "Sie sterben jetzt den Henkel.",                   sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 145, sentence: "Sie stehlen ein Erdbeben.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
@@ -402,7 +404,7 @@ const materials_nein_aff = [
     { sentNum: 230, sentence: "Sie beenden eine Ziege.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 231, sentence: "Sie kaschieren eine Torte.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 232, sentence: "Sie vegetieren einen Lauf.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
-    { sentNum: 233, sentence: "Sie schrauben ein Kissen.",                       sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
+    { sentNum: 233, sentence: "Sie schrauben kein Kissen.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 234, sentence: "Sie flöten eine Pfanne.",                         sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 235, sentence: "Sie fauchen heute den Ast.",                      sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
     { sentNum: 236, sentence: "Sie massieren ein Wohnmobil.",                    sinn: "nein", pol: "aff", corrResp: prms.respKeys[1] },
@@ -430,12 +432,12 @@ const materials_ja_neg = [
     { sentNum:  15, sentence: "Sie basteln keinen Flieger.",                     sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  16, sentence: "Sie machen keine Pause.",                         sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  17, sentence: "Sie bearbeiten keine Aufgabe.",                   sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum:  18, sentence: "Sie finden kein Rätsel.",                         sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum:  18, sentence: "Sie lösen kein Rätsel.",                          sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  19, sentence: "Sie skizzieren kein Tier.",                       sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  20, sentence: "Sie zeichnen kein Bild.",                         sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  21, sentence: "Sie hüpfen nicht über den Stein.",                sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  22, sentence: "Sie feiern heute nicht das Jubiläum.",            sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum:  23, sentence: "Sie bauen kein Haus.",                            sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum:  23, sentence: "Sie packen keinen Koffer.",                       sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  24, sentence: "Sie putzen nicht das Bad.",                       sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  25, sentence: "Sie schreiben keinen Aufsatz.",                   sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  26, sentence: "Sie gehen nicht in die Kirche.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -460,7 +462,7 @@ const materials_ja_neg = [
     { sentNum:  45, sentence: "Sie unternehmen keine Wanderung.",                sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  46, sentence: "Sie schneiden keine Zwiebel.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  47, sentence: "Sie reiten nicht über den Strand.",               sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum:  48, sentence: "Sie pflücken keinen Apfel.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum:  48, sentence: "Sie vergraben keinen Schatz.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  49, sentence: "Sie brauchen keine Dusche.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  50, sentence: "Sie vergessen keinen Termin.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  51, sentence: "Sie träumen nicht vom Sommer.",                   sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -473,7 +475,7 @@ const materials_ja_neg = [
     { sentNum:  58, sentence: "Sie leiden an keiner Krankheit.",                 sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  59, sentence: "Sie klauen nicht das Geld.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  60, sentence: "Sie vermieten keine Wohnung.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum:  61, sentence: "Sie treffen nicht ihre Familie.",                 sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum:  61, sentence: "Sie verabreden sich nicht mit der Familie.",      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  62, sentence: "Sie gehen nicht zur Verwandtschaft.",             sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  63, sentence: "Sie benutzen keine Fernbedienung.",               sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  64, sentence: "Sie entwerfen keine Strategie.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -488,7 +490,7 @@ const materials_ja_neg = [
     { sentNum:  73, sentence: "Sie trinken keinen Kaffee.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  74, sentence: "Sie essen nicht die Lasagne.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  75, sentence: "Sie fliegen kein Flugzeug.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum:  76, sentence: "Sie riechen nicht an der Blume.",                 sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum:  76, sentence: "Sie probieren nicht die Frucht.",                 sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  77, sentence: "Sie halten keine Rede.",                          sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  78, sentence: "Sie stehen nicht in der Schlange.",               sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  79, sentence: "Sie knuddeln nicht den Hund.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -511,7 +513,7 @@ const materials_ja_neg = [
     { sentNum:  96, sentence: "Sie klopfen nicht gegen das Tor.",                sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  97, sentence: "Sie zählen nicht die Schafe.",                    sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum:  98, sentence: "Sie baden nicht in der Badewanne.",               sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum:  99, sentence: "Sie pflücken nicht die Blumen.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum:  99, sentence: "Sie bewundern nicht das Gemälde.",                sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 100, sentence: "Sie zimmern keine Kommode.",                      sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 101, sentence: "Sie streicheln keine Katze.",                     sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 102, sentence: "Sie sprinten nicht zur Halle.",                   sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -525,11 +527,11 @@ const materials_ja_neg = [
     { sentNum: 110, sentence: "Sie speisen nicht im Restaurant.",                sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 111, sentence: "Sie suchen nach keinem Schlüssel.",               sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 112, sentence: "Sie ändern nicht ihr Aussehen.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum: 113, sentence: "Sie treffen keinen Star.",                        sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum: 114, sentence: "Sie lesen kein Buch.",                            sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum: 113, sentence: "Sie überzeugen nicht den Mann.",                  sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum: 114, sentence: "Sie dichten kein Reim.",                          sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 115, sentence: "Sie knabbern an keiner Karotte.",                 sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 116, sentence: "Sie übernachten nicht bei dem Vater.",            sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
-    { sentNum: 117, sentence: "Sie treffen nicht ihre Schwester.",               sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
+    { sentNum: 117, sentence: "Sie brechen keine Regel.",                        sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 118, sentence: "Sie recherchieren nicht nach Sängern.",           sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 119, sentence: "Sie wollen kein Auto.",                           sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
     { sentNum: 120, sentence: "Sie füttern kein Kaninchen.",                     sinn: "ja",   pol: "neg", corrResp: prms.respKeys[0] },
@@ -557,7 +559,7 @@ const materials_nein_neg = [
     { sentNum: 139, sentence: "Sie schweigen keine Kanone.",                     sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 140, sentence: "Sie schwimmen keinen Docht.",                     sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 141, sentence: "Sie schwingen kein Loch.",                        sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
-    { sentNum: 142, sentence: "Sie schwören kein Gericht.",                      sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
+    { sentNum: 142, sentence: "Sie schwören keinen Gärtner.",                    sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 143, sentence: "Sie spinnen keinen Hocker.",                      sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 144, sentence: "Sie sterben nicht den Henkel.",                   sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
     { sentNum: 145, sentence: "Sie stehlen kein Erdbeben.",                      sinn: "nein", pol: "neg", corrResp: prms.respKeys[1] },
@@ -909,14 +911,13 @@ const alphaNum = {
     canvas_border: canvas_border,
     response_ends_trial: true,
     choices: [32],
-    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
+    stimulus: "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde (0,5) benötigst, </h3>" +
               "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
               "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-              "<h2>sarah.ritter@student.uni-tuebingen.de</h2>" +
+              "<h2>sarah.ritter@student.uni-tuebingen.de oder rebekka.hemmrich@student.uni-tuebingen.de </h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 style='text-align:left;'>Drücke die Leertaste, um fortzufahren!</h2>",  
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
