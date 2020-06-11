@@ -915,7 +915,7 @@ const alphaNum = {
               "<h3 style='text-align:left;'>In unserer Studie untersuchen wir den Einfluss von Bildern auf </h3>" +
               "<h3 style='text-align:left;'>die Verarbeitung von negierten Sätzen. Wenn Sie </h3>" +
               "<h3 style='text-align:left;'>Versuchspersonenstunden (0,5) benötigen, kopieren Sie den folgenden </h3>" +
-              "<h3 style='text-align:left;'>zufällig generierten Code und senden Sie diesen zusammen mit Ihre </h3>" +
+              "<h3 style='text-align:left;'>zufällig generierten Code und senden Sie diesen zusammen mit Ihrer </h3>" +
               "<h3 style='text-align:left;'>Matrikelnummer per Email an:</h3><br>" +
               "<h2>sarah.ritter@student.uni-tuebingen.de oder </h2>" +
               "<h2>rebekka.hemmrich@student.uni-tuebingen.de </h2>" +
