@@ -34,7 +34,7 @@ const prms = {
     fixWidth: 3,
     fixSize: 15,
     sentenceSize: "20px monospace",
-    fbSize: "20px monospace"
+    fbSize: "20px monospace",
     respKeys: [],
 };
 
