@@ -40,7 +40,7 @@ const prms = {
     fixWidth: 2,
     fixSize: 10,
     flankSize: "30px monospace",
-    fbSize: "20px monospace"
+    fbSize: "20px monospace",
     respKeys: [],
 };
 
