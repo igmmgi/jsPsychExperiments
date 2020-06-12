@@ -221,7 +221,7 @@ function codeTrialPES() {
     let corrCodeFB = 0;
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.corrResp);
 
-    let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
+    let rt = (data.rt !== null) ? data.rt : prms.tooSlow 
 
     // need to check that we don't give different feedback for direct 
     // stimulus + response repetitions
