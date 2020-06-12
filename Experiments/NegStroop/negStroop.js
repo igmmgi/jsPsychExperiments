@@ -282,9 +282,9 @@ function genExpSeq() {
         exp.push(iti);
     }
     exp.push(debrief_de);
+    exp.push(showMouseCursor);
     exp.push(alphaNum);
     exp.push(fullscreen_off);
-    exp.push(showMouseCursor);
     
     return exp;
 

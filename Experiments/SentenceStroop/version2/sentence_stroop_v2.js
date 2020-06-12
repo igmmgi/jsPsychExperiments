@@ -745,8 +745,8 @@ function genExpSeq() {
 
     // end phase
     exp.push(debrief_en);
-    exp.push(alphaNum);
     exp.push(showMouseCursor);
+    exp.push(alphaNum);
     exp.push(fullscreen_off);
     
     return exp;

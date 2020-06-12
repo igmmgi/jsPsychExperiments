@@ -952,9 +952,9 @@ function genExpSeq() {
     exp.push(trial_timeline4);
     
     exp.push(debrief_de);
+    exp.push(showMouseCursor);
     exp.push(alphaNum);
     exp.push(fullscreen_off);
-    exp.push(showMouseCursor);
 
     return exp;
 

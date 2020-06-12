@@ -365,8 +365,8 @@ function genExpSeq() {
         exp.push(block_feedback);  // show previous block performance 
     }
     exp.push(debrief_de);
-    exp.push(alphaNum);
     exp.push(showMouseCursor);
+    exp.push(alphaNum);
     exp.push(fullscreen_off);
     
     return exp;
