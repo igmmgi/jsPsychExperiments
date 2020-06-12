@@ -51,7 +51,7 @@
 //////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
 const canvas_size   = [1280, 960];
-const canvas_border = "5px solid black";
+const canvas_border = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
@@ -65,8 +65,8 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    fixSize: 15,
-    fixWidth: 3,
+    fixSize: 10,
+    fixWidth: 2,
     fixDur: 500,
     fbDur: 750,
     iti: 1000,
@@ -76,11 +76,10 @@ const prms = {
     respKeysStroop: shuffle(["G", "H", "J"]),
     respKeysQuestion: ["T", "F"],
     fbTxt: ["Correct", "Error"],  
-    font_sentence: "22px monospace",
-    line_height: 40,
+    font_sentence: "26px monospace",
     sentence_width: 1200,
-    font_question: "22 monospace",
-    font_stroop: "22px monospace",
+    font_question: "26px monospace",
+    font_stroop: "30px monospace",
     cTrl: 1,  // count trials
 };
 
@@ -126,7 +125,6 @@ task_instructions3 = {
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
-
 task_instructions4 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
@@ -138,7 +136,6 @@ task_instructions4 = {
               "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
-
 
 task_instructions5 = {
     type: "html-keyboard-response-canvas",
@@ -155,7 +152,6 @@ task_instructions5 = {
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
-
 task_instructions6 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
@@ -170,7 +166,6 @@ task_instructions6 = {
               "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -476,9 +471,8 @@ const moving_window_text = {
     sentence: jsPsych.timelineVariable('sentence'),
     word_number: jsPsych.timelineVariable('word_num'),
     font: prms.font_sentence,
-    text_align: "center",
+    text_align: "left",
     max_width: prms.sentence_width,
-    line_height: prms.line_height,
     choices: prms["respKeysSentence"],
     data: {
         stim: "SentenceStroop",

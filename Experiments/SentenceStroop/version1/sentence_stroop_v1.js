@@ -51,7 +51,7 @@
 //////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
 const canvas_size   = [1280, 960];
-const canvas_border = "5px solid black";
+const canvas_border = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
@@ -76,11 +76,10 @@ const prms = {
     respKeysStroop: shuffle(["G", "H", "J"]),
     respKeysQuestion: ["T", "F"],
     fbTxt: ["Correct", "Error"],  
-    font_sentence: "22px monospace",
-    line_height: 40,
+    font_sentence: "26px monospace",
     sentence_width: 1200,
-    font_question: "22px monospace",
-    font_stroop: "22px monospace",
+    font_question: "26px monospace",
+    font_stroop: "26px monospace",
     cTrl: 1,  // count trials
 };
 
@@ -126,7 +125,6 @@ task_instructions3 = {
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
-
 task_instructions4 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
@@ -138,7 +136,6 @@ task_instructions4 = {
               "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
-
 
 task_instructions5 = {
     type: "html-keyboard-response-canvas",
@@ -155,7 +152,6 @@ task_instructions5 = {
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
-
 task_instructions6 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
@@ -170,7 +166,6 @@ task_instructions6 = {
               "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -481,9 +476,8 @@ const moving_window_text = {
     sentence: jsPsych.timelineVariable('sentence'),
     word_number: jsPsych.timelineVariable('word_num'),
     font: prms.font_sentence,
-    text_align: "center",
+    text_align: "left",
     max_width: prms.sentence_width,
-    line_height: prms.line_height,
     choices: prms["respKeysSentence"],
     data: {
         stim: "SentenceStroop",
@@ -728,21 +722,21 @@ function genExpSeq() {
     // exp.push(vpInfoForm_en);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
-    exp.push(task_instructions1);
+    //exp.push(task_instructions1);
 
-    // 1st phase (practice stroop + baseline stroop)
-    exp.push(task_instructions2);
-    exp.push(prac_trials_stroop_timeline)
-    exp.push(task_instructions3);
-    exp.push(base_trials_stroop_timeline)
+    // // 1st phase (practice stroop + baseline stroop)
+    // exp.push(task_instructions2);
+    // exp.push(prac_trials_stroop_timeline)
+    // exp.push(task_instructions3);
+    // exp.push(base_trials_stroop_timeline)
 
-    // 2nd phase (1 trial moving window)
-    exp.push(task_instructions4);
-    exp.push(prac_trial_sentence_timeline)
+    // // 2nd phase (1 trial moving window)
+    // exp.push(task_instructions4);
+    // exp.push(prac_trial_sentence_timeline)
 
-    // 3rd phase (combined stroop and sentence practice)
-    exp.push(task_instructions5);
-    exp.push(prac_trial_combined_timeline)
+    // // 3rd phase (combined stroop and sentence practice)
+    // exp.push(task_instructions5);
+    // exp.push(prac_trial_combined_timeline)
 
     // 4th phase (Experiment)
     exp.push(task_instructions6);

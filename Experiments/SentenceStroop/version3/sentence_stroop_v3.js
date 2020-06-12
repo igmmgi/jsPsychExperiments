@@ -34,8 +34,8 @@
 ////                         Canvas Properties                          //
 //////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size   = [960, 720];
-const canvas_border = "5px solid black";
+const canvas_size   = [1280, 960];
+const canvas_border = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
@@ -581,7 +581,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_en);
     exp.push(resize_en);
-    exp.push(vpInfoForm_en);
+    // exp.push(vpInfoForm_en);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
