@@ -50,7 +50,7 @@
 ////                         Canvas Properties                          //
 //////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size   = [1280, 960];
+const canvas_size   = [1280, 720];
 const canvas_border = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -76,10 +76,10 @@ const prms = {
     respKeysStroop: shuffle(["G", "H", "J"]),
     respKeysQuestion: ["T", "F"],
     fbTxt: ["Correct", "Error"],  
-    font_sentence: "26px monospace",
-    sentence_width: 1200,
-    font_question: "26px monospace",
-    font_stroop: "26px monospace",
+    font_sentence: "24px monospace",
+    sentence_width: 1250,
+    font_question: "24px monospace",
+    font_stroop: "28px monospace",
     cTrl: 1,  // count trials
 };
 
@@ -719,24 +719,24 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_en);
     exp.push(resize_en);
-    // exp.push(vpInfoForm_en);
+    exp.push(vpInfoForm_en);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
-    //exp.push(task_instructions1);
+    exp.push(task_instructions1);
 
-    // // 1st phase (practice stroop + baseline stroop)
-    // exp.push(task_instructions2);
-    // exp.push(prac_trials_stroop_timeline)
-    // exp.push(task_instructions3);
-    // exp.push(base_trials_stroop_timeline)
+    // 1st phase (practice stroop + baseline stroop)
+    exp.push(task_instructions2);
+    exp.push(prac_trials_stroop_timeline)
+    exp.push(task_instructions3);
+    exp.push(base_trials_stroop_timeline)
 
-    // // 2nd phase (1 trial moving window)
-    // exp.push(task_instructions4);
-    // exp.push(prac_trial_sentence_timeline)
+    // 2nd phase (1 trial moving window)
+    exp.push(task_instructions4);
+    exp.push(prac_trial_sentence_timeline)
 
-    // // 3rd phase (combined stroop and sentence practice)
-    // exp.push(task_instructions5);
-    // exp.push(prac_trial_combined_timeline)
+    // 3rd phase (combined stroop and sentence practice)
+    exp.push(task_instructions5);
+    exp.push(prac_trial_combined_timeline)
 
     // 4th phase (Experiment)
     exp.push(task_instructions6);

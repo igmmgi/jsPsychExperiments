@@ -34,7 +34,7 @@
 ////                         Canvas Properties                          //
 //////////////////////////////////////////////////////////////////////////
 const canvas_colour = "rgba(200, 200, 200, 1)";
-const canvas_size   = [1280, 960];
+const canvas_size   = [1280, 720];
 const canvas_border = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ const prms = {
     respKeysStroop: shuffle(["J", "K", "L"]),
     respKeys: ["A", "S", "J", "K", "L"],
     fbTxt: ["Correct", "Error"],  
-    font_stimulus: "30px monospace",
+    font_stimulus: "28px monospace",
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
 };
@@ -581,7 +581,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_en);
     exp.push(resize_en);
-    // exp.push(vpInfoForm_en);
+    exp.push(vpInfoForm_en);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
