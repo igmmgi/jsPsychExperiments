@@ -336,6 +336,8 @@ const alphaNum = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
+    response_ends_trial: true,
+    choices: [32],
     stimulus: "<h2 style='text-align:left;'>Wenn Sie für diesen Versuch eine Versuchspersonenstunde</h2>" +
               "<h2 style='text-align:left;'>benötigen, kopieren Sie den folgenden zufällig generierten</h2>" +
               "<h2 style='text-align:left;'>Code und senden Sie diesen</h2>" +
@@ -343,7 +345,7 @@ const alphaNum = {
               "<h2 style='text-align:left;'>per Email an:</h2></br>" +
               "<h2>kath.lang@student.uni-tuebingen.de</h2>" +
               "<h2>Code: " + randomString + "</h2></br></br>" +
-              "<h3>Drücken Sie eine beliebige Taste, um fortzufahren!</h3>"
+              "<h3 align='left'>Drücke die Leertaste, um fortzufahren!</h3>",  
 };
 
 ////////////////////////////////////////////////////////////////////////
