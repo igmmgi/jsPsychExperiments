@@ -621,24 +621,45 @@ function drawQuestion(args) {
     ctx.fillText("YES/TRUE (T)      NO/FALSE (F)", 0, 50); 
 }
 
-// brute force shuffle and check seems quick enough?
-function constrained_shuffle(items) {
-    let constraints_met = false;
-    while (constraints_met === false) {
-        items = shuffle(items)
-        constraints_met = true;
-        for (let i in items) {
-            if (i > 0) {
-                if (items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] === "exp") {
-                    if (items[i-1]["timeline_variables"][0]["type"] === "exp" | items[i-1]["timeline_variables"][0]["type"] === "filler") {
-                        constraints_met = false;
-                        break
-                    }
-                }
+function constrained_shuffle(exp_items_sentences, exp_items_stroop, exp_items_filler) {
+
+    let items = shuffle(exp_items_stroop.concat(exp_items_filler))
+
+    // find positions of stroop and filler items
+    let stroop_positions = []
+    for (let i in items) {
+        if(items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] === "stroop") {
+            stroop_positions.push(parseInt(i))
+        } 
+    }
+
+    // determine valid positions for exp sentence trial
+    let valid_positions = []
+    for (let i in stroop_positions) {
+        if (i > 0) {
+            if ((stroop_positions[i] === stroop_positions[i-1] + 1) & !valid_positions.includes(i-1)) {
+                valid_positions.push(stroop_positions[i])
             }
         }
-        return(items)
     }
+    valid_positions = shuffle(valid_positions).splice(0, exp_items_sentences.length).sort((a, b) => a - b);
+    
+    // add exp sentence items into valid locations
+    for (let i = valid_positions.length-1; i >= 0; i--) {
+        items.splice(valid_positions[i], 0, exp_items_sentences[i])
+    }
+    
+    for (let i in items) {
+        if (items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] === "exp") {
+            if (items[i-1]["timeline_variables"][0]["type"] === "exp") {
+                console.log("Problem: exp item repeats!")
+            }
+        }
+    }
+
+    console.log(items)
+    return(items)
+
 }
 
 // only some of the filler items have questions
@@ -698,7 +719,7 @@ const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === listNu
 const exp_items_sentences = create_sentence_items(exp_sentences_filtered)
 const exp_items_stroop    = create_stroop_items(10)
 const exp_items_fillers   = create_sentence_items(filler_sentences)
-const exp_items_all       = add_fix_iti(constrained_shuffle(exp_items_sentences.concat(exp_items_stroop, exp_items_fillers)))
+const exp_items_all       = add_fix_iti(constrained_shuffle(exp_items_sentences, exp_items_stroop, exp_items_fillers))
 const exp_items           = add_filler_questions(exp_items_all)
 
 const exp_timeline = { timeline: exp_items, data: {phase: "exp"} }
