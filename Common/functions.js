@@ -262,14 +262,20 @@ function loadImages(imagefiles) {
     loadcount = 0;
     loadtotal = imagefiles.length;
     preloaded = false;
- 
+
+    console.log(loadtotal)
+
+
+
     // Load the images
     let loadedimages = [];
     for (let i = 0; i < imagefiles.length; i++) {
         var image = new Image();
         image.onload = function () {
             loadcount++;
+            console.log(loadcount)
             if (loadcount == loadtotal) {
+                console.log("preloaded")
                 preloaded = true;
             }
         };
