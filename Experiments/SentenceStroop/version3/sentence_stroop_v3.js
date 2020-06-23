@@ -396,7 +396,7 @@ function codeTrial() {
     let dat = jsPsych.data.get().last(1).values()[0];
     let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
     let corrCode = dat.key_press === corrKeyNum ? 1 : 2;
-    jsPsych.data.addDataToLastTrial({date: Date(), corrCode: corrCode, trialNum: prms.cTrl});
+    jsPsych.data.addDataToLastTrial({date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl});
     prms.cTrl += 1;
     if (dat.key_press === 27) {
         jsPsych.endExperiment();
