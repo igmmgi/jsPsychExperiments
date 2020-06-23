@@ -692,8 +692,8 @@ function combinePictures(materials) {
     }
     imageNumber = shuffle(imageNumber)
     for (let i = 0; i < materials.length; i++) {
-        materials[i].imageNumber = imageNumber[i+1]
-        materials[i].imageName = imageFiles[imageNumber[i]].slice(7, -4)
+        materials[i].imageNumber = imageNumber[i] + 1;
+        materials[i].imageName = imageFiles[imageNumber[i]].slice(7, -4);
     }
     return materials;
 }
