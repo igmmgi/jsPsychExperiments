@@ -49,7 +49,7 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nBlks: 4,
+    nBlks: 6,
     fixSize: 10,
     fixWidth: 2,
     fixDur: 500,
@@ -87,7 +87,34 @@ task_instructions2 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align:center;'>Part 1: Practice Block</H1><br>" +
+    stimulus: "<H1 style='text-align:center;'>Part 1: Practice Color Task</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the color of the font with your dominant hand.</H2>" +
+              "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
+              "<H2 style='text-align:center;'>'J' key = " + cols[prms.respKeysStroop.indexOf("J")] + "&emsp; 'K' key = " + cols[prms.respKeysStroop.indexOf("K")] + "&emsp; 'L' key = " + cols[prms.respKeysStroop.indexOf("L")] + "</H2><br>" +
+              "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2><br>" +
+              "<h2 style='text-align:center;'>Press any key to continue!</h2>"
+};
+
+task_instructions3 = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<H1 style='text-align:center;'>Part 2: Color Task</H1><br>" +
+              "<H2 style='text-align:center;'>Respond to the color of the font with your dominant hand</H2><br>" +
+              "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
+              "<H2 style='text-align:center;'>'J' key = " + cols[prms.respKeysStroop.indexOf("J")] + "&emsp; 'K' key = " + cols[prms.respKeysStroop.indexOf("K")] + "&emsp; 'L' key = " + cols[prms.respKeysStroop.indexOf("L")] + "</H2><br>" +
+              "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2><br>" +
+              "<h2 style='text-align:center;'>Press any key to continue!</h2>"
+};
+
+
+task_instructions4 = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: "<H1 style='text-align:center;'>Part 3: Practice Block</H1><br>" +
               "<H2 style='text-align:center;'>Respond to the color of the font with your right hand.</H2>" +
               "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
               "<H2 style='text-align:center;'>'J' key = " + cols[prms.respKeysStroop.indexOf("J")] + "&emsp; 'K' key = " + cols[prms.respKeysStroop.indexOf("K")] + "&emsp; 'L' key = " + cols[prms.respKeysStroop.indexOf("L")] + "</H2><br>" +
@@ -99,12 +126,12 @@ task_instructions2 = {
 };
 
 
-task_instructions3 = {
+task_instructions5 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align:center;'>Part 2: Real Block</H1><br>" +
+    stimulus: "<H1 style='text-align:center;'>Part 4: Real Block</H1><br>" +
               "<H2 style='text-align:center;'>Respond to the color of the font with your right hand.</H2>" +
               "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
               "<H2 style='text-align:center;'>'J' key = " + cols[prms.respKeysStroop.indexOf("J")] + "&emsp; 'K' key = " + cols[prms.respKeysStroop.indexOf("K")] + "&emsp; 'L' key = " + cols[prms.respKeysStroop.indexOf("L")] + "</H2><br>" +
@@ -154,7 +181,7 @@ const stroops = [
     { type: "stroop", word: "yellow", colour: "green",  cong: "incong", key:prms.respKeysStroop[1] },
 ]
 
-let sentence_materials_cong = [
+const sentence_materials_cong = shuffle([
     { type: "sentence", word: "Eagles can fly.",             colour: "black", cong: "cong",   key: prms.respKeysSentence[0] },
     { type: "sentence", word: "Monkeys can climb.",          colour: "black", cong: "cong",   key: prms.respKeysSentence[0] },   
     { type: "sentence", word: "Academics are educated.",     colour: "black", cong: "cong",   key: prms.respKeysSentence[0] }, 
@@ -251,10 +278,9 @@ let sentence_materials_cong = [
     { type: "sentence", word: "Deserts are dry.",            colour: "black", cong: "cong",   key: prms.respKeysSentence[0] }, 
     { type: "sentence", word: "Zebras are striped.",         colour: "black", cong: "cong",   key: prms.respKeysSentence[0] }, 
     { type: "sentence", word: "Sugar is sweet.",             colour: "black", cong: "cong",   key: prms.respKeysSentence[0] },
-]
-sentence_materials_cong = shuffle(sentence_materials_cong)
+])
 
-let sentence_materials_incong = [
+const sentence_materials_incong = shuffle([
     { type: "sentence", word: "Erasers are bloody.",         colour: "black", cong: "incong", key: prms.respKeysSentence[1] }, 
     { type: "sentence", word: "Crises are cheap.",           colour: "black", cong: "incong", key: prms.respKeysSentence[1] }, 
     { type: "sentence", word: "Wine is serious.",            colour: "black", cong: "incong", key: prms.respKeysSentence[1] }, 
@@ -351,8 +377,7 @@ let sentence_materials_incong = [
     { type: "sentence", word: "Vegetables are unhealthy.",   colour: "black", cong: "incong", key: prms.respKeysSentence[1] }, 
     { type: "sentence", word: "Cellars are bright.",         colour: "black", cong: "incong", key: prms.respKeysSentence[1] }, 
     { type: "sentence", word: "Giraffes are small.",         colour: "black", cong: "incong", key: prms.respKeysSentence[1] }
-]
-sentence_materials_incong = shuffle(sentence_materials_incong)
+])
 
 ////////////////////////////////////////////////////////////////////////
 //                        jsPsych type stimuli                        //
@@ -499,70 +524,94 @@ function drawStimulus(args) {
 ////////////////////////////////////////////////////////////////////////
 //                     Create timeline variables                      //
 ////////////////////////////////////////////////////////////////////////
+
+// 1st phase is a short Stroop practice followed by a longer Stroop baseline phase
+const prac_trials_stroop_timeline = {
+    timeline: [
+        fixation_cross,
+        stimulus,
+        trial_feedback,
+        iti
+    ],
+    timeline_variables: stroops,
+    sample: {
+        type: "fixed-repetitions",
+        size: 1
+    }
+};
+
+const base_trials_stroop_timeline = {
+    timeline: [
+        fixation_cross,
+        stimulus,
+        iti
+    ],
+    timeline_variables: stroops,
+    sample: {
+        type: "fixed-repetitions",
+        size: 12
+    }
+};
+
+// Combined sentence and stroop trials
 // split materials into 1 practice block + 3 experimental blocks
-let materials1 = stroops.concat(sentence_materials_cong.splice(0, 6).concat(sentence_materials_incong.splice(0, 6)))
-materials1 = shuffle(materials1)
+// Combined practice block
+const prac_comb = shuffle(stroops.concat(sentence_materials_cong.splice(0, 6).concat(sentence_materials_incong.splice(0, 6))))
 
-let stroop_materials = stroops.concat(stroops, stroops, stroops, stroops)
-let materials2 = stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30)))
-materials2 = shuffle(materials2)
+// Three experimental blocks
+const stroop_materials = stroops.concat(stroops, stroops, stroops, stroops)
 
-let materials3 = stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30)))
-materials3 = shuffle(materials3)
+const exp_block1 = shuffle(stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30))))
+const exp_block2 = shuffle(stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30))))
+const exp_block3 = shuffle(stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30))))
 
-let materials4 = stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30)))
-materials4 = shuffle(materials4)
-
-const trial_timeline1 = {
+const prac_comb_timeline = {
     timeline: [
         fixation_cross,
         stimulus,
         trial_feedback,
         iti
     ],
-    timeline_variables: materials1,
+    timeline_variables: prac_comb,
     sample: {
         type: "fixed-repetitions",
         size: 1
     }
 };
 
-const trial_timeline2 = {
+const exp_block1_timeline = {
     timeline: [
         fixation_cross,
         stimulus,
-        trial_feedback,
         iti
     ],
-    timeline_variables: materials2,
+    timeline_variables: exp_block1,
     sample: {
         type: "fixed-repetitions",
         size: 1
     }
 };
 
-const trial_timeline3 = {
+const exp_block2_timeline = {
     timeline: [
         fixation_cross,
         stimulus,
-        trial_feedback,
         iti
     ],
-    timeline_variables: materials3,
+    timeline_variables: exp_block2,
     sample: {
         type: "fixed-repetitions",
         size: 1
     }
 };
 
-const trial_timeline4 = {
+const exp_block3_timeline = {
     timeline: [
         fixation_cross,
         stimulus,
-        trial_feedback,
         iti
     ],
-    timeline_variables: materials4,
+    timeline_variables: exp_block3,
     sample: {
         type: "fixed-repetitions",
         size: 1
@@ -584,19 +633,35 @@ function genExpSeq() {
     exp.push(vpInfoForm_en);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
-    exp.push(task_instructions1);
-    exp.push(task_instructions2);
 
-    exp.push(trial_timeline1);
-    exp.push(block_feedback);  // show previous block performance 
-    exp.push(task_reminder);   // show response mapping 
-    exp.push(trial_timeline2);
-    exp.push(block_feedback);  // show previous block performance 
-    exp.push(task_reminder);   // show response mapping 
-    exp.push(trial_timeline3);
-    exp.push(block_feedback);  // show previous block performance 
-    exp.push(task_reminder);   // show response mapping 
-    exp.push(trial_timeline4);
+    // start of experiment
+    exp.push(task_instructions1);
+
+    // practice stroop block
+    exp.push(task_instructions2);
+    exp.push(prac_trials_stroop_timeline)
+    exp.push(block_feedback);  
+
+    // baseline stroop block
+    exp.push(task_instructions3);
+    exp.push(base_trials_stroop_timeline)
+    exp.push(block_feedback);  
+   
+    // practice block combined
+    exp.push(task_instructions4);
+    exp.push(prac_comb_timeline) 
+    exp.push(block_feedback);  
+
+    // 3 experimental blocks
+    exp.push(task_instructions5);
+    exp.push(exp_block1_timeline) 
+    exp.push(block_feedback);  
+    
+    exp.push(exp_block2_timeline) 
+    exp.push(block_feedback);  
+    
+    exp.push(exp_block3_timeline) 
+    exp.push(block_feedback);  
 
     // end phase
     exp.push(debrief_en);
