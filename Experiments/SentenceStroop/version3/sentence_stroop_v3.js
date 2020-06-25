@@ -82,7 +82,7 @@ const task_instructions1 = {
 const cols = ["blue", "green", "yellow"];
 const sens = ["sensible", "non-sensible"];
 
-task_instructions2 = {
+const task_instructions2 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
@@ -95,7 +95,7 @@ task_instructions2 = {
               "<h2 style='text-align:center;'>Press any key to continue!</h2>"
 };
 
-task_instructions3 = {
+const task_instructions3 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
@@ -109,7 +109,7 @@ task_instructions3 = {
 };
 
 
-task_instructions4 = {
+const task_instructions4 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
@@ -126,7 +126,7 @@ task_instructions4 = {
 };
 
 
-task_instructions5 = {
+const task_instructions5 = {
     type: "html-keyboard-response-canvas",
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
@@ -141,23 +141,6 @@ task_instructions5 = {
               "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2>" +
               "<h2 style='text-align:center;'>Press any key to continue!</h2>",
 };
-
-task_reminder = {
-    type: "html-keyboard-response-canvas",
-    canvas_colour: canvas_colour,
-    canvas_size: canvas_size,
-    canvas_border: canvas_border,
-    stimulus: "<H1 style='text-align:center;'>Task Reminder</H1><br>" +
-              "<H2 style='text-align:center;'>Respond to the color of the font with your right hand.</H2>" +
-              "<H2 style='text-align:center;'>Use your index, middle, and ring-fingers (one per key).</H2><br>" +
-              "<H2 style='text-align:center;'>'J' key = " + cols[prms.respKeysStroop.indexOf("J")] + "&emsp; 'K' key = " + cols[prms.respKeysStroop.indexOf("K")] + "&emsp; 'L' key = " + cols[prms.respKeysStroop.indexOf("L")] + "</H2><br>" +
-              "<H2 style='text-align:center;'>Respond to the sentence (sensible/non-sensible) with your left hand.</H2>" +
-              "<H2 style='text-align:center;'>Use your index and middle fingers (one per key).</H2><br>" +
-              "<H2 style='text-align:center;'>'A' key = " + sens[prms.respKeysSentence.indexOf("A")] + "&emsp; 'S' key = " + sens[prms.respKeysSentence.indexOf("S")] + "</H2><br>" +
-              "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2>" +
-              "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-};
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -618,6 +601,16 @@ const exp_block3_timeline = {
     }
 };
 
+const save = {
+    type: 'call-function',
+    func: function(){
+        let data_filename = dirName + "data/" + expName + "_" + vpNum;
+        let code_filename = dirName + "code/" + expName;
+        saveData("/Common/write_data.php", data_filename, {stim: "SentenceStroop"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
+    },
+    timing_post_trial: 200
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -664,6 +657,7 @@ function genExpSeq() {
     exp.push(block_feedback);  
 
     // end phase
+    exp.push(save);
     exp.push(debrief_en);
     exp.push(showMouseCursor);
     exp.push(alphaNum);
@@ -674,8 +668,6 @@ function genExpSeq() {
 }
 EXP = genExpSeq();
 
-const data_filename = dirName + "data/" + expName + "_" + vpNum;
-const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -685,9 +677,5 @@ jsPsych.init({
         min_width:canvas_size[0],
         min_height:canvas_size[1],
     },
-    on_finish: function(){ 
-        saveData("/Common/write_data.php", data_filename, {stim: "SentenceStroop"});
-        saveRandomCode("/Common/write_code.php", code_filename, randomString);
-    }
 });
 

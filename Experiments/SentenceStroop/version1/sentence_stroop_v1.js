@@ -695,6 +695,17 @@ function add_filler_questions(items) {
     return final_items
 }
 
+const save = {
+    type: 'call-function',
+    func: function(){
+        let data_filename = dirName + "data/" + expName + "_" + vpNum;
+        let code_filename = dirName + "code/" + expName;
+        saveData("/Common/write_data.php", data_filename, {stim: "SentenceStroop"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
+    },
+    timing_post_trial: 200
+};
+
 
 ////////////////////////////////////////////////////////////////////////
 //                     Create required timelines                      //
@@ -766,6 +777,7 @@ function genExpSeq() {
     exp.push(exp_timeline)
 
     // end phase
+    exp.push(save);
     exp.push(debrief_en);
     exp.push(showMouseCursor);
     exp.push(alphaNum);
@@ -776,8 +788,6 @@ function genExpSeq() {
 }
 EXP = genExpSeq();
 
-const data_filename = dirName + "data/" + expName + "_" + vpNum;
-const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -787,9 +797,5 @@ jsPsych.init({
         min_width:canvas_size[0],
         min_height:canvas_size[1],
     },
-    on_finish: function(){ 
-        saveData("/Common/write_data.php", data_filename, {stim: "SentenceStroop"});
-        saveRandomCode("/Common/write_code.php", code_filename, randomString);
-    }
 });
 
