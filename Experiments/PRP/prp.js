@@ -19,15 +19,15 @@ const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 72,  // number of trials in first block (practice)
-    nTrlsE: 72,  // number of trials in subsequent blocks 
+    nTrlsP: 64,  // number of trials in first block (practice)
+    nTrlsE: 64,  // number of trials in subsequent blocks 
     nBlks: 6,   
     fixDur: 500,
     fbDur: [1000, 3000, 3000, 3000],
-    soa: [50, 200, 1000],
+    soa: [50, 1000],
     iti: 500,
     tooFast: 100,
-    tooSlow: 5000,
+    tooSlow: 3000,
     fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
     cTrl: 1,  // count trials
     cBlk: 1,  // count blocks
@@ -279,10 +279,6 @@ const trial_timeline = {
         { t1_letter: prms.respLetters[1], t2_1_colour: cc, t2_2_colour: prms.respCols[0], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
         { t1_letter: prms.respLetters[0], t2_1_colour: cc, t2_2_colour: prms.respCols[1], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
         { t1_letter: prms.respLetters[1], t2_1_colour: cc, t2_2_colour: prms.respCols[1], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
-        { t1_letter: prms.respLetters[0], t2_1_colour: cc, t2_2_colour: prms.respCols[0], soa: prms.soa[2], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
-        { t1_letter: prms.respLetters[1], t2_1_colour: cc, t2_2_colour: prms.respCols[0], soa: prms.soa[2], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
-        { t1_letter: prms.respLetters[0], t2_1_colour: cc, t2_2_colour: prms.respCols[1], soa: prms.soa[2], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
-        { t1_letter: prms.respLetters[1], t2_1_colour: cc, t2_2_colour: prms.respCols[1], soa: prms.soa[2], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
     ],
 };
 
@@ -301,6 +297,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
+    exp.push(vpInfoForm_en);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
     exp.push(task_instructions3);
