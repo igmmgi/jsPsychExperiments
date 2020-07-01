@@ -46,7 +46,7 @@ if (nVersion === 1) {
     respText      = "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'D'</b> (linker Zeigefinger).</h2>" +
                     "<h2 style='text-align:center;'><b>Sinnlos = Taste 'K'</b> (rechter Zeigefinger).</h2><br>";
 } else {
-    prms.respKeys = ["D", "K", 27];
+    prms.respKeys = ["K", "D", 27];
     respText      = "<h2 style='text-align:center;'><b>Sinnlos = Taste 'D'</b> (linker Zeigefinger).</h2>" +
                     "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'K'</b> (rechter Zeigefinger).</h2><br>";
 }
@@ -98,70 +98,70 @@ const task_reminder = {
   
 // 60 image files
 const imageFiles = [
-    "images/Aff_A1.bmp",
-    "images/Aff_A2.bmp",
-    "images/Aff_A3.bmp",
-    "images/Aff_A4.bmp",
-    "images/Aff_A5.bmp",
-    "images/Aff_A6.bmp",
-    "images/Aff_A7.bmp",
-    "images/Aff_A8.bmp",
-    "images/Aff_A9.bmp",
-    "images/Aff_A10.bmp",
-    "images/Aff_F1.bmp",
-    "images/Aff_F2.bmp",
-    "images/Aff_F3.bmp",
-    "images/Aff_F4.bmp",
-    "images/Aff_F5.bmp",
-    "images/Aff_F6.bmp",
-    "images/Aff_F7.bmp",
-    "images/Aff_F8.bmp",
-    "images/Aff_F9.bmp",
-    "images/Aff_F10.bmp",
-    "images/Aff_G1.bmp",
-    "images/Aff_G2.bmp",
-    "images/Aff_G3.bmp",
-    "images/Aff_G4.bmp",
-    "images/Aff_G5.bmp",
-    "images/Aff_G6.bmp",
-    "images/Aff_G7.bmp",
-    "images/Aff_G8.bmp",
-    "images/Aff_G9.bmp",
-    "images/Aff_G10.bmp",
-    "images/Neg_A1.bmp",
-    "images/Neg_A2.bmp",
-    "images/Neg_A3.bmp",
-    "images/Neg_A4.bmp",
-    "images/Neg_A5.bmp",
-    "images/Neg_A6.bmp",
-    "images/Neg_A7.bmp",
-    "images/Neg_A8.bmp",
-    "images/Neg_A9.bmp",
-    "images/Neg_A10.bmp",
-    "images/Neg_F1.bmp",
-    "images/Neg_F2.bmp",
-    "images/Neg_F3.bmp",
-    "images/Neg_F4.bmp",
-    "images/Neg_F5.bmp",
-    "images/Neg_F6.bmp",
-    "images/Neg_F7.bmp",
-    "images/Neg_F8.bmp",
-    "images/Neg_F9.bmp",
-    "images/Neg_F10.bmp",
-    "images/Neg_G1.bmp",
-    "images/Neg_G2.bmp",
-    "images/Neg_G3.bmp",
-    "images/Neg_G4.bmp",
-    "images/Neg_G5.bmp",
-    "images/Neg_G6.bmp",
-    "images/Neg_G7.bmp",
-    "images/Neg_G8.bmp",
-    "images/Neg_G9.bmp",
-    "images/Neg_G10.bmp",
+    "images/Aff_A1.png",
+    "images/Aff_A2.png",
+    "images/Aff_A3.png",
+    "images/Aff_A4.png",
+    "images/Aff_A5.png",
+    "images/Aff_A6.png",
+    "images/Aff_A7.png",
+    "images/Aff_A8.png",
+    "images/Aff_A9.png",
+    "images/Aff_A10.png",
+    "images/Aff_F1.png",
+    "images/Aff_F2.png",
+    "images/Aff_F3.png",
+    "images/Aff_F4.png",
+    "images/Aff_F5.png",
+    "images/Aff_F6.png",
+    "images/Aff_F7.png",
+    "images/Aff_F8.png",
+    "images/Aff_F9.png",
+    "images/Aff_F10.png",
+    "images/Aff_G1.png",
+    "images/Aff_G2.png",
+    "images/Aff_G3.png",
+    "images/Aff_G4.png",
+    "images/Aff_G5.png",
+    "images/Aff_G6.png",
+    "images/Aff_G7.png",
+    "images/Aff_G8.png",
+    "images/Aff_G9.png",
+    "images/Aff_G10.png",
+    "images/Neg_A1.png",
+    "images/Neg_A2.png",
+    "images/Neg_A3.png",
+    "images/Neg_A4.png",
+    "images/Neg_A5.png",
+    "images/Neg_A6.png",
+    "images/Neg_A7.png",
+    "images/Neg_A8.png",
+    "images/Neg_A9.png",
+    "images/Neg_A10.png",
+    "images/Neg_F1.png",
+    "images/Neg_F2.png",
+    "images/Neg_F3.png",
+    "images/Neg_F4.png",
+    "images/Neg_F5.png",
+    "images/Neg_F6.png",
+    "images/Neg_F7.png",
+    "images/Neg_F8.png",
+    "images/Neg_F9.png",
+    "images/Neg_F10.png",
+    "images/Neg_G1.png",
+    "images/Neg_G2.png",
+    "images/Neg_G3.png",
+    "images/Neg_G4.png",
+    "images/Neg_G5.png",
+    "images/Neg_G6.png",
+    "images/Neg_G7.png",
+    "images/Neg_G8.png",
+    "images/Neg_G9.png",
+    "images/Neg_G10.png",
 ]
 
 const images = loadImages(imageFiles)
-    
+
 // 120 sentences per category
 // 4 categories:
 // 1: sensible-affirmative
@@ -692,8 +692,8 @@ function combinePictures(materials) {
     }
     imageNumber = shuffle(imageNumber)
     for (let i = 0; i < materials.length; i++) {
-        materials[i].imageNumber = imageNumber[i+1]
-        materials[i].imageName = imageFiles[imageNumber[i]].slice(7, -4)
+        materials[i].imageNumber = imageNumber[i] + 1;
+        materials[i].imageName = imageFiles[imageNumber[i]].slice(7, -4);
     }
     return materials;
 }
@@ -739,7 +739,6 @@ function showPicture(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
     let num = args["imageNumber"];
-    console.log(images[num].width)
     ctx.drawImage(images[num], -images[num].width/2, -images[num].height/2)
 }
 
@@ -960,6 +959,7 @@ function genExpSeq() {
 
 }
 const EXP = genExpSeq();
+
 
 const data_filename = dirName + "data/" + expName + "_" + vpNum;
 const code_filename = dirName + "code/" + expName;

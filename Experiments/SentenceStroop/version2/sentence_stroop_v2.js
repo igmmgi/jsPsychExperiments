@@ -458,7 +458,6 @@ const question_stimulus = {
         let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.answer);
         let corrCode = dat.key_press === corrKeyNum ? 1 : 2;
         jsPsych.data.addDataToLastTrial({date: Date(), corrCode: corrCode, trialNum: prms.cTrl});
-        console.log(corrCode)
         prms.cTrl += 1
     }
 };
@@ -649,15 +648,14 @@ function constrained_shuffle(exp_items_sentences, exp_items_stroop, exp_items_fi
         items.splice(valid_positions[i], 0, exp_items_sentences[i])
     }
     
-    for (let i in items) {
-        if (items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] === "exp") {
-            if (items[i-1]["timeline_variables"][0]["type"] === "exp") {
-                console.log("Problem: exp item repeats!")
-            }
-        }
-    }
+    // for (let i in items) {
+    //     if (items[i]["timeline_variables"] && items[i]["timeline_variables"][0]["type"] === "exp") {
+    //         if (items[i-1]["timeline_variables"][0]["type"] === "exp") {
+    //             console.log("Problem: exp item repeats!")
+    //         }
+    //     }
+    // }
 
-    console.log(items)
     return(items)
 
 }
@@ -687,6 +685,17 @@ function add_filler_questions(items) {
     }
     return final_items
 }
+
+const save = {
+    type: 'call-function',
+    func: function(){
+        let data_filename = dirName + "data/" + expName + "_" + vpNum;
+        let code_filename = dirName + "code/" + expName;
+        saveData("/Common/write_data.php", data_filename, {stim: "SentenceStroop"});
+        saveRandomCode("/Common/write_code.php", code_filename, randomString);
+    },
+    timing_post_trial: 200
+};
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -759,6 +768,7 @@ function genExpSeq() {
     exp.push(exp_timeline)
 
     // end phase
+    exp.push(save);
     exp.push(debrief_en);
     exp.push(showMouseCursor);
     exp.push(alphaNum);
@@ -769,8 +779,6 @@ function genExpSeq() {
 }
 EXP = genExpSeq();
 
-const data_filename = dirName + "data/" + expName + "_" + vpNum;
-const code_filename = dirName + "code/" + expName;
 
 jsPsych.init({
     timeline: EXP,
@@ -780,9 +788,5 @@ jsPsych.init({
         min_width:canvas_size[0],
         min_height:canvas_size[1],
     },
-    on_finish: function(){ 
-        saveData("/Common/write_data.php", data_filename, {stim: "SentenceStroop"});
-        saveRandomCode("/Common/write_code.php", code_filename, randomString);
-    }
 });
 
