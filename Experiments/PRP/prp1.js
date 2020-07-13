@@ -26,7 +26,7 @@ const prms = {
     nTrlsE: 64,  // number of trials in subsequent blocks 
     nBlks: 5,   
     fixDur: 500,
-    fbDur: [1000, 3000, 3000, 3000],
+    fbDur: [1000, 5000, 5000, 5000],
     soa: [50, 1000],
     iti: 500,
     tooFast: 100,
