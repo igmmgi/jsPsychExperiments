@@ -1,4 +1,5 @@
 // Basic version of a PRP Task:
+// Version 2: Colour --> Letter
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -15,13 +16,15 @@ const dirName = getDirName();
 const vpNum   = genVpNum();
 const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
+jsPsych.data.addProperties({version: 2});
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
     nTrlsP: 64,  // number of trials in first block (practice)
     nTrlsE: 64,  // number of trials in subsequent blocks 
-    nBlks: 6,   
+    nBlks: 5,   
     fixDur: 500,
     fbDur: [1000, 3000, 3000, 3000],
     soa: [50, 1000],
@@ -35,9 +38,10 @@ const prms = {
     respLetters: shuffle(["B","C","D","F","G","H","J","K","M","N","S","T","V","X","Y","Z"]),
     fixWidth: 2,
     fixSize: 10,
+    letterSize: "50px monospace",
     fbSize: "20px monospace",
-    respKeys1: ["Q", "W"],
-    respKeys2: ["O", "P"],
+    respKeys1: ["O", "P"],
+    respKeys2: ["Q", "W"],
     respKeys: ["Q", "W", "O", "P"],
 };
 
@@ -66,10 +70,10 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>Experiment:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du in jedem Durchgang zwei Aufgaben bearbeiten.</h3>" +
     "<h3 style='text-align: left;'>Jede Aufgabe wird mit einer Hand bearbeitet. </h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 1 = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
-    "<h3 style='text-align: left;'>auf die Tasten „Q“ und „W“.</h3><br>" +  
-    "<h3 style='text-align: left;'>Aufgabe 2 = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
+    "<h3 style='text-align: left;'>Aufgabe 1 = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „O“ und „P“.</h3><br>" +  
+    "<h3 style='text-align: left;'>Aufgabe 2 = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
+    "<h3 style='text-align: left;'>auf die Tasten „Q“ und „W“.</h3><br>" +  
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -82,14 +86,30 @@ const task_instructions3 = {
     "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Buchstaben reagieren.</h3>" +
     "<h3 style='text-align: left;'>Nachdem du auf den Buchstaben reagiert hast, musst du auf die </h3>" +
     "<h3 style='text-align: left;'>Farbe reagieren: Reagiere wie folgt:</h3><br>" + 
-    "<h3 style='text-align: left;'>Aufgabe 1 (Buchstabe) linke Hand:</h3>" +
-    "<h3 style='text-align: center;'>Zeigefinger („W-Taste“): " + prms.respLetters[1] + "</h3>" +
-    "<h3 style='text-align: center;'>Mittelfinger („Q-Taste“): " + prms.respLetters[0] + "</h3>" +
-    "<h3 style='text-align: left;'>Aufgabe 2 (Farbe) rechte Hand:</h3>" +
+    "<h3 style='text-align: left;'>Aufgabe 1 (Farbe) rechte Hand:</h3>" +
     "<h3 style='text-align: center;'>Zeigefinger („O-Taste“): " + prms.respCols[0] + "</h3>" +
     "<h3 style='text-align: center;'>Mittelfinger („P-Taste“): " + prms.respCols[1] + "</h3><br>" +
+    "<h3 style='text-align: left;'>Aufgabe 2 (Buchstabe) linke Hand:</h3>" +
+    "<h3 style='text-align: center;'>Zeigefinger („W-Taste“): " + prms.respLetters[1] + "</h3>" +
+    "<h3 style='text-align: center;'>Mittelfinger („Q-Taste“): " + prms.respLetters[0] + "</h3>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>"
 };
+
+
+const task_instructions4 = {
+    type: "html-keyboard-response-canvas",
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    stimulus: 
+    "<h3 style='text-align: center;'>Bitte beachte: </h3>" +
+    "<h3 style='text-align: left;'> Bitte reagiere immer erst so schnell wie möglich auf die 1. Aufgabe </h3>" + 
+    "<h3 style='text-align: left;'> sobald das farbige Quadrat erscheint und erst anschliessend so schnell wie </h3>" + 
+    "<h3 style='text-align: left;'> möglich auf die 2. Aufgabe. Das heißt warte nicht mit der Bearbeitung der </h3>" + 
+    "<h3 style='text-align: left;'> 1. Aufgabe bis der buchstabe von Aufgabe 2 erscheint. </h3>" 
+};
+
+
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -131,12 +151,12 @@ function drawFeedback() {
     // show response mapping if not correct
     ctx.font = "20px monospace";
     if (dat.corrCode !== 1) {
-        ctx.fillText("Aufgabe 1 (Buchstabe) linke Hand:", -250, 50); 
-        ctx.fillText("„W-Taste“: " + prms.respLetters[1], -250, 100); 
-        ctx.fillText("„Q-Taste“: " + prms.respLetters[0], -250, 150); 
-        ctx.fillText("Aufgabe 2 (Farbe) rechte Hand:", 250, 50); 
+        ctx.fillText("Aufgabe 1 (Farbe) rechte Hand:", 250, 50); 
         ctx.fillText("„O-Taste“: " + prms.respCols[0], 250, 100); 
         ctx.fillText("„P-Taste“: " + prms.respCols[1], 250, 150); 
+        ctx.fillText("Aufgabe 2 (Buchstabe) linke Hand:", -250, 50); 
+        ctx.fillText("„W-Taste“: " + prms.respLetters[1], -250, 100); 
+        ctx.fillText("„Q-Taste“: " + prms.respLetters[0], -250, 150); 
     }
 
 }
@@ -144,20 +164,20 @@ function drawFeedback() {
 function drawStimulus(args) {
     "use strict"
     let ctx = document.getElementById('canvas').getContext('2d');
-   
-    // draw first stimulus (letter)
-    ctx.font = "40px monospace";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "black";
-    ctx.fillText(args["letter"], 0, 0); 
 
-    // draw second stimulus (square frame)
+    // draw first stimulus (square frame)
     ctx.beginPath();
     ctx.lineWidth = 10;
     ctx.strokeStyle = args["colour"];
     ctx.rect(-40, -40, 80, 80);
     ctx.stroke();
+
+    // draw second stimulus (letter)
+    ctx.font = prms.letterSize; 
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "black";
+    ctx.fillText(args["letter"], 0, 0); 
 
 }
 
@@ -246,12 +266,12 @@ const prp_stimulus = {
     func: [drawStimulus, drawStimulus],
     func_args:[
         { 
-            "letter": jsPsych.timelineVariable("t1_letter") ,
-            "colour": jsPsych.timelineVariable("t2_1_colour") ,
+            "colour": jsPsych.timelineVariable("t1_colour") ,
+            "letter": jsPsych.timelineVariable("t2_1_letter") ,
         },
         { 
-            "letter": jsPsych.timelineVariable("t1_letter") ,
-            "colour": jsPsych.timelineVariable("t2_2_colour") ,
+            "colour": jsPsych.timelineVariable("t1_colour") ,
+            "letter": jsPsych.timelineVariable("t2_2_letter") ,
         },
     ],
     data: {
@@ -271,14 +291,14 @@ const trial_timeline = {
         iti,
     ],
     timeline_variables:[
-        { t1_letter: prms.respLetters[0], t2_1_colour: cc, t2_2_colour: prms.respCols[0], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
-        { t1_letter: prms.respLetters[1], t2_1_colour: cc, t2_2_colour: prms.respCols[0], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
-        { t1_letter: prms.respLetters[0], t2_1_colour: cc, t2_2_colour: prms.respCols[1], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
-        { t1_letter: prms.respLetters[1], t2_1_colour: cc, t2_2_colour: prms.respCols[1], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
-        { t1_letter: prms.respLetters[0], t2_1_colour: cc, t2_2_colour: prms.respCols[0], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
-        { t1_letter: prms.respLetters[1], t2_1_colour: cc, t2_2_colour: prms.respCols[0], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
-        { t1_letter: prms.respLetters[0], t2_1_colour: cc, t2_2_colour: prms.respCols[1], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
-        { t1_letter: prms.respLetters[1], t2_1_colour: cc, t2_2_colour: prms.respCols[1], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
+        { t1_colour: prms.respCols[0], t2_1_letter: "", t2_2_letter: prms.respLetters[0], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
+        { t1_colour: prms.respCols[1], t2_1_letter: "", t2_2_letter: prms.respLetters[0], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
+        { t1_colour: prms.respCols[0], t2_1_letter: "", t2_2_letter: prms.respLetters[1], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
+        { t1_colour: prms.respCols[1], t2_1_letter: "", t2_2_letter: prms.respLetters[1], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
+        { t1_colour: prms.respCols[0], t2_1_letter: "", t2_2_letter: prms.respLetters[0], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
+        { t1_colour: prms.respCols[1], t2_1_letter: "", t2_2_letter: prms.respLetters[0], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
+        { t1_colour: prms.respCols[0], t2_1_letter: "", t2_2_letter: prms.respLetters[1], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
+        { t1_colour: prms.respCols[1], t2_1_letter: "", t2_2_letter: prms.respLetters[1], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
     ],
 };
 
@@ -297,15 +317,16 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    exp.push(vpInfoForm_en);
+    exp.push(vpInfoForm_de);
     exp.push(task_instructions1);
     exp.push(task_instructions2);
     exp.push(task_instructions3);
+    exp.push(task_instructions4);
     exp.push(hideMouseCursor);
     
     for (let blk = 0; blk < prms.nBlks; blk += 1) {
         let blk_timeline = {...trial_timeline};
-        blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? (prms.nTrlsP/12) : (prms.nTrlsE/12)}
+        blk_timeline.sample = {type: "fixed-repetitions", size: (blk === 0) ? (prms.nTrlsP/8) : (prms.nTrlsE/8)}
         exp.push(blk_timeline);    // trials within a block
         exp.push(block_feedback);  // show previous block performance 
     }

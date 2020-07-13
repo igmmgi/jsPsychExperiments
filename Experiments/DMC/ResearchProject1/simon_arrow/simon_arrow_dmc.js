@@ -162,7 +162,7 @@ function codeTrial() {
     let rt = (dat.rt !== null) ? dat.rt : prms.tooSlow 
     rt = (dat.order === "RI") ? rt : rt - offset;
 
-    let comp = ((dat.word === "<<<<" & dat.corrResp === "Q") | (dat.word === ">>>>" & dat.corrResp === "Q")) ? "comp" : "incomp";
+    let comp = ((dat.word === "<<<<" & dat.corrResp === "Q") | (dat.word === ">>>>" & dat.corrResp === "P")) ? "comp" : "incomp";
     
     if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
         corrCode = 1;  // correct
