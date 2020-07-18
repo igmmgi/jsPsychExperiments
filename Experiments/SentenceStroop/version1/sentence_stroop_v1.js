@@ -730,7 +730,8 @@ const prac_trial_combined_timeline = { timeline: prac_items_combined, data: {pha
 
 // 4th phase: Experiment
 // list 1 vs. list 2
-const listNum = (nFiles % 2 == 0) ? 1 : 2;
+// const listNum = (nFiles % 2 == 0) ? 1 : 2;
+const listNum = 1;
 jsPsych.data.addProperties({list:listNum});
 const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === listNum)
 
@@ -758,7 +759,7 @@ function genExpSeq() {
     exp.push(screenInfo);
     exp.push(task_instructions1);
 
-    // 1st phase (practice stroop + baseline stroop)
+    // // 1st phase (practice stroop + baseline stroop)
     exp.push(task_instructions2);
     exp.push(prac_trials_stroop_timeline)
     exp.push(task_instructions3);
@@ -768,7 +769,7 @@ function genExpSeq() {
     exp.push(task_instructions4);
     exp.push(prac_trial_sentence_timeline)
 
-    // 3rd phase (combined stroop and sentence practice)
+    // // 3rd phase (combined stroop and sentence practice)
     exp.push(task_instructions5);
     exp.push(prac_trial_combined_timeline)
 
