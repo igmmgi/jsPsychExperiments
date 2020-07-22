@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = "rgba(200, 200, 200, 1)";
+const canvas_colour = "rgba(255, 255, 255, 1)";
 const canvas_size   = [960, 720];
-const canvas_border = "5px solid black";
+const canvas_border = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
@@ -45,9 +45,7 @@ const task_instructions1 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus: "<h2 style='text-align:left;'>Liebe Teilnehmer/innen,</h2><br>" +
-              "<h2 style='text-align:left;'>vielen Dank, dass Sie sich die Zeit zur</h2>" +
-              "<h2 style='text-align:left;'>Teilnahme an unserer B.Sc. Arbeit nehmen.</h2><br>" +
-              "<h2 style='text-align:left;'>Bitte nehmen Sie nur teil, wenn Sie mindestens 18 Jahre alt </h2>" +
+              "<h2 style='text-align:left;'>bitte nehmen Sie nur teil, wenn Sie mindestens 18 Jahre alt </h2>" +
               "<h2 style='text-align:left;'>sind und Deutsch auf Muttersprachenniveau beherrschen. </h2><br>" + 
               "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
 };
@@ -115,17 +113,17 @@ for (let i = 0; i < words_practice.length; i++) {
         words_practice[i]["corrResp"]   = prms.respKeys[0]
         words_practice[i]["respSide"]   = "left"
         words_practice[i]["respColour"] = "green"
-    } else if (words[i]["imgNum"] === 1) {
+    } else if (words_practice[i]["imgNum"] === 1) {
         words_practice[i]["imgName"]    = imgFiles[1].slice(7,-4)
         words_practice[i]["corrResp"]   = prms.respKeys[0]
         words_practice[i]["respSide"]   = "left"
         words_practice[i]["respColour"] = "green"
-    } else if (words[i]["imgNum"] === 2) {
+    } else if (words_practice[i]["imgNum"] === 2) {
         words_practice[i]["imgName"]    = imgFiles[2].slice(7,-4)
         words_practice[i]["corrResp"]   = prms.respKeys[1]
         words_practice[i]["respSide"]   = "right"
         words_practice[i]["respColour"] = "red"
-    } else if (words[i]["imgNum"] === 3) {
+    } else if (words_practice[i]["imgNum"] === 3) {
         words_practice[i]["imgName"]    = imgFiles[3].slice(7,-4)
         words_practice[i]["corrResp"]   = prms.respKeys[1]
         words_practice[i]["respSide"]   = "right"
@@ -133,23 +131,23 @@ for (let i = 0; i < words_practice.length; i++) {
     }
 }
 
-for (let i = 0; i < nonwords.length; i++) {
+for (let i = 0; i < nonwords_practice.length; i++) {
     if (nonwords_practice[i]["imgNum"] === 0){
         nonwords_practice[i]["imgName"]    = imgFiles[0].slice(7,-4)
         nonwords_practice[i]["corrResp"]   = prms.respKeys[1]
         nonwords_practice[i]["respSide"]   = "right"
-        nonwords[i]["respColour"] = "red"
-    } else if (words[i]["imgNum"] === 1) {
+        nonwords_practice[i]["respColour"] = "red"
+    } else if (nonwords_practice[i]["imgNum"] === 1) {
         nonwords_practice[i]["imgName"]    = imgFiles[1].slice(7,-4)
         nonwords_practice[i]["corrResp"]   = prms.respKeys[1]
         nonwords_practice[i]["respSide"]   = "right"
         nonwords_practice[i]["respColour"] = "red"
-    } else if (words[i]["imgNum"] === 2) {
+    } else if (nonwords_practice[i]["imgNum"] === 2) {
         nonwords_practice[i]["imgName"]    = imgFiles[2].slice(7,-4)
         nonwords_practice[i]["corrResp"]   = prms.respKeys[0]
         nonwords_practice[i]["respSide"]   = "left"
         nonwords_practice[i]["respColour"] = "green"
-    } else if (words[i]["imgNum"] === 3) {
+    } else if (nonwords_practice[i]["imgNum"] === 3) {
         nonwords_practice[i]["imgName"]    = imgFiles[3].slice(7,-4)
         nonwords_practice[i]["corrResp"]   = prms.respKeys[0]
         nonwords_practice[i]["respSide"]   = "left"
@@ -401,24 +399,23 @@ for (let i = 0; i < nonwords.length; i++) {
         nonwords[i]["corrResp"]   = prms.respKeys[1]
         nonwords[i]["respSide"]   = "right"
         nonwords[i]["respColour"] = "red"
-    } else if (words[i]["imgNum"] === 1) {
+    } else if (nonwords[i]["imgNum"] === 1) {
         nonwords[i]["imgName"]    = imgFiles[1].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[1]
         nonwords[i]["respSide"]   = "right"
         nonwords[i]["respColour"] = "red"
-    } else if (words[i]["imgNum"] === 2) {
+    } else if (nonwords[i]["imgNum"] === 2) {
         nonwords[i]["imgName"]    = imgFiles[2].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[0]
         nonwords[i]["respSide"]   = "left"
         nonwords[i]["respColour"] = "green"
-    } else if (words[i]["imgNum"] === 3) {
+    } else if (nonwords[i]["imgNum"] === 3) {
         nonwords[i]["imgName"]    = imgFiles[3].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[0]
         nonwords[i]["respSide"]   = "left"
         nonwords[i]["respColour"] = "green"
     }
 }
-
 
 // randomly select 25 words and 25 non-words in each block (4 exp blocks in total)
 let words_mixed    = shuffle(words)
@@ -461,7 +458,7 @@ function showStim(args) {
     let num = args["imgNum"];
     let w = imgs[num].width;
     let h = imgs[num].height;
-    let s = 8;
+    let s = 6;
     ctx.drawImage(imgs[num], (-w/s)/2, 50, w/s, h/s)
 
     // draw word in centre
