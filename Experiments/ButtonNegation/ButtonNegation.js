@@ -13,15 +13,14 @@ const canvas_border = "5px solid black";
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum   = genVpNum();
-const nFiles  = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 20,  // number of trials in first block (practice)
+    nTrlsP:  8,  // number of trials in first block (practice)
     nTrlsE: 50,  // number of trials in subsequent blocks 
-    nBlks: 4,
+    nBlks:   5,
     fixDur: 750,
     fbDur: 1000,
     iti: 500,
@@ -34,21 +33,8 @@ const prms = {
     fixSize: 15,
     wordSize: "30px monospace",
     fbSize: "30px monospace",
-    respKeys: [],
+    respKeys: ["D", "K", 27],
 };
-
-const nVersion = getVersionNumber(nFiles, 2)
-jsPsych.data.addProperties({version: nVersion});
-let respText;
-if (nVersion === 1) {
-    prms.respKeys = ["D", "K", 27];
-    respText      = "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'D'</b> (linker Zeigefinger).</h2>" +
-                    "<h2 style='text-align:center;'><b>Sinnlos = Taste 'K'</b> (rechter Zeigefinger).</h2><br>";
-} else {
-    prms.respKeys = ["K", "D", 27];
-    respText      = "<h2 style='text-align:center;'><b>Sinnlos = Taste 'D'</b> (linker Zeigefinger).</h2>" +
-                    "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'K'</b> (rechter Zeigefinger).</h2><br>";
-}
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -71,25 +57,16 @@ const task_instructions2 = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus: 
-    "<h3 style='text-align:left;'>In der Studie sehen Sie in jedem Durchgang ein Bild gefolgt</h3>" +
-    "<h3 style='text-align:left;'>von einem Satz. Ihre Aufgabe ist es nach jedem Satz zu entscheiden,</h3>" +
-    "<h3 style='text-align:left;'>ob dieser Satz sinnvoll ist (z.B. 'Sie essen heute viel Kuchen.')</h3>" +
-    "<h3 style='text-align:left;'>oder nicht (z.B. 'Sie humpeln einen Schlauch.').</h3><br>" +
-    respText +
-    "<h3 style='text-align:center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h3><br>" +
-    "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
+    stimulus: "<h3 style='text-align: left;'> Liebe/r Teilnehmer/in, in unserer Studie sehen Sie in jedem Durchgang entweder</h3>" + 
+              "<h3 style='text-align: left;'> ein richtiges Wort, oder ein Wort, das es gar nicht gibt im Deutschen. Ihre</h3>" + 
+              "<h3 style='text-align: left;'> Aufgabe ist es zu entscheiden, ob es sich um ein richtiges Wort handelt oder</h3>" + 
+              "<h3 style='text-align: left;'> nicht indem Sie entweder die Taste D (linker Zeigefinger) oder die Taste K</h3>" + 
+              "<h3 style='text-align: left;'> (rechter Zeigefinger) drücken. Unter dem Wort sehen Sie immer zwei Kreise, die</h3>" + 
+              "<h3 style='text-align: left;'> zeigen, ob links oder rechts für die JA oder NEIN gedrückt werden muss. Bitte</h3>" + 
+              "<h3 style='text-align: left;'> reagieren Sie so schnell und korrekt wie möglich. Das Experiment beginnt mit</h3>" + 
+              "<h3 style='text-align: left;'> einem Übungsblock. Vielen Dank für's Mitmachen! Weiter geht es mit der</h3>" + 
+              "<h3 style='text-align: left;'> Leertaste.</h3>"
 };
-
-const task_reminder = {
-    type: "html-keyboard-response-canvas",
-    canvas_colour: canvas_colour,
-    canvas_size: canvas_size,
-    canvas_border: canvas_border,
-    stimulus: 
-    "<h3 style='text-align:center;'>Erinnerung:</h3>" +
-    respText
-}
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -103,13 +80,90 @@ const imgFiles = [
     "images/NEIN_left_red.png",
 ]
 const imgs = loadImages(imgFiles)
-console.log(imgs)
 
+// practice items
+// 8 real words and 8 nonwords 
+const imgNumWordsPractice    = shuffle(new Array(2).fill([0, 1, 2, 3]).flat());
+const imgNumNonWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat());
 
+const words_practice = [
+    { id: 1, word: "Optimismus", isWord: true, imgNum: imgNumWordsPractice[ 0] },
+    { id: 1, word: "Wurf" ,      isWord: true, imgNum: imgNumWordsPractice[ 1] },
+    { id: 1, word: "Panama",     isWord: true, imgNum: imgNumWordsPractice[ 2] },
+    { id: 1, word: "Milch",      isWord: true, imgNum: imgNumWordsPractice[ 3] },
+    { id: 1, word: "Fisch",      isWord: true, imgNum: imgNumWordsPractice[ 4] },
+    { id: 1, word: "Krippe",     isWord: true, imgNum: imgNumWordsPractice[ 5] },
+    { id: 1, word: "Brett",      isWord: true, imgNum: imgNumWordsPractice[ 6] },
+    { id: 1, word: "Ziegel",     isWord: true, imgNum: imgNumWordsPractice[ 7] },
+];
+
+const nonwords_practice = [
+    { id: 1, word: "Zonko",     isWord: false, imgNum: imgNumWordsPractice[ 0] },
+    { id: 1, word: "Balpim",    isWord: false, imgNum: imgNumWordsPractice[ 1] },
+    { id: 1, word: "Kobldar",   isWord: false, imgNum: imgNumWordsPractice[ 2] },
+    { id: 1, word: "Fipusel",   isWord: false, imgNum: imgNumWordsPractice[ 3] },
+    { id: 1, word: "Molaki"	,   isWord: false, imgNum: imgNumWordsPractice[ 4] },
+    { id: 1, word: "Papusel",   isWord: false, imgNum: imgNumWordsPractice[ 5] },
+    { id: 1, word: "Worip",	    isWord: false, imgNum: imgNumWordsPractice[ 6] },
+    { id: 1, word: "Oligappus", isWord: false, imgNum: imgNumWordsPractice[ 7] },
+];
+
+// assign correct responses
+for (let i = 0; i < words_practice.length; i++) {
+    if (words_practice[i]["imgNum"] === 0) {
+        words_practice[i]["imgName"]    = imgFiles[0].slice(7,-4)
+        words_practice[i]["corrResp"]   = prms.respKeys[0]
+        words_practice[i]["respSide"]   = "left"
+        words_practice[i]["respColour"] = "green"
+    } else if (words[i]["imgNum"] === 1) {
+        words_practice[i]["imgName"]    = imgFiles[1].slice(7,-4)
+        words_practice[i]["corrResp"]   = prms.respKeys[0]
+        words_practice[i]["respSide"]   = "left"
+        words_practice[i]["respColour"] = "green"
+    } else if (words[i]["imgNum"] === 2) {
+        words_practice[i]["imgName"]    = imgFiles[2].slice(7,-4)
+        words_practice[i]["corrResp"]   = prms.respKeys[1]
+        words_practice[i]["respSide"]   = "right"
+        words_practice[i]["respColour"] = "red"
+    } else if (words[i]["imgNum"] === 3) {
+        words_practice[i]["imgName"]    = imgFiles[3].slice(7,-4)
+        words_practice[i]["corrResp"]   = prms.respKeys[1]
+        words_practice[i]["respSide"]   = "right"
+        words_practice[i]["respColour"] = "red"
+    }
+}
+
+for (let i = 0; i < nonwords.length; i++) {
+    if (nonwords_practice[i]["imgNum"] === 0){
+        nonwords_practice[i]["imgName"]    = imgFiles[0].slice(7,-4)
+        nonwords_practice[i]["corrResp"]   = prms.respKeys[1]
+        nonwords_practice[i]["respSide"]   = "right"
+        nonwords[i]["respColour"] = "red"
+    } else if (words[i]["imgNum"] === 1) {
+        nonwords_practice[i]["imgName"]    = imgFiles[1].slice(7,-4)
+        nonwords_practice[i]["corrResp"]   = prms.respKeys[1]
+        nonwords_practice[i]["respSide"]   = "right"
+        nonwords_practice[i]["respColour"] = "red"
+    } else if (words[i]["imgNum"] === 2) {
+        nonwords_practice[i]["imgName"]    = imgFiles[2].slice(7,-4)
+        nonwords_practice[i]["corrResp"]   = prms.respKeys[0]
+        nonwords_practice[i]["respSide"]   = "left"
+        nonwords_practice[i]["respColour"] = "green"
+    } else if (words[i]["imgNum"] === 3) {
+        nonwords_practice[i]["imgName"]    = imgFiles[3].slice(7,-4)
+        nonwords_practice[i]["corrResp"]   = prms.respKeys[0]
+        nonwords_practice[i]["respSide"]   = "left"
+        nonwords_practice[i]["respColour"] = "green"
+    }
+}
+
+let materials_practice = shuffle(words_practice.concat(nonwords_practice))
+
+// experimental items
+// 100 real words and 100 nonwords 
 const imgNumWords    = shuffle(new Array(25).fill([0, 1, 2, 3]).flat());
 const imgNumNonWords = shuffle(new Array(25).fill([0, 1, 2, 3]).flat());
 
-// 100 real words and 100 non.words 
 const words = [
     { id:   1, word: "Besteck",       isWord: true, imgNum: imgNumWords[ 0] },
     { id:   2, word: "Ballon",        isWord: true, imgNum: imgNumWords[ 1] },
@@ -343,22 +397,22 @@ for (let i = 0; i < words.length; i++) {
 
 for (let i = 0; i < nonwords.length; i++) {
     if (nonwords[i]["imgNum"] === 0){
-        words[i]["imgName"]       = imgFiles[0].slice(7,-4)
+        nonwords[i]["imgName"]    = imgFiles[0].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[1]
         nonwords[i]["respSide"]   = "right"
         nonwords[i]["respColour"] = "red"
     } else if (words[i]["imgNum"] === 1) {
-        words[i]["imgName"]       = imgFiles[1].slice(7,-4)
+        nonwords[i]["imgName"]    = imgFiles[1].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[1]
         nonwords[i]["respSide"]   = "right"
         nonwords[i]["respColour"] = "red"
     } else if (words[i]["imgNum"] === 2) {
-        words[i]["imgName"]       = imgFiles[2].slice(7,-4)
+        nonwords[i]["imgName"]    = imgFiles[2].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[0]
         nonwords[i]["respSide"]   = "left"
         nonwords[i]["respColour"] = "green"
     } else if (words[i]["imgNum"] === 3) {
-        words[i]["imgName"]       = imgFiles[3].slice(7,-4)
+        nonwords[i]["imgName"]    = imgFiles[3].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[0]
         nonwords[i]["respSide"]   = "left"
         nonwords[i]["respColour"] = "green"
@@ -407,7 +461,7 @@ function showStim(args) {
     let num = args["imgNum"];
     let w = imgs[num].width;
     let h = imgs[num].height;
-    let s = 4;
+    let s = 8;
     ctx.drawImage(imgs[num], (-w/s)/2, 50, w/s, h/s)
 
     // draw word in centre
@@ -471,7 +525,7 @@ const stim = {
     translate_origin: true,
     stimulus_onset: 0,
     response_ends_trial: true,
-    choices: [prms.respKeys],
+    choices: prms.respKeys,
     trial_duration: prms.tooSlow,
     func: showStim,
     func_args: [
@@ -488,6 +542,21 @@ const stim = {
     },
 
     on_finish: function() { codeTrial(); }
+};
+
+
+const trial_timeline_practice = {
+    timeline: [
+        fixation_cross,
+        stim,
+        trial_feedback,
+        iti
+    ],
+    timeline_variables: materials_practice,
+    sample: {
+        type: "fixed-repetitions",
+        size: 1
+    }
 };
 
 const trial_timeline1 = {
@@ -511,7 +580,7 @@ const trial_timeline2 = {
         trial_feedback,
         iti
     ],
-    timeline_variables: materials1,
+    timeline_variables: materials2,
     sample: {
         type: "fixed-repetitions",
         size: 1
@@ -524,7 +593,7 @@ const trial_timeline3 = {
         trial_feedback,
         iti
     ],
-    timeline_variables: materials1,
+    timeline_variables: materials3,
     sample: {
         type: "fixed-repetitions",
         size: 1
@@ -538,7 +607,7 @@ const trial_timeline4 = {
         trial_feedback,
         iti
     ],
-    timeline_variables: materials1,
+    timeline_variables: materials4,
     sample: {
         type: "fixed-repetitions",
         size: 1
@@ -575,14 +644,20 @@ function genExpSeq() {
     let exp = [];
     
     exp.push(resize_de) 
-    // exp.push(fullscreen_on);
-    // exp.push(welcome_de);
+    
+    exp.push(fullscreen_on);
+    exp.push(welcome_de);
     // exp.push(vpInfoForm_de);
-    // exp.push(hideMouseCursor);
-    // exp.push(screenInfo);
-    // exp.push(task_instructions1);
-    // exp.push(task_instructions2);
+    exp.push(hideMouseCursor);
+    exp.push(screenInfo);
+    exp.push(task_instructions1);
+    exp.push(task_instructions2);
 
+    // practice block
+    exp.push(trial_timeline_practice);
+    exp.push(block_feedback);  // show previous block performance 
+    
+    // experimental blocks
     exp.push(trial_timeline1);
     exp.push(block_feedback);  // show previous block performance 
     exp.push(trial_timeline2);
@@ -591,16 +666,15 @@ function genExpSeq() {
     exp.push(block_feedback);  // show previous block performance 
     exp.push(trial_timeline4);
     
-    // exp.push(debrief_de);
-    // exp.push(showMouseCursor);
-    // exp.push(alphaNum);
-    // exp.push(fullscreen_off);
+    exp.push(debrief_de);
+    exp.push(showMouseCursor);
+    exp.push(alphaNum);
+    exp.push(fullscreen_off);
 
     return exp;
 
 }
 const EXP = genExpSeq();
-
 
 const data_filename = dirName + "data/" + expName + "_" + vpNum;
 const code_filename = dirName + "code/" + expName;
