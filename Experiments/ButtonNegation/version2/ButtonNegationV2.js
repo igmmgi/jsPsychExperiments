@@ -1,4 +1,4 @@
-// PictureNegation:
+// ButtonNegation:
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -72,10 +72,10 @@ const task_instructions2 = {
   
 // 4 image files
 const imgFiles = [
-    "images/JA_left_green.png",
-    "images/JA_left_red.png",
-    "images/NEIN_left_green.png",
-    "images/NEIN_left_red.png",
+    "images/2JA_left_greenWB.png",
+    "images/2JA_left_redWB.png",
+    "images/2NEIN_left_greenWB.png",
+    "images/2NEIN_left_redWB.png",
 ]
 const imgs = loadImages(imgFiles)
 
@@ -112,22 +112,26 @@ for (let i = 0; i < words_practice.length; i++) {
         words_practice[i]["imgName"]    = imgFiles[0].slice(7,-4)
         words_practice[i]["corrResp"]   = prms.respKeys[0]
         words_practice[i]["respSide"]   = "left"
-        words_practice[i]["respColour"] = "green"
+        words_practice[i]["respColour"] = "white"
+        words_practice[i]["comp"]       = "comp"
     } else if (words_practice[i]["imgNum"] === 1) {
         words_practice[i]["imgName"]    = imgFiles[1].slice(7,-4)
         words_practice[i]["corrResp"]   = prms.respKeys[0]
         words_practice[i]["respSide"]   = "left"
-        words_practice[i]["respColour"] = "green"
+        words_practice[i]["respColour"] = "black"
+        words_practice[i]["comp"]       = "incomp"
     } else if (words_practice[i]["imgNum"] === 2) {
         words_practice[i]["imgName"]    = imgFiles[2].slice(7,-4)
         words_practice[i]["corrResp"]   = prms.respKeys[1]
         words_practice[i]["respSide"]   = "right"
-        words_practice[i]["respColour"] = "red"
+        words_practice[i]["respColour"] = "black"
+        words_practice[i]["comp"]       = "incomp"
     } else if (words_practice[i]["imgNum"] === 3) {
         words_practice[i]["imgName"]    = imgFiles[3].slice(7,-4)
         words_practice[i]["corrResp"]   = prms.respKeys[1]
         words_practice[i]["respSide"]   = "right"
-        words_practice[i]["respColour"] = "red"
+        words_practice[i]["respColour"] = "white"
+        words_practice[i]["comp"]       = "comp"
     }
 }
 
@@ -136,22 +140,26 @@ for (let i = 0; i < nonwords_practice.length; i++) {
         nonwords_practice[i]["imgName"]    = imgFiles[0].slice(7,-4)
         nonwords_practice[i]["corrResp"]   = prms.respKeys[1]
         nonwords_practice[i]["respSide"]   = "right"
-        nonwords_practice[i]["respColour"] = "red"
+        nonwords_practice[i]["respColour"] = "black"
+        nonwords_practice[i]["comp"]       = "comp"
     } else if (nonwords_practice[i]["imgNum"] === 1) {
         nonwords_practice[i]["imgName"]    = imgFiles[1].slice(7,-4)
         nonwords_practice[i]["corrResp"]   = prms.respKeys[1]
         nonwords_practice[i]["respSide"]   = "right"
-        nonwords_practice[i]["respColour"] = "red"
+        nonwords_practice[i]["respColour"] = "white"
+        nonwords_practice[i]["comp"]       = "incomp"
     } else if (nonwords_practice[i]["imgNum"] === 2) {
         nonwords_practice[i]["imgName"]    = imgFiles[2].slice(7,-4)
         nonwords_practice[i]["corrResp"]   = prms.respKeys[0]
         nonwords_practice[i]["respSide"]   = "left"
-        nonwords_practice[i]["respColour"] = "green"
+        nonwords_practice[i]["respColour"] = "white"
+        nonwords_practice[i]["comp"]       = "incomp"
     } else if (nonwords_practice[i]["imgNum"] === 3) {
         nonwords_practice[i]["imgName"]    = imgFiles[3].slice(7,-4)
         nonwords_practice[i]["corrResp"]   = prms.respKeys[0]
         nonwords_practice[i]["respSide"]   = "left"
-        nonwords_practice[i]["respColour"] = "green"
+        nonwords_practice[i]["respColour"] = "black"
+        nonwords_practice[i]["comp"]       = "comp"
     }
 }
 
@@ -374,22 +382,26 @@ for (let i = 0; i < words.length; i++) {
         words[i]["imgName"]    = imgFiles[0].slice(7,-4)
         words[i]["corrResp"]   = prms.respKeys[0]
         words[i]["respSide"]   = "left"
-        words[i]["respColour"] = "green"
+        words[i]["respColour"] = "white"
+        words[i]["comp"]       = "comp"
     } else if (words[i]["imgNum"] === 1) {
         words[i]["imgName"]    = imgFiles[1].slice(7,-4)
         words[i]["corrResp"]   = prms.respKeys[0]
         words[i]["respSide"]   = "left"
-        words[i]["respColour"] = "green"
+        words[i]["respColour"] = "black"
+        words[i]["comp"]       = "incomp"
     } else if (words[i]["imgNum"] === 2) {
         words[i]["imgName"]    = imgFiles[2].slice(7,-4)
         words[i]["corrResp"]   = prms.respKeys[1]
         words[i]["respSide"]   = "right"
-        words[i]["respColour"] = "red"
+        words[i]["respColour"] = "black"
+        words[i]["comp"]       = "comp"
     } else if (words[i]["imgNum"] === 3) {
         words[i]["imgName"]    = imgFiles[3].slice(7,-4)
         words[i]["corrResp"]   = prms.respKeys[1]
         words[i]["respSide"]   = "right"
-        words[i]["respColour"] = "red"
+        words[i]["respColour"] = "white"
+        words[i]["comp"]       = "comp"
     }
 }
 
@@ -398,22 +410,26 @@ for (let i = 0; i < nonwords.length; i++) {
         nonwords[i]["imgName"]    = imgFiles[0].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[1]
         nonwords[i]["respSide"]   = "right"
-        nonwords[i]["respColour"] = "red"
+        nonwords[i]["respColour"] = "black"
+        nonwords[i]["comp"]       = "comp"
     } else if (nonwords[i]["imgNum"] === 1) {
         nonwords[i]["imgName"]    = imgFiles[1].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[1]
         nonwords[i]["respSide"]   = "right"
-        nonwords[i]["respColour"] = "red"
+        nonwords[i]["respColour"] = "white"
+        nonwords[i]["comp"]       = "incomp"
     } else if (nonwords[i]["imgNum"] === 2) {
         nonwords[i]["imgName"]    = imgFiles[2].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[0]
         nonwords[i]["respSide"]   = "left"
-        nonwords[i]["respColour"] = "green"
+        nonwords[i]["respColour"] = "white"
+        nonwords[i]["comp"]       = "incomp"
     } else if (nonwords[i]["imgNum"] === 3) {
         nonwords[i]["imgName"]    = imgFiles[3].slice(7,-4)
         nonwords[i]["corrResp"]   = prms.respKeys[0]
         nonwords[i]["respSide"]   = "left"
-        nonwords[i]["respColour"] = "green"
+        nonwords[i]["respColour"] = "black"
+        nonwords[i]["comp"]       = "comp"
     }
 }
 
