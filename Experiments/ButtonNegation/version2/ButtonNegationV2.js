@@ -72,10 +72,10 @@ const task_instructions2 = {
   
 // 4 image files
 const imgFiles = [
-    "images/2JA_left_greenWB.png",
-    "images/2JA_left_redWB.png",
-    "images/2NEIN_left_greenWB.png",
-    "images/2NEIN_left_redWB.png",
+    "images/2JA_left_green.png",
+    "images/2JA_left_red.png",
+    "images/2NEIN_left_green.png",
+    "images/2NEIN_left_red.png",
 ]
 const imgs = loadImages(imgFiles)
 
