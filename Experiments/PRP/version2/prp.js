@@ -387,7 +387,7 @@ const alphaNum = {
               "<h3 style='text-align:left;'>Wenn Sie Versuchspersonenstunden (0,5) benötigen, kopieren Sie den </h3>" +
               "<h3 style='text-align:left;'>folgenden zufällig generierten Code und senden Sie diesen zusammen mit </h3>" +
               "<h3 style='text-align:left;'>Ihrer Matrikelnummer per Email an:</h3><br>" +
-              "<h2>hiwipibio@student.uni-tuebingen.de</h2>" +
+              "<h2>hiwipibio@gmail.com</h2>" +
               "<h1>Code: " + randomString + "</h1><br>" +
               "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",  
 };
@@ -419,6 +419,7 @@ function genExpSeq() {
     }
     exp.push(debrief_de);
     exp.push(showMouseCursor);
+    exp.push(alphaNum);
     exp.push(fullscreen_off);
 
     return exp;
