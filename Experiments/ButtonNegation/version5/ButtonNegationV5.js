@@ -72,10 +72,10 @@ const task_instructions2 = {
   
 // 4 image files
 const imgFiles = [
-    "images/5JA_left_greenDD.png",
-    "images/5JA_left_redDD.png",
-    "images/5NEIN_left_greenDD.png",
-    "images/5NEIN_left_redDD.png",
+    "images/5JA_left_green.png",
+    "images/5JA_left_red.png",
+    "images/5NEIN_left_green.png",
+    "images/5NEIN_left_red.png",
 ]
 const imgs = loadImages(imgFiles)
 
@@ -86,24 +86,24 @@ const imgNumNonWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat());
 
 const words_practice = [
     { id: 1, word: "Optimismus", isWord: true, imgNum: imgNumWordsPractice[ 0] },
-    { id: 1, word: "Wurf" ,      isWord: true, imgNum: imgNumWordsPractice[ 1] },
-    { id: 1, word: "Panama",     isWord: true, imgNum: imgNumWordsPractice[ 2] },
-    { id: 1, word: "Milch",      isWord: true, imgNum: imgNumWordsPractice[ 3] },
-    { id: 1, word: "Fisch",      isWord: true, imgNum: imgNumWordsPractice[ 4] },
-    { id: 1, word: "Krippe",     isWord: true, imgNum: imgNumWordsPractice[ 5] },
-    { id: 1, word: "Brett",      isWord: true, imgNum: imgNumWordsPractice[ 6] },
-    { id: 1, word: "Ziegel",     isWord: true, imgNum: imgNumWordsPractice[ 7] },
+    { id: 2, word: "Wurf" ,      isWord: true, imgNum: imgNumWordsPractice[ 1] },
+    { id: 3, word: "Panama",     isWord: true, imgNum: imgNumWordsPractice[ 2] },
+    { id: 4, word: "Milch",      isWord: true, imgNum: imgNumWordsPractice[ 3] },
+    { id: 5, word: "Fisch",      isWord: true, imgNum: imgNumWordsPractice[ 4] },
+    { id: 6, word: "Krippe",     isWord: true, imgNum: imgNumWordsPractice[ 5] },
+    { id: 7, word: "Brett",      isWord: true, imgNum: imgNumWordsPractice[ 6] },
+    { id: 8, word: "Ziegel",     isWord: true, imgNum: imgNumWordsPractice[ 7] },
 ];
 
 const nonwords_practice = [
-    { id: 1, word: "Zonko",     isWord: false, imgNum: imgNumWordsPractice[ 0] },
-    { id: 1, word: "Balpim",    isWord: false, imgNum: imgNumWordsPractice[ 1] },
-    { id: 1, word: "Kobldar",   isWord: false, imgNum: imgNumWordsPractice[ 2] },
-    { id: 1, word: "Fipusel",   isWord: false, imgNum: imgNumWordsPractice[ 3] },
-    { id: 1, word: "Molaki"	,   isWord: false, imgNum: imgNumWordsPractice[ 4] },
-    { id: 1, word: "Papusel",   isWord: false, imgNum: imgNumWordsPractice[ 5] },
-    { id: 1, word: "Worip",	    isWord: false, imgNum: imgNumWordsPractice[ 6] },
-    { id: 1, word: "Oligappus", isWord: false, imgNum: imgNumWordsPractice[ 7] },
+    { id:  9, word: "Zonko",     isWord: false, imgNum: imgNumWordsPractice[ 0] },
+    { id: 10, word: "Balpim",    isWord: false, imgNum: imgNumWordsPractice[ 1] },
+    { id: 11, word: "Kobldar",   isWord: false, imgNum: imgNumWordsPractice[ 2] },
+    { id: 12, word: "Fipusel",   isWord: false, imgNum: imgNumWordsPractice[ 3] },
+    { id: 13, word: "Molaki",    isWord: false, imgNum: imgNumWordsPractice[ 4] },
+    { id: 14, word: "Papusel",   isWord: false, imgNum: imgNumWordsPractice[ 5] },
+    { id: 15, word: "Worip",	 isWord: false, imgNum: imgNumWordsPractice[ 6] },
+    { id: 16, word: "Oligappus", isWord: false, imgNum: imgNumWordsPractice[ 7] },
 ];
 
 // assign correct responses
@@ -112,25 +112,25 @@ for (let i = 0; i < words_practice.length; i++) {
         words_practice[i]["imgName"]     = imgFiles[0].slice(7,-4)
         words_practice[i]["corrResp"]    = prms.respKeys[0]
         words_practice[i]["respSide"]    = "left"
-        words_practice[i]["respFeature"] = "dotted"
+        words_practice[i]["respFeature"] = "smooth"
         words_practice[i]["comp"]        = "comp"
     } else if (words_practice[i]["imgNum"] === 1) {
         words_practice[i]["imgName"]     = imgFiles[1].slice(7,-4)
         words_practice[i]["corrResp"]    = prms.respKeys[0]
         words_practice[i]["respSide"]    = "left"
-        words_practice[i]["respFeature"] = "dashed"
+        words_practice[i]["respFeature"] = "spiky"
         words_practice[i]["comp"]        = "incomp"
     } else if (words_practice[i]["imgNum"] === 2) {
         words_practice[i]["imgName"]     = imgFiles[2].slice(7,-4)
         words_practice[i]["corrResp"]    = prms.respKeys[1]
         words_practice[i]["respSide"]    = "right"
-        words_practice[i]["respFeature"] = "dashed"
+        words_practice[i]["respFeature"] = "spiky"
         words_practice[i]["comp"]        = "incomp"
     } else if (words_practice[i]["imgNum"] === 3) {
         words_practice[i]["imgName"]     = imgFiles[3].slice(7,-4)
         words_practice[i]["corrResp"]    = prms.respKeys[1]
         words_practice[i]["respSide"]    = "right"
-        words_practice[i]["respFeature"] = "dotted"
+        words_practice[i]["respFeature"] = "smooth"
         words_practice[i]["comp"]        = "comp"
     }
 }
@@ -140,25 +140,25 @@ for (let i = 0; i < nonwords_practice.length; i++) {
         nonwords_practice[i]["imgName"]     = imgFiles[0].slice(7,-4)
         nonwords_practice[i]["corrResp"]    = prms.respKeys[1]
         nonwords_practice[i]["respSide"]    = "right"
-        nonwords_practice[i]["respFeature"] = "dashed"
+        nonwords_practice[i]["respFeature"] = "spiky"
         nonwords_practice[i]["comp"]        = "comp"
     } else if (nonwords_practice[i]["imgNum"] === 1) {
         nonwords_practice[i]["imgName"]     = imgFiles[1].slice(7,-4)
         nonwords_practice[i]["corrResp"]    = prms.respKeys[1]
         nonwords_practice[i]["respSide"]    = "right"
-        nonwords_practice[i]["respFeature"] = "dotted"
+        nonwords_practice[i]["respFeature"] = "smooth"
         nonwords_practice[i]["comp"]        = "incomp"
     } else if (nonwords_practice[i]["imgNum"] === 2) {
         nonwords_practice[i]["imgName"]     = imgFiles[2].slice(7,-4)
         nonwords_practice[i]["corrResp"]    = prms.respKeys[0]
         nonwords_practice[i]["respSide"]    = "left"
-        nonwords_practice[i]["respFeature"] = "dotted"
+        nonwords_practice[i]["respFeature"] = "smooth"
         nonwords_practice[i]["comp"]        = "incomp"
     } else if (nonwords_practice[i]["imgNum"] === 3) {
         nonwords_practice[i]["imgName"]     = imgFiles[3].slice(7,-4)
         nonwords_practice[i]["corrResp"]    = prms.respKeys[0]
         nonwords_practice[i]["respSide"]    = "left"
-        nonwords_practice[i]["respFeature"] = "dashed"
+        nonwords_practice[i]["respFeature"] = "spiky"
         nonwords_practice[i]["comp"]        = "comp"
     }
 }
@@ -382,25 +382,25 @@ for (let i = 0; i < words.length; i++) {
         words[i]["imgName"]     = imgFiles[0].slice(7,-4)
         words[i]["corrResp"]    = prms.respKeys[0]
         words[i]["respSide"]    = "left"
-        words[i]["respFeature"] = "dotted"
+        words[i]["respFeature"] = "smooth"
         words[i]["comp"]        = "comp"
     } else if (words[i]["imgNum"] === 1) {
         words[i]["imgName"]     = imgFiles[1].slice(7,-4)
         words[i]["corrResp"]    = prms.respKeys[0]
         words[i]["respSide"]    = "left"
-        words[i]["respFeature"] = "dashed"
+        words[i]["respFeature"] = "spiky"
         words[i]["comp"]        = "incomp"
     } else if (words[i]["imgNum"] === 2) {
         words[i]["imgName"]     = imgFiles[2].slice(7,-4)
         words[i]["corrResp"]    = prms.respKeys[1]
         words[i]["respSide"]    = "right"
-        words[i]["respFeature"] = "dashed"
+        words[i]["respFeature"] = "spiky"
         words[i]["comp"]        = "incomp"
     } else if (words[i]["imgNum"] === 3) {
         words[i]["imgName"]     = imgFiles[3].slice(7,-4)
         words[i]["corrResp"]    = prms.respKeys[1]
         words[i]["respSide"]    = "right"
-        words[i]["respFeature"] = "dotted"
+        words[i]["respFeature"] = "smooth"
         words[i]["comp"]        = "comp"
     }
 }
@@ -410,25 +410,25 @@ for (let i = 0; i < nonwords.length; i++) {
         nonwords[i]["imgName"]     = imgFiles[0].slice(7,-4)
         nonwords[i]["corrResp"]    = prms.respKeys[1]
         nonwords[i]["respSide"]    = "right"
-        nonwords[i]["respFeature"] = "dashed"
+        nonwords[i]["respFeature"] = "spiky"
         nonwords[i]["comp"]        = "comp"
     } else if (nonwords[i]["imgNum"] === 1) {
         nonwords[i]["imgName"]     = imgFiles[1].slice(7,-4)
         nonwords[i]["corrResp"]    = prms.respKeys[1]
         nonwords[i]["respSide"]    = "right"
-        nonwords[i]["respFeature"] = "dotted"
+        nonwords[i]["respFeature"] = "smooth"
         nonwords[i]["comp"]        = "incomp"
     } else if (nonwords[i]["imgNum"] === 2) {
         nonwords[i]["imgName"]     = imgFiles[2].slice(7,-4)
         nonwords[i]["corrResp"]    = prms.respKeys[0]
         nonwords[i]["respSide"]    = "left"
-        nonwords[i]["respFeature"] = "dotted"
+        nonwords[i]["respFeature"] = "smooth"
         nonwords[i]["comp"]        = "incomp"
     } else if (nonwords[i]["imgNum"] === 3) {
         nonwords[i]["imgName"]     = imgFiles[3].slice(7,-4)
         nonwords[i]["corrResp"]    = prms.respKeys[0]
         nonwords[i]["respSide"]    = "left"
-        nonwords[i]["respFeature"] = "dashed"
+        nonwords[i]["respFeature"] = "spiky"
         nonwords[i]["comp"]        = "comp"
     }
 }
@@ -549,6 +549,7 @@ const stim = {
         imgNum: jsPsych.timelineVariable("imgNum"),
         imgName: jsPsych.timelineVariable("imgName"),
         word: jsPsych.timelineVariable("word"),
+        id: jsPsych.timelineVariable("id"),
         respSide: jsPsych.timelineVariable("respSide"),
         respColour: jsPsych.timelineVariable("respColour"),
         corrResp: jsPsych.timelineVariable("corrResp")
@@ -660,7 +661,7 @@ function genExpSeq() {
     
     exp.push(fullscreen_on);
     exp.push(welcome_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);

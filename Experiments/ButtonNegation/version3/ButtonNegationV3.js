@@ -72,10 +72,10 @@ const task_instructions2 = {
   
 // 4 image files
 const imgFiles = [
-    "images/3JA_left_greenSF.png",
-    "images/3JA_left_redSF.png",
-    "images/3NEIN_left_greenSF.png",
-    "images/3NEIN_left_redSF.png",
+    "images/3JA_left_green.png",
+    "images/3JA_left_red.png",
+    "images/3NEIN_left_green.png",
+    "images/3NEIN_left_red.png",
 ]
 const imgs = loadImages(imgFiles)
 
@@ -86,24 +86,24 @@ const imgNumNonWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat());
 
 const words_practice = [
     { id: 1, word: "Optimismus", isWord: true, imgNum: imgNumWordsPractice[ 0] },
-    { id: 1, word: "Wurf" ,      isWord: true, imgNum: imgNumWordsPractice[ 1] },
-    { id: 1, word: "Panama",     isWord: true, imgNum: imgNumWordsPractice[ 2] },
-    { id: 1, word: "Milch",      isWord: true, imgNum: imgNumWordsPractice[ 3] },
-    { id: 1, word: "Fisch",      isWord: true, imgNum: imgNumWordsPractice[ 4] },
-    { id: 1, word: "Krippe",     isWord: true, imgNum: imgNumWordsPractice[ 5] },
-    { id: 1, word: "Brett",      isWord: true, imgNum: imgNumWordsPractice[ 6] },
-    { id: 1, word: "Ziegel",     isWord: true, imgNum: imgNumWordsPractice[ 7] },
+    { id: 2, word: "Wurf" ,      isWord: true, imgNum: imgNumWordsPractice[ 1] },
+    { id: 3, word: "Panama",     isWord: true, imgNum: imgNumWordsPractice[ 2] },
+    { id: 4, word: "Milch",      isWord: true, imgNum: imgNumWordsPractice[ 3] },
+    { id: 5, word: "Fisch",      isWord: true, imgNum: imgNumWordsPractice[ 4] },
+    { id: 6, word: "Krippe",     isWord: true, imgNum: imgNumWordsPractice[ 5] },
+    { id: 7, word: "Brett",      isWord: true, imgNum: imgNumWordsPractice[ 6] },
+    { id: 8, word: "Ziegel",     isWord: true, imgNum: imgNumWordsPractice[ 7] },
 ];
 
 const nonwords_practice = [
-    { id: 1, word: "Zonko",     isWord: false, imgNum: imgNumWordsPractice[ 0] },
-    { id: 1, word: "Balpim",    isWord: false, imgNum: imgNumWordsPractice[ 1] },
-    { id: 1, word: "Kobldar",   isWord: false, imgNum: imgNumWordsPractice[ 2] },
-    { id: 1, word: "Fipusel",   isWord: false, imgNum: imgNumWordsPractice[ 3] },
-    { id: 1, word: "Molaki"	,   isWord: false, imgNum: imgNumWordsPractice[ 4] },
-    { id: 1, word: "Papusel",   isWord: false, imgNum: imgNumWordsPractice[ 5] },
-    { id: 1, word: "Worip",	    isWord: false, imgNum: imgNumWordsPractice[ 6] },
-    { id: 1, word: "Oligappus", isWord: false, imgNum: imgNumWordsPractice[ 7] },
+    { id:  9, word: "Zonko",     isWord: false, imgNum: imgNumWordsPractice[ 0] },
+    { id: 10, word: "Balpim",    isWord: false, imgNum: imgNumWordsPractice[ 1] },
+    { id: 11, word: "Kobldar",   isWord: false, imgNum: imgNumWordsPractice[ 2] },
+    { id: 12, word: "Fipusel",   isWord: false, imgNum: imgNumWordsPractice[ 3] },
+    { id: 13, word: "Molaki",    isWord: false, imgNum: imgNumWordsPractice[ 4] },
+    { id: 14, word: "Papusel",   isWord: false, imgNum: imgNumWordsPractice[ 5] },
+    { id: 15, word: "Worip",     isWord: false, imgNum: imgNumWordsPractice[ 6] },
+    { id: 16, word: "Oligappus", isWord: false, imgNum: imgNumWordsPractice[ 7] },
 ];
 
 // assign correct responses
@@ -549,6 +549,7 @@ const stim = {
         imgNum: jsPsych.timelineVariable("imgNum"),
         imgName: jsPsych.timelineVariable("imgName"),
         word: jsPsych.timelineVariable("word"),
+        id: jsPsych.timelineVariable("id"),
         respSide: jsPsych.timelineVariable("respSide"),
         respColour: jsPsych.timelineVariable("respColour"),
         corrResp: jsPsych.timelineVariable("corrResp")
@@ -660,7 +661,7 @@ function genExpSeq() {
     
     exp.push(fullscreen_on);
     exp.push(welcome_de);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
