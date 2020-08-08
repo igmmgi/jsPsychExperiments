@@ -270,7 +270,6 @@ function blockStartText() {
         "<h3 style='text-align: center;'>" + "(\"Q-Taste\") &emsp;&emsp;&emsp;&emsp; (\"W-Taste\") &emsp;&emsp;&emsp;&emsp;&emsp; (\"O-Taste\") &emsp;&emsp;&emsp;&emsp; (\"P-Taste\")" + "</h3><br>" +
         "<H3>Bitte versuche so schnell und so genau wie möglich zu sein! </H3><br>" +
         "<H2>Drücke eine beliebige Taste um fortzufahren!</H2>";
-    prms.cBlk += 1;
     return blockStartTxt;
 }
 
