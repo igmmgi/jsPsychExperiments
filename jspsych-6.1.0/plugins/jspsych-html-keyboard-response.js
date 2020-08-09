@@ -1,3 +1,14 @@
+/**
+ * jspsych-html-keyboard-response
+ * Josh de Leeuw
+ *
+ * plugin for displaying a stimulus and getting a keyboard response
+ *
+ * documentation: docs.jspsych.org
+ *
+ **/
+
+
 jsPsych.plugins["html-keyboard-response"] = (function() {
 
   var plugin = {};
@@ -135,4 +146,4 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
   };
 
   return plugin;
-})(); 
+})();
