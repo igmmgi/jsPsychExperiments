@@ -456,7 +456,7 @@ function showStim(args) {
   let ctx = document.getElementById('canvas').getContext('2d');
 
   // draw response buttons
-  let num = args['imgNum'];
+  let num = args.imgNum;
   let w = imgs[num].width;
   let h = imgs[num].height;
   let s = 6;
@@ -467,7 +467,7 @@ function showStim(args) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText(args['word'], 0, 0);
+  ctx.fillText(args.word, 0, 0);
 }
 
 function drawFeedback() {

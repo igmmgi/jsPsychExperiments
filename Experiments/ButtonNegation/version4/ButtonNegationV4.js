@@ -416,6 +416,7 @@ for (let i = 0; i < nonwords.length; i++) {
     nonwords[i].corrResp = prms.respKeys[0];
     nonwords[i].respSide = 'left';
     nonwords[i].respFeature = 'square';
+  }
 }
 
 // randomly select 25 words and 25 non-words in each block (4 exp blocks in total)
@@ -455,7 +456,7 @@ function showStim(args) {
   let ctx = document.getElementById('canvas').getContext('2d');
 
   // draw response buttons
-  let num = args['imgNum'];
+  let num = args.imgNum;
   let w = imgs[num].width;
   let h = imgs[num].height;
   let s = 6;
@@ -466,7 +467,7 @@ function showStim(args) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText(args['word'], 0, 0);
+  ctx.fillText(args.word, 0, 0);
 }
 
 function drawFeedback() {
