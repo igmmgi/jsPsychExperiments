@@ -110,58 +110,50 @@ const nonwords_practice = [
 
 // assign correct responses
 for (let i = 0; i < words_practice.length; i++) {
-  if (words_practice[i]['imgNum'] === 0) {
-    words_practice[i]['imgName'] = imgFiles[0].slice(7, -4);
-    words_practice[i]['corrResp'] = prms.respKeys[0];
-    words_practice[i]['respSide'] = 'left';
-    words_practice[i]['respFeature'] = 'smooth';
-    words_practice[i]['comp'] = 'comp';
-  } else if (words_practice[i]['imgNum'] === 1) {
-    words_practice[i]['imgName'] = imgFiles[1].slice(7, -4);
-    words_practice[i]['corrResp'] = prms.respKeys[0];
-    words_practice[i]['respSide'] = 'left';
-    words_practice[i]['respFeature'] = 'spiky';
-    words_practice[i]['comp'] = 'incomp';
-  } else if (words_practice[i]['imgNum'] === 2) {
-    words_practice[i]['imgName'] = imgFiles[2].slice(7, -4);
-    words_practice[i]['corrResp'] = prms.respKeys[1];
-    words_practice[i]['respSide'] = 'right';
-    words_practice[i]['respFeature'] = 'spiky';
-    words_practice[i]['comp'] = 'incomp';
-  } else if (words_practice[i]['imgNum'] === 3) {
-    words_practice[i]['imgName'] = imgFiles[3].slice(7, -4);
-    words_practice[i]['corrResp'] = prms.respKeys[1];
-    words_practice[i]['respSide'] = 'right';
-    words_practice[i]['respFeature'] = 'smooth';
-    words_practice[i]['comp'] = 'comp';
+  if (words_practice[i].imgNum === 0) {
+    words_practice[i].imgName = imgFiles[0].slice(7, -4);
+    words_practice[i].corrResp = prms.respKeys[0];
+    words_practice[i].respSide = 'left';
+    words_practice[i].respFeature = 'smooth';
+  } else if (words_practice[i].imgNum === 1) {
+    words_practice[i].imgName = imgFiles[1].slice(7, -4);
+    words_practice[i].corrResp = prms.respKeys[0];
+    words_practice[i].respSide = 'left';
+    words_practice[i].respFeature = 'spiky';
+  } else if (words_practice[i].imgNum === 2) {
+    words_practice[i].imgName = imgFiles[2].slice(7, -4);
+    words_practice[i].corrResp = prms.respKeys[1];
+    words_practice[i].respSide = 'right';
+    words_practice[i].respFeature = 'spiky';
+  } else if (words_practice[i].imgNum === 3) {
+    words_practice[i].imgName = imgFiles[3].slice(7, -4);
+    words_practice[i].corrResp = prms.respKeys[1];
+    words_practice[i].respSide = 'right';
+    words_practice[i].respFeature = 'smooth';
   }
 }
 
 for (let i = 0; i < nonwords_practice.length; i++) {
-  if (nonwords_practice[i]['imgNum'] === 0) {
-    nonwords_practice[i]['imgName'] = imgFiles[0].slice(7, -4);
-    nonwords_practice[i]['corrResp'] = prms.respKeys[1];
-    nonwords_practice[i]['respSide'] = 'right';
-    nonwords_practice[i]['respFeature'] = 'spiky';
-    nonwords_practice[i]['comp'] = 'comp';
-  } else if (nonwords_practice[i]['imgNum'] === 1) {
-    nonwords_practice[i]['imgName'] = imgFiles[1].slice(7, -4);
-    nonwords_practice[i]['corrResp'] = prms.respKeys[1];
-    nonwords_practice[i]['respSide'] = 'right';
-    nonwords_practice[i]['respFeature'] = 'smooth';
-    nonwords_practice[i]['comp'] = 'incomp';
-  } else if (nonwords_practice[i]['imgNum'] === 2) {
-    nonwords_practice[i]['imgName'] = imgFiles[2].slice(7, -4);
-    nonwords_practice[i]['corrResp'] = prms.respKeys[0];
-    nonwords_practice[i]['respSide'] = 'left';
-    nonwords_practice[i]['respFeature'] = 'smooth';
-    nonwords_practice[i]['comp'] = 'incomp';
-  } else if (nonwords_practice[i]['imgNum'] === 3) {
-    nonwords_practice[i]['imgName'] = imgFiles[3].slice(7, -4);
-    nonwords_practice[i]['corrResp'] = prms.respKeys[0];
-    nonwords_practice[i]['respSide'] = 'left';
-    nonwords_practice[i]['respFeature'] = 'spiky';
-    nonwords_practice[i]['comp'] = 'comp';
+  if (nonwords_practice[i].imgNum === 0) {
+    nonwords_practice[i].imgName = imgFiles[0].slice(7, -4);
+    nonwords_practice[i].corrResp = prms.respKeys[1];
+    nonwords_practice[i].respSide = 'right';
+    nonwords_practice[i].respFeature = 'spiky';
+  } else if (nonwords_practice[i].imgNum === 1) {
+    nonwords_practice[i].imgName = imgFiles[1].slice(7, -4);
+    nonwords_practice[i].corrResp = prms.respKeys[1];
+    nonwords_practice[i].respSide = 'right';
+    nonwords_practice[i].respFeature = 'smooth';
+  } else if (nonwords_practice[i].imgNum === 2) {
+    nonwords_practice[i].imgName = imgFiles[2].slice(7, -4);
+    nonwords_practice[i].corrResp = prms.respKeys[0];
+    nonwords_practice[i].respSide = 'left';
+    nonwords_practice[i].respFeature = 'smooth';
+  } else if (nonwords_practice[i].imgNum === 3) {
+    nonwords_practice[i].imgName = imgFiles[3].slice(7, -4);
+    nonwords_practice[i].corrResp = prms.respKeys[0];
+    nonwords_practice[i].respSide = 'left';
+    nonwords_practice[i].respFeature = 'spiky';
   }
 }
 
@@ -380,58 +372,50 @@ const nonwords = [
 
 // assign correct responses
 for (let i = 0; i < words.length; i++) {
-  if (words[i]['imgNum'] === 0) {
-    words[i]['imgName'] = imgFiles[0].slice(7, -4);
-    words[i]['corrResp'] = prms.respKeys[0];
-    words[i]['respSide'] = 'left';
-    words[i]['respFeature'] = 'smooth';
-    words[i]['comp'] = 'comp';
-  } else if (words[i]['imgNum'] === 1) {
-    words[i]['imgName'] = imgFiles[1].slice(7, -4);
-    words[i]['corrResp'] = prms.respKeys[0];
-    words[i]['respSide'] = 'left';
-    words[i]['respFeature'] = 'spiky';
-    words[i]['comp'] = 'incomp';
-  } else if (words[i]['imgNum'] === 2) {
-    words[i]['imgName'] = imgFiles[2].slice(7, -4);
-    words[i]['corrResp'] = prms.respKeys[1];
-    words[i]['respSide'] = 'right';
-    words[i]['respFeature'] = 'spiky';
-    words[i]['comp'] = 'incomp';
-  } else if (words[i]['imgNum'] === 3) {
-    words[i]['imgName'] = imgFiles[3].slice(7, -4);
-    words[i]['corrResp'] = prms.respKeys[1];
-    words[i]['respSide'] = 'right';
-    words[i]['respFeature'] = 'smooth';
-    words[i]['comp'] = 'comp';
+  if (words[i].imgNum === 0) {
+    words[i].imgName = imgFiles[0].slice(7, -4);
+    words[i].corrResp = prms.respKeys[0];
+    words[i].respSide = 'left';
+    words[i].respFeature = 'smooth';
+  } else if (words[i].imgNum === 1) {
+    words[i].imgName = imgFiles[1].slice(7, -4);
+    words[i].corrResp = prms.respKeys[0];
+    words[i].respSide = 'left';
+    words[i].respFeature = 'spiky';
+  } else if (words[i].imgNum === 2) {
+    words[i].imgName = imgFiles[2].slice(7, -4);
+    words[i].corrResp = prms.respKeys[1];
+    words[i].respSide = 'right';
+    words[i].respFeature = 'spiky';
+  } else if (words[i].imgNum === 3) {
+    words[i].imgName = imgFiles[3].slice(7, -4);
+    words[i].corrResp = prms.respKeys[1];
+    words[i].respSide = 'right';
+    words[i].respFeature = 'smooth';
   }
 }
 
 for (let i = 0; i < nonwords.length; i++) {
-  if (nonwords[i]['imgNum'] === 0) {
-    nonwords[i]['imgName'] = imgFiles[0].slice(7, -4);
-    nonwords[i]['corrResp'] = prms.respKeys[1];
-    nonwords[i]['respSide'] = 'right';
-    nonwords[i]['respFeature'] = 'spiky';
-    nonwords[i]['comp'] = 'comp';
-  } else if (nonwords[i]['imgNum'] === 1) {
-    nonwords[i]['imgName'] = imgFiles[1].slice(7, -4);
-    nonwords[i]['corrResp'] = prms.respKeys[1];
-    nonwords[i]['respSide'] = 'right';
-    nonwords[i]['respFeature'] = 'smooth';
-    nonwords[i]['comp'] = 'incomp';
-  } else if (nonwords[i]['imgNum'] === 2) {
-    nonwords[i]['imgName'] = imgFiles[2].slice(7, -4);
-    nonwords[i]['corrResp'] = prms.respKeys[0];
-    nonwords[i]['respSide'] = 'left';
-    nonwords[i]['respFeature'] = 'smooth';
-    nonwords[i]['comp'] = 'incomp';
-  } else if (nonwords[i]['imgNum'] === 3) {
-    nonwords[i]['imgName'] = imgFiles[3].slice(7, -4);
-    nonwords[i]['corrResp'] = prms.respKeys[0];
-    nonwords[i]['respSide'] = 'left';
-    nonwords[i]['respFeature'] = 'spiky';
-    nonwords[i]['comp'] = 'comp';
+  if (nonwords[i].imgNum === 0) {
+    nonwords[i].imgName = imgFiles[0].slice(7, -4);
+    nonwords[i].corrResp = prms.respKeys[1];
+    nonwords[i].respSide = 'right';
+    nonwords[i].respFeature = 'spiky';
+  } else if (nonwords[i].imgNum === 1) {
+    nonwords[i].imgName = imgFiles[1].slice(7, -4);
+    nonwords[i].corrResp = prms.respKeys[1];
+    nonwords[i].respSide = 'right';
+    nonwords[i].respFeature = 'smooth';
+  } else if (nonwords[i].imgNum === 2) {
+    nonwords[i].imgName = imgFiles[2].slice(7, -4);
+    nonwords[i].corrResp = prms.respKeys[0];
+    nonwords[i].respSide = 'left';
+    nonwords[i].respFeature = 'smooth';
+  } else if (nonwords[i].imgNum === 3) {
+    nonwords[i].imgName = imgFiles[3].slice(7, -4);
+    nonwords[i].corrResp = prms.respKeys[0];
+    nonwords[i].respSide = 'left';
+    nonwords[i].respFeature = 'spiky';
   }
 }
 

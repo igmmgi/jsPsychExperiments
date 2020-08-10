@@ -110,50 +110,50 @@ const nonwords_practice = [
 
 // assign correct responses
 for (let i = 0; i < words_practice.length; i++) {
-  if (words_practice[i]['imgNum'] === 0) {
-    words_practice[i]['imgName'] = imgFiles[0].slice(7, -4);
-    words_practice[i]['corrResp'] = prms.respKeys[0];
-    words_practice[i]['respSide'] = 'left';
-    words_practice[i]['respColour'] = 'white';
-  } else if (words_practice[i]['imgNum'] === 1) {
-    words_practice[i]['imgName'] = imgFiles[1].slice(7, -4);
-    words_practice[i]['corrResp'] = prms.respKeys[0];
-    words_practice[i]['respSide'] = 'left';
-    words_practice[i]['respColour'] = 'black';
-  } else if (words_practice[i]['imgNum'] === 2) {
-    words_practice[i]['imgName'] = imgFiles[2].slice(7, -4);
-    words_practice[i]['corrResp'] = prms.respKeys[1];
-    words_practice[i]['respSide'] = 'right';
-    words_practice[i]['respColour'] = 'black';
-  } else if (words_practice[i]['imgNum'] === 3) {
-    words_practice[i]['imgName'] = imgFiles[3].slice(7, -4);
-    words_practice[i]['corrResp'] = prms.respKeys[1];
-    words_practice[i]['respSide'] = 'right';
-    words_practice[i]['respColour'] = 'white';
+  if (words_practice[i].imgNum === 0) {
+    words_practice[i].imgName = imgFiles[0].slice(7, -4);
+    words_practice[i].corrResp = prms.respKeys[0];
+    words_practice[i].respSide = 'left';
+    words_practice[i].respColour = 'white';
+  } else if (words_practice[i].imgNum === 1) {
+    words_practice[i].imgName = imgFiles[1].slice(7, -4);
+    words_practice[i].corrResp = prms.respKeys[0];
+    words_practice[i].respSide = 'left';
+    words_practice[i].respColour = 'black';
+  } else if (words_practice[i].imgNum === 2) {
+    words_practice[i].imgName = imgFiles[2].slice(7, -4);
+    words_practice[i].corrResp = prms.respKeys[1];
+    words_practice[i].respSide = 'right';
+    words_practice[i].respColour = 'black';
+  } else if (words_practice[i].imgNum === 3) {
+    words_practice[i].imgName = imgFiles[3].slice(7, -4);
+    words_practice[i].corrResp = prms.respKeys[1];
+    words_practice[i].respSide = 'right';
+    words_practice[i].respColour = 'white';
   }
 }
 
 for (let i = 0; i < nonwords_practice.length; i++) {
-  if (nonwords_practice[i]['imgNum'] === 0) {
-    nonwords_practice[i]['imgName'] = imgFiles[0].slice(7, -4);
-    nonwords_practice[i]['corrResp'] = prms.respKeys[1];
-    nonwords_practice[i]['respSide'] = 'right';
-    nonwords_practice[i]['respColour'] = 'black';
-  } else if (nonwords_practice[i]['imgNum'] === 1) {
-    nonwords_practice[i]['imgName'] = imgFiles[1].slice(7, -4);
-    nonwords_practice[i]['corrResp'] = prms.respKeys[1];
-    nonwords_practice[i]['respSide'] = 'right';
-    nonwords_practice[i]['respColour'] = 'white';
-  } else if (nonwords_practice[i]['imgNum'] === 2) {
-    nonwords_practice[i]['imgName'] = imgFiles[2].slice(7, -4);
-    nonwords_practice[i]['corrResp'] = prms.respKeys[0];
-    nonwords_practice[i]['respSide'] = 'left';
-    nonwords_practice[i]['respColour'] = 'white';
-  } else if (nonwords_practice[i]['imgNum'] === 3) {
-    nonwords_practice[i]['imgName'] = imgFiles[3].slice(7, -4);
-    nonwords_practice[i]['corrResp'] = prms.respKeys[0];
-    nonwords_practice[i]['respSide'] = 'left';
-    nonwords_practice[i]['respColour'] = 'black';
+  if (nonwords_practice[i].imgNum === 0) {
+    nonwords_practice[i].imgName = imgFiles[0].slice(7, -4);
+    nonwords_practice[i].corrResp = prms.respKeys[1];
+    nonwords_practice[i].respSide = 'right';
+    nonwords_practice[i].respColour = 'black';
+  } else if (nonwords_practice[i].imgNum === 1) {
+    nonwords_practice[i].imgName = imgFiles[1].slice(7, -4);
+    nonwords_practice[i].corrResp = prms.respKeys[1];
+    nonwords_practice[i].respSide = 'right';
+    nonwords_practice[i].respColour = 'white';
+  } else if (nonwords_practice[i].imgNum === 2) {
+    nonwords_practice[i].imgName = imgFiles[2].slice(7, -4);
+    nonwords_practice[i].corrResp = prms.respKeys[0];
+    nonwords_practice[i].respSide = 'left';
+    nonwords_practice[i].respColour = 'white';
+  } else if (nonwords_practice[i].imgNum === 3) {
+    nonwords_practice[i].imgName = imgFiles[3].slice(7, -4);
+    nonwords_practice[i].corrResp = prms.respKeys[0];
+    nonwords_practice[i].respSide = 'left';
+    nonwords_practice[i].respColour = 'black';
   }
 }
 
@@ -372,50 +372,50 @@ const nonwords = [
 
 // assign correct responses
 for (let i = 0; i < words.length; i++) {
-  if (words[i]['imgNum'] === 0) {
-    words[i]['imgName'] = imgFiles[0].slice(7, -4);
-    words[i]['corrResp'] = prms.respKeys[0];
-    words[i]['respSide'] = 'left';
-    words[i]['respColour'] = 'white';
-  } else if (words[i]['imgNum'] === 1) {
-    words[i]['imgName'] = imgFiles[1].slice(7, -4);
-    words[i]['corrResp'] = prms.respKeys[0];
-    words[i]['respSide'] = 'left';
-    words[i]['respColour'] = 'black';
-  } else if (words[i]['imgNum'] === 2) {
-    words[i]['imgName'] = imgFiles[2].slice(7, -4);
-    words[i]['corrResp'] = prms.respKeys[1];
-    words[i]['respSide'] = 'right';
-    words[i]['respColour'] = 'black';
+  if (words[i].imgNum === 0) {
+    words[i].imgName = imgFiles[0].slice(7, -4);
+    words[i].corrResp = prms.respKeys[0];
+    words[i].respSide = 'left';
+    words[i].respColour = 'white';
+  } else if (words[i].imgNum === 1) {
+    words[i].imgName = imgFiles[1].slice(7, -4);
+    words[i].corrResp = prms.respKeys[0];
+    words[i].respSide = 'left';
+    words[i].respColour = 'black';
+  } else if (words[i].imgNum === 2) {
+    words[i].imgName = imgFiles[2].slice(7, -4);
+    words[i].corrResp = prms.respKeys[1];
+    words[i].respSide = 'right';
+    words[i].respColour = 'black';
   } else if (words[i]['imgNum'] === 3) {
-    words[i]['imgName'] = imgFiles[3].slice(7, -4);
-    words[i]['corrResp'] = prms.respKeys[1];
-    words[i]['respSide'] = 'right';
-    words[i]['respColour'] = 'white';
+    words[i].imgName = imgFiles[3].slice(7, -4);
+    words[i].corrResp = prms.respKeys[1];
+    words[i].respSide = 'right';
+    words[i].respColour = 'white';
   }
 }
 
 for (let i = 0; i < nonwords.length; i++) {
-  if (nonwords[i]['imgNum'] === 0) {
-    nonwords[i]['imgName'] = imgFiles[0].slice(7, -4);
-    nonwords[i]['corrResp'] = prms.respKeys[1];
-    nonwords[i]['respSide'] = 'right';
-    nonwords[i]['respColour'] = 'black';
-  } else if (nonwords[i]['imgNum'] === 1) {
-    nonwords[i]['imgName'] = imgFiles[1].slice(7, -4);
-    nonwords[i]['corrResp'] = prms.respKeys[1];
-    nonwords[i]['respSide'] = 'right';
-    nonwords[i]['respColour'] = 'white';
-  } else if (nonwords[i]['imgNum'] === 2) {
-    nonwords[i]['imgName'] = imgFiles[2].slice(7, -4);
-    nonwords[i]['corrResp'] = prms.respKeys[0];
-    nonwords[i]['respSide'] = 'left';
-    nonwords[i]['respColour'] = 'white';
-  } else if (nonwords[i]['imgNum'] === 3) {
-    nonwords[i]['imgName'] = imgFiles[3].slice(7, -4);
-    nonwords[i]['corrResp'] = prms.respKeys[0];
-    nonwords[i]['respSide'] = 'left';
-    nonwords[i]['respColour'] = 'black';
+  if (nonwords[i].imgNum === 0) {
+    nonwords[i].imgName = imgFiles[0].slice(7, -4);
+    nonwords[i].corrResp = prms.respKeys[1];
+    nonwords[i].respSide = 'right';
+    nonwords[i].respColour = 'black';
+  } else if (nonwords[i].imgNum === 1) {
+    nonwords[i].imgName = imgFiles[1].slice(7, -4);
+    nonwords[i].corrResp = prms.respKeys[1];
+    nonwords[i].respSide = 'right';
+    nonwords[i].respColour = 'white';
+  } else if (nonwords[i].imgNum === 2) {
+    nonwords[i].imgName = imgFiles[2].slice(7, -4);
+    nonwords[i].corrResp = prms.respKeys[0];
+    nonwords[i].respSide = 'left';
+    nonwords[i].respColour = 'white';
+  } else if (nonwords[i].imgNum === 3) {
+    nonwords[i].imgName = imgFiles[3].slice(7, -4);
+    nonwords[i].corrResp = prms.respKeys[0];
+    nonwords[i].respSide = 'left';
+    nonwords[i].respColour = 'black';
   }
 }
 
