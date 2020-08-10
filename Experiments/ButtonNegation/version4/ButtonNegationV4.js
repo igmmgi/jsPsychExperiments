@@ -376,22 +376,22 @@ for (let i = 0; i < words.length; i++) {
     words[i].imgName = imgFiles[0].slice(7, -4);
     words[i].corrResp = prms.respKeys[0];
     words[i].respSide = 'left';
-    words[i].respFeature = 'circle';
+    words[i].respFeature = 'smile';
   } else if (words[i].imgNum === 1) {
     words[i].imgName = imgFiles[1].slice(7, -4);
     words[i].corrResp = prms.respKeys[0];
     words[i].respSide = 'left';
-    words[i].respFeature = 'square';
+    words[i].respFeature = 'frown';
   } else if (words[i].imgNum === 2) {
     words[i].imgName = imgFiles[2].slice(7, -4);
     words[i].corrResp = prms.respKeys[1];
     words[i].respSide = 'right';
-    words[i].respFeature = 'square';
+    words[i].respFeature = 'frown';
   } else if (words[i].imgNum === 3) {
     words[i].imgName = imgFiles[3].slice(7, -4);
     words[i].corrResp = prms.respKeys[1];
     words[i].respSide = 'right';
-    words[i].respFeature = 'circle';
+    words[i].respFeature = 'smile';
   }
 }
 
@@ -400,22 +400,22 @@ for (let i = 0; i < nonwords.length; i++) {
     nonwords[i].imgName = imgFiles[0].slice(7, -4);
     nonwords[i].corrResp = prms.respKeys[1];
     nonwords[i].respSide = 'right';
-    nonwords[i].respFeature = 'square';
+    nonwords[i].respFeature = 'frown';
   } else if (nonwords[i].imgNum === 1) {
     nonwords[i].imgName = imgFiles[1].slice(7, -4);
     nonwords[i].corrResp = prms.respKeys[1];
     nonwords[i].respSide = 'right';
-    nonwords[i].respFeature = 'circle';
+    nonwords[i].respFeature = 'smile';
   } else if (nonwords[i].imgNum === 2) {
     nonwords[i].imgName = imgFiles[2].slice(7, -4);
     nonwords[i].corrResp = prms.respKeys[0];
     nonwords[i].respSide = 'left';
-    nonwords[i].respFeature = 'circle';
+    nonwords[i].respFeature = 'smile';
   } else if (nonwords[i].imgNum === 3) {
     nonwords[i].imgName = imgFiles[3].slice(7, -4);
     nonwords[i].corrResp = prms.respKeys[0];
     nonwords[i].respSide = 'left';
-    nonwords[i].respFeature = 'square';
+    nonwords[i].respFeature = 'frown';
   }
 }
 
