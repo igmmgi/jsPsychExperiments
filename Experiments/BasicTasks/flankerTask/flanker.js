@@ -2,9 +2,9 @@
 // VPs respond to the direction of the central arrow whilst
 // ignoring the surrounding arrows using key responses ("D" and "J").
 
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -23,7 +23,7 @@ const prms = {
   fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -31,11 +31,11 @@ const prms = {
 const task_instructions = {
   type: 'html-keyboard-response',
   stimulus:
-    "<H1 style='text-align:center;'>Welcome:</H1><br>" +
-    "<H2 style='text-align:center;'>Respond to the direction of the central arrow</H2><br>" +
-    "<H2 style='text-align:center;'>LEFT = 'D' key &emsp; RIGHT = 'J' key</H2>",
+    generate_html('Welcome:', 'center', 'black', 50, [0, -100], 1, true) +
+    generate_html('Respond to the direction of the central arrow', 'center', 'black', 40, [0, 0]) +
+    generate_html('LEFT = "D" key &emsp; RIGHT = "J" key', 'center', 'black', 40, [0, 100]),
   post_trial_gap: prms.waitDur,
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -47,7 +47,7 @@ const fixation_cross = {
   trial_duration: prms.fixDur,
   post_trial_gap: 0,
   data: { stim: 'fixation' },
-}
+};
 
 const flankers = [
   [
@@ -70,7 +70,7 @@ const flankers = [
       "<div class='right' style='float: left'></div>" +
       "<div class='left'  style='float: right'></div>",
   ],
-]
+];
 
 // const flankers = [
 //     ['<div style="font-size:100px;"> <<<<< </div>'],
@@ -92,9 +92,9 @@ const flanker_stimulus = {
     corrResp: jsPsych.timelineVariable('key'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_feedback = {
   type: 'html-keyboard-response',
@@ -104,9 +104,9 @@ const trial_feedback = {
   post_trial_gap: prms.iti,
   data: { stim: 'feedback' },
   on_start: function (trial) {
-    trial.stimulus = trialFeedbackTxt(prms.fbTxt)
+    trial.stimulus = trialFeedbackTxt(prms.fbTxt);
   },
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response',
@@ -114,9 +114,9 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'flanker' })
+    trial.stimulus = blockFeedbackTxt({ stim: 'flanker' });
   },
-}
+};
 
 const trial_timeline = {
   timeline: [fixation_cross, flanker_stimulus, trial_feedback],
@@ -126,40 +126,40 @@ const trial_timeline = {
     { flanker: flankers[2], comp: 'comp', key: prms.respKeys[1] },
     { flanker: flankers[3], comp: 'incomp', key: prms.respKeys[1] },
   ],
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(welcome_en)
-  //exp.push(vpInfoForm_en);
-  exp.push(task_instructions)
+  exp.push(welcome_en);
+  exp.push(vpInfoForm_en);
+  exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline }
+    let blk_timeline = { ...trial_timeline };
     blk_timeline.sample = {
       type: 'fixed-repetitions',
       size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
-    }
-    exp.push(blk_timeline) // trials within a block
-    exp.push(block_feedback) // show previous block performance
+    };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_en)
-  return exp
+  exp.push(debrief_en);
+  return exp;
 }
-const EXP = genExpSeq()
-const filename = dirName + 'data/' + expName + '_' + genVpNum()
+const EXP = genExpSeq();
+const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
   fullscreen: false,
   show_progress_bar: false,
   on_finish: function () {
-    saveData('/Common/write_data.php', filename, { stim: 'flanker' })
+    saveData('/Common/write_data.php', filename, { stim: 'flanker' });
   },
-})
+});

@@ -603,7 +603,7 @@ const alphaNum = {
     "<h3 style='text-align:left;'>Versuchspersonenstunden (0,5) benötigen, kopieren Sie den folgenden </h3>" +
     "<h3 style='text-align:left;'>zufällig generierten Code und senden Sie diesen zusammen mit Ihrer </h3>" +
     "<h3 style='text-align:left;'>Matrikelnummer per Email an:</h3><br>" +
-    '<h2>xxx.xxxr@student.uni-tuebingen.de</h2>' +
+    '<h2>sprachstudien@psycho.uni-tuebingen.de</h2>' +
     '<h1>Code: ' +
     randomString +
     '</h1><br>' +
