@@ -3,16 +3,16 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(255, 255, 255, 1)'
-const canvas_size = [960, 720]
-const canvas_border = '0px solid black'
+const canvas_colour = 'rgba(255, 255, 255, 1)';
+const canvas_size = [960, 720];
+const canvas_border = '0px solid black';
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -34,7 +34,7 @@ const prms = {
   wordSize: '30px monospace',
   fbSize: '30px monospace',
   respKeys: ['D', 'K', 27],
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -49,7 +49,7 @@ const task_instructions1 = {
     "<h2 style='text-align:left;'>bitte nehmen Sie nur teil, wenn Sie mindestens 18 Jahre alt </h2>" +
     "<h2 style='text-align:left;'>sind und Deutsch auf Muttersprachenniveau beherrschen. </h2><br>" +
     "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-}
+};
 
 const task_instructions2 = {
   type: 'html-keyboard-response-canvas',
@@ -66,7 +66,7 @@ const task_instructions2 = {
     "<h3 style='text-align: left;'> reagieren Sie so schnell und korrekt wie möglich. Das Experiment beginnt mit</h3>" +
     "<h3 style='text-align: left;'> einem Übungsblock. Vielen Dank für's Mitmachen! Weiter geht es mit der</h3>" +
     "<h3 style='text-align: left;'> Leertaste.</h3>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -78,13 +78,13 @@ const imgFiles = [
   'images/3JA_left_red.png',
   'images/3NEIN_left_green.png',
   'images/3NEIN_left_red.png',
-]
-const imgs = loadImages(imgFiles)
+];
+const imgs = loadImages(imgFiles);
 
 // practice items
 // 8 real words and 8 nonwords
-const imgNumWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat())
-const imgNumNonWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat())
+const imgNumWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat());
+const imgNumNonWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat());
 
 const words_practice = [
   { id: 1, word: 'Optimismus', isWord: true, imgNum: imgNumWordsPractice[0] },
@@ -95,7 +95,7 @@ const words_practice = [
   { id: 6, word: 'Krippe', isWord: true, imgNum: imgNumWordsPractice[5] },
   { id: 7, word: 'Brett', isWord: true, imgNum: imgNumWordsPractice[6] },
   { id: 8, word: 'Ziegel', isWord: true, imgNum: imgNumWordsPractice[7] },
-]
+];
 
 const nonwords_practice = [
   { id: 9, word: 'Zonko', isWord: false, imgNum: imgNumWordsPractice[0] },
@@ -106,71 +106,71 @@ const nonwords_practice = [
   { id: 14, word: 'Papusel', isWord: false, imgNum: imgNumWordsPractice[5] },
   { id: 15, word: 'Worip', isWord: false, imgNum: imgNumWordsPractice[6] },
   { id: 16, word: 'Oligappus', isWord: false, imgNum: imgNumWordsPractice[7] },
-]
+];
 
 // assign correct responses
 for (let i = 0; i < words_practice.length; i++) {
   if (words_practice[i]['imgNum'] === 0) {
-    words_practice[i]['imgName'] = imgFiles[0].slice(7, -4)
-    words_practice[i]['corrResp'] = prms.respKeys[0]
-    words_practice[i]['respSide'] = 'left'
-    words_practice[i]['respFeature'] = 'smile'
-    words_practice[i]['comp'] = 'comp'
+    words_practice[i]['imgName'] = imgFiles[0].slice(7, -4);
+    words_practice[i]['corrResp'] = prms.respKeys[0];
+    words_practice[i]['respSide'] = 'left';
+    words_practice[i]['respFeature'] = 'smile';
+    words_practice[i]['comp'] = 'comp';
   } else if (words_practice[i]['imgNum'] === 1) {
-    words_practice[i]['imgName'] = imgFiles[1].slice(7, -4)
-    words_practice[i]['corrResp'] = prms.respKeys[0]
-    words_practice[i]['respSide'] = 'left'
-    words_practice[i]['respFeature'] = 'frown'
-    words_practice[i]['comp'] = 'incomp'
+    words_practice[i]['imgName'] = imgFiles[1].slice(7, -4);
+    words_practice[i]['corrResp'] = prms.respKeys[0];
+    words_practice[i]['respSide'] = 'left';
+    words_practice[i]['respFeature'] = 'frown';
+    words_practice[i]['comp'] = 'incomp';
   } else if (words_practice[i]['imgNum'] === 2) {
-    words_practice[i]['imgName'] = imgFiles[2].slice(7, -4)
-    words_practice[i]['corrResp'] = prms.respKeys[1]
-    words_practice[i]['respSide'] = 'right'
-    words_practice[i]['respFeature'] = 'frown'
-    words_practice[i]['comp'] = 'incomp'
+    words_practice[i]['imgName'] = imgFiles[2].slice(7, -4);
+    words_practice[i]['corrResp'] = prms.respKeys[1];
+    words_practice[i]['respSide'] = 'right';
+    words_practice[i]['respFeature'] = 'frown';
+    words_practice[i]['comp'] = 'incomp';
   } else if (words_practice[i]['imgNum'] === 3) {
-    words_practice[i]['imgName'] = imgFiles[3].slice(7, -4)
-    words_practice[i]['corrResp'] = prms.respKeys[1]
-    words_practice[i]['respSide'] = 'right'
-    words_practice[i]['respFeature'] = 'smile'
-    words_practice[i]['comp'] = 'comp'
+    words_practice[i]['imgName'] = imgFiles[3].slice(7, -4);
+    words_practice[i]['corrResp'] = prms.respKeys[1];
+    words_practice[i]['respSide'] = 'right';
+    words_practice[i]['respFeature'] = 'smile';
+    words_practice[i]['comp'] = 'comp';
   }
 }
 
 for (let i = 0; i < nonwords_practice.length; i++) {
   if (nonwords_practice[i]['imgNum'] === 0) {
-    nonwords_practice[i]['imgName'] = imgFiles[0].slice(7, -4)
-    nonwords_practice[i]['corrResp'] = prms.respKeys[1]
-    nonwords_practice[i]['respSide'] = 'right'
-    nonwords_practice[i]['respFeature'] = 'frown'
-    nonwords_practice[i]['comp'] = 'comp'
+    nonwords_practice[i]['imgName'] = imgFiles[0].slice(7, -4);
+    nonwords_practice[i]['corrResp'] = prms.respKeys[1];
+    nonwords_practice[i]['respSide'] = 'right';
+    nonwords_practice[i]['respFeature'] = 'frown';
+    nonwords_practice[i]['comp'] = 'comp';
   } else if (nonwords_practice[i]['imgNum'] === 1) {
-    nonwords_practice[i]['imgName'] = imgFiles[1].slice(7, -4)
-    nonwords_practice[i]['corrResp'] = prms.respKeys[1]
-    nonwords_practice[i]['respSide'] = 'right'
-    nonwords_practice[i]['respFeature'] = 'smile'
-    nonwords_practice[i]['comp'] = 'incomp'
+    nonwords_practice[i]['imgName'] = imgFiles[1].slice(7, -4);
+    nonwords_practice[i]['corrResp'] = prms.respKeys[1];
+    nonwords_practice[i]['respSide'] = 'right';
+    nonwords_practice[i]['respFeature'] = 'smile';
+    nonwords_practice[i]['comp'] = 'incomp';
   } else if (nonwords_practice[i]['imgNum'] === 2) {
-    nonwords_practice[i]['imgName'] = imgFiles[2].slice(7, -4)
-    nonwords_practice[i]['corrResp'] = prms.respKeys[0]
-    nonwords_practice[i]['respSide'] = 'left'
-    nonwords_practice[i]['respFeature'] = 'smile'
-    nonwords_practice[i]['comp'] = 'incomp'
+    nonwords_practice[i]['imgName'] = imgFiles[2].slice(7, -4);
+    nonwords_practice[i]['corrResp'] = prms.respKeys[0];
+    nonwords_practice[i]['respSide'] = 'left';
+    nonwords_practice[i]['respFeature'] = 'smile';
+    nonwords_practice[i]['comp'] = 'incomp';
   } else if (nonwords_practice[i]['imgNum'] === 3) {
-    nonwords_practice[i]['imgName'] = imgFiles[3].slice(7, -4)
-    nonwords_practice[i]['corrResp'] = prms.respKeys[0]
-    nonwords_practice[i]['respSide'] = 'left'
-    nonwords_practice[i]['respFeature'] = 'frown'
-    nonwords_practice[i]['comp'] = 'comp'
+    nonwords_practice[i]['imgName'] = imgFiles[3].slice(7, -4);
+    nonwords_practice[i]['corrResp'] = prms.respKeys[0];
+    nonwords_practice[i]['respSide'] = 'left';
+    nonwords_practice[i]['respFeature'] = 'frown';
+    nonwords_practice[i]['comp'] = 'comp';
   }
 }
 
-let materials_practice = shuffle(words_practice.concat(nonwords_practice))
+let materials_practice = shuffle(words_practice.concat(nonwords_practice));
 
 // experimental items
 // 100 real words and 100 nonwords
-const imgNumWords = shuffle(new Array(25).fill([0, 1, 2, 3]).flat())
-const imgNumNonWords = shuffle(new Array(25).fill([0, 1, 2, 3]).flat())
+const imgNumWords = shuffle(new Array(25).fill([0, 1, 2, 3]).flat());
+const imgNumNonWords = shuffle(new Array(25).fill([0, 1, 2, 3]).flat());
 
 const words = [
   { id: 1, word: 'Besteck', isWord: true, imgNum: imgNumWords[0] },
@@ -273,7 +273,7 @@ const words = [
   { id: 98, word: 'Sieb', isWord: true, imgNum: imgNumWords[97] },
   { id: 99, word: 'Lied', isWord: true, imgNum: imgNumWords[98] },
   { id: 100, word: 'Reise', isWord: true, imgNum: imgNumWords[99] },
-]
+];
 
 const nonwords = [
   { id: 101, word: 'Westeff', isWord: false, imgNum: imgNumNonWords[0] },
@@ -376,84 +376,84 @@ const nonwords = [
   { id: 198, word: 'Bieb', isWord: false, imgNum: imgNumNonWords[97] },
   { id: 199, word: 'Pied', isWord: false, imgNum: imgNumNonWords[98] },
   { id: 200, word: 'Seige', isWord: false, imgNum: imgNumNonWords[99] },
-]
+];
 
 // assign correct responses
 for (let i = 0; i < words.length; i++) {
   if (words[i]['imgNum'] === 0) {
-    words[i]['imgName'] = imgFiles[0].slice(7, -4)
-    words[i]['corrResp'] = prms.respKeys[0]
-    words[i]['respSide'] = 'left'
-    words[i]['respFeature'] = 'smile'
-    words[i]['comp'] = 'comp'
+    words[i]['imgName'] = imgFiles[0].slice(7, -4);
+    words[i]['corrResp'] = prms.respKeys[0];
+    words[i]['respSide'] = 'left';
+    words[i]['respFeature'] = 'smile';
+    words[i]['comp'] = 'comp';
   } else if (words[i]['imgNum'] === 1) {
-    words[i]['imgName'] = imgFiles[1].slice(7, -4)
-    words[i]['corrResp'] = prms.respKeys[0]
-    words[i]['respSide'] = 'left'
-    words[i]['respFeature'] = 'frown'
-    words[i]['comp'] = 'incomp'
+    words[i]['imgName'] = imgFiles[1].slice(7, -4);
+    words[i]['corrResp'] = prms.respKeys[0];
+    words[i]['respSide'] = 'left';
+    words[i]['respFeature'] = 'frown';
+    words[i]['comp'] = 'incomp';
   } else if (words[i]['imgNum'] === 2) {
-    words[i]['imgName'] = imgFiles[2].slice(7, -4)
-    words[i]['corrResp'] = prms.respKeys[1]
-    words[i]['respSide'] = 'right'
-    words[i]['respFeature'] = 'frown'
-    words[i]['comp'] = 'incomp'
+    words[i]['imgName'] = imgFiles[2].slice(7, -4);
+    words[i]['corrResp'] = prms.respKeys[1];
+    words[i]['respSide'] = 'right';
+    words[i]['respFeature'] = 'frown';
+    words[i]['comp'] = 'incomp';
   } else if (words[i]['imgNum'] === 3) {
-    words[i]['imgName'] = imgFiles[3].slice(7, -4)
-    words[i]['corrResp'] = prms.respKeys[1]
-    words[i]['respSide'] = 'right'
-    words[i]['respFeature'] = 'smile'
-    words[i]['comp'] = 'comp'
+    words[i]['imgName'] = imgFiles[3].slice(7, -4);
+    words[i]['corrResp'] = prms.respKeys[1];
+    words[i]['respSide'] = 'right';
+    words[i]['respFeature'] = 'smile';
+    words[i]['comp'] = 'comp';
   }
 }
 
 for (let i = 0; i < nonwords.length; i++) {
   if (nonwords[i]['imgNum'] === 0) {
-    nonwords[i]['imgName'] = imgFiles[0].slice(7, -4)
-    nonwords[i]['corrResp'] = prms.respKeys[1]
-    nonwords[i]['respSide'] = 'right'
-    nonwords[i]['respFeature'] = 'frown'
-    nonwords[i]['comp'] = 'comp'
+    nonwords[i]['imgName'] = imgFiles[0].slice(7, -4);
+    nonwords[i]['corrResp'] = prms.respKeys[1];
+    nonwords[i]['respSide'] = 'right';
+    nonwords[i]['respFeature'] = 'frown';
+    nonwords[i]['comp'] = 'comp';
   } else if (nonwords[i]['imgNum'] === 1) {
-    nonwords[i]['imgName'] = imgFiles[1].slice(7, -4)
-    nonwords[i]['corrResp'] = prms.respKeys[1]
-    nonwords[i]['respSide'] = 'right'
-    nonwords[i]['respFeature'] = 'smile'
-    nonwords[i]['comp'] = 'incomp'
+    nonwords[i]['imgName'] = imgFiles[1].slice(7, -4);
+    nonwords[i]['corrResp'] = prms.respKeys[1];
+    nonwords[i]['respSide'] = 'right';
+    nonwords[i]['respFeature'] = 'smile';
+    nonwords[i]['comp'] = 'incomp';
   } else if (nonwords[i]['imgNum'] === 2) {
-    nonwords[i]['imgName'] = imgFiles[2].slice(7, -4)
-    nonwords[i]['corrResp'] = prms.respKeys[0]
-    nonwords[i]['respSide'] = 'left'
-    nonwords[i]['respFeature'] = 'smile'
-    nonwords[i]['comp'] = 'incomp'
+    nonwords[i]['imgName'] = imgFiles[2].slice(7, -4);
+    nonwords[i]['corrResp'] = prms.respKeys[0];
+    nonwords[i]['respSide'] = 'left';
+    nonwords[i]['respFeature'] = 'smile';
+    nonwords[i]['comp'] = 'incomp';
   } else if (nonwords[i]['imgNum'] === 3) {
-    nonwords[i]['imgName'] = imgFiles[3].slice(7, -4)
-    nonwords[i]['corrResp'] = prms.respKeys[0]
-    nonwords[i]['respSide'] = 'left'
-    nonwords[i]['respFeature'] = 'frown'
-    nonwords[i]['comp'] = 'comp'
+    nonwords[i]['imgName'] = imgFiles[3].slice(7, -4);
+    nonwords[i]['corrResp'] = prms.respKeys[0];
+    nonwords[i]['respSide'] = 'left';
+    nonwords[i]['respFeature'] = 'frown';
+    nonwords[i]['comp'] = 'comp';
   }
 }
 
 // randomly select 25 words and 25 non-words in each block (4 exp blocks in total)
-let words_mixed = shuffle(words)
-let nonwords_mixed = shuffle(nonwords)
+let words_mixed = shuffle(words);
+let nonwords_mixed = shuffle(nonwords);
 
-let materials1 = shuffle(words_mixed.splice(0, 25).concat(nonwords_mixed.splice(0, 25)))
-let materials2 = shuffle(words_mixed.splice(0, 25).concat(nonwords_mixed.splice(0, 25)))
-let materials3 = shuffle(words_mixed.splice(0, 25).concat(nonwords_mixed.splice(0, 25)))
-let materials4 = shuffle(words_mixed.splice(0, 25).concat(nonwords_mixed.splice(0, 25)))
+let materials1 = shuffle(words_mixed.splice(0, 25).concat(nonwords_mixed.splice(0, 25)));
+let materials2 = shuffle(words_mixed.splice(0, 25).concat(nonwords_mixed.splice(0, 25)));
+let materials3 = shuffle(words_mixed.splice(0, 25).concat(nonwords_mixed.splice(0, 25)));
+let materials4 = shuffle(words_mixed.splice(0, 25).concat(nonwords_mixed.splice(0, 25)));
 
 function drawFixation() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.lineWidth = prms.fixWidth
-  ctx.moveTo(-prms.fixSize, 0)
-  ctx.lineTo(prms.fixSize, 0)
-  ctx.stroke()
-  ctx.moveTo(0, -prms.fixSize)
-  ctx.lineTo(0, prms.fixSize)
-  ctx.stroke()
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = prms.fixWidth;
+  ctx.moveTo(-prms.fixSize, 0);
+  ctx.lineTo(prms.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -prms.fixSize);
+  ctx.lineTo(0, prms.fixSize);
+  ctx.stroke();
 }
 
 const fixation_cross = {
@@ -465,36 +465,36 @@ const fixation_cross = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawFixation,
-}
+};
 
 function showStim(args) {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
 
   // draw response buttons
-  let num = args['imgNum']
-  let w = imgs[num].width
-  let h = imgs[num].height
-  let s = 6
-  ctx.drawImage(imgs[num], -w / s / 2, 50, w / s, h / s)
+  let num = args['imgNum'];
+  let w = imgs[num].width;
+  let h = imgs[num].height;
+  let s = 6;
+  ctx.drawImage(imgs[num], -w / s / 2, 50, w / s, h / s);
 
   // draw word in centre
-  ctx.font = prms.wordSize
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(args['word'], 0, 0)
+  ctx.font = prms.wordSize;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(args['word'], 0, 0);
 }
 
 function drawFeedback() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  let dat = jsPsych.data.get().last(1).values()[0]
-  ctx.font = prms.fbSize
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.fbSize;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
 }
 
 const trial_feedback = {
@@ -506,7 +506,7 @@ const trial_feedback = {
   trial_duration: prms.fbDur,
   response_ends_trial: false,
   func: drawFeedback,
-}
+};
 
 const iti = {
   type: 'static-canvas-keyboard-response',
@@ -516,7 +516,7 @@ const iti = {
   trial_duration: prms.iti,
   response_ends_trial: false,
   func: function () {},
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response-canvas',
@@ -526,9 +526,9 @@ const block_feedback = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'ButtonNegation' })
+    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'ButtonNegation' });
   },
-}
+};
 
 const stim = {
   type: 'static-canvas-keyboard-response',
@@ -549,14 +549,14 @@ const stim = {
     word: jsPsych.timelineVariable('word'),
     id: jsPsych.timelineVariable('id'),
     respSide: jsPsych.timelineVariable('respSide'),
-    respColour: jsPsych.timelineVariable('respColour'),
+    respFeature: jsPsych.timelineVariable('respFeature'),
     corrResp: jsPsych.timelineVariable('corrResp'),
   },
 
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_timeline_practice = {
   timeline: [fixation_cross, stim, trial_feedback, iti],
@@ -565,7 +565,7 @@ const trial_timeline_practice = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const trial_timeline1 = {
   timeline: [fixation_cross, stim, trial_feedback, iti],
@@ -574,7 +574,7 @@ const trial_timeline1 = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const trial_timeline2 = {
   timeline: [fixation_cross, stim, trial_feedback, iti],
@@ -583,7 +583,7 @@ const trial_timeline2 = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 const trial_timeline3 = {
   timeline: [fixation_cross, stim, trial_feedback, iti],
   timeline_variables: materials3,
@@ -591,7 +591,7 @@ const trial_timeline3 = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const trial_timeline4 = {
   timeline: [fixation_cross, stim, trial_feedback, iti],
@@ -600,10 +600,10 @@ const trial_timeline4 = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 // For VP Stunden
-const randomString = generateRandomString(16)
+const randomString = generateRandomString(16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -624,50 +624,50 @@ const alphaNum = {
     randomString +
     '</h1><br>' +
     "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(resize_de)
+  exp.push(resize_de);
 
-  exp.push(fullscreen_on)
-  exp.push(welcome_de)
-  exp.push(vpInfoForm_de)
-  exp.push(hideMouseCursor)
-  exp.push(screenInfo)
-  exp.push(task_instructions1)
-  exp.push(task_instructions2)
+  exp.push(fullscreen_on);
+  exp.push(welcome_de);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
   // practice block
-  exp.push(trial_timeline_practice)
-  exp.push(block_feedback) // show previous block performance
+  exp.push(trial_timeline_practice);
+  exp.push(block_feedback); // show previous block performance
 
   // experimental blocks
-  exp.push(trial_timeline1)
-  exp.push(block_feedback) // show previous block performance
-  exp.push(trial_timeline2)
-  exp.push(block_feedback) // show previous block performance
-  exp.push(trial_timeline3)
-  exp.push(block_feedback) // show previous block performance
-  exp.push(trial_timeline4)
+  exp.push(trial_timeline1);
+  exp.push(block_feedback); // show previous block performance
+  exp.push(trial_timeline2);
+  exp.push(block_feedback); // show previous block performance
+  exp.push(trial_timeline3);
+  exp.push(block_feedback); // show previous block performance
+  exp.push(trial_timeline4);
 
-  exp.push(debrief_de)
-  exp.push(showMouseCursor)
-  exp.push(alphaNum)
-  exp.push(fullscreen_off)
+  exp.push(debrief_de);
+  exp.push(showMouseCursor);
+  exp.push(alphaNum);
+  exp.push(fullscreen_off);
 
-  return exp
+  return exp;
 }
-const EXP = genExpSeq()
+const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + vpNum
-const code_filename = dirName + 'code/' + expName
+const data_filename = dirName + 'data/' + expName + '_' + vpNum;
+const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
@@ -678,7 +678,7 @@ jsPsych.init({
     min_height: canvas_size[1],
   },
   on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'ButtonNegation' })
-    saveRandomCode('/Common/write_code.php', code_filename, randomString)
+    saveData('/Common/write_data.php', data_filename, { stim: 'ButtonNegation' });
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-})
+});
