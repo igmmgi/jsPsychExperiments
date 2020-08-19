@@ -15,7 +15,6 @@ const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
-
 const version = getVersionNumber(nFiles, 2);
 
 ////////////////////////////////////////////////////////////////////////
@@ -58,13 +57,13 @@ const task_instructions2 = {
     canvas_size: canvas_size,
     canvas_border: canvas_border,
     stimulus:
-    "<h3 style='text-align:left;'> In this experiment, you need to try to collect as many Points as possible.</h3><br>" +
-    "<h3 style='text-align:left;'> You will see in each trial, one Picture on the left and one Picture on .</h3>" +
-    "<h3 style='text-align:left;'> the Right side. If you select the Picture with reward you will receive  </h3><br>" +
-    "<h3 style='text-align:left;'> +1 point ('$$$$'), if you select the Picture without reward you will receive 0 Points ('----').</h3>" +
-    "<h3 style='text-align:left;'> Make a choice in each trial by Pressing the corresponding key with your left </h3>" +
-    "<h3 style='text-align:left;'> and right index finger: Left = Q-key Right = P-key </h3><br>" +
-    "<h3 style='text-align:left;'> Drücken Sie eine beliebige Taste, um fortzufahren!</h3>",
+    "<h3 style='text-align:left;'> In this experiment, you need to try to collect as many points as possible. You</h3>" +
+    "<h3 style='text-align:left;'> will see in each trial, one picture on the left and one picture on the right side. If</h3>" +
+    "<h3 style='text-align:left;'> If you select the picture with reward you will receive +1 point ($$$$$). If you</h3>" +
+    "<h3 style='text-align:left;'> select the picture without reward you will receive 0 points (----). Make a choice</h3>" +
+    "<h3 style='text-align:left;'> in each trial by Pressing the corresponding key with your left and right index finger:</h3><br>" +
+    "<h3 style='text-align:center;'> Left = Q-key &nbsp;&nbsp Right = P-key </h3><br><br>" +
+    "<h3 style='text-align:center;'> Drücken Sie eine beliebige Taste, um fortzufahren!</h3>",
 };
 
 const block_start = {
@@ -72,10 +71,11 @@ const block_start = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    stimulus:
-    "<h2 style='text-align:left;'>Block Start </h2><br>" +
-    "<h2 style='text-align:left;'>Total Points Accumulated: " + prms.cPoints + "</h2><br>" +
-    "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    on_start: function(trial) {
+        trial.stimulus =  "<h2 style='text-align:left;'>Block Start </h2><br>" +
+            "<h2 style='text-align:left;'>Total Points Accumulated: " + prms.cPoints + "</h2><br>" +
+            "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
+    },
     on_finish: function() {
         prms.cTrl = 1;
     },
@@ -153,7 +153,6 @@ function showPicture(args) {
 
 }
 
-
 const trial_feedback = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: canvas_colour,
@@ -189,7 +188,7 @@ const iti = {
 };
 
 
-const response_feedback_interval = {
+const rfi = {
     type: 'static-canvas-keyboard-response',
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
@@ -203,11 +202,9 @@ function codeTrial() {
     'use strict';
     let dat = jsPsych.data.get().last(1).values()[0];
 
-
     let pressed_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(dat.key_press);
     let response_side = (pressed_key === prms.respKeys[0]) ? "left" : "right";
     let highProbSelected = (response_side === dat.highProbSide) ? true : false;
-
 
     let rewardCode;
     if (response_side === "left") {
@@ -215,7 +212,10 @@ function codeTrial() {
     } else if (response_side === "right") {
         rewardCode = Math.random() < dat.imageProbRight ? 1 : 0;
     }
-
+    
+    if (rewardCode === 1) {
+        prms.cPoints += 1;
+    }
 
     let chosenImageType = (response_side === "left") ? dat.imageTypeLeft : dat.imageTypeRight;
 
@@ -288,7 +288,7 @@ let learning_block_experience = [
     { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 1, highProbSide: "left"},
 ];
 
-
+// TO CHECK!!!
 let experimental_block = [
     
     // Pure Description 4
@@ -303,88 +303,32 @@ let experimental_block = [
     { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 3, highProbSide: "right"},
     { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 1, highProbSide: "left"},
 
-
     // Description vs. Experimence Unequal 8
-    { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: "right"},
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: "right"},
-    { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: "left"},
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: "left"},
-    { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 3, highProbSide: "right"},
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 3, highProbSide: "right"},
-    { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 1, highProbSide: "left"},
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 1, highProbSide: "left"},
 
+    { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: "right"},
+    { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: "left"},
+    { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 3, highProbSide: "right"},
+    { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 1, highProbSide: "left"},
 
-    // Description vs. Experiment Equal 64
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
+    // Description vs. Experiment Equal 8
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: "na"},
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: "na"},
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: "na"},
-    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: "na"},
+
+    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: "na"},
+    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: "na"},
+    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: "na"},
+    { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 2, highProbSide: "na"},
 
 ];
 
 const trial_timeline_description = {
-    timeline: [fixation_cross, pic_stim, response_feedback_interval, trial_feedback, iti],
+    timeline: [fixation_cross, pic_stim, rfi, trial_feedback, iti],
     timeline_variables: learning_block_description,
     sample: {
         type: 'fixed-repetitions',
@@ -393,7 +337,7 @@ const trial_timeline_description = {
 };
 
 const trial_timeline_experience = {
-    timeline: [fixation_cross, pic_stim, response_feedback_interval, trial_feedback, iti],
+    timeline: [fixation_cross, pic_stim, rfi, trial_feedback, iti],
     timeline_variables: learning_block_experience,
     sample: {
         type: 'fixed-repetitions',
@@ -402,7 +346,7 @@ const trial_timeline_experience = {
 };
 
 const trial_timeline_experiment = {
-    timeline: [fixation_cross, pic_stim, response_feedback_interval, trial_feedback, iti],
+    timeline: [fixation_cross, pic_stim, rfi, trial_feedback, iti],
     timeline_variables: experimental_block,
     sample: {
         type: 'fixed-repetitions',
@@ -410,26 +354,57 @@ const trial_timeline_experiment = {
     },
 };
 
+function ratings(imgs, imgType) {
+    let r = [];
+    for (let i = 0; i < 4; i ++) {
+        let tmp = {
+            type: 'image-slider-response',
+            stimulus: imgs[i].src,
+            labels: ['0 (no chance)', '100 (guaranteed)'],
+            slider_width: 500,
+            require_movement: true,
+            prompt: '<p>Indicate the percentage win rate of the dispalyed stimulus.</p>',
+            on_finish: function () {
+                let dat = jsPsych.data.get().last(1).values()[0];
+                let key = imgType + (i+1);
+                console.log(key)
+                console.log(dat.response)
+                jsPsych.data.addProperties({ key : dat.response });
+            },
+        }
+        r.push(tmp);
+    }
+    return r;
+}
+
+const ratingsDescription = ratings(imagesDescription, "D");;
+const ratingsExperience = ratings(imagesExperience, "E");;
+const ratingStimuli = shuffle(ratingsDescription.concat(ratingsExperience));
 
 const randomString = generateRandomString(16);
 
 const alphaNum = {
-    type: 'html-keyboard-response-canvas',
-    canvas_colour: canvas_colour,
-    canvas_size: canvas_size,
-    canvas_border: canvas_border,
-    response_ends_trial: true,
-    choices: [32],
-    stimulus:
-    "<h3 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h3>" +
-    "<h2 style='text-align:left;'>Total Points Accumulated: " + prms.cPoints + "</h2><br>" +
-    "<h3 style='text-align:left;'>Wenn Sie einen Gutschein gewinnen möchten, kopieren Sie den folgenden </h3>" +
-    "<h3 style='text-align:left;'>zufällig generierten Code und senden Sie diesen per Email. </h3>" +
-    '<h2>xxx.xxx@student.uni-tuebingen.de oder </h2>' +
-    '<h1>Code: ' +
-    randomString +
-    '</h1><br>' +
-    "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: "",
+  response_ends_trial: true,
+  choices: [32],
+  on_start: function (trial) {
+    trial.stimulus =
+      "<h3 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h3>" +
+      "<h2 style='text-align:left;'>Total Points Accumulated: " +
+      prms.cPoints +
+      '</h2><br>' +
+      "<h3 style='text-align:left;'>Wenn Sie einen Gutschein gewinnen möchten, kopieren Sie den folgenden </h3>" +
+      "<h3 style='text-align:left;'>zufällig generierten Code und senden Sie diesen per Email. </h3>" +
+      '<h2>xxx.xxx@student.uni-tuebingen.de oder </h2>' +
+      '<h1>Code: ' +
+      randomString +
+      '</h1><br>' +
+      "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>";
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -470,12 +445,19 @@ const alphaNum = {
         exp.push(block_start);
         exp.push(trial_timeline_experiment);
         
-        // exp.push(short_break);
-        // exp.push(block_start);
-        // exp.push(trial_timeline_experiment);
+        exp.push(short_break);
+        exp.push(block_start);
+        exp.push(trial_timeline_experiment);
+
+        exp.push(showMouseCursor);
+        exp.push(short_break);
+
+        // end of experiment ratings
+        for (let i = 0; i < ratingStimuli.length; i++) {
+            exp.push(ratingStimuli[i])
+        }
 
         exp.push(debrief_de);
-        exp.push(showMouseCursor);
         exp.push(alphaNum);
         exp.push(fullscreen_off);
 
