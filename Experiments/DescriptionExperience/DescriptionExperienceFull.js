@@ -24,7 +24,7 @@ const version = getVersionNumber(nFiles, 2);
 const prms = {
     fixDur: 500,
     fbDur: 750,
-    responseFeedbackInterval: 300,
+    rfi: 300,   // response -> feedback interval
     iti: 500,
     cTrl: 1,    // count trials
     cBlk: 1,    // count blocks
@@ -76,6 +76,9 @@ const block_start = {
     "<h2 style='text-align:left;'>Block Start </h2><br>" +
     "<h2 style='text-align:left;'>Total Points Accumulated: " + prms.cPoints + "</h2><br>" +
     "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    on_finish: function() {
+        prms.cTrl = 1;
+    },
 };
 
 const short_break = {
@@ -86,10 +89,10 @@ const short_break = {
     stimulus:
     "<h2 style='text-align:left;'>Break</h2><br>" +
     "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+    on_finish: function() {
+        prms.cBlk += 1;
+    },
 };
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -102,13 +105,8 @@ function readImages(dir, n) {
     return loadImages(images);
 }
 
-const imagesDescription = readImages('DescriptionImages/D_',   4);
-let imagesExperienceN = readImages('ExperienceImages/EN_', 116);
-let imagesExperienceO = readImages('ExperienceImages/EO_', 165);
-
-var tmp = shuffle(imagesExperienceN.concat(imagesExperienceO));
-const imagesExperience = tmp.splice(0, 4);
-
+const imagesDescription = readImages('DescriptionImages/D_', 4);
+const imagesExperience = shuffle(readImages('ExperienceImages/E_', 281)).splice(0, 4);
 
 ////////////////////////////////////////////////////////////////////////
 //                             Functions                              //
@@ -144,21 +142,13 @@ function showPicture(args) {
     let imageTypeLeft = args.imageTypeLeft;
     let imageTypeRight = args.imageTypeRight;
 
-    let imagesLeft;
-    if (imageTypeLeft === 'Description') {
-        imagesLeft = imagesDescription;
-    } else if (imageTypeLeft === 'Experience') {
-        imagesLeft = imagesExperience;
-    }
+    let imagesLeft = (imageTypeLeft === 'Description') ? imagesDescription : imagesExperience;
+    let imagesRight = (imageTypeRight === 'Description') ? imagesDescription : imagesExperience;
 
-    let imagesRight;
-    if (imageTypeRight === 'Description') {
-        imagesRight = imagesDescription;
-    } else if (imageTypeRight === 'Experience') {
-        imagesRight = imagesExperience;
-    }
-
+    // draw left image
     ctx.drawImage(imagesLeft[numLeft], -imagesLeft[numLeft].width / 2 - 150, -imagesLeft[numLeft].height / 2);
+    
+    // draw right image
     ctx.drawImage(imagesRight[numRight], -imagesRight[numRight].width / 2 + 150, -imagesRight[numRight].height / 2);
 
 }
@@ -185,9 +175,7 @@ function drawFeedback() {
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
     ctx.fillText(prms.fbTxt[dat.rewardCode], 0, 0);
-    // ctx.font = '30px monospace'; 
-    // let txt = "Total Points: " + prms.cPoints;
-    // ctx.fillText(txt, 0, -75);
+
 }
 
 const iti = {
@@ -206,7 +194,7 @@ const response_feedback_interval = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    trial_duration: prms.responseFeedbackInterval,
+    trial_duration: prms.rfi,
     response_ends_trial: false,
     func: function () {},
 };
@@ -214,34 +202,16 @@ const response_feedback_interval = {
 function codeTrial() {
     'use strict';
     let dat = jsPsych.data.get().last(1).values()[0];
-    let rewardCode;
+
     let pressed_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(dat.key_press);
-
-    let response_side;
-    if (pressed_key === prms.respKeys[0]) {
-        response_side = "left";
-    } else if (pressed_key === prms.respKeys[1]) {
-        response_side = "right";
-    }
-
-    if (response_side === dat.rewardSide) {
-        rewardCode = 1;
-        prms.cPoints += 1;
-    } else {
-        rewardCode = 0;
-    }
-
+    let response_side = (pressed_key === prms.respKeys[0]) ? "left" : "right";
     let highProbSelected = (response_side === dat.highProbSide) ? true : false;
-
-    let chosenImageType;
-    if (response_side === "left") {
-        chosenImageType = dat.imageTypeLeft;
-    } else if (response_side === "right") {
-        chosenImageType = dat.imageTypeRight;
-    }
+    let rewardCode = (response_side === dat.rewardSide) ? 1 : 0;
+    let chosenImageType = (response_side === "left") ? dat.imageTypeLeft : dat.imageTypeRight;
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
+        pressed_key: pressed_key,
         response_side: response_side,
         rt: dat.rt,
         rewardCode: rewardCode,
@@ -257,9 +227,6 @@ function codeTrial() {
     }
 
 }
-
-
-
 
 const pic_stim = {
     type: 'static-canvas-keyboard-response',
@@ -282,10 +249,16 @@ const pic_stim = {
     ],
     data: {
         stim: 'DescriptionExperience',
+        phase: jsPsych.timelineVariable('phase'),
+        trialType: jsPsych.timelineVariable('trialType'),
         imageTypeLeft: jsPsych.timelineVariable('imageTypeLeft'),
         imageTypeRight: jsPsych.timelineVariable('imageTypeRight'),
-        imageNumber: jsPsych.timelineVariable('imageNumber'),
+        imageProbLeft: jsPsych.timelineVariable('imageProbLeft'),
+        imageProbRight: jsPsych.timelineVariable('imageProbRight'),
+        imageNumberLeft: jsPsych.timelineVariable('imageNumberLeft'),
+        imageNumberRight: jsPsych.timelineVariable('imageNumberRight'),
         rewardSide: jsPsych.timelineVariable('rewardSide'),
+        highProbSide: jsPsych.timelineVariable('highProbSide'),
     },
     on_finish: function() {
         codeTrial();
@@ -345,49 +318,51 @@ let learning_block_experience = [
 
 let experimental_block = [
 
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "left",  highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "right", highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "left",  highProbSide: "right"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "right", highProbSide: "left"},
+    // Pure Description
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "left",  highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "right", highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "left",  highProbSide: "right"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureDescription", imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "right", highProbSide: "left"},
 
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "left",  highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 2, imageNumberRight: 0, rewardSide: "right", highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right", highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "left",  highProbSide: "right"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "left",  highProbSide: "left"},
-    { phase: "experiment", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 3, imageNumberRight: 1, rewardSide: "right", highProbSide: "left"},
-
-
+    // Pure Experience
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 0, imageNumberRight: 2, imagesDescription[2], rewardSide: "left",  highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 2, imageNumberRight: 0, imagesDescription[0], rewardSide: "right", highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "right", highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 1, imageNumberRight: 3, imagesDescription[3], rewardSide: "left",  highProbSide: "right"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "left",  highProbSide: "left"},
+    { phase: "learning", trialType: "PureExperience", imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 3, imageNumberRight: 1, imagesDescription[1], rewardSide: "right", highProbSide: "left"},
+    
+    // Description vs. Experimence Unequal
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right",  highProbSide: "right"},
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right",  highProbSide: "right"},
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 80, imageNumberLeft: 0, imageNumberRight: 2, rewardSide: "right",  highProbSide: "right"},
@@ -429,7 +404,7 @@ let experimental_block = [
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "right",  highProbSide: "left"},
     { phase: "experiment", trialType: "UnequalMixed", imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 80, imageProbRight: 20, imageNumberLeft: 1, imageNumberRight: 3, rewardSide: "left",   highProbSide: "left"},
 
-
+    // Description vs. Experimence Equal
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 20, imageProbRight: 20, imageNumberLeft: 0, imageNumberRight: 1, rewardSide: "right",  highProbSide: "na"},
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 80, imageNumberLeft: 2, imageNumberRight: 3, rewardSide: "right",  highProbSide: "na"},
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 20, imageProbRight: 20, imageNumberLeft: 0, imageNumberRight: 1, rewardSide: "right",  highProbSide: "na"},
@@ -550,7 +525,6 @@ let experimental_block = [
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Experience',   imageTypeRight: 'Description', imageProbLeft: 80, imageProbRight: 80, imageNumberLeft: 2, imageNumberRight: 3, rewardSide: "left",  highProbSide: "na"},
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 20, imageProbRight: 20, imageNumberLeft: 0, imageNumberRight: 1, rewardSide: "left",  highProbSide: "na"},
     { phase: "experiment", trialType: "EqualMixed", imageTypeLeft: 'Description',  imageTypeRight: 'Experience',  imageProbLeft: 80, imageProbRight: 80, imageNumberLeft: 2, imageNumberRight: 3, rewardSide: "left",  highProbSide: "na"},
-
 
 ];
 
@@ -571,7 +545,6 @@ const trial_timeline_experience = {
         size: 5,
     },
 };
-
 
 const trial_timeline_experiment = {
     timeline: [fixation_cross, pic_stim, response_feedback_interval, trial_feedback, iti],
