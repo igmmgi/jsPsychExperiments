@@ -369,7 +369,7 @@ function ratings(imgs, imgType) {
                 let key = imgType + (i+1);
                 console.log(key)
                 console.log(dat.response)
-                jsPsych.data.addProperties({ key : dat.response });
+                jsPsych.data.addProperties({ [key] : dat.response });
             },
         }
         r.push(tmp);
