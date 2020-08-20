@@ -74,7 +74,7 @@ const block_start = {
     on_start: function(trial) {
         trial.stimulus =  "<h2 style='text-align:left;'>Block Start </h2><br>" +
             "<h2 style='text-align:left;'>Total Points Accumulated: " + prms.cPoints + "</h2><br>" +
-            "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>"
+            "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>";
     },
     on_finish: function() {
         prms.cTrl = 1;
@@ -367,18 +367,16 @@ function ratings(imgs, imgType) {
             on_finish: function () {
                 let dat = jsPsych.data.get().last(1).values()[0];
                 let key = imgType + (i+1);
-                console.log(key)
-                console.log(dat.response)
                 jsPsych.data.addProperties({ [key] : dat.response });
             },
-        }
+        };
         r.push(tmp);
     }
     return r;
 }
 
-const ratingsDescription = ratings(imagesDescription, "D");;
-const ratingsExperience = ratings(imagesExperience, "E");;
+const ratingsDescription = ratings(imagesDescription, "D");
+const ratingsExperience = ratings(imagesExperience, "E");
 const ratingStimuli = shuffle(ratingsDescription.concat(ratingsExperience));
 
 const randomString = generateRandomString(16);
@@ -454,7 +452,7 @@ const alphaNum = {
 
         // end of experiment ratings
         for (let i = 0; i < ratingStimuli.length; i++) {
-            exp.push(ratingStimuli[i])
+            exp.push(ratingStimuli[i]);
         }
 
         exp.push(debrief_de);
@@ -481,3 +479,4 @@ jsPsych.init({
         saveRandomCode('/Common/write_code.php', code_filename, randomString);
     },
 });
+
