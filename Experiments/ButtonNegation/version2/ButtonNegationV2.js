@@ -597,17 +597,19 @@ const alphaNum = {
   response_ends_trial: true,
   choices: [32],
   stimulus:
-    "<h3 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h3>" +
-    "<h3 style='text-align:left;'>In unserer Studie untersuchen wir den Einfluss von Bildern auf </h3>" +
-    "<h3 style='text-align:left;'>die Verarbeitung von negierten Sätzen. Wenn Sie </h3>" +
-    "<h3 style='text-align:left;'>Versuchspersonenstunden (0,5) benötigen, kopieren Sie den folgenden </h3>" +
-    "<h3 style='text-align:left;'>zufällig generierten Code und senden Sie diesen zusammen mit Ihrer </h3>" +
-    "<h3 style='text-align:left;'>Matrikelnummer per Email an:</h3><br>" +
-    '<h2>sprachstudien@psycho.uni-tuebingen.de</h2>' +
+    "<h3 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h3><br>" +
+    "<h3 style='text-align:left;'>Versuchpersonenstunde:</h3>" +
+    "<h4 style='text-align:left;'>Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und</h4>" +
+    "<h4 style='text-align:left;'>senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an: </h4>" +
+    '<h2>sprachstudien@psycho.uni-tuebingen.de</h2><br>' +
+    "<h3 style='text-align:left;'>Gewinnspiel:</h3>" + 
+    "<h4 style='text-align:left;'>Wenn Sie alternativ an der Verlosung der Gutscheine teilnehmen möchten, kopieren Sie den zufällig generierten</h4>" +
+    "<h4 style='text-align:left;'>Code und senden sie diesen in einer E-Mail mit Betreff 'Gewinnspiel' an:</h4>" + 
+    '<h2>sprachstudien@psycho.uni-tuebingen.de</h2><br>' +
     '<h1>Code: ' +
     randomString +
     '</h1><br>' +
-    "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",
+    "<h2 style='text-align:center;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",
 };
 
 ////////////////////////////////////////////////////////////////////////
