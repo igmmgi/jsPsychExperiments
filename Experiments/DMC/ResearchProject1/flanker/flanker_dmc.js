@@ -21,6 +21,8 @@ const dirName = getDirName()
 const vpNum = genVpNum()
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/')
 
+console.log(nFiles)
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
