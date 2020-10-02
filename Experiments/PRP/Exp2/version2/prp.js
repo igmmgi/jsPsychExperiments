@@ -1,5 +1,5 @@
 // Basic version of a PRP Task:
-// Version 1: Letter --> Tone
+// Version 1: Tone --> Letter
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -16,7 +16,7 @@ const dirName = getDirName();
 const vpNum = genVpNum();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
-jsPsych.data.addProperties({ version: 1 });
+jsPsych.data.addProperties({ version: 2 });
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -41,8 +41,8 @@ const prms = {
   fixSize: 10,
   letterSize: '50px monospace',
   fbSize: '20px monospace',
-  respKeys1: ['Q', 'W'],
-  respKeys2: ['O', 'P'],
+  respKeys1: ['O', 'P'],
+  respKeys2: ['Q', 'W'],
   respKeys: ['Q', 'W', 'O', 'P'],
 };
 
@@ -75,10 +75,10 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>Experiment:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du in jedem Durchgang zwei Aufgaben bearbeiten.</h3>" +
     "<h3 style='text-align: left;'>Jede Aufgabe wird mit einer Hand bearbeitet. </h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 1 = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
-    "<h3 style='text-align: left;'>auf die Tasten „Q“ und „W“.</h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 2 = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
+    "<h3 style='text-align: left;'>Aufgabe 1 = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „O“ und „P“.</h3><br>" +
+    "<h3 style='text-align: left;'>Aufgabe 2 = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
+    "<h3 style='text-align: left;'>auf die Tasten „Q“ und „W“.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -88,10 +88,10 @@ const task_instructions3 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Buchstaben reagieren.</h3>" +
-    "<h3 style='text-align: left;'>Nachdem du auf den Buchstaben reagiert hast, musst du auf die </h3>" +
-    "<h3 style='text-align: left;'>Höhe des Tones reagieren: Reagiere wie folgt:</h3><br>" +
-    "<h3 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;Aufgabe 1 (linke Hand)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Aufgabe 2 (rechte Hand)</h3>" +
+    "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Höhe des Tones</h3>" +
+    "<h3 style='text-align: left;'>reagieren. Nachdem du auf den Ton reagiert hast, musst du</h3>" +
+    "<h3 style='text-align: left;'>auf dem Buchstaben reagieren: Reagiere wie folgt:</h3><br>" +
+    "<h3 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;Aufgabe 2 (linke Hand)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Aufgabe 1 (rechte Hand)</h3>" +
     "<h2 style='text-align: left;'>" +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.respLetters[0] +
@@ -113,9 +113,9 @@ const task_instructions4 = {
   stimulus:
     "<h3 style='text-align: center;'>Bitte beachte: </h3>" +
     "<h3 style='text-align: left;'> Bitte reagiere immer erst so schnell wie möglich auf die 1. Aufgabe </h3>" +
-    "<h3 style='text-align: left;'> sobald der Buchstabe erscheint und erst anschliessend so schnell wie </h3>" +
+    "<h3 style='text-align: left;'> sobald der Tone erscheint und erst anschliessend so schnell wie </h3>" +
     "<h3 style='text-align: left;'> möglich auf die 2. Aufgabe. Das heißt warte nicht mit der Bearbeitung der </h3>" +
-    "<h3 style='text-align: left;'> 1. Aufgabe bis der Ton präsentiert wirt. </h3>",
+    "<h3 style='text-align: left;'> 1. Aufgabe bis der Buchstabe präsentiert wirt. </h3>",
 };
 
 const task_instructions5 = {
@@ -196,7 +196,7 @@ function drawFeedback() {
   // show response mapping if not correct
   ctx.font = '20px monospace';
   if (dat.corrCode !== 1) {
-    ctx.fillText('Aufgabe 1 (linke Hand)', -250, 50);
+    ctx.fillText('Aufgabe 2 (linke Hand)', -250, 50);
     ctx.font = 'bold 20px monospace';
     ctx.fillText(prms.respLetters[0], -300, 80);
     ctx.fillText(prms.respLetters[1], -200, 80);
@@ -204,7 +204,7 @@ function drawFeedback() {
     ctx.fillText('("Q-Taste")', -320, 120);
     ctx.fillText('("W-Taste")', -180, 120);
 
-    ctx.fillText('Aufgabe 2 (rechte Hand)', 250, 50);
+    ctx.fillText('Aufgabe 1 (rechte Hand)', 250, 50);
     ctx.font = 'bold 20px monospace';
     ctx.fillText('Tiefer Ton', 180, 80);
     ctx.fillText('Hoher Ton', 320, 80);
@@ -316,7 +316,7 @@ function blockStartText() {
     ' von ' +
     prms.nBlks +
     '</H1><br>' +
-    "<h3 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;Aufgabe 1 (linke Hand) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Aufgabe 2 (rechte Hand)</h3>" +
+    "<h3 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;Aufgabe 2 (linke Hand) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Aufgabe 1 (rechte Hand)</h3>" +
     "<h2 style='text-align: left;'>" +
     '&emsp;&emsp;&emsp;' +
     prms.respLetters[0] +
@@ -369,16 +369,22 @@ const block_end = {
   },
 };
 
+const click_to_enable_sound = {
+  type: 'html-button-response',
+  stimulus: 'Click',
+  choices: ['Continue'],
+};
+
 const prp_stimulus = {
   type: 'static-canvas-keyboard-multiple-response-visual-sound',
   canvas_colour: cc,
   canvas_size: cs,
   canvas_border: cb,
   sound_stimulus: jsPsych.timelineVariable('tone'),
-  sound_onset: jsPsych.timelineVariable('soa'),
+  sound_onset: 0,
   trial_duration: prms.trialDuration,
   translate_origin: true,
-  stimulus_onset: 0,
+  stimulus_onset: jsPsych.timelineVariable('soa'),
   stimulus_duration: prms.trialDuration,
   response_ends_trial: true,
   choices: prms.respKeys,
@@ -411,15 +417,15 @@ const trial_timeline = {
       letter: prms.respLetters[1],
       tone: prms.respTones[0],
       soa: prms.soa[0],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[0],
+      corrResp1: prms.respKeys1[0],
+      corrResp2: prms.respKeys2[1],
     },
     {
       letter: prms.respLetters[0],
       tone: prms.respTones[1],
       soa: prms.soa[0],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[1],
+      corrResp1: prms.respKeys1[1],
+      corrResp2: prms.respKeys2[0],
     },
     {
       letter: prms.respLetters[1],
@@ -439,15 +445,15 @@ const trial_timeline = {
       letter: prms.respLetters[1],
       tone: prms.respTones[0],
       soa: prms.soa[1],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[0],
+      corrResp1: prms.respKeys1[0],
+      corrResp2: prms.respKeys2[1],
     },
     {
       letter: prms.respLetters[0],
       tone: prms.respTones[1],
       soa: prms.soa[1],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[1],
+      corrResp1: prms.respKeys1[1],
+      corrResp2: prms.respKeys2[0],
     },
     {
       letter: prms.respLetters[1],

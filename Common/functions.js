@@ -426,6 +426,16 @@ const welcome_de_du = {
   },
 };
 
+const welcome_de_du_click = {
+  type: 'html-button-response',
+  stimulus: '<h1>Willkommen. Bitte klicke "Continue" um fortzufahren!</h1>',
+  choices: ['Continue'],
+  on_finish: function () {
+    'use strict';
+    jsPsych.data.addProperties({ date: Date() });
+  },
+};
+
 const resize_en = {
   type: 'resize',
   item_width: 3 + 3 / 8,
