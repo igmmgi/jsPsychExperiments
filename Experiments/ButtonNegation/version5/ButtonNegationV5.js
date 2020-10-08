@@ -602,9 +602,9 @@ const alphaNum = {
     "<h4 style='text-align:left;'>Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und</h4>" +
     "<h4 style='text-align:left;'>senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an: </h4>" +
     '<h2>sprachstudien@psycho.uni-tuebingen.de</h2><br>' +
-    "<h3 style='text-align:left;'>Gewinnspiel:</h3>" + 
+    "<h3 style='text-align:left;'>Gewinnspiel:</h3>" +
     "<h4 style='text-align:left;'>Wenn Sie alternativ an der Verlosung der Gutscheine teilnehmen möchten, kopieren Sie den zufällig generierten</h4>" +
-    "<h4 style='text-align:left;'>Code und senden sie diesen in einer E-Mail mit Betreff 'Gewinnspiel' an:</h4>" + 
+    "<h4 style='text-align:left;'>Code und senden sie diesen in einer E-Mail mit Betreff 'Gewinnspiel' an:</h4>" +
     '<h2>sprachstudien@psycho.uni-tuebingen.de</h2><br>' +
     '<h1>Code: ' +
     randomString +

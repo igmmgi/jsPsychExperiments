@@ -10,16 +10,16 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)'
-const canvas_size = [960, 720]
-const canvas_border = '5px solid black'
+const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_size = [960, 720];
+const canvas_border = '5px solid black';
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -39,22 +39,22 @@ const prms = {
   respMapping: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
   respKeys: [],
   respDir: [],
-}
+};
 
-jsPsych.data.addProperties({ respMapping: prms.respMapping })
-let respText
+jsPsych.data.addProperties({ respMapping: prms.respMapping });
+let respText;
 if (prms.respMapping === 1) {
-  prms.respKeys = ['X', 'M', 27]
-  prms.respDir = ['left', 'right', 27]
+  prms.respKeys = ['X', 'M', 27];
+  prms.respDir = ['left', 'right', 27];
   respText =
     "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
-    "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>"
+    "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
 } else {
-  prms.respKeys = ['M', 'X', 27]
-  prms.respDir = ['right', 'left', 27]
+  prms.respKeys = ['M', 'X', 27];
+  prms.respDir = ['right', 'left', 27];
   respText =
     "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Konsonanten (B, H, T, S)</b> drücken Sie die <b>Taste X</b> (linken Zeigefinger).</h4>" +
-    "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>"
+    "<h4 style='text-align:left;''>Handelt es sich hierbei um einem <b>Vokal (A, E, O, U)</b> drücken Sie die <b>Taste m</b> (rechten Zeigefinger).</h4>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ const task_instructions1 = {
     "<h3 style='text-align:center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
     "<h3 style='text-align:center;'>Die Teilnahme ist freiwillig und Sie dürfen das Experiment jederzeit abbrechen.</h3><br>" +
     "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-}
+};
 
 const task_instructions2 = {
   type: 'html-keyboard-response-canvas',
@@ -87,21 +87,21 @@ const task_instructions2 = {
     "<h4 style='text-align:left;'>Das Experiment besteht aus 13 Blöcken.</h4>" +
     "<h4 style='text-align:left;'>Nach jedem Block haben Sie die Möglichkeit, eine kleine Pause zu machen.</h4><br><br>" +
     "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 function drawFixation() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.lineWidth = 2
-  ctx.moveTo(-15, 0)
-  ctx.lineTo(15, 0)
-  ctx.stroke()
-  ctx.moveTo(0, -15)
-  ctx.lineTo(0, 15)
-  ctx.stroke()
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = 2;
+  ctx.moveTo(-15, 0);
+  ctx.lineTo(15, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -15);
+  ctx.lineTo(0, 15);
+  ctx.stroke();
 }
 
 const fixation_cross = {
@@ -113,27 +113,27 @@ const fixation_cross = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawFixation,
-}
+};
 
 function drawFeedback() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  let dat = jsPsych.data.get().last(1).values()[0]
-  ctx.font = '40px Arial'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(prms.fbTxt[dat.corrCodeFB - 1], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = '40px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCodeFB - 1], 0, 0);
 }
 
 function drawFlanker(args) {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.font = '50px monospace'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(args['text'], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font = '50px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(args['text'], 0, 0);
 }
 
 const trial_feedback = {
@@ -145,7 +145,7 @@ const trial_feedback = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawFeedback,
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response-canvas',
@@ -155,104 +155,104 @@ const block_feedback = {
   stimulus: blockFeedbackTxtPES,
   response_ends_trial: true,
   data: { stim: 'block_feedback' },
-}
+};
 
 function generate_letter_arrays() {
-  'use strict'
-  let vowel = ['A', 'E', 'O', 'U']
-  let consonant = ['B', 'H', 'T', 'S']
-  let letters = vowel.concat(consonant)
-  letters = letters.sort(() => Math.random() - 0.5)
-  let letterCombs = []
-  let flankerCombs = []
-  let removed
+  'use strict';
+  let vowel = ['A', 'E', 'O', 'U'];
+  let consonant = ['B', 'H', 'T', 'S'];
+  let letters = vowel.concat(consonant);
+  letters = letters.sort(() => Math.random() - 0.5);
+  let letterCombs = [];
+  let flankerCombs = [];
+  let removed;
   for (let i = 0; i < letters.length; i++) {
-    removed = false
+    removed = false;
     for (let j = 0; j < letters.length; j++) {
       if (letters[i] === letters[j]) {
         // e.g., no AAAAAA, EEEEEE
-        continue
+        continue;
       }
       if (!removed) {
         // need to remove 1 incompatible combination
         if (vowel.includes(letters[i]) && consonant.includes(letters[j])) {
-          removed = true
-          continue
+          removed = true;
+          continue;
         } else if (vowel.includes(letters[j]) && consonant.includes(letters[i])) {
-          removed = true
-          continue
+          removed = true;
+          continue;
         }
       }
-      letterCombs.push(letters[i] + letters[i] + letters[j] + letters[i] + letters[i])
-      flankerCombs.push(letters[i] + letters[i] + ' ' + letters[i] + letters[i])
+      letterCombs.push(letters[i] + letters[i] + letters[j] + letters[i] + letters[i]);
+      flankerCombs.push(letters[i] + letters[i] + ' ' + letters[i] + letters[i]);
     }
   }
-  return [letterCombs, flankerCombs]
+  return [letterCombs, flankerCombs];
 }
 
 function generate_timeline_variables(stimuli) {
-  'use strict'
-  let timeline = []
-  let vowels = ['A', 'E', 'O', 'U']
-  let rd, rk, comp
-  let letters = stimuli[0]
-  let flankers = stimuli[1]
+  'use strict';
+  let timeline = [];
+  let vowels = ['A', 'E', 'O', 'U'];
+  let rd, rk, comp;
+  let letters = stimuli[0];
+  let flankers = stimuli[1];
   for (let i = 0; i < letters.length; i++) {
     if (vowels.includes(letters[i][2])) {
-      rd = prms.respDir[0]
-      rk = prms.respKeys[0]
+      rd = prms.respDir[0];
+      rk = prms.respKeys[0];
     } else {
-      rd = prms.respDir[1]
-      rk = prms.respKeys[1]
+      rd = prms.respDir[1];
+      rk = prms.respKeys[1];
     }
     if (['A', 'E', 'O', 'U'].includes(letters[i][0]) && ['A', 'E', 'O', 'U'].includes(letters[i][2])) {
-      comp = 'comp'
+      comp = 'comp';
     } else if (['B', 'H', 'T', 'S'].includes(letters[i][0]) && ['B', 'H', 'T', 'S'].includes(letters[i][2])) {
-      comp = 'comp'
+      comp = 'comp';
     } else {
-      comp = 'incomp'
+      comp = 'incomp';
     }
-    timeline.push({ flankerArray: flankers[i], letterArray: letters[i], respDir: rd, respKey: rk, comp: comp })
+    timeline.push({ flankerArray: flankers[i], letterArray: letters[i], respDir: rd, respKey: rk, comp: comp });
   }
-  return timeline
+  return timeline;
 }
 
 function codeTrialPES() {
-  'use strict'
+  'use strict';
 
-  let data = jsPsych.data.get().last(1).values()[0] // current trial
-  let dataP = jsPsych.data.get().last(4).values()[0] // previous trial
-  let corrCode = 0
-  let corrCodeFB = 0
-  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.corrResp)
+  let data = jsPsych.data.get().last(1).values()[0]; // current trial
+  let dataP = jsPsych.data.get().last(4).values()[0]; // previous trial
+  let corrCode = 0;
+  let corrCodeFB = 0;
+  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.corrResp);
 
-  let rt = data.rt !== null ? data.rt : prms.tooSlow
+  let rt = data.rt !== null ? data.rt : prms.tooSlow;
 
   // need to check that we don't give different feedback for direct
   // stimulus + response repetitions
-  let false_feedback_allowed = true
+  let false_feedback_allowed = true;
   if (dataP !== undefined) {
     if (dataP.letterArray === data.letterArray) {
-      false_feedback_allowed = false
+      false_feedback_allowed = false;
     }
   }
 
   if (data.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
-    corrCode = 1
-    corrCodeFB = 1
+    corrCode = 1;
+    corrCodeFB = 1;
     if (prms.cBlk > 1 && false_feedback_allowed) {
       // only give false feedback after practice blocks
-      corrCodeFB = Math.random() >= 0.8 ? 2 : 1
+      corrCodeFB = Math.random() >= 0.8 ? 2 : 1;
     }
   } else if (data.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
-    corrCode = 2
-    corrCodeFB = 2
+    corrCode = 2;
+    corrCodeFB = 2;
   } else if (rt >= prms.tooSlow) {
-    corrCode = 3
-    corrCodeFB = 3
+    corrCode = 3;
+    corrCodeFB = 3;
   } else if (rt <= prms.tooFast) {
-    corrCode = 4
-    corrCodeFB = 4
+    corrCode = 4;
+    corrCodeFB = 4;
   }
 
   jsPsych.data.addDataToLastTrial({
@@ -262,31 +262,31 @@ function codeTrialPES() {
     corrCodeFB: corrCodeFB,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
-  })
-  prms.cTrl += 1
+  });
+  prms.cTrl += 1;
   if (data.key_press === 27) {
-    jsPsych.endExperiment()
+    jsPsych.endExperiment();
   }
 }
 
 function blockFeedbackTxtPES() {
-  'use strict'
+  'use strict';
 
-  let dat = jsPsych.data.get().filter({ stim: 'flanker', blockNum: prms.cBlk })
-  let nTotal = dat.count()
+  let dat = jsPsych.data.get().filter({ stim: 'flanker', blockNum: prms.cBlk });
+  let nTotal = dat.count();
   let nError = dat.select('corrCode').values.filter(function (x) {
-    return x !== 1
-  }).length
-  let errorRate = Math.round((nError / nTotal) * 100)
+    return x !== 1;
+  }).length;
+  let errorRate = Math.round((nError / nTotal) * 100);
 
-  let errorRateTxt = '<h2>&nbsp;</h2><br>'
+  let errorRateTxt = '<h2>&nbsp;</h2><br>';
   if (errorRate < 5) {
-    errorRateTxt = '<h2><b>Bitte reagieren Sie schneller!</h2></b><br>'
+    errorRateTxt = '<h2><b>Bitte reagieren Sie schneller!</h2></b><br>';
   } else if (errorRate > 15) {
-    errorRateTxt = '<h2><b>Bitte reagieren Sie genauer!</h2></b><br>'
+    errorRateTxt = '<h2><b>Bitte reagieren Sie genauer!</h2></b><br>';
   }
 
-  let meanRT = dat.select('rt').mean()
+  let meanRT = dat.select('rt').mean();
   let fbTxtBlk =
     '<h1>Block: ' +
     prms.cBlk +
@@ -300,14 +300,14 @@ function blockFeedbackTxtPES() {
     errorRate +
     ' %</h1><br>' +
     errorRateTxt +
-    '<h1>Drücken Sie eine beliebige Taste, um fortzufahren!</h1>'
-  prms.cBlk += 1
-  prms.cTrl = 1
-  return fbTxtBlk
+    '<h1>Drücken Sie eine beliebige Taste, um fortzufahren!</h1>';
+  prms.cBlk += 1;
+  prms.cTrl = 1;
+  return fbTxtBlk;
 }
 
-const stimuli = generate_letter_arrays()
-const timeline = generate_timeline_variables(stimuli)
+const stimuli = generate_letter_arrays();
+const timeline = generate_timeline_variables(stimuli);
 
 const flanker_stimulus = {
   type: 'static-canvas-keyboard-response',
@@ -328,16 +328,16 @@ const flanker_stimulus = {
     corrResp: jsPsych.timelineVariable('respKey'),
   },
   on_finish: function () {
-    codeTrialPES()
+    codeTrialPES();
   },
-}
+};
 
 const trial_timeline = {
   timeline: [fixation_cross, flanker_stimulus, trial_feedback],
   timeline_variables: timeline,
-}
+};
 
-const randomString = generateRandomString(16)
+const randomString = generateRandomString(16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -357,41 +357,41 @@ const alphaNum = {
     randomString +
     '</h2></br></br>' +
     "<h3 align='left'>Drücke die Leertaste, um fortzufahren!</h3>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
-  exp.push(fullscreen_on)
-  exp.push(welcome_de)
-  exp.push(resize_de)
-  exp.push(vpInfoForm_de)
-  exp.push(hideMouseCursor)
-  exp.push(screenInfo)
-  exp.push(task_instructions1)
-  exp.push(task_instructions2)
+  let exp = [];
+  exp.push(fullscreen_on);
+  exp.push(welcome_de);
+  exp.push(resize_de);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline }
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? 1 : 2 }
-    exp.push(blk_timeline) // trials within a block
-    exp.push(block_feedback) // show previous block performance
+    let blk_timeline = { ...trial_timeline };
+    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? 1 : 2 };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_de)
-  exp.push(showMouseCursor)
-  exp.push(alphaNum)
-  exp.push(fullscreen_off)
+  exp.push(debrief_de);
+  exp.push(showMouseCursor);
+  exp.push(alphaNum);
+  exp.push(fullscreen_off);
 
-  return exp
+  return exp;
 }
-const EXP = genExpSeq()
+const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + vpNum
-const code_filename = dirName + 'code/' + expName
+const data_filename = dirName + 'data/' + expName + '_' + vpNum;
+const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
@@ -402,7 +402,7 @@ jsPsych.init({
     min_height: canvas_size[1],
   },
   on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'flanker' })
-    saveRandomCode('/Common/write_code.php', code_filename, randomString)
+    saveData('/Common/write_data.php', data_filename, { stim: 'flanker' });
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-})
+});

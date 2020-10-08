@@ -2,9 +2,9 @@
 // VPs respond to the meaning of the presented text using
 // key responses ("D" and "J").
 
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -23,7 +23,7 @@ const prms = {
   fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -35,7 +35,7 @@ const task_instructions = {
     "<H2 style='text-align:center;'>Respond to the meaning of the text.</H2><br>" +
     "<H2 style='text-align:center;'>LEFT = 'D' key &emsp; RIGHT = 'J' </H2>",
   post_trial_gap: prms.waitDur,
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -47,9 +47,9 @@ const fixation_cross = {
   trial_duration: prms.fixDur,
   post_trial_gap: 0,
   data: { stim: 'fixation' },
-}
+};
 
-const affnegs = ['<h1>now left</h1>', '<h1>now right</h1>', '<h1>not left</h1>', '<h1>not right</h1>']
+const affnegs = ['<h1>now left</h1>', '<h1>now right</h1>', '<h1>not left</h1>', '<h1>not right</h1>'];
 
 const affneg_stimulus = {
   type: 'html-keyboard-response',
@@ -65,9 +65,9 @@ const affneg_stimulus = {
     corrResp: jsPsych.timelineVariable('key'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_feedback = {
   type: 'html-keyboard-response',
@@ -77,9 +77,9 @@ const trial_feedback = {
   post_trial_gap: prms.iti,
   data: { stim: 'feedback' },
   on_start: function (trial) {
-    trial.stimulus = trialFeedbackTxt(prms.fbTxt)
+    trial.stimulus = trialFeedbackTxt(prms.fbTxt);
   },
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response',
@@ -87,9 +87,9 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'affneg' })
+    trial.stimulus = blockFeedbackTxt({ stim: 'affneg' });
   },
-}
+};
 
 const trial_timeline = {
   timeline: [fixation_cross, affneg_stimulus, trial_feedback],
@@ -99,37 +99,37 @@ const trial_timeline = {
     { affneg: affnegs[2], type: 'neg', side: 'left', key: prms.respKeys[1] },
     { affneg: affnegs[3], type: 'neg', side: 'right', key: prms.respKeys[0] },
   ],
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(welcome_en)
+  exp.push(welcome_en);
   // exp.push(vpInfoForm_en);
-  exp.push(task_instructions)
+  exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline }
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 }
-    exp.push(blk_timeline) // trials within a block
-    exp.push(block_feedback) // show previous block performance
+    let blk_timeline = { ...trial_timeline };
+    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_en)
-  return exp
+  exp.push(debrief_en);
+  return exp;
 }
-const EXP = genExpSeq()
-const filename = dirName + 'data/' + expName + '_' + genVpNum()
+const EXP = genExpSeq();
+const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
   fullscreen: false,
   show_progress_bar: false,
   on_finish: function () {
-    saveData('/Common/write_data.php', filename, { stim: 'affneg' })
+    saveData('/Common/write_data.php', filename, { stim: 'affneg' });
   },
-})
+});

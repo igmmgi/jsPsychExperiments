@@ -2,9 +2,9 @@
 // VPs respond to the colour of the presented stimulus using
 // left and right key responses.
 
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -24,14 +24,14 @@ const prms = {
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   mapping: jsPsych.randomization.sampleWithoutReplacement([1, 2], 1)[0],
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-let task_instructions = ''
+let task_instructions = '';
 if (prms.mapping === 1) {
-  prms.respKeys = ['D', 'J', 27]
+  prms.respKeys = ['D', 'J', 27];
   task_instructions = {
     type: 'html-keyboard-response',
     stimulus:
@@ -39,9 +39,9 @@ if (prms.mapping === 1) {
       "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
       "<H2 style='text-align: center;'>red = 'D' key &emsp; blue = 'J' key</H2>",
     post_trial_gap: prms.waitDur,
-  }
+  };
 } else {
-  prms.respKeys = ['J', 'D', 27]
+  prms.respKeys = ['J', 'D', 27];
   task_instructions = {
     type: 'html-keyboard-response',
     stimulus:
@@ -49,7 +49,7 @@ if (prms.mapping === 1) {
       "<H2 style='text-align: center;'>Respond to the colour of the font </H2><br>" +
       "<H2 style='text-align: center;'>blue = 'D' key &emsp; red = 'J' key</H2>",
     post_trial_gap: prms.waitDur,
-  }
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -62,14 +62,14 @@ const fixation_cross = {
   trial_duration: prms.fixDur,
   post_trial_gap: 0,
   data: { stim: 'fixation' },
-}
+};
 
 const stroops = [
   "<h1 style='color:red'>red</h1>",
   "<h1 style='color:red'>blue</h1>",
   "<h1 style='color:blue'>blue</h1>",
   "<h1 style='color:blue'>red</h1>",
-]
+];
 
 const stroop_stimulus = {
   type: 'html-keyboard-response',
@@ -86,9 +86,9 @@ const stroop_stimulus = {
     corrResp: jsPsych.timelineVariable('key'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_feedback = {
   type: 'html-keyboard-response',
@@ -98,9 +98,9 @@ const trial_feedback = {
   post_trial_gap: prms.iti,
   data: { stim: 'feedback' },
   on_start: function (trial) {
-    trial.stimulus = trialFeedbackTxt(prms.fbTxt)
+    trial.stimulus = trialFeedbackTxt(prms.fbTxt);
   },
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response',
@@ -108,9 +108,9 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'stroop' })
+    trial.stimulus = blockFeedbackTxt({ stim: 'stroop' });
   },
-}
+};
 
 const trial_timeline = {
   timeline: [fixation_cross, stroop_stimulus, trial_feedback],
@@ -120,37 +120,37 @@ const trial_timeline = {
     { stroop: stroops[2], word: 'blue', colour: 'blue', comp: 'comp', key: prms.respKeys[1] },
     { stroop: stroops[3], word: 'red', colour: 'blue', comp: 'incomp', key: prms.respKeys[1] },
   ],
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(welcome_en)
+  exp.push(welcome_en);
   //exp.push(vpInfoForm_en);
-  exp.push(task_instructions)
+  exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline }
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 }
-    exp.push(blk_timeline) // trials within a block
-    exp.push(block_feedback) // show previous block performance
+    let blk_timeline = { ...trial_timeline };
+    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_en)
-  return exp
+  exp.push(debrief_en);
+  return exp;
 }
-const EXP = genExpSeq()
-const filename = dirName + 'data/' + expName + '_' + genVpNum()
+const EXP = genExpSeq();
+const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
   fullscreen: false,
   show_progress_bar: false,
   on_finish: function () {
-    saveData('/Common/write_data.php', filename, { stim: 'stroop' })
+    saveData('/Common/write_data.php', filename, { stim: 'stroop' });
   },
-})
+});

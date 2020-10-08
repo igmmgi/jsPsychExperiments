@@ -1,5 +1,5 @@
 jsPsych.plugins['static-canvas-keyboard-response'] = (function () {
-  let plugin = {}
+  let plugin = {};
 
   plugin.info = {
     name: 'static-canvas-keyboard-response',
@@ -84,31 +84,31 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function () {
         description: 'If true, then trial will end when user responds.',
       },
     },
-  }
+  };
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    display_element.innerHTML = "<canvas id='canvas'></canvas>"
-    let canvas = document.getElementById('canvas')
+    display_element.innerHTML = "<canvas id='canvas'></canvas>";
+    let canvas = document.getElementById('canvas');
 
-    canvas.style = 'position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;'
-    canvas.width = trial.canvas_size[0]
-    canvas.height = trial.canvas_size[1]
-    canvas.style.border = trial.canvas_border
-    canvas.style.left = -trial.canvas_size[0] / 2 + 'px'
+    canvas.style = 'position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;';
+    canvas.width = trial.canvas_size[0];
+    canvas.height = trial.canvas_size[1];
+    canvas.style.border = trial.canvas_border;
+    canvas.style.left = -trial.canvas_size[0] / 2 + 'px';
 
-    let ctx = document.getElementById('canvas').getContext('2d')
-    ctx.fillStyle = trial.canvas_colour
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    let ctx = document.getElementById('canvas').getContext('2d');
+    ctx.fillStyle = trial.canvas_colour;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (typeof trial.func === 'function') {
-      trial.func = [trial.func]
+      trial.func = [trial.func];
     }
     if (typeof trial.stimulus_onset === 'boolean') {
-      trial.clear_screen = [trial.clear_screen]
+      trial.clear_screen = [trial.clear_screen];
     }
     if (typeof trial.stimulus_onset === 'number') {
-      trial.stimulus_onset = [trial.stimulus_onset]
+      trial.stimulus_onset = [trial.stimulus_onset];
     }
 
     if (trial.func.length !== trial.stimulus_onset.length) {
@@ -116,23 +116,23 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function () {
     }
 
     if (trial.translate_origin) {
-      ctx.translate(canvas.width / 2, canvas.height / 2) // make center (0, 0)
+      ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
     }
 
     // store response
     let response = {
       rt: null,
       key: null,
-    }
+    };
 
     // function to end trial when it is time
     let end_trial = function () {
       // kill any remaining setTimeout handlers
-      jsPsych.pluginAPI.clearAllTimeouts()
+      jsPsych.pluginAPI.clearAllTimeouts();
 
       // kill keyboard listeners
       if (typeof keyboardListener !== 'undefined') {
-        jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener)
+        jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       }
 
       // gather the data to store for the trial
@@ -140,24 +140,24 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function () {
         rt: response.rt,
         stimulus: trial.stimulus,
         key_press: response.key,
-      }
+      };
 
       // clear the display
-      display_element.innerHTML = "<canvas id='canvas'></canvas>"
+      display_element.innerHTML = "<canvas id='canvas'></canvas>";
 
       // move on to the next trial
-      jsPsych.finishTrial(trial_data)
-    }
+      jsPsych.finishTrial(trial_data);
+    };
 
     // function to handle responses by the subject
     let after_response = function (info) {
       if (response.key == null) {
-        response = info
+        response = info;
       }
       if (trial.response_ends_trial) {
-        end_trial()
+        end_trial();
       }
-    }
+    };
 
     // start the response listener
     if (trial.choices !== jsPsych.NO_KEYS) {
@@ -167,34 +167,34 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function () {
         rt_method: 'performance',
         persist: false,
         allow_held_key: false,
-      })
+      });
     }
 
     // hide stimulus if stimulus_duration is set
     if (trial.stimulus_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function () {
         // reset canvas
-        display_element.innerHTML = "<canvas id='canvas'></canvas>"
-        let canvas = document.getElementById('canvas')
+        display_element.innerHTML = "<canvas id='canvas'></canvas>";
+        let canvas = document.getElementById('canvas');
 
-        canvas.style = 'position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;'
-        canvas.width = trial.canvas_size[0]
-        canvas.height = trial.canvas_size[1]
-        canvas.style.border = trial.canvas_border
-        canvas.style.left = -trial.canvas_size[0] / 2 + 'px'
+        canvas.style = 'position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;';
+        canvas.width = trial.canvas_size[0];
+        canvas.height = trial.canvas_size[1];
+        canvas.style.border = trial.canvas_border;
+        canvas.style.left = -trial.canvas_size[0] / 2 + 'px';
 
-        let ctx = document.getElementById('canvas').getContext('2d')
+        let ctx = document.getElementById('canvas').getContext('2d');
 
-        ctx.fillStyle = trial.canvas_colour
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-      }, trial.stimulus_duration)
+        ctx.fillStyle = trial.canvas_colour;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }, trial.stimulus_duration);
     }
 
     // end trial if trial_duration is set
     if (trial.trial_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function () {
-        end_trial()
-      }, trial.trial_duration)
+        end_trial();
+      }, trial.trial_duration);
     }
 
     // draw stimulus/stimuli
@@ -202,17 +202,17 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function () {
       jsPsych.pluginAPI.setTimeout(function () {
         if (trial.clear_screen[i]) {
           if (trial.translate_origin) {
-            ctx.fillStyle = trial.canvas_colour
-            ctx.fillRect(-canvas.width / 2, -canvas.height / 2, ctx.canvas.width, ctx.canvas.height)
+            ctx.fillStyle = trial.canvas_colour;
+            ctx.fillRect(-canvas.width / 2, -canvas.height / 2, ctx.canvas.width, ctx.canvas.height);
           } else {
-            ctx.fillStyle = trial.canvas_colour
-            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = trial.canvas_colour;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
         }
-        trial.func[i](trial.func_args[i])
-      }, trial.stimulus_onset[i])
+        trial.func[i](trial.func_args[i]);
+      }, trial.stimulus_onset[i]);
     }
-  }
+  };
 
-  return plugin
-})()
+  return plugin;
+})();

@@ -10,17 +10,17 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)'
-const canvas_size = [960, 720]
-const canvas_border = '5px solid black'
+const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_size = [960, 720];
+const canvas_border = '5px solid black';
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/')
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
+const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -44,7 +44,7 @@ const prms = {
   stimPosX: 200,
   stimPosY: 0,
   stimSize: '50px monospace',
-}
+};
 
 const task_instructions1 = {
   type: 'html-keyboard-response-canvas',
@@ -59,7 +59,7 @@ const task_instructions1 = {
     "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
     "<h3 style='text-align: center;'>Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste um fortzufahren!</h2>",
-}
+};
 
 const task_instructions2 = {
   type: 'html-keyboard-response-canvas',
@@ -74,7 +74,7 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>größer 45 = 'P' Taste (rechter Zeigefinger)</h2>" +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
-}
+};
 
 const task_reminder = {
   type: 'html-keyboard-response-canvas',
@@ -88,21 +88,21 @@ const task_reminder = {
     "<h2 style='text-align: center;'>kleiner 45 = 'Q' Taste (linker Zeigefinger)</h2>" +
     "<h2 style='text-align: center;'>größer 45 = 'P' Taste (rechter Zeigefinger)</h2><br>" +
     "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 function drawFixation() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.lineWidth = prms.fixWidth
-  ctx.moveTo(-prms.fixSize, 0)
-  ctx.lineTo(prms.fixSize, 0)
-  ctx.stroke()
-  ctx.moveTo(0, -prms.fixSize)
-  ctx.lineTo(0, prms.fixSize)
-  ctx.stroke()
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = prms.fixWidth;
+  ctx.moveTo(-prms.fixSize, 0);
+  ctx.lineTo(prms.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -prms.fixSize);
+  ctx.lineTo(0, prms.fixSize);
+  ctx.stroke();
 }
 
 const fixation_cross = {
@@ -114,24 +114,24 @@ const fixation_cross = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawFixation,
-}
+};
 
 function drawNumber(args) {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
 
-  ctx.fillStyle = 'black'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.font = prms.stimSize
+  ctx.fillStyle = 'black';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = prms.stimSize;
 
   switch (args['position']) {
     case 'left':
-      ctx.fillText(args['number'], -prms.stimPosX, prms.stimPosY)
-      break
+      ctx.fillText(args['number'], -prms.stimPosX, prms.stimPosY);
+      break;
     case 'right':
-      ctx.fillText(args['number'], prms.stimPosX, prms.stimPosY)
-      break
+      ctx.fillText(args['number'], prms.stimPosX, prms.stimPosY);
+      break;
   }
 }
 
@@ -156,19 +156,19 @@ const number_stimulus = {
     corrResp: jsPsych.timelineVariable('corrResp'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 function drawFeedback() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  let dat = jsPsych.data.get().last(1).values()[0]
-  ctx.font = prms.fbSize
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.fbSize;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
 }
 
 const trial_feedback = {
@@ -180,10 +180,10 @@ const trial_feedback = {
   response_ends_trial: false,
   func: drawFeedback,
   on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0]
-    trial.trial_duration = prms.fbDur[dat.corrCode - 1]
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
   },
-}
+};
 
 const iti = {
   type: 'static-canvas-keyboard-response',
@@ -193,7 +193,7 @@ const iti = {
   trial_duration: prms.iti,
   response_ends_trial: false,
   func: function () {},
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response-canvas',
@@ -203,9 +203,9 @@ const block_feedback = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'SimonNumber' })
+    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'SimonNumber' });
   },
-}
+};
 
 const trial_timeline = {
   timeline: [fixation_cross, number_stimulus, trial_feedback, iti],
@@ -308,9 +308,9 @@ const trial_timeline = {
     { number: '69', size: 'large', distance: 'far', position: 'right', cong: 'cong', corrResp: prms.respKeys[1] },
   ],
   randomize_order: true,
-}
+};
 
-const randomString = generateRandomString(16)
+const randomString = generateRandomString(16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -328,45 +328,45 @@ const alphaNum = {
     randomString +
     '</h1><br>' +
     "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(fullscreen_on)
-  exp.push(welcome_de_du)
-  exp.push(resize_de_du)
-  exp.push(vpInfoForm_de)
-  exp.push(hideMouseCursor)
-  exp.push(screenInfo)
-  exp.push(task_instructions1)
-  exp.push(task_instructions2)
+  exp.push(fullscreen_on);
+  exp.push(welcome_de_du);
+  exp.push(resize_de_du);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline }
-    blk_timeline.repetitions = 1
+    let blk_timeline = { ...trial_timeline };
+    blk_timeline.repetitions = 1;
     if (blk > 0) {
-      exp.push(task_reminder)
+      exp.push(task_reminder);
     }
-    exp.push(blk_timeline) // trials within a block
-    exp.push(block_feedback) // show previous block performance
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_de)
-  exp.push(showMouseCursor)
-  exp.push(alphaNum)
-  exp.push(fullscreen_off)
+  exp.push(debrief_de);
+  exp.push(showMouseCursor);
+  exp.push(alphaNum);
+  exp.push(fullscreen_off);
 
-  return exp
+  return exp;
 }
-const EXP = genExpSeq()
+const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + vpNum
-const code_filename = dirName + 'code/' + expName
+const data_filename = dirName + 'data/' + expName + '_' + vpNum;
+const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
@@ -377,7 +377,7 @@ jsPsych.init({
     min_height: canvas_size[1],
   },
   on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'SimonNumber' })
-    saveRandomCode('/Common/write_code.php', code_filename, randomString)
+    saveData('/Common/write_data.php', data_filename, { stim: 'SimonNumber' });
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-})
+});

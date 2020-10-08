@@ -5,9 +5,9 @@
 // 1, 2, 8, 9 (normal/italics)
 // X in green or left to the left or right of fixation
 
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -26,10 +26,10 @@ const prms = {
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
   cTrl: 1,
   cBlk: 1,
-}
+};
 
-prms.respKeys = prms.mapping === 1 ? ['C', 'M', 27] : ['M', 'C', 27]
-prms.comp = prms.mapping === 1 ? ['comp', 'incomp'] : ['incomp', 'comp']
+prms.respKeys = prms.mapping === 1 ? ['C', 'M', 27] : ['M', 'C', 27];
+prms.comp = prms.mapping === 1 ? ['comp', 'incomp'] : ['incomp', 'comp'];
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -47,7 +47,7 @@ const task_instructions = {
     ' Taste</h2>' +
     "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
   post_trial_gap: prms.waitDur,
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -59,7 +59,7 @@ const fixation_cross = {
   trial_duration: prms.fixDur,
   post_trial_gap: 0,
   data: { stim: 'fixation' },
-}
+};
 
 const stims = [
   ["<h1 style='font-size:60px; color:red;   font-family:Courier; position:relative; left: -100px'>X</h1>"],
@@ -74,7 +74,7 @@ const stims = [
   ["<h1 style='font-size:60px; color:black; font-family:Courier;'><i>8</i></h1>"],
   ["<h1 style='font-size:60px; color:black; font-family:Courier;'   >9</h1>"],
   ["<h1 style='font-size:60px; color:black; font-family:Courier;'><i>9</i></h1>"],
-]
+];
 
 const trial_stimulus = {
   type: 'html-keyboard-response',
@@ -93,9 +93,9 @@ const trial_stimulus = {
     corrResp: jsPsych.timelineVariable('key'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_feedback = {
   type: 'html-keyboard-response',
@@ -106,17 +106,17 @@ const trial_feedback = {
   data: { stim: 'feedback' },
   on_start: function (trial) {
     if (prms.cBlk === 1) {
-      trial.stimulus = trialFeedbackTxt(prms.fbTxt)
+      trial.stimulus = trialFeedbackTxt(prms.fbTxt);
     }
   },
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response',
   stimulus: blockFeedbackTxt,
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
-}
+};
 
 const trial_timeline = {
   timeline: [fixation_cross, trial_stimulus, trial_feedback],
@@ -266,9 +266,9 @@ const trial_timeline = {
       key: prms.respKeys[1],
     },
   ],
-}
+};
 
-const randomString = generateRandomString(16)
+const randomString = generateRandomString(16);
 
 const alphaNum = {
   type: 'html-keyboard-response',
@@ -281,39 +281,39 @@ const alphaNum = {
     randomString +
     '</h1>' +
     '<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>',
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(welcome_de)
+  exp.push(welcome_de);
   //exp.push(vpInfoForm);
-  exp.push(task_instructions)
+  exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline }
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 16 : prms.nTrlsE / 16 }
-    exp.push(blk_timeline) // trials within a block
-    exp.push(block_feedback) // show previous block performance
+    let blk_timeline = { ...trial_timeline };
+    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 16 : prms.nTrlsE / 16 };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_de)
-  exp.push(alphaNum)
-  return exp
+  exp.push(debrief_de);
+  exp.push(alphaNum);
+  return exp;
 }
-const EXP = genExpSeq()
-const filename = dirName + 'data/' + expName + '_' + genVpNum()
+const EXP = genExpSeq();
+const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
   fullscreen: false,
   show_progress_bar: false,
   on_finish: function () {
-    saveRandomCode(expName)
-    saveData('/Common/write_data.php', filename, { stim: 'snarcSimon' })
+    saveRandomCode(expName);
+    saveData('/Common/write_data.php', filename, { stim: 'snarcSimon' });
   },
-})
+});

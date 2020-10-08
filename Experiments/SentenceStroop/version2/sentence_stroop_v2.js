@@ -49,17 +49,17 @@
 //////////////////////////////////////////////////////////////////////////
 ////                         Canvas Properties                          //
 //////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)'
-const canvas_size = [1280, 720]
-const canvas_border = '0px solid black'
+const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_size = [1280, 720];
+const canvas_border = '0px solid black';
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/')
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
+const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -81,7 +81,7 @@ const prms = {
   font_question: '24px monospace',
   font_stroop: '28px monospace',
   cTrl: 1, // count trials
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                            Instructions                            //
@@ -93,11 +93,11 @@ const task_instructions1 = {
   canvas_border: canvas_border,
   stimulus: "<h2 style='text-align:center;'>Welcome: Press any key to continue!</h2><br>",
   on_finish: function () {
-    $('body').css('cursor', 'none')
+    $('body').css('cursor', 'none');
   },
-}
+};
 
-const cols = ['blue', 'green', 'yellow']
+const cols = ['blue', 'green', 'yellow'];
 
 task_instructions2 = {
   type: 'html-keyboard-response-canvas',
@@ -117,7 +117,7 @@ task_instructions2 = {
     '</H2><br>' +
     "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2><br>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 task_instructions3 = {
   type: 'html-keyboard-response-canvas',
@@ -137,7 +137,7 @@ task_instructions3 = {
     '</H2><br>' +
     "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2><br>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 task_instructions4 = {
   type: 'html-keyboard-response-canvas',
@@ -150,7 +150,7 @@ task_instructions4 = {
     "<H2 style='text-align:center;'>hand to reveal the sentence word-by-word.</H2>" +
     "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 task_instructions5 = {
   type: 'html-keyboard-response-canvas',
@@ -172,7 +172,7 @@ task_instructions5 = {
     "<H2 style='text-align:center;'>Press the spacebar to reveal the sentence word-by-word.</H2>" +
     "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 task_instructions6 = {
   type: 'html-keyboard-response-canvas',
@@ -194,7 +194,7 @@ task_instructions6 = {
     "<H2 style='text-align:center;'>Press the spacebar to reveal the sentence word-by-word.</H2>" +
     "<H2 style='text-align:center;'>Read the sentence for comprehension.</H2><br>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -324,7 +324,7 @@ const stroops = [
     question: 'na',
     answer: 'na',
   },
-]
+];
 
 // 11 practice sentences
 // Select 1 random sentence as the training phase for the moving-window procedure
@@ -417,7 +417,7 @@ const prac_sentences = [
     question: 'na',
     answer: 'na',
   },
-]
+];
 
 // 42 experimental items (21/21 congruent incongruent)
 // list refers to the original item list number used in Kan et al. (2013)
@@ -1178,7 +1178,7 @@ const exp_sentences = [
     question: 'na',
     answer: 'na',
   },
-]
+];
 
 // 29 filler sentences, 10 have questions
 const filler_sentences = [
@@ -1414,7 +1414,7 @@ const filler_sentences = [
     question: 'na',
     answer: 'na',
   },
-]
+];
 
 ////////////////////////////////////////////////////////////////////////
 //                        jsPsych type stimuli                        //
@@ -1429,7 +1429,7 @@ const fixation_cross = {
   trial_duration: prms.fixDur,
   response_ends_trial: false,
   func: drawFixation,
-}
+};
 
 const iti = {
   type: 'static-canvas-keyboard-response',
@@ -1439,7 +1439,7 @@ const iti = {
   trial_duration: prms.iti,
   response_ends_trial: false,
   func: function () {},
-}
+};
 
 const iti_filler = {
   type: 'static-canvas-keyboard-response',
@@ -1449,30 +1449,30 @@ const iti_filler = {
   trial_duration: prms.iti_filler,
   response_ends_trial: false,
   func: function () {},
-}
+};
 
 function codeTrial() {
-  'use strict'
-  let dat = jsPsych.data.get().last(1).values()[0]
-  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp)
-  let corrCode = dat.key_press === corrKeyNum ? 1 : 2
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow
-  jsPsych.data.addDataToLastTrial({ date: Date(), rt: rt, corrCode: corrCode, trialNum: prms.cTrl })
-  prms.cTrl += 1
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
+  let corrCode = dat.key_press === corrKeyNum ? 1 : 2;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  jsPsych.data.addDataToLastTrial({ date: Date(), rt: rt, corrCode: corrCode, trialNum: prms.cTrl });
+  prms.cTrl += 1;
   if (dat.key_press === 27) {
-    jsPsych.endExperiment()
+    jsPsych.endExperiment();
   }
 }
 
 function drawStroopFeedback() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  let dat = jsPsych.data.get().last(1).values()[0]
-  ctx.font = prms.font_stroop
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.font_stroop;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
 }
 
 const stroop_stimulus = {
@@ -1507,9 +1507,9 @@ const stroop_stimulus = {
     corrResp: jsPsych.timelineVariable('key'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_feedback = {
   type: 'static-canvas-keyboard-response',
@@ -1520,7 +1520,7 @@ const trial_feedback = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawStroopFeedback,
-}
+};
 
 const question_stimulus = {
   type: 'static-canvas-keyboard-response',
@@ -1544,13 +1544,13 @@ const question_stimulus = {
     answer: jsPsych.timelineVariable('answer'),
   },
   on_finish: function () {
-    let dat = jsPsych.data.get().last(1).values()[0]
-    let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.answer)
-    let corrCode = dat.key_press === corrKeyNum ? 1 : 2
-    jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, trialNum: prms.cTrl })
-    prms.cTrl += 1
+    let dat = jsPsych.data.get().last(1).values()[0];
+    let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.answer);
+    let corrCode = dat.key_press === corrKeyNum ? 1 : 2;
+    jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, trialNum: prms.cTrl });
+    prms.cTrl += 1;
   },
-}
+};
 
 const moving_window_text = {
   type: 'text-moving-window-keyboard-response',
@@ -1577,18 +1577,18 @@ const moving_window_text = {
     answer: jsPsych.timelineVariable('answer'),
   },
   on_finish: function () {
-    let dat = jsPsych.data.get().last(1).values()[0]
-    jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: 1, trialNum: prms.cTrl })
+    let dat = jsPsych.data.get().last(1).values()[0];
+    jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: 1, trialNum: prms.cTrl });
     if (dat.word_number === dat.length - 1) {
-      prms.cTrl += 1
+      prms.cTrl += 1;
     }
   },
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Amazon Turk Random Code                       //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16)
+const randomString = generateRandomString(16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -1603,14 +1603,14 @@ const alphaNum = {
     "<h3 style='text-align: left;'>This is your participation code:</h3>" +
     "<h3 style='text-align: left;'>Please copy the code and return to the MTurk page.</h3>" +
     "<h3 style='text-align: left;'>Press the spacebar to end the experiment.</h3>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                     Create timeline variables                      //
 ////////////////////////////////////////////////////////////////////////
 function create_sentence_sequence(sentence) {
-  const txt = sentence['sent'].split(' ')
-  let seq = []
+  const txt = sentence['sent'].split(' ');
+  let seq = [];
   for (let i = -1; i < txt.length; i++) {
     seq.push({
       stimulus: 'sentence',
@@ -1622,121 +1622,121 @@ function create_sentence_sequence(sentence) {
       answer: sentence['answer'],
       word_num: i,
       length: txt.length,
-    })
+    });
   }
-  return seq
+  return seq;
 }
 
 function create_sentence_items(sentences) {
-  let items = []
+  let items = [];
   for (let i = 0; i < sentences.length; i++) {
     const tmp = {
       timeline: [moving_window_text],
       timeline_variables: create_sentence_sequence(sentences[i]),
-    }
-    items.push(tmp)
+    };
+    items.push(tmp);
   }
-  return shuffle(items)
+  return shuffle(items);
 }
 
 function create_stroop_items_feedback(nreps) {
-  let items = []
+  let items = [];
   for (let i = 0; i < nreps; i++) {
     for (let j = 0; j < 12; j++) {
       let tmp = {
         timeline: [stroop_stimulus, trial_feedback],
         timeline_variables: [stroops[j]],
-      }
-      items.push(tmp)
+      };
+      items.push(tmp);
     }
   }
-  return shuffle(items)
+  return shuffle(items);
 }
 
 function create_stroop_items(nreps) {
-  let items = []
+  let items = [];
   for (let i = 0; i < nreps; i++) {
     for (let j = 0; j < 12; j++) {
       let tmp = {
         timeline: [stroop_stimulus],
         timeline_variables: [stroops[j]],
-      }
-      items.push(tmp)
+      };
+      items.push(tmp);
     }
   }
-  return shuffle(items)
+  return shuffle(items);
 }
 
 function add_fix_iti(items) {
-  let seq = []
+  let seq = [];
   for (let i = 0; i < items.length; i++) {
-    seq.push(fixation_cross)
-    seq.push(items[i])
-    seq.push(iti)
+    seq.push(fixation_cross);
+    seq.push(items[i]);
+    seq.push(iti);
   }
-  return seq
+  return seq;
 }
 
 ////////////////////////////////////////////////////////////////////////
 //                      Canvas Drawing Functions                      //
 ////////////////////////////////////////////////////////////////////////
 function drawFixation() {
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.lineWidth = prms.fixWidth
-  ctx.moveTo(-prms.fixSize, 0)
-  ctx.lineTo(prms.fixSize, 0)
-  ctx.stroke()
-  ctx.moveTo(0, -prms.fixSize)
-  ctx.lineTo(0, prms.fixSize)
-  ctx.stroke()
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = prms.fixWidth;
+  ctx.moveTo(-prms.fixSize, 0);
+  ctx.lineTo(prms.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -prms.fixSize);
+  ctx.lineTo(0, prms.fixSize);
+  ctx.stroke();
 }
 
 function drawStroop(args) {
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.font = prms.font_stroop
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = args['colour']
-  ctx.fillText(args['word'], 0, 0)
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font = prms.font_stroop;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = args['colour'];
+  ctx.fillText(args['word'], 0, 0);
 }
 
 function drawQuestion(args) {
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.font = prms.font_question
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(args['question'], 0, -50)
-  ctx.fillText('YES/TRUE (T)      NO/FALSE (F)', 0, 50)
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font = prms.font_question;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(args['question'], 0, -50);
+  ctx.fillText('YES/TRUE (T)      NO/FALSE (F)', 0, 50);
 }
 
 function constrained_shuffle(exp_items_sentences, exp_items_stroop, exp_items_filler) {
-  let items = shuffle(exp_items_stroop.concat(exp_items_filler))
+  let items = shuffle(exp_items_stroop.concat(exp_items_filler));
 
   // find positions of stroop and filler items
-  let stroop_positions = []
+  let stroop_positions = [];
   for (let i in items) {
     if (items[i]['timeline_variables'] && items[i]['timeline_variables'][0]['type'] === 'stroop') {
-      stroop_positions.push(parseInt(i))
+      stroop_positions.push(parseInt(i));
     }
   }
 
   // determine valid positions for exp sentence trial
-  let valid_positions = []
+  let valid_positions = [];
   for (let i in stroop_positions) {
     if (i > 0) {
       if ((stroop_positions[i] === stroop_positions[i - 1] + 1) & !valid_positions.includes(i - 1)) {
-        valid_positions.push(stroop_positions[i])
+        valid_positions.push(stroop_positions[i]);
       }
     }
   }
   valid_positions = shuffle(valid_positions)
     .splice(0, exp_items_sentences.length)
-    .sort((a, b) => a - b)
+    .sort((a, b) => a - b);
 
   // add exp sentence items into valid locations
   for (let i = valid_positions.length - 1; i >= 0; i--) {
-    items.splice(valid_positions[i], 0, exp_items_sentences[i])
+    items.splice(valid_positions[i], 0, exp_items_sentences[i]);
   }
 
   // for (let i in items) {
@@ -1747,16 +1747,16 @@ function constrained_shuffle(exp_items_sentences, exp_items_stroop, exp_items_fi
   //     }
   // }
 
-  return items
+  return items;
 }
 
 // only some of the filler items have questions
 function add_filler_questions(items) {
-  let final_items = []
+  let final_items = [];
   for (let i in items) {
-    final_items.push(items[i])
+    final_items.push(items[i]);
     if (items[i].timeline_variables === undefined) {
-      continue
+      continue;
     }
     if (
       items[i]['timeline_variables'][0]['type'] === 'filler' &&
@@ -1772,23 +1772,23 @@ function add_filler_questions(items) {
             answer: items[i]['timeline_variables'][0]['answer'],
           },
         ],
-      }
-      final_items.push(tmp)
+      };
+      final_items.push(tmp);
     }
   }
-  return final_items
+  return final_items;
 }
 
 const save = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum
-    let code_filename = dirName + 'code/' + expName
-    saveData('/Common/write_data.php', data_filename, { stim: 'SentenceStroop' })
-    saveRandomCode('/Common/write_code.php', code_filename, randomString)
+    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
+    let code_filename = dirName + 'code/' + expName;
+    saveData('/Common/write_data.php', data_filename, { stim: 'SentenceStroop' });
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
   timing_post_trial: 200,
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                     Create required timelines                      //
@@ -1800,81 +1800,81 @@ const save = {
 const prac_trials_stroop_timeline = {
   timeline: add_fix_iti(create_stroop_items_feedback(1)),
   data: { phase: 'prac_trials_stroop' },
-}
+};
 const base_trials_stroop_timeline = {
   timeline: add_fix_iti(create_stroop_items(12)),
   data: { phase: 'base_trials_stroop' },
-}
+};
 
 // 2nd phase is a short practice with the moving window text alone (1 trial)
 // just take the first item as the item for the moving window familiarisation routine
-const prac_items_sentences = create_sentence_items(prac_sentences)
-const prac_items_sentences1 = add_fix_iti(prac_items_sentences.slice(0, 1))
-const prac_trial_sentence_timeline = { timeline: prac_items_sentences1, data: { phase: 'prac_trial_sentence' } }
+const prac_items_sentences = create_sentence_items(prac_sentences);
+const prac_items_sentences1 = add_fix_iti(prac_items_sentences.slice(0, 1));
+const prac_trial_sentence_timeline = { timeline: prac_items_sentences1, data: { phase: 'prac_trial_sentence' } };
 
 // 3rd phase is short combined stroop + sentence combination
-const prac_items_sentences2 = prac_items_sentences.slice(1)
-const prac_items_combined = add_fix_iti(shuffle(prac_items_sentences2.concat(create_stroop_items(1))))
-const prac_trial_combined_timeline = { timeline: prac_items_combined, data: { phase: 'prac_trials_combined' } }
+const prac_items_sentences2 = prac_items_sentences.slice(1);
+const prac_items_combined = add_fix_iti(shuffle(prac_items_sentences2.concat(create_stroop_items(1))));
+const prac_trial_combined_timeline = { timeline: prac_items_combined, data: { phase: 'prac_trials_combined' } };
 
 // 4th phase: Experiment
 // list 1 vs. list 2
-const listNum = nFiles % 2 == 0 ? 1 : 2
-jsPsych.data.addProperties({ list: listNum })
-const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === listNum)
+const listNum = nFiles % 2 == 0 ? 1 : 2;
+jsPsych.data.addProperties({ list: listNum });
+const exp_sentences_filtered = exp_sentences.filter((obj) => obj.list === listNum);
 
-const exp_items_sentences = create_sentence_items(exp_sentences_filtered)
-const exp_items_stroop = create_stroop_items(10)
-const exp_items_fillers = create_sentence_items(filler_sentences)
-const exp_items_all = add_fix_iti(constrained_shuffle(exp_items_sentences, exp_items_stroop, exp_items_fillers))
-const exp_items = add_filler_questions(exp_items_all)
+const exp_items_sentences = create_sentence_items(exp_sentences_filtered);
+const exp_items_stroop = create_stroop_items(10);
+const exp_items_fillers = create_sentence_items(filler_sentences);
+const exp_items_all = add_fix_iti(constrained_shuffle(exp_items_sentences, exp_items_stroop, exp_items_fillers));
+const exp_items = add_filler_questions(exp_items_all);
 
-const exp_timeline = { timeline: exp_items, data: { phase: 'exp' } }
+const exp_timeline = { timeline: exp_items, data: { phase: 'exp' } };
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(fullscreen_on)
-  exp.push(welcome_en)
-  exp.push(resize_en)
-  exp.push(vpInfoForm_en)
-  exp.push(hideMouseCursor)
-  exp.push(screenInfo)
-  exp.push(task_instructions1)
+  exp.push(fullscreen_on);
+  exp.push(welcome_en);
+  exp.push(resize_en);
+  exp.push(vpInfoForm_en);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
 
   // 1st phase (practice stroop + baseline stroop)
-  exp.push(task_instructions2)
-  exp.push(prac_trials_stroop_timeline)
-  exp.push(task_instructions3)
-  exp.push(base_trials_stroop_timeline)
+  exp.push(task_instructions2);
+  exp.push(prac_trials_stroop_timeline);
+  exp.push(task_instructions3);
+  exp.push(base_trials_stroop_timeline);
 
   // 2nd phase (1 trial moving window)
-  exp.push(task_instructions4)
-  exp.push(prac_trial_sentence_timeline)
+  exp.push(task_instructions4);
+  exp.push(prac_trial_sentence_timeline);
 
   // 3rd phase (combined stroop and sentence practice)
-  exp.push(task_instructions5)
-  exp.push(prac_trial_combined_timeline)
+  exp.push(task_instructions5);
+  exp.push(prac_trial_combined_timeline);
 
   // 4th phase (Experiment)
-  exp.push(task_instructions6)
-  exp.push(exp_timeline)
+  exp.push(task_instructions6);
+  exp.push(exp_timeline);
 
   // end phase
-  exp.push(save)
-  exp.push(debrief_en)
-  exp.push(showMouseCursor)
-  exp.push(alphaNum)
-  exp.push(fullscreen_off)
+  exp.push(save);
+  exp.push(debrief_en);
+  exp.push(showMouseCursor);
+  exp.push(alphaNum);
+  exp.push(fullscreen_off);
 
-  return exp
+  return exp;
 }
-EXP = genExpSeq()
+EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
@@ -1884,4 +1884,4 @@ jsPsych.init({
     min_width: canvas_size[0],
     min_height: canvas_size[1],
   },
-})
+});

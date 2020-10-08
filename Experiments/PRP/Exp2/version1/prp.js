@@ -30,8 +30,8 @@ const prms = {
   soa: [50, 1000],
   iti: 500,
   tooFast: 100,
-  tooSlow: 2000,
-  trialDuration: 3000,
+  tooSlow: 4000,
+  trialDuration: 4000,
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -246,12 +246,10 @@ function codeTrial() {
     (dat.key_press2 !== corrKeyNum2 && rt2 > prms.tooFast && rt2 < prms.tooSlow)
   ) {
     corrCode = 2; // choice error
-  } else if (rt2 >= prms.tooSlow) {
+  } else if ((rt1 >= prms.tooSlow) | (rt2 >= prms.tooSlow)) {
     corrCode = 3; // too slow
-  } else if (rt1 <= prms.tooFast) {
-    corrCode = 4; // too false
-  } else if (rt2 <= prms.tooFast) {
-    corrCode = 4; // too false
+  } else if ((rt1 <= prms.tooFast) | (rt2 <= prms.tooFast)) {
+    corrCode = 4; // too fast
   }
 
   jsPsych.data.addDataToLastTrial({

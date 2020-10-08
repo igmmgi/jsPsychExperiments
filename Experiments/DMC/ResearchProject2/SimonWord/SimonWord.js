@@ -8,17 +8,17 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)'
-const canvas_size = [960, 720]
-const canvas_border = '5px solid black'
+const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_size = [960, 720];
+const canvas_border = '5px solid black';
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/')
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
+const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -44,22 +44,22 @@ const prms = {
   stimPosX: 300,
   stimPosY: 0,
   stimSize: '40px monospace',
-}
+};
 
-const nVersion = getVersionNumber(nFiles, 2)
-jsPsych.data.addProperties({ nVersion: nVersion })
+const nVersion = getVersionNumber(nFiles, 2);
+jsPsych.data.addProperties({ nVersion: nVersion });
 if (nVersion === 1) {
-  prms.respKeysLife = ['Q', 'P', 27]
-  prms.respKeysSize = ['Q', 'P', 27]
+  prms.respKeysLife = ['Q', 'P', 27];
+  prms.respKeysSize = ['Q', 'P', 27];
   respText =
     "<h2 style='text-align: center;'>Leben: Lebendig = 'Q' &emsp;&emsp; Nicht Lebendig = 'P'</h2>" +
-    "<h2 style='text-align: center;'>Größe: Klein = 'Q' &emsp;&emsp; Groß = 'P'</h2><br>"
+    "<h2 style='text-align: center;'>Größe: Klein = 'Q' &emsp;&emsp; Groß = 'P'</h2><br>";
 } else if (nVersion === 2) {
-  prms.respKeysLife = ['P', 'Q', 27]
-  prms.respKeysSize = ['Q', 'P', 27]
+  prms.respKeysLife = ['P', 'Q', 27];
+  prms.respKeysSize = ['Q', 'P', 27];
   respText =
     "<h2 style='text-align: center;'>Leben: Nicht Lebendig = 'Q' &emsp;&emsp; Lebendig = 'P'</h4>" +
-    "<h2 style='text-align: center;'>Größe: Klein = 'Q' &emsp;&emsp; Groß = 'P'</h4><br>"
+    "<h2 style='text-align: center;'>Größe: Klein = 'Q' &emsp;&emsp; Groß = 'P'</h4><br>";
 }
 
 const task_instructions1 = {
@@ -75,7 +75,7 @@ const task_instructions1 = {
     "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
     "<h3 style='text-align: center;'>Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste um fortzufahren!</h2>",
-}
+};
 
 const task_instructions2 = {
   type: 'html-keyboard-response-canvas',
@@ -93,7 +93,7 @@ const task_instructions2 = {
     "<h3 style='text-align: center;'>Bediene 'S' mit deinem linken Zeigefinger und 'K' mit deinem rechten Zeigefinger.</h3><br>" +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste um fortzufahren!</h2>",
-}
+};
 
 const task_reminder = {
   type: 'html-keyboard-response-canvas',
@@ -106,21 +106,21 @@ const task_reminder = {
     "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
     respText +
     "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 function drawFixation() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.lineWidth = prms.fixWidth
-  ctx.moveTo(-prms.fixSize, 0)
-  ctx.lineTo(prms.fixSize, 0)
-  ctx.stroke()
-  ctx.moveTo(0, -prms.fixSize)
-  ctx.lineTo(0, prms.fixSize)
-  ctx.stroke()
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = prms.fixWidth;
+  ctx.moveTo(-prms.fixSize, 0);
+  ctx.lineTo(prms.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -prms.fixSize);
+  ctx.lineTo(0, prms.fixSize);
+  ctx.stroke();
 }
 
 const fixation_cross = {
@@ -132,16 +132,16 @@ const fixation_cross = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawFixation,
-}
+};
 
 function drawWordCue(args) {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.font = prms.stimSize
-  ctx.fillStyle = 'black'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillText(args['cue'], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font = prms.stimSize;
+  ctx.fillStyle = 'black';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(args['cue'], 0, 0);
 }
 
 const word_cue = {
@@ -154,49 +154,49 @@ const word_cue = {
   response_ends_trial: false,
   func: drawWordCue,
   func_args: [{ cue: jsPsych.timelineVariable('cue') }],
-}
+};
 
 function drawWord(args) {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
 
-  ctx.fillStyle = 'black'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.font = prms.stimSize
+  ctx.fillStyle = 'black';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = prms.stimSize;
 
   switch (args['position']) {
     case 'left':
-      ctx.fillText(args['word'], -prms.stimPosX, prms.stimPosY)
-      ctx.fillText(args['cue'], 0, 0)
-      break
+      ctx.fillText(args['word'], -prms.stimPosX, prms.stimPosY);
+      ctx.fillText(args['cue'], 0, 0);
+      break;
     case 'right':
-      ctx.fillText(args['word'], prms.stimPosX, prms.stimPosY)
-      ctx.fillText(args['cue'], 0, 0)
-      break
+      ctx.fillText(args['word'], prms.stimPosX, prms.stimPosY);
+      ctx.fillText(args['cue'], 0, 0);
+      break;
   }
 }
 
 function codeTrial() {
-  'use strict'
-  let dat = jsPsych.data.get().last(1).values()[0]
-  let corrCode = 0
-  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp)
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
 
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
   let comp =
     ((dat.position === 'left') & (dat.corrResp === 'Q')) | ((dat.position === 'right') & (dat.corrResp === 'P'))
       ? 'comp'
-      : 'incomp'
+      : 'incomp';
 
   if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
-    corrCode = 1 // correct
+    corrCode = 1; // correct
   } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
-    corrCode = 2 // choice error
+    corrCode = 2; // choice error
   } else if (rt === prms.tooSlow) {
-    corrCode = 3 // too slow
+    corrCode = 3; // too slow
   } else if (rt <= prms.tooFast) {
-    corrCode = 4 // too false
+    corrCode = 4; // too false
   }
 
   jsPsych.data.addDataToLastTrial({
@@ -206,10 +206,10 @@ function codeTrial() {
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
-  })
-  prms.cTrl += 1
+  });
+  prms.cTrl += 1;
   if (dat.key_press === 27) {
-    jsPsych.endExperiment()
+    jsPsych.endExperiment();
   }
 }
 
@@ -240,19 +240,19 @@ const word_stimulus = {
     corrResp: jsPsych.timelineVariable('corrResp'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 function drawFeedback() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  let dat = jsPsych.data.get().last(1).values()[0]
-  ctx.font = prms.fbSize
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.fbSize;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
 }
 
 const trial_feedback = {
@@ -264,10 +264,10 @@ const trial_feedback = {
   response_ends_trial: false,
   func: drawFeedback,
   on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0]
-    trial.trial_duration = prms.fbDur[dat.corrCode - 1]
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
   },
-}
+};
 
 const iti = {
   type: 'static-canvas-keyboard-response',
@@ -277,7 +277,7 @@ const iti = {
   trial_duration: prms.iti,
   response_ends_trial: false,
   func: function () {},
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response-canvas',
@@ -287,9 +287,9 @@ const block_feedback = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'SimonWord' })
+    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'SimonWord' });
   },
-}
+};
 
 const trial_timeline = {
   timeline: [fixation_cross, word_cue, word_stimulus, trial_feedback, iti],
@@ -561,9 +561,9 @@ const trial_timeline = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
-const randomString = generateRandomString(16)
+const randomString = generateRandomString(16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -581,44 +581,44 @@ const alphaNum = {
     randomString +
     '</h1><br>' +
     "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(fullscreen_on)
-  exp.push(welcome_de_du)
-  exp.push(resize_de_du)
-  exp.push(vpInfoForm_de)
-  exp.push(hideMouseCursor)
-  exp.push(screenInfo)
-  exp.push(task_instructions1)
-  exp.push(task_instructions2)
+  exp.push(fullscreen_on);
+  exp.push(welcome_de_du);
+  exp.push(resize_de_du);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline }
+    let blk_timeline = { ...trial_timeline };
     if (blk > 0) {
-      exp.push(task_reminder)
+      exp.push(task_reminder);
     }
-    exp.push(blk_timeline) // trials within a block
-    exp.push(block_feedback) // show previous block performance
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_de)
-  exp.push(showMouseCursor)
-  exp.push(alphaNum)
-  exp.push(fullscreen_off)
+  exp.push(debrief_de);
+  exp.push(showMouseCursor);
+  exp.push(alphaNum);
+  exp.push(fullscreen_off);
 
-  return exp
+  return exp;
 }
-const EXP = genExpSeq()
+const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + genVpNum()
-const code_filename = dirName + 'code/' + expName
+const data_filename = dirName + 'data/' + expName + '_' + genVpNum();
+const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
@@ -629,7 +629,7 @@ jsPsych.init({
     min_height: canvas_size[1],
   },
   on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'SimonWord' })
-    saveRandomCode('/Common/write_code.php', code_filename, randomString)
+    saveData('/Common/write_data.php', data_filename, { stim: 'SimonWord' });
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-})
+});

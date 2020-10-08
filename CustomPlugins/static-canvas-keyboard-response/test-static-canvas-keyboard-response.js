@@ -1,43 +1,43 @@
 function drawFixation() {
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.lineWidth = 5
-  ctx.moveTo(-25, 0)
-  ctx.lineTo(25, 0)
-  ctx.stroke()
-  ctx.moveTo(0, -25)
-  ctx.lineTo(0, 25)
-  ctx.stroke()
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = 5;
+  ctx.moveTo(-25, 0);
+  ctx.lineTo(25, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -25);
+  ctx.lineTo(0, 25);
+  ctx.stroke();
 }
 
 function drawCircle() {
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.beginPath()
-  ctx.arc(0, 0, 50, 0, 2 * Math.PI)
-  ctx.strokeStyle = 'blue'
-  ctx.stroke()
-  ctx.beginPath()
-  ctx.arc(0, 200, 50, 0, 2 * Math.PI)
-  ctx.strokeStyle = 'red'
-  ctx.stroke()
-  ctx.beginPath()
-  ctx.arc(200, 0, 50, 0, 2 * Math.PI)
-  ctx.strokeStyle = 'green'
-  ctx.lineWidth = 5
-  ctx.stroke()
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.beginPath();
+  ctx.arc(0, 0, 50, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'blue';
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 200, 50, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'red';
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(200, 0, 50, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'green';
+  ctx.lineWidth = 5;
+  ctx.stroke();
 }
 
 function drawText() {
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.font = '30px Arial'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillText('Hello World', 0, 0)
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font = '30px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Hello World', 0, 0);
 }
 
 function drawImage(args) {
   // args should be dict with imageNum, x, y, h and w fields
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.drawImage(images[args['imageNum']], args['x'], args['y'], args['h'], args['w'])
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.drawImage(images[args['imageNum']], args['x'], args['y'], args['h'], args['w']);
 }
 
 const fixation_cross = {
@@ -46,7 +46,7 @@ const fixation_cross = {
   translate_origin: true,
   canvas_border: '10px solid black',
   func: drawFixation,
-}
+};
 
 const circle = {
   type: 'static-canvas-keyboard-response',
@@ -54,7 +54,7 @@ const circle = {
   translate_origin: true,
   canvas_border: '6px solid red',
   func: drawCircle,
-}
+};
 
 const text = {
   type: 'static-canvas-keyboard-response',
@@ -62,7 +62,7 @@ const text = {
   translate_origin: true,
   canvas_border: '8px solid green',
   func: drawText,
-}
+};
 
 // const combined = {
 //     type: 'static-canvas-keyboard-response',
@@ -85,7 +85,7 @@ const text = {
 //     func: [ drawFixation, drawCircle, drawText ]
 // }
 
-const images = loadImages(['../../img/h1.bmp', '../../img/h2.bmp'])
+const images = loadImages(['../../img/h1.bmp', '../../img/h2.bmp']);
 
 const image_grid = {
   type: 'static-canvas-keyboard-response',
@@ -101,7 +101,7 @@ const image_grid = {
     { imageNum: 1, x: 200, y: 200, h: 200, w: 200 },
     { imageNum: 1, x: 200, y: -400, h: 200, w: 200 },
   ],
-}
+};
 
 // const image_sequential = {
 //     type: 'static-canvas-keyboard-response',
@@ -140,13 +140,13 @@ const image_grid = {
 //    ]
 //}
 
-const randomTimeline = []
+const randomTimeline = [];
 for (let i = 0; i < 100; i++) {
   randomTimeline.push({
     imageNum: getRandomInt(0, 2),
     x: getRandomInt(-400, 200),
     y: getRandomInt(-400, 200),
-  })
+  });
 }
 
 //const image_timeline2 = {
@@ -161,9 +161,9 @@ for (let i = 0; i < 100; i++) {
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
   // just draw stuff
   //exp.push(fixation_cross);
@@ -174,18 +174,18 @@ function genExpSeq() {
   //exp.push(combined);
   //exp.push(combined_sequential);
   //exp.push(fixation_cross);
-  exp.push(image_grid)
+  exp.push(image_grid);
   //exp.push(fixation_cross);
   //exp.push(image_sequential);
   //exp.push(image_timeline1);
   //exp.push(image_timeline2);
 
-  return exp
+  return exp;
 }
-const EXP = genExpSeq()
+const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
   fullscreen: false,
   show_progress_bar: false,
-})
+});

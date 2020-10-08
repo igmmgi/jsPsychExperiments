@@ -2,9 +2,9 @@
 // VPs respond to the colour of the presented stimulus using
 // left and right key responses.
 
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -23,7 +23,7 @@ const prms = {
   fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -35,7 +35,7 @@ const task_instructions = {
     "<H2 style='text-align:center;'>Respond to the colour of the presented square</H2>" +
     "<H2 style='text-align:center;'>BLUE squares = 'D' key &emsp; RED squares = 'J' key</H2>",
   post_trial_gap: prms.waitDur,
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -47,14 +47,14 @@ const fixation_cross = {
   trial_duration: prms.fixDur,
   post_trial_gap: 0,
   data: { stim: 'fixation' },
-}
+};
 
 const simons = [
   "<div class='square_blue_left'></div>",
   "<div class='square_blue_right'></div>",
   "<div class='square_red_left'></div>",
   "<div class='square_red_right'></div>",
-]
+];
 
 const simon_stimulus = {
   type: 'html-keyboard-response',
@@ -70,9 +70,9 @@ const simon_stimulus = {
     corrResp: jsPsych.timelineVariable('key'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_feedback = {
   type: 'html-keyboard-response',
@@ -82,9 +82,9 @@ const trial_feedback = {
   post_trial_gap: prms.iti,
   data: { stim: 'feedback' },
   on_start: function (trial) {
-    trial.stimulus = trialFeedbackTxt(prms.fbTxt)
+    trial.stimulus = trialFeedbackTxt(prms.fbTxt);
   },
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response',
@@ -92,9 +92,9 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'simon' })
+    trial.stimulus = blockFeedbackTxt({ stim: 'simon' });
   },
-}
+};
 
 const trial_timeline = {
   timeline: [fixation_cross, simon_stimulus, trial_feedback],
@@ -104,37 +104,37 @@ const trial_timeline = {
     { simon: simons[2], comp: 'comp', side: 'right', key: prms.respKeys[1] },
     { simon: simons[3], comp: 'incomp', side: 'right', key: prms.respKeys[1] },
   ],
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(welcome_en)
+  exp.push(welcome_en);
   //exp.push(vpInfoForm);
-  exp.push(task_instructions)
+  exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline }
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 }
-    exp.push(blk_timeline) // trials within a block
-    exp.push(block_feedback) // show previous block performance
+    let blk_timeline = { ...trial_timeline };
+    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_en)
-  return exp
+  exp.push(debrief_en);
+  return exp;
 }
-const EXP = genExpSeq()
-const filename = dirName + 'data/' + expName + '_' + genVpNum()
+const EXP = genExpSeq();
+const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
   fullscreen: false,
   show_progress_bar: false,
   on_finish: function () {
-    saveData('/Common/write_data.php', filename, { stim: 'simon' })
+    saveData('/Common/write_data.php', filename, { stim: 'simon' });
   },
-})
+});

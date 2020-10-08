@@ -3,17 +3,17 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)'
-const canvas_size = [960, 720]
-const canvas_border = '5px solid black'
+const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_size = [960, 720];
+const canvas_border = '5px solid black';
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/')
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
+const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -36,21 +36,21 @@ const prms = {
   sentenceSize: '20px monospace',
   fbSize: '20px monospace',
   respKeys: [],
-}
+};
 
-const nVersion = getVersionNumber(nFiles, 2)
-jsPsych.data.addProperties({ version: nVersion })
-let respText
+const nVersion = getVersionNumber(nFiles, 2);
+jsPsych.data.addProperties({ version: nVersion });
+let respText;
 if (nVersion === 1) {
-  prms.respKeys = ['D', 'K', 27]
+  prms.respKeys = ['D', 'K', 27];
   respText =
     "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'D'</b> (linker Zeigefinger).</h2>" +
-    "<h2 style='text-align:center;'><b>Sinnlos = Taste 'K'</b> (rechter Zeigefinger).</h2><br>"
+    "<h2 style='text-align:center;'><b>Sinnlos = Taste 'K'</b> (rechter Zeigefinger).</h2><br>";
 } else {
-  prms.respKeys = ['K', 'D', 27]
+  prms.respKeys = ['K', 'D', 27];
   respText =
     "<h2 style='text-align:center;'><b>Sinnlos = Taste 'D'</b> (linker Zeigefinger).</h2>" +
-    "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'K'</b> (rechter Zeigefinger).</h2><br>"
+    "<h2 style='text-align:center;'><b>Sinnvoll = Taste 'K'</b> (rechter Zeigefinger).</h2><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ const task_instructions1 = {
     "<h2 style='text-align:left;'>Bitte nehmen Sie nur teil, wenn Sie mindestens 18 Jahre alt </h2>" +
     "<h2 style='text-align:left;'>sind und Deutsch auf Muttersprachenniveau beherrschen. </h2><br>" +
     "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-}
+};
 
 const task_instructions2 = {
   type: 'html-keyboard-response-canvas',
@@ -83,7 +83,7 @@ const task_instructions2 = {
     respText +
     "<h3 style='text-align:center;'>Bitte reagieren Sie so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align:center;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-}
+};
 
 const task_reminder = {
   type: 'html-keyboard-response-canvas',
@@ -91,7 +91,7 @@ const task_reminder = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: "<h3 style='text-align:center;'>Erinnerung:</h3>" + respText,
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -159,9 +159,9 @@ const imageFiles = [
   'images/Neg_G8.png',
   'images/Neg_G9.png',
   'images/Neg_G10.png',
-]
+];
 
-const images = loadImages(imageFiles)
+const images = loadImages(imageFiles);
 
 // 120 sentences per category
 // 4 categories:
@@ -308,7 +308,7 @@ const materials_ja_aff = [
   },
   { sentNum: 119, sentence: 'Sie wollen ein Auto.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
   { sentNum: 120, sentence: 'Sie füttern ein Kaninchen.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-]
+];
 
 const materials_nein_aff = [
   { sentNum: 121, sentence: 'Sie reiten ein Buch.', sinn: 'nein', pol: 'aff', corrResp: prms.respKeys[1] },
@@ -437,7 +437,7 @@ const materials_nein_aff = [
   { sentNum: 238, sentence: 'Sie kratzen heute den Ekel.', sinn: 'nein', pol: 'aff', corrResp: prms.respKeys[1] },
   { sentNum: 239, sentence: 'Sie wühlen eine Ananas.', sinn: 'nein', pol: 'aff', corrResp: prms.respKeys[1] },
   { sentNum: 240, sentence: 'Sie klammern eine Bohne.', sinn: 'nein', pol: 'aff', corrResp: prms.respKeys[1] },
-]
+];
 
 const materials_ja_neg = [
   { sentNum: 1, sentence: 'Sie trinken kein Glas Saft.', sinn: 'ja', pol: 'neg', corrResp: prms.respKeys[0] },
@@ -578,7 +578,7 @@ const materials_ja_neg = [
   },
   { sentNum: 119, sentence: 'Sie wollen kein Auto.', sinn: 'ja', pol: 'neg', corrResp: prms.respKeys[0] },
   { sentNum: 120, sentence: 'Sie füttern kein Kaninchen.', sinn: 'ja', pol: 'neg', corrResp: prms.respKeys[0] },
-]
+];
 
 const materials_nein_neg = [
   { sentNum: 121, sentence: 'Sie reiten kein Buch.', sinn: 'nein', pol: 'neg', corrResp: prms.respKeys[1] },
@@ -707,74 +707,74 @@ const materials_nein_neg = [
   { sentNum: 238, sentence: 'Sie kratzen nicht den Ekel.', sinn: 'nein', pol: 'neg', corrResp: prms.respKeys[1] },
   { sentNum: 239, sentence: 'Sie wühlen keine Ananas.', sinn: 'nein', pol: 'neg', corrResp: prms.respKeys[1] },
   { sentNum: 240, sentence: 'Sie klammern keine Bohne.', sinn: 'nein', pol: 'neg', corrResp: prms.respKeys[1] },
-]
+];
 
 // randomly select 60 ja_aff and nein_aff items
 // the items for the ja_neg and the nein_neg are the items not selected above
-let materials_ja_aff_selected = shuffle(materials_ja_aff)
-materials_ja_aff_selected = materials_ja_aff_selected.splice(0, 60)
+let materials_ja_aff_selected = shuffle(materials_ja_aff);
+materials_ja_aff_selected = materials_ja_aff_selected.splice(0, 60);
 
-let materials_nein_aff_selected = shuffle(materials_nein_aff)
-materials_nein_aff_selected = materials_nein_aff_selected.splice(0, 60)
+let materials_nein_aff_selected = shuffle(materials_nein_aff);
+materials_nein_aff_selected = materials_nein_aff_selected.splice(0, 60);
 
-let selected_ja_aff = materials_ja_aff_selected.map((o) => o.sentNum)
-let materials_ja_neg_selected = []
+let selected_ja_aff = materials_ja_aff_selected.map((o) => o.sentNum);
+let materials_ja_neg_selected = [];
 for (let i = 0; i < materials_ja_neg.length; i++) {
   if (selected_ja_aff.includes(materials_ja_neg[i].sentNum) === false) {
-    materials_ja_neg_selected.push(materials_ja_neg[i])
+    materials_ja_neg_selected.push(materials_ja_neg[i]);
   }
 }
 
-let selected_nein_aff = materials_nein_aff_selected.map((o) => o.sentNum)
-let materials_nein_neg_selected = []
+let selected_nein_aff = materials_nein_aff_selected.map((o) => o.sentNum);
+let materials_nein_neg_selected = [];
 for (let i = 0; i < materials_nein_neg.length; i++) {
   if (selected_nein_aff.includes(materials_nein_neg[i].sentNum) === false) {
-    materials_nein_neg_selected.push(materials_nein_neg[i])
+    materials_nein_neg_selected.push(materials_nein_neg[i]);
   }
 }
 
 // add the 60 pictures to each of the 4 sentence types
 function combinePictures(materials) {
-  let imageNumber = []
+  let imageNumber = [];
   for (let i = 0; i < 60; i++) {
-    imageNumber.push(i)
+    imageNumber.push(i);
   }
-  imageNumber = shuffle(imageNumber)
+  imageNumber = shuffle(imageNumber);
   for (let i = 0; i < materials.length; i++) {
-    materials[i].imageNumber = imageNumber[i] + 1
-    materials[i].imageName = imageFiles[imageNumber[i]].slice(7, -4)
+    materials[i].imageNumber = imageNumber[i] + 1;
+    materials[i].imageName = imageFiles[imageNumber[i]].slice(7, -4);
   }
-  return materials
+  return materials;
 }
 
-materials_ja_aff_selected = combinePictures(materials_ja_aff_selected)
-materials_nein_aff_selected = combinePictures(materials_nein_aff_selected)
-materials_ja_neg_selected = combinePictures(materials_ja_neg_selected)
-materials_nein_neg_selected = combinePictures(materials_nein_neg_selected)
+materials_ja_aff_selected = combinePictures(materials_ja_aff_selected);
+materials_nein_aff_selected = combinePictures(materials_nein_aff_selected);
+materials_ja_neg_selected = combinePictures(materials_ja_neg_selected);
+materials_nein_neg_selected = combinePictures(materials_nein_neg_selected);
 
 let materials = materials_ja_aff_selected.concat(
   materials_nein_aff_selected,
   materials_ja_neg_selected,
   materials_nein_neg_selected,
-)
-materials = shuffle(materials)
+);
+materials = shuffle(materials);
 
 // split materials into 4 blocks of 60 trials
-let materials1 = materials.splice(0, 60)
-let materials2 = materials.splice(0, 60)
-let materials3 = materials.splice(0, 60)
-let materials4 = materials.splice(0, 60)
+let materials1 = materials.splice(0, 60);
+let materials2 = materials.splice(0, 60);
+let materials3 = materials.splice(0, 60);
+let materials4 = materials.splice(0, 60);
 
 function drawFixation() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.lineWidth = prms.fixWidth
-  ctx.moveTo(-prms.fixSize, 0)
-  ctx.lineTo(prms.fixSize, 0)
-  ctx.stroke()
-  ctx.moveTo(0, -prms.fixSize)
-  ctx.lineTo(0, prms.fixSize)
-  ctx.stroke()
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = prms.fixWidth;
+  ctx.moveTo(-prms.fixSize, 0);
+  ctx.lineTo(prms.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -prms.fixSize);
+  ctx.lineTo(0, prms.fixSize);
+  ctx.stroke();
 }
 
 const fixation_cross = {
@@ -786,36 +786,36 @@ const fixation_cross = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawFixation,
-}
+};
 
 function showPicture(args) {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  let num = args['imageNumber']
-  ctx.drawImage(images[num], -images[num].width / 2, -images[num].height / 2)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let num = args['imageNumber'];
+  ctx.drawImage(images[num], -images[num].width / 2, -images[num].height / 2);
 }
 
 function showSentence(args) {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
 
   // draw sentence
-  ctx.font = prms.sentenceSize
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(args['sentence'], 0, 0)
+  ctx.font = prms.sentenceSize;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(args['sentence'], 0, 0);
 }
 
 function drawFeedback() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  let dat = jsPsych.data.get().last(1).values()[0]
-  ctx.font = prms.fbSize
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.fbSize;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
 }
 
 const trial_feedback = {
@@ -827,7 +827,7 @@ const trial_feedback = {
   trial_duration: prms.fbDur,
   response_ends_trial: false,
   func: drawFeedback,
-}
+};
 
 const iti = {
   type: 'static-canvas-keyboard-response',
@@ -837,7 +837,7 @@ const iti = {
   trial_duration: prms.iti,
   response_ends_trial: false,
   func: function () {},
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response-canvas',
@@ -847,9 +847,9 @@ const block_feedback = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'PictureNegation' })
+    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'PictureNegation' });
   },
-}
+};
 
 const pic_stim = {
   type: 'static-canvas-keyboard-response',
@@ -863,7 +863,7 @@ const pic_stim = {
   trial_duration: prms.picDur,
   func: showPicture,
   func_args: [{ imageNumber: jsPsych.timelineVariable('imageNumber') }],
-}
+};
 
 const sent_stim = {
   type: 'static-canvas-keyboard-response',
@@ -887,9 +887,9 @@ const sent_stim = {
     corrResp: jsPsych.timelineVariable('corrResp'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_timeline1 = {
   timeline: [fixation_cross, pic_stim, sent_stim, trial_feedback, iti],
@@ -898,7 +898,7 @@ const trial_timeline1 = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const trial_timeline2 = {
   timeline: [fixation_cross, pic_stim, sent_stim, trial_feedback, iti],
@@ -907,7 +907,7 @@ const trial_timeline2 = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const trial_timeline3 = {
   timeline: [fixation_cross, pic_stim, sent_stim, trial_feedback, iti],
@@ -916,7 +916,7 @@ const trial_timeline3 = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const trial_timeline4 = {
   timeline: [fixation_cross, pic_stim, sent_stim, trial_feedback, iti],
@@ -925,9 +925,9 @@ const trial_timeline4 = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
-const randomString = generateRandomString(16)
+const randomString = generateRandomString(16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -949,47 +949,47 @@ const alphaNum = {
     randomString +
     '</h1><br>' +
     "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(fullscreen_on)
-  exp.push(welcome_de)
-  exp.push(resize_de)
+  exp.push(fullscreen_on);
+  exp.push(welcome_de);
+  exp.push(resize_de);
   exp.push(vpInfoForm_de);
-  exp.push(hideMouseCursor)
-  exp.push(screenInfo)
-  exp.push(task_instructions1)
-  exp.push(task_instructions2)
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
-  exp.push(trial_timeline1)
-  exp.push(block_feedback) // show previous block performance
-  exp.push(task_reminder) // show response mapping
-  exp.push(trial_timeline2)
-  exp.push(block_feedback) // show previous block performance
-  exp.push(task_reminder) // show response mapping
-  exp.push(trial_timeline3)
-  exp.push(block_feedback) // show previous block performance
-  exp.push(task_reminder) // show response mapping
-  exp.push(trial_timeline4)
+  exp.push(trial_timeline1);
+  exp.push(block_feedback); // show previous block performance
+  exp.push(task_reminder); // show response mapping
+  exp.push(trial_timeline2);
+  exp.push(block_feedback); // show previous block performance
+  exp.push(task_reminder); // show response mapping
+  exp.push(trial_timeline3);
+  exp.push(block_feedback); // show previous block performance
+  exp.push(task_reminder); // show response mapping
+  exp.push(trial_timeline4);
 
-  exp.push(debrief_de)
-  exp.push(showMouseCursor)
-  exp.push(alphaNum)
-  exp.push(fullscreen_off)
+  exp.push(debrief_de);
+  exp.push(showMouseCursor);
+  exp.push(alphaNum);
+  exp.push(fullscreen_off);
 
-  return exp
+  return exp;
 }
-const EXP = genExpSeq()
+const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + vpNum
-const code_filename = dirName + 'code/' + expName
+const data_filename = dirName + 'data/' + expName + '_' + vpNum;
+const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
@@ -1000,7 +1000,7 @@ jsPsych.init({
     min_height: canvas_size[1],
   },
   on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'PictureNegation' })
-    saveRandomCode('/Common/write_code.php', code_filename, randomString)
+    saveData('/Common/write_data.php', data_filename, { stim: 'PictureNegation' });
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-})
+});

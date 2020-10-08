@@ -33,17 +33,17 @@
 //////////////////////////////////////////////////////////////////////////
 ////                         Canvas Properties                          //
 //////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)'
-const canvas_size = [1280, 720]
-const canvas_border = '0px solid black'
+const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_size = [1280, 720];
+const canvas_border = '0px solid black';
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
-const expName = getFileName()
-const dirName = getDirName()
-const vpNum = genVpNum()
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/')
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
+const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -63,7 +63,7 @@ const prms = {
   font_stimulus: '28px monospace',
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                            Instructions                            //
@@ -75,12 +75,12 @@ const task_instructions1 = {
   canvas_border: canvas_border,
   stimulus: "<h2 style='text-align:center;'>Welcome: Press any key to continue!</h2><br>",
   on_finish: function () {
-    $('body').css('cursor', 'none')
+    $('body').css('cursor', 'none');
   },
-}
+};
 
-const cols = ['blue', 'green', 'yellow']
-const sens = ['sensible', 'non-sensible']
+const cols = ['blue', 'green', 'yellow'];
+const sens = ['sensible', 'non-sensible'];
 
 const task_instructions2 = {
   type: 'html-keyboard-response-canvas',
@@ -100,7 +100,7 @@ const task_instructions2 = {
     '</H2><br>' +
     "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2><br>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 const task_instructions3 = {
   type: 'html-keyboard-response-canvas',
@@ -120,7 +120,7 @@ const task_instructions3 = {
     '</H2><br>' +
     "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2><br>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 const task_instructions4 = {
   type: 'html-keyboard-response-canvas',
@@ -147,7 +147,7 @@ const task_instructions4 = {
     '</H2><br>' +
     "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 const task_instructions5 = {
   type: 'html-keyboard-response-canvas',
@@ -174,7 +174,7 @@ const task_instructions5 = {
     '</H2><br>' +
     "<H2 style='text-align:center;'>Respond as quickly and accurately as possible!</H2>" +
     "<h2 style='text-align:center;'>Press any key to continue!</h2>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -196,7 +196,7 @@ const stroops = [
   { type: 'stroop', text: 'blue', colour: 'yellow', cong: 'incong', key: prms.respKeysStroop[2] },
   { type: 'stroop', text: 'green', colour: 'blue', cong: 'incong', key: prms.respKeysStroop[0] },
   { type: 'stroop', text: 'yellow', colour: 'green', cong: 'incong', key: prms.respKeysStroop[1] },
-]
+];
 
 const sentence_materials_cong = shuffle([
   { type: 'sentence', text: 'Eagles can fly.', colour: 'black', cong: 'cong', key: prms.respKeysSentence[0] },
@@ -295,7 +295,7 @@ const sentence_materials_cong = shuffle([
   { type: 'sentence', text: 'Deserts are dry.', colour: 'black', cong: 'cong', key: prms.respKeysSentence[0] },
   { type: 'sentence', text: 'Zebras are striped.', colour: 'black', cong: 'cong', key: prms.respKeysSentence[0] },
   { type: 'sentence', text: 'Sugar is sweet.', colour: 'black', cong: 'cong', key: prms.respKeysSentence[0] },
-])
+]);
 
 const sentence_materials_incong = shuffle([
   { type: 'sentence', text: 'Erasers are bloody.', colour: 'black', cong: 'incong', key: prms.respKeysSentence[1] },
@@ -412,7 +412,7 @@ const sentence_materials_incong = shuffle([
   },
   { type: 'sentence', text: 'Cellars are bright.', colour: 'black', cong: 'incong', key: prms.respKeysSentence[1] },
   { type: 'sentence', text: 'Giraffes are small.', colour: 'black', cong: 'incong', key: prms.respKeysSentence[1] },
-])
+]);
 
 ////////////////////////////////////////////////////////////////////////
 //                        jsPsych type stimuli                        //
@@ -427,7 +427,7 @@ const fixation_cross = {
   trial_duration: prms.fixDur,
   response_ends_trial: false,
   func: drawFixation,
-}
+};
 
 const iti = {
   type: 'static-canvas-keyboard-response',
@@ -437,7 +437,7 @@ const iti = {
   trial_duration: prms.iti,
   response_ends_trial: false,
   func: function () {},
-}
+};
 
 const block_feedback = {
   type: 'html-keyboard-response-canvas',
@@ -447,16 +447,16 @@ const block_feedback = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'SentenceStroop' })
+    trial.stimulus = blockFeedbackTxt({ stim: 'SentenceStroop' });
   },
-}
+};
 
 function codeTrial() {
-  'use strict'
-  let dat = jsPsych.data.get().last(1).values()[0]
-  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp)
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow
-  let corrCode = dat.key_press === corrKeyNum ? 1 : 2
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  let corrCode = dat.key_press === corrKeyNum ? 1 : 2;
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
@@ -464,22 +464,22 @@ function codeTrial() {
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
-  })
-  prms.cTrl += 1
+  });
+  prms.cTrl += 1;
   if (dat.key_press === 27) {
-    jsPsych.endExperiment()
+    jsPsych.endExperiment();
   }
 }
 
 function drawFeedback() {
-  'use strict'
-  let ctx = document.getElementById('canvas').getContext('2d')
-  let dat = jsPsych.data.get().last(1).values()[0]
-  ctx.font = prms.font_stimulus
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'black'
-  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0)
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.font_stimulus;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
 }
 
 const stimulus = {
@@ -506,9 +506,9 @@ const stimulus = {
     corrResp: jsPsych.timelineVariable('key'),
   },
   on_finish: function () {
-    codeTrial()
+    codeTrial();
   },
-}
+};
 
 const trial_feedback = {
   type: 'static-canvas-keyboard-response',
@@ -519,12 +519,12 @@ const trial_feedback = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawFeedback,
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Amazon Turk Random Code                       //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16)
+const randomString = generateRandomString(16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -539,29 +539,29 @@ const alphaNum = {
     "<h3 style='text-align: left;'>This is your participation code:</h3>" +
     "<h3 style='text-align: left;'>Please copy the code and return to the MTurk page.</h3>" +
     "<h3 style='text-align: left;'>Press the spacebar to end the experiment.</h3>",
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Canvas Drawing Functions                      //
 ////////////////////////////////////////////////////////////////////////
 function drawFixation() {
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.lineWidth = prms.fixWidth
-  ctx.moveTo(-prms.fixSize, 0)
-  ctx.lineTo(prms.fixSize, 0)
-  ctx.stroke()
-  ctx.moveTo(0, -prms.fixSize)
-  ctx.lineTo(0, prms.fixSize)
-  ctx.stroke()
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = prms.fixWidth;
+  ctx.moveTo(-prms.fixSize, 0);
+  ctx.lineTo(prms.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -prms.fixSize);
+  ctx.lineTo(0, prms.fixSize);
+  ctx.stroke();
 }
 
 function drawStimulus(args) {
-  let ctx = document.getElementById('canvas').getContext('2d')
-  ctx.font = prms.font_stimulus
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = args['colour']
-  ctx.fillText(args['text'], 0, 0)
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font = prms.font_stimulus;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = args['colour'];
+  ctx.fillText(args['text'], 0, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -576,7 +576,7 @@ const prac_trials_stroop_timeline = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const base_trials_stroop_timeline = {
   timeline: [fixation_cross, stimulus, iti],
@@ -585,27 +585,27 @@ const base_trials_stroop_timeline = {
     type: 'fixed-repetitions',
     size: 12,
   },
-}
+};
 
 // Combined sentence and stroop trials
 // split materials into 1 practice block + 3 experimental blocks
 // Combined practice block
 const prac_comb = shuffle(
   stroops.concat(sentence_materials_cong.splice(0, 6).concat(sentence_materials_incong.splice(0, 6))),
-)
+);
 
 // Three experimental blocks
-const stroop_materials = stroops.concat(stroops, stroops, stroops, stroops)
+const stroop_materials = stroops.concat(stroops, stroops, stroops, stroops);
 
 const exp_block1 = shuffle(
   stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30))),
-)
+);
 const exp_block2 = shuffle(
   stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30))),
-)
+);
 const exp_block3 = shuffle(
   stroop_materials.concat(sentence_materials_cong.splice(0, 30).concat(sentence_materials_incong.splice(0, 30))),
-)
+);
 
 const prac_comb_timeline = {
   timeline: [fixation_cross, stimulus, trial_feedback, iti],
@@ -614,7 +614,7 @@ const prac_comb_timeline = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const exp_block1_timeline = {
   timeline: [fixation_cross, stimulus, iti],
@@ -623,7 +623,7 @@ const exp_block1_timeline = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const exp_block2_timeline = {
   timeline: [fixation_cross, stimulus, iti],
@@ -632,7 +632,7 @@ const exp_block2_timeline = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const exp_block3_timeline = {
   timeline: [fixation_cross, stimulus, iti],
@@ -641,73 +641,73 @@ const exp_block3_timeline = {
     type: 'fixed-repetitions',
     size: 1,
   },
-}
+};
 
 const save = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum
-    let code_filename = dirName + 'code/' + expName
-    saveData('/Common/write_data.php', data_filename, { stim: 'SentenceStroop' })
-    saveRandomCode('/Common/write_code.php', code_filename, randomString)
+    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
+    let code_filename = dirName + 'code/' + expName;
+    saveData('/Common/write_data.php', data_filename, { stim: 'SentenceStroop' });
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
   timing_post_trial: 200,
-}
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict'
+  'use strict';
 
-  let exp = []
+  let exp = [];
 
-  exp.push(fullscreen_on)
-  exp.push(welcome_en)
-  exp.push(resize_en)
-  exp.push(vpInfoForm_en)
-  exp.push(hideMouseCursor)
-  exp.push(screenInfo)
+  exp.push(fullscreen_on);
+  exp.push(welcome_en);
+  exp.push(resize_en);
+  exp.push(vpInfoForm_en);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
 
   // start of experiment
-  exp.push(task_instructions1)
+  exp.push(task_instructions1);
 
   // practice stroop block
-  exp.push(task_instructions2)
-  exp.push(prac_trials_stroop_timeline)
-  exp.push(block_feedback)
+  exp.push(task_instructions2);
+  exp.push(prac_trials_stroop_timeline);
+  exp.push(block_feedback);
 
   // baseline stroop block
-  exp.push(task_instructions3)
-  exp.push(base_trials_stroop_timeline)
-  exp.push(block_feedback)
+  exp.push(task_instructions3);
+  exp.push(base_trials_stroop_timeline);
+  exp.push(block_feedback);
 
   // practice block combined
-  exp.push(task_instructions4)
-  exp.push(prac_comb_timeline)
-  exp.push(block_feedback)
+  exp.push(task_instructions4);
+  exp.push(prac_comb_timeline);
+  exp.push(block_feedback);
 
   // 3 experimental blocks
-  exp.push(task_instructions5)
-  exp.push(exp_block1_timeline)
-  exp.push(block_feedback)
+  exp.push(task_instructions5);
+  exp.push(exp_block1_timeline);
+  exp.push(block_feedback);
 
-  exp.push(exp_block2_timeline)
-  exp.push(block_feedback)
+  exp.push(exp_block2_timeline);
+  exp.push(block_feedback);
 
-  exp.push(exp_block3_timeline)
-  exp.push(block_feedback)
+  exp.push(exp_block3_timeline);
+  exp.push(block_feedback);
 
   // end phase
-  exp.push(save)
-  exp.push(debrief_en)
-  exp.push(showMouseCursor)
-  exp.push(alphaNum)
-  exp.push(fullscreen_off)
+  exp.push(save);
+  exp.push(debrief_en);
+  exp.push(showMouseCursor);
+  exp.push(alphaNum);
+  exp.push(fullscreen_off);
 
-  return exp
+  return exp;
 }
-EXP = genExpSeq()
+EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
@@ -717,4 +717,4 @@ jsPsych.init({
     min_width: canvas_size[0],
     min_height: canvas_size[1],
   },
-})
+});
