@@ -1,0 +1,500 @@
+// Modified version of a Flanker Task and Simon Task (blocked)
+// Flanker Task:
+// VPs respond to the central letter within a 5-letter array (e.g., HHHHH,
+// SSHSS) whilst ignoring the surrounding letters using left and right
+// key-presses ("Q" and "P"). Stimuli are presented in one of two colours
+// (e.g., green vs. red) with one colour assigned to a "Go" response, and the
+// other to the "NoGo" response. The proportion of Go vs. NoGo responses is
+// manipulated blockwise (e.g., Low (10%) vs. High (50%) NoGo Probability).
+//
+// Simon Task:
+// VPs respond to a laterally presented letter (e.g., H vs. S) with
+// left/right-keypresses ("Q" and "P"). Stimuli are presented in one of two
+// colours (e.g., green vs. red) with one colour assigned to a "Go" response,
+// and the other to the "NoGo" response. The proportion of Go vs. NoGo
+// responses is manipulated blockwise (e.g., Low (10%) vs. High NoGo (50%)
+// Probability).
+//
+// Factors:
+// Task (Flanker vs. Simon)
+// Compatibility (Compatible vs. Incompatible)
+// NoGo Probability (High vs. Low)
+//
+// Task (Flanker vs. Simon) alternates across blocks
+// NoGo Prob (Low vs. High) counterbalanced across experiment half
+//
+// 8 Counter-balanced versions
+// Version 1: H = left ("Q"), S = right ("P"), Flanker -> Simon,   Low  -> High
+// Version 2: S = left ("Q"), H = right ("P"), Flanker -> Simon,   Low  -> High
+// Version 3: H = left ("Q"), S = right ("P"), Simon   -> Flanker, Low  -> High
+// Version 4: S = left ("Q"), H = right ("P"), Simon   -> Flanker, Low  -> High
+// Version 5: H = left ("Q"), S = right ("P"), Flanker -> Simon,   High -> Low
+// Version 6: S = left ("Q"), H = right ("P"), Flanker -> Simon,   High -> Low
+// Version 7: H = left ("Q"), S = right ("P"), Simon   -> Flanker, High -> Low
+// Version 8: S = left ("Q"), H = right ("P"), Simon   -> Flanker, High -> Low
+
+////////////////////////////////////////////////////////////////////////
+//                         Canvas Properties                          //
+////////////////////////////////////////////////////////////////////////
+const cc = 'rgba(200, 200, 200, 1)';
+const cs = [960, 720];
+const cb = '5px solid black';
+
+////////////////////////////////////////////////////////////////////////
+//                             Experiment                             //
+////////////////////////////////////////////////////////////////////////
+const expName = getFileName();
+const dirName = getDirName();
+const vpNum = genVpNum();
+const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
+
+////////////////////////////////////////////////////////////////////////
+//                           Exp Parameters                           //
+////////////////////////////////////////////////////////////////////////
+const prms = {
+    nTrlsP: 40, // number of trials in first block (practice)
+    nTrlsE: 80, // number of trials in subsequent blocks
+    nBlks: 12,
+    fixDur: 500,
+    fbDur: [1000, 2000, 2000, 2000],
+    iti: 500,
+    tooFast: 100,
+    tooSlow: 1500,
+    fbTxtGo: ['Richtig', 'Falsch', 'Zu langsam'],
+    fbTxtNoGo: ['Richtig', 'Falsch: Do not respond'],
+    cTrl: 1, // count trials
+    cBlk: 1, // count blocks
+    fixWidth: 2,
+    fixSize: 10,
+    stimSize: '40px monospace',
+    fbSize: '30px monospace',
+    colours: ["green", "red"],
+    respKeys: [],
+};
+
+const nVersion = getVersionNumber(nFiles, 8);
+jsPsych.data.addProperties({ version: nVersion });
+let respText;
+if (nVersion % 2 == 1) {
+    prms.respKeys = ['Q', 'P', 27];
+    respText =
+        "<h3 style='text-align:center;'><b>H = Taste 'Q'</b> (linker Zeigefinger).</h3>" +
+        "<h3 style='text-align:center;'><b>S = Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
+} else {
+    prms.respKeys = ['P', 'Q', 27];
+    respText =
+        "<h3 style='text-align:center;'><b>S = Taste 'Q'</b> (linker Zeigefinger).</h3>" +
+        "<h3 style='text-align:center;'><b>H = Taste 'P'</b> (rechter Zeigefinger).</h3><br>";
+}
+
+////////////////////////////////////////////////////////////////////////
+//                      Experiment Instructions                       //
+////////////////////////////////////////////////////////////////////////
+const task_instructions1 = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    stimulus:
+    "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
+    "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
+    "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
+    "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
+    "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich die ca. XXX Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+const task_instructions2 = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    stimulus:
+    "<h2 style='text-align: center;'>Aufgabe:</h2>" +
+    "<h3 style='text-align: center;'>Bitte reagiere ... </h3>" +
+    respText +
+    "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+const task_reminder = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    stimulus:
+    "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
+    "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
+    "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
+    respText +
+    "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>",
+};
+
+////////////////////////////////////////////////////////////////////////
+//                              Stimuli                               //
+////////////////////////////////////////////////////////////////////////
+function drawFixation() {
+    'use strict';
+    let ctx = document.getElementById('canvas').getContext('2d');
+    ctx.lineWidth = prms.fixWidth;
+    ctx.moveTo(-prms.fixSize, 0);
+    ctx.lineTo(prms.fixSize, 0);
+    ctx.stroke();
+    ctx.moveTo(0, -prms.fixSize);
+    ctx.lineTo(0, prms.fixSize);
+    ctx.stroke();
+}
+
+const fixation_cross = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    trial_duration: prms.fixDur,
+    translate_origin: true,
+    response_ends_trial: false,
+    func: drawFixation,
+};
+
+function drawFeedback() {
+    'use strict';
+    let ctx = document.getElementById('canvas').getContext('2d');
+    let dat = jsPsych.data.get().last(1).values()[0];
+    ctx.font = prms.fbSize;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
+    if (dat.type === "go") {
+        ctx.fillText(prms.fbTxtGo[dat.corrCode - 1], 0, 0);
+    } else if (dat.type == "nogo") {
+        ctx.fillText(prms.fbTxtNoGo[dat.corrCode - 1], 0, 0);
+    }
+}
+
+function drawFlanker(args) {
+    'use strict';
+    let ctx = document.getElementById('canvas').getContext('2d');
+    ctx.font = prms.stimSize;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // draw flanker
+    ctx.fillStyle = args.colour;
+    ctx.fillText(args.stimulus, 0, 0);
+
+}
+
+function drawSimon(args) {
+    'use strict';
+    let ctx = document.getElementById('canvas').getContext('2d');
+    ctx.font = prms.stimSize;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // draw Simon
+    ctx.fillStyle = args.colour;
+    switch (args.position) {
+        case 'left':
+            ctx.fillText(args.stimulus, -100, 0);
+            break;
+        case 'right':
+            ctx.fillText(args.stimulus, 100, 0);
+            break;
+    }
+}
+
+function codeTrial() {
+    'use strict';
+    let dat = jsPsych.data.get().last(1).values()[0];
+    let corrCode = 0;
+  
+    let corrKeyNum;
+    let rt;
+    if (dat.type === "go") {
+
+        corrKeyNum = dat.corrResp !== null ? jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp) : null;
+        rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+        if (dat.key_press === corrKeyNum && rt < prms.tooSlow) {
+            corrCode = 1; // correct
+        } else if (dat.key_press !== corrKeyNum && rt < prms.tooSlow) {
+            corrCode = 2; // choice error
+        } else if (rt >= prms.tooSlow) {
+            corrCode = 3; // too slow
+        }
+
+    } else if (dat.type === "nogo") {
+
+        if (dat.key_press === null ) {
+            corrCode = 1; // correct withheld response
+        } else if (dat.key_press !== null) {
+            corrCode = 2; // response to nogo trial
+        }
+
+    }
+    
+    jsPsych.data.addDataToLastTrial({
+        date: Date(),
+        keyPress: dat.key_press,
+        rt: rt,
+        corrCode: corrCode,
+        blockNum: prms.cBlk,
+        trialNum: prms.cTrl,
+    });
+    prms.cTrl += 1;
+    if (dat.key_press === 27) {
+        jsPsych.endExperiment();
+    }
+
+}
+
+const trial_feedback = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    translate_origin: true,
+    response_ends_trial: false,
+    func: drawFeedback,
+    on_start: function (trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = prms.fbDur[dat.corrCode - 1];
+    },
+};
+
+const iti = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    trial_duration: prms.iti,
+    response_ends_trial: false,
+    func: function () {},
+};
+
+const block_feedback = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    stimulus: '',
+    response_ends_trial: true,
+    on_start: function (trial) {
+        trial.stimulus = blockFeedbackTxt_de_du({ stim: 'flanker_simon', type: 'go' });
+    },
+};
+
+const flanker_stimulus = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    translate_origin: true,
+    response_ends_trial: true,
+    choices: prms.respKeys,
+    trial_duration: prms.tooSlow,
+    func: drawFlanker,
+    func_args: [
+        { stimulus: jsPsych.timelineVariable('stimulus'), colour: jsPsych.timelineVariable('colour') },
+    ],
+    data: {
+        stim: 'flanker_simon',
+        task: jsPsych.timelineVariable('task'),
+        flanker_simon: jsPsych.timelineVariable('stimulus'),
+        type: jsPsych.timelineVariable('type'),
+        comp: jsPsych.timelineVariable('comp'),
+        position: jsPsych.timelineVariable('position'),
+        colour: jsPsych.timelineVariable('colour'),
+        corrResp: jsPsych.timelineVariable('corrResp'),
+    },
+    on_finish: function () {
+        codeTrial();
+    },
+};
+
+
+const simon_stimulus = {
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    translate_origin: true,
+    response_ends_trial: true,
+    choices: prms.respKeys,
+    trial_duration: prms.tooSlow,
+    func: drawSimon,
+    func_args: [ 
+        { stimulus: jsPsych.timelineVariable('stimulus'), position: jsPsych.timelineVariable('position'), colour: jsPsych.timelineVariable('colour') },
+    ],
+    data: {
+        stim: 'flanker_simon',
+        task: jsPsych.timelineVariable('task'),
+        flanker_simon: jsPsych.timelineVariable('stimulus'),
+        type: jsPsych.timelineVariable('type'),
+        comp: jsPsych.timelineVariable('comp'),
+        position: jsPsych.timelineVariable('position'),
+        colour: jsPsych.timelineVariable('colour'),
+        corrResp: jsPsych.timelineVariable('corrResp'),
+    },
+    on_finish: function () {
+        codeTrial();
+    },
+};
+
+function generate_flanker_combinations(nGo, nNoGo) {
+    let  flanker_go = repeatArray([
+        { task: 'flanker', stimulus: 'HHHHH', position: 'centre', colour: prms.colours[0], type: 'go', comp: 'comp',   corrResp: prms.respKeys[0]},
+        { task: 'flanker', stimulus: 'SSSSS', position: 'centre', colour: prms.colours[0], type: 'go', comp: 'comp',   corrResp: prms.respKeys[1]},
+        { task: 'flanker', stimulus: 'SSHSS', position: 'centre', colour: prms.colours[0], type: 'go', comp: 'incomp', corrResp: prms.respKeys[0]},
+        { task: 'flanker', stimulus: 'HHSHH', position: 'centre', colour: prms.colours[0], type: 'go', comp: 'incomp', corrResp: prms.respKeys[1]} 
+    ], nGo);
+    let flanker_nogo = repeatArray([
+        { task: 'flanker', stimulus: 'HHHHH', position: 'centre', colour: prms.colours[1], type: 'nogo', comp: 'comp',   corrResp: null},
+        { task: 'flanker', stimulus: 'SSSSS', position: 'centre', colour: prms.colours[1], type: 'nogo', comp: 'comp',   corrResp: null},
+        { task: 'flanker', stimulus: 'SSHSS', position: 'centre', colour: prms.colours[1], type: 'nogo', comp: 'incomp', corrResp: null},
+        { task: 'flanker', stimulus: 'HHSHH', position: 'centre', colour: prms.colours[1], type: 'nogo', comp: 'incomp', corrResp: null}, 
+    ], nNoGo)
+    return flanker_go.concat(flanker_nogo)
+}
+
+const flanker_combinations_low_nogo  = generate_flanker_combinations(8, 2)  // 10% NoGo
+const flanker_combinations_high_nogo = generate_flanker_combinations(5, 5)  // 50% NoGo
+
+const trial_timeline_flanker_low_nogo = {
+    timeline: [fixation_cross, flanker_stimulus, trial_feedback, iti],
+    timeline_variables: flanker_combinations_low_nogo
+};
+
+const trial_timeline_flanker_high_nogo = {
+    timeline: [fixation_cross, flanker_stimulus, trial_feedback, iti],
+    timeline_variables: flanker_combinations_high_nogo
+};
+
+function generate_simon_combinations(nGo, nNoGo) {
+    let  simon_go = repeatArray([
+        { task: 'simon', stimulus: 'H', position: 'left',  colour: prms.colours[0], type: 'go', comp: 'comp',   corrResp: prms.respKeys[0]},
+        { task: 'simon', stimulus: 'S', position: 'right', colour: prms.colours[0], type: 'go', comp: 'comp',   corrResp: prms.respKeys[1]},
+        { task: 'simon', stimulus: 'H', position: 'right', colour: prms.colours[0], type: 'go', comp: 'incomp', corrResp: prms.respKeys[0]},
+        { task: 'simon', stimulus: 'S', position: 'left',  colour: prms.colours[0], type: 'go', comp: 'incomp', corrResp: prms.respKeys[1]} 
+    ], nGo);
+    let simon_nogo = repeatArray([
+        { task: 'simon', stimulus: 'H', position: 'left',  colour: prms.colours[1], type: 'nogo', comp: 'comp',   corrResp: null},
+        { task: 'simon', stimulus: 'S', position: 'right', colour: prms.colours[1], type: 'nogo', comp: 'comp',   corrResp: null},
+        { task: 'simon', stimulus: 'H', position: 'right', colour: prms.colours[1], type: 'nogo', comp: 'incomp', corrResp: null},
+        { task: 'simon', stimulus: 'S', position: 'left',  colour: prms.colours[1], type: 'nogo', comp: 'incomp', corrResp: null}, 
+    ], nNoGo)
+    return simon_go.concat(simon_nogo)
+}
+
+const simon_combinations_low_nogo  = generate_simon_combinations(8, 2)  // 10% NoGo
+const simon_combinations_high_nogo = generate_simon_combinations(5, 5)  // 50% NoGo
+
+const trial_timeline_simon_low_nogo = {
+    timeline: [fixation_cross, simon_stimulus, trial_feedback, iti],
+    timeline_variables: simon_combinations_low_nogo
+};
+
+const trial_timeline_simon_high_nogo = {
+    timeline: [fixation_cross, simon_stimulus, trial_feedback, iti],
+    timeline_variables: simon_combinations_high_nogo
+};
+
+const randomString = generateRandomString(16);
+
+const alphaNum = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    response_ends_trial: true,
+    choices: [32],
+    stimulus:
+    "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
+    "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
+    "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
+    '<h2>xxx@xxx</h2>' +
+    '<h1>Code: ' +
+    randomString +
+    '</h1><br>' +
+    "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",
+};
+
+////////////////////////////////////////////////////////////////////////
+//                    Generate and run experiment                     //
+////////////////////////////////////////////////////////////////////////
+function genExpSeq() {
+    'use strict';
+
+    let exp = [];
+
+    exp.push(fullscreen_on);
+    exp.push(welcome_de_du);
+    exp.push(resize_de_du);
+    // exp.push(vpInfoForm_de);
+    exp.push(hideMouseCursor);
+    exp.push(screenInfo);
+    exp.push(task_instructions1);
+    exp.push(task_instructions2);
+
+    // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
+    let blk_task = [];
+    if ([1,2,5,6].includes(nVersion)) {
+        blk_task = repeatArray(["F", "F", "S", "S"], prms.nBlks/4);
+    } else {
+        blk_task = repeatArray(["S", "S", "F", "F"], prms.nBlks/4);
+    }
+    
+    // Counter-balanced Go-NoGo high prob
+    let blk_prob = [];
+    if ([1,2,3,4].includes(nVersion)) {
+        blk_prob = repeatArray(["L"], prms.nBlks/2).concat(repeatArray(["H"], prms.nBlks/2))
+    } else {
+        blk_prob = repeatArray(["H"], prms.nBlks/2).concat(repeatArray(["L"], prms.nBlks/2))
+    }
+
+    for (let blk = 0; blk < prms.nBlks; blk += 1) {
+
+        // select appropriate blk_timeline
+        let blk_timeline;
+        if (blk_task[blk] === "F" & blk_prob[blk] === "L") {
+            blk_timeline = { ...trial_timeline_flanker_low_nogo};
+        } else if (blk_task[blk] === "F" & blk_prob[blk] === "H") {
+            blk_timeline = { ...trial_timeline_flanker_high_nogo};
+        } else if (blk_task[blk] === "S" & blk_prob[blk] === "L") {
+            blk_timeline = { ...trial_timeline_simon_low_nogo};
+        } else if (blk_task[blk] === "S" & blk_prob[blk] === "H") {
+            blk_timeline = { ...trial_timeline_simon_low_nogo};
+        }
+
+        blk_timeline.sample = { type: 'fixed-repetitions', size: [0,1,6,7].includes(blk) ? prms.nTrlsP / 40 : prms.nTrlsE / 40 };
+        if (blk > 0) {
+            exp.push(task_reminder);
+        }
+        exp.push(blk_timeline);   // trials within a block
+        exp.push(block_feedback); // show previous block performance
+    }
+    exp.push(debrief_de);
+    exp.push(showMouseCursor);
+    exp.push(alphaNum);
+    exp.push(fullscreen_off);
+
+    return exp;
+}
+const EXP = genExpSeq();
+
+const data_filename = dirName + 'data/' + expName + '_' + vpNum;
+const code_filename = dirName + 'code/' + expName;
+
+jsPsych.init({
+    timeline: EXP,
+    fullscreen: true,
+    show_progress_bar: false,
+    exclusions: {
+        min_width: cs[0],
+        min_height: cs[1],
+    },
+    on_finish: function () {
+        saveData('/Common/write_data.php', data_filename, { stim: 'flanker_simon' });
+        saveRandomCode('/Common/write_code.php', code_filename, randomString);
+    },
+});
