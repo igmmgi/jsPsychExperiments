@@ -33,9 +33,7 @@
 // Version 7: H = left ("Q"), S = right ("P"), Simon   -> Flanker, High -> Low
 // Version 8: S = left ("Q"), H = right ("P"), Simon   -> Flanker, High -> Low
 //
-// 12 blocks with Version 1:
-// 1st half: Flanker Low Practice --> Simon Low Practice --> ((Flanker Low --> Simon Low) * 2)
-// 2nd half: Flanker High Practice --> Simon High Practice --> ((Flanker High --> Simon High) * 2)
+// 24 blocks with Version 1: ((Flanker Low --> Simon Low) * 6) --> ((Flanker High --> Simon High) * 6)
 // and counter-balanced versions ...
 
 ////////////////////////////////////////////////////////////////////////
@@ -57,61 +55,38 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 40, // number of trials in first block (practice)
-  nTrlsE: 80, // number of trials in subsequent blocks
-  nBlks: 12,
+  nTrls: 40, // number of trials in each block
+  nBlks: 24,
   fixDur: 500,
-  fbDur: [1000, 2000, 2000, 2000],
+  fbDur: [1000, 2500, 2500],
   iti: 500,
-  tooFast: 100,
-  tooSlow: 1500,
-  fbTxtGo: ['Richtig', 'Falsch', 'Zu langsam'],
-  fbTxtNoGo: ['Richtig', 'Falsch: Do not respond'],
+  tooSlow: 1000,
+  fbTxtGo: ['Richtig', 'Falsch: Falsche Taste gedrückt!', 'Zu langsam: Reagiere wenn der Buchstabe grün ist!'],
+  fbTxtNoGo: ['Richtig', 'Falsch: Reagiere nicht wenn der Buchstabe rot ist!'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   fixWidth: 2,
   fixSize: 10,
   stimSize: '40px monospace',
-  fbSize: '30px monospace',
+  fbSize: '24px monospace',
   simonEccentricity: 100,
-  colours: ['green', 'red'], // go/nogo colour
-  colours_de: ['grün', 'rot'], // go/nogo colour for instruction
+  colours: ['green', 'red'], // go/nogo colours (although fixed within instruction text)
   respKeys: [],
 };
 
-const nVersion = getVersionNumber(nFiles, 8);
+const nVersion = 8; // getVersionNumber(nFiles, 8);
 jsPsych.data.addProperties({ version: nVersion });
 let respText;
 if (nVersion % 2 == 1) {
   prms.respKeys = ['Q', 'P', 27];
   respText =
-    "<h3 style='text-align:center;'><b>H (" +
-    prms.colours_de[0] +
-    ") = Taste 'Q'</b> (linker Zeigefinger)</h3>" +
-    "<h3 style='text-align:center;'><b>S (" +
-    prms.colours_de[0] +
-    ") = Taste 'P'</b> (rechter Zeigefinger)</h3><br>" +
-    "<h3 style='text-align:center;'><b>H (" +
-    prms.colours_de[1] +
-    ') = Letter Side</b></h3>' +
-    "<h3 style='text-align:center;'><b>S (" +
-    prms.colours_de[1] +
-    ') = Letter Side</b></h3><br>';
+    "<h3 style='text-align:center;'><b>H = Taste 'Q'</b> (linker Zeigefinger)</h3>" +
+    "<h3 style='text-align:center;'><b>S = Taste 'P'</b> (rechter Zeigefinger)</h3><br>";
 } else {
   prms.respKeys = ['P', 'Q', 27];
   respText =
-    "<h3 style='text-align:center;'><b>S (" +
-    prms.colours_de[0] +
-    ") = Taste 'Q'</b> (linker Zeigefinger)</h3>" +
-    "<h3 style='text-align:center;'><b>H (" +
-    prms.colours_de[0] +
-    ") = Taste 'P'</b> (rechter Zeigefinger)</h3><br>" +
-    "<h3 style='text-align:center;'><b>H (" +
-    prms.colours_de[1] +
-    ') = Letter Side</b></h3>' +
-    "<h3 style='text-align:center;'><b>S (" +
-    prms.colours_de[1] +
-    ') = Letter Side</b></h3><br>';
+    "<h3 style='text-align:center;'><b>S = Taste 'Q'</b> (linker Zeigefinger)</h3>" +
+    "<h3 style='text-align:center;'><b>H = Taste 'P'</b> (rechter Zeigefinger)</h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -124,11 +99,10 @@ const task_instructions1 = {
   canvas_border: cb,
   stimulus:
     "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
-    "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
     "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
     "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
     "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
-    "<h3 style='text-align: center;'>Wir bitten dich die ca. XXX Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich die ca. 40 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -139,23 +113,59 @@ const task_instructions2 = {
   canvas_border: cb,
   stimulus:
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'>Bitte reagiere ... </h3>" +
+    "<h3 style='text-align: left;'>In diesem Experiment musst du auf verschiedene Buchstaben</h3>" +
+    "<h3 style='text-align: left;'>reagieren. Der Ziel-Buchstabe erscheint in manchen Blöcken </h3>" +
+    "<h3 style='text-align: left;'>in der Mitte des Bildschirms und in anderen Blöcken rechts oder</h3>" +
+    "<h3 style='text-align: left;'>links auf dem Bildschirm. Es gilt die folgende Zuordnung: </h3><br>" +
     respText +
-    "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
-const task_reminder = {
+const task_instructions3 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: cc,
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
-    "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
-    "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
-    respText +
-    "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>",
+    "<h2 style='text-align: center;'>WICHTIG:</h2>" +
+    "<h3 style='text-align: left;'>Der Ziel-Buchstabe H oder S erscheint manchmal in grün und manchmal in</h3>" +
+    "<h3 style='text-align: left;'>roter Farbe. Reagiere nur so schnell und so genau wie möglich wenn der </h3>" +
+    "<h3 style='text-align: left;'>Buchstabe grün ist! Somit sollst du keine Taste drücken, wenn der Buchstabe </h3>" +
+    "<h3 style='text-align: left;'>in rot erscheint. Es folgen insgesamt 24 Blöcke.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+const task_instructions4 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      "<h2 style='text-align: center;'>Block " +
+      prms.cBlk +
+      ' von 24:</h2><br>' +
+      "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere </h3>" +
+      "<h3 style='text-align: left;'>deine Hände auf die Tastatur. Es gilt:</h3><br>" +
+      respText +
+      "<h3 style='text-align: left;'>Reagiere nur wenn der Buchstabe in grün erscheint und drücke </h3>" +
+      "<h3 style='text-align: left;'>keine Taste wenn der Buchstabe in rot erscheint!</h3><br>" +
+      "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
+  },
+};
+
+const task_instructions5 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  stimulus:
+    "<h3 style='text-align: left;'>Kurze Pause. Bitte nutze die Pause um dich zu erholen. Wenn du wieder bereit</h3>" +
+    "<h3 style='text-align: left;'> für den nächsten Block bist dann drücke eine beliebige Taste.</h3>",
+  on_finish: function () {
+    prms.cBlk += 1;
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -405,6 +415,7 @@ function generate_flanker_combinations(nGo, nNoGo) {
     ],
     nGo,
   );
+
   let flanker_nogo = repeatArray(
     [
       {
@@ -453,12 +464,12 @@ const flanker_combinations_low_nogo = generate_flanker_combinations(8, 2); // 10
 const flanker_combinations_high_nogo = generate_flanker_combinations(5, 5); // 50% NoGo
 
 const trial_timeline_flanker_low_nogo = {
-  timeline: [fixation_cross, flanker_stimulus, trial_feedback, iti],
+  timeline: [fixation_cross, flanker_stimulus, trial_feedback],
   timeline_variables: flanker_combinations_low_nogo,
 };
 
 const trial_timeline_flanker_high_nogo = {
-  timeline: [fixation_cross, flanker_stimulus, trial_feedback, iti],
+  timeline: [fixation_cross, flanker_stimulus, trial_feedback],
   timeline_variables: flanker_combinations_high_nogo,
 };
 
@@ -552,12 +563,12 @@ const simon_combinations_low_nogo = generate_simon_combinations(8, 2); // 10% No
 const simon_combinations_high_nogo = generate_simon_combinations(5, 5); // 50% NoGo
 
 const trial_timeline_simon_low_nogo = {
-  timeline: [fixation_cross, simon_stimulus, trial_feedback, iti],
+  timeline: [fixation_cross, simon_stimulus, trial_feedback],
   timeline_variables: simon_combinations_low_nogo,
 };
 
 const trial_timeline_simon_high_nogo = {
-  timeline: [fixation_cross, simon_stimulus, trial_feedback, iti],
+  timeline: [fixation_cross, simon_stimulus, trial_feedback],
   timeline_variables: simon_combinations_high_nogo,
 };
 
@@ -597,13 +608,14 @@ function genExpSeq() {
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
+  exp.push(task_instructions3);
 
   // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
   let blk_task = [];
   if ([1, 2, 5, 6].includes(nVersion)) {
-    blk_task = repeatArray(['F', 'F', 'S', 'S'], prms.nBlks / 4);
+    blk_task = repeatArray(['F', 'S'], prms.nBlks / 2);
   } else {
-    blk_task = repeatArray(['S', 'S', 'F', 'F'], prms.nBlks / 4);
+    blk_task = repeatArray(['S', 'F'], prms.nBlks / 2);
   }
 
   // Counter-balanced Go-NoGo high prob
@@ -615,6 +627,9 @@ function genExpSeq() {
   }
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    // show start of block screen
+    exp.push(task_instructions4);
+
     // select appropriate blk_timeline
     let blk_timeline;
     if ((blk_task[blk] === 'F') & (blk_prob[blk] === 'L')) {
@@ -624,18 +639,18 @@ function genExpSeq() {
     } else if ((blk_task[blk] === 'S') & (blk_prob[blk] === 'L')) {
       blk_timeline = { ...trial_timeline_simon_low_nogo };
     } else if ((blk_task[blk] === 'S') & (blk_prob[blk] === 'H')) {
-      blk_timeline = { ...trial_timeline_simon_low_nogo };
+      blk_timeline = { ...trial_timeline_simon_high_nogo };
     }
 
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: [0, 1, 6, 7].includes(blk) ? prms.nTrlsP / 40 : prms.nTrlsE / 40,
+      size: 1,
     };
-    if (blk > 0) {
-      exp.push(task_reminder);
-    }
     exp.push(blk_timeline); // trials within a block
-    exp.push(block_feedback); // show previous block performance
+    if (blk < prms.nBlks) {
+      exp.push(task_instructions5); // show PAUSE
+    }
+    // exp.push(block_feedback); // show previous block performance
   }
   exp.push(debrief_de);
   exp.push(showMouseCursor);
