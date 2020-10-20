@@ -43,15 +43,20 @@ const prms = {
     fixSize: 10,
     stimSize: '40px monospace',
     fbSize: '30px monospace',
-    colours: ["green", "red"],
+    simonEccentricity: 100,
     respKeys: ["Q", "P", 27],
 };
 
-const nVersion = getVersionNumber(nFiles, 8);
+const nVersion = getVersionNumber(nFiles, 2);
 jsPsych.data.addProperties({ version: nVersion });
-let respText =
-        "<h3 style='text-align:center;'><b>" + prms.respLetters[0] + " = 'Q'</b> (linker Zeigefinger).</h3>" +
-        "<h3 style='text-align:center;'><b>" + prms.respLetters[1] + " = 'P'</b> (rechter Zeigefinger).</h3><br>";
+
+// response keys for baseline simon
+let respText_base = "<h3 style='text-align:center;'><b>" + prms.respLetters[0] + " = 'Q'</b> (linker Zeigefinger).</h3>" + 
+                    "<h3 style='text-align:center;'><b>" + prms.respLetters[1] + " = 'P'</b> (rechter Zeigefinger).</h3><br>";
+
+let respText_pp = "<h3 style='text-align:center;'><b>" + prms.respLetters[0] + " = 'Q'</b> (linker Zeigefinger).</h3>" + 
+                  "<h3 style='text-align:center;'><b>" + prms.respLetters[1] + " = 'P'</b> (rechter Zeigefinger).</h3><br>" + 
+                  "<h3 style='text-align:center;'><b>" + prms.respLetters[2] + " = Stimulus Location.</h3><br>";
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -71,7 +76,7 @@ const task_instructions1 = {
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
-const task_instructions2 = {
+const task_instructions_base = {
     type: 'html-keyboard-response-canvas',
     canvas_colour: cc,
     canvas_size: cs,
@@ -79,12 +84,12 @@ const task_instructions2 = {
     stimulus:
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h3 style='text-align: center;'>Bitte reagiere ... </h3>" +
-    respText +
+    respText_base +
     "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
-const task_reminder = {
+const task_reminder_base = {
     type: 'html-keyboard-response-canvas',
     canvas_colour: cc,
     canvas_size: cs,
@@ -93,7 +98,33 @@ const task_reminder = {
     "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
     "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
     "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
-    respText +
+    respText_base +
+    "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>",
+};
+
+const task_instructions_pp = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    stimulus:
+    "<h2 style='text-align: center;'>Aufgabe:</h2>" +
+    "<h3 style='text-align: center;'>Bitte reagiere ... </h3>" +
+    respText_pp +
+    "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+const task_reminder_pp = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    stimulus:
+    "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
+    "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
+    "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
+    respText_pp +
     "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>",
 };
 
@@ -145,24 +176,22 @@ function drawSimon(args) {
     ctx.fillStyle = "black";
     switch (args.position) {
         case 'left':
-            ctx.fillText(args.stimulus, -100, 0);
+            ctx.fillText(args.stimulus, -prms.simonEccentricity, 0);
             break;
         case 'right':
-            ctx.fillText(args.stimulus, 100, 0);
+            ctx.fillText(args.stimulus, prms.simonEccentricity, 0);
             break;
     }
 }
 
 function codeTrial() {
     'use strict';
-    let dat = jsPsych.data.get().last(1).values()[0];
-    let corrCode = 0;
-  
-    let corrKeyNum;
-    let rt;
 
-    corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
-    rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+    let dat = jsPsych.data.get().last(1).values()[0];
+
+    let corrCode = 0;
+    let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
+    let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
     if (dat.key_press === corrKeyNum && rt < prms.tooSlow) {
         corrCode = 1; // correct
     } else if (dat.key_press !== corrKeyNum && rt < prms.tooSlow) {
@@ -170,9 +199,24 @@ function codeTrial() {
     } else if (rt >= prms.tooSlow) {
         corrCode = 3; // too slow
     }
-    
+  
+    // block type: always 4 Simon base blocks first
+    let blk_type;
+    if (prms.cBlk <= prms.nBlksBase) {
+        blk_type = "simon_base";
+    } else if (nVersion == 1 & (prms.cBlk <= (prms.nBlksBase + (prms.nBlksPP/2)))) {
+        blk_type = "simon_low";
+    } else if (nVersion == 1 & (prms.cBlk > (prms.nBlksBase + (prms.nBlksPP/2)))) {
+        blk_type = "simon_high";
+    } else if (nVersion == 2 & (prms.cBlk <= (prms.nBlksBase + (prms.nBlksPP/2)))) {
+        blk_type = "simon_high";
+    } else if (nVersion == 2 & (prms.cBlk > (prms.nBlksBase + (prms.nBlksPP/2)))) {
+        blk_type = "simon_low";
+    }
+
     jsPsych.data.addDataToLastTrial({
         date: Date(),
+        blk_type: blk_type,
         keyPress: dat.key_press,
         rt: rt,
         corrCode: corrCode,
@@ -262,11 +306,11 @@ const trial_timeline_simon_base = {
 const simon_t2 = [
     { stimulus: prms.respLetters[2], position: 'left',  comp: 'comp', corrResp: prms.respKeys[0]},
     { stimulus: prms.respLetters[2], position: 'right', comp: 'comp', corrResp: prms.respKeys[1]},
-]
+];
 
 const trial_timeline_simon_low = {
     timeline: [fixation_cross, simon_stimulus, trial_feedback, iti],
-    timeline_variables: repeatArray(simon_t1, 9).concat(repeatArray(simon_t2, 2))  // 90% vs 10%&
+    timeline_variables: repeatArray(simon_t1, 9).concat(repeatArray(simon_t2, 2))  // 90% vs 10%
 };
 
 const trial_timeline_simon_high = {
@@ -305,27 +349,28 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
-    exp.push(task_instructions2);
+    exp.push(task_instructions_base);
 
-    // // baseline Simon block    
-    // for (let blk = 0; blk < prms.nBlksBase; blk += 1) {
-    //     let blk_timeline_base = { ...trial_timeline_base };
-    //     blk_timeline_base.sample = { type: 'fixed-repetitions', size: prms.nTrlsBase / 4 };
-    //     exp.push(blk_timeline_base);   // trials within a block
-    //     exp.push(block_feedback);      // show previous block performance
-    // }
+    // baseline Simon block    
+    for (let blk = 0; blk < prms.nBlksBase; blk += 1) {
+        let blk_timeline_simon_base = { ...trial_timeline_simon_base };
+        blk_timeline_simon_base.sample = { type: 'fixed-repetitions', size: prms.nTrlsBase / 4 };
+        exp.push(blk_timeline_simon_base);   // trials within a block
+        exp.push(block_feedback);            // show previous block performance
+    }
 
     
     // PP Simon block    
+    exp.push(task_instructions_pp);
     let blk_prob;
     if (nVersion % 2 == 0) {
-        blk_prob = repeatArray(["L"], prms.nBlksPP/2).concat(repeatArray(["H"], prms.nBlksPP/2))
+        blk_prob = repeatArray(["L"], prms.nBlksPP/2).concat(repeatArray(["H"], prms.nBlksPP/2));
     } else {
-        blk_prob = repeatArray(["H"], prms.nBlksPP/2).concat(repeatArray(["L"], prms.nBlksPP/2))
+        blk_prob = repeatArray(["H"], prms.nBlksPP/2).concat(repeatArray(["L"], prms.nBlksPP/2));
     }
 
     let blk_timeline_pp;
@@ -339,7 +384,6 @@ function genExpSeq() {
         exp.push(blk_timeline_pp);   // trials within a block
         exp.push(block_feedback);    // show previous block performance
     }
-
 
     exp.push(debrief_de);
     exp.push(showMouseCursor);
