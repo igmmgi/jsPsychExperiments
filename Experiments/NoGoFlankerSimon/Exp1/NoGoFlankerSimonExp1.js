@@ -74,7 +74,7 @@ const prms = {
   respKeys: [],
 };
 
-const nVersion = 8; // getVersionNumber(nFiles, 8);
+const nVersion = getVersionNumber(nFiles, 8);
 jsPsych.data.addProperties({ version: nVersion });
 let respText;
 if (nVersion % 2 == 1) {

@@ -26,11 +26,11 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsBase: 80, // number of trials in Simon baseline blocks
-    nBlksBase: 4,  // number of blocks of Simon baseline 
-    nTrlsPP: 80,   // number of trials in subsequent blocks
-    nBlksPP: 8,
-    nBlks: 12,
+    nTrlsBase: 4,  // number of trials in Simon baseline blocks
+    nBlksBase: 2,  // number of blocks of Simon baseline 
+    nTrlsPP: 6,    // number of trials in subsequent blocks
+    nBlksPP: 4,
+    nBlks: 6,
     fixDur: 500,
     fbDur: [1000, 2500, 2500, 2500],
     iti: 500,
@@ -99,7 +99,7 @@ const task_instructions_base_reminder = {
         trial.stimulus =
             "<h2 style='text-align: center;'>Block " +
             prms.cBlk +
-            ' von 12:</h2><br>' +
+            ' von 6:</h2><br>' +
             "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere deine Hände auf die Tastatur.</h3><br>" +
             respText_base +
             "<h2 style='text-align: center;'>Bitte reagiere immer so schnell und so genau wie möglich!</h2>" +
@@ -142,7 +142,7 @@ const task_instructions_pp_reminder = {
         trial.stimulus =
             "<h2 style='text-align: center;'>Block " +
             prms.cBlk +
-            ' von 12:</h2><br>' +
+            ' von 6:</h2><br>' +
             "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere deine Hände auf die Tastatur. </h3>" +
             respText_base +
             "<h3 style='text-align: center;'>Wenn der Buchstabe " + prms.respLetters[2] + " ist, dann reagiere auf Position des Buchstaben:</h3>" +
@@ -379,12 +379,12 @@ const simon_t2 = [
 
 const trial_timeline_simon_low = {
     timeline: [fixation_cross, simon_stimulus, trial_feedback],
-    timeline_variables: repeatArray(simon_t1, 9).concat(repeatArray(simon_t2, 2))  // 90% vs 10%
+    timeline_variables: simon_t1.concat(simon_t2)  
 };
 
 const trial_timeline_simon_high = {
     timeline: [fixation_cross, simon_stimulus, trial_feedback],
-    timeline_variables: repeatArray(simon_t1, 5).concat(repeatArray(simon_t2, 5))  // 50% vs. 50%
+    timeline_variables: simon_t1.concat(simon_t2)  
 };
 
 const randomString = generateRandomString(16);
@@ -418,7 +418,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    exp.push(vpInfoForm_de);
+    // exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
