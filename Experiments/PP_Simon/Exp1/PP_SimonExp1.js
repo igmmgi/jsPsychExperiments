@@ -98,7 +98,7 @@ const task_instructions_base_reminder = {
         trial.stimulus =
             "<h2 style='text-align: center;'>Block " +
             prms.cBlk +
-            ' von 6:</h2><br>' +
+            ' von 12:</h2><br>' +
             "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
             "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:.</h3><br>" +
             respText_base +
@@ -142,7 +142,7 @@ const task_instructions_pp_reminder = {
         trial.stimulus =
             "<h2 style='text-align: center;'>Block " +
             prms.cBlk +
-            ' von 6:</h2><br>' +
+            ' von 12:</h2><br>' +
             "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
             "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3>" +
             respText_base +
