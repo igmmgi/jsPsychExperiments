@@ -32,18 +32,18 @@ const prms = {
     nBlksPP: 4,
     nBlks: 6,
     fixDur: 500,
-    fbDur: [1000, 2500, 2500, 2500],
+    fbDur: [1000, 2500, 2500],
     iti: 500,
     tooFast: 100,
-    tooSlow: 1000,
+    tooSlow: 2000,
     respLetters: shuffle(["H", "S", "K"]),
     cTrl: 1, // count trials
     cBlk: 1, // count blocks
     fixWidth: 2,
     fixSize: 10,
     stimSize: '40px monospace',
-    fbSize: '30px monospace',
-    simonEccentricity: 100,
+    fbSize: '24px monospace',
+    simonEccentricity: 150,
     respKeys: ["Q", "P", 27],
 };
 
@@ -85,7 +85,6 @@ const task_instructions_base = {
     "<h3 style='text-align: left;'>reagieren, die rechts oder links auf dem Bildschirm erscheinen.</h3>" +
     "<h3 style='text-align: left;'>Ignoriere die Position des Buchstaben und reagiere immer wie folgt:</h3><br>" +
     respText_base +
-    "<h3 style='text-align: center;'>Bitte reagiere immer so schnell und so genau wie möglich!</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren.</h2>",
 };
 
@@ -100,9 +99,10 @@ const task_instructions_base_reminder = {
             "<h2 style='text-align: center;'>Block " +
             prms.cBlk +
             ' von 6:</h2><br>' +
-            "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere deine Hände auf die Tastatur.</h3><br>" +
+            "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
+            "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:.</h3><br>" +
             respText_base +
-            "<h2 style='text-align: center;'>Bitte reagiere immer so schnell und so genau wie möglich!</h2>" +
+            "<h3 style='text-align: center;'>Bitte reagiere immer so schnell und so genau wie möglich!</h3><br>" +
             "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
     },
 };
@@ -123,11 +123,11 @@ const task_instructions_pp = {
     canvas_size: cs,
     canvas_border: cb,
     stimulus:
-    "<h2 style='text-align: center;'>ACHTUNG: Neu Instructionen:</h2>" +
-    "<h3 style='text-align: center;'>Buchstaben erscheinen weiterhin rechts oder links auf dem Bildschirm erscheinen.</h3>" +
-    "<h3 style='text-align: center;'>Die erste Priorität ist weiterhin auf die Buchstaben wie folgt zu reagieren:</h3><br>" +
+    "<h2 style='text-align: center;'>ACHTUNG: NEUE INSTRUKTIONEN!!!</h2>" +
+    "<h3 style='text-align: left;'>Die erste Priorität ist auf den Buchstaben weiterhin folgt zu reagieren:</h3><br>" +
     respText_base +
-    "<h3 style='text-align: center;'>Wenn der Buchstabe aber K ist, reagiere basierend auf der Position des Buchstabens:</h3><br>" +
+    "<h3 style='text-align: left;'>Wenn der Buchstabe aber " + prms.respLetters[2] + " ist, dann reagiere auf die</h3>" +
+    "<h3 style='text-align: left;'>Position des Buchstabens (zweite Priorität):</h3><br>" +
     respText_pp +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
@@ -143,11 +143,13 @@ const task_instructions_pp_reminder = {
             "<h2 style='text-align: center;'>Block " +
             prms.cBlk +
             ' von 6:</h2><br>' +
-            "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere deine Hände auf die Tastatur. </h3>" +
+            "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
+            "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3>" +
             respText_base +
-            "<h3 style='text-align: center;'>Wenn der Buchstabe " + prms.respLetters[2] + " ist, dann reagiere auf Position des Buchstaben:</h3>" +
+            "<h3 style='text-align: left;'>Wenn der Buchstabe aber " + prms.respLetters[2] + " ist, dann reagiere auf die</h3>" +
+            "<h3 style='text-align: left;'>Position des Buchstabens (zweite Priorität):</h3>" +
             respText_pp + 
-            "<h2 style='text-align: center;'>Bitte reagiere immer so schnell und so genau wie möglich!</h2>" +
+            "<h3 style='text-align: center;'>Bitte reagiere immer so schnell und so genau wie möglich!</h3>" +
             "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
     },
 };
@@ -187,23 +189,20 @@ function drawFeedback() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
-
     if (dat.blk_type === "simon_base") {
         switch (dat.corrCode) {
             case 1:  // correct
                 ctx.fillText("Richtig", 0, 0);
                 break;
             case 2: // Falsch
-                ctx.fillText("Falsch!", 0, -75);
-                ctx.fillText("Zu Erinnerung:", 0, -25);
-                ctx.fillText(prms.respLetters[0] + " = 'Q'", 0, 25);
-                ctx.fillText(prms.respLetters[1] + " = 'P'", 0, 75);
+                ctx.fillText("Falsch! Zu Errinnerung:", 0, -75);
+                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, 25);
+                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 75);
                 break;
             case 3: // Too Slow
-                ctx.fillText("Zu langsam!", 0, -75);
-                ctx.fillText("Zu Erinnerung:", 0, -25);
-                ctx.fillText(prms.respLetters[0] + " = 'Q'", 0, 25);
-                ctx.fillText(prms.respLetters[1] + " = 'P'", 0, 75);
+                ctx.fillText("Zu langsam! Zu Errinnerung:", 0, -75);
+                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, 25);
+                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 75);
                 break;
         }
     } else {
@@ -212,26 +211,27 @@ function drawFeedback() {
                 ctx.fillText("Richtig", 0, 0);
                 break;
             case 2: // Falsch
-                ctx.fillText("Falsch!", 0, -150);
-                ctx.fillText("Zu Erinnerung:", 0, -100);
-                ctx.fillText(prms.respLetters[0] + " = 'Q'", 0, -50);
-                ctx.fillText(prms.respLetters[1] + " = 'P'", 0, 0);
-                ctx.fillText(prms.respLetters[2] + " = Position des Buchstaben", 0, 50);
-                ctx.fillText("Links = Taste 'Q' (linker Zeigefinger)", 0, 100);
-                ctx.fillText("Rechts = Taste 'P' (rechter Zeigefinger", 0, 150);
+                ctx.fillText("Falsch! Zu Erinnerung:", 0, -200);
+                ctx.fillText("Erse Priorität (Typ Buchstabe):", 0, -100);
+                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, -50);
+                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 0);
+                ctx.fillText("Wenn der Buchstabe " + prms.respLetters[2] + " ist, reagiere auf die", 0, 100);
+                ctx.fillText("Position des Buchstaben (zweite Priorität):", 0, 150);
+                ctx.fillText("Links = linker Zeigefinger (Taste 'Q')", 0, 200);
+                ctx.fillText("Rechts = rechter Zeigefinger (Taste 'P'", 0, 250);
                 break;
             case 3: // Too Slow
-                ctx.fillText("Zu langsam!", 0, -150);
-                ctx.fillText("Zu Erinnerung:", 0, -100);
-                ctx.fillText(prms.respLetters[0] + " = 'Q'", 0, -50);
-                ctx.fillText(prms.respLetters[1] + " = 'P'", 0, 0);
-                ctx.fillText(prms.respLetters[2] + " = Position des Buchstaben", 0, 50);
-                ctx.fillText("Links = Taste 'Q' (linker Zeigefinger)", 0, 100);
-                ctx.fillText("Rechts = Taste 'P' (rechter Zeigefinger", 0, 150);
+                ctx.fillText("Zu langsam! Zu Erinnerung:", 0, -200);
+                ctx.fillText("Erse Priorität (Typ Buchstabe):", 0, -100);
+                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, -50);
+                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 0);
+                ctx.fillText("Wenn der Buchstabe " + prms.respLetters[2] + " ist, reagiere auf die", 0, 100);
+                ctx.fillText("Position des Buchstaben (zweite Priorität):", 0, 150);
+                ctx.fillText("Links = linker Zeigefinger (Taste 'Q')", 0, 200);
+                ctx.fillText("Rechts = rechter Zeigefinger (Taste 'P'", 0, 250);
                 break;
         }
     }
-
 }
 
 function drawSimon(args) {
@@ -418,7 +418,7 @@ function genExpSeq() {
     exp.push(fullscreen_on);
     exp.push(welcome_de_du);
     exp.push(resize_de_du);
-    // exp.push(vpInfoForm_de);
+    exp.push(vpInfoForm_de);
     exp.push(hideMouseCursor);
     exp.push(screenInfo);
     exp.push(task_instructions1);
@@ -433,7 +433,6 @@ function genExpSeq() {
         exp.push(block_feedback);            // show previous block performance
         exp.push(task_instructions_pause);
     }
-
     
     // PP Simon block    
     exp.push(task_instructions_pp);
