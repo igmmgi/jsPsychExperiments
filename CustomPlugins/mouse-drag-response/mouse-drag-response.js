@@ -99,7 +99,6 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     $('#canvas').mouseup(function (e) {
       handleMouseUp(e);
     });
-    //$("#canvas").mouseout(function(e){handleMouseOut(e);});
 
     let canvasOffset = $(canvas).offset();
     let offsetX = canvasOffset.left;
@@ -114,6 +113,10 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     let end_rt;
     let end_loc;
     let npresses = 0;
+
+    let x_coords = [];
+    let y_coords = [];
+    let time = [];
 
     // some text objects
     let text = {
@@ -149,6 +152,9 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
         end_x: text.x,
         end_y: text.y,
         nPresses: npresses,
+        x_coords: x_coords,
+        y_coords: y_coords,
+        time: time,
       };
 
       // clear the display
@@ -187,15 +193,14 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
       let mouseX = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
       let mouseY = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
 
-      // Put your mousemove stuff here
-      let dx = mouseX - startX;
-      let dy = mouseY - startY;
+      // store coordinates and time array
+      x_coords.push(mouseX);
+      y_coords.push(mouseY);
+      time.push(performance.now() - start_time);
 
-      startX = mouseX;
-      startY = mouseY;
-
-      text.x += dx;
-      text.y += dy;
+      // set new text position
+      text.x = mouseX;
+      text.y = mouseY;
 
       if (text.y < trial.response_border[0] - text.height / 2 || text.y > trial.response_border[1] + text.height / 2) {
         end_trial();

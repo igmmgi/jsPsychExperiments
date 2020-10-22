@@ -266,6 +266,19 @@ function saveData(
   xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
 }
 
+function saveDataJSON(
+  url,
+  filename,
+  rows = {},
+  colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
+) {
+  let dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).json();
+  let xhr = new XMLHttpRequest();
+  xhr.open('POST', url);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
+}
+
 function generateRandomString(length) {
   let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let randomString = '';
@@ -396,7 +409,7 @@ function generate_html(
 }
 
 function repeatArray(a, n) {
-    return new Array(n).fill(a).flat();
+  return new Array(n).fill(a).flat();
 }
 
 ////////////////////////////////////////////////////////////////////////

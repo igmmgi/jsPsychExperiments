@@ -18,7 +18,6 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsE: 64, // number of trials in subsequent blocks
   nBlks: 1,
   fixDur: 1000,
   fbDur: 1000,
@@ -29,40 +28,42 @@ const prms = {
   cBlk: 1, // count blocks
 };
 
-const words_upper_de = shuffle([
-  'Alpen',
-  'Ballon',
-  'Vogel',
-  'Burg',
-  'Decke',
-  'Wolke',
-  'Komet',
-  'Krone',
-  'Adler',
-  'Giebel',
-  'Empore',
-  'Falke',
-  'Höhe',
-  'Hochland',
-  'Berg',
-  'Drachen',
-  'Höhepunkt',
-  'Mond',
-  'Gebirge',
-  'Nest',
-  'Flugzeug',
-  'Planet',
-  'Dach',
-  'Satellit',
-  'Himmel',
-  'Hochhaus',
-  'Gipfel',
-  'Stern',
-  'Sonne',
-  'Spitze',
-  'Turm',
-  'Weltall',
-]);
+// const words_upper_de = shuffle([
+//   'Alpen',
+//   'Ballon',
+//   'Vogel',
+//   'Burg',
+//   'Decke',
+//   'Wolke',
+//   'Komet',
+//   'Krone',
+//   'Adler',
+//   'Giebel',
+//   'Empore',
+//   'Falke',
+//   'Höhe',
+//   'Hochland',
+//   'Berg',
+//   'Drachen',
+//   'Höhepunkt',
+//   'Mond',
+//   'Gebirge',
+//   'Nest',
+//   'Flugzeug',
+//   'Planet',
+//   'Dach',
+//   'Satellit',
+//   'Himmel',
+//   'Hochhaus',
+//   'Gipfel',
+//   'Stern',
+//   'Sonne',
+//   'Spitze',
+//   'Turm',
+//   'Weltall',
+// ]);
+
+const words_upper_de = shuffle(['Alpen', 'Ballon']);
 
 //const words_upper_en = shuffle([
 //    "alps", "balloon", "bird", "castle", "ceiling", "cloud",
@@ -73,40 +74,42 @@ const words_upper_de = shuffle([
 //    "summit", "star", "sun", "top", "tower", "universe"
 //]);
 
-const words_lower_de = shuffle([
-  'Abgrund',
-  'Schlucht',
-  'Teppich',
-  'Keller',
-  'Klee',
-  'Tiefe',
-  'Graben',
-  'Taucher',
-  'Erdreich',
-  'Fußboden',
-  'Fuß',
-  'Gras',
-  'Grab',
-  'Boden',
-  'Hölle',
-  'Maulwurf',
-  'Maus',
-  'Schienen',
-  'Fluss',
-  'Wurzel',
-  'Gehweg',
-  'Erde',
-  'Sohle',
-  'Stein',
-  'Straße',
-  'Untergrund',
-  'U-Boot',
-  'U-Bahn',
-  'Sumpf',
-  'Tunnel',
-  'Unterwelt',
-  'Wurm',
-]);
+// const words_lower_de = shuffle([
+//   'Abgrund',
+//   'Schlucht',
+//   'Teppich',
+//   'Keller',
+//   'Klee',
+//   'Tiefe',
+//   'Graben',
+//   'Taucher',
+//   'Erdreich',
+//   'Fußboden',
+//   'Fuß',
+//   'Gras',
+//   'Grab',
+//   'Boden',
+//   'Hölle',
+//   'Maulwurf',
+//   'Maus',
+//   'Schienen',
+//   'Fluss',
+//   'Wurzel',
+//   'Gehweg',
+//   'Erde',
+//   'Sohle',
+//   'Stein',
+//   'Straße',
+//   'Untergrund',
+//   'U-Boot',
+//   'U-Bahn',
+//   'Sumpf',
+//   'Tunnel',
+//   'Unterwelt',
+//   'Wurm',
+// ]);
+
+const words_lower_de = shuffle(['Abgrund', 'Schlucht']);
 
 // const words_lower_en = shuffle([
 //     "abyss" , "canyon" , "carpet" ," cellar" ," clover" ,
@@ -195,6 +198,7 @@ const fixation_cross = {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  console.log(dat);
   let corrCode = 0;
   if (dat.resp_loc !== dat.end_loc) {
     corrCode = 1; // choice error
@@ -291,16 +295,6 @@ const trial_timeline = {
   repetitions: 1,
 };
 
-const fullscreen_on = {
-  type: 'fullscreen',
-  fullscreen_mode: true,
-};
-
-const fullscreen_off = {
-  type: 'fullscreen',
-  fullscreen_mode: false,
-};
-
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -312,7 +306,7 @@ function genExpSeq() {
   exp.push(welcome_en);
   exp.push(resize_en);
 
-  // exp.push(vpInfoForm);
+  // exp.push(vpInfoForm_en);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -334,6 +328,7 @@ jsPsych.init({
   fullscreen_mode: true,
   show_progress_bar: false,
   on_finish: function () {
-    saveData('/Common/write_data.php', filename, { stim: 'stroop' });
+    // saveDataJSON('/Common/write_data.php', filename, { stim: 'stroop' });
+    jsPsych.data.get().filter({ stim: 'stroop' }).localSave('json', 'local_save_stroop.json');
   },
 });
