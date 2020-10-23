@@ -329,6 +329,6 @@ jsPsych.init({
   show_progress_bar: false,
   on_finish: function () {
     // saveDataJSON('/Common/write_data.php', filename, { stim: 'stroop' });
-    jsPsych.data.get().filter({ stim: 'stroop' }).localSave('json', 'local_save_stroop.json');
+    jsPsych.data.get().filter({ stim: 'stroop' }).localSave('json', filename + '.json');
   },
 });
