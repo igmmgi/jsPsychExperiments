@@ -56,10 +56,11 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrls: 40, // number of trials in each block
-  nBlks: 24,
+  nBlks: 20,
   fixDur: 500,
   fbDur: [1000, 2500, 2500],
   iti: 500,
+  tooSlowPractice: 1500,
   tooSlow: 1000,
   fbTxtGo: ['Richtig', 'Falsch: Falsche Taste gedrückt!', 'Zu langsam: Reagiere wenn der Buchstabe grün ist!'],
   fbTxtNoGo: ['Richtig', 'Falsch: Reagiere nicht wenn der Buchstabe rot ist!'],
@@ -69,7 +70,7 @@ const prms = {
   fixSize: 10,
   stimSize: '40px monospace',
   fbSize: '24px monospace',
-  simonEccentricity: 100,
+  simonEccentricity: 150,
   colours: ['green', 'red'], // go/nogo colours (although fixed within instruction text)
   respKeys: [],
 };
@@ -80,13 +81,13 @@ let respText;
 if (nVersion % 2 == 1) {
   prms.respKeys = ['Q', 'P', 27];
   respText =
-    "<h3 style='text-align:center;'><b>H = Taste 'Q'</b> (linker Zeigefinger)</h3>" +
-    "<h3 style='text-align:center;'><b>S = Taste 'P'</b> (rechter Zeigefinger)</h3><br>";
+    "<h3 style='text-align:center;'><b>H = linker Zeigefinger (Taste 'Q')</b></h3>" +
+    "<h3 style='text-align:center;'><b>S = rechter Zeigefinger (Taste 'P')</b></h3><br>";
 } else {
   prms.respKeys = ['P', 'Q', 27];
   respText =
-    "<h3 style='text-align:center;'><b>S = Taste 'Q'</b> (linker Zeigefinger)</h3>" +
-    "<h3 style='text-align:center;'><b>H = Taste 'P'</b> (rechter Zeigefinger)</h3><br>";
+    "<h3 style='text-align:center;'><b>S = linker Zeigefinger (Taste 'Q')</b></h3>" +
+    "<h3 style='text-align:center;'><b>H = rechter Zeigefinger (Taste 'P')</b></h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -131,7 +132,7 @@ const task_instructions3 = {
     "<h3 style='text-align: left;'>Der Ziel-Buchstabe H oder S erscheint manchmal in grün und manchmal in</h3>" +
     "<h3 style='text-align: left;'>roter Farbe. Reagiere nur so schnell und so genau wie möglich wenn der </h3>" +
     "<h3 style='text-align: left;'>Buchstabe grün ist! Somit sollst du keine Taste drücken, wenn der Buchstabe </h3>" +
-    "<h3 style='text-align: left;'>in rot erscheint. Es folgen insgesamt 24 Blöcke.</h3><br>" +
+    "<h3 style='text-align: left;'>in rot erscheint. Es folgen insgesamt 20 Blöcke.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -316,61 +317,67 @@ const block_feedback = {
 };
 
 const flanker_stimulus = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: cc,
-  canvas_size: cs,
-  canvas_border: cb,
-  translate_origin: true,
-  response_ends_trial: true,
-  choices: prms.respKeys,
-  trial_duration: prms.tooSlow,
-  func: drawFlanker,
-  func_args: [{ stimulus: jsPsych.timelineVariable('stimulus'), colour: jsPsych.timelineVariable('colour') }],
-  data: {
-    stim: 'flanker_simon',
-    task: jsPsych.timelineVariable('task'),
-    flanker_simon: jsPsych.timelineVariable('stimulus'),
-    type: jsPsych.timelineVariable('type'),
-    comp: jsPsych.timelineVariable('comp'),
-    position: jsPsych.timelineVariable('position'),
-    colour: jsPsych.timelineVariable('colour'),
-    corrResp: jsPsych.timelineVariable('corrResp'),
-  },
-  on_finish: function () {
-    codeTrial();
-  },
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    translate_origin: true,
+    response_ends_trial: true,
+    choices: prms.respKeys,
+    trial_duration: prms.tooSlow,
+    func: drawFlanker,
+    func_args: [{ stimulus: jsPsych.timelineVariable('stimulus'), colour: jsPsych.timelineVariable('colour') }],
+    data: {
+        stim: 'flanker_simon',
+        task: jsPsych.timelineVariable('task'),
+        flanker_simon: jsPsych.timelineVariable('stimulus'),
+        type: jsPsych.timelineVariable('type'),
+        comp: jsPsych.timelineVariable('comp'),
+        position: jsPsych.timelineVariable('position'),
+        colour: jsPsych.timelineVariable('colour'),
+        corrResp: jsPsych.timelineVariable('corrResp'),
+    },
+    on_start: function(trial) {
+        trial.trial_duration = [1,2,11,12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
+    },
+    on_finish: function () {
+        codeTrial();
+    },
 };
 
 const simon_stimulus = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: cc,
-  canvas_size: cs,
-  canvas_border: cb,
-  translate_origin: true,
-  response_ends_trial: true,
-  choices: prms.respKeys,
-  trial_duration: prms.tooSlow,
-  func: drawSimon,
-  func_args: [
-    {
-      stimulus: jsPsych.timelineVariable('stimulus'),
-      position: jsPsych.timelineVariable('position'),
-      colour: jsPsych.timelineVariable('colour'),
+    type: 'static-canvas-keyboard-response',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    translate_origin: true,
+    response_ends_trial: true,
+    choices: prms.respKeys,
+    trial_duration: prms.tooSlow,
+    func: drawSimon,
+    func_args: [
+        {
+            stimulus: jsPsych.timelineVariable('stimulus'),
+            position: jsPsych.timelineVariable('position'),
+            colour: jsPsych.timelineVariable('colour'),
+        },
+    ],
+    data: {
+        stim: 'flanker_simon',
+        task: jsPsych.timelineVariable('task'),
+        flanker_simon: jsPsych.timelineVariable('stimulus'),
+        type: jsPsych.timelineVariable('type'),
+        comp: jsPsych.timelineVariable('comp'),
+        position: jsPsych.timelineVariable('position'),
+        colour: jsPsych.timelineVariable('colour'),
+        corrResp: jsPsych.timelineVariable('corrResp'),
     },
-  ],
-  data: {
-    stim: 'flanker_simon',
-    task: jsPsych.timelineVariable('task'),
-    flanker_simon: jsPsych.timelineVariable('stimulus'),
-    type: jsPsych.timelineVariable('type'),
-    comp: jsPsych.timelineVariable('comp'),
-    position: jsPsych.timelineVariable('position'),
-    colour: jsPsych.timelineVariable('colour'),
-    corrResp: jsPsych.timelineVariable('corrResp'),
-  },
-  on_finish: function () {
-    codeTrial();
-  },
+    on_start: function(trial) {
+        trial.trial_duration = [1,2,11,12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
+    },
+    on_finish: function () {
+        codeTrial();
+    },
 };
 
 function generate_flanker_combinations(nGo, nNoGo) {
@@ -575,17 +582,18 @@ const trial_timeline_simon_high_nogo = {
 const randomString = generateRandomString(16);
 
 const alphaNum = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: cc,
-  canvas_size: cs,
-  canvas_border: cb,
-  response_ends_trial: true,
-  choices: [32],
-  stimulus:
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: cc,
+    canvas_size: cs,
+    canvas_border: cb,
+    response_ends_trial: true,
+    choices: [32],
+    stimulus:
     "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
     "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
-    "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-    '<h2>xxx@xxx</h2>' +
+    "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer</h3><br>" +
+    "<h3 style='text-align:left;'>und deiner Universität (Bremen/Tübingen) per Email an:</h3><br>" +
+    '<h2>hiwipibio@gmail.com</h2>' +
     '<h1>Code: ' +
     randomString +
     '</h1><br>' +

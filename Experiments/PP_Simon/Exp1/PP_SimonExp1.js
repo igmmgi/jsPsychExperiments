@@ -26,13 +26,13 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsBase: 80, // number of trials in Simon baseline blocks
-    nBlksBase: 4,  // number of blocks of Simon baseline 
-    nTrlsPP: 80,   // number of trials in subsequent blocks
-    nBlksPP: 8,
-    nBlks: 12,
+    nTrlsBase: 40,  // number of trials in Simon baseline blocks
+    nBlksBase: 7,   // number of blocks of Simon baseline 
+    nTrlsPP: 40,    // number of trials in subsequent blocks
+    nBlksPP: 14,
+    nBlks: 21,
     fixDur: 500,
-    fbDur: [1000, 2500, 2500],
+    fbDur: [1000, 3000, 3000],
     iti: 500,
     tooFast: 100,
     tooSlow: 2000,
@@ -42,7 +42,7 @@ const prms = {
     fixWidth: 2,
     fixSize: 10,
     stimSize: '40px monospace',
-    fbSize: '30px monospace',
+    fbSize: '24px monospace',
     simonEccentricity: 150,
     respKeys: ["Q", "P", 27],
 };
@@ -51,11 +51,11 @@ const nVersion = getVersionNumber(nFiles, 2);
 jsPsych.data.addProperties({ version: nVersion });
 
 // response keys for baseline simon
-let respText_base = "<h3 style='text-align:center;'><b>" + prms.respLetters[0] + " = 'Q'</b> (linker Zeigefinger).</h3>" + 
-                    "<h3 style='text-align:center;'><b>" + prms.respLetters[1] + " = 'P'</b> (rechter Zeigefinger).</h3><br>";
+let respText_base = "<h3 style='text-align:center;'><b>" + prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')</b></h3>" + 
+                    "<h3 style='text-align:center;'><b>" + prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')</b></h3><br>";
 
-let respText_pp = "<h3 style='text-align:center;'><b>" + prms.respLetters[2] + " erscheint links = 'Q'</b> (linker Zeigefinger).</h3>" + 
-                  "<h3 style='text-align:center;'><b>" + prms.respLetters[2] + " erscheint rechts = 'P'</b> (rechter Zeigefinger).</h3><br>";
+let respText_pp = "<h3 style='text-align:center;'><b>" + prms.respLetters[2] + " erscheint links = linker Zeigefinger (Taste 'Q')</b></h3>" + 
+                  "<h3 style='text-align:center;'><b>" + prms.respLetters[2] + " erscheint rechts = rechter Zeigefinger (Taste 'P')</b></h3><br>";
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -82,8 +82,9 @@ const task_instructions_base = {
   stimulus:
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du auf verschiedene Buchstaben</h3>" +
-    "<h3 style='text-align: left;'>reagieren, die rechts oder links auf dem Bildschirm erscheinen.</h3>" +
-    "<h3 style='text-align: left;'>Ignoriere die Position des Buchstaben und reagiere immer wie folgt:</h3><br>" +
+    "<h3 style='text-align: left;'>so schnell und so genau wie möglich reagieren, die rechts</h3>" +
+    "<h3 style='text-align: left;'>oder links auf dem Bildschirm erscheinen.</h3>" +
+    "<h3 style='text-align: left;'>Reagiere immer wie folgt:</h3><br>" +
     respText_base +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren.</h2>",
 };
@@ -98,11 +99,10 @@ const task_instructions_base_reminder = {
         trial.stimulus =
             "<h2 style='text-align: center;'>Block " +
             prms.cBlk +
-            ' von 12:</h2><br>' +
+            ' von 21:</h2><br>' +
             "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
-            "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:.</h3><br>" +
+            "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3><br>" +
             respText_base +
-            "<h3 style='text-align: center;'>Bitte reagiere immer so schnell und so genau wie möglich!</h3><br>" +
             "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
     },
 };
@@ -124,14 +124,14 @@ const task_instructions_pp = {
     canvas_border: cb,
     stimulus:
     "<h2 style='text-align: center;'>ACHTUNG: NEUE INSTRUKTIONEN!!!</h2>" +
-    "<h3 style='text-align: left;'>Die erste Priorität ist auf den Buchstaben weiterhin folgt zu reagieren:</h3><br>" +
+    "<h3 style='text-align: left;'>Die erste Priorität ist auf den Buchstaben weiterhin wie folgt zu reagieren:</h3><br>" +
     respText_base +
     "<h3 style='text-align: left;'>Wenn der Buchstabe aber " + prms.respLetters[2] + " ist, dann reagiere auf die</h3>" +
     "<h3 style='text-align: left;'>Position des Buchstabens (zweite Priorität):</h3><br>" +
     respText_pp +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
-
+ 
 const task_instructions_pp_reminder = {
     type: 'html-keyboard-response-canvas',
     canvas_colour: cc,
@@ -142,14 +142,12 @@ const task_instructions_pp_reminder = {
         trial.stimulus =
             "<h2 style='text-align: center;'>Block " +
             prms.cBlk +
-            ' von 12:</h2><br>' +
-            "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
-            "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3>" +
+            ' von 21:</h2><br>' +
+            "<h3 style='text-align: left;'>Erst Priorität ist Typ Buchstabe:</h3>" +
             respText_base +
             "<h3 style='text-align: left;'>Wenn der Buchstabe aber " + prms.respLetters[2] + " ist, dann reagiere auf die</h3>" +
-            "<h3 style='text-align: left;'>Position des Buchstabens (zweite Priorität):</h3>" +
+            "<h3 style='text-align: left;'>Position des Buchstabens:</h3>" +
             respText_pp + 
-            "<h3 style='text-align: center;'>Bitte reagiere immer so schnell und so genau wie möglich!</h3>" +
             "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
     },
 };
@@ -195,14 +193,12 @@ function drawFeedback() {
                 ctx.fillText("Richtig", 0, 0);
                 break;
             case 2: // Falsch
-                ctx.fillText("Falsch! Zu Errinnerung:", 0, -75);
-                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, 25);
-                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 75);
+                ctx.fillText("Falsch!", 0, -50);
+                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, 0);
+                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 50);
                 break;
             case 3: // Too Slow
-                ctx.fillText("Zu langsam! Zu Errinnerung:", 0, -75);
-                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, 25);
-                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 75);
+                ctx.fillText("Zu langsam!", 0, 0);
                 break;
         }
     } else {
@@ -211,24 +207,20 @@ function drawFeedback() {
                 ctx.fillText("Richtig", 0, 0);
                 break;
             case 2: // Falsch
-                ctx.fillText("Falsch! Zu Erinnerung:", 0, -200);
-                ctx.fillText("Erse Priorität (Typ Buchstabe):", 0, -100);
-                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, -50);
-                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 0);
-                ctx.fillText("Wenn der Buchstabe " + prms.respLetters[2] + " ist, reagiere auf die", 0, 100);
-                ctx.fillText("Position des Buchstaben (zweite Priorität):", 0, 150);
-                ctx.fillText("Links = linker Zeigefinger (Taste 'Q')", 0, 200);
-                ctx.fillText("Rechts = rechter Zeigefinger (Taste 'P'", 0, 250);
+                if (dat.task === "T1") {
+                    ctx.fillText("Falsch!", 0, -75);
+                    ctx.fillText("Erste Priorität ist Typ Buchstabe:", 0, -25);
+                    ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, 25);
+                    ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 75);
+                } else if (dat.task === "T2") {
+                    ctx.fillText("Falsch!", 0, -75);
+                    ctx.fillText("Wenn der Buchstabe " + prms.respLetters[2] + " ist, reagiere auf die Position:", 0, -25);
+                    ctx.fillText("Links = linker Zeigefinger (Taste 'Q')", 0, 25);
+                    ctx.fillText("Rechts = rechter Zeigefinger (Taste 'P')", 0, 75);
+                }
                 break;
             case 3: // Too Slow
-                ctx.fillText("Zu langsam! Zu Erinnerung:", 0, -200);
-                ctx.fillText("Erse Priorität (Typ Buchstabe):", 0, -100);
-                ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, -50);
-                ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 0);
-                ctx.fillText("Wenn der Buchstabe " + prms.respLetters[2] + " ist, reagiere auf die", 0, 100);
-                ctx.fillText("Position des Buchstaben (zweite Priorität):", 0, 150);
-                ctx.fillText("Links = linker Zeigefinger (Taste 'Q')", 0, 200);
-                ctx.fillText("Rechts = rechter Zeigefinger (Taste 'P'", 0, 250);
+                ctx.fillText("Zu langsam!", 0, 0);
                 break;
         }
     }
@@ -245,10 +237,10 @@ function drawSimon(args) {
     ctx.fillStyle = "black";
     switch (args.position) {
         case 'left':
-            ctx.fillText(args.stimulus, -prms.simonEccentricity, 0);
+            ctx.fillText(args.letter, -prms.simonEccentricity, 0);
             break;
         case 'right':
-            ctx.fillText(args.stimulus, prms.simonEccentricity, 0);
+            ctx.fillText(args.letter, prms.simonEccentricity, 0);
             break;
     }
 }
@@ -269,7 +261,7 @@ function codeTrial() {
         corrCode = 3; // too slow
     }
   
-    // block type: always 4 Simon base blocks first
+    // block type: always 7 Simon base blocks first
     let blk_type;
     if (prms.cBlk <= prms.nBlksBase) {
         blk_type = "simon_base";
@@ -346,11 +338,12 @@ const simon_stimulus = {
     trial_duration: prms.tooSlow,
     func: drawSimon,
     func_args: [ 
-        { stimulus: jsPsych.timelineVariable('stimulus'), position: jsPsych.timelineVariable('position') },
+        { letter: jsPsych.timelineVariable('letter'), position: jsPsych.timelineVariable('position') },
     ],
     data: {
         stim: 'pp_simon',
-        simon: jsPsych.timelineVariable('stimulus'),
+        letter: jsPsych.timelineVariable('letter'),
+        task: jsPsych.timelineVariable('task'),
         comp: jsPsych.timelineVariable('comp'),
         position: jsPsych.timelineVariable('position'),
         corrResp: jsPsych.timelineVariable('corrResp'),
@@ -361,10 +354,10 @@ const simon_stimulus = {
 };
 
 const simon_t1 = [
-    { stimulus: prms.respLetters[0], position: 'left',  comp: 'comp',   corrResp: prms.respKeys[0]},
-    { stimulus: prms.respLetters[1], position: 'right', comp: 'comp',   corrResp: prms.respKeys[1]},
-    { stimulus: prms.respLetters[0], position: 'right', comp: 'incomp', corrResp: prms.respKeys[0]},
-    { stimulus: prms.respLetters[1], position: 'left',  comp: 'incomp', corrResp: prms.respKeys[1]} 
+    { letter: prms.respLetters[0], task: "T1", position: 'left',  comp: 'comp',   corrResp: prms.respKeys[0]},
+    { letter: prms.respLetters[1], task: "T1", position: 'right', comp: 'comp',   corrResp: prms.respKeys[1]},
+    { letter: prms.respLetters[0], task: "T1", position: 'right', comp: 'incomp', corrResp: prms.respKeys[0]},
+    { letter: prms.respLetters[1], task: "T1", position: 'left',  comp: 'incomp', corrResp: prms.respKeys[1]} 
 ];
 
 const trial_timeline_simon_base = {
@@ -373,18 +366,18 @@ const trial_timeline_simon_base = {
 };
 
 const simon_t2 = [
-    { stimulus: prms.respLetters[2], position: 'left',  comp: 'comp', corrResp: prms.respKeys[0]},
-    { stimulus: prms.respLetters[2], position: 'right', comp: 'comp', corrResp: prms.respKeys[1]},
+    { letter: prms.respLetters[2], task: "T2", position: 'left',  comp: 'comp', corrResp: prms.respKeys[0]},
+    { letter: prms.respLetters[2], task: "T2", position: 'right', comp: 'comp', corrResp: prms.respKeys[1]},
 ];
 
 const trial_timeline_simon_low = {
     timeline: [fixation_cross, simon_stimulus, trial_feedback],
-    timeline_variables: repeatArray(simon_t1, 9).concat(repeatArray(simon_t2, 2))  // 90% vs 10%
+    timeline_variables: simon_t1.concat(simon_t2)  
 };
 
 const trial_timeline_simon_high = {
     timeline: [fixation_cross, simon_stimulus, trial_feedback],
-    timeline_variables: repeatArray(simon_t1, 5).concat(repeatArray(simon_t2, 5))  // 50% vs. 50%
+    timeline_variables: simon_t1.concat(simon_t2)  
 };
 
 const randomString = generateRandomString(16);
@@ -399,8 +392,9 @@ const alphaNum = {
     stimulus:
     "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
     "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
-    "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-    '<h2>xxx@xxx</h2>' +
+    "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer</h3><br>" +
+    "<h3 style='text-align:left;'>und deiner Universität (Bremen/Tübingen) per Email an:</h3><br>" +
+    '<h2>hiwipibio@gmail.com</h2>' +
     '<h1>Code: ' +
     randomString +
     '</h1><br>' +
@@ -433,7 +427,6 @@ function genExpSeq() {
         exp.push(block_feedback);            // show previous block performance
         exp.push(task_instructions_pause);
     }
-
     
     // PP Simon block    
     exp.push(task_instructions_pp);
@@ -483,3 +476,4 @@ jsPsych.init({
         saveRandomCode('/Common/write_code.php', code_filename, randomString);
     },
 });
+
