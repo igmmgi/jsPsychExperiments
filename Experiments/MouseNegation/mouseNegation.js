@@ -1,5 +1,4 @@
-// Negation task using the phrases "now left"/"not left" and mouse tracking
-// responses.
+// Negation task using the phrases "now left"/"not left" and mouse tracking responses.
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -19,24 +18,14 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nBlks: 1,
-  fixDur: 1000,
-  fbDur: 1000,
-  waitDur: 1000,
-  iti: 1000,
-  fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
-  cTrl: 1, // count trials
-  cBlk: 1, // count blocks
+    nBlks: 1,
+    fbDur: 1000,
+    waitDur: 1000,
+    iti: 1000,
+    fbTxt: ['Richtig', 'Falsch'],
+    cTrl: 1, // count trials
+    cBlk: 1, // count blocks
 };
-
-const words_aff = ["now left", "now right"]
-const words_neg = ["not left", "not right"]
-
-const words = words_upper_de.concat(words_lower_de);
-
-const resp_mapping_location = ['top', 'top', 'bottom', 'bottom'];
-const resp_mapping_color = shuffle(['red', 'blue', 'green', 'orange']);
-const colours = ['red', 'blue', 'green', 'orange'];
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -49,43 +38,20 @@ const task_instructions = {
     post_trial_gap: prms.waitDur,
 };
 
-function drawFixation() {
-  'use strict';
-  let ctx = document.getElementById('canvas').getContext('2d');
-  ctx.lineWidth = 5;
-  ctx.moveTo(-25, 0);
-  ctx.lineTo(25, 0);
-  ctx.stroke();
-  ctx.moveTo(0, -25);
-  ctx.lineTo(0, 25);
-  ctx.stroke();
-}
-
 function drawFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
-  ctx.font = '80px Arial';
+  ctx.font = '50px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
   ctx.fillText(prms.fbTxt[dat.corrCode], dat.end_x, dat.end_y);
 }
 
-const fixation_cross = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  trial_duration: 500,
-  translate_origin: true,
-  func: drawFixation,
-};
-
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  console.log(dat);
   let corrCode = 0;
   if (dat.resp_loc !== dat.end_loc) {
     corrCode = 1; // choice error
@@ -98,28 +64,31 @@ function codeTrial() {
 }
 
 const trial_stimulus = {
-  type: 'mouse-drag-response',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  word: jsPsych.timelineVariable('word'),
-  colour: jsPsych.timelineVariable('colour'),
-  scale_factor: null,
-  data: {
-    stim: 'stroop',
+    type: 'mouse-response',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    colour: 'black',
     word: jsPsych.timelineVariable('word'),
-    colour: jsPsych.timelineVariable('colour'),
-    word_loc: jsPsych.timelineVariable('word_loc'),
-    resp_loc: jsPsych.timelineVariable('resp_loc'),
-  },
-  on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.scale_factor = dat.scale_factor;
-  },
-  on_finish: function () {
-    codeTrial();
-  },
+    scale_factor: null,
+    data: {
+        stim: 'mouse_negation',
+        word: jsPsych.timelineVariable('word'),
+        resp_loc: jsPsych.timelineVariable('resp_loc'),
+    },
+    on_start: function (trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.scale_factor = dat.scale_factor;
+    },
+    on_finish: function () {
+        codeTrial();
+    },
 };
+
+stimuli = [ { word: 'jetzt links',  aff_neg: 'aff', resp_loc: 'left' },
+            { word: 'jetzt rechts', aff_neg: 'aff', resp_loc: 'right' },
+            { word: 'nicht rechts', aff_neg: 'neg', resp_loc: 'left' },
+            { word: 'nicht links',  aff_neg: 'neg', resp_loc: 'right' } ];
 
 const trial_feedback = {
   type: 'static-canvas-keyboard-response',
@@ -132,28 +101,29 @@ const trial_feedback = {
 };
 
 function blockFeedbackTxt(filter_options) {
-  'use strict';
-  let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
-  let nTotal = dat.count();
-  let nError = dat.select('corrCode').values.filter(function (x) {
-    return x !== 0;
-  }).length;
-  dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 1 });
-  let blockFbTxt =
-    '<H1>Block: ' +
-    prms.cBlk +
-    ' of ' +
-    prms.nBlks +
-    '</H1>' +
-    '<H1>Mean RT: ' +
-    Math.round(dat.select('end_rt').mean()) +
-    ' ms </H1>' +
-    '<H1>Error Rate: ' +
-    Math.round((nError / nTotal) * 100) +
-    ' %</H1>' +
-    '<H2>Press any key to continue the experiment!</H2>';
-  prms.cBlk += 1;
-  return blockFbTxt;
+    'use strict';
+    let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
+    console.log(dat)
+    let nTotal = dat.count();
+    let nError = dat.select('corrCode').values.filter(function (x) {
+        return x !== 0;
+    }).length;
+    dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 0 });
+    let blockFbTxt =
+        '<H1>Block: ' +
+        prms.cBlk +
+        ' of ' +
+        prms.nBlks +
+        '</H1>' +
+        '<H1>Mean RT: ' +
+        Math.round(dat.select('end_rt').mean()) +
+        ' ms </H1>' +
+        '<H1>Error Rate: ' +
+        Math.round((nError / nTotal) * 100) +
+        ' %</H1>' +
+        '<H2>Press any key to continue the experiment!</H2>';
+    prms.cBlk += 1;
+    return blockFbTxt;
 }
 
 const iti = {
@@ -172,12 +142,12 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'stroop' });
+    trial.stimulus = blockFeedbackTxt({ stim: 'mouse_negation' });
   },
 };
 
 const trial_timeline = {
-  timeline: [fixation_cross, trial_stimulus, trial_feedback, iti],
+  timeline: [trial_stimulus, trial_feedback, iti],
   randomize_order: true,
   repetitions: 1,
 };
@@ -190,19 +160,19 @@ function genExpSeq() {
 
   let exp = [];
   exp.push(fullscreen_on);
-  exp.push(welcome_en);
-  exp.push(resize_en);
+  exp.push(welcome_de);
+  exp.push(resize_de);
 
   // exp.push(vpInfoForm_en);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.timeline_variables = create_timeline(blk);
-    exp.push(blk_timeline); // trials within a block
+    blk_timeline.timeline_variables = stimuli;
+    exp.push(blk_timeline);   // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_en);
+  exp.push(debrief_de);
   exp.push(fullscreen_off);
 
   return exp;
@@ -216,6 +186,7 @@ jsPsych.init({
   show_progress_bar: false,
   on_finish: function () {
     // saveDataJSON('/Common/write_data.php', filename, { stim: 'stroop' });
-    jsPsych.data.get().filter({ stim: 'stroop' }).localSave('json', filename + '.json');
+    jsPsych.data.get().filter({ stim: 'mouse_negation' }).localSave('json', filename + '.json');
   },
 });
+
