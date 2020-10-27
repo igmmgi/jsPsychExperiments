@@ -372,12 +372,12 @@ const simon_t2 = [
 
 const trial_timeline_simon_low = {
     timeline: [fixation_cross, simon_stimulus, trial_feedback],
-    timeline_variables: simon_t1.concat(simon_t2)  
+    timeline_variables: repeatArray(simon_t1, 9).concat(repeatArray(simon_t2, 2))  // 90% vs. 10%
 };
 
 const trial_timeline_simon_high = {
     timeline: [fixation_cross, simon_stimulus, trial_feedback],
-    timeline_variables: simon_t1.concat(simon_t2)  
+    timeline_variables: repeatArray(simon_t1, 5).concat(repeatArray(simon_t2, 10)) // 50% vs. 50%
 };
 
 const randomString = generateRandomString(16);

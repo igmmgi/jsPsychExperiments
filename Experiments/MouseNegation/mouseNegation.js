@@ -18,7 +18,9 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nBlks: 1,
+    nTrlsP: 4, // number of trials in first block (practice)
+    nTrlsE: 8, // number of trials in subsequent blocks
+    nBlks: 2,
     fbDur: 1000,
     waitDur: 1000,
     iti: 1000,
@@ -33,8 +35,16 @@ const prms = {
 const task_instructions = {
     type: 'html-keyboard-response',
     stimulus:
-    "<H1 style='text-align: center;'>Welcome:</H1><br>" +
-    "<H2 style='text-align: center;'>Respond to the meaning of the word!</H2><br>",
+    "<H2 style='text-align: left;'>Liebe/r Teilnehmer/in</H1><br>" +
+    "<H3 style='text-align: left;'>im Experiment werden Sie in jedem Durchgang 3 Quadrate sehen. Zu Beginn</H3>" +
+    "<H3 style='text-align: left;'>des Durchgangs bewegen Sie die Maus in das Quadrat am unteren Bildschirmrand</H3>" +
+    "<H3 style='text-align: left;'>am unteren  und klicken in das Quadrat. Dann erscheint eine der folgenden Aussagen:</H3><br>" + 
+    "<H3 style='text-align: center;'>'jetzt links', 'jetzt rechts', 'nicht links', oder 'nicht rechts'</H3><br>" +
+    "<H3 style='text-align: left;'>Bitte halten Sie die Maustaste gedrückt und bewegen Sie die Maus in das obere</H3>" + 
+    "<H3 style='text-align: left;'>Quadrat, also das LINKE QUADRAT bei 'jetzt links' und 'nicht rechts', und das</H3>" +
+    "<H3 style='text-align: left;'>RECHTE QUADRAT bei 'jetzt rechts' und 'nicht links'. Es gibt im folgenden 16 </H3>" +
+    "<H3 style='text-align: left;'>Übungsdurchgänge Danach beginnt das richtige Experiment.</H3><br>"+ 
+    "<h3 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h3>",
     post_trial_gap: prms.waitDur,
 };
 
@@ -121,7 +131,7 @@ function blockFeedbackTxt(filter_options) {
         '<H1>Error Rate: ' +
         Math.round((nError / nTotal) * 100) +
         ' %</H1>' +
-        '<H2>Press any key to continue the experiment!</H2>';
+        '<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>';
     prms.cBlk += 1;
     return blockFbTxt;
 }
@@ -147,9 +157,9 @@ const block_feedback = {
 };
 
 const trial_timeline = {
-  timeline: [trial_stimulus, trial_feedback, iti],
-  randomize_order: true,
-  repetitions: 1,
+    timeline: [trial_stimulus, trial_feedback, iti],
+    randomize_order: true,
+    timeline_variables: stimuli
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -163,14 +173,17 @@ function genExpSeq() {
   exp.push(welcome_de);
   exp.push(resize_de);
 
-  // exp.push(vpInfoForm_en);
+  // exp.push(vpInfoForm_de);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline };
-    blk_timeline.timeline_variables = stimuli;
-    exp.push(blk_timeline);   // trials within a block
-    exp.push(block_feedback); // show previous block performance
+      let blk_timeline = { ...trial_timeline };
+      blk_timeline.sample = {
+          type: 'fixed-repetitions',
+          size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
+      }
+      exp.push(blk_timeline);   // trials within a block
+      exp.push(block_feedback); // show previous block performance
   }
   exp.push(debrief_de);
   exp.push(fullscreen_off);
@@ -179,14 +192,15 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 const filename = dirName + 'data/' + expName + '_' + genVpNum();
+const filename_local = expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
   fullscreen_mode: true,
   show_progress_bar: false,
   on_finish: function () {
-    // saveDataJSON('/Common/write_data.php', filename, { stim: 'stroop' });
-    jsPsych.data.get().filter({ stim: 'mouse_negation' }).localSave('json', filename + '.json');
+    // saveData('/Common/write_data_json.php', filename, { stim: 'mouse_negation' }, filetype = "json");
+    saveDataLocal(filename_local, { stim: 'mouse_negation' }, filetype = "json");
   },
 });
 

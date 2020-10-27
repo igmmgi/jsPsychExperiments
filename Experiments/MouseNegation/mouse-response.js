@@ -148,15 +148,15 @@ jsPsych.plugins['mouse-response'] = (function () {
             // gather the data to store for the trial
             let trial_data = {
                 start_rt: start_rt,
-                start_x: x_coords[0],
-                start_y: y_coords[0],
+                start_x: Math.round(x_coords[0]),
+                start_y: Math.round(y_coords[0]),
                 end_rt: end_rt,
-                end_x: end_X,
-                end_y: end_Y,
+                end_x: Math.round(x_coords[x_coords.length - 1]),
+                end_y: Math.round(y_coords[y_coords.length - 1]),
                 end_loc: end_loc,
                 n_presses: n_presses,
-                x_coords: x_coords,
-                y_coords: y_coords,
+                x_coords: roundArray(x_coords),
+                y_coords: roundArray(y_coords),
                 time: time,
             };
 
@@ -214,12 +214,8 @@ jsPsych.plugins['mouse-response'] = (function () {
             // response movement finished
             if (mouseDown) {
                 if (in_box(X, Y, left_responsebox)){
-                    end_X = X;
-                    end_Y = Y;
                     end_trial();
                 } else if (mouseDown && in_box(X, Y, right_responsebox)) {
-                    end_X = X;
-                    end_Y = Y;
                     end_trial();
                 }
             }
@@ -277,7 +273,7 @@ jsPsych.plugins['mouse-response'] = (function () {
                 end_trial();
             }, trial.trial_duration);
         }
-    }
+    };
 
     return plugin;
 })();

@@ -338,7 +338,7 @@ const flanker_stimulus = {
         corrResp: jsPsych.timelineVariable('corrResp'),
     },
     on_start: function(trial) {
-        trial.trial_duration = [1,2,11,12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
+        trial.trial_duration = [1, 2, 11, 12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
     },
     on_finish: function () {
         codeTrial();
@@ -373,7 +373,7 @@ const simon_stimulus = {
         corrResp: jsPsych.timelineVariable('corrResp'),
     },
     on_start: function(trial) {
-        trial.trial_duration = [1,2,11,12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
+        trial.trial_duration = [1, 2, 11, 12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
     },
     on_finish: function () {
         codeTrial();
@@ -467,7 +467,7 @@ function generate_flanker_combinations(nGo, nNoGo) {
   return flanker_go.concat(flanker_nogo);
 }
 
-const flanker_combinations_low_nogo = generate_flanker_combinations(8, 2); // 10% NoGo
+const flanker_combinations_low_nogo = generate_flanker_combinations(9, 1);  // 10% NoGo
 const flanker_combinations_high_nogo = generate_flanker_combinations(5, 5); // 50% NoGo
 
 const trial_timeline_flanker_low_nogo = {

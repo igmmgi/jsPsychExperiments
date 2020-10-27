@@ -254,30 +254,33 @@ function blockFeedbackTxt_de_du(filter_options) {
 }
 
 function saveData(
-  url,
-  filename,
-  rows = {},
-  colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
+    url,
+    filename,
+    rows = {},
+    filetype = "csv",
+    colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
 ) {
-  let dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).csv();
-  let xhr = new XMLHttpRequest();
-  xhr.open('POST', url);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
+    let dat;
+    if (filetype === "csv") {
+        dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).csv();
+    } else if (filetype === "json") {
+        dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).json();
+    }
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
 }
 
-function saveDataJSON(
-  url,
-  filename,
-  rows = {},
-  colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
+function saveDataLocal(
+    filename,
+    rows = {},
+    filetype = "csv",
+    colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
 ) {
-  let dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).json();
-  let xhr = new XMLHttpRequest();
-  xhr.open('POST', url);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
+    jsPsych.data.get().filter(rows).ignore(colsToIgnore).localSave(filetype, filename + '.' + filetype);
 }
+
 
 function generateRandomString(length) {
   let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -337,6 +340,15 @@ function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Adapteed from: https://stackoverflow.com/questions/9671203/how-to-round-all-the-values-in-an-array-to-2-decimal-points
+function roundArray(array) {
+    let len = array.length;
+    while (len--) {
+        array[len] = Math.round(array[len]);
+    }
+    return array;
 }
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
