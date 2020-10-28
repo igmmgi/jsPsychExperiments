@@ -56,7 +56,7 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrls: 40, // number of trials in each block
-  nBlks: 20,
+  nBlks: 24,
   fixDur: 500,
   fbDur: [1000, 2500, 2500],
   iti: 500,
@@ -71,7 +71,7 @@ const prms = {
   stimSize: '40px monospace',
   fbSize: '24px monospace',
   simonEccentricity: 150,
-  colours: ['green', 'red'], // go/nogo colours (although fixed within instruction text)
+  colours: ['green', 'red'], // go/nogo colours (although fixed within instruction text!)
   respKeys: [],
 };
 
@@ -113,12 +113,9 @@ const task_instructions2 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: left;'>In diesem Experiment musst du auf verschiedene Buchstaben</h3>" +
-    "<h3 style='text-align: left;'>reagieren. Der Ziel-Buchstabe erscheint in manchen Blöcken </h3>" +
-    "<h3 style='text-align: left;'>in der Mitte des Bildschirms und in anderen Blöcken rechts oder</h3>" +
-    "<h3 style='text-align: left;'>links auf dem Bildschirm. Es gilt die folgende Zuordnung: </h3><br>" +
-    respText +
+    "<h3 style='text-align: left;'>Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen</h3>" +
+    "<h3 style='text-align: left;'>am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:</h3><br>" +
+    "<h3 style='text-align: center;'>hiwipibio@gmail.com</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -128,15 +125,30 @@ const task_instructions3 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h2 style='text-align: center;'>WICHTIG:</h2>" +
-    "<h3 style='text-align: left;'>Der Ziel-Buchstabe H oder S erscheint manchmal in grün und manchmal in</h3>" +
-    "<h3 style='text-align: left;'>roter Farbe. Reagiere nur so schnell und so genau wie möglich wenn der </h3>" +
-    "<h3 style='text-align: left;'>Buchstabe grün ist! Somit sollst du keine Taste drücken, wenn der Buchstabe </h3>" +
-    "<h3 style='text-align: left;'>in rot erscheint. Es folgen insgesamt 20 Blöcke.</h3><br>" +
+    "<h2 style='text-align: center;'>Aufgabe:</h2>" +
+    "<h3 style='text-align: left;'>In diesem Experiment musst du auf verschiedene Buchstaben</h3>" +
+    "<h3 style='text-align: left;'>reagieren. Der Ziel-Buchstabe erscheint in manchen Blöcken </h3>" +
+    "<h3 style='text-align: left;'>in der Mitte des Bildschirms und in anderen Blöcken rechts oder</h3>" +
+    "<h3 style='text-align: left;'>links auf dem Bildschirm. Es gilt die folgende Zuordnung: </h3><br>" +
+    respText +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
 const task_instructions4 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  stimulus:
+    "<h2 style='text-align: center;'>WICHTIG:</h2>" +
+    "<h3 style='text-align: left;'>Der Ziel-Buchstabe H oder S erscheint manchmal in grün und manchmal in</h3>" +
+    "<h3 style='text-align: left;'>roter Farbe. Reagiere nur so schnell und so genau wie möglich wenn der </h3>" +
+    "<h3 style='text-align: left;'>Buchstabe grün ist! Somit sollst du keine Taste drücken, wenn der Buchstabe </h3>" +
+    "<h3 style='text-align: left;'>in rot erscheint. Es folgen insgesamt 24 Blöcke.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+const task_instructions5_flanker = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: cc,
   canvas_size: cs,
@@ -148,7 +160,8 @@ const task_instructions4 = {
       prms.cBlk +
       ' von 24:</h2><br>' +
       "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere </h3>" +
-      "<h3 style='text-align: left;'>deine Hände auf die Tastatur. Es gilt:</h3><br>" +
+      "<h3 style='text-align: left;'>deine Hände auf die Tastatur.</h3>" +
+      "<h3 style='text-align: left;'>Ziel - Buchstabe erscheint in der Mitte des Bildschirms. Es gilt:</h3><br>" +
       respText +
       "<h3 style='text-align: left;'>Reagiere nur wenn der Buchstabe in grün erscheint und drücke </h3>" +
       "<h3 style='text-align: left;'>keine Taste wenn der Buchstabe in rot erscheint!</h3><br>" +
@@ -156,7 +169,28 @@ const task_instructions4 = {
   },
 };
 
-const task_instructions5 = {
+const task_instructions5_simon = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      "<h2 style='text-align: center;'>Block " +
+      prms.cBlk +
+      ' von 24:</h2><br>' +
+      "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere </h3>" +
+      "<h3 style='text-align: left;'>deine Hände auf die Tastatur.</h3>" +
+      "<h3 style='text-align: left;'>Ziel - Buchstabe erscheint rechts oder links auf dem Bildschirm. Es gilt:</h3><br>" +
+      respText +
+      "<h3 style='text-align: left;'>Reagiere nur wenn der Buchstabe in grün erscheint und drücke </h3>" +
+      "<h3 style='text-align: left;'>keine Taste wenn der Buchstabe in rot erscheint!</h3><br>" +
+      "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
+  },
+};
+
+const task_instructions6 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: cc,
   canvas_size: cs,
@@ -244,6 +278,7 @@ function drawSimon(args) {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  console.log(dat);
   let corrCode = 0;
 
   let corrKeyNum;
@@ -317,67 +352,69 @@ const block_feedback = {
 };
 
 const flanker_stimulus = {
-    type: 'static-canvas-keyboard-response',
-    canvas_colour: cc,
-    canvas_size: cs,
-    canvas_border: cb,
-    translate_origin: true,
-    response_ends_trial: true,
-    choices: prms.respKeys,
-    trial_duration: prms.tooSlow,
-    func: drawFlanker,
-    func_args: [{ stimulus: jsPsych.timelineVariable('stimulus'), colour: jsPsych.timelineVariable('colour') }],
-    data: {
-        stim: 'flanker_simon',
-        task: jsPsych.timelineVariable('task'),
-        flanker_simon: jsPsych.timelineVariable('stimulus'),
-        type: jsPsych.timelineVariable('type'),
-        comp: jsPsych.timelineVariable('comp'),
-        position: jsPsych.timelineVariable('position'),
-        colour: jsPsych.timelineVariable('colour'),
-        corrResp: jsPsych.timelineVariable('corrResp'),
-    },
-    on_start: function(trial) {
-        trial.trial_duration = [1, 2, 11, 12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
-    },
-    on_finish: function () {
-        codeTrial();
-    },
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  translate_origin: true,
+  response_ends_trial: true,
+  choices: prms.respKeys,
+  trial_duration: prms.tooSlow,
+  func: drawFlanker,
+  func_args: [{ stimulus: jsPsych.timelineVariable('stimulus'), colour: jsPsych.timelineVariable('colour') }],
+  data: {
+    stim: 'flanker_simon',
+    task: jsPsych.timelineVariable('task'),
+    flanker_simon: jsPsych.timelineVariable('stimulus'),
+    prob: jsPsych.timelineVariable('prob'),
+    type: jsPsych.timelineVariable('type'),
+    comp: jsPsych.timelineVariable('comp'),
+    position: jsPsych.timelineVariable('position'),
+    colour: jsPsych.timelineVariable('colour'),
+    corrResp: jsPsych.timelineVariable('corrResp'),
+  },
+  on_start: function (trial) {
+    trial.trial_duration = [1, 2, 11, 12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
+  },
+  on_finish: function () {
+    codeTrial();
+  },
 };
 
 const simon_stimulus = {
-    type: 'static-canvas-keyboard-response',
-    canvas_colour: cc,
-    canvas_size: cs,
-    canvas_border: cb,
-    translate_origin: true,
-    response_ends_trial: true,
-    choices: prms.respKeys,
-    trial_duration: prms.tooSlow,
-    func: drawSimon,
-    func_args: [
-        {
-            stimulus: jsPsych.timelineVariable('stimulus'),
-            position: jsPsych.timelineVariable('position'),
-            colour: jsPsych.timelineVariable('colour'),
-        },
-    ],
-    data: {
-        stim: 'flanker_simon',
-        task: jsPsych.timelineVariable('task'),
-        flanker_simon: jsPsych.timelineVariable('stimulus'),
-        type: jsPsych.timelineVariable('type'),
-        comp: jsPsych.timelineVariable('comp'),
-        position: jsPsych.timelineVariable('position'),
-        colour: jsPsych.timelineVariable('colour'),
-        corrResp: jsPsych.timelineVariable('corrResp'),
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  translate_origin: true,
+  response_ends_trial: true,
+  choices: prms.respKeys,
+  trial_duration: prms.tooSlow,
+  func: drawSimon,
+  func_args: [
+    {
+      stimulus: jsPsych.timelineVariable('stimulus'),
+      position: jsPsych.timelineVariable('position'),
+      colour: jsPsych.timelineVariable('colour'),
     },
-    on_start: function(trial) {
-        trial.trial_duration = [1, 2, 11, 12].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
-    },
-    on_finish: function () {
-        codeTrial();
-    },
+  ],
+  data: {
+    stim: 'flanker_simon',
+    task: jsPsych.timelineVariable('task'),
+    flanker_simon: jsPsych.timelineVariable('stimulus'),
+    prob: jsPsych.timelineVariable('prob'),
+    type: jsPsych.timelineVariable('type'),
+    comp: jsPsych.timelineVariable('comp'),
+    position: jsPsych.timelineVariable('position'),
+    colour: jsPsych.timelineVariable('colour'),
+    corrResp: jsPsych.timelineVariable('corrResp'),
+  },
+  on_start: function (trial) {
+    trial.trial_duration = [1, 2, 13, 14].includes(prms.cBlk) ? prms.tooSlowPractice : prms.tooSlow;
+  },
+  on_finish: function () {
+    codeTrial();
+  },
 };
 
 function generate_flanker_combinations(nGo, nNoGo) {
@@ -467,7 +504,7 @@ function generate_flanker_combinations(nGo, nNoGo) {
   return flanker_go.concat(flanker_nogo);
 }
 
-const flanker_combinations_low_nogo = generate_flanker_combinations(9, 1);  // 10% NoGo
+const flanker_combinations_low_nogo = generate_flanker_combinations(9, 1); // 10% NoGo
 const flanker_combinations_high_nogo = generate_flanker_combinations(5, 5); // 50% NoGo
 
 const trial_timeline_flanker_low_nogo = {
@@ -566,7 +603,7 @@ function generate_simon_combinations(nGo, nNoGo) {
   return simon_go.concat(simon_nogo);
 }
 
-const simon_combinations_low_nogo = generate_simon_combinations(8, 2); // 10% NoGo
+const simon_combinations_low_nogo = generate_simon_combinations(9, 1); // 10% NoGo
 const simon_combinations_high_nogo = generate_simon_combinations(5, 5); // 50% NoGo
 
 const trial_timeline_simon_low_nogo = {
@@ -582,13 +619,13 @@ const trial_timeline_simon_high_nogo = {
 const randomString = generateRandomString(16);
 
 const alphaNum = {
-    type: 'html-keyboard-response-canvas',
-    canvas_colour: cc,
-    canvas_size: cs,
-    canvas_border: cb,
-    response_ends_trial: true,
-    choices: [32],
-    stimulus:
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  response_ends_trial: true,
+  choices: [32],
+  stimulus:
     "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
     "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
     "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer</h3><br>" +
@@ -617,6 +654,7 @@ function genExpSeq() {
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);
+  exp.push(task_instructions4);
 
   // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
   let blk_task = [];
@@ -635,8 +673,12 @@ function genExpSeq() {
   }
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    // show start of block screen
-    exp.push(task_instructions4);
+    // add approprite block start flanker vs. simon instructions
+    if (blk_task[blk] === 'F') {
+      exp.push(task_instructions5_flanker);
+    } else {
+      exp.push(task_instructions5_simon);
+    }
 
     // select appropriate blk_timeline
     let blk_timeline;
@@ -650,13 +692,18 @@ function genExpSeq() {
       blk_timeline = { ...trial_timeline_simon_high_nogo };
     }
 
+    // add low vs. high to block timeline variables
+    for (let i = 0; i < blk_timeline.timeline_variables.length; i++) {
+      blk_timeline.timeline_variables[i].prob = blk_prob[blk];
+    }
+
     blk_timeline.sample = {
       type: 'fixed-repetitions',
       size: 1,
     };
     exp.push(blk_timeline); // trials within a block
     if (blk < prms.nBlks) {
-      exp.push(task_instructions5); // show PAUSE
+      exp.push(task_instructions6); // show PAUSE
     }
     // exp.push(block_feedback); // show previous block performance
   }
