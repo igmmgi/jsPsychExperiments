@@ -278,7 +278,6 @@ function drawSimon(args) {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  console.log(dat);
   let corrCode = 0;
 
   let corrKeyNum;
@@ -732,3 +731,4 @@ jsPsych.init({
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
 });
+

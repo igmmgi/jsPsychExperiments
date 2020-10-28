@@ -10,8 +10,8 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 8, // number of trials in first block (practice)
-  nTrlsE: 8, // number of trials in subsequent blocks
+  nTrlsP: 4, // number of trials in first block (practice)
+  nTrlsE: 4, // number of trials in subsequent blocks
   nBlks: 2,
   fixDur: 750,
   fbDur: 750,
