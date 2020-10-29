@@ -146,13 +146,17 @@ const iti = {
 };
 
 const block_feedback = {
-  type: 'html-keyboard-response',
-  stimulus: '',
-  response_ends_trial: true,
-  post_trial_gap: prms.waitDur,
-  on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'mouse_negation' });
-  },
+    type: 'html-keyboard-response',
+    stimulus: '',
+    response_ends_trial: true,
+    post_trial_gap: prms.waitDur,
+    on_start: function (trial) {
+        trial.stimulus = blockFeedbackTxt({ stim: 'mouse_negation' });
+    },
+    on_finish: function () {
+        saveData('/Common/write_data_json.php', filename, { stim: 'mouse_negation' }, "json");
+    },
+    timeing_post_trial: 200
 };
 
 const trial_timeline = {
@@ -161,12 +165,39 @@ const trial_timeline = {
     timeline_variables: stimuli
 };
 
+// For VP Stunden
+const randomString = generateRandomString(16);
+
+const alphaNum = {
+  type: 'html-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  response_ends_trial: true,
+  choices: [32],
+  stimulus:
+    "<h3 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h3><br>" +
+    "<h3 style='text-align:left;'>Versuchpersonenstunde:</h3>" +
+    "<h4 style='text-align:left;'>Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und</h4>" +
+    "<h4 style='text-align:left;'>senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an: </h4>" +
+    '<h2>sprachstudien@psycho.uni-tuebingen.de</h2><br>' +
+    "<h3 style='text-align:left;'>Gewinnspiel:</h3>" +
+    "<h4 style='text-align:left;'>Wenn Sie alternativ an der Verlosung der Gutscheine teilnehmen möchten, kopieren Sie den zufällig generierten</h4>" +
+    "<h4 style='text-align:left;'>Code und senden sie diesen in einer E-Mail mit Betreff 'Gewinnspiel' an:</h4>" +
+    '<h2>sprachstudien@psycho.uni-tuebingen.de</h2><br>' +
+    '<h1>Code: ' +
+    randomString +
+    '</h1><br>' +
+    "<h2 style='text-align:center;'>Drücken Sie die Leertaste, um fortzufahren!</h2>",
+};
+
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
   'use strict';
-
+  
   let exp = [];
   exp.push(fullscreen_on);
   exp.push(welcome_de);
@@ -184,6 +215,7 @@ function genExpSeq() {
       exp.push(block_feedback); // show previous block performance
   }
   exp.push(debrief_de);
+  exp.push(alphaNum);
   exp.push(fullscreen_off);
 
   return exp;
@@ -197,8 +229,8 @@ jsPsych.init({
   fullscreen_mode: true,
   show_progress_bar: false,
   on_finish: function () {
-    saveData('/Common/write_data_json.php', filename, { stim: 'mouse_negation' }, filetype = "json");
-    // saveDataLocal(filename_local, { stim: 'mouse_negation' }, filetype = "json");
+    saveData('/Common/write_data_json.php', filename, { stim: 'mouse_negation' }, "json");
+    // saveDataLocal(filename_local, { stim: 'mouse_negation' }, "json");
   },
 });
 
