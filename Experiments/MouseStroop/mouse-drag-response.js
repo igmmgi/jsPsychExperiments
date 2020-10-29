@@ -109,10 +109,9 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     let startY;
     let movement_initiated = false;
     let start_rt;
-    let start_loc;
     let end_rt;
     let end_loc;
-    let npresses = 0;
+    let n_presses = 0;
 
     let x_coords = [];
     let y_coords = [];
@@ -146,14 +145,15 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
       // gather the data to store for the trial
       let trial_data = {
         start_rt: start_rt,
-        start_loc: start_loc,
+        start_x: Math.round(x_coords[0]),
+        start_y: Math.round(y_coords[0]),
         end_rt: end_rt,
+        end_x: Math.round(x_coords[x_coords.length - 1]),
+        end_y: Math.round(y_coords[y_coords.length - 1]),
         end_loc: end_loc,
-        end_x: text.x,
-        end_y: text.y,
-        nPresses: npresses,
-        x_coords: x_coords,
-        y_coords: y_coords,
+        n_presses: n_presses,
+        x_coords: roundArray(x_coords),
+        y_coords: roundArray(y_coords),
         time: time,
       };
 
@@ -175,11 +175,11 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     }
 
     function handleMouseDown(e) {
-      npresses++;
+      n_presses++;
       e.preventDefault();
-      startX = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
-      startY = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
-      if (textHittest(startX, startY)) {
+      X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
+      Y = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
+      if (textHittest(X, Y)) {
         selectedText = true;
       }
     }
@@ -190,17 +190,17 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
       }
 
       e.preventDefault();
-      let mouseX = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
-      let mouseY = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
+      let X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
+      let Y = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
 
       // store coordinates and time array
-      x_coords.push(mouseX);
-      y_coords.push(mouseY);
+      x_coords.push(X);
+      y_coords.push(Y);
       time.push(performance.now() - start_time);
 
       // set new text position
-      text.x = mouseX;
-      text.y = mouseY;
+      text.x = X;
+      text.y = Y;
 
       if (text.y < trial.response_border[0] - text.height / 2 || text.y > trial.response_border[1] + text.height / 2) {
         end_trial();
@@ -210,7 +210,6 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
       if (!movement_initiated) {
         start_rt = performance.now() - start_time;
-        start_loc = text.y < canvas.height / 2 ? 'top' : 'bottom';
         movement_initiated = true;
       }
     }

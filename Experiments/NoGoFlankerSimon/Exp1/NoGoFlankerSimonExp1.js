@@ -63,7 +63,7 @@ const prms = {
   tooSlowPractice: 1500,
   tooSlow: 1000,
   fbTxtGo: ['Richtig', 'Falsch: Falsche Taste gedrückt!', 'Zu langsam: Reagiere wenn der Buchstabe grün ist!'],
-  fbTxtNoGo: ['Richtig', 'Falsch: Reagiere nicht wenn der Buchstabe rot ist!'],
+  fbTxtNoGo: ['Richtig', 'Falsch: Reagiere nicht, wenn der Buchstabe rot ist!'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   fixWidth: 2,
@@ -103,7 +103,7 @@ const task_instructions1 = {
     "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
     "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
     "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
-    "<h3 style='text-align: center;'>Wir bitten dich die ca. 40 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich, die ca. 40 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -142,7 +142,7 @@ const task_instructions4 = {
   stimulus:
     "<h2 style='text-align: center;'>WICHTIG:</h2>" +
     "<h3 style='text-align: left;'>Der Ziel-Buchstabe H oder S erscheint manchmal in grün und manchmal in</h3>" +
-    "<h3 style='text-align: left;'>roter Farbe. Reagiere nur so schnell und so genau wie möglich wenn der </h3>" +
+    "<h3 style='text-align: left;'>roter Farbe. Reagiere nur so schnell und so genau wie möglich, wenn der </h3>" +
     "<h3 style='text-align: left;'>Buchstabe grün ist! Somit sollst du keine Taste drücken, wenn der Buchstabe </h3>" +
     "<h3 style='text-align: left;'>in rot erscheint. Es folgen insgesamt 24 Blöcke.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
@@ -159,12 +159,12 @@ const task_instructions5_flanker = {
       "<h2 style='text-align: center;'>Block " +
       prms.cBlk +
       ' von 24:</h2><br>' +
-      "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere </h3>" +
+      "<h3 style='text-align: left;'>Wenn du bereit für den Block bist, dann positioniere </h3>" +
       "<h3 style='text-align: left;'>deine Hände auf die Tastatur.</h3>" +
       "<h3 style='text-align: left;'>Ziel - Buchstabe erscheint in der Mitte des Bildschirms. Es gilt:</h3><br>" +
       respText +
-      "<h3 style='text-align: left;'>Reagiere nur wenn der Buchstabe in grün erscheint und drücke </h3>" +
-      "<h3 style='text-align: left;'>keine Taste wenn der Buchstabe in rot erscheint!</h3><br>" +
+      "<h3 style='text-align: left;'>Reagiere nur, wenn der Buchstabe in grün erscheint und drücke </h3>" +
+      "<h3 style='text-align: left;'>keine Taste, wenn der Buchstabe in rot erscheint!</h3><br>" +
       "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
   },
 };
@@ -180,7 +180,7 @@ const task_instructions5_simon = {
       "<h2 style='text-align: center;'>Block " +
       prms.cBlk +
       ' von 24:</h2><br>' +
-      "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere </h3>" +
+      "<h3 style='text-align: left;'>Wenn du bereit für den Block bist, dann positioniere </h3>" +
       "<h3 style='text-align: left;'>deine Hände auf die Tastatur.</h3>" +
       "<h3 style='text-align: left;'>Ziel - Buchstabe erscheint rechts oder links auf dem Bildschirm. Es gilt:</h3><br>" +
       respText +
@@ -196,8 +196,8 @@ const task_instructions6 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: left;'>Kurze Pause. Bitte nutze die Pause um dich zu erholen. Wenn du wieder bereit</h3>" +
-    "<h3 style='text-align: left;'> für den nächsten Block bist dann drücke eine beliebige Taste.</h3>",
+    "<h3 style='text-align: left;'>Kurze Pause. Bitte nutze die Pause, um dich zu erholen. Wenn du wieder bereit</h3>" +
+    "<h3 style='text-align: left;'> für den nächsten Block bist, dann drücke eine beliebige Taste.</h3>",
   on_finish: function () {
     prms.cBlk += 1;
   },

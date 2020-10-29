@@ -248,7 +248,7 @@ function blockFeedbackTxt_de_du(filter_options) {
     '<H1>Fehlerrate: ' +
     Math.round((nError / nTotal) * 100) +
     ' %</H1><br>' +
-    '<H2>Drücke eine beliebige Taste um fortzufahren!</H2>';
+    '<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>';
   prms.cBlk += 1;
   return blockFbTxt;
 }

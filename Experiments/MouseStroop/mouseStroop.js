@@ -328,7 +328,6 @@ jsPsych.init({
   fullscreen_mode: true,
   show_progress_bar: false,
   on_finish: function () {
-    // saveDataJSON('/Common/write_data.php', filename, { stim: 'stroop' });
-    jsPsych.data.get().filter({ stim: 'stroop' }).localSave('json', filename + '.json');
+    saveData('/Common/write_data_json.php', filename, { stim: 'mouse_stroop' }, filetype = "json");
   },
 });

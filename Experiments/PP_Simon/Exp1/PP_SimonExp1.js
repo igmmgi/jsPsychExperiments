@@ -135,8 +135,8 @@ const task_instructions_pause = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: left;'>Kurze Pause. Bitte nutze die Pause um dich zu erholen. Wenn du wieder bereit</h3>" +
-    "<h3 style='text-align: left;'>für den nächsten Block bist dann drücke eine beliebige Taste.</h3>",
+    "<h3 style='text-align: left;'>Kurze Pause. Bitte nutze die Pause, um dich zu erholen. Wenn du wieder bereit</h3>" +
+    "<h3 style='text-align: left;'>für den nächsten Block bist, dann drücke eine beliebige Taste.</h3>",
 };
 
 const task_instructions_pp = {
@@ -167,7 +167,7 @@ const task_instructions_pp_reminder = {
       "<h2 style='text-align: center;'>Block " +
       prms.cBlk +
       ' von 24:</h2><br>' +
-      "<h3 style='text-align: left;'>Erst Priorität ist Typ Buchstabe:</h3>" +
+      "<h3 style='text-align: left;'>Erste Priorität ist Typ Buchstabe:</h3>" +
       respText_base +
       "<h3 style='text-align: left;'>Wenn der Buchstabe aber " +
       prms.respLetters[2] +

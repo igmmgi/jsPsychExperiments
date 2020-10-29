@@ -18,12 +18,12 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 4, // number of trials in first block (practice)
-    nTrlsE: 8, // number of trials in subsequent blocks
-    nBlks: 2,
-    fbDur: 1000,
+    nTrlsP: 16, // number of trials in first block (practice)
+    nTrlsE: 48, // number of trials in subsequent blocks
+    nBlks: 9,
+    fbDur: 500,
     waitDur: 1000,
-    iti: 1000,
+    iti: 500,
     fbTxt: ['Richtig', 'Falsch'],
     cTrl: 1, // count trials
     cBlk: 1, // count blocks
@@ -113,7 +113,6 @@ const trial_feedback = {
 function blockFeedbackTxt(filter_options) {
     'use strict';
     let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
-    console.log(dat)
     let nTotal = dat.count();
     let nError = dat.select('corrCode').values.filter(function (x) {
         return x !== 0;
@@ -172,8 +171,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -192,15 +190,15 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 const filename = dirName + 'data/' + expName + '_' + genVpNum();
-const filename_local = expName + '_' + genVpNum();
+// const filename_local = expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
   fullscreen_mode: true,
   show_progress_bar: false,
   on_finish: function () {
-    // saveData('/Common/write_data_json.php', filename, { stim: 'mouse_negation' }, filetype = "json");
-    saveDataLocal(filename_local, { stim: 'mouse_negation' }, filetype = "json");
+    saveData('/Common/write_data_json.php', filename, { stim: 'mouse_negation' }, filetype = "json");
+    // saveDataLocal(filename_local, { stim: 'mouse_negation' }, filetype = "json");
   },
 });
 
