@@ -69,6 +69,7 @@ jsPsych.plugins['mouse-response'] = (function () {
     };
 
     plugin.trial = function (display_element, trial) {
+
         // setup canvas
         display_element.innerHTML = "<canvas id='canvas'></canvas>";
         let canvas = document.getElementById('canvas');
@@ -88,9 +89,6 @@ jsPsych.plugins['mouse-response'] = (function () {
         $('#canvas').mousemove(function (e) {
             handleMouseMove(e);
         });
-        $('#canvas').mouseup(function (e) {
-            handleMouseUp(e);
-        });
 
         let canvasOffset = $(canvas).offset();
         let offsetX = canvasOffset.left;
@@ -101,11 +99,11 @@ jsPsych.plugins['mouse-response'] = (function () {
         let end_X = null;
         let end_Y = null;
         let trial_initiated = false;
+        let start_time = null;
         let movement_initiated = false;
         let start_rt = null;
         let end_rt = null;
         let end_loc = null;
-        let n_presses = 0;
 
         let start_box = {
             "x": (canvas.width/2) - 25, 
@@ -136,47 +134,12 @@ jsPsych.plugins['mouse-response'] = (function () {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        // initial draw
-        let start_time = performance.now();
+        // initial draw without word
         draw(false);
 
-        // function to end trial when it is time
-        let end_trial = function () {
-            end_rt = performance.now() - start_time;
-            end_loc = x_coords[x_coords.length - 1] < canvas.width / 2 ? 'left' : 'right';
-
-            // gather the data to store for the trial
-            let trial_data = {
-                start_rt: start_rt,
-                start_x: Math.round(x_coords[0]),
-                start_y: Math.round(y_coords[0]),
-                end_rt: end_rt,
-                end_x: Math.round(x_coords[x_coords.length - 1]),
-                end_y: Math.round(y_coords[y_coords.length - 1]),
-                end_loc: end_loc,
-                n_presses: n_presses,
-                x_coords: roundArray(x_coords),
-                y_coords: roundArray(y_coords),
-                time: time,
-            };
-
-            // clear the display
-            display_element.innerHTML = "<canvas id='canvas'></canvas>";
-
-            // move on to the next trial
-            jsPsych.finishTrial(trial_data);
-        };
-
-        // mouse button
-        function handleMouseUp(e) {
-            e.preventDefault();
-            mouseDown = false;
-        }
 
         // Trial is initiated by pressing the mouse button inside the start box
         function handleMouseDown(e) {
-            n_presses++;
-            mouseDown = true;
             e.preventDefault();
             if (!trial_initiated) {
                 let X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
@@ -185,7 +148,8 @@ jsPsych.plugins['mouse-response'] = (function () {
                     start_X = X; 
                     start_Y = Y; 
                     trial_initiated = true;
-                    draw(true);
+                    start_time = performance.now();
+                    draw(true);  // draw word
                 }
             }
         }
@@ -200,25 +164,24 @@ jsPsych.plugins['mouse-response'] = (function () {
             let X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
             let Y = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
 
-            // store coordinates and time array
-            x_coords.push(X);
-            y_coords.push(Y);
-            time.push(performance.now() - start_time);
-
             // response movement started?
             if (!movement_initiated) {
                 start_rt = performance.now() - start_time;
                 movement_initiated = true;
             }
 
+            // store coordinates and time array
+            x_coords.push(X);
+            y_coords.push(Y);
+            time.push(performance.now() - start_time);
+
             // response movement finished
-            if (mouseDown) {
-                if (in_box(X, Y, left_responsebox)){
-                    end_trial();
-                } else if (mouseDown && in_box(X, Y, right_responsebox)) {
-                    end_trial();
-                }
+            if (in_box(X, Y, left_responsebox)){
+                end_trial();
+            } else if (in_box(X, Y, right_responsebox)) {
+                end_trial();
             }
+
         }
 
         // clear the canvas and draw text
@@ -266,6 +229,32 @@ jsPsych.plugins['mouse-response'] = (function () {
                 y <= box.y + box.h 
             );
         }
+
+        // function to end trial when it is time
+        let end_trial = function () {
+            end_rt = performance.now() - start_time;
+            end_loc = x_coords[x_coords.length - 1] < canvas.width / 2 ? 'left' : 'right';
+
+            // gather the data to store for the trial
+            let trial_data = {
+                start_rt: start_rt,
+                start_x: Math.round(x_coords[0]),
+                start_y: Math.round(y_coords[0]),
+                end_rt: end_rt,
+                end_x: Math.round(x_coords[x_coords.length - 1]),
+                end_y: Math.round(y_coords[y_coords.length - 1]),
+                end_loc: end_loc,
+                x_coords: roundArray(x_coords),
+                y_coords: roundArray(y_coords),
+                time: time,
+            };
+
+            // clear the display
+            display_element.innerHTML = "<canvas id='canvas'></canvas>";
+
+            // move on to the next trial
+            jsPsych.finishTrial(trial_data);
+        };
 
         // end trial if trial_duration is set
         if (trial.trial_duration !== null) {
