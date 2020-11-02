@@ -86,8 +86,8 @@ function drawStroop(args) {
   ctx.font = prms.stimSize;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = args['fontcolour'];
-  ctx.fillText(args['text'], args['posx'], args['posy']);
+  ctx.fillStyle = args.fontcolour;
+  ctx.fillText(args.text, args.posx, args.posy);
 }
 
 function drawFeedback() {
