@@ -35,8 +35,8 @@ const prms = {
   word_by_word_resp_key: ['Space'],
   word_by_word_mask_type: 1, // select 1 vs. 2
   canvas_border: canvas_border,
-  font_sentence: '22px monospace',
-  sentence_width: 1200,
+  font_sentence: '20px monospace',
+  sentence_width: 1250,
   cTrl: 1, // count trials
 };
 
@@ -71,22 +71,16 @@ function update_selected_items(items) {
 }
 
 let selected_items = [];
-const items_cu = select_items(items, 'CU', [], 12);
+const items_cu = select_items(items, 'CU', [], 24);
 update_selected_items(items_cu);
 
-const items_ca = select_items(items, 'CA', selected_items, 12);
+const items_ca = select_items(items, 'CA', selected_items, 24);
 update_selected_items(items_ca);
-
-const items_au = select_items(items, 'AU', selected_items, 12);
-update_selected_items(items_au);
-
-const items_aa = select_items(items, 'AA', selected_items, 12);
-update_selected_items(items_aa);
 
 // selected_items.sort((a, b) => a - b);
 // console.log(selected_items);
 
-const items_final = shuffle(items_cu.concat(items_ca, items_au, items_aa));
+const items_final = shuffle(items_cu.concat(items_ca));
 // console.log(items_final);
 
 ////////////////////////////////////////////////////////////////////////
@@ -107,11 +101,12 @@ const moving_window_text = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  mask_type: prms.word_by_word_mask_type,
+  mask_type: jsPsych.timelineVariable('mask_type'),
   sentence: jsPsych.timelineVariable('sent'),
   word_number: jsPsych.timelineVariable('word_num'),
   font: prms.font_sentence,
   max_width: prms.sentence_width,
+  text_align: 'center',
   choices: prms.word_by_word_resp_key,
   data: {
     stim: 'SentenceConflict',
@@ -158,6 +153,7 @@ const alphaNum = {
 function create_timeline_variables(items) {
   const txt = items.sent.split(' ');
   let seq = [];
+  let mask_type = getRandomInt(1, 2);
   for (let i = -1; i < txt.length; i++) {
     seq.push({
       item: items.item,
@@ -167,6 +163,7 @@ function create_timeline_variables(items) {
       sent: items.sent,
       word_num: i,
       length: txt.length,
+      mask_type: mask_type,
     });
   }
   return seq;
