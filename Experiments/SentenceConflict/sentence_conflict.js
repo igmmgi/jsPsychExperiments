@@ -11,13 +11,15 @@
 // Coherent Ambiguous	 The man knew that one more (ace)   was enough to win the game of tennis against his rival.
 // Anomalous Unambiguous The man knew that one more (prawn) was enough to win the game of tennis against his rival.
 // Anomalous Ambiguous	 The man knew that one more (mule)  was enough to win the game of tennis against his rival.
+//
+// NB. Experiment uses only Coherent Unambigous (CU) and Coherent Ambiguous (CA) items
 
 //////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                            //
 //////////////////////////////////////////////////////////////////////////
 const canvas_colour = 'rgba(200, 200, 200, 1)';
 const canvas_size = [1280, 720];
-const canvas_border = '0px solid black';
+const canvas_border = '5px solid black';
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
@@ -35,9 +37,15 @@ const prms = {
   word_by_word_resp_key: ['Space'],
   word_by_word_mask_type: 1, // select 1 vs. 2
   canvas_border: canvas_border,
-  font_sentence: '20px monospace',
+  font_size_sentence: '20px monospace',
   sentence_width: 1250,
-  cTrl: 1, // count trials
+  stroop_resp_keys: [],
+  font_size_stroop: '30px monospace',
+  stroop_mapping: shuffle([1, 2])[0],
+  fbTxt: ['Correct', 'Incorrect'],
+  fbDur: [1000, 1000],
+  cTrlSentence: 1, // count trials
+  cTrlStroop: 1, // count trials
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -49,6 +57,43 @@ const task_instructions1 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: "<h2 style='text-align:center;'>Welcome: Press any key to continue!</h2><br>",
+};
+
+const task_instructions2 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: "<h2 style='text-align:center;'>Sentence Task Instructions Part 1: TO DO!</h2><br>",
+};
+
+const task_instructions3 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: "<h2 style='text-align:center;'>End of Part 1: Press and key to continue!</h2><br>",
+};
+
+let stroop_text_instructions;
+if (prms.stroop_mapping === 1) {
+  prms.stroop_resp_keys = ['Q', 'P', 27];
+  stroop_text_instructions =
+    "<h3 style='text-align: center;'><b>BLUE</b> Press the <b>'Q' key</b> (left index finger).</h3>" +
+    "<h3 style='text-align: center;'><b>GREEN</b> Press the <b>'P' key</b> (right index finger).</h3><br>";
+} else if (prms.stroop_mapping === 2) {
+  prms.stroop_resp_keys = ['P', 'Q', 27];
+  stroop_text_instructions =
+    "<h3 style='text-align: center;'><b>GREEN</b> Press the <b>'Q' key</b> (left index finger).</h3>" +
+    "<h3 style='text-align: center;'><b>BLUE</b> Press the <b>'P' key</b> (right index finger).</h3><br>";
+}
+
+const task_instructions4 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: stroop_text_instructions,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -104,7 +149,7 @@ const moving_window_text = {
   mask_type: jsPsych.timelineVariable('mask_type'),
   sentence: jsPsych.timelineVariable('sent'),
   word_number: jsPsych.timelineVariable('word_num'),
-  font: prms.font_sentence,
+  font: prms.font_size_sentence,
   max_width: prms.sentence_width,
   text_align: 'center',
   choices: prms.word_by_word_resp_key,
@@ -120,12 +165,107 @@ const moving_window_text = {
   },
   on_finish: function () {
     let dat = jsPsych.data.get().last(1).values()[0];
-    jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: 1, trialNum: prms.cTrl });
+    jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: 1, trialNum: prms.cTrlSentence });
     if (dat.word_number === dat.length - 1) {
-      prms.cTrl += 1;
+      prms.cTrlSentence += 1;
+    }
+    if (dat.key_press === 27) {
+      jsPsych.endExperiment();
     }
   },
 };
+
+function drawStroop(args) {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+
+  // draw word
+  ctx.font = prms.font_size_stroop;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = args.colour;
+  ctx.fillText(args.word, 0, 0);
+}
+
+function drawFeedback() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.font_size_stroop;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode], 0, 0);
+}
+
+const stroop_stimulus = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  translate_origin: true,
+  choices: prms.stroop_resp_keys,
+  func: [drawStroop],
+  func_args: [{ word: jsPsych.timelineVariable('word'), colour: jsPsych.timelineVariable('colour') }],
+  data: {
+    stim: 'stroop',
+    word: jsPsych.timelineVariable('word'),
+    colour: jsPsych.timelineVariable('colour'),
+    comp: jsPsych.timelineVariable('comp'),
+    corrResp: jsPsych.timelineVariable('corrResp'),
+  },
+  on_finish: function () {
+    codeTrial();
+  },
+};
+
+const trial_feedback = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  translate_origin: true,
+  response_ends_trial: false,
+  func: [drawFeedback],
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode];
+  },
+};
+
+const trial_timeline_stroop = {
+  timeline: [stroop_stimulus, trial_feedback, iti],
+  timeline_variables: [
+    { word: 'BLUE', colour: 'blue', comp: 'comp', corrResp: prms.stroop_resp_keys[0] },
+    { word: 'BLUE', colour: 'green', comp: 'incomp', corrResp: prms.stroop_resp_keys[1] },
+    { word: 'GREEN', colour: 'green', comp: 'comp', corrResp: prms.stroop_resp_keys[1] },
+    { word: 'GREEN', colour: 'blue', comp: 'incomp', corrResp: prms.stroop_resp_keys[0] },
+  ],
+  sample: {
+    type: 'fixed-repetitions',
+    size: 12,
+  },
+};
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  if (dat.key_press !== jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp)) {
+    corrCode = 1; // choice error
+  }
+  // console.log('Code Trial: ', corrCode);
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: dat.rt,
+    corrCode: corrCode,
+    trialNum: prms.cTrlStroop,
+  });
+  prms.cTrlStroop += 1;
+  if (dat.key_press === 27) {
+    jsPsych.endExperiment();
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                      Amazon Turk Random Code                       //
@@ -148,7 +288,7 @@ const alphaNum = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                     Create timeline variables                      //
+//                         Timeline Sentences                         //
 ////////////////////////////////////////////////////////////////////////
 function create_timeline_variables(items) {
   const txt = items.sent.split(' ');
@@ -182,20 +322,34 @@ function create_timeline(items) {
   return timeline_items;
 }
 
-const exp_timeline = { timeline: create_timeline(items_final) };
+const exp_timeline_sentences = { timeline: create_timeline(items_final) };
 
 ////////////////////////////////////////////////////////////////////////
 //                                Save                                //
 ////////////////////////////////////////////////////////////////////////
-const save = {
+const save_sentences = {
   type: 'call-function',
   func: function () {
-    // let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    // let code_filename = dirName + 'code/' + expName;
-    let filename_local = expName + '_' + genVpNum();
-    // saveData('/Common/write_data.php', data_filename, { stim: 'SentenceConflict' });
-    saveDataLocal(filename_local, { stim: 'SentenceConflict' });
-    // saveRandomCode('/Common/write_code.php', code_filename, randomString);
+    let data_filename = dirName + 'data/' + expName + '_sentences_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim: 'SentenceConflict' });
+  },
+  timing_post_trial: 200,
+};
+
+const save_stroop = {
+  type: 'call-function',
+  func: function () {
+    let data_filename = dirName + 'data/' + expName + '_stroop_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim: 'stroop' });
+  },
+  timing_post_trial: 200,
+};
+
+const save_code = {
+  type: 'call-function',
+  func: function () {
+    let code_filename = dirName + 'code/' + expName;
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
   timing_post_trial: 200,
 };
@@ -215,13 +369,21 @@ function genExpSeq() {
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
   // 1st phase (Sentences)
-  exp.push(exp_timeline);
+  exp.push(exp_timeline_sentences);
+  exp.push(save_sentences);
+  exp.push(task_instructions3);
+
+  // 2nd phase (Stroop Task)
+  exp.push(task_instructions4);
+  exp.push(trial_timeline_stroop);
+  exp.push(save_stroop);
 
   // end phase
-  exp.push(save);
   exp.push(debrief_en);
+  exp.push(save_code);
   exp.push(showMouseCursor);
   exp.push(alphaNum);
   exp.push(fullscreen_off);
