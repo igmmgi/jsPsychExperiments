@@ -77,7 +77,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
   };
 
   function textMask(txt) {
-    return txt.replace(/[a-z.!?’\'-]/gi, '_');
+    return txt.replace(/[a-z.!?’'-]/gi, '_');
   }
 
   plugin.trial = function (display_element, trial) {
@@ -149,7 +149,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
       // gather the data to store for the trial
       const trial_data = {
         rt: response.rt,
-        ind_word: words[trial.word_number],
+        word: words[trial.word_number],
       };
 
       // move on to the next trial

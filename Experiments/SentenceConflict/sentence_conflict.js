@@ -7,12 +7,8 @@
 // word was disambiguated towards an unexpected meaning. For example,
 // consider the following sentences:
 //
-// Coherent Unambiguous	 The man knew that one more (spurt) was enough to win the game of tennis against his rival.
-// Coherent Ambiguous	 The man knew that one more (ace)   was enough to win the game of tennis against his rival.
-// Anomalous Unambiguous The man knew that one more (prawn) was enough to win the game of tennis against his rival.
-// Anomalous Ambiguous	 The man knew that one more (mule)  was enough to win the game of tennis against his rival.
-//
-// NB. Experiment uses only Coherent Unambigous (CU) and Coherent Ambiguous (CA) items
+// Coherent Unambiguous	 The man knew that one more (spurt) was enough to win the game of (tennis) against his rival.
+// Coherent Ambiguous	 The man knew that one more (ace)   was enough to win the game of (tennis) against his rival.
 
 //////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                            //
@@ -51,12 +47,16 @@ const prms = {
 ////////////////////////////////////////////////////////////////////////
 //                            Instructions                            //
 ////////////////////////////////////////////////////////////////////////
+
 const task_instructions1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: "<h2 style='text-align:center;'>Welcome: Press any key to continue!</h2><br>",
+  stimulus: generate_formatted_html({
+    text: 'Welcome: Press any key to continue!',
+    fontsize: 32,
+  }),
 };
 
 const task_instructions2 = {
@@ -64,7 +64,20 @@ const task_instructions2 = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: "<h2 style='text-align:center;'>Sentence Task Instructions Part 1: TO DO!</h2><br>",
+  stimulus:
+    generate_formatted_html({
+      text: 'Part 1:',
+      fontsize: 48,
+      xypos: [0, -100],
+    }) +
+    generate_formatted_html({
+      text:
+        'Press the spacebar to reveal a sentence word-by-word. Example: <br><br> _____ ___ ________ __ <br>Press ___ ________ __ <br>Press the ________ __ <br> Press the spacebar __ <br><br><br> Please read the sentences carefully!',
+      fontsize: 32,
+      align: 'left',
+      xypos: [0, -100],
+    }) +
+    generate_formatted_html({ text: 'Press any key to begin.', fontsize: 32 }),
 };
 
 const task_instructions3 = {
@@ -72,20 +85,27 @@ const task_instructions3 = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: "<h2 style='text-align:center;'>End of Part 1: Press and key to continue!</h2><br>",
+  stimulus: generate_formatted_html({
+    text: 'End of Part 1: Press any key to continue!',
+    fontsize: 32,
+  }),
 };
 
 let stroop_text_instructions;
 if (prms.stroop_mapping === 1) {
   prms.stroop_resp_keys = ['Q', 'P', 27];
   stroop_text_instructions =
-    "<h3 style='text-align: center;'><b>BLUE</b> Press the <b>'Q' key</b> (left index finger).</h3>" +
-    "<h3 style='text-align: center;'><b>GREEN</b> Press the <b>'P' key</b> (right index finger).</h3><br>";
+    'Part 2:<br>' +
+    'Respond to the font color, not word meaning!<br>' +
+    "<b><span style='color:#0000FF'>BLUE/GREEN</b> &#10142; Press the <b>'Q'</b> key (left index finger) <br> " +
+    "<b><span style='color:#008000'>BLUE/GREEN</b> &#10142; Press the <b>'P'</b> key (right index finger).";
 } else if (prms.stroop_mapping === 2) {
   prms.stroop_resp_keys = ['P', 'Q', 27];
   stroop_text_instructions =
-    "<h3 style='text-align: center;'><b>GREEN</b> Press the <b>'Q' key</b> (left index finger).</h3>" +
-    "<h3 style='text-align: center;'><b>BLUE</b> Press the <b>'P' key</b> (right index finger).</h3><br>";
+    'Part 2:<br>' +
+    'Respond to the font color, not word meaning!<br>' +
+    "<b><span style='color:#008000'>BLUE/GREEN</b> &#10142; Press the <b>'Q'</b> key (left index finger) <br> " +
+    "<b><span style='color:#0000FF'>BLUE/GREEN</b> &#10142; Press the <b>'P'</b> key (right index finger).";
 }
 
 const task_instructions4 = {
@@ -93,7 +113,7 @@ const task_instructions4 = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: stroop_text_instructions,
+  stimulus: generate_formatted_html({ text: stroop_text_instructions, fontsize: 32, lineheight: 2.5 }),
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -156,8 +176,6 @@ const moving_window_text = {
   data: {
     stim: 'SentenceConflict',
     item: jsPsych.timelineVariable('item'),
-    num: jsPsych.timelineVariable('num'),
-    word: jsPsych.timelineVariable('word'),
     cond: jsPsych.timelineVariable('cond'),
     sent: jsPsych.timelineVariable('sent'),
     word_number: jsPsych.timelineVariable('word_num'),
@@ -279,12 +297,15 @@ const alphaNum = {
   canvas_border: canvas_border,
   response_ends_trial: true,
   choices: [32],
-  stimulus:
-    "<h3 style='text-align: left;'>This is your participation code:</h3>" +
-    randomString +
-    "<h3 style='text-align: left;'>This is your participation code:</h3>" +
-    "<h3 style='text-align: left;'>Please copy the code and return to the MTurk page.</h3>" +
-    "<h3 style='text-align: left;'>Press the spacebar to end the experiment.</h3>",
+  stimulus: generate_formatted_html({
+    text:
+      'This is your participation code: <br><br>' +
+      '<b>' +
+      randomString +
+      '</b>' +
+      '<br><br>Please copy the code and return to the MTurk page. <br><br>Press the spacebar to end the experiment.',
+    fontsize: 32,
+  }),
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -297,8 +318,6 @@ function create_timeline_variables(items) {
   for (let i = -1; i < txt.length; i++) {
     seq.push({
       item: items.item,
-      num: items.num,
-      word: items.word,
       cond: items.cond,
       sent: items.sent,
       word_num: i,
@@ -365,9 +384,10 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  // exp.push(vpInfoForm_en);
+  exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
+
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 

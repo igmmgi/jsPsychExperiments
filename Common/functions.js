@@ -254,33 +254,36 @@ function blockFeedbackTxt_de_du(filter_options) {
 }
 
 function saveData(
-    url,
-    filename,
-    rows = {},
-    filetype = "csv",
-    colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
+  url,
+  filename,
+  rows = {},
+  filetype = 'csv',
+  colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
 ) {
-    let dat;
-    if (filetype === "csv") {
-        dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).csv();
-    } else if (filetype === "json") {
-        dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).json();
-    }
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
+  let dat;
+  if (filetype === 'csv') {
+    dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).csv();
+  } else if (filetype === 'json') {
+    dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).json();
+  }
+  let xhr = new XMLHttpRequest();
+  xhr.open('POST', url);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
 }
 
 function saveDataLocal(
-    filename,
-    rows = {},
-    filetype = "csv",
-    colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
+  filename,
+  rows = {},
+  filetype = 'csv',
+  colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
 ) {
-    jsPsych.data.get().filter(rows).ignore(colsToIgnore).localSave(filetype, filename + '.' + filetype);
+  jsPsych.data
+    .get()
+    .filter(rows)
+    .ignore(colsToIgnore)
+    .localSave(filetype, filename + '.' + filetype);
 }
-
 
 function generateRandomString(length) {
   let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -344,11 +347,11 @@ function getRandomInt(min, max) {
 
 // Adapteed from: https://stackoverflow.com/questions/9671203/how-to-round-all-the-values-in-an-array-to-2-decimal-points
 function roundArray(array) {
-    let len = array.length;
-    while (len--) {
-        array[len] = Math.round(array[len]);
-    }
-    return array;
+  let len = array.length;
+  while (len--) {
+    array[len] = Math.round(array[len]);
+  }
+  return array;
 }
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -382,39 +385,45 @@ function mean(array) {
 
 // Deep copy: https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
 const deepCopy = (inObject) => {
-  let outObject, value, key
+  let outObject, value, key;
 
-  if (typeof inObject !== "object" || inObject === null) {
-    return inObject // Return the value if inObject is not an object
+  if (typeof inObject !== 'object' || inObject === null) {
+    return inObject; // Return the value if inObject is not an object
   }
 
   // Create an array or object to hold the values
-  outObject = Array.isArray(inObject) ? [] : {}
+  outObject = Array.isArray(inObject) ? [] : {};
 
   for (key in inObject) {
-    value = inObject[key]
+    value = inObject[key];
     // Recursively (deep) copy for nested objects, including arrays
-    outObject[key] = deepCopy(value)
+    outObject[key] = deepCopy(value);
   }
 
-  return outObject
-}
+  return outObject;
+};
 
 // adapted from https://github.com/hauselin/lab_exp/blob/master/libraries/utils.js
-function generate_html(
+function generate_formatted_html({
   text,
-  align = 'center',
+  width = '900px',
   color = 'black',
-  size = 20,
-  location = [0, 0],
+  align = 'center',
+  fontsize = 20,
+  xypos = [0, 0],
   lineheight = 1,
   bold = false,
   italics = false,
   underline = false,
-) {
+  position = 'relative',
+} = {}) {
   var div =
-    "<p><div style='font-size:" +
-    size +
+    '<p style="width:' +
+    width +
+    '; position:' +
+    position +
+    '; font-size:' +
+    fontsize +
     'px; text-align:' +
     align +
     '; line-height:' +
@@ -422,12 +431,12 @@ function generate_html(
     ';color:' +
     color +
     ';transform: translate(' +
-    location[0] +
+    xypos[0] +
     'px,' +
-    location[1] +
-    "px)'; >" +
+    xypos[1] +
+    'px)"; >' +
     text +
-    '</div></p>';
+    '</p>';
   if (bold) {
     div = '<b>' + div + '</b>';
   }

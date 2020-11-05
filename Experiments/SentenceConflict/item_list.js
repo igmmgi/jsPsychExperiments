@@ -2,7 +2,6 @@ const items = shuffle([
   {
     item: 1,
     num: 1,
-    word: 'ace',
     cond: 'CU',
     sent: 'The man knew that one more spurt was enough to win the game of tennis against his rival.',
     crit_pos: 7,
@@ -11,7 +10,6 @@ const items = shuffle([
   {
     item: 1,
     num: 2,
-    word: 'ace',
     cond: 'CA',
     sent: 'The man knew that one more ace was enough to win the game of tennis against his rival.',
     crit_pos: 7,
@@ -20,7 +18,6 @@ const items = shuffle([
   {
     item: 1,
     num: 3,
-    word: 'ace',
     cond: 'AU',
     sent: 'The man knew that one more prawn was enough to win the game of tennis against his rival',
     crit_pos: 7,
@@ -29,7 +26,6 @@ const items = shuffle([
   {
     item: 1,
     num: 4,
-    word: 'ace',
     cond: 'AA',
     sent: 'The man knew that one more mule was enough to win the game of tennis against his rival',
     crit_pos: 7,
@@ -38,7 +34,6 @@ const items = shuffle([
   {
     item: 2,
     num: 5,
-    word: 'appendix',
     cond: 'CU',
     sent: 'She asked about the manuscript and was told that it would be translated as soon as possible.',
     crit_pos: 5,
@@ -47,7 +42,6 @@ const items = shuffle([
   {
     item: 2,
     num: 6,
-    word: 'appendix',
     cond: 'CA',
     sent: 'She asked about the appendix and was told that it would be translated as soon as possible.',
     crit_pos: 5,
@@ -56,7 +50,6 @@ const items = shuffle([
   {
     item: 2,
     num: 7,
-    word: 'appendix',
     cond: 'AU',
     sent: 'She asked about the cottage and was told that it would be translated as soon as possible.',
     crit_pos: 5,
@@ -65,7 +58,6 @@ const items = shuffle([
   {
     item: 2,
     num: 8,
-    word: 'appendix',
     cond: 'AA',
     sent: 'She asked about the bowler and was told that it would be translated as soon as possible.',
     crit_pos: 5,
@@ -74,7 +66,6 @@ const items = shuffle([
   {
     item: 3,
     num: 9,
-    word: 'arms',
     cond: 'CU',
     sent: "The police kept hold of the criminal's guns after they had been fired one last time.",
     crit_pos: 8,
@@ -83,7 +74,6 @@ const items = shuffle([
   {
     item: 3,
     num: 10,
-    word: 'arms',
     cond: 'CA',
     sent: "The police kept hold of the criminal's arms after they had been fired one last time.",
     crit_pos: 8,
@@ -92,7 +82,6 @@ const items = shuffle([
   {
     item: 3,
     num: 11,
-    word: 'arms',
     cond: 'AU',
     sent: "The police kept hold of the criminal's bricks after they had been fired one last time.",
     crit_pos: 8,
@@ -101,7 +90,6 @@ const items = shuffle([
   {
     item: 3,
     num: 12,
-    word: 'arms',
     cond: 'AA',
     sent: "The police kept hold of the criminal's locks after they had been fired one last time.",
     crit_pos: 8,
@@ -110,7 +98,6 @@ const items = shuffle([
   {
     item: 4,
     num: 13,
-    word: 'ball',
     cond: 'CU',
     sent: 'Sally worried that the town was going to be too crowded for her liking.',
     crit_pos: 5,
@@ -119,7 +106,6 @@ const items = shuffle([
   {
     item: 4,
     num: 14,
-    word: 'ball',
     cond: 'CA',
     sent: 'Sally worried that the ball was going to be too crowded for her liking.',
     crit_pos: 5,
@@ -128,7 +114,6 @@ const items = shuffle([
   {
     item: 4,
     num: 15,
-    word: 'ball',
     cond: 'AU',
     sent: 'Sally worried that the bird was going to be too crowded for her liking.',
     crit_pos: 5,
@@ -137,7 +122,6 @@ const items = shuffle([
   {
     item: 4,
     num: 16,
-    word: 'ball',
     cond: 'AA',
     sent: 'Sally worried that the rule was going to be too crowded for her liking.',
     crit_pos: 5,
@@ -146,7 +130,6 @@ const items = shuffle([
   {
     item: 5,
     num: 17,
-    word: 'bank',
     cond: 'CU',
     sent: 'The old man headed for the boat but he had a long way to swim to reach it.',
     crit_pos: 7,
@@ -155,7 +138,6 @@ const items = shuffle([
   {
     item: 5,
     num: 18,
-    word: 'bank',
     cond: 'CA',
     sent: 'The old man headed for the bank but he had a long way to swim to reach it.',
     crit_pos: 7,
@@ -164,7 +146,6 @@ const items = shuffle([
   {
     item: 5,
     num: 19,
-    word: 'bank',
     cond: 'AU',
     sent: 'The old man headed for the knee but he had a long way to swim to reach it.',
     crit_pos: 7,
@@ -173,7 +154,6 @@ const items = shuffle([
   {
     item: 5,
     num: 20,
-    word: 'bank',
     cond: 'AA',
     sent: 'The old man headed for the press but he had a long way to swim to reach it.',
     crit_pos: 7,
@@ -182,7 +162,6 @@ const items = shuffle([
   {
     item: 6,
     num: 21,
-    word: 'bar',
     cond: 'CU',
     sent: 'The man found a knife but it was small and too rusty to be used.',
     crit_pos: 5,
@@ -191,7 +170,6 @@ const items = shuffle([
   {
     item: 6,
     num: 22,
-    word: 'bar',
     cond: 'CA',
     sent: 'The man found a bar but it was small and too rusty to be used.',
     crit_pos: 5,
@@ -200,7 +178,6 @@ const items = shuffle([
   {
     item: 6,
     num: 23,
-    word: 'bar',
     cond: 'AU',
     sent: 'The man found a crowd but it was small and too rusty to be used.',
     crit_pos: 5,
@@ -209,7 +186,6 @@ const items = shuffle([
   {
     item: 6,
     num: 24,
-    word: 'bar',
     cond: 'AA',
     sent: 'The man found a court but it was small and too rusty to be used.',
     crit_pos: 5,
@@ -218,7 +194,6 @@ const items = shuffle([
   {
     item: 7,
     num: 25,
-    word: 'board',
     cond: 'CU',
     sent: 'John hoped that the new judge would not take very long to decide this time around.',
     crit_pos: 6,
@@ -227,7 +202,6 @@ const items = shuffle([
   {
     item: 7,
     num: 26,
-    word: 'board',
     cond: 'CA',
     sent: 'John hoped that the new board would not take very long to decide this time around.',
     crit_pos: 6,
@@ -236,7 +210,6 @@ const items = shuffle([
   {
     item: 7,
     num: 27,
-    word: 'board',
     cond: 'AU',
     sent: 'John hoped that the new desk would not take very long to decide this time around.',
     crit_pos: 6,
@@ -245,7 +218,6 @@ const items = shuffle([
   {
     item: 7,
     num: 28,
-    word: 'board',
     cond: 'AA',
     sent: 'John hoped that the new rush would not take very long to decide this time around.',
     crit_pos: 6,
@@ -254,7 +226,6 @@ const items = shuffle([
   {
     item: 8,
     num: 29,
-    word: 'boxer',
     cond: 'CU',
     sent: 'The man knew that the kitten would be in need of a good veterinarian as soon as possible.',
     crit_pos: 6,
@@ -263,7 +234,6 @@ const items = shuffle([
   {
     item: 8,
     num: 30,
-    word: 'boxer',
     cond: 'CA',
     sent: 'The man knew that the boxer would be in need of a good veterinarian as soon as possible.',
     crit_pos: 6,
@@ -272,7 +242,6 @@ const items = shuffle([
   {
     item: 8,
     num: 31,
-    word: 'boxer',
     cond: 'AU',
     sent: 'The man knew that the fabric would be in need of a good veterinarian as soon as possible.',
     crit_pos: 6,
@@ -281,7 +250,6 @@ const items = shuffle([
   {
     item: 8,
     num: 32,
-    word: 'boxer',
     cond: 'AA',
     sent: 'The man knew that the staple would be in need of a good veterinarian as soon as possible.',
     crit_pos: 6,
@@ -290,7 +258,6 @@ const items = shuffle([
   {
     item: 9,
     num: 33,
-    word: 'branch',
     cond: 'CU',
     sent: "The young woman couldn't use that bus because it was much busier than she had expected.",
     crit_pos: 7,
@@ -299,7 +266,6 @@ const items = shuffle([
   {
     item: 9,
     num: 34,
-    word: 'branch',
     cond: 'CA',
     sent: "The young woman couldn't use that branch because it was much busier than she had expected.",
     crit_pos: 7,
@@ -308,7 +274,6 @@ const items = shuffle([
   {
     item: 9,
     num: 35,
-    word: 'branch',
     cond: 'AU',
     sent: "The young woman couldn't use that milk because it was much busier than she had expected.",
     crit_pos: 7,
@@ -317,7 +282,6 @@ const items = shuffle([
   {
     item: 9,
     num: 36,
-    word: 'branch',
     cond: 'AA',
     sent: "The young woman couldn't use that fit because it was much busier than she had expected.",
     crit_pos: 7,
@@ -326,7 +290,6 @@ const items = shuffle([
   {
     item: 10,
     num: 37,
-    word: 'bridge',
     cond: 'CU',
     sent: 'Mary discussed the hunt and said that it ought to be more competitive this coming week.',
     crit_pos: 4,
@@ -335,7 +298,6 @@ const items = shuffle([
   {
     item: 10,
     num: 38,
-    word: 'bridge',
     cond: 'CA',
     sent: 'Mary discussed the bridge and said that it ought to be more competitive this coming week.',
     crit_pos: 4,
@@ -344,7 +306,6 @@ const items = shuffle([
   {
     item: 10,
     num: 39,
-    word: 'bridge',
     cond: 'AU',
     sent: 'Mary discussed the fruit and said that it ought to be more competitive this coming week.',
     crit_pos: 4,
@@ -353,7 +314,6 @@ const items = shuffle([
   {
     item: 10,
     num: 40,
-    word: 'bridge',
     cond: 'AA',
     sent: 'Mary discussed the plane and said that it ought to be more competitive this coming week.',
     crit_pos: 4,
@@ -362,7 +322,6 @@ const items = shuffle([
   {
     item: 11,
     num: 41,
-    word: 'bulbs',
     cond: 'CU',
     sent: 'The caretaker preferred to store the berries inside a box in the old greenhouse until they were needed.',
     crit_pos: 7,
@@ -371,7 +330,6 @@ const items = shuffle([
   {
     item: 11,
     num: 42,
-    word: 'bulbs',
     cond: 'CA',
     sent: 'The caretaker preferred to store the bulbs inside a box in the old greenhouse until they were needed.',
     crit_pos: 7,
@@ -380,7 +338,6 @@ const items = shuffle([
   {
     item: 11,
     num: 43,
-    word: 'bulbs',
     cond: 'AU',
     sent: 'The caretaker preferred to store the sobs inside a box in the old greenhouse until they were needed.',
     crit_pos: 7,
@@ -389,7 +346,6 @@ const items = shuffle([
   {
     item: 11,
     num: 44,
-    word: 'bulbs',
     cond: 'AA',
     sent: 'The caretaker preferred to store the sharks inside a box in the old greenhouse until they were needed.',
     crit_pos: 7,
@@ -398,7 +354,6 @@ const items = shuffle([
   {
     item: 12,
     num: 45,
-    word: 'button',
     cond: 'CU',
     sent: 'Karen knew that there was one last lever that she needed to press in order to start.',
     crit_pos: 8,
@@ -407,7 +362,6 @@ const items = shuffle([
   {
     item: 12,
     num: 46,
-    word: 'button',
     cond: 'CA',
     sent: 'Karen knew that there was one last button that she needed to press in order to start.',
     crit_pos: 8,
@@ -416,7 +370,6 @@ const items = shuffle([
   {
     item: 12,
     num: 47,
-    word: 'button',
     cond: 'AU',
     sent: 'Karen knew that there was one last lawyer that she needed to press in order to start.',
     crit_pos: 8,
@@ -425,7 +378,6 @@ const items = shuffle([
   {
     item: 12,
     num: 48,
-    word: 'button',
     cond: 'AA',
     sent: 'Karen knew that there was one last speaker that she needed to press in order to start.',
     crit_pos: 8,
@@ -434,7 +386,6 @@ const items = shuffle([
   {
     item: 13,
     num: 49,
-    word: 'cape',
     cond: 'CU',
     sent: 'The woman saw the cliff and thought that it looked very rocky from where she stood.',
     crit_pos: 5,
@@ -443,7 +394,6 @@ const items = shuffle([
   {
     item: 13,
     num: 50,
-    word: 'cape',
     cond: 'CA',
     sent: 'The woman saw the cape and thought that it looked very rocky from where she stood.',
     crit_pos: 5,
@@ -452,7 +402,6 @@ const items = shuffle([
   {
     item: 13,
     num: 51,
-    word: 'cape',
     cond: 'AU',
     sent: 'The woman saw the ax and thought that it looked very rocky from where she stood.	',
     crit_pos: 5,
@@ -461,7 +410,6 @@ const items = shuffle([
   {
     item: 13,
     num: 52,
-    word: 'cape',
     cond: 'AA',
     sent: 'The woman saw the horn and thought that it looked very rocky from where she stood.',
     crit_pos: 5,
@@ -470,7 +418,6 @@ const items = shuffle([
   {
     item: 14,
     num: 53,
-    word: 'chips',
     cond: 'CU',
     sent: 'The manager hoped that the fuse he had ordered would be compatible this time around.',
     crit_pos: 6,
@@ -479,7 +426,6 @@ const items = shuffle([
   {
     item: 14,
     num: 54,
-    word: 'chips',
     cond: 'CA',
     sent: 'The manager hoped that the chips he had ordered would be compatible this time around.',
     crit_pos: 6,
@@ -488,7 +434,6 @@ const items = shuffle([
   {
     item: 14,
     num: 55,
-    word: 'chips',
     cond: 'AU',
     sent: 'The manager hoped that the coral he had ordered would be compatible this time around.',
     crit_pos: 6,
@@ -497,7 +442,6 @@ const items = shuffle([
   {
     item: 14,
     num: 56,
-    word: 'chips',
     cond: 'AA',
     sent: 'The manager hoped that the ray he had ordered would be compatible this time around.',
     crit_pos: 6,
@@ -506,7 +450,6 @@ const items = shuffle([
   {
     item: 15,
     num: 57,
-    word: 'coat',
     cond: 'CU',
     sent: 'The man hoped that the new roof would not take long to paint early in the morning.',
     crit_pos: 7,
@@ -515,7 +458,6 @@ const items = shuffle([
   {
     item: 15,
     num: 58,
-    word: 'coat',
     cond: 'CA',
     sent: 'The man hoped that the new coat would not take long to paint early in the morning.',
     crit_pos: 7,
@@ -524,7 +466,6 @@ const items = shuffle([
   {
     item: 15,
     num: 59,
-    word: 'coat',
     cond: 'AU',
     sent: 'The man hoped that the new pill would not take long to paint early in the morning.',
     crit_pos: 7,
@@ -533,7 +474,6 @@ const items = shuffle([
   {
     item: 15,
     num: 60,
-    word: 'coat',
     cond: 'AA',
     sent: 'The man hoped that the new shock would not take long to paint early in the morning.',
     crit_pos: 7,
@@ -542,7 +482,6 @@ const items = shuffle([
   {
     item: 16,
     num: 61,
-    word: 'cold',
     cond: 'CU',
     sent: 'Ted complained about the nurse and said that he needed some medicine as soon as possible.',
     crit_pos: 5,
@@ -551,7 +490,6 @@ const items = shuffle([
   {
     item: 16,
     num: 62,
-    word: 'cold',
     cond: 'CA',
     sent: 'Ted complained about the cold and said that he needed some medicine as soon as possible.',
     crit_pos: 5,
@@ -560,7 +498,6 @@ const items = shuffle([
   {
     item: 16,
     num: 63,
-    word: 'cold',
     cond: 'AU',
     sent: 'Ted complained about the wall and said that he needed some medicine as soon as possible.',
     crit_pos: 5,
@@ -569,7 +506,6 @@ const items = shuffle([
   {
     item: 16,
     num: 64,
-    word: 'cold',
     cond: 'AA',
     sent: 'Ted complained about the yard and said that he needed some medicine as soon as possible.',
     crit_pos: 5,
@@ -578,7 +514,6 @@ const items = shuffle([
   {
     item: 17,
     num: 65,
-    word: 'deed',
     cond: 'CU',
     sent: 'John thought about the lease and wondered whether it had been signed within the deadline.',
     crit_pos: 5,
@@ -587,7 +522,6 @@ const items = shuffle([
   {
     item: 17,
     num: 66,
-    word: 'deed',
     cond: 'CA',
     sent: 'John thought about the deed and wondered whether it had been signed within the deadline.',
     crit_pos: 5,
@@ -596,7 +530,6 @@ const items = shuffle([
   {
     item: 17,
     num: 67,
-    word: 'deed',
     cond: 'AU',
     sent: 'John thought about the harp and wondered whether it had been signed within the deadline.',
     crit_pos: 5,
@@ -605,7 +538,6 @@ const items = shuffle([
   {
     item: 17,
     num: 68,
-    word: 'deed',
     cond: 'AA',
     sent: 'John thought about the mint and wondered whether it had been signed within the deadline.',
     crit_pos: 5,
@@ -614,7 +546,6 @@ const items = shuffle([
   {
     item: 18,
     num: 69,
-    word: 'dock',
     cond: 'CU',
     sent: 'The man was already at the jail but had to wait for the magistrate for another hour.',
     crit_pos: 7,
@@ -623,7 +554,6 @@ const items = shuffle([
   {
     item: 18,
     num: 70,
-    word: 'dock',
     cond: 'CA',
     sent: 'The man was already at the dock but had to wait for the magistrate for another hour.',
     crit_pos: 7,
@@ -632,7 +562,6 @@ const items = shuffle([
   {
     item: 18,
     num: 71,
-    word: 'dock',
     cond: 'AU',
     sent: 'The man was already at the golf but had to wait for the magistrate for another hour.',
     crit_pos: 7,
@@ -641,7 +570,6 @@ const items = shuffle([
   {
     item: 18,
     num: 72,
-    word: 'dock',
     cond: 'AA',
     sent: 'The man was already at the spit but had to wait for the magistrate for another hour.',
     crit_pos: 7,
@@ -650,7 +578,6 @@ const items = shuffle([
   {
     item: 19,
     num: 73,
-    word: 'drill',
     cond: 'CU',
     sent: 'The students liked the parade but thought it involved a lot more marching than they had expected.',
     crit_pos: 5,
@@ -659,7 +586,6 @@ const items = shuffle([
   {
     item: 19,
     num: 74,
-    word: 'drill',
     cond: 'CA',
     sent: 'The students liked the drill but thought it involved a lot more marching than they had expected.',
     crit_pos: 5,
@@ -668,7 +594,6 @@ const items = shuffle([
   {
     item: 19,
     num: 75,
-    word: 'drill',
     cond: 'AU',
     sent: 'The students liked the cage but thought it involved a lot more marching than they had expected.',
     crit_pos: 5,
@@ -677,7 +602,6 @@ const items = shuffle([
   {
     item: 19,
     num: 76,
-    word: 'drill',
     cond: 'AA',
     sent: 'The students liked the pulse but thought it involved a lot more marching than they had expected.',
     crit_pos: 5,
@@ -686,7 +610,6 @@ const items = shuffle([
   {
     item: 20,
     num: 77,
-    word: 'interest',
     cond: 'CU',
     sent: 'The man expected that any attention he received would be flattering for him tonight.',
     crit_pos: 6,
@@ -695,7 +618,6 @@ const items = shuffle([
   {
     item: 20,
     num: 78,
-    word: 'interest',
     cond: 'CA',
     sent: 'The man expected that any interest he received would be flattering for him tonight.',
     crit_pos: 6,
@@ -704,7 +626,6 @@ const items = shuffle([
   {
     item: 20,
     num: 79,
-    word: 'interest',
     cond: 'AU',
     sent: 'The man expected that any machine he received would be flattering for him tonight.',
     crit_pos: 6,
@@ -713,7 +634,6 @@ const items = shuffle([
   {
     item: 20,
     num: 80,
-    word: 'interest',
     cond: 'AA',
     sent: 'The man expected that any issue he received would be flattering for him tonight.',
     crit_pos: 6,
@@ -722,7 +642,6 @@ const items = shuffle([
   {
     item: 21,
     num: 81,
-    word: 'kids',
     cond: 'CU',
     sent: 'The mother knew that the sheep were coming by the sound of their hooves getting louder.',
     crit_pos: 6,
@@ -731,7 +650,6 @@ const items = shuffle([
   {
     item: 21,
     num: 82,
-    word: 'kids',
     cond: 'CA',
     sent: 'The mother knew that the kids were coming by the sound of their hooves getting louder.',
     crit_pos: 6,
@@ -740,7 +658,6 @@ const items = shuffle([
   {
     item: 21,
     num: 83,
-    word: 'kids',
     cond: 'AU',
     sent: 'The mother knew that the tools were coming by the sound of their hooves getting louder.',
     crit_pos: 6,
@@ -749,7 +666,6 @@ const items = shuffle([
   {
     item: 21,
     num: 84,
-    word: 'kids',
     cond: 'AA',
     sent: 'The mother knew that the scales were coming by the sound of their hooves getting louder.',
     crit_pos: 6,
@@ -758,7 +674,6 @@ const items = shuffle([
   {
     item: 22,
     num: 85,
-    word: 'lobby',
     cond: 'CU',
     sent: 'The plans meant that the new motor would be a lot more powerful in the future.',
     crit_pos: 7,
@@ -767,7 +682,6 @@ const items = shuffle([
   {
     item: 22,
     num: 86,
-    word: 'lobby',
     cond: 'CA',
     sent: 'The plans meant that the new lobby would be a lot more powerful in the future.',
     crit_pos: 7,
@@ -776,7 +690,6 @@ const items = shuffle([
   {
     item: 22,
     num: 87,
-    word: 'lobby',
     cond: 'AU',
     sent: 'The plans meant that the new breakfast would be a lot more powerful in the future.',
     crit_pos: 7,
@@ -785,7 +698,6 @@ const items = shuffle([
   {
     item: 22,
     num: 88,
-    word: 'lobby',
     cond: 'AA',
     sent: 'The plans meant that the new relief would be a lot more powerful in the future.',
     crit_pos: 7,
@@ -794,7 +706,6 @@ const items = shuffle([
   {
     item: 23,
     num: 89,
-    word: 'log',
     cond: 'CU',
     sent: 'They were surprised to find that the old map was so easy to read without much help.',
     crit_pos: 9,
@@ -803,7 +714,6 @@ const items = shuffle([
   {
     item: 23,
     num: 90,
-    word: 'log',
     cond: 'CA',
     sent: 'They were surprised to find that the old log was so easy to read without much help.',
     crit_pos: 9,
@@ -812,7 +722,6 @@ const items = shuffle([
   {
     item: 23,
     num: 91,
-    word: 'log',
     cond: 'AU',
     sent: 'They were surprised to find that the old zoo was so easy to read without much help.',
     crit_pos: 9,
@@ -821,7 +730,6 @@ const items = shuffle([
   {
     item: 23,
     num: 92,
-    word: 'log',
     cond: 'AA',
     sent: 'They were surprised to find that the old jet was so easy to read without much help.',
     crit_pos: 9,
@@ -830,7 +738,6 @@ const items = shuffle([
   {
     item: 24,
     num: 93,
-    word: 'mine',
     cond: 'CU',
     sent: 'The report said that the bomb found by the children was not armed in the end.',
     crit_pos: 6,
@@ -839,7 +746,6 @@ const items = shuffle([
   {
     item: 24,
     num: 94,
-    word: 'mine',
     cond: 'CA',
     sent: 'The report said that the mine found by the children was not armed in the end.',
     crit_pos: 6,
@@ -848,7 +754,6 @@ const items = shuffle([
   {
     item: 24,
     num: 95,
-    word: 'mine',
     cond: 'AU',
     sent: 'The report said that the sand found by the children was not armed in the end.',
     crit_pos: 6,
@@ -857,7 +762,6 @@ const items = shuffle([
   {
     item: 24,
     num: 96,
-    word: 'mine',
     cond: 'AA',
     sent: 'The report said that the page found by the children was not armed in the end.',
     crit_pos: 6,
@@ -866,7 +770,6 @@ const items = shuffle([
   {
     item: 25,
     num: 97,
-    word: 'mouse',
     cond: 'CU',
     sent: 'The woman disliked the hinge because of the way it clicked a bit too loudly.',
     crit_pos: 5,
@@ -875,7 +778,6 @@ const items = shuffle([
   {
     item: 25,
     num: 98,
-    word: 'mouse',
     cond: 'CA',
     sent: 'The woman disliked the mouse because of the way it clicked a bit too loudly.',
     crit_pos: 5,
@@ -884,7 +786,6 @@ const items = shuffle([
   {
     item: 25,
     num: 99,
-    word: 'mouse',
     cond: 'AU',
     sent: 'The woman disliked the nest because of the way it clicked a bit too loudly.',
     crit_pos: 5,
@@ -893,7 +794,6 @@ const items = shuffle([
   {
     item: 25,
     num: 100,
-    word: 'mouse',
     cond: 'AA',
     sent: 'The woman disliked the glare because of the way it clicked a bit too loudly.',
     crit_pos: 5,
@@ -902,7 +802,6 @@ const items = shuffle([
   {
     item: 26,
     num: 101,
-    word: 'note',
     cond: 'CU',
     sent: 'The girl was surprised by the price because it was much higher than she had expected.',
     crit_pos: 7,
@@ -911,7 +810,6 @@ const items = shuffle([
   {
     item: 26,
     num: 102,
-    word: 'note',
     cond: 'CA',
     sent: 'The girl was surprised by the note because it was much higher than she had expected.',
     crit_pos: 7,
@@ -920,25 +818,6 @@ const items = shuffle([
   {
     item: 26,
     num: 103,
-    word: 'note',
-    cond: 'AU',
-    sent: 'The girl was surprised by the oil because it was much higher than she had expected.',
-    crit_pos: 7,
-    dis_pos: 12,
-  },
-  {
-    item: 26,
-    num: 104,
-    word: 'note',
-    cond: 'AA',
-    sent: 'The girl was surprised by the strike because it was much higher than she had expected.',
-    crit_pos: 7,
-    dis_pos: 12,
-  },
-  {
-    item: 27,
-    num: 105,
-    word: 'nugget',
     cond: 'CU',
     sent: 'The man asked about the sandwich and was told that it was chicken this time around.',
     crit_pos: 6,
@@ -947,7 +826,6 @@ const items = shuffle([
   {
     item: 27,
     num: 106,
-    word: 'nugget',
     cond: 'CA',
     sent: 'The man asked about the nugget and was told that it was chicken this time around.',
     crit_pos: 6,
@@ -956,7 +834,6 @@ const items = shuffle([
   {
     item: 27,
     num: 107,
-    word: 'nugget',
     cond: 'AU',
     sent: 'The man asked about the cartoon and was told that it was chicken this time around.',
     crit_pos: 6,
@@ -965,7 +842,6 @@ const items = shuffle([
   {
     item: 27,
     num: 108,
-    word: 'nugget',
     cond: 'AA',
     sent: 'The man asked about the landing and was told that it was chicken this time around.',
     crit_pos: 6,
@@ -974,7 +850,6 @@ const items = shuffle([
   {
     item: 28,
     num: 109,
-    word: 'nut',
     cond: 'CU',
     sent: "The boy wasn't paying attention to the dust when it fell off the bolt onto the floor.",
     crit_pos: 8,
@@ -983,7 +858,6 @@ const items = shuffle([
   {
     item: 28,
     num: 110,
-    word: 'nut',
     cond: 'CA',
     sent: "The boy wasn't paying attention to the nut when it fell off the bolt onto the floor.",
     crit_pos: 8,
@@ -992,7 +866,6 @@ const items = shuffle([
   {
     item: 28,
     num: 111,
-    word: 'nut',
     cond: 'AU',
     sent: "The boy wasn't paying attention to the wheat when it fell off the bolt onto the floor.",
     crit_pos: 8,
@@ -1001,7 +874,6 @@ const items = shuffle([
   {
     item: 28,
     num: 112,
-    word: 'nut',
     cond: 'AA',
     sent: "The boy wasn't paying attention to the port when it fell off the bolt onto the floor.",
     crit_pos: 8,
@@ -1010,7 +882,6 @@ const items = shuffle([
   {
     item: 29,
     num: 113,
-    word: 'organ',
     cond: 'CU',
     sent: 'The expert knew that the damaged piano would be quite difficult to tune after all this time.',
     crit_pos: 7,
@@ -1019,7 +890,6 @@ const items = shuffle([
   {
     item: 29,
     num: 114,
-    word: 'organ',
     cond: 'CA',
     sent: 'The expert knew that the damaged organ would be quite difficult to tune after all this time.',
     crit_pos: 7,
@@ -1028,7 +898,6 @@ const items = shuffle([
   {
     item: 29,
     num: 115,
-    word: 'organ',
     cond: 'AU',
     sent: 'The expert knew that the damaged sergeant would be quite difficult to tune after all this time.',
     crit_pos: 7,
@@ -1037,7 +906,6 @@ const items = shuffle([
   {
     item: 29,
     num: 116,
-    word: 'organ',
     cond: 'AA',
     sent: 'The expert knew that the damaged marble would be quite difficult to tune after all this time.',
     crit_pos: 7,
@@ -1046,7 +914,6 @@ const items = shuffle([
   {
     item: 30,
     num: 117,
-    word: 'palm',
     cond: 'CU',
     sent: "The boy noticed the old man's hedge and thought that it seemed more wilted than it had before.",
     crit_pos: 7,
@@ -1055,7 +922,6 @@ const items = shuffle([
   {
     item: 30,
     num: 118,
-    word: 'palm',
     cond: 'CA',
     sent: "The boy noticed the old man's palm and thought that it seemed more wilted than it had before.",
     crit_pos: 7,
@@ -1064,7 +930,6 @@ const items = shuffle([
   {
     item: 30,
     num: 119,
-    word: 'palm',
     cond: 'AU',
     sent: "The boy noticed the old man's cough and thought that it seemed more wilted than it had before.",
     crit_pos: 7,
@@ -1073,7 +938,6 @@ const items = shuffle([
   {
     item: 30,
     num: 120,
-    word: 'palm',
     cond: 'AA',
     sent: "The boy noticed the old man's pitch and thought that it seemed more wilted than it had before.",
     crit_pos: 7,
@@ -1082,7 +946,6 @@ const items = shuffle([
   {
     item: 31,
     num: 121,
-    word: 'pen',
     cond: 'CU',
     sent: 'Frank compared the barn to the one he had bought for his cattle the previous year.',
     crit_pos: 4,
@@ -1091,7 +954,6 @@ const items = shuffle([
   {
     item: 31,
     num: 122,
-    word: 'pen',
     cond: 'CA',
     sent: 'Frank compared the pen to the one he had bought for his cattle the previous year.',
     crit_pos: 4,
@@ -1100,7 +962,6 @@ const items = shuffle([
   {
     item: 31,
     num: 123,
-    word: 'pen',
     cond: 'AU',
     sent: 'Frank compared the beer to the one he had bought for his cattle the previous year.',
     crit_pos: 4,
@@ -1109,7 +970,6 @@ const items = shuffle([
   {
     item: 31,
     num: 124,
-    word: 'pen',
     cond: 'AA',
     sent: 'Frank compared the clutch to the one he had bought for his cattle the previous year.',
     crit_pos: 4,
@@ -1118,7 +978,6 @@ const items = shuffle([
   {
     item: 32,
     num: 125,
-    word: 'pipe',
     cond: 'CU',
     sent: 'The boy saw that the carpet was the same sort his father had laid the last time.',
     crit_pos: 6,
@@ -1127,7 +986,6 @@ const items = shuffle([
   {
     item: 32,
     num: 126,
-    word: 'pipe',
     cond: 'CA',
     sent: 'The boy saw that the pipe was the same sort his father had laid the last time.',
     crit_pos: 6,
@@ -1136,7 +994,6 @@ const items = shuffle([
   {
     item: 32,
     num: 127,
-    word: 'pipe',
     cond: 'AU',
     sent: 'The boy saw that the ink was the same sort his father had laid the last time.',
     crit_pos: 6,
@@ -1145,7 +1002,6 @@ const items = shuffle([
   {
     item: 32,
     num: 128,
-    word: 'pipe',
     cond: 'AA',
     sent: 'The boy saw that the spray was the same sort his father had laid the last time.',
     crit_pos: 6,
@@ -1154,7 +1010,6 @@ const items = shuffle([
   {
     item: 33,
     num: 129,
-    word: 'plant',
     cond: 'CU',
     sent: 'The newspaper reported that the church had been very difficul to build from the start.',
     crit_pos: 6,
@@ -1163,7 +1018,6 @@ const items = shuffle([
   {
     item: 33,
     num: 130,
-    word: 'plant',
     cond: 'CA',
     sent: 'The newspaper reported that the plant had been very difficul to build from the start.',
     crit_pos: 6,
@@ -1172,7 +1026,6 @@ const items = shuffle([
   {
     item: 33,
     num: 131,
-    word: 'plant',
     cond: 'AU',
     sent: 'The newspaper reported that the cook had been very difficul to build from the start.',
     crit_pos: 6,
@@ -1181,7 +1034,6 @@ const items = shuffle([
   {
     item: 33,
     num: 132,
-    word: 'plant',
     cond: 'AA',
     sent: 'The newspaper reported that the count had been very difficul to build from the start.',
     crit_pos: 6,
@@ -1190,7 +1042,6 @@ const items = shuffle([
   {
     item: 34,
     num: 133,
-    word: 'poker',
     cond: 'CU',
     sent: 'Claire knew that this type of necklace would probably be more collectible than all the others.',
     crit_pos: 7,
@@ -1199,7 +1050,6 @@ const items = shuffle([
   {
     item: 34,
     num: 134,
-    word: 'poker',
     cond: 'CA',
     sent: 'Claire knew that this type of poker would probably be more collectible than all the others.',
     crit_pos: 7,
@@ -1208,7 +1058,6 @@ const items = shuffle([
   {
     item: 34,
     num: 135,
-    word: 'poker',
     cond: 'AU',
     sent: 'Claire knew that this type of ravine would probably be more collectible than all the others.',
     crit_pos: 7,
@@ -1217,7 +1066,6 @@ const items = shuffle([
   {
     item: 34,
     num: 136,
-    word: 'poker',
     cond: 'AA',
     sent: 'Claire knew that this type of pupil would probably be more collectible than all the others.',
     crit_pos: 7,
@@ -1226,7 +1074,6 @@ const items = shuffle([
   {
     item: 35,
     num: 137,
-    word: 'program',
     cond: 'CU',
     sent: 'When Tom looked at the computer he saw that it now had more viruses than ever before.',
     crit_pos: 6,
@@ -1235,7 +1082,6 @@ const items = shuffle([
   {
     item: 35,
     num: 138,
-    word: 'program',
     cond: 'CA',
     sent: 'When Tom looked at the program he saw that it now had more viruses than ever before.',
     crit_pos: 6,
@@ -1244,7 +1090,6 @@ const items = shuffle([
   {
     item: 35,
     num: 139,
-    word: 'program',
     cond: 'AU',
     sent: 'When Tom looked at the kitchen he saw that it now had more viruses than ever before.',
     crit_pos: 6,
@@ -1253,7 +1098,6 @@ const items = shuffle([
   {
     item: 35,
     num: 140,
-    word: 'program',
     cond: 'AA',
     sent: 'When Tom looked at the capital he saw that it now had more viruses than ever before.',
     crit_pos: 6,
@@ -1262,7 +1106,6 @@ const items = shuffle([
   {
     item: 36,
     num: 141,
-    word: 'records',
     cond: 'CU',
     sent: 'The students knew that the messages were so old they would be hard to decipher without a lot of help.',
     crit_pos: 6,
@@ -1271,7 +1114,6 @@ const items = shuffle([
   {
     item: 36,
     num: 142,
-    word: 'records',
     cond: 'CA',
     sent: 'The students knew that the records were so old they would be hard to decipher without a lot of help.',
     crit_pos: 6,
@@ -1280,7 +1122,6 @@ const items = shuffle([
   {
     item: 36,
     num: 143,
-    word: 'records',
     cond: 'AU',
     sent: 'The students knew that the battles were so old they would be hard to decipher without a lot of help.',
     crit_pos: 6,
@@ -1289,7 +1130,6 @@ const items = shuffle([
   {
     item: 36,
     num: 144,
-    word: 'records',
     cond: 'AA',
     sent: 'The students knew that the matches were so old they would be hard to decipher without a lot of help.',
     crit_pos: 6,
@@ -1298,7 +1138,6 @@ const items = shuffle([
   {
     item: 37,
     num: 145,
-    word: 'ruler',
     cond: 'CU',
     sent: 'The man hoped that the new dentist would be a lot more compassionate than the last.',
     crit_pos: 7,
@@ -1307,7 +1146,6 @@ const items = shuffle([
   {
     item: 37,
     num: 146,
-    word: 'ruler',
     cond: 'CA',
     sent: 'The man hoped that the new ruler would be a lot more compassionate than the last.',
     crit_pos: 7,
@@ -1316,7 +1154,6 @@ const items = shuffle([
   {
     item: 37,
     num: 147,
-    word: 'ruler',
     cond: 'AU',
     sent: 'The man hoped that the new ocean would be a lot more compassionate than the last.',
     crit_pos: 7,
@@ -1325,7 +1162,6 @@ const items = shuffle([
   {
     item: 37,
     num: 148,
-    word: 'ruler',
     cond: 'AA',
     sent: 'The man hoped that the new shower would be a lot more compassionate than the last.',
     crit_pos: 7,
@@ -1334,7 +1170,6 @@ const items = shuffle([
   {
     item: 38,
     num: 149,
-    word: 'scoop',
     cond: 'CU',
     sent: 'The woman thought that such a big memoir might be quite a challenge to write in such a short time.',
     crit_pos: 8,
@@ -1343,7 +1178,6 @@ const items = shuffle([
   {
     item: 38,
     num: 150,
-    word: 'scoop',
     cond: 'CA',
     sent: 'The woman thought that such a big scoop might be quite a challenge to write in such a short time.',
     crit_pos: 8,
@@ -1352,7 +1186,6 @@ const items = shuffle([
   {
     item: 38,
     num: 151,
-    word: 'scoop',
     cond: 'AU',
     sent: 'The woman thought that such a big spoon might be quite a challenge to write in such a short time.',
     crit_pos: 8,
@@ -1361,7 +1194,6 @@ const items = shuffle([
   {
     item: 38,
     num: 152,
-    word: 'scoop',
     cond: 'AA',
     sent: 'The woman thought that such a big lash might be quite a challenge to write in such a short time.',
     crit_pos: 8,
@@ -1370,7 +1202,6 @@ const items = shuffle([
   {
     item: 39,
     num: 153,
-    word: 'sentence',
     cond: 'CU',
     sent: 'When the old man heard the judgment he thought it was too lenient under the circumstances.',
     crit_pos: 7,
@@ -1379,7 +1210,6 @@ const items = shuffle([
   {
     item: 39,
     num: 154,
-    word: 'sentence',
     cond: 'CA',
     sent: 'When the old man heard the sentence he thought it was too lenient under the circumstances.',
     crit_pos: 7,
@@ -1388,7 +1218,6 @@ const items = shuffle([
   {
     item: 39,
     num: 155,
-    word: 'sentence',
     cond: 'AU',
     sent: 'When the old man heard the supper he thought it was too lenient under the circumstances.',
     crit_pos: 7,
@@ -1397,7 +1226,6 @@ const items = shuffle([
   {
     item: 39,
     num: 156,
-    word: 'sentence',
     cond: 'AA',
     sent: 'When the old man heard the balance he thought it was too lenient under the circumstances.',
     crit_pos: 7,
@@ -1406,7 +1234,6 @@ const items = shuffle([
   {
     item: 40,
     num: 157,
-    word: 'shells',
     cond: 'CU',
     sent: 'The men were told that all the troops had to be removed from the arsenal as quickly as possible.',
     crit_pos: 8,
@@ -1415,7 +1242,6 @@ const items = shuffle([
   {
     item: 40,
     num: 158,
-    word: 'shells',
     cond: 'CA',
     sent: 'The men were told that all the shells had to be removed from the arsenal as quickly as possible.',
     crit_pos: 8,
@@ -1424,7 +1250,6 @@ const items = shuffle([
   {
     item: 40,
     num: 159,
-    word: 'shells',
     cond: 'AU',
     sent: 'The men were told that all the lakes had to be removed from the arsenal as quickly as possible. ',
     crit_pos: 8,
@@ -1433,7 +1258,6 @@ const items = shuffle([
   {
     item: 40,
     num: 160,
-    word: 'shells',
     cond: 'AA',
     sent: 'The men were told that all the knots had to be removed from the arsenal as quickly as possible. ',
     crit_pos: 8,
@@ -1442,7 +1266,6 @@ const items = shuffle([
   {
     item: 41,
     num: 161,
-    word: 'staff',
     cond: 'CU',
     sent: 'The man worried that a bigger phone would be more difficult to hold for too long.',
     crit_pos: 7,
@@ -1451,7 +1274,6 @@ const items = shuffle([
   {
     item: 41,
     num: 162,
-    word: 'staff',
     cond: 'CA',
     sent: 'The man worried that a bigger staff would be more difficult to hold for too long.',
     crit_pos: 7,
@@ -1460,7 +1282,6 @@ const items = shuffle([
   {
     item: 41,
     num: 163,
-    word: 'staff',
     cond: 'AU',
     sent: 'The man worried that a bigger leader would be more difficult to hold for too long.',
     crit_pos: 7,
@@ -1469,7 +1290,6 @@ const items = shuffle([
   {
     item: 41,
     num: 164,
-    word: 'staff',
     cond: 'AA',
     sent: 'The man worried that a bigger race would be more difficult to hold for too long.',
     crit_pos: 7,
@@ -1478,7 +1298,6 @@ const items = shuffle([
   {
     item: 42,
     num: 165,
-    word: 'star',
     cond: 'CU',
     sent: 'The news story on the actor included a picture and lots more gossip than ever before.',
     crit_pos: 6,
@@ -1487,7 +1306,6 @@ const items = shuffle([
   {
     item: 42,
     num: 166,
-    word: 'star',
     cond: 'CA',
     sent: 'The news story on the star included a picture and lots more gossip than ever before.',
     crit_pos: 6,
@@ -1496,7 +1314,6 @@ const items = shuffle([
   {
     item: 42,
     num: 167,
-    word: 'star',
     cond: 'AU',
     sent: 'The news story on the fish included a picture and lots more gossip than ever before.',
     crit_pos: 6,
@@ -1505,7 +1322,6 @@ const items = shuffle([
   {
     item: 42,
     num: 168,
-    word: 'star',
     cond: 'AA',
     sent: 'The news story on the ear included a picture and lots more gossip than ever before.',
     crit_pos: 6,
@@ -1514,7 +1330,6 @@ const items = shuffle([
   {
     item: 43,
     num: 169,
-    word: 'strain',
     cond: 'CU',
     sent: 'The report said that the disease he was suffering from was not contagious for much longer.',
     crit_pos: 6,
@@ -1523,7 +1338,6 @@ const items = shuffle([
   {
     item: 43,
     num: 170,
-    word: 'strain',
     cond: 'CA',
     sent: 'The report said that the strain he was suffering from was not contagious for much longer.',
     crit_pos: 6,
@@ -1532,7 +1346,6 @@ const items = shuffle([
   {
     item: 43,
     num: 171,
-    word: 'strain',
     cond: 'AU',
     sent: 'The report said that the cheese he was suffering from was not contagious for much longer.',
     crit_pos: 6,
@@ -1541,7 +1354,6 @@ const items = shuffle([
   {
     item: 43,
     num: 172,
-    word: 'strain',
     cond: 'AA',
     sent: 'The report said that the cap he was suffering from was not contagious for much longer.',
     crit_pos: 6,
@@ -1550,7 +1362,6 @@ const items = shuffle([
   {
     item: 44,
     num: 173,
-    word: 'tables',
     cond: 'CU',
     sent: 'The professor disliked the laws because he thought they were too confusing to be of use.',
     crit_pos: 5,
@@ -1559,7 +1370,6 @@ const items = shuffle([
   {
     item: 44,
     num: 174,
-    word: 'tables',
     cond: 'CA',
     sent: 'The professor disliked the tables because he thought they were too confusing to be of use.',
     crit_pos: 5,
@@ -1568,7 +1378,6 @@ const items = shuffle([
   {
     item: 44,
     num: 175,
-    word: 'tables',
     cond: 'AU',
     sent: 'The professor disliked the coffees because he thought they were too confusing to be of use.',
     crit_pos: 5,
@@ -1577,7 +1386,6 @@ const items = shuffle([
   {
     item: 44,
     num: 176,
-    word: 'tables',
     cond: 'AA',
     sent: 'The professor disliked the posts because he thought they were too confusing to be of use.',
     crit_pos: 5,
@@ -1586,7 +1394,6 @@ const items = shuffle([
   {
     item: 45,
     num: 177,
-    word: 'tie',
     cond: 'CU',
     sent: "Jim was worried about the rain and hoped it wouldn't ruin the tournament for everyone involved.",
     crit_pos: 6,
@@ -1595,7 +1402,6 @@ const items = shuffle([
   {
     item: 45,
     num: 178,
-    word: 'tie',
     cond: 'CA',
     sent: "Jim was worried about the tie and hoped it wouldn't ruin the tournament for everyone involved.",
     crit_pos: 6,
@@ -1604,7 +1410,6 @@ const items = shuffle([
   {
     item: 45,
     num: 179,
-    word: 'tie',
     cond: 'AU',
     sent: "Jim was worried about the egg and hoped it wouldn't ruin the tournament for everyone involved.",
     crit_pos: 6,
@@ -1613,7 +1418,6 @@ const items = shuffle([
   {
     item: 45,
     num: 180,
-    word: 'tie',
     cond: 'AA',
     sent: "Jim was worried about the stock and hoped it wouldn't ruin the tournament for everyone involved.",
     crit_pos: 6,
@@ -1622,7 +1426,6 @@ const items = shuffle([
   {
     item: 46,
     num: 181,
-    word: 'trailers',
     cond: 'CU',
     sent: 'The boys saw one of the previews and asked to see the movie this coming weekend.',
     crit_pos: 7,
@@ -1631,7 +1434,6 @@ const items = shuffle([
   {
     item: 46,
     num: 182,
-    word: 'trailers',
     cond: 'CA',
     sent: 'The boys saw one of the trailers and asked to see the movie this coming weekend.',
     crit_pos: 7,
@@ -1640,7 +1442,6 @@ const items = shuffle([
   {
     item: 46,
     num: 183,
-    word: 'trailers',
     cond: 'AU',
     sent: 'The boys saw one of the vases and asked to see the movie this coming weekend.',
     crit_pos: 7,
@@ -1649,7 +1450,6 @@ const items = shuffle([
   {
     item: 46,
     num: 184,
-    word: 'trailers',
     cond: 'AA',
     sent: 'The boys saw one of the dressers and asked to see the movie this coming weekend.',
     crit_pos: 7,
@@ -1658,7 +1458,6 @@ const items = shuffle([
   {
     item: 47,
     num: 185,
-    word: 'volume',
     cond: 'CU',
     sent: 'The man explained why the poem was not going to be published the following year.',
     crit_pos: 6,
@@ -1667,7 +1466,6 @@ const items = shuffle([
   {
     item: 47,
     num: 186,
-    word: 'volume',
     cond: 'CA',
     sent: 'The man explained why the volume was not going to be published the following year.',
     crit_pos: 6,
@@ -1676,7 +1474,6 @@ const items = shuffle([
   {
     item: 47,
     num: 187,
-    word: 'volume',
     cond: 'AU',
     sent: 'The man explained why the aircraft was not going to be published the following year.',
     crit_pos: 6,
@@ -1685,7 +1482,6 @@ const items = shuffle([
   {
     item: 47,
     num: 188,
-    word: 'volume',
     cond: 'AA',
     sent: 'The man explained why the cricket was not going to be published the following year.',
     crit_pos: 6,
@@ -1694,7 +1490,6 @@ const items = shuffle([
   {
     item: 48,
     num: 189,
-    word: 'watch',
     cond: 'CU',
     sent: 'The man was annoyed that the police had not been quite as vigilant as he had hoped.',
     crit_pos: 7,
@@ -1703,7 +1498,6 @@ const items = shuffle([
   {
     item: 48,
     num: 190,
-    word: 'watch',
     cond: 'CA',
     sent: 'The man was annoyed that the watch had not been quite as vigilant as he had hoped.',
     crit_pos: 7,
@@ -1712,7 +1506,6 @@ const items = shuffle([
   {
     item: 48,
     num: 191,
-    word: 'watch',
     cond: 'AU',
     sent: 'The man was annoyed that the joke had not been quite as vigilant as he had hoped.',
     crit_pos: 7,
@@ -1721,7 +1514,6 @@ const items = shuffle([
   {
     item: 48,
     num: 192,
-    word: 'watch',
     cond: 'AA',
     sent: 'The man was annoyed that the play had not been quite as vigilant as he had hoped.',
     crit_pos: 7,
