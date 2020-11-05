@@ -31,9 +31,28 @@ const prms = {
 const task_instructions = {
   type: 'html-keyboard-response',
   stimulus:
-    generate_html('Welcome:', 'center', 'black', 50, [0, -100], 1, true) +
-    generate_html('Respond to the direction of the central arrow', 'center', 'black', 40, [0, 0]) +
-    generate_html('LEFT = "D" key &emsp; RIGHT = "J" key', 'center', 'black', 40, [0, 100]),
+    generate_formatted_html({
+      text: 'Welcome:',
+      align: 'center',
+      color: 'black',
+      fontsize: 50,
+      xypos: [0, -30],
+      bold: true,
+    }) +
+    generate_formatted_html({
+      text: 'Respond to the direction of the central arrow',
+      align: 'center',
+      color: 'black',
+      fontsize: 40,
+      xypos: [0, 0],
+    }) +
+    generate_formatted_html({
+      text: 'LEFT = "D" key &emsp; RIGHT = "J" key',
+      alighn: 'center',
+      colour: 'black',
+      fontsize: 40,
+      xypos: [0, 50],
+    }),
   post_trial_gap: prms.waitDur,
 };
 
@@ -137,7 +156,7 @@ function genExpSeq() {
   let exp = [];
 
   exp.push(welcome_en);
-  exp.push(vpInfoForm_en);
+  // exp.push(vpInfoForm_en);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
