@@ -1,3 +1,13 @@
+const practice_item = [
+  {
+    item: 1,
+    cond: 'Practice',
+    sent: 'Press the space bar to reveal the sentence word by word.',
+    crit_pos: 1,
+    dis_pos: 1,
+  },
+];
+
 const items = shuffle([
   {
     item: 1,
