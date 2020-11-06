@@ -71,8 +71,13 @@ const task_instructions2 = {
       xypos: [0, -100],
     }) +
     generate_formatted_html({
-      text:
-        'Press the spacebar to reveal a sentence word-by-word. Example: <br><br> _____ ___ ________ __ <br>Press ___ ________ __ <br>Press the ________ __ <br> Press the spacebar __ <br><br><br> Please read the sentences carefully!',
+      text: `Press the spacebar to reveal a sentence word-by-word. 
+        Example: <br><br> 
+        _____ ___ ________ __ <br>
+        Press ___ ________ __ <br>
+        Press the ________ __ <br> 
+        Press the spacebar __ <br><br><br> 
+        Please read the sentences carefully!`,
       fontsize: 32,
       align: 'left',
       xypos: [0, -100],
@@ -95,17 +100,17 @@ let stroop_text_instructions;
 if (prms.stroop_mapping === 1) {
   prms.stroop_resp_keys = ['Q', 'P', 27];
   stroop_text_instructions =
-    'Part 2:<br>' +
+    'Part 2:<br><br>' +
     'Respond to the font color, not word meaning!<br>' +
-    "<b><span style='color:#0000FF'>BLUE/GREEN</b> &#10142; Press the <b>'Q'</b> key (left index finger) <br> " +
-    "<b><span style='color:#008000'>BLUE/GREEN</b> &#10142; Press the <b>'P'</b> key (right index finger).";
+    '<b><span style="color:#0000FF">BLUE/GREEN</b> &#10142; Press the <b>\'Q\'</b> key (left index finger) <br>' +
+    '<b><span style="color:#008000">BLUE/GREEN</b> &#10142; Press the <b>\'P\'</b> key (right index finger).';
 } else if (prms.stroop_mapping === 2) {
   prms.stroop_resp_keys = ['P', 'Q', 27];
   stroop_text_instructions =
-    'Part 2:<br>' +
+    'Part 2:<br><br>' +
     'Respond to the font color, not word meaning!<br>' +
-    "<b><span style='color:#008000'>BLUE/GREEN</b> &#10142; Press the <b>'Q'</b> key (left index finger) <br> " +
-    "<b><span style='color:#0000FF'>BLUE/GREEN</b> &#10142; Press the <b>'P'</b> key (right index finger).";
+    '<b><span style="color:#008000">BLUE/GREEN</b> &#10142; Press the <b>\'Q\'</b> key (left index finger) <br>' +
+    '<b><span style="color:#0000FF">BLUE/GREEN</b> &#10142; Press the <b>\'P\'</b> key (right index finger).';
 }
 
 const task_instructions4 = {
@@ -116,12 +121,27 @@ const task_instructions4 = {
   stimulus: generate_formatted_html({ text: stroop_text_instructions, fontsize: 32, lineheight: 2.5 }),
 };
 
+const test_phase_instructions =
+  'Part 3: <br><br>' +
+  `In the next phase of the experiment, you will be presentend with full sentences. 
+  Your task is to indicate whether the presented sentence appeared during Part 1 of the experiment.
+  Press any key to continue!`;
+
+const task_instructions5 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({ text: test_phase_instructions, fontsize: 32, lineheight: 1.5, align: 'left' }),
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                         Sentence Materials                         //
 ////////////////////////////////////////////////////////////////////////
 // See item_list.js for item list
 // Item selection
 function select_items(items, condition, selected, n) {
+  'use strict';
   return items
     .filter(function (i) {
       return (i.cond === condition) & !selected.includes(i.item);
@@ -130,19 +150,35 @@ function select_items(items, condition, selected, n) {
 }
 
 function update_selected_items(items) {
+  'use strict';
   for (let i = 0; i < items.length; i++) {
     selected_items.push(items[i].item);
   }
 }
 
 function repeat_item_test_phase(items) {
+  'use strict';
   for (let i = 0; i < items.length; i++) {
     items[i].repeat = i < items.length / 2 ? true : false;
   }
 }
 
-function create_test_items(items, items_cu, items_ca) {
-  console.log(items);
+function create_test_items(items_org, items) {
+  'use strict';
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].repeat) {
+      items[i].test_sent = items[i].sent;
+      items[i].test_answer = true;
+    } else {
+      for (let j = 0; j < items_org.length; j++) {
+        if ((items_cu[i].item === items_org[j].item) & (items_org[j].cond !== items[i].cond)) {
+          items[i].test_sent = items_org[j].sent;
+          items[i].answer = false;
+        }
+      }
+    }
+  }
+  return items;
 }
 
 let selected_items = [];
@@ -161,7 +197,10 @@ const items_final = shuffle(items_cu.concat(items_ca));
 // console.log(items_final);
 
 // test items for third phase
-items_test = create_test_items(items, items_cu, items_ca);
+const items_cu_test = create_test_items(items, items_cu);
+const items_ca_test = create_test_items(items, items_ca);
+const items_test = shuffle(items_cu_test.concat(items_ca_test));
+console.log(items_test);
 
 ////////////////////////////////////////////////////////////////////////
 //                        jsPsych type stimuli                        //
@@ -176,7 +215,7 @@ const iti = {
   func: function () {},
 };
 
-const moving_window_text = {
+const trial_moving_window_text = {
   type: 'text-moving-window-keyboard-response',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -300,6 +339,15 @@ function codeTrial() {
   }
 }
 
+// TO DO
+// const trial_test = {
+//   type: 'static-canvas-keyboard-response',
+//   canvas_colour: canvas_colour,
+//   canvas_size: canvas_size,
+//   canvas_border: canvas_border,
+//   func: [drawTestSentence],
+// };
+
 ////////////////////////////////////////////////////////////////////////
 //                      Amazon Turk Random Code                       //
 ////////////////////////////////////////////////////////////////////////
@@ -347,7 +395,7 @@ function create_timeline(items) {
   let timeline_items = [];
   for (let i = 0; i < items.length; i++) {
     const tmp = {
-      timeline: [moving_window_text],
+      timeline: [trial_moving_window_text],
       timeline_variables: create_timeline_variables(items[i]),
     };
     timeline_items.push(tmp);
@@ -403,18 +451,21 @@ function genExpSeq() {
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
+  // exp.push(task_instructions1);
+  // exp.push(task_instructions2);
 
-  // 1st phase (Sentences)
-  exp.push(exp_timeline_sentences);
-  exp.push(save_sentences);
-  exp.push(task_instructions3);
+  // // 1st phase (Sentences)
+  // exp.push(exp_timeline_sentences);
+  // exp.push(save_sentences);
+  // exp.push(task_instructions3);
 
-  // 2nd phase (Stroop Task)
-  exp.push(task_instructions4);
-  exp.push(trial_timeline_stroop);
-  exp.push(save_stroop);
+  // // 2nd phase (Stroop Task)
+  // exp.push(task_instructions4);
+  // exp.push(trial_timeline_stroop);
+  // exp.push(save_stroop);
+
+  // 3rd phase (Sentence Recognition/Memory phase)
+  exp.push(task_instructions5);
 
   // end phase
   exp.push(debrief_en);
