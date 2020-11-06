@@ -36,7 +36,7 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 const prmsWordByWord = {
   iti: 500,
   resp_key: ['Space'],
-  mask_type: 1, // select 1 vs. 2
+  mask_type: 2, // select 1 vs. 2
   font_size: '20px monospace',
   sentence_width: 1250,
   cTrl: 1, // count trials
@@ -215,7 +215,6 @@ function codeTrialWordByWord() {
 function create_timeline_variables(items) {
   const txt = items.sent.split(' ');
   let seq = [];
-  let mask_type = getRandomInt(1, 2); // TO DO: pick final mask type!
   for (let i = -1; i < txt.length; i++) {
     seq.push({
       item: items.item,
@@ -223,7 +222,7 @@ function create_timeline_variables(items) {
       sent: items.sent,
       word_num: i,
       length: txt.length,
-      mask_type: mask_type,
+      mask_type: prmsWordByWord.mask_type,
     });
   }
   return seq;
@@ -269,7 +268,8 @@ const stroop_instructionsStart1 = {
     text:
       `Part 2: This section involves responding to font colour. Ignore word meaning! <br><br>` +
       stroop_resp_mapping +
-      `You will begin with a practice block of 8 trials. Here, individual trial feedback is provided.<br><br> 
+      `You will begin with a practice block of 8 trials. Here, individual trial feedback is provided.
+      Respond as quickly and as accurately as possible.<br><br> 
       Press any key to continue!`,
     fontsize: 32,
     lineheight: 1.5,
@@ -287,6 +287,7 @@ const stroop_instructionsStart2 = {
       `Part 2: Continue responding to font colour. Remember: ignore word meaning! <br><br>` +
       stroop_resp_mapping +
       `You will now perform a block of 48 trials. Here, individual trial feedback is not provided.<br><br>
+      Respond as quickly and as accurately as possible.<br><br> 
       Press any key to continue!`,
     fontsize: 32,
     lineheight: 1.5,
@@ -621,7 +622,7 @@ const alphaNum = {
 const save_wordByWord = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_wordByWord' + vpNum;
+    let data_filename = dirName + 'data/' + expName + '_wordByWord_' + vpNum;
     saveData('/Common/write_data.php', data_filename, { stim: 'SentenceConflict' });
   },
   timing_post_trial: 200,
