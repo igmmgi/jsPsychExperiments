@@ -135,18 +135,33 @@ function update_selected_items(items) {
   }
 }
 
+function repeat_item_test_phase(items) {
+  for (let i = 0; i < items.length; i++) {
+    items[i].repeat = i < items.length / 2 ? true : false;
+  }
+}
+
+function create_test_items(items, items_cu, items_ca) {
+  console.log(items);
+}
+
 let selected_items = [];
 const items_cu = select_items(items, 'CU', [], 24);
 update_selected_items(items_cu);
+repeat_item_test_phase(items_cu);
 
 const items_ca = select_items(items, 'CA', selected_items, 24);
 update_selected_items(items_ca);
+repeat_item_test_phase(items_ca);
 
 // selected_items.sort((a, b) => a - b);
 // console.log(selected_items);
 
 const items_final = shuffle(items_cu.concat(items_ca));
 // console.log(items_final);
+
+// test items for third phase
+items_test = create_test_items(items, items_cu, items_ca);
 
 ////////////////////////////////////////////////////////////////////////
 //                        jsPsych type stimuli                        //
@@ -384,7 +399,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  exp.push(vpInfoForm_en);
+  // exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 

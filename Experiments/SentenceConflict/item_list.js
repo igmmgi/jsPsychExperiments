@@ -818,6 +818,22 @@ const items = shuffle([
   {
     item: 26,
     num: 103,
+    cond: 'AU',
+    sent: 'The girl was surprised by the oil because it was much higher than she had expected.',
+    crit_pos: 7,
+    dis_pos: 12,
+  },
+  {
+    item: 26,
+    num: 104,
+    cond: 'AA',
+    sent: 'The girl was surprised by the strike because it was much higher than she had expected.',
+    crit_pos: 7,
+    dis_pos: 12,
+  },
+  {
+    item: 27,
+    num: 105,
     cond: 'CU',
     sent: 'The man asked about the sandwich and was told that it was chicken this time around.',
     crit_pos: 6,
@@ -1521,4 +1537,4 @@ const items = shuffle([
   },
 ]);
 
-// console.log(items);
+console.log(items);
