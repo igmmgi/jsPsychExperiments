@@ -5,7 +5,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = 'rgba(200, 200, 200, 1)';
-const canvas_size = [1280, 960];
+const canvas_size = [1280, 720];
 const canvas_border = '5px solid black';
 
 ////////////////////////////////////////////////////////////////////////
@@ -19,7 +19,7 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nBlks: 4,
+  nBlks: 4, // split into 8 "mini" blocks
   fixWidth: 3,
   fixSize: 15,
   fixDur: 750,
@@ -27,12 +27,17 @@ const prms = {
   fbFont: '60px Arial',
   waitDur: 750,
   iti: 750,
-  fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
+  fbTxt: ['Richtig', 'Falsch'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
 
-const words_upper_de = shuffle([
+// practice items
+const words_practice = ['xxxx', 'xxxx', 'xxxx', 'xxxx'];
+const colours_practice = ['red', 'blue', 'green', 'orange'];
+
+// up/down items
+const words_up = shuffle([
   'Alpen',
   'Ballon',
   'Vogel',
@@ -57,26 +62,21 @@ const words_upper_de = shuffle([
   'Planet',
   'Dach',
   'Satellit',
-  // 'Himmel',
-  // 'Hochhaus',
-  // 'Gipfel',
-  // 'Stern',
-  // 'Sonne',
-  // 'Spitze',
-  // 'Turm',
-  // 'Weltall',
+  'Himmel',
+  'Hochhaus',
+  'Gipfel',
+  'Stern',
+  'Sonne',
+  'Spitze',
+  'Turm',
+  'Weltall',
+  'NewWord33',
+  'NewWord34',
+  'NewWord35',
+  'NewWord36',
 ]);
 
-//const words_upper_en = shuffle([
-//    "alps", "balloon", "bird", "castle", "ceiling", "cloud",
-//    "comet", "crown", "eagle", "gable", "gallery",
-//    "hawk", "height", "highlands", "hill", "kite",
-//    "maximum", "moon", "mountains", "nest", "plane",
-//    "planet", "roof", "satellite", "sky", "skyscraper",
-//    "summit", "star", "sun", "top", "tower", "universe"
-//]);
-
-const words_lower_de = shuffle([
+const words_down = shuffle([
   'Abgrund',
   'Schlucht',
   'Teppich',
@@ -101,34 +101,27 @@ const words_lower_de = shuffle([
   'Erde',
   'Sohle',
   'Stein',
-  // 'Straße',
-  // 'Untergrund',
-  // 'U-Boot',
-  // 'U-Bahn',
-  // 'Sumpf',
-  // 'Tunnel',
-  // 'Unterwelt',
-  // 'Wurm',
+  'Straße',
+  'Untergrund',
+  'U-Boot',
+  'U-Bahn',
+  'Sumpf',
+  'Tunnel',
+  'Unterwelt',
+  'Wurm',
+  'NewWord33',
+  'NewWord34',
+  'NewWord35',
+  'NewWord36',
 ]);
 
-// const words_lower_en = shuffle([
-//     "abyss" , "canyon" , "carpet" ," cellar" ," clover" ,
-//     "depth", "ditch"," diver" , "earth", "floor", "foot" ,
-//     "grass", "grave"," ground" , "hell", "mole", "mouse" ,
-//     "rails", "river"," root", "sidewalk", "soil"," sole" ,
-//     "stone", "street"," subfont", "submarine", "subway" ,
-//     "swamp", "tunnel"," underworld", "worm"
-// ]);
+const words_up_down = words_up.concat(words_down);
+const colours_up_down = ['red', 'blue', 'green', 'orange'];
+// console.log(words_up_down);
 
-const words = words_upper_de.concat(words_lower_de);
-const stroops = repeatArray(['red', 'blue', 'green', 'orange'], 16);
-
-const resp_mapping_location = ['up', 'up', 'down', 'down'];
-const resp_mapping_color = shuffle(['red', 'blue', 'green', 'orange']);
-const colours = ['red', 'blue', 'green', 'orange'];
-
-const stroop_words = repeatArray(repeatArray(['red', 'blue', 'green', 'orange'], 6), 2);
-const stroop_colours = repeatArray(
+// Stroop words + colours
+const words_stroop = repeatArray(repeatArray(['red', 'blue', 'green', 'orange'], 3), 6);
+const colours_stroop = repeatArray(
   repeatArray(['red', 'blue', 'green', 'orange'], 3).concat([
     'blue',
     'red',
@@ -143,11 +136,15 @@ const stroop_colours = repeatArray(
     'orange',
     'green',
   ]),
-  2,
+  3,
 );
+// console.log(words_stroop);
+// console.log(colours_stroop);
 
-// console.log(stroop_words);
-// console.log(stroop_colours);
+// random response mapping
+const resp_mapping_location = ['up', 'up', 'down', 'down'];
+const resp_mapping_color = shuffle(['red', 'blue', 'green', 'orange']);
+const resp_mapping_color_en_de = { red: 'rot', blue: 'blau', green: 'grün', orange: 'orange' };
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -160,31 +157,87 @@ const instructionsStart1 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text:
-      `Welcome: Respond to the colour of the font. Ignore word meaning!<br><br>` +
-      resp_mapping_color[0] +
+      `Liebe/r Teilnehmer/in, <br><br>
+      vielen Dank für Ihr Interesse an unserer Studie! Ihre Aufgabe ist folgende:
+      In der Mitte des Bildschirm erscheint ein Wort, daraufhin gilt:<br><br>
+      (1) Klicken Sie auf das Wort<br>
+      (2) Bewegen Sie das Wort entsprechend der Farbe nach OBEN oder nach UNTEN <br><br>
+      Es gilt folgende Farbzuordnung:<br><br>` +
+      resp_mapping_color_en_de[resp_mapping_color[0]] +
       '/' +
-      resp_mapping_color[1] +
+      resp_mapping_color_en_de[resp_mapping_color[1]] +
       " = 'UP'<br>" +
-      resp_mapping_color[2] +
+      resp_mapping_color_en_de[resp_mapping_color[2]] +
       '/' +
-      resp_mapping_color[3] +
+      resp_mapping_color_en_de[resp_mapping_color[3]] +
       " = 'DOWN'<br><br>" +
-      'Press any key to begin a practice block.',
-    fontsize: 32,
-    lineheight: 1.5,
+      `Das Experiment beginnt mit ein paar Übungsdurchgängen, um die Farbzuordnung zu lernen.<br><br>
+      Vielen Dank für Ihre Teilnahme!`,
+    fontsize: 28,
+    lineheight: 1.0,
     align: 'left',
   }),
 };
 
+const instructionsStart2 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text:
+      `Liebe/r Teilnehmer/in, <br><br>
+      vielen Dank für Ihr Interesse an unserer Studie! Ihre Aufgabe ist folgende:
+      In der Mitte des Bildschirm erscheint ein Wort, daraufhin gilt:<br><br>
+      (1) Klicken Sie auf das Wort<br>
+      (2) Bewegen Sie das Wort entsprechend der Farbe nach OBEN oder nach UNTEN <br><br>
+      Es gilt folgende Farbzuordnung:<br><br>` +
+      resp_mapping_color_en_de[resp_mapping_color[0]] +
+      '/' +
+      resp_mapping_color_en_de[resp_mapping_color[1]] +
+      " = 'UP'<br>" +
+      resp_mapping_color_en_de[resp_mapping_color[2]] +
+      '/' +
+      resp_mapping_color_en_de[resp_mapping_color[3]] +
+      " = 'DOWN'<br><br>" +
+      `Das Experiment beginnt mit ein paar Übungsdurchgängen, um die Farbzuordnung zu lernen.<br><br>
+      Vielen Dank für Ihre Teilnahme!`,
+    fontsize: 28,
+    lineheight: 1.0,
+    align: 'left',
+  }),
+};
+
+////////////////////////////////////////////////////////////////////////
+//                     Trial Timelines + Stimuli                      //
+////////////////////////////////////////////////////////////////////////
+
+function create_timeline_practice() {
+  'use strict';
+  let t = [];
+  for (let i = 0; i < words_practice.length; i++) {
+    t.push({
+      word: words_practice[i],
+      colour: colours_practice[i],
+      word_loc: 'na',
+      resp_loc: resp_mapping_location[resp_mapping_color.findIndex((x) => x === colours_practice[i])],
+      comp: 'na',
+    });
+  }
+  t = repeatArray(t, 4); // 16 practice trials
+  // console.log(t);
+  return t;
+}
+
 function create_timeline_up_down_words(cpos) {
   'use strict';
   let t = [];
-  for (let i = 0; i < words.length; i++) {
+  for (let i = 0; i < words_up_down.length; i++) {
     t.push({
-      word: words[i],
-      colour: colours[cpos],
-      word_loc: i < words_upper_de.length ? 'up' : 'down',
-      resp_loc: resp_mapping_location[resp_mapping_color.findIndex((x) => x === colours[cpos])],
+      word: words_up_down[i],
+      colour: colours_up_down[cpos],
+      word_loc: i < words_up.length ? 'up' : 'down',
+      resp_loc: resp_mapping_location[resp_mapping_color.findIndex((x) => x === colours_up_down[cpos])],
     });
     cpos = (cpos + 1) % 4;
   }
@@ -199,12 +252,12 @@ function create_timeline_up_down_words(cpos) {
 function create_timeline_stroop_words() {
   'use strict';
   let t = [];
-  for (let i = 0; i < stroop_words.length; i++) {
+  for (let i = 0; i < words_stroop.length; i++) {
     t.push({
-      word: stroop_words[i],
-      colour: stroop_colours[i],
+      word: words_stroop[i],
+      colour: colours_stroop[i],
       word_loc: 'na',
-      resp_loc: resp_mapping_location[resp_mapping_color.findIndex((x) => x === stroop_colours[i])],
+      resp_loc: resp_mapping_location[resp_mapping_color.findIndex((x) => x === colours_stroop[i])],
     });
   }
   // code compatibiliy
@@ -224,8 +277,7 @@ function intermix_stroop_up_down_timelines(blk) {
     t.push(stroop_timeline[i]);
     t.push(up_down_timeline[i]);
   }
-  // console.log(t);
-  return t;
+  return [t.splice(0, 72), t];
 }
 
 function drawFixation() {
@@ -321,16 +373,16 @@ function blockFeedbackTxt(filter_options) {
   let blockFbTxt =
     '<H1>Block: ' +
     prms.cBlk +
-    ' of ' +
-    prms.nBlks +
+    ' von ' +
+    prms.nBlks * 2 +
     '</H1>' +
-    '<H1>Mean RT: ' +
+    '<H1>Mittelwert RT: ' +
     Math.round(dat.select('end_rt').mean()) +
     ' ms </H1>' +
-    '<H1>Error Rate: ' +
+    '<H1>Fehler Rate: ' +
     Math.round((nError / nTotal) * 100) +
     ' %</H1>' +
-    '<H2>Press any key to continue the experiment!</H2>';
+    '<H2>Drucken Sie eine beliebige Taste um fortzufahren!</H2>';
   prms.cBlk += 1;
   return blockFbTxt;
 }
@@ -361,6 +413,31 @@ const trial_timeline = {
   repetitions: 1,
 };
 
+// For VP Stunden
+const randomString = generateRandomString(16);
+
+const alphaNum = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  response_ends_trial: true,
+  choices: [32],
+  stimulus: generate_formatted_html({
+    text:
+      `Vielen Dank für Ihre Teilnahme.<br><br>
+      Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und
+      senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an:<br><br>
+      sprachstudien@psycho.uni-tuebingen.de <br><br>
+      Code: ` +
+      randomString +
+      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
+    fontsize: 28,
+    lineheight: 1.0,
+    align: 'left',
+  }),
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -369,31 +446,51 @@ function genExpSeq() {
 
   let exp = [];
   exp.push(fullscreen_on);
-  exp.push(welcome_en);
-  exp.push(resize_en);
+  exp.push(welcome_de);
+  exp.push(resize_de);
   exp.push(vpInfoForm_en);
   exp.push(instructionsStart1);
 
+  // practice block with "xxxx" stimuli
+  let blk_timeline = { ...trial_timeline };
+  blk_timeline.timeline_variables = create_timeline_practice();
+  blk_timeline.randomize_order = true;
+  exp.push(blk_timeline); // trials within a block
+  exp.push(instructionsStart2); // show end if practice instructions
+
+  // split balanced 144 trials across blocks two blocks
+  let timeline_variables = [];
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    let tmp = intermix_stroop_up_down_timelines(blk);
+    timeline_variables.push(tmp[0], tmp[1]);
+  }
+
+  for (let blk = 0; blk < timeline_variables.length; blk += 1) {
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.timeline_variables = intermix_stroop_up_down_timelines(blk);
+    blk_timeline.timeline_variables = timeline_variables[blk];
+    console.log(blk_timeline);
     blk_timeline.randomize_order = false; // randomized earlier
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_en);
+
+  exp.push(alphaNum);
+  exp.push(debrief_de);
   exp.push(fullscreen_off);
 
   return exp;
 }
 const EXP = genExpSeq();
-const filename = dirName + 'data/' + expName + '_' + genVpNum();
+
+const data_filename = dirName + 'data/' + expName + '_' + genVpNum();
+const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
   fullscreen_mode: true,
   show_progress_bar: false,
   on_finish: function () {
-    saveData('/Common/write_data_json.php', filename, { stim: 'mouse_stroop' }, (filetype = 'json'));
+    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_stroop' }, (filetype = 'json'));
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
 });

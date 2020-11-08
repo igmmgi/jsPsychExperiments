@@ -46,7 +46,7 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
         type: jsPsych.plugins.parameterType.INT,
         array: true,
         pretty_name: 'ResponseBorder',
-        default: [100, 860],
+        default: [100, 620],
         description: 'Border style',
       },
       word: {
