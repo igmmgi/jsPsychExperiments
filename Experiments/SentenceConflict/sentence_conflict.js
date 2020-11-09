@@ -48,7 +48,7 @@ const prmsStroop = {
   font_size: '30px monospace',
   resp_keys: [],
   fbTxt: ['Correct', 'Incorrect'], // provide feedback during short practice block
-  fbDur: [1000, 1000], // Only during practice block
+  fbDur: [750, 750], // Only during practice block
   cBlk: 1, // count blocks
   cTrl: 1, // count trials
 };
@@ -58,7 +58,7 @@ const prmsRecall = {
   resp_keys: ['Q', 'P'],
   font_size: '20px monospace',
   fbTxt: ['Correct', 'Incorrect'],
-  fbDur: [500, 2000], // make "Incorrect" feedback v. long to encourage proper decision
+  fbDur: [750, 750], // make "Incorrect" feedback v. long to encourage proper decision
   cTrl: 1, // count trials
 };
 
