@@ -455,7 +455,7 @@ const recall_instructionsStart = {
 function repeat_item_recall_phase(items) {
   'use strict';
   for (let i = 0; i < items.length; i++) {
-    items[i].repeat = i < items.length / 2 ? true : false;
+    items[i].repeat = i < items.length / 4 ? true : false; // present 50% of items in phase 3
   }
 }
 
@@ -474,6 +474,7 @@ function create_recall_items(items_org, items) {
       }
     }
   }
+  // console.log(items);
   return items;
 }
 
@@ -483,7 +484,8 @@ repeat_item_recall_phase(items_ca);
 // items for third phase (Recall)
 const items_cu_recall = create_recall_items(items, items_cu);
 const items_ca_recall = create_recall_items(items, items_ca);
-const items_recall = shuffle(items_cu_recall.concat(items_ca_recall));
+const items_recall = shuffle(items_cu_recall.splice(0, 12).concat(items_ca_recall.splice(0, 12)));
+console.log(items_recall);
 
 const iti_recall = {
   type: 'static-canvas-keyboard-response',
@@ -666,7 +668,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  exp.push(vpInfoForm_en);
+  //exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
