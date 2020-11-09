@@ -58,7 +58,7 @@ const prmsRecall = {
   resp_keys: ['Q', 'P'],
   font_size: '20px monospace',
   fbTxt: ['Correct', 'Incorrect'],
-  fbDur: [1000, 3000], // make "Incorrect" feedback v. long to encourage proper decision
+  fbDur: [500, 2000], // make "Incorrect" feedback v. long to encourage proper decision
   cTrl: 1, // count trials
 };
 

@@ -70,10 +70,6 @@ const words_up = shuffle([
   'Spitze',
   'Turm',
   'Weltall',
-  'NewWord33',
-  'NewWord34',
-  'NewWord35',
-  'NewWord36',
 ]);
 
 const words_down = shuffle([
@@ -109,10 +105,6 @@ const words_down = shuffle([
   'Tunnel',
   'Unterwelt',
   'Wurm',
-  'NewWord33',
-  'NewWord34',
-  'NewWord35',
-  'NewWord36',
 ]);
 
 const words_up_down = words_up.concat(words_down);
@@ -166,13 +158,13 @@ const instructionsStart1 = {
       resp_mapping_color_en_de[resp_mapping_color[0]] +
       '/' +
       resp_mapping_color_en_de[resp_mapping_color[1]] +
-      " = 'UP'<br>" +
+      ` = \'OBEN\'<br>` +
       resp_mapping_color_en_de[resp_mapping_color[2]] +
       '/' +
       resp_mapping_color_en_de[resp_mapping_color[3]] +
-      " = 'DOWN'<br><br>" +
-      `Das Experiment beginnt mit ein paar Übungsdurchgängen, um die Farbzuordnung zu lernen.<br><br>
-      Vielen Dank für Ihre Teilnahme!`,
+      ` = \'UNTEN\'<br><br> 
+      Das Experiment beginnt mit ein paar Übungsdurchgängen, um die Farbzuordnung zu lernen.<br><br>
+      Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 28,
     lineheight: 1.0,
     align: 'left',
@@ -186,8 +178,7 @@ const instructionsStart2 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text:
-      `Liebe/r Teilnehmer/in, <br><br>
-      vielen Dank für Ihr Interesse an unserer Studie! Ihre Aufgabe ist folgende:
+      `Ende der Übung. Erinnerung: Ihre Aufgabe ist folgende:
       In der Mitte des Bildschirm erscheint ein Wort, daraufhin gilt:<br><br>
       (1) Klicken Sie auf das Wort<br>
       (2) Bewegen Sie das Wort entsprechend der Farbe nach OBEN oder nach UNTEN <br><br>
@@ -195,13 +186,13 @@ const instructionsStart2 = {
       resp_mapping_color_en_de[resp_mapping_color[0]] +
       '/' +
       resp_mapping_color_en_de[resp_mapping_color[1]] +
-      " = 'UP'<br>" +
+      ` = \'OBEN\'<br>` +
       resp_mapping_color_en_de[resp_mapping_color[2]] +
       '/' +
       resp_mapping_color_en_de[resp_mapping_color[3]] +
-      " = 'DOWN'<br><br>" +
-      `Das Experiment beginnt mit ein paar Übungsdurchgängen, um die Farbzuordnung zu lernen.<br><br>
-      Vielen Dank für Ihre Teilnahme!`,
+      ` = \'UNTEN\'<br><br> +
+      Das Experiment beginnt mit ein paar Übungsdurchgängen, um die Farbzuordnung zu lernen.<br><br>
+      Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 28,
     lineheight: 1.0,
     align: 'left',
@@ -428,14 +419,35 @@ const alphaNum = {
       `Vielen Dank für Ihre Teilnahme.<br><br>
       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und
       senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an:<br><br>
-      sprachstudien@psycho.uni-tuebingen.de <br><br>
-      Code: ` +
+        hiwipibio@gmail.com 
+        Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
     lineheight: 1.0,
     align: 'left',
   }),
+};
+
+////////////////////////////////////////////////////////////////////////
+//                                Save                                //
+////////////////////////////////////////////////////////////////////////
+const save_data = {
+  type: 'call-function',
+  func: function () {
+    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim: 'mouse_stroop' });
+  },
+  timing_post_trial: 200,
+};
+
+const save_code = {
+  type: 'call-function',
+  func: function () {
+    let code_filename = dirName + 'code/' + expName;
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
+  },
+  timing_post_trial: 200,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -448,7 +460,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_en);
+  exp.push(vpInfoForm_de);
   exp.push(instructionsStart1);
 
   // practice block with "xxxx" stimuli
@@ -456,7 +468,9 @@ function genExpSeq() {
   blk_timeline.timeline_variables = create_timeline_practice();
   blk_timeline.randomize_order = true;
   exp.push(blk_timeline); // trials within a block
-  exp.push(instructionsStart2); // show end if practice instructions
+
+  // end of practice/start of real experiment
+  exp.push(instructionsStart2);
 
   // split balanced 144 trials across blocks two blocks
   let timeline_variables = [];
@@ -468,12 +482,17 @@ function genExpSeq() {
   for (let blk = 0; blk < timeline_variables.length; blk += 1) {
     let blk_timeline = { ...trial_timeline };
     blk_timeline.timeline_variables = timeline_variables[blk];
-    console.log(blk_timeline);
+    // console.log(blk_timeline);
     blk_timeline.randomize_order = false; // randomized earlier
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
 
+  // save data
+  exp.push(save_data);
+  exp.push(save_code);
+
+  // debrief
   exp.push(alphaNum);
   exp.push(debrief_de);
   exp.push(fullscreen_off);
@@ -482,15 +501,12 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + genVpNum();
-const code_filename = dirName + 'code/' + expName;
-
 jsPsych.init({
   timeline: EXP,
   fullscreen_mode: true,
   show_progress_bar: false,
-  on_finish: function () {
-    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_stroop' }, (filetype = 'json'));
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
+  exclusions: {
+    min_width: canvas_size[0],
+    min_height: canvas_size[1],
   },
 });
