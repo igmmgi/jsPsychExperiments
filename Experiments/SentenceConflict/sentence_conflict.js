@@ -485,7 +485,7 @@ repeat_item_recall_phase(items_ca);
 const items_cu_recall = create_recall_items(items, items_cu);
 const items_ca_recall = create_recall_items(items, items_ca);
 const items_recall = shuffle(items_cu_recall.splice(0, 12).concat(items_ca_recall.splice(0, 12)));
-console.log(items_recall);
+// console.log(items_recall);
 
 const iti_recall = {
   type: 'static-canvas-keyboard-response',
@@ -591,7 +591,7 @@ const exp_timeline_recall = {
   timeline_variables: items_recall,
   sample: {
     type: 'fixed-repetitions',
-    size: 12,
+    size: 1,
   },
 };
 
@@ -668,7 +668,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  //exp.push(vpInfoForm_en);
+  exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 

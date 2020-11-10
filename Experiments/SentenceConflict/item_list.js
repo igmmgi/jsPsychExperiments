@@ -463,14 +463,14 @@ const items = shuffle([
   {
     item: 33,
     cond: 'CU',
-    sent: 'The newspaper reported that the church had been very difficul to build from the start.',
+    sent: 'The newspaper reported that the church had been very difficult to build from the start.',
     crit_pos: 6,
     dis_pos: 12,
   },
   {
     item: 33,
     cond: 'CA',
-    sent: 'The newspaper reported that the plant had been very difficul to build from the start.',
+    sent: 'The newspaper reported that the plant had been very difficult to build from the start.',
     crit_pos: 6,
     dis_pos: 12,
   },
