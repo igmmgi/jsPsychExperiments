@@ -292,6 +292,13 @@ function generateRandomString(length) {
   return randomString;
 }
 
+function generateRandomStringWithExpName(expName, length) {
+  let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let randomString = '';
+  for (let i = length; i > 0; --i) randomString += chars[Math.round(Math.random() * (chars.length - 1))];
+  return expName + '_' + randomString;
+}
+
 function saveRandomCode(url, filename, code) {
   $.ajax({
     type: 'post',

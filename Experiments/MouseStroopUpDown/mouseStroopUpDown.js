@@ -24,7 +24,7 @@ const prms = {
   fixSize: 15,
   fixDur: 750,
   fbDur: 750,
-  fbFont: '60px Arial',
+  fontSize: '50px Arial',
   waitDur: 750,
   iti: 750,
   fbTxt: ['Richtig', 'Falsch'],
@@ -38,73 +38,57 @@ const colours_practice = ['red', 'blue', 'green', 'orange'];
 
 // up/down items
 const words_up = shuffle([
-  'Alpen',
   'Ballon',
-  'Vogel',
-  'Burg',
-  'Decke',
-  'Wolke',
-  'Komet',
-  'Krone',
-  'Adler',
-  'Giebel',
-  'Empore',
-  'Falke',
-  'Höhe',
-  'Hochland',
   'Berg',
-  'Drachen',
-  'Höhepunkt',
-  'Mond',
-  'Gebirge',
-  'Nest',
-  'Flugzeug',
-  'Planet',
   'Dach',
-  'Satellit',
+  'Decke',
+  'Drachen',
+  'Empore',
+  'Flugzeug',
+  'Gebirge',
+  'Gipfel',
   'Himmel',
   'Hochhaus',
-  'Gipfel',
-  'Stern',
+  'Hochland',
+  'Höhe',
+  'Höhepunkt',
+  'Krone',
+  'Mond',
+  'Nest',
+  'Satellit',
   'Sonne',
   'Spitze',
+  'Stern',
   'Turm',
-  'Weltall',
+  'Vogel',
+  'Wolke',
 ]);
 
 const words_down = shuffle([
   'Abgrund',
-  'Schlucht',
-  'Teppich',
-  'Keller',
-  'Klee',
-  'Tiefe',
-  'Graben',
-  'Taucher',
-  'Erdreich',
-  'Fußboden',
-  'Fuß',
-  'Gras',
-  'Grab',
   'Boden',
-  'Hölle',
-  'Maulwurf',
-  'Maus',
-  'Schienen',
-  'Fluss',
-  'Wurzel',
-  'Gehweg',
   'Erde',
+  'Fluss',
+  'Fuß',
+  'Fußboden',
+  'Gehweg',
+  'Grab',
+  'Graben',
+  'Gras',
+  'Keller',
+  'Schlucht',
   'Sohle',
   'Stein',
   'Straße',
-  'Untergrund',
-  'U-Boot',
-  'U-Bahn',
   'Sumpf',
+  'Teppich',
   'Tunnel',
+  'U-Bahn',
+  'U-Boot',
+  'Untergrund',
   'Unterwelt',
   'Wurm',
+  'Wurzel',
 ]);
 
 const words_up_down = words_up.concat(words_down);
@@ -112,7 +96,7 @@ const colours_up_down = ['red', 'blue', 'green', 'orange'];
 // console.log(words_up_down);
 
 // Stroop words + colours
-const words_stroop = repeatArray(repeatArray(['red', 'blue', 'green', 'orange'], 3), 6);
+const words_stroop = repeatArray(repeatArray(['red', 'blue', 'green', 'orange'], 3), 4);
 const colours_stroop = repeatArray(
   repeatArray(['red', 'blue', 'green', 'orange'], 3).concat([
     'blue',
@@ -128,7 +112,7 @@ const colours_stroop = repeatArray(
     'orange',
     'green',
   ]),
-  3,
+  2,
 );
 // console.log(words_stroop);
 // console.log(colours_stroop);
@@ -268,7 +252,9 @@ function intermix_stroop_up_down_timelines(blk) {
     t.push(stroop_timeline[i]);
     t.push(up_down_timeline[i]);
   }
-  return [t.splice(0, 72), t];
+  // console.log(t);
+  return [t.splice(0, 48), t];
+  // return [t.splice(0, 2), t.splice(0, 2)];
 }
 
 function drawFixation() {
@@ -287,7 +273,7 @@ function drawFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
-  ctx.font = prms.fbFont;
+  ctx.font = prms.fontSize;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
@@ -323,6 +309,7 @@ const trial_stimulus = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
+  font: prms.fontSize,
   word: jsPsych.timelineVariable('word'),
   colour: jsPsych.timelineVariable('colour'),
   scale_factor: null,
@@ -405,7 +392,7 @@ const trial_timeline = {
 };
 
 // For VP Stunden
-const randomString = generateRandomString(16);
+const randomString = generateRandomStringWithExpName(expName, 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -482,7 +469,6 @@ function genExpSeq() {
   for (let blk = 0; blk < timeline_variables.length; blk += 1) {
     let blk_timeline = { ...trial_timeline };
     blk_timeline.timeline_variables = timeline_variables[blk];
-    // console.log(blk_timeline);
     blk_timeline.randomize_order = false; // randomized earlier
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
