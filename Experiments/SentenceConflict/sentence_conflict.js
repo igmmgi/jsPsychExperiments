@@ -39,16 +39,19 @@ const prmsWordByWord = {
   mask_type: 2, // select 1 vs. 2
   font_size: '20px monospace',
   sentence_width: 1250,
-  cTrlSentence: 1, // count trials
+  cTrlSentence: 0, // count trials (make single practice trial equal to zero)
 };
 
 const prmsStroop = {
+  fixWidth: 2,
+  fixSize: 10,
+  fixDur: 500,
   iti: 500,
   key_mapping: shuffle([1, 2])[0],
   font_size: '30px monospace',
   resp_keys: [],
   fbTxt: ['Correct', 'Incorrect'], // provide feedback during short practice block
-  fbDur: [750, 750], // Only during practice block
+  fbDur: 500,
   cBlkStroop: 1, // count blocks
   cTrlStroop: 1, // count trials
 };
@@ -58,7 +61,7 @@ const prmsRecall = {
   resp_keys: ['Q', 'P'],
   font_size: '20px monospace',
   fbTxt: ['Correct', 'Incorrect'],
-  fbDur: [750, 750], // make "Incorrect" feedback v. long to encourage proper decision
+  fbDur: 500,
   cTrlRecall: 1, // count trials
 };
 
@@ -192,6 +195,8 @@ const trial_moving_window_text = {
     item: jsPsych.timelineVariable('item'),
     cond: jsPsych.timelineVariable('cond'),
     sent: jsPsych.timelineVariable('sent'),
+    crit_pos: jsPsych.timelineVariable('crit_pos'),
+    dis_pos: jsPsych.timelineVariable('dis_pos'),
     word_number: jsPsych.timelineVariable('word_num'),
     length: jsPsych.timelineVariable('length'),
   },
@@ -220,6 +225,8 @@ function create_timeline_variables(items) {
       item: items.item,
       cond: items.cond,
       sent: items.sent,
+      crit_pos: items.crit_pos,
+      dis_pos: items.dis_pos,
       word_num: i,
       length: txt.length,
       mask_type: prmsWordByWord.mask_type,
@@ -251,12 +258,12 @@ const exp_timeline_wordByWord_experiment = { timeline: create_timeline(items_sen
 let stroop_resp_mapping;
 if (prmsStroop.key_mapping === 1) {
   prmsStroop.resp_keys = ['Q', 'P', 27];
-  stroop_resp_mapping = `<b><span style="color:#0000FF">BLUE/GREEN</b> &#10142; Press the <b>\'Q\'</b> key (left index finger) <br>
-    <b><span style="color:#008000">BLUE/GREEN</b> &#10142; Press the <b>\'P\'</b> key (right index finger)<br><br>`;
+  stroop_resp_mapping = `<b><span style="color:#0000FF">xxxx</b> &#10142; Press the <b>\'Q\'</b> key (left index finger) <br>
+    <b><span style="color:#008000">xxxx</b> &#10142; Press the <b>\'P\'</b> key (right index finger)<br><br>`;
 } else if (prmsStroop.key_mapping === 2) {
   prmsStroop.resp_keys = ['P', 'Q', 27];
-  stroop_resp_mapping = `<b><span style="color:#008000">BLUE/GREEN</b> &#10142; Press the <b>\'Q\'</b> key (left index finger)<br> 
-    <b><span style="color:#0000FF">BLUE/GREEN</b> &#10142; Press the <b>\'P\'</b> key (right index finger)<br><br>`;
+  stroop_resp_mapping = `<b><span style="color:#008000">xxxx</b> &#10142; Press the <b>\'Q\'</b> key (left index finger)<br> 
+    <b><span style="color:#0000FF">xxxx</b> &#10142; Press the <b>\'P\'</b> key (right index finger)<br><br>`;
 }
 
 const stroop_instructionsStart1 = {
@@ -268,7 +275,7 @@ const stroop_instructionsStart1 = {
     text:
       `Part 2: This section involves responding to font colour. Ignore word meaning! <br><br>` +
       stroop_resp_mapping +
-      `You will begin with a practice block of 8 trials. Here, individual trial feedback is provided.
+      `You will begin with a practice block of 8 trials. 
       Respond as quickly and as accurately as possible.<br><br> 
       Press any key to continue!`,
     fontsize: 32,
@@ -286,7 +293,7 @@ const stroop_instructionsStart2 = {
     text:
       `Part 2: Continue responding to font colour. Remember: ignore word meaning! <br><br>` +
       stroop_resp_mapping +
-      `You will now perform a block of 48 trials. Here, individual trial feedback is not provided.<br><br>
+      `You will now perform a block of 48 trials. 
       Respond as quickly and as accurately as possible.<br><br> 
       Press any key to continue!`,
     fontsize: 32,
@@ -295,6 +302,7 @@ const stroop_instructionsStart2 = {
   }),
   on_start() {
     prmsStroop.cBlkStroop += 1;
+    prmsStroop.cTrlStroop = 1;
   },
 };
 
@@ -313,6 +321,28 @@ const stroop_instructionsEnd = {
 ////////////////////////////////////////////////////////////////////////
 //                   Stimuli/Timelines Stroop Part 2                  //
 ////////////////////////////////////////////////////////////////////////
+function drawFixation() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = prmsStroop.fixWidth;
+  ctx.moveTo(-prmsStroop.fixSize, 0);
+  ctx.lineTo(prmsStroop.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -prmsStroop.fixSize);
+  ctx.lineTo(0, prmsStroop.fixSize);
+  ctx.stroke();
+}
+
+const fixation_cross = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  trial_duration: prmsStroop.fixDur,
+  translate_origin: true,
+  response_ends_trial: false,
+  func: drawFixation,
+};
 
 const iti_stroop = {
   type: 'static-canvas-keyboard-response',
@@ -371,12 +401,9 @@ const trial_feedback_stroop = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   translate_origin: true,
+  trial_duration: prmsStroop.fbDur,
   response_ends_trial: false,
   func: [drawStroopFeedback],
-  on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prmsStroop.fbDur[dat.error];
-  },
 };
 
 const stroop_stimulus = {
@@ -401,12 +428,12 @@ const stroop_stimulus = {
 };
 
 const exp_timeline_stroop_practice = {
-  timeline: [stroop_stimulus, trial_feedback_stroop, iti_stroop],
+  timeline: [fixation_cross, stroop_stimulus, trial_feedback_stroop, iti_stroop],
   timeline_variables: [
-    { word: 'BLUE', colour: 'blue', comp: 'comp', corrResp: prmsStroop.resp_keys[0] },
-    { word: 'BLUE', colour: 'green', comp: 'incomp', corrResp: prmsStroop.resp_keys[1] },
-    { word: 'GREEN', colour: 'green', comp: 'comp', corrResp: prmsStroop.resp_keys[1] },
-    { word: 'GREEN', colour: 'blue', comp: 'incomp', corrResp: prmsStroop.resp_keys[0] },
+    { word: 'blue', colour: 'blue', comp: 'comp', corrResp: prmsStroop.resp_keys[0] },
+    { word: 'blue', colour: 'green', comp: 'incomp', corrResp: prmsStroop.resp_keys[1] },
+    { word: 'green', colour: 'green', comp: 'comp', corrResp: prmsStroop.resp_keys[1] },
+    { word: 'green', colour: 'blue', comp: 'incomp', corrResp: prmsStroop.resp_keys[0] },
   ],
   sample: {
     type: 'fixed-repetitions',
@@ -415,12 +442,12 @@ const exp_timeline_stroop_practice = {
 };
 
 const exp_timeline_stroop_experiment = {
-  timeline: [stroop_stimulus, iti_stroop],
+  timeline: [fixation_cross, stroop_stimulus, trial_feedback_stroop, iti_stroop],
   timeline_variables: [
-    { word: 'BLUE', colour: 'blue', comp: 'comp', corrResp: prmsStroop.resp_keys[0] },
-    { word: 'BLUE', colour: 'green', comp: 'incomp', corrResp: prmsStroop.resp_keys[1] },
-    { word: 'GREEN', colour: 'green', comp: 'comp', corrResp: prmsStroop.resp_keys[1] },
-    { word: 'GREEN', colour: 'blue', comp: 'incomp', corrResp: prmsStroop.resp_keys[0] },
+    { word: 'blue', colour: 'blue', comp: 'comp', corrResp: prmsStroop.resp_keys[0] },
+    { word: 'blue', colour: 'green', comp: 'incomp', corrResp: prmsStroop.resp_keys[1] },
+    { word: 'green', colour: 'green', comp: 'comp', corrResp: prmsStroop.resp_keys[1] },
+    { word: 'green', colour: 'blue', comp: 'incomp', corrResp: prmsStroop.resp_keys[0] },
   ],
   sample: {
     type: 'fixed-repetitions',
@@ -485,7 +512,7 @@ repeat_item_recall_phase(items_ca);
 const items_cu_recall = create_recall_items(items, items_cu);
 const items_ca_recall = create_recall_items(items, items_ca);
 const items_recall = shuffle(items_cu_recall.splice(0, 12).concat(items_ca_recall.splice(0, 12)));
-console.log(items_recall);
+// console.log(items_recall);
 
 const iti_recall = {
   type: 'static-canvas-keyboard-response',
@@ -579,11 +606,8 @@ const trial_feedback_recall = {
   canvas_border: canvas_border,
   translate_origin: true,
   response_ends_trial: false,
+  trial_duration: prmsRecall.fbDur,
   func: [drawRecallFeedback],
-  on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prmsRecall.fbDur[dat.error];
-  },
 };
 
 const exp_timeline_recall = {
@@ -668,7 +692,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  //exp.push(vpInfoForm_en);
+  exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
