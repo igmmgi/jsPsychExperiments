@@ -163,7 +163,7 @@ update_selected_items(items_ca);
 // console.log(selected_items);
 
 const items_sentences = shuffle(items_cu.concat(items_ca));
-// console.log(items_part1);
+// console.log(items_sentences);
 
 const iti_wordByWord = {
   type: 'static-canvas-keyboard-response',
@@ -485,7 +485,7 @@ repeat_item_recall_phase(items_ca);
 const items_cu_recall = create_recall_items(items, items_cu);
 const items_ca_recall = create_recall_items(items, items_ca);
 const items_recall = shuffle(items_cu_recall.splice(0, 12).concat(items_ca_recall.splice(0, 12)));
-// console.log(items_recall);
+console.log(items_recall);
 
 const iti_recall = {
   type: 'static-canvas-keyboard-response',
@@ -510,7 +510,7 @@ function codeTrialRecall() {
       error = 1;
     }
   }
-  console.log('Trial Error: ', error);
+  // console.log('Trial Error: ', error);
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
@@ -668,7 +668,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  exp.push(vpInfoForm_en);
+  //exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
