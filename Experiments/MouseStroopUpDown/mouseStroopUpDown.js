@@ -391,7 +391,9 @@ const trial_timeline = {
   repetitions: 1,
 };
 
-// For VP Stunden
+////////////////////////////////////////////////////////////////////////
+//                           For VP Stunden                           //
+////////////////////////////////////////////////////////////////////////
 const randomString = generateRandomStringWithExpName(expName, 16);
 
 const alphaNum = {

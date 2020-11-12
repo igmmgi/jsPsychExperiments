@@ -87,7 +87,7 @@ function drawStroop(args) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = args.fontcolour;
-  ctx.fillText(args.text, args.posx, args.posy);
+  ctx.fillText(args.text, 0, 0);
 }
 
 function drawFeedback() {
@@ -99,9 +99,9 @@ function drawFeedback() {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
   if (prms.cBlk === 1) {
-    ctx.fillText(prms.fbTxt[dat.corrCode - 1], dat.posx, dat.posy);
+    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
   } else if (prms.cBlk > 1 && dat.corrCode !== 1) {
-    ctx.fillText(prms.fbTxt[dat.corrCode - 1], dat.posx, dat.posy);
+    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
   }
 }
 
@@ -121,10 +121,16 @@ const trial_stimulus = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: prms.tooSlow,
+  trial_duration: prms.tooSlow + 150,
   translate_origin: true,
-  func: drawStroop,
+  stimulus_onset: [0, 150],
+  func: [drawStroop, drawStroop],
+  clear_screen: [1, 1],
   func_args: [
+    {
+      text: jsPsych.timelineVariable('text'),
+      fontcolour: 'black',
+    },
     {
       text: jsPsych.timelineVariable('text'),
       fontcolour: jsPsych.timelineVariable('fontcolour'),
@@ -136,12 +142,6 @@ const trial_stimulus = {
     fontcolour: jsPsych.timelineVariable('fontcolour'),
     affneg: jsPsych.timelineVariable('affneg'),
     corrResp: jsPsych.timelineVariable('corrResp'),
-  },
-  on_start: function (trial) {
-    trial.func_args[0].posx = getRandomInt(-75, 75);
-    trial.func_args[0].posy = getRandomInt(-75, 75);
-    trial.data.posx = trial.func_args[0].posx;
-    trial.data.posy = trial.func_args[0].posy;
   },
   on_finish: function () {
     codeTrial();
@@ -243,7 +243,10 @@ const trial_timeline = {
   ],
 };
 
-const randomString = generateRandomString(16);
+////////////////////////////////////////////////////////////////////////
+//                           For VP Stunden                           //
+////////////////////////////////////////////////////////////////////////
+const randomString = generateRandomStringWithExpName(expName, 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -252,15 +255,41 @@ const alphaNum = {
   canvas_border: canvas_border,
   response_ends_trial: true,
   choices: [32],
-  stimulus:
-    "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
-    "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
-    "<h3 style='text-align:left;'>und sende diesen zusammen mit deiner Matrikelnummer per Email an:</h3><br>" +
-    '<h2>sprachstudien@psycho.uni-tuebingen.de</h2>' +
-    '<h1>Code: ' +
-    randomString +
-    '</h1><br>' +
-    "<h2 align='left'>Drücke die Leertaste, um fortzufahren!</h2>",
+  stimulus: generate_formatted_html({
+    text:
+      `Vielen Dank für Ihre Teilnahme.<br><br>
+      Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und
+      senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an:<br><br>
+    sprachstudien@psycho.uni-tuebingen.de
+        hiwipibio@gmail.com 
+        Code: ` +
+      randomString +
+      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
+    fontsize: 28,
+    lineheight: 1.0,
+    align: 'left',
+  }),
+};
+
+////////////////////////////////////////////////////////////////////////
+//                                Save                                //
+////////////////////////////////////////////////////////////////////////
+const save_data = {
+  type: 'call-function',
+  func: function () {
+    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim: 'negStroop' });
+  },
+  timing_post_trial: 200,
+};
+
+const save_code = {
+  type: 'call-function',
+  func: function () {
+    let code_filename = dirName + 'code/' + expName;
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
+  },
+  timing_post_trial: 200,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -286,6 +315,12 @@ function genExpSeq() {
     exp.push(block_feedback); // show previous block performance
     exp.push(iti);
   }
+
+  // save data
+  exp.push(save_data);
+  exp.push(save_code);
+
+  // debrief
   exp.push(debrief_de);
   exp.push(showMouseCursor);
   exp.push(alphaNum);
@@ -305,9 +340,5 @@ jsPsych.init({
   exclusions: {
     min_width: canvas_size[0],
     min_height: canvas_size[1],
-  },
-  on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'negStroop' });
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
 });

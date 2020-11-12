@@ -39,7 +39,7 @@ const prmsWordByWord = {
   mask_type: 2, // select 1 vs. 2
   font_size: '20px monospace',
   sentence_width: 1250,
-  cTrl: 1, // count trials
+  cTrlSentence: 1, // count trials
 };
 
 const prmsStroop = {
@@ -49,8 +49,8 @@ const prmsStroop = {
   resp_keys: [],
   fbTxt: ['Correct', 'Incorrect'], // provide feedback during short practice block
   fbDur: [750, 750], // Only during practice block
-  cBlk: 1, // count blocks
-  cTrl: 1, // count trials
+  cBlkStroop: 1, // count blocks
+  cTrlStroop: 1, // count trials
 };
 
 const prmsRecall = {
@@ -59,7 +59,7 @@ const prmsRecall = {
   font_size: '20px monospace',
   fbTxt: ['Correct', 'Incorrect'],
   fbDur: [750, 750], // make "Incorrect" feedback v. long to encourage proper decision
-  cTrl: 1, // count trials
+  cTrlRecall: 1, // count trials
 };
 
 ////////////////////////////////////////////////////////////////////////
