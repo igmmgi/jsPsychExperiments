@@ -76,7 +76,7 @@ const exp_welcome_screen = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `Welcome: <br><br>The following experiment consists of three phases and will take
-    approximately XXX minutes to complete. Please read the instructions
+    approximately 15-20 minutes to complete. Please read the instructions
     carefully! Upon completion of the experiment, you will be provided with a
     randomly generated code which you require to confirm your participation via
     the MTurk website.<br><br>Press any key to continue!`,
@@ -102,7 +102,7 @@ const wordByWord_instructionsStart1 = {
         Press ___ _____ ___ __ <br>
         Press the _____ ___ __ <br> 
         Press the space ___ __ <br><br>
-        Please read the sentences carefully! <br><br> Press any key to begin a practice trial.`,
+        Please read the sentences carefully, as they are relevant later! <br><br> Press any key to begin a practice trial.`,
     fontsize: 32,
     lineheight: 1.5,
     align: 'left',
@@ -482,7 +482,7 @@ const recall_instructionsStart = {
 function repeat_item_recall_phase(items) {
   'use strict';
   for (let i = 0; i < items.length; i++) {
-    items[i].repeat = i < items.length / 4 ? true : false; // present 50% of items in phase 3
+    items[i].repeat = i % 2 ? true : false; // present 50% of items in phase 3
   }
 }
 
@@ -491,7 +491,7 @@ function create_recall_items(items_org, items) {
   for (let i = 0; i < items.length; i++) {
     if (items[i].repeat) {
       items[i].test_sent = items[i].sent;
-      items[i].test_answer = true;
+      items[i].answer = true;
     } else {
       for (let j = 0; j < items_org.length; j++) {
         if ((items_cu[i].item === items_org[j].item) & (items_org[j].cond !== items[i].cond)) {
@@ -506,7 +506,9 @@ function create_recall_items(items_org, items) {
 }
 
 repeat_item_recall_phase(items_cu);
+// console.log(items_cu);
 repeat_item_recall_phase(items_ca);
+// console.log(items_ca);
 
 // items for third phase (Recall)
 const items_cu_recall = create_recall_items(items, items_cu);
