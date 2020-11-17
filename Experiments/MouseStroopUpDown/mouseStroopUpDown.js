@@ -96,7 +96,7 @@ const colours_up_down = ['red', 'blue', 'green', 'orange'];
 // console.log(words_up_down);
 
 // Stroop words + colours
-const words_stroop = repeatArray(repeatArray(['red', 'blue', 'green', 'orange'], 3), 4);
+const words_stroop = repeatArray(repeatArray(['rot', 'blau', 'grün', 'orange'], 3), 4);
 const colours_stroop = repeatArray(
   repeatArray(['red', 'blue', 'green', 'orange'], 3).concat([
     'blue',
@@ -408,7 +408,7 @@ const alphaNum = {
       `Vielen Dank für Ihre Teilnahme.<br><br>
       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und
       senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an:<br><br>
-        hiwipibio@gmail.com 
+        hiwipibio@gmail.com <br>
         Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
@@ -425,7 +425,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim: 'mouse_stroop' });
+    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_stroop' }, 'json');
   },
   timing_post_trial: 200,
 };

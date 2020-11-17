@@ -264,7 +264,7 @@ function saveData(
   if (filetype === 'csv') {
     dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).csv();
   } else if (filetype === 'json') {
-    dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).json();
+    dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).json(true); // true to avoid single line
   }
   let xhr = new XMLHttpRequest();
   xhr.open('POST', url);

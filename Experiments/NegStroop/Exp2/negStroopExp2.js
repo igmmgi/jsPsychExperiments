@@ -25,7 +25,7 @@ const prms = {
   fixDur: 500,
   fbDur: 1000,
   iti: 1000, // feedback shown during iti for incorrect responses only
-  tooFast: 150,
+  tooFast: 300,
   tooSlow: 1500,
   respKeys: ['D', 'C', 'M', 'K', 27],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
@@ -141,6 +141,7 @@ const trial_stimulus = {
     text: jsPsych.timelineVariable('text'),
     fontcolour: jsPsych.timelineVariable('fontcolour'),
     affneg: jsPsych.timelineVariable('affneg'),
+    comp: jsPsych.timelineVariable('comp'),
     corrResp: jsPsych.timelineVariable('corrResp'),
   },
   on_finish: function () {
@@ -260,8 +261,7 @@ const alphaNum = {
       `Vielen Dank für Ihre Teilnahme.<br><br>
       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und
       senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an:<br><br>
-    sprachstudien@psycho.uni-tuebingen.de
-        hiwipibio@gmail.com 
+        helena.scharp@student.uni-tuebingen.de<br><br>
         Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
@@ -329,9 +329,6 @@ function genExpSeq() {
   return exp;
 }
 const EXP = genExpSeq();
-
-const data_filename = dirName + 'data/' + expName + '_' + vpNum;
-const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
