@@ -70,6 +70,7 @@ const block_start = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
+  stimulus: '',
   on_start: function (trial) {
     trial.stimulus =
       "<h2 style='text-align:left;'>Block Start </h2><br>" +
@@ -107,8 +108,8 @@ function readImages(dir, n) {
   return loadImages(images);
 }
 
-const imagesDescription = readImages('DescriptionImages4/D_', 4);
-const imagesExperience = shuffle(readImages('ExperienceImages/E_', 34)).splice(0, 4);
+const imagesDescription = readImages('DescriptionImages4/D_', 6);
+const imagesExperience = shuffle(readImages('ExperienceImages/E_', 34)).splice(0, 6);
 
 ////////////////////////////////////////////////////////////////////////
 //                             Functions                              //
@@ -575,7 +576,7 @@ const ratingsDescription = ratings(imagesDescription, 'D');
 const ratingsExperience = ratings(imagesExperience, 'E');
 const ratingStimuli = ratingsDescription.concat(ratingsExperience);
 
-const randomString = generateRandomString(16);
+const randomString = generateRandomStringWithExpName('DE', 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -587,18 +588,39 @@ const alphaNum = {
   choices: [32],
   on_start: function (trial) {
     trial.stimulus =
-      "<h3 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h3>" +
-      "<h2 style='text-align:left;'>Total Points Accumulated: " +
+      "<h2 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h2>" +
+      "<h3 style='text-align:left;'>Total Points Accumulated: " +
       prms.cPoints +
-      '</h2><br>' +
-      "<h3 style='text-align:left;'>Wenn Sie einen Gutschein gewinnen möchten, kopieren Sie den folgenden </h3>" +
-      "<h3 style='text-align:left;'>zufällig generierten Code und senden Sie diesen per Email. </h3>" +
-      '<h2>xxx.xxx@student.uni-tuebingen.de oder </h2>' +
-      '<h1>Code: ' +
+      '</h3><br>' +
+      "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, kopieren Sie den </h3>" +
+      "<h3 style='text-align:left;'>folgenden zufällig generierten Code und senden Sie diesen per Email. </h3>" +
+      '<h2>hiwipibio@gmail.com</h2>' +
+      '<h2>Code: ' +
       randomString +
-      '</h1><br>' +
+      '</h2><br>' +
       "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>";
   },
+};
+
+////////////////////////////////////////////////////////////////////////
+//                                Save                                //
+////////////////////////////////////////////////////////////////////////
+const save_data = {
+  type: 'call-function',
+  func: function () {
+    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim: 'DescriptionExperience' });
+  },
+  timing_post_trial: 200,
+};
+
+const save_code = {
+  type: 'call-function',
+  func: function () {
+    let code_filename = dirName + 'code/' + expName;
+    saveRandomCode('/Common/write_code.php', code_filename, randomString);
+  },
+  timing_post_trial: 200,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -649,16 +671,18 @@ function genExpSeq() {
     exp.push(ratingStimuli[i]);
   }
 
-  exp.push(debrief_de);
+  // save data
+  exp.push(save_data);
+  exp.push(save_code);
+
+  // de-brief
   exp.push(alphaNum);
+  exp.push(debrief_de);
   exp.push(fullscreen_off);
 
   return exp;
 }
 const EXP = genExpSeq();
-
-const data_filename = dirName + 'data/' + expName + '_' + vpNum;
-const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
@@ -667,9 +691,5 @@ jsPsych.init({
   exclusions: {
     min_width: canvas_size[0],
     min_height: canvas_size[1],
-  },
-  on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'DescriptionExperience' });
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
 });
