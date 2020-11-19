@@ -14,7 +14,7 @@ const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
-const version = getVersionNumber(nFiles, 2);
+const phase_order = getVersionNumber(nFiles, 2);
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -22,17 +22,18 @@ const version = getVersionNumber(nFiles, 2);
 const prms = {
   fixDur: 500,
   fbDur: [1000, 500], // 1000 ms feedback for no reward, 500 ms for reward
-  rfi: 300, // response -> feedback interval
-  iti: 500,
+  iti: 200,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
-  cPoints: 0, // count points
+  cPoints: 600, // count points
   fixWidth: 3,
   fixSize: 15,
   fbSize: '50px monospace',
-  fbTxt: ['+0', '+1'],
+  fbTxt: ['-1', '-0'],
   respKeys: ['q', 'p', 27],
 };
+
+jsPsych.data.addProperties({ version: 'loss', phase_order: phase_order });
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -55,14 +56,19 @@ const task_instructions2 = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus:
-    "<h3 style='text-align:left;'> In this experiment, you need to try to collect as many points as possible. You</h3>" +
-    "<h3 style='text-align:left;'> will see in each trial, one picture on the left and one picture on the right side. If</h3>" +
-    "<h3 style='text-align:left;'> If you select the picture with reward you will receive +1 point. If you select</h3>" +
-    "<h3 style='text-align:left;'> the picture without reward you will receive 0 points. Make a choice in each</h3>" +
-    "<h3 style='text-align:left;'> trial by pressing the corresponding key with your left and right index finger:</h3><br>" +
-    "<h3 style='text-align:center;'> Left = Q-key &nbsp;&nbsp Right = P-key </h3><br><br>" +
-    "<h3 style='text-align:center;'> Drücken Sie eine beliebige Taste, um fortzufahren!</h3>",
+  stimulus: generate_formatted_html({
+    text: `In diesem Experiment müssen Sie versuchen soviele Punkte wie möglich zu
+    sichern. Sie haben zu Beginn 600 Punkte und Sie sehen in jedem Durchgang ein
+    Bild auf der linken und ein Bild auf der rechten Seite des Bildschirms. Wenn
+    Sie das Bild mit Verlust wählen verlieren Sie -1 Punkt. Wenn Sie das Bild ohne
+    Verlust wählen verlieren Sie 0 Punkte. Entscheiden Sie sich in jedem Durchgang
+    für ein Bild in Sie die entsprechende Taste drücken: Links: "Q" Rechts: "P" 
+    Drücken Sie eine beliebige Taste, um fortzufahren!`,
+    fontsize: 26,
+    bold: true,
+    lineheight: 1.25,
+    align: 'left',
+  }),
 };
 
 const block_start = {
@@ -74,7 +80,7 @@ const block_start = {
   on_start: function (trial) {
     trial.stimulus =
       "<h2 style='text-align:left;'>Block Start </h2><br>" +
-      "<h2 style='text-align:left;'>Total Points Accumulated: " +
+      "<h2 style='text-align:left;'>Gesampunkte: " +
       prms.cPoints +
       '</h2><br>' +
       "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>";
@@ -90,7 +96,7 @@ const short_break = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
-    "<h2 style='text-align:left;'>Break</h2><br>" +
+    "<h2 style='text-align:left;'>Pause</h2><br>" +
     "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
   on_finish: function () {
     prms.cBlk += 1;
@@ -108,8 +114,8 @@ function readImages(dir, n) {
   return loadImages(images);
 }
 
-const imagesDescription = readImages('DescriptionImages4/D_', 6);
-const imagesExperience = shuffle(readImages('ExperienceImages/E_', 34)).splice(0, 6);
+const imagesDescription = readImages('../DescriptionImages4/D_', 6);
+const imagesExperience = shuffle(readImages('../ExperienceImages/E_', 34)).splice(0, 6);
 
 ////////////////////////////////////////////////////////////////////////
 //                             Functions                              //
@@ -164,7 +170,7 @@ const trial_feedback = {
   response_ends_trial: false,
   func: drawFeedback,
   on_start: function (trial) {
-    let dat = jsPsych.data.get().last(2).values()[0];
+    let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = prms.fbDur[dat.rewardCode];
   },
 };
@@ -172,7 +178,7 @@ const trial_feedback = {
 function drawFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
-  let dat = jsPsych.data.get().last(2).values()[0];
+  let dat = jsPsych.data.get().last(1).values()[0];
 
   ctx.font = prms.fbSize;
   ctx.textAlign = 'center';
@@ -187,16 +193,6 @@ const iti = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   trial_duration: prms.iti,
-  response_ends_trial: false,
-  func: function () {},
-};
-
-const rfi = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  trial_duration: prms.rfi,
   response_ends_trial: false,
   func: function () {},
 };
@@ -216,8 +212,8 @@ function codeTrial() {
     rewardCode = Math.random() < dat.imageProbRight ? 1 : 0;
   }
 
-  if (rewardCode === 1) {
-    prms.cPoints += 1;
+  if (rewardCode === 0) {
+    prms.cPoints -= 1;
   }
 
   let chosenImageType = response_side === 'left' ? dat.imageTypeLeft : dat.imageTypeRight;
@@ -556,13 +552,13 @@ const experimental_block = shuffle(
       experimental_block_description_vs_experience_unequal,
       experimental_block_description_vs_experience_equal,
     ),
-    3,
+    4,
   ),
 );
-console.log(experimental_block); // 504 in total (168*3)
+// console.log(experimental_block);
 
 const trial_timeline_description = {
-  timeline: [fixation_cross, pic_stim, rfi, trial_feedback, iti],
+  timeline: [fixation_cross, pic_stim, trial_feedback, iti],
   timeline_variables: learning_block_description,
   sample: {
     type: 'fixed-repetitions',
@@ -571,7 +567,7 @@ const trial_timeline_description = {
 };
 
 const trial_timeline_experience = {
-  timeline: [fixation_cross, pic_stim, rfi, trial_feedback, iti],
+  timeline: [fixation_cross, pic_stim, trial_feedback, iti],
   timeline_variables: learning_block_experience,
   sample: {
     type: 'fixed-repetitions',
@@ -580,7 +576,7 @@ const trial_timeline_experience = {
 };
 
 const trial_timeline_experiment = {
-  timeline: [fixation_cross, pic_stim, rfi, trial_feedback, iti],
+  timeline: [fixation_cross, pic_stim, trial_feedback, iti],
   sample: {
     type: 'fixed-repetitions',
     size: 1,
@@ -593,10 +589,11 @@ function ratings(imgs, imgType) {
     let tmp = {
       type: 'image-slider-response',
       stimulus: imgs[i].src,
-      labels: ['0 (no chance)', '100 (guaranteed)'],
+      labels: ['0% Verlust', '20%', '40%', '60%', '80%', '100% Verlust'],
+      button_label: 'Weiter',
       slider_width: 500,
       require_movement: true,
-      prompt: '<p>Indicate the percentage win rate of the dispalyed stimulus.</p>',
+      prompt: '<p>Schätzen Sie die Wahrscheinlichkeit, dass dieses Bild zu einem Verlust führt.</p>',
       on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
         let key = imgType + (i + 1);
@@ -625,7 +622,7 @@ const alphaNum = {
   on_start: function (trial) {
     trial.stimulus =
       "<h2 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h2>" +
-      "<h3 style='text-align:left;'>Total Points Accumulated: " +
+      "<h3 style='text-align:left;'>Gesampunkte: " +
       prms.cPoints +
       '</h3><br>' +
       "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, kopieren Sie den </h3>" +
@@ -671,7 +668,7 @@ function genExpSeq() {
   exp.push(welcome_de);
   exp.push(resize_de);
 
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
@@ -679,13 +676,13 @@ function genExpSeq() {
 
   // 96 trials in each block
   // first phase: learning block (description vs. experience)
-  if (version === 1) {
+  if (phase_order === 1) {
     exp.push(block_start);
     exp.push(trial_timeline_description);
     exp.push(short_break);
     exp.push(block_start);
     exp.push(trial_timeline_experience);
-  } else if (version === 2) {
+  } else if (phase_order === 2) {
     exp.push(block_start);
     exp.push(trial_timeline_experience);
     exp.push(short_break);
@@ -693,15 +690,14 @@ function genExpSeq() {
     exp.push(trial_timeline_description);
   }
 
-  // second phase: 6 experiment block of 96 trials
-  for (let blk = 0; blk < 6; blk++) {
+  // second phase: 8 experiment block of 96 trials
+  for (let blk = 0; blk < 8; blk++) {
     exp.push(short_break);
     exp.push(block_start);
 
     let blk_timeline = deepCopy(trial_timeline_experiment);
     blk_timeline.timeline_variables = experimental_block.splice(0, 96);
 
-    console.log(blk_timeline);
     exp.push(blk_timeline); // trials within a block
   }
 
