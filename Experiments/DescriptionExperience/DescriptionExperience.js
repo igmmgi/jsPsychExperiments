@@ -21,7 +21,7 @@ const version = getVersionNumber(nFiles, 2);
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   fixDur: 500,
-  fbDur: 750,
+  fbDur: [1000, 500], // 1000 ms feedback for no reward, 500 ms for reward
   rfi: 300, // response -> feedback interval
   iti: 500,
   cTrl: 1, // count trials
@@ -161,9 +161,12 @@ const trial_feedback = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   translate_origin: true,
-  trial_duration: prms.fbDur,
   response_ends_trial: false,
   func: drawFeedback,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(2).values()[0];
+    trial.trial_duration = prms.fbDur[dat.rewardCode];
+  },
 };
 
 function drawFeedback() {
@@ -275,7 +278,7 @@ const pic_stim = {
 
 // prettier-ignore
 let learning_block_description = [
-  // Pure Description
+  // Pure Description 24 in total 
   // even image numbers = squares 0) 20% 2) 50% 4) 80%
   // odd image numbers = circles 0) 20% 2) 50% 4) 80%
 
@@ -314,7 +317,7 @@ let learning_block_description = [
 
 // prettier-ignore
 let learning_block_experience = [
-  // Pure Experience
+  // Pure Experience 24 in total
   // even image numbers = random emoji with 0) 20% 2) 50% 4) 80%
   // odd image numbers = random emoji with 0) 20% 2) 50% 4) 80%
 
@@ -352,12 +355,12 @@ let learning_block_experience = [
 ];
 
 // prettier-ignore
-let experimental_block = [
+let experimental_block_pure_description = repeatArray([
     
   // Pure Description 24 in total
   // even image numbers = squares 0) 20% 2) 50% 4) 80%
   // odd image numbers = circles 0) 20% 2) 50% 4) 80%
-    
+ 
   // Squares vs. Squares Unequal
   { phase: 'experiment', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
   { phase: 'experiment', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 4, highProbSide: 'right', },
@@ -389,7 +392,11 @@ let experimental_block = [
   { phase: 'experiment', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 4, imageNumberRight: 1, highProbSide: 'left', },
   { phase: 'experiment', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 4, imageNumberRight: 3, highProbSide: 'left', },
 
+], 2);
 
+// prettier-ignore
+let experimental_block_pure_experience = repeatArray([
+    
   // Pure Experience 24 in total
   // even image numbers = random emoji with 0) 20% 2) 50% 4) 80%
   // odd image numbers = random emoji with 0) 20% 2) 50% 4) 80%
@@ -425,6 +432,10 @@ let experimental_block = [
   { phase: 'experiment', trialType: 'PureExperience', imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 4, imageNumberRight: 1, highProbSide: 'left', },
   { phase: 'experiment', trialType: 'PureExperience', imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 4, imageNumberRight: 3, highProbSide: 'left', },
 
+], 2);
+
+// prettier-ignore
+let experimental_block_description_vs_experience_unequal = [
 
   // Description vs. Experience Unequal 48 in total
   // Squares vs. Emoji set 1 
@@ -472,7 +483,7 @@ let experimental_block = [
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 4, imageNumberRight: 1, highProbSide: 'left', },
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 4, imageNumberRight: 3, highProbSide: 'left', },
 
-  // Circles vs. Emoji set 1
+  // Circles vs. Emoji set 2
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 1, imageNumberRight: 3, highProbSide: 'right', },
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 5, highProbSide: 'right', },
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 5, highProbSide: 'right', },
@@ -487,6 +498,10 @@ let experimental_block = [
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 5, imageNumberRight: 1, highProbSide: 'left', },
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 5, imageNumberRight: 3, highProbSide: 'left', },
 
+];
+
+// prettier-ignore
+let experimental_block_description_vs_experience_equal = repeatArray([
     
   // Description vs. Experience Equal 24 in total
   // Squares vs. Emoji Set 1
@@ -521,15 +536,37 @@ let experimental_block = [
   { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.5, imageNumberLeft: 3, imageNumberRight: 3, highProbSide: 'na', },
   { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Experience',  imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 5, imageNumberRight: 5, highProbSide: 'na', },
 
-];
-console.log(experimental_block);
+], 2);
+
+// Learning Block
+// learning_block_description (24)
+// learning_block_experience (24)
+
+// Experimental Blocks
+// Experimental Block Trial Combinations (120)
+// experimental_block_pure_description (24)
+// experimental_block_pure_experience (24)
+// experimental_block_description_vs_experience_unequal (48)
+// experimental_block_description_vs_experience_equal (24)
+
+const experimental_block = shuffle(
+  repeatArray(
+    experimental_block_pure_description.concat(
+      experimental_block_pure_experience,
+      experimental_block_description_vs_experience_unequal,
+      experimental_block_description_vs_experience_equal,
+    ),
+    3,
+  ),
+);
+console.log(experimental_block); // 504 in total (168*3)
 
 const trial_timeline_description = {
   timeline: [fixation_cross, pic_stim, rfi, trial_feedback, iti],
   timeline_variables: learning_block_description,
   sample: {
     type: 'fixed-repetitions',
-    size: 13,
+    size: 4,
   },
 };
 
@@ -538,13 +575,12 @@ const trial_timeline_experience = {
   timeline_variables: learning_block_experience,
   sample: {
     type: 'fixed-repetitions',
-    size: 13,
+    size: 4,
   },
 };
 
 const trial_timeline_experiment = {
   timeline: [fixation_cross, pic_stim, rfi, trial_feedback, iti],
-  timeline_variables: experimental_block,
   sample: {
     type: 'fixed-repetitions',
     size: 1,
@@ -641,6 +677,7 @@ function genExpSeq() {
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 
+  // 96 trials in each block
   // first phase: learning block (description vs. experience)
   if (version === 1) {
     exp.push(block_start);
@@ -656,11 +693,16 @@ function genExpSeq() {
     exp.push(trial_timeline_description);
   }
 
-  // second phase: 5 experiment block of 80 trials
-  for (let blk = 0; blk < 5; blk++) {
+  // second phase: 6 experiment block of 96 trials
+  for (let blk = 0; blk < 6; blk++) {
     exp.push(short_break);
     exp.push(block_start);
-    exp.push(trial_timeline_experiment);
+
+    let blk_timeline = deepCopy(trial_timeline_experiment);
+    blk_timeline.timeline_variables = experimental_block.splice(0, 96);
+
+    console.log(blk_timeline);
+    exp.push(blk_timeline); // trials within a block
   }
 
   exp.push(showMouseCursor);
