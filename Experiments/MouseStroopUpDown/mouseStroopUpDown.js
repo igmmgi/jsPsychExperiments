@@ -210,6 +210,7 @@ function create_timeline_up_down_words(cpos) {
   for (let i = 0; i < words_up_down.length; i++) {
     t.push({
       word: words_up_down[i],
+      category: 'location',
       colour: colours_up_down[cpos],
       word_loc: i < words_up.length ? 'up' : 'down',
       resp_loc: resp_mapping_location[resp_mapping_color.findIndex((x) => x === colours_up_down[cpos])],
@@ -230,6 +231,7 @@ function create_timeline_stroop_words() {
   for (let i = 0; i < words_stroop.length; i++) {
     t.push({
       word: words_stroop[i],
+      category: 'colour',
       colour: colours_stroop[i],
       word_loc: 'na',
       resp_loc: resp_mapping_location[resp_mapping_color.findIndex((x) => x === colours_stroop[i])],
@@ -237,9 +239,9 @@ function create_timeline_stroop_words() {
   }
   // code compatibiliy
   for (let i = 0; i < t.length; i++) {
-    t[i].comp = t[i].word === t[i].colour ? 'comp' : 'incomp';
+    t[i].comp = t[i].word === resp_mapping_color_en_de[t[i].colour] ? 'comp' : 'incomp';
   }
-  // console.log(t);
+  console.log(t);
   return t;
 }
 
@@ -362,6 +364,7 @@ function blockFeedbackTxt(filter_options) {
     ' %</H1>' +
     '<H2>Drucken Sie eine beliebige Taste um fortzufahren!</H2>';
   prms.cBlk += 1;
+  prms.cTrl = 1;
   return blockFbTxt;
 }
 
@@ -449,7 +452,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(instructionsStart1);
 
   // practice block with "xxxx" stimuli
@@ -457,6 +460,7 @@ function genExpSeq() {
   blk_timeline.timeline_variables = create_timeline_practice();
   blk_timeline.randomize_order = true;
   exp.push(blk_timeline); // trials within a block
+  exp.push(block_feedback); // show previous block performance
 
   // end of practice/start of real experiment
   exp.push(instructionsStart2);
