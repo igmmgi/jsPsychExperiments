@@ -188,6 +188,9 @@ const block_feedback = {
   on_start: function (trial) {
     trial.stimulus = blockFeedbackTxt_de({ stim: 'negStroop' });
   },
+  on_finish: function () {
+    prms.cTrl = 1;
+  },
 };
 
 const trial_timeline = {
