@@ -65,7 +65,28 @@ const task_instructions = {
     respMap[1] +
     ' = C&emsp;' +
     respMap[2] +
-    ' = M </H2>',
+    ' = M </H2>' +
+    '<br><br><H2>Weiter mit beliebiger Taste!<H2>',
+};
+
+const task_reminder = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    "<H2 style='text-align: center;'>Aufgabe: Bitte reagieren Sie auf die Farbe der Schrift!</H2><br>" +
+    "<H2 style='text-align: center;'>" +
+    respMap[0] +
+    ' = D&emsp;&emsp;&emsp;&emsp;' +
+    respMap[3] +
+    ' = K </H2>' +
+    "<H2 style='text-align: center;'>" +
+    respMap[1] +
+    ' = C&emsp;' +
+    respMap[2] +
+    ' = M </H2>' +
+    '<br><br><H2>Weiter mit beliebiger Taste!<H2>',
 };
 
 function drawFixation() {
@@ -312,6 +333,9 @@ function genExpSeq() {
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    if (blk > 0) {
+      exp.push(task_reminder);
+    }
     let blk_timeline = { ...trial_timeline };
     blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 48 : prms.nTrlsE / 48 };
     exp.push(blk_timeline); // trials within a block

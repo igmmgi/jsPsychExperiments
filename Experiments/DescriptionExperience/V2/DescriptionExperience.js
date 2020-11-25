@@ -29,7 +29,7 @@ const prms = {
   fixWidth: 3,
   fixSize: 15,
   fbSize: '50px monospace',
-  fbTxt: ['-1', '-0'],
+  fbTxt: ['-0', '-1'],
   respKeys: ['q', 'p', 27],
 };
 
@@ -79,7 +79,9 @@ const block_start = {
   stimulus: '',
   on_start: function (trial) {
     trial.stimulus =
-      "<h2 style='text-align:left;'>Block Start </h2><br>" +
+      "<h2 style='text-align:left;'>Block Start: " +
+      prms.cBlk +
+      ' von 10</h2><br>' +
       "<h2 style='text-align:left;'>Gesampunkte: " +
       prms.cPoints +
       '</h2><br>' +
@@ -212,7 +214,7 @@ function codeTrial() {
     rewardCode = Math.random() < dat.imageProbRight ? 1 : 0;
   }
 
-  if (rewardCode === 0) {
+  if (rewardCode === 1) {
     prms.cPoints -= 1;
   }
 
@@ -286,28 +288,28 @@ let learning_block_description = [
   { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 4, imageNumberRight: 0, highProbSide: 'left', },
   { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 4, imageNumberRight: 2, highProbSide: 'left', },
 
-  // Circles vs. Circles Unequal
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 1, imageNumberRight: 3, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 5, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 5, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 1, highProbSide: 'left', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 5, imageNumberRight: 1, highProbSide: 'left', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 5, imageNumberRight: 3, highProbSide: 'left', },
+  // // Circles vs. Circles Unequal
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 1, imageNumberRight: 3, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 5, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 5, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 1, highProbSide: 'left', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 5, imageNumberRight: 1, highProbSide: 'left', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 5, imageNumberRight: 3, highProbSide: 'left', },
 
-  // Circles vs. Squares Unequal 
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 3, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 5, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 5, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 0, highProbSide: 'left', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 5, imageNumberRight: 0, highProbSide: 'left', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 5, imageNumberRight: 2, highProbSide: 'left', },
+  // // Circles vs. Squares Unequal 
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 3, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 5, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 5, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 3, imageNumberRight: 0, highProbSide: 'left', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 5, imageNumberRight: 0, highProbSide: 'left', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 5, imageNumberRight: 2, highProbSide: 'left', },
 
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 4, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 4, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'left', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 4, imageNumberRight: 1, highProbSide: 'left', },
-  { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 4, imageNumberRight: 3, highProbSide: 'left', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 4, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 3, imageNumberRight: 4, highProbSide: 'right', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'left', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 4, imageNumberRight: 1, highProbSide: 'left', },
+  // { phase: 'learning', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 4, imageNumberRight: 3, highProbSide: 'left', },
 
 ];
 
@@ -585,7 +587,7 @@ const trial_timeline_experiment = {
 
 function ratings(imgs, imgType) {
   let r = [];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 6; i++) {
     let tmp = {
       type: 'image-slider-response',
       stimulus: imgs[i].src,
@@ -668,7 +670,7 @@ function genExpSeq() {
   exp.push(welcome_de);
   exp.push(resize_de);
 
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);

@@ -79,7 +79,9 @@ const block_start = {
   stimulus: '',
   on_start: function (trial) {
     trial.stimulus =
-      "<h2 style='text-align:left;'>Block Start </h2><br>" +
+      "<h2 style='text-align:left;'>Block Start: " +
+      prms.cBlk +
+      ' von 10</h2><br>' +
       "<h2 style='text-align:left;'>Gesampunkte: " +
       prms.cPoints +
       '</h2><br>' +
@@ -130,6 +132,12 @@ function drawFixation() {
   ctx.moveTo(0, -prms.fixSize);
   ctx.lineTo(0, prms.fixSize);
   ctx.stroke();
+
+  ctx.font = '30px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText('Gesampunkte: ' + prms.cPoints, 0, -300);
 }
 
 const fixation_cross = {
@@ -153,6 +161,12 @@ function showPicture(args) {
 
   let imagesLeft = imageTypeLeft === 'Description' ? imagesDescription : imagesExperience;
   let imagesRight = imageTypeRight === 'Description' ? imagesDescription : imagesExperience;
+
+  ctx.font = '30px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText('Gesampunkte: ' + prms.cPoints, 0, -300);
 
   // draw left image
   ctx.drawImage(imagesLeft[numLeft], -imagesLeft[numLeft].width / 2 - 150, -imagesLeft[numLeft].height / 2);
@@ -185,6 +199,23 @@ function drawFeedback() {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
   ctx.fillText(prms.fbTxt[dat.rewardCode], 0, 0);
+
+  ctx.font = '30px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText('Gesampunkte: ' + prms.cPoints, 0, -300);
+}
+
+function drawITI() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+
+  ctx.font = '30px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText('Gesampunkte: ' + prms.cPoints, 0, -300);
 }
 
 const iti = {
@@ -192,9 +223,10 @@ const iti = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
+  translate_origin: true,
   trial_duration: prms.iti,
   response_ends_trial: false,
-  func: function () {},
+  func: drawITI,
 };
 
 function codeTrial() {
@@ -585,7 +617,7 @@ const trial_timeline_experiment = {
 
 function ratings(imgs, imgType) {
   let r = [];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 6; i++) {
     let tmp = {
       type: 'image-slider-response',
       stimulus: imgs[i].src,

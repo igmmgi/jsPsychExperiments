@@ -36,7 +36,7 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 const prmsWordByWord = {
   iti: 500,
   resp_key: ['Space'],
-  mask_type: 2, // select 1 vs. 2
+  mask_type: 1, // select 1 vs. 2
   font_size: '20px monospace',
   sentence_width: 1250,
   cTrlSentence: 0, // count trials (make single practice trial equal to zero)
@@ -90,6 +90,25 @@ const exp_welcome_screen = {
 //                 Instructions Word-by-Word Part 1                   //
 ////////////////////////////////////////////////////////////////////////
 
+// const wordByWord_instructionsStart1 = {
+//   type: 'html-keyboard-response-canvas',
+//   canvas_colour: canvas_colour,
+//   canvas_size: canvas_size,
+//   canvas_border: canvas_border,
+//   stimulus: generate_formatted_html({
+//     text: `Part 1: This section involves reading sentences for comprehension. The words in the sentence are
+//       presented in a word-by-word fashion by pressing the space bar to reveal each word individually.<br>
+//         _____ ___ _____ ___ __ <br>
+//         Press ___ _____ ___ __ <br>
+//         Press the _____ ___ __ <br>
+//         Press the space ___ __ <br><br>
+//         Please read the sentences carefully, as they are relevant later! <br><br> Press any key to begin a practice trial.`,
+//     fontsize: 32,
+//     lineheight: 1.5,
+//     align: 'left',
+//   }),
+// };
+
 const wordByWord_instructionsStart1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
@@ -100,8 +119,8 @@ const wordByWord_instructionsStart1 = {
       presented in a word-by-word fashion by pressing the space bar to reveal each word individually.<br>
         _____ ___ _____ ___ __ <br>
         Press ___ _____ ___ __ <br>
-        Press the _____ ___ __ <br> 
-        Press the space ___ __ <br><br>
+        _____ the _____ ___ __ <br> 
+        _____ ___ space ___ __ <br><br>
         Please read the sentences carefully, as they are relevant later! <br><br> Press any key to begin a practice trial.`,
     fontsize: 32,
     lineheight: 1.5,

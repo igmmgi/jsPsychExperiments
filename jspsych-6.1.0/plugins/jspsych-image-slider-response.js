@@ -169,7 +169,7 @@ jsPsych.plugins['image-slider-response'] = (function () {
       html += '<span style="text-align: center; font-size: 80%;">' + trial.labels[j] + '</span>';
       html += '</div>';
     }
-    html += '<p id="value"><br><br>Selection: 50%</p>';
+    html += '<p id="value"><br><br>Schätzung: 50%</p>';
 
     // add submit button
     html +=
