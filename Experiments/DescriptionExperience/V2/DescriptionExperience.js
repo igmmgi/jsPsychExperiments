@@ -413,15 +413,10 @@ let experimental_block_description_vs_experience_equal = repeatArray([
 // experimental_block_description_vs_experience_unequal (12)
 // experimental_block_description_vs_experience_equal (6*2)
 
-const experimental_block = shuffle(
-  repeatArray(
-    experimental_block_pure_description.concat(
-      experimental_block_pure_experience,
-      experimental_block_description_vs_experience_unequal,
-      experimental_block_description_vs_experience_equal,
-    ),
-    4,
-  ),
+const experimental_block = experimental_block_pure_description.concat(
+  experimental_block_pure_experience,
+  experimental_block_description_vs_experience_unequal,
+  experimental_block_description_vs_experience_equal,
 );
 // console.log(experimental_block);
 

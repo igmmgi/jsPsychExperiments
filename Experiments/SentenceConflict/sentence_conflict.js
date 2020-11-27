@@ -36,7 +36,7 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 const prmsWordByWord = {
   iti: 500,
   resp_key: ['Space'],
-  mask_type: 1, // select 1 vs. 2
+  mask_type: 2, // select 1 vs. 2
   font_size: '20px monospace',
   sentence_width: 1250,
   cTrlSentence: 0, // count trials (make single practice trial equal to zero)
@@ -713,7 +713,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  exp.push(vpInfoForm_en);
+  // exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
