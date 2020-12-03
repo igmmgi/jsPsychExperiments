@@ -65,7 +65,9 @@ const task_instructions = {
     respMap[1] +
     ' = C&emsp;' +
     respMap[2] +
-    ' = M </H2>' +
+    ' = M </H2><br><br>' +
+    "<H2 style='text-align: center;'>Der erste Block ist ein Übungsblock, um die Aufgabe zu lernen. </H2>" +
+    "<H2 style='text-align: center;'>Danach beginnen die 4 richtigen Experimental-Blöcke.</H2>" +
     '<br><br><H2>Weiter mit beliebiger Taste!<H2>',
 };
 
@@ -327,7 +329,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions);
