@@ -61,11 +61,11 @@ let respText_base =
 
 let respText_pp =
   "<h3 style='text-align:center;'><b>" +
-  prms.respLetters[2] +
-  " erscheint links = linker Zeigefinger (Taste 'Q')</b></h3>" +
+  prms.respLetters[0] +
+  " = linker Zeigefinger (Taste 'Q')</b></h3>" +
   "<h3 style='text-align:center;'><b>" +
-  prms.respLetters[2] +
-  " erscheint rechts = rechter Zeigefinger (Taste 'P')</b></h3><br>";
+  prms.respLetters[1] +
+  " = rechter Zeigefinger (Taste 'P')</b></h3><br>";
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -234,7 +234,7 @@ function drawFeedback() {
       case 2: // Falsch
         if (dat.task === 'T1') {
           ctx.fillText('Falsch!', 0, -75);
-          ctx.fillText('Erste Priorität ist Typ mitte Buchstabe:', 0, -25);
+          ctx.fillText('Erste Priorität ist der mittige Buchstabe:', 0, -25);
           ctx.fillText(prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')", 0, 25);
           ctx.fillText(prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')", 0, 75);
         } else if (dat.task === 'T2') {
