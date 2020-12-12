@@ -194,7 +194,7 @@ const trial_sentence_text = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  mask_colour: 'rgba(150, 150, 150, 1)',
+  mask_colour: 'rgba(50, 50, 200, 1)',
   sentence: jsPsych.timelineVariable('sent'),
   translate_origin: true,
   font: prmsSentence.font_size,

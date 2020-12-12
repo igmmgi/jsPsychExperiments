@@ -12,7 +12,8 @@
 //
 // Experiment is split into three main phases
 // Phase 1: Garden-path word-by-word presentation + Stroop items inter-mixed
-// Phase 2: Short Old/New recall test
+// Phase 2: Stroop task
+// Phase 3: Short Old/New recall test
 
 //////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                            //
@@ -50,6 +51,20 @@ const prmsWordByWordStroop = {
   cTrlWordByWordStroop: 1, // count trials
 };
 
+const prmsStroop = {
+  fixWidth: 2,
+  fixSize: 10,
+  fixDur: 500,
+  iti: 500,
+  key_mapping: prmsWordByWordStroop.key_mapping_stroop,
+  font_size: '30px monospace',
+  resp_keys: [],
+  fbTxt: ['Correct', 'Incorrect'], // provide feedback during short practice block
+  fbDur: 500,
+  cBlkStroop: 1, // count blocks
+  cTrlStroop: 1, // count trials
+};
+
 const prmsRecall = {
   iti: 500,
   resp_keys: ['Q', 'P'],
@@ -69,7 +84,7 @@ const exp_welcome_screen = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Welcome: <br><br>The following experiment consists of two phases and will take
+    text: `Welcome: <br><br>The following experiment consists of three parts and will take
     approximately 20-25 minutes to complete. Please read the instructions
     carefully! Upon completion of the experiment, you will be provided with a
     randomly generated code which you require to confirm your participation via
@@ -264,9 +279,6 @@ function create_timeline_sentence(items) {
   return timeline_items;
 }
 
-////////////////////////////////////////////////////////////////////////
-//                   Stimuli/Timelines Stroop Part 2                  //
-////////////////////////////////////////////////////////////////////////
 function drawFixation() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
@@ -313,7 +325,7 @@ function drawStroopFeedback() {
   ctx.fillText(prmsWordByWordStroop.fbTxt[dat.error], 0, 0);
 }
 
-function codeTrialStroop() {
+function codeTrialWordByWordStroop() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   let error = dat.key_press !== jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp) ? 1 : 0;
@@ -342,7 +354,7 @@ const trial_feedback_stroop = {
   func: [drawStroopFeedback],
 };
 
-const stroop_stimulus = {
+const stroop_stimulus_wordByWord = {
   type: 'static-canvas-keyboard-response',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -365,7 +377,7 @@ const stroop_stimulus = {
     length: 1,
   },
   on_finish: function () {
-    codeTrialStroop();
+    codeTrialWordByWordStroop();
   },
 };
 
@@ -383,36 +395,33 @@ const stroop_stimuli_exp = shuffle(repeatArray(stroops, 24));
 // console.log(stroop_stimuli_practice);
 
 function create_timeline_sentencestroop(sentences, stroops, nstroops) {
-  console.log(sentences);
-  console.log(stroops);
-  console.log(nstroops);
-  let timeline = [];
-  let nstroop;
-  for (let i = 0; i < sentences.length; i++) {
-    // Always start with X Stroop trials
-    if (i == 0) {
-      nstroop = nstroops.splice(0, 1);
-      for (let i = 0; i < nstroop; i++) {
+    let timeline = [];
+    let nstroop;
+    for (let i = 0; i < sentences.length; i++) {
+        // Always start with X Stroop trials
+        if (i == 0) {
+            nstroop = nstroops.splice(0, 1);
+            for (let i = 0; i < nstroop; i++) {
+                const tmp = {
+                    timeline: [fixation_cross, stroop_stimulus_wordByWord, trial_feedback_stroop, iti_wordByWordStroop],
+                    timeline_variables: stroops.splice(0, 1),
+                };
+                timeline.push(tmp);
+                timeline.push(iti_wordByWordStroop);
+            }
+        }
         const tmp = {
-          timeline: [fixation_cross, stroop_stimulus, trial_feedback_stroop, iti_wordByWordStroop],
-          timeline_variables: stroops.splice(0, 1),
+            timeline: [trial_moving_window_text],
+            timeline_variables: create_timeline_variables_sentence(sentences[i]),
         };
         timeline.push(tmp);
         timeline.push(iti_wordByWordStroop);
-      }
-    }
-    const tmp = {
-      timeline: [trial_moving_window_text],
-      timeline_variables: create_timeline_variables_sentence(sentences[i]),
-    };
-    timeline.push(tmp);
-    timeline.push(iti_wordByWordStroop);
 
     // Intervening Stroops
     nstroop = nstroops.splice(0, 1);
     for (let j = 0; j < nstroop; j++) {
       const tmp = {
-        timeline: [fixation_cross, stroop_stimulus, trial_feedback_stroop, iti_wordByWordStroop],
+        timeline: [fixation_cross, stroop_stimulus_wordByWord, trial_feedback_stroop, iti_wordByWordStroop],
         timeline_variables: stroops.splice(0, 1),
       };
       timeline.push(tmp);
@@ -437,8 +446,109 @@ const timeline_exp = {
 };
 // console.log(timeline_exp);
 
+
 ////////////////////////////////////////////////////////////////////////
-//                     Instructions Recall part 2                     //
+//                        Instructions Stroop Part 2                  //
+////////////////////////////////////////////////////////////////////////
+
+const stroop_instructionsStart1 = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: generate_formatted_html({
+        text:
+        `Part 2: This section involves responding to font colour. Ignore word meaning! <br><br>` +
+        stroop_resp_mapping +
+      `You will now perform a block of 48 trials. 
+       Respond as quickly and as accurately as possible.<br><br> 
+    Press any key to continue!`,
+        fontsize: 32,
+        lineheight: 1.5,
+        align: 'left',
+    }),
+};
+
+const stroop_instructionsEnd = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `End of Part 2: Press any key to continue with Part 3.`,
+    fontsize: 32,
+    align: 'left',
+  }),
+};
+
+const iti_stroop = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  trial_duration: prmsStroop.iti,
+  response_ends_trial: false,
+  func: function () {},
+};
+
+const stroop_stimulus = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  translate_origin: true,
+  choices: prmsWordByWordStroop.resp_keys_stroop,
+  func: [drawStroop],
+  func_args: [{ word: jsPsych.timelineVariable('word'), colour: jsPsych.timelineVariable('colour') }],
+  data: {
+    stim: 'stroop',
+    word: jsPsych.timelineVariable('word'),
+    colour: jsPsych.timelineVariable('colour'),
+    comp: jsPsych.timelineVariable('comp'),
+    corrResp: jsPsych.timelineVariable('corrResp'),
+  },
+  on_finish: function () {
+    codeTrialStroop();
+  },
+};
+
+// prettier-ignore
+const exp_timeline_stroop_experiment = {
+  timeline: [fixation_cross, stroop_stimulus, trial_feedback_stroop, iti_stroop],
+  timeline_variables: [
+    { word: 'blue',  colour: 'blue',  comp: 'comp',   corrResp: prmsWordByWordStroop.resp_keys_stroop[0] },
+    { word: 'blue',  colour: 'green', comp: 'incomp', corrResp: prmsWordByWordStroop.resp_keys_stroop[1] },
+    { word: 'green', colour: 'green', comp: 'comp',   corrResp: prmsWordByWordStroop.resp_keys_stroop[1] },
+    { word: 'green', colour: 'blue',  comp: 'incomp', corrResp: prmsWordByWordStroop.resp_keys_stroop[0] },
+  ],
+  sample: {
+    type: 'fixed-repetitions',
+    size: 12,
+  },
+};
+
+function codeTrialStroop() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let error = dat.key_press !== jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp) ? 1 : 0;
+  // console.log('Trial Error: ', error);
+
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    error: error,
+    blockNum: prmsStroop.cBlkStroop,
+    trialNum: prmsStroop.cTrlStroop,
+  });
+  prmsStroop.cTrlStroop += 1;
+  if (dat.key_press === 27) {
+    jsPsych.endExperiment();
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////
+//                     Instructions Recall Phase 3                     //
 ////////////////////////////////////////////////////////////////////////
 
 const recall_instructionsStart = {
@@ -447,7 +557,7 @@ const recall_instructionsStart = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Part 2: In the final phase of the experiment, you will be presentend with complete sentences.
+    text: `Part 3: In the final part of the experiment, you will be presentend with complete sentences.
     Your task is to indicate whether the presented sentence appeared during Part 1 of the experiment. The
     keys required to indicate your response are indicated below the sentences.<br><br>
     Press any key to continue!`,
@@ -458,7 +568,7 @@ const recall_instructionsStart = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                  Stimuli/Timelines Recall Part 2                   //
+//                  Stimuli/Timelines Recall Part 3                   //
 ////////////////////////////////////////////////////////////////////////
 
 function repeat_item_recall_phase(items) {
@@ -639,6 +749,15 @@ const save_sentencestroop = {
   timing_post_trial: 200,
 };
 
+const save_stroop = {
+  type: 'call-function',
+  func: function () {
+    let data_filename = dirName + 'data/' + expName + '_stroop_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim: 'stroop' });
+  },
+  timing_post_trial: 200,
+};
+
 const save_recall = {
   type: 'call-function',
   func: function () {
@@ -668,22 +787,28 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  exp.push(vpInfoForm_en);
+  // exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
   // start experiment
   exp.push(exp_welcome_screen);
 
-  // Phase 1: word-by-word garden path sentences
-  exp.push(wordByWordStroop_instructionsStart1);
-  exp.push(timeline_practice);
-  exp.push(wordByWordStroop_instructionsStart2);
-  exp.push(timeline_exp);
-  exp.push(save_sentencestroop);
-  exp.push(wordByWordStroop_instructionsEnd);
+  // // Phase 1: word-by-word garden path sentences
+  // exp.push(wordByWordStroop_instructionsStart1);
+  // exp.push(timeline_practice);
+  // exp.push(wordByWordStroop_instructionsStart2);
+  // exp.push(timeline_exp);
+  // exp.push(save_sentencestroop);
+  // exp.push(wordByWordStroop_instructionsEnd);
 
-  // 2nd phase (Sentence Recognition/Memory phase)
+  // Phase 2: Stroop task
+  exp.push(stroop_instructionsStart1);
+  exp.push(exp_timeline_stroop_experiment);
+  exp.push(save_stroop);
+  exp.push(stroop_instructionsEnd);
+
+  // 3rd phase (Sentence Recognition/Memory phase)
   exp.push(recall_instructionsStart);
   exp.push(exp_timeline_recall);
   exp.push(save_recall);
