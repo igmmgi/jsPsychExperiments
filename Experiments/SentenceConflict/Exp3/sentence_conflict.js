@@ -120,7 +120,7 @@ const wordByWordStroop_instructionsStart1 = {
       stroop_resp_mapping +
       `You should respond as quickly and as accurately as possible! 
       The second task involves reading sentences for comprehension. The words in the sentence are
-      presented in a word-by-word fashion by pressing the space bar using your left index finger to reveal each word individually.<br>
+      presented in a word-by-word fashion by pressing the space bar using your right thumb to reveal each word individually.<br>
         Press ___ _____ ___ __ <br>
         _____ the _____ ___ __ <br> 
         _____ ___ space ___ __ <br><br>
@@ -144,6 +144,10 @@ const wordByWordStroop_instructionsStart2 = {
     fontsize: 32,
     align: 'left',
   }),
+  on_start() {
+    prmsWordByWordStroop.cBlkWordByWordStroop += 1;
+    prmsWordByWordStroop.cTrlWordByWordStroop = 1;
+  },
 };
 
 const wordByWordStroop_instructionsEnd = {
@@ -395,27 +399,27 @@ const stroop_stimuli_exp = shuffle(repeatArray(stroops, 24));
 // console.log(stroop_stimuli_practice);
 
 function create_timeline_sentencestroop(sentences, stroops, nstroops) {
-    let timeline = [];
-    let nstroop;
-    for (let i = 0; i < sentences.length; i++) {
-        // Always start with X Stroop trials
-        if (i == 0) {
-            nstroop = nstroops.splice(0, 1);
-            for (let i = 0; i < nstroop; i++) {
-                const tmp = {
-                    timeline: [fixation_cross, stroop_stimulus_wordByWord, trial_feedback_stroop, iti_wordByWordStroop],
-                    timeline_variables: stroops.splice(0, 1),
-                };
-                timeline.push(tmp);
-                timeline.push(iti_wordByWordStroop);
-            }
-        }
+  let timeline = [];
+  let nstroop;
+  for (let i = 0; i < sentences.length; i++) {
+    // Always start with X Stroop trials
+    if (i == 0) {
+      nstroop = nstroops.splice(0, 1);
+      for (let i = 0; i < nstroop; i++) {
         const tmp = {
-            timeline: [trial_moving_window_text],
-            timeline_variables: create_timeline_variables_sentence(sentences[i]),
+          timeline: [fixation_cross, stroop_stimulus_wordByWord, trial_feedback_stroop, iti_wordByWordStroop],
+          timeline_variables: stroops.splice(0, 1),
         };
         timeline.push(tmp);
         timeline.push(iti_wordByWordStroop);
+      }
+    }
+    const tmp = {
+      timeline: [trial_moving_window_text],
+      timeline_variables: create_timeline_variables_sentence(sentences[i]),
+    };
+    timeline.push(tmp);
+    timeline.push(iti_wordByWordStroop);
 
     // Intervening Stroops
     nstroop = nstroops.splice(0, 1);
@@ -446,27 +450,26 @@ const timeline_exp = {
 };
 // console.log(timeline_exp);
 
-
 ////////////////////////////////////////////////////////////////////////
 //                        Instructions Stroop Part 2                  //
 ////////////////////////////////////////////////////////////////////////
 
 const stroop_instructionsStart1 = {
-    type: 'html-keyboard-response-canvas',
-    canvas_colour: canvas_colour,
-    canvas_size: canvas_size,
-    canvas_border: canvas_border,
-    stimulus: generate_formatted_html({
-        text:
-        `Part 2: This section involves responding to font colour. Ignore word meaning! <br><br>` +
-        stroop_resp_mapping +
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text:
+      `Part 2: This section involves responding to font colour. Ignore word meaning! <br><br>` +
+      stroop_resp_mapping +
       `You will now perform a block of 48 trials. 
        Respond as quickly and as accurately as possible.<br><br> 
     Press any key to continue!`,
-        fontsize: 32,
-        lineheight: 1.5,
-        align: 'left',
-    }),
+    fontsize: 32,
+    lineheight: 1.5,
+    align: 'left',
+  }),
 };
 
 const stroop_instructionsEnd = {
@@ -544,8 +547,6 @@ function codeTrialStroop() {
     jsPsych.endExperiment();
   }
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////
 //                     Instructions Recall Phase 3                     //
@@ -794,13 +795,13 @@ function genExpSeq() {
   // start experiment
   exp.push(exp_welcome_screen);
 
-  // // Phase 1: word-by-word garden path sentences
-  // exp.push(wordByWordStroop_instructionsStart1);
-  // exp.push(timeline_practice);
-  // exp.push(wordByWordStroop_instructionsStart2);
-  // exp.push(timeline_exp);
-  // exp.push(save_sentencestroop);
-  // exp.push(wordByWordStroop_instructionsEnd);
+  // Phase 1: word-by-word garden path sentences
+  exp.push(wordByWordStroop_instructionsStart1);
+  exp.push(timeline_practice);
+  exp.push(wordByWordStroop_instructionsStart2);
+  exp.push(timeline_exp);
+  exp.push(save_sentencestroop);
+  exp.push(wordByWordStroop_instructionsEnd);
 
   // Phase 2: Stroop task
   exp.push(stroop_instructionsStart1);

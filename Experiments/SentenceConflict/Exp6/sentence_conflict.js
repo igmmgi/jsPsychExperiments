@@ -35,10 +35,7 @@ const vpNum = genVpNum();
 const prmsWordByWordStroop = {
   iti: 500,
   resp_key_sentence: ['Space'],
-  mask_type: 1, // select 1 vs. 2
-  font_size_sentence: '20px monospace',
-  sentence_width: 1250,
-  cTrlSentence: 0, // count trials (make single practice trial equal to zero)
+  font_size_sentence: '30px monospace',
   fixWidth: 2,
   fixSize: 10,
   fixDur: 500,
@@ -121,9 +118,6 @@ const wordByWordStroop_instructionsStart1 = {
       `You should respond as quickly and as accurately as possible! 
       The second task involves reading sentences for comprehension. The words in the sentence are
       presented in a word-by-word fashion by pressing the space bar using your right thumb to reveal each word individually.<br>
-        Press ___ _____ ___ __ <br>
-        _____ the _____ ___ __ <br> 
-        _____ ___ space ___ __ <br><br>
         Please read the sentences carefully, as they are relevant later! <br><br> Press any key to begin a short block of practice trials.`,
     fontsize: 30,
     lineheight: 1.1,
@@ -206,17 +200,14 @@ const iti_wordByWordStroop = {
   func: function () {},
 };
 
-const trial_moving_window_text = {
-  type: 'text-moving-window-keyboard-response',
+const trial_center_text = {
+  type: 'text-word-by-word-center-response',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  mask_type: jsPsych.timelineVariable('mask_type'),
   sentence: jsPsych.timelineVariable('sent'),
   word_number: jsPsych.timelineVariable('word_num'),
   font: prmsWordByWordStroop.font_size_sentence,
-  max_width: prmsWordByWordStroop.sentence_width,
-  text_align: 'center',
   choices: prmsWordByWordStroop.resp_key_sentence,
   data: {
     stim: 'SentenceStroop',
@@ -274,7 +265,7 @@ function create_timeline_sentence(items) {
   let timeline_items = [];
   for (let i = 0; i < items.length; i++) {
     const tmp = {
-      timeline: [trial_moving_window_text],
+      timeline: [trial_center_text],
       timeline_variables: create_timeline_variables_sentence(items[i]),
     };
     timeline_items.push(tmp);
@@ -415,7 +406,7 @@ function create_timeline_sentencestroop(sentences, stroops, nstroops) {
       }
     }
     const tmp = {
-      timeline: [trial_moving_window_text],
+      timeline: [trial_center_text],
       timeline_variables: create_timeline_variables_sentence(sentences[i]),
     };
     timeline.push(tmp);
@@ -788,7 +779,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_en);
   exp.push(resize_en);
-  // exp.push(vpInfoForm_en);
+  exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 

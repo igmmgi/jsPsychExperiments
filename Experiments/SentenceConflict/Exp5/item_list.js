@@ -1,33 +1,12 @@
-const practice_items = shuffle([
+const practice_item = [
   {
     item: 1,
     cond: 'Practice',
-    sent: 'The good dog fetched the stick for his owner.',
+    sent: 'Press the space bar to reveal the sentence word by word.',
     crit_pos: 1,
     dis_pos: 1,
   },
-  {
-    item: 1,
-    cond: 'Practice',
-    sent: 'The clumsy postal worker damaged the package full of priceless antique china.',
-    crit_pos: 1,
-    dis_pos: 1,
-  },
-  {
-    item: 1,
-    cond: 'Practice',
-    sent: 'The local supermarket closed early every night and never had what you needed.',
-    crit_pos: 1,
-    dis_pos: 1,
-  },
-  {
-    item: 1,
-    cond: 'Practice',
-    sent: 'The pizza deliveryman always made his delivery on time and earned large tips.',
-    crit_pos: 1,
-    dis_pos: 1,
-  },
-]);
+];
 
 const items = shuffle([
   {

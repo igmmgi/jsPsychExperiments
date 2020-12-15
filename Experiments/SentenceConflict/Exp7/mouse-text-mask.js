@@ -89,6 +89,8 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
 
     let ctx = document.getElementById('canvas').getContext('2d');
     let canvasOffset = $(canvas).offset();
+    let trial_started = false;
+    // let text_on = false;
     let offsetX = canvasOffset.left;
     let offsetY = canvasOffset.top;
     let end_rt;
@@ -98,6 +100,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     let y_coords = [];
     let time = [];
 
+    // Mouse Events
     canvas.addEventListener(
       'mousemove',
       function (e) {
@@ -116,7 +119,8 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     );
 
     // initial draw
-    let start_time = performance.now();
+    let start_time;
+    let [start_box, textMetrics] = draw_start();
 
     // function to end trial when it is time
     let end_trial = function () {
@@ -162,23 +166,92 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
 
     // clear the canvas and draw text
     function draw(mouse) {
-      canvas.width = canvas.width;
+      if (!trial_started) {
+        if (in_box(mouse.x, mouse.y, start_box)) {
+          trial_started = true;
+          start_time = performance.now();
+        } else {
+          return;
+        }
+      }
+      // if (!text_on) {
+      //   if (performance.now() - start_time > 100) {
+      //     text_on = true;
+      //   } else {
+      //     return;
+      //   }
+      // }
 
+      canvas.width = canvas.width;
+      ctx.save();
+
+      // mask
       // ctx.filter = 'blur(1px)';
-      ctx.fillStyle = trial.mask_colour;
-      ctx.ellipse(mouse.x, mouse.y, 40, 60, Math.PI / 2, 0, 2 * Math.PI);
-      // ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2, true);
+      ctx.ellipse(mouse.x, mouse.y - 20, 30, 60, Math.PI / 2, 0, 2 * Math.PI);
       ctx.clip();
+      ctx.fillStyle = trial.mask_colour;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.font = trial.font;
-
-      ctx.fillStyle = trial.canvas_colour;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.fillStyle = 'black';
       ctx.fillText(trial.sentence, canvas.width / 2, canvas.height / 2);
+
+      // restore context and draw text bounding box with a little bit of border
+      ctx.restore();
+      ctx.beginPath();
+      ctx.moveTo(
+        canvas.width / 2 - textMetrics.actualBoundingBoxLeft * 1.01,
+        canvas.height / 2 - textMetrics.actualBoundingBoxAscent * 1.01,
+      );
+      ctx.lineTo(
+        canvas.width / 2 + textMetrics.actualBoundingBoxRight * 1.01,
+        canvas.height / 2 - textMetrics.actualBoundingBoxAscent * 1.01,
+      );
+      ctx.lineTo(
+        canvas.width / 2 + textMetrics.actualBoundingBoxRight * 1.01,
+        canvas.height / 2 + textMetrics.actualBoundingBoxDescent * 1.01,
+      );
+      ctx.lineTo(
+        canvas.width / 2 - textMetrics.actualBoundingBoxLeft * 1.01,
+        canvas.height / 2 + textMetrics.actualBoundingBoxDescent * 1.01,
+      );
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    function draw_start() {
+      // fake draw to get text position and calculate bounding box once
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = trial.font;
+      ctx.fillStyle = trial.canvas_colour;
+      ctx.fillText(trial.sentence, canvas.width / 2, canvas.height / 2);
+
+      let textMetrics = ctx.measureText(trial.sentence);
+
+      // start box
+      ctx.beginPath();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'black';
+
+      let start_box = {
+        x: canvas.width / 2 - textMetrics.actualBoundingBoxLeft - 30,
+        y: canvas.height / 2 - textMetrics.actualBoundingBoxAscent,
+        h: 20,
+        w: 20,
+      };
+
+      ctx.rect(start_box.x, start_box.y, start_box.w, start_box.h);
+      ctx.stroke();
+
+      return [start_box, textMetrics];
+    }
+
+    // test if x, y is inside the bounding box
+    function in_box(x, y, box) {
+      return x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
     }
 
     // end trial if trial_duration is set

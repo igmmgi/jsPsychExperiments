@@ -1,4 +1,4 @@
-// cusotm jspsych mouse drag response using code adapted from:
+/ cusotm jspsych mouse drag response using code adapted from:
 // https://stackoverflow.com/questions/21605942/drag-element-on-canvas
 
 jsPsych.plugins['mouse-drag-response'] = (function () {
