@@ -624,7 +624,7 @@ function genExpSeq() {
 
   exp.push(fullscreen_on);
   exp.push(welcome_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
@@ -657,7 +657,6 @@ const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
-  fullscreen: true,
   show_progress_bar: false,
   exclusions: {
     min_width: canvas_size[0],

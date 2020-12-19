@@ -361,7 +361,6 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
-  fullscreen_mode: true,
   show_progress_bar: false,
   exclusions: {
     min_width: canvas_size[0],

@@ -461,7 +461,6 @@ const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
-  fullscreen: true,
   show_progress_bar: false,
   exclusions: {
     min_width: canvas_size[0],

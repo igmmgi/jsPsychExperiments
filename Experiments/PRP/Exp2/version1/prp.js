@@ -527,7 +527,6 @@ jsPsych.init({
   timeline: EXP,
   preload_audio: audio,
   use_webaudio: true,
-  fullscreen: true,
   show_progress_bar: false,
   exclusions: {
     min_width: cs[0],

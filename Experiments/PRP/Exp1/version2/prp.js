@@ -517,7 +517,6 @@ const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
   timeline: EXP,
-  fullscreen: true,
   show_progress_bar: false,
   exclusions: {
     min_width: cs[0],

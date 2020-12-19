@@ -167,7 +167,6 @@ const datname = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
-  fullscreen: false,
   show_progress_bar: false,
   on_finish: function () {
     saveRandomCode(expName);
