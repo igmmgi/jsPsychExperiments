@@ -53,6 +53,14 @@ jsPsych.plugins['mouse-response'] = (function () {
         default: 500,
         description: 'Fixation Duration',
       },
+      fixation_position: {
+        type: jsPsych.plugins.parameterType.INT,
+        array: true,
+        pretty_name: 'Fixation Position',
+        default: [0, 0],
+        description: 'Fixation Position',
+      },
+
       stimulus: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Stimulus',
@@ -277,7 +285,7 @@ jsPsych.plugins['mouse-response'] = (function () {
       // fixation cross
       if (draw_fixation) {
         ctx.fillStyle = trial.stimulus_colour;
-        ctx.fillText('+', trial.stimulus_position[0], trial.stimulus_position[1]);
+        ctx.fillText('+', trial.fixation_position[0], trial.fixation_position[1]);
         jsPsych.pluginAPI.setTimeout(function () {
           draw_fixation = false;
           draw_stimulus = true;

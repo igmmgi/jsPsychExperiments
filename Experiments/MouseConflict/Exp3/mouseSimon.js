@@ -1,4 +1,4 @@
-// Flanker Task using the mouse
+// Simon Task using the mouse
 // Each individual trial is split into three phases:
 // Phase 1: Trial Initiation
 //      Participant is required to initiate the trial by moving the cursor into a
@@ -14,8 +14,8 @@
 // Whether the start box and both response boxes are drawn during each phase is controlled within
 //  prms using an array (length = 3) of bools (see below).
 //
-//  The size of the response boxes is manipulated giving a 2*2 design:
-//  Flanker compatibility (comp vs. incomp) X Response Box Size (small vs. large)
+//  The position of the response boxes is manipulated giving a 2*2 design:
+//  Simon compatibility (comp vs. incomp) X Response Box Position (near vs. far)
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -43,11 +43,14 @@ const prms = {
   fbDur: 500,
   waitDur: 1000,
   iti: 500,
-  stimPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of stimulus
+  fixPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of stimulus
+  stimPos: [null, canvas_size[1] / 2], // x,y position of stimulus (x is set per trial)
+  stimEccentricity: 100, // x,y position of stimulus (x is set per trial)
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
-  leftBox: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
-  rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
-  responseBoxSizeAdjust: 25, // response boxes are +- X pixels different in height/width from start size
+  leftBoxN: [300, 300, 50, 50], // xpos, ypos, xsize, ysize
+  rightBoxN: [980, 300, 50, 50], // xpos, ypos, xsize, ysize
+  leftBoxF: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
+  rightBoxF: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
@@ -95,8 +98,9 @@ const trial_stimulus = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   fixation_duration: prms.fixDur,
+  fixation_position: prms.fixPos,
   stimulus: jsPsych.timelineVariable('stim'),
-  stimulus_position: prms.stimPos,
+  stimulus_position: null,
   stimulus_colour: 'black',
   start_box: prms.startBox,
   resp_size: jsPsych.timelineVariable('resp_size'),
@@ -110,23 +114,24 @@ const trial_stimulus = {
   data: {
     stim_type: 'mouse_flanker',
     stim: jsPsych.timelineVariable('stim'),
-    comp: jsPsych.timelineVariable('comp'),
+    side: jsPsych.timelineVariable('side'),
     resp_size: jsPsych.timelineVariable('resp_size'),
     resp_loc: jsPsych.timelineVariable('resp_loc'),
   },
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.scale_factor = dat.scale_factor;
-    if (trial.data.resp_size === 'large') {
-      trial.left_box[2] += prms.responseBoxSizeAdjust;
-      trial.left_box[3] += prms.responseBoxSizeAdjust;
-      trial.right_box[2] += prms.responseBoxSizeAdjust;
-      trial.right_box[3] += prms.responseBoxSizeAdjust;
-    } else if (trial.data.resp_size === 'small') {
-      trial.left_box[2] -= prms.responseBoxSizeAdjust;
-      trial.left_box[3] -= prms.responseBoxSizeAdjust;
-      trial.right_box[2] -= prms.responseBoxSizeAdjust;
-      trial.right_box[3] -= prms.responseBoxSizeAdjust;
+    if (trial.data.side === 'left') {
+      trial.stimulus_position = [canvas_size[0] / 2 - prms.stimEccentricity, prms.stimPos[1]];
+    } else if (trial.data.side === 'right') {
+      trial.stimulus_position = [canvas_size[0] / 2 + prms.stimEccentricity, prms.stimPos[1]];
+    }
+    if (trial.data.resp_size === 'near') {
+      trial.left_box = prms.leftBoxN;
+      trial.right_box = prms.rightBoxN;
+    } else if (trial.data.resp_size === 'far') {
+      trial.left_box = prms.leftBoxF;
+      trial.right_box = prms.rightBoxF;
     }
   },
   on_finish: function () {
@@ -139,7 +144,15 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = dat.resp_loc == dat.end_loc ? 0 : 1;
-  jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl });
+  let comp = dat.resp_loc == dat.side ? 'comp' : 'incomp';
+  console.log(comp);
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    comp: comp,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
   prms.cTrl += 1;
 }
 
@@ -177,14 +190,14 @@ const iti = {
 
 // prettier-ignore
 stimuli = [
-  { stim: 'HHHHH', comp: 'comp',   resp_size: 'large', resp_loc: prms.resp_loc[0] },
-  { stim: 'SSSSS', comp: 'comp',   resp_size: 'large', resp_loc: prms.resp_loc[1] },
-  { stim: 'HHSHH', comp: 'incomp', resp_size: 'large', resp_loc: prms.resp_loc[1] },
-  { stim: 'SSHSS', comp: 'incomp', resp_size: 'large', resp_loc: prms.resp_loc[0] },
-  { stim: 'HHHHH', comp: 'comp',   resp_size: 'small', resp_loc: prms.resp_loc[0] },
-  { stim: 'SSSSS', comp: 'comp',   resp_size: 'small', resp_loc: prms.resp_loc[1] },
-  { stim: 'HHSHH', comp: 'incomp', resp_size: 'small', resp_loc: prms.resp_loc[1] },
-  { stim: 'SSHSS', comp: 'incomp', resp_size: 'small', resp_loc: prms.resp_loc[0] },
+  { stim: 'H', side: 'left',  resp_size: 'near', resp_loc: prms.resp_loc[0] },
+  { stim: 'S', side: 'left',  resp_size: 'near', resp_loc: prms.resp_loc[1] },
+  { stim: 'S', side: 'right', resp_size: 'near', resp_loc: prms.resp_loc[1] },
+  { stim: 'H', side: 'right', resp_size: 'near', resp_loc: prms.resp_loc[0] },
+  { stim: 'H', side: 'left',  resp_size: 'far',  resp_loc: prms.resp_loc[0] },
+  { stim: 'S', side: 'left',  resp_size: 'far',  resp_loc: prms.resp_loc[1] },
+  { stim: 'S', side: 'right', resp_size: 'far',  resp_loc: prms.resp_loc[1] },
+  { stim: 'H', side: 'right', resp_size: 'far',  resp_loc: prms.resp_loc[0] },
 ];
 
 // Block feedback shows:
