@@ -1,4 +1,9 @@
-// Start box and end boxes whilst recording x,y mouse posiiton
+// Mouse start box and end boxes whilst recording x,y mouse posiiton
+//   RBL                   RBR
+//
+//              +
+//
+//              SB
 
 jsPsych.plugins['mouse-response'] = (function () {
   let plugin = {};
@@ -236,7 +241,7 @@ jsPsych.plugins['mouse-response'] = (function () {
       }
 
       // response movement started?
-      if (!movement_initiated) {
+      if (!movement_initiated && !in_box(X, Y, start_box)) {
         start_rt = performance.now() - start_time;
         movement_initiated = true;
       }
@@ -276,6 +281,7 @@ jsPsych.plugins['mouse-response'] = (function () {
         jsPsych.pluginAPI.setTimeout(function () {
           draw_fixation = false;
           draw_stimulus = true;
+          draw_start_box = trial.draw_start_box[2];
           draw_response_boxes = trial.draw_response_boxes[2];
           draw();
         }, trial.fixation_duration);
@@ -315,6 +321,7 @@ jsPsych.plugins['mouse-response'] = (function () {
       trial_initiated = true;
       start_time = performance.now();
       draw_fixation = true;
+      draw_start_box = trial.draw_start_box[1];
       draw_response_boxes = trial.draw_response_boxes[1];
       draw();
     };

@@ -1,16 +1,18 @@
 // Flanker Task using the mouse
-// Each inddividual trial is split into three phases:
+// Each individual trial is split into three phases:
 // Phase 1: Trial Initiation
-//      Participant is required to press the left mouse button inside a "Trial Initiation"
-//      region (start box)
-// Phase 2: Fixation Cross (x ms)
+//      Participant is required to initiate the trial by moving the cursor into a
+//      "Trial Initiation" region (start box).
+//      Option 1: Just enter the start box region to initiate the trial.
+//      Option 2: Enter the start box region AND press the left mouse button to initiate the trial.
+// Phase 2: Fixation Cross (X ms)
 // Phase 3: Stimulus presented --> Participant is required to move mouse cursor to one of two
-//      response regions (reponse boxes) to execute the reponse
-//      Option 1: Just enter the response box to end the trial
-//      Option 2: Enter the response box and press the left mouse button
+//      response regions (reponse boxes) to execute the reponse.
+//      Option 1: Just enter the response box to end the trial.
+//      Option 2: Enter the response box and press the left mouse button.
 //
 // Whether the start box and both response boxes are drawn during each phase is controlled within
-//  prms usingg an array (length = 3) of bools (see below).
+//  prms using an array (length = 3) of bools (see below).
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -31,9 +33,9 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 16, // number of trials in first block (practice)
-  nTrlsE: 48, // number of trials in subsequent blocks
-  nBlks: 9,
+  nTrlsP: 4, // number of trials in first block (practice)
+  nTrlsE: 4, // number of trials in subsequent blocks
+  nBlks: 4,
   fixDur: 500,
   fbDur: 500,
   waitDur: 1000,
@@ -44,8 +46,8 @@ const prms = {
   rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
-  requireMousePressStart: false, // is mouse button press inside start box required to initiate trial?
-  requireMousePressFinish: false, // is mouse button press inside response box required to end trial?
+  requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
+  requireMousePressFinish: true, // is mouse button press inside response box required to end trial?
   fbTxt: ['Richtig', 'Falsch'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -79,24 +81,9 @@ const task_instructions = {
   post_trial_gap: prms.waitDur,
 };
 
-function drawFeedback() {
-  'use strict';
-  let ctx = document.getElementById('canvas').getContext('2d');
-  let dat = jsPsych.data.get().last(1).values()[0];
-  ctx.font = '50px Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
-  ctx.fillText(prms.fbTxt[dat.corrCode], dat.end_x, dat.end_y);
-}
-
-function codeTrial() {
-  'use strict';
-  let dat = jsPsych.data.get().last(1).values()[0];
-  let corrCode = dat.resp_loc == dat.end_loc ? 0 : 1;
-  jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl });
-  prms.cTrl += 1;
-}
+////////////////////////////////////////////////////////////////////////
+//                        Experiment Functions                        //
+////////////////////////////////////////////////////////////////////////
 
 const trial_stimulus = {
   type: 'mouse-response',
@@ -110,12 +97,13 @@ const trial_stimulus = {
   start_box: prms.startBox,
   left_box: prms.leftBox,
   right_box: prms.rightBox,
+  draw_start_box: prms.drawStartBox,
   draw_response_boxes: prms.drawResponseBoxes,
   require_mouse_press_start: prms.requireMousePressStart,
   require_mouse_press_finish: prms.requireMousePressFinish,
   scale_factor: null,
   data: {
-    stim: 'mouse_negation',
+    stim_type: 'mouse_flanker',
     stim: jsPsych.timelineVariable('stim'),
     comp: jsPsych.timelineVariable('comp'),
     resp_loc: jsPsych.timelineVariable('resp_loc'),
@@ -129,12 +117,27 @@ const trial_stimulus = {
   },
 };
 
-stimuli = [
-  { stim: 'HHHHH', comp: 'comp', resp_loc: prms.resp_loc[0] },
-  { stim: 'SSSSS', comp: 'comp', resp_loc: prms.resp_loc[1] },
-  { stim: 'HHSHH', comp: 'incomp', resp_loc: prms.resp_loc[1] },
-  { stim: 'SSHSS', comp: 'incomp', resp_loc: prms.resp_loc[0] },
-];
+// Trials coded as Correct 0, Error 1
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  console.log(dat);
+  let corrCode = dat.resp_loc == dat.end_loc ? 0 : 1;
+  jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl });
+  prms.cTrl += 1;
+}
+
+// Feedback is draw at response location
+function drawFeedback() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = '50px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode], dat.end_x, dat.end_y);
+}
 
 const trial_feedback = {
   type: 'static-canvas-keyboard-response',
@@ -146,9 +149,30 @@ const trial_feedback = {
   func: drawFeedback,
 };
 
+const iti = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  trial_duration: prms.iti,
+  response_ends_trial: false,
+  func: function () {},
+};
+
+// prettier-ignore
+stimuli = [
+  { stim: 'HHHHH', comp: 'comp',   resp_loc: prms.resp_loc[0] },
+  { stim: 'SSSSS', comp: 'comp',   resp_loc: prms.resp_loc[1] },
+  { stim: 'HHSHH', comp: 'incomp', resp_loc: prms.resp_loc[1] },
+  { stim: 'SSHSS', comp: 'incomp', resp_loc: prms.resp_loc[0] },
+];
+
+// Block feedback shows:
+// Block Number, Mean RT + ER from previous block
 function blockFeedbackTxt(filter_options) {
   'use strict';
   let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
+  console.log(dat);
   let nTotal = dat.count();
   let nError = dat.select('corrCode').values.filter(function (x) {
     return x !== 0;
@@ -171,23 +195,13 @@ function blockFeedbackTxt(filter_options) {
   return blockFbTxt;
 }
 
-const iti = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  trial_duration: prms.iti,
-  response_ends_trial: false,
-  func: function () {},
-};
-
 const block_feedback = {
   type: 'html-keyboard-response',
   stimulus: '',
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'mouse_negation' });
+    trial.stimulus = blockFeedbackTxt({ stim_type: 'mouse_flanker' });
   },
 };
 
@@ -197,8 +211,12 @@ const trial_timeline = {
   timeline_variables: stimuli,
 };
 
+////////////////////////////////////////////////////////////////////////
+//                              De-brief                              //
+////////////////////////////////////////////////////////////////////////
+
 // For VP Stunden
-const randomString = generateRandomString(16);
+const randomString = generateRandomStringWithExpName('mf', 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -229,7 +247,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_negation' }, 'json');
+    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_flanker' }, 'json');
   },
   timing_post_trial: 200,
 };
