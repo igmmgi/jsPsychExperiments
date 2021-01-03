@@ -20,9 +20,9 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_colour = "rgba(200, 200, 200, 1)";
 const canvas_size = [1280, 960];
-const canvas_border = '5px solid black';
+const canvas_border = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
@@ -30,7 +30,7 @@ const canvas_border = '5px solid black';
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
+const nFiles = getNumberOfFiles("/Common/num_files.php", dirName + "data/");
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -39,11 +39,11 @@ const prms = {
   nTrlsP: 8, // number of trials in first block (practice)
   nTrlsE: 8, // number of trials in subsequent blocks
   nBlks: 4,
-  fixDur: 500,
-  fbDur: 500,
+  fixDur: 500, // fixation cross duration
+  fbDur: 500, // feedback duration
   waitDur: 1000,
-  iti: 500,
-  fixPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of stimulus
+  iti: 500, // inter-trial-interval
+  fixPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of fixation cross
   stimPos: [null, canvas_size[1] / 2], // x,y position of stimulus (x is set per trial)
   stimEccentricity: 100, // x,y position of stimulus (x is set per trial)
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
@@ -55,7 +55,7 @@ const prms = {
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
   requireMousePressFinish: true, // is mouse button press inside response box required to end trial?
-  fbTxt: ['Richtig', 'Falsch'],
+  fbTxt: ["Richtig", "Falsch"],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
@@ -64,18 +64,20 @@ const nVersion = getVersionNumber(nFiles, 2);
 jsPsych.data.addProperties({ version: nVersion });
 let respText;
 if (nVersion === 1) {
-  prms.resp_loc = ['left', 'right'];
-  respText = "<h3 style='text-align:center;'><b>H = Left &ensp;&ensp;&ensp; S = Right</b></h3><br>";
+  prms.resp_loc = ["left", "right"];
+  respText =
+    "<h3 style='text-align:center;'><b>H = Left &ensp;&ensp;&ensp; S = Right</b></h3><br>";
 } else {
-  prms.resp_loc = ['right', 'left'];
-  respText = "<h3 style='text-align:center;'><b>S = Left &ensp;&ensp;&ensp; H = Right</b></h3><br>";
+  prms.resp_loc = ["right", "left"];
+  respText =
+    "<h3 style='text-align:center;'><b>S = Left &ensp;&ensp;&ensp; H = Right</b></h3><br>";
 }
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
 const task_instructions = {
-  type: 'html-keyboard-response',
+  type: "html-keyboard-response",
   stimulus:
     "<H1 style='text-align: left;'>BITTE NUR TEILNEHMEN, FALLS EINE</H1>" +
     "<H1 style='text-align: left;'>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!</H1><br>" +
@@ -93,17 +95,17 @@ const task_instructions = {
 ////////////////////////////////////////////////////////////////////////
 
 const trial_stimulus = {
-  type: 'mouse-response',
+  type: "mouse-response",
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   fixation_duration: prms.fixDur,
   fixation_position: prms.fixPos,
-  stimulus: jsPsych.timelineVariable('stim'),
+  stimulus: jsPsych.timelineVariable("stim"),
   stimulus_position: null,
-  stimulus_colour: 'black',
+  stimulus_colour: "black",
   start_box: prms.startBox,
-  resp_size: jsPsych.timelineVariable('resp_size'),
+  resp_size: jsPsych.timelineVariable("resp_size"),
   left_box: prms.leftBox,
   right_box: prms.rightBox,
   draw_start_box: prms.drawStartBox,
@@ -112,24 +114,30 @@ const trial_stimulus = {
   require_mouse_press_finish: prms.requireMousePressFinish,
   scale_factor: null,
   data: {
-    stim_type: 'mouse_flanker',
-    stim: jsPsych.timelineVariable('stim'),
-    side: jsPsych.timelineVariable('side'),
-    resp_size: jsPsych.timelineVariable('resp_size'),
-    resp_loc: jsPsych.timelineVariable('resp_loc'),
+    stim_type: "mouse_simon",
+    stim: jsPsych.timelineVariable("stim"),
+    side: jsPsych.timelineVariable("side"),
+    resp_size: jsPsych.timelineVariable("resp_size"),
+    resp_loc: jsPsych.timelineVariable("resp_loc"),
   },
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.scale_factor = dat.scale_factor;
-    if (trial.data.side === 'left') {
-      trial.stimulus_position = [canvas_size[0] / 2 - prms.stimEccentricity, prms.stimPos[1]];
-    } else if (trial.data.side === 'right') {
-      trial.stimulus_position = [canvas_size[0] / 2 + prms.stimEccentricity, prms.stimPos[1]];
+    if (trial.data.side === "left") {
+      trial.stimulus_position = [
+        canvas_size[0] / 2 - prms.stimEccentricity,
+        prms.stimPos[1],
+      ];
+    } else if (trial.data.side === "right") {
+      trial.stimulus_position = [
+        canvas_size[0] / 2 + prms.stimEccentricity,
+        prms.stimPos[1],
+      ];
     }
-    if (trial.data.resp_size === 'near') {
+    if (trial.data.resp_size === "near") {
       trial.left_box = prms.leftBoxN;
       trial.right_box = prms.rightBoxN;
-    } else if (trial.data.resp_size === 'far') {
+    } else if (trial.data.resp_size === "far") {
       trial.left_box = prms.leftBoxF;
       trial.right_box = prms.rightBoxF;
     }
@@ -141,10 +149,10 @@ const trial_stimulus = {
 
 // Trials coded as Correct 0, Error 1
 function codeTrial() {
-  'use strict';
+  "use strict";
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = dat.resp_loc == dat.end_loc ? 0 : 1;
-  let comp = dat.resp_loc == dat.side ? 'comp' : 'incomp';
+  let comp = dat.resp_loc == dat.side ? "comp" : "incomp";
   console.log(comp);
   jsPsych.data.addDataToLastTrial({
     date: Date(),
@@ -158,18 +166,18 @@ function codeTrial() {
 
 // Feedback is draw at response location
 function drawFeedback() {
-  'use strict';
-  let ctx = document.getElementById('canvas').getContext('2d');
+  "use strict";
+  let ctx = document.getElementById("canvas").getContext("2d");
   let dat = jsPsych.data.get().last(1).values()[0];
-  ctx.font = '50px Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
+  ctx.font = "50px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = "black";
   ctx.fillText(prms.fbTxt[dat.corrCode], dat.end_x, dat.end_y);
 }
 
 const trial_feedback = {
-  type: 'static-canvas-keyboard-response',
+  type: "static-canvas-keyboard-response",
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
@@ -179,7 +187,7 @@ const trial_feedback = {
 };
 
 const iti = {
-  type: 'static-canvas-keyboard-response',
+  type: "static-canvas-keyboard-response",
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
@@ -203,37 +211,41 @@ stimuli = [
 // Block feedback shows:
 // Block Number, Mean RT + ER from previous block
 function blockFeedbackTxt(filter_options) {
-  'use strict';
-  let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
+  "use strict";
+  let dat = jsPsych.data
+    .get()
+    .filter({ ...filter_options, blockNum: prms.cBlk });
   let nTotal = dat.count();
-  let nError = dat.select('corrCode').values.filter(function (x) {
+  let nError = dat.select("corrCode").values.filter(function (x) {
     return x !== 0;
   }).length;
-  dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 0 });
+  dat = jsPsych.data
+    .get()
+    .filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 0 });
   let blockFbTxt =
-    '<H1>Block: ' +
+    "<H1>Block: " +
     prms.cBlk +
-    ' of ' +
+    " of " +
     prms.nBlks +
-    '</H1>' +
-    '<H1>Mean RT: ' +
-    Math.round(dat.select('end_rt').mean()) +
-    ' ms </H1>' +
-    '<H1>Error Rate: ' +
+    "</H1>" +
+    "<H1>Mean RT: " +
+    Math.round(dat.select("end_rt").mean()) +
+    " ms </H1>" +
+    "<H1>Error Rate: " +
     Math.round((nError / nTotal) * 100) +
-    ' %</H1>' +
-    '<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>';
+    " %</H1>" +
+    "<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>";
   prms.cBlk += 1;
   return blockFbTxt;
 }
 
 const block_feedback = {
-  type: 'html-keyboard-response',
-  stimulus: '',
+  type: "html-keyboard-response",
+  stimulus: "",
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim_type: 'mouse_flanker' });
+    trial.stimulus = blockFeedbackTxt({ stim_type: "mouse_simon" });
   },
 };
 
@@ -248,10 +260,10 @@ const trial_timeline = {
 ////////////////////////////////////////////////////////////////////////
 
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('mf', 16);
+const randomString = generateRandomStringWithExpName("mc3", 16);
 
 const alphaNum = {
-  type: 'html-keyboard-response-canvas',
+  type: "html-keyboard-response-canvas",
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
@@ -268,7 +280,7 @@ const alphaNum = {
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
     lineheight: 1.0,
-    align: 'left',
+    align: "left",
   }),
 };
 
@@ -276,19 +288,24 @@ const alphaNum = {
 //                                Save                                //
 ////////////////////////////////////////////////////////////////////////
 const save_data = {
-  type: 'call-function',
+  type: "call-function",
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_flanker' }, 'json');
+    let data_filename = dirName + "data/" + expName + "_" + vpNum;
+    saveData(
+      "/Common/write_data_json.php",
+      data_filename,
+      { stim: "mouse_simon" },
+      "json"
+    );
   },
   timing_post_trial: 200,
 };
 
 const save_code = {
-  type: 'call-function',
+  type: "call-function",
   func: function () {
-    let code_filename = dirName + 'code/' + expName;
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
+    let code_filename = dirName + "code/" + expName;
+    saveRandomCode("/Common/write_code.php", code_filename, randomString);
   },
   timing_post_trial: 200,
 };
@@ -297,7 +314,7 @@ const save_code = {
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-  'use strict';
+  "use strict";
 
   let exp = [];
   exp.push(fullscreen_on);
@@ -309,7 +326,7 @@ function genExpSeq() {
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
     blk_timeline.sample = {
-      type: 'fixed-repetitions',
+      type: "fixed-repetitions",
       size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8,
     };
     exp.push(blk_timeline); // trials within a block

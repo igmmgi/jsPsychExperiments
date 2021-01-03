@@ -10,9 +10,9 @@ const vpNum = genVpNum();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 8, // number of trials in first block (practice)
-  nTrlsE: 8, // number of trials in subsequent blocks
-  nBlks: 2,
+  nTrlsP: 4, // number of trials in first block (practice)
+  nTrlsE: 4, // number of trials in subsequent blocks
+  nBlks: 1,
   fixDur: 750,
   fbDur: 750,
   waitDur: 1000,
@@ -179,5 +179,7 @@ jsPsych.init({
   show_progress_bar: false,
   on_finish: function () {
     saveData('/Common/write_data.php', filename, { stim: 'flanker' });
+    getComputerInfo();
+    jsPsych.data.displayData('csv');
   },
 });
