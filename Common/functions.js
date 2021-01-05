@@ -13,6 +13,18 @@ function getFileName() {
   return name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'));
 }
 
+function filterDataPavlovia(
+  rows = {},
+  filetype = 'csv',
+  colsToIgnore = ['stimulus', 'trial_type', 'internal_node_id', 'trial_index', 'time_elapsed'],
+) {
+  if (filetype === 'csv') {
+    return jsPsych.data.get().filter(rows).ignore(colsToIgnore).csv();
+  } else if (filetype === 'json') {
+    return jsPsych.data.get().filter(rows).ignore(colsToIgnore).json(true); // true to avoid single line
+  }
+}
+
 function getNumberOfFiles(url, datDir) {
   let numDataFiles = 0;
   $.ajax({

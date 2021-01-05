@@ -346,6 +346,7 @@ jsPsych.plugins['mouse-response'] = (function () {
       };
 
       // move on to the next trial
+      display_element.innerHTML = '';
       jsPsych.finishTrial(trial_data);
     };
 
