@@ -81,17 +81,24 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
   }
 
   plugin.trial = function (display_element, trial) {
-    display_element.innerHTML = "<canvas id='canvas'></canvas>";
-    let canvas = document.getElementById('canvas');
-
     // setup canvas
-    canvas.style = 'position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;';
-    canvas.width = trial.canvas_size[0];
-    canvas.height = trial.canvas_size[1];
-    canvas.style.border = trial.canvas_border;
-    canvas.style.left = -trial.canvas_size[0] / 2 + 'px';
+    var new_html =
+      '<div>' +
+      '<canvas id="canvas" width="' +
+      trial.canvas_size[0] +
+      '" height="' +
+      trial.canvas_size[1] +
+      '" style="border: ' +
+      trial.canvas_border +
+      ';"></canvas>' +
+      '</div>';
 
+    console.log('here');
+
+    display_element.innerHTML = new_html;
+    let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');
+
     ctx.fillStyle = trial.canvas_colour;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
@@ -148,6 +155,9 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
         word: words[trial.word_number],
         key_press: response.key,
       };
+
+      // clear the display
+      display_element.innerHTML = '';
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);

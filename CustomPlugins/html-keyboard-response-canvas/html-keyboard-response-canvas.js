@@ -55,7 +55,7 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
       stimulus_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Stimulus duration',
-        default: null,
+        default: 1000,
         description: 'How long to hide the stimulus.',
       },
       trial_duration: {
@@ -74,13 +74,21 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
   };
 
   plugin.trial = function (display_element, trial) {
-    let canvas = document.createElement('canvas');
+    // setup canvas
+    var new_html =
+      '<div>' +
+      '<canvas id="canvas" width="' +
+      trial.canvas_size[0] +
+      '" height="' +
+      trial.canvas_size[1] +
+      '" style="border: ' +
+      trial.canvas_border +
+      ';position:fixed; left:0px; right:0px; top: 0px; bottom:0px;margin:auto; z-index:-1;"></canvas>' +
+      trial.stimulus +
+      '</div>';
 
-    canvas.style = 'position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; z-index:-1;';
-    canvas.width = trial.canvas_size[0];
-    canvas.height = trial.canvas_size[1];
-    canvas.style.border = trial.canvas_border;
-
+    display_element.innerHTML = new_html;
+    let canvas = document.getElementById('canvas');
     let ctx = canvas.getContext('2d');
 
     ctx.fillStyle = trial.canvas_colour;
@@ -90,20 +98,12 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
       ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
     }
 
-    let new_html = '<div id="jspsych-html-keyboard-response-stimulus">' + trial.stimulus + '</div>';
-
     // add prompt
     if (trial.prompt !== null) {
       new_html += trial.prompt;
     }
 
-    // draw
-    display_element.innerHTML = new_html;
-
-    // make sure canvas still centered
-    let offsetWidth = document.getElementById('jspsych-html-keyboard-response-stimulus').offsetWidth;
-    canvas.style.left = (offsetWidth - canvas.width) / 2 + 'px';
-
+    display_element.innerHTML = '<div id="stimulus">' + trial.stimulus + '</div>';
     display_element.appendChild(canvas);
 
     // store response
@@ -138,10 +138,6 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
 
     // function to handle responses by the subject
     let after_response = function (info) {
-      // after a valid response, the stimulus will have the CSS class 'responded'
-      // which can be used to provide visual feedback that a response was recorded
-      display_element.querySelector('#jspsych-html-keyboard-response-stimulus').className += ' responded';
-
       // only record the first response
       if (response.key == null) {
         response = info;
@@ -166,7 +162,7 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
     // hide stimulus if stimulus_duration is set
     if (trial.stimulus_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function () {
-        display_element.querySelector('#jspsych-html-keyboard-response-stimulus').style.visibility = 'hidden';
+        display_element.querySelector('#stimulus').style.visibility = 'hidden';
       }, trial.stimulus_duration);
     }
 

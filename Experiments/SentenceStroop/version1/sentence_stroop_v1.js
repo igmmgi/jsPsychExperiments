@@ -1903,17 +1903,17 @@ function genExpSeq() {
 
   exp.push(fullscreen_on);
   exp.push(welcome_en);
-  exp.push(resize_en);
-  exp.push(vpInfoForm_en);
+  //exp.push(resize_en);
+  //exp.push(vpInfoForm_en);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
 
   // // 1st phase (practice stroop + baseline stroop)
-  exp.push(task_instructions2);
-  exp.push(prac_trials_stroop_timeline);
-  exp.push(task_instructions3);
-  exp.push(base_trials_stroop_timeline);
+  // exp.push(task_instructions2);
+  // exp.push(prac_trials_stroop_timeline);
+  // exp.push(task_instructions3);
+  // exp.push(base_trials_stroop_timeline);
 
   // 2nd phase (1 trial moving window)
   exp.push(task_instructions4);

@@ -43,7 +43,7 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response'] = (function () {
       canvas_border: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Border',
-        default: '0px solid black',
+        default: '1px solid black',
         description: 'Border style',
       },
       translate_origin: {
@@ -88,16 +88,22 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    display_element.innerHTML = "<canvas id='canvas'></canvas>";
+
+    var new_html =
+      '<div>' +
+      '<canvas id="canvas" width="' +
+      trial.canvas_size[0] +
+      '" height="' +
+      trial.canvas_size[1] +
+      '" style="border: ' +
+      trial.canvas_border +
+      ';"></canvas>' +
+      '</div>';
+
+    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
-
-    canvas.style = 'position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;';
-    canvas.width = trial.canvas_size[0];
-    canvas.height = trial.canvas_size[1];
-    canvas.style.border = trial.canvas_border;
-    canvas.style.left = -trial.canvas_size[0] / 2 + 'px';
-
     let ctx = document.getElementById('canvas').getContext('2d');
+
     ctx.fillStyle = trial.canvas_colour;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -151,7 +157,7 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response'] = (function () {
       };
 
       // clear the display
-      display_element.innerHTML = "<canvas id='canvas'></canvas>";
+      display_element.innerHTML = '';
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
@@ -187,15 +193,8 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response'] = (function () {
     if (trial.stimulus_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function () {
         // reset canvas
-        display_element.innerHTML = "<canvas id='canvas'></canvas>";
+        display_element.innerHTML = new_html;
         let canvas = document.getElementById('canvas');
-
-        canvas.style = 'position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto;';
-        canvas.width = trial.canvas_size[0];
-        canvas.height = trial.canvas_size[1];
-        canvas.style.border = trial.canvas_border;
-        canvas.style.left = -trial.canvas_size[0] / 2 + 'px';
-
         let ctx = document.getElementById('canvas').getContext('2d');
 
         ctx.fillStyle = trial.canvas_colour;
