@@ -180,7 +180,7 @@ function genExpSeq() {
     // exp.push(vpInfoForm_en);
     exp.push(task_instructions);
 
-    for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    for (let blk = 0; blk < prms.nBlks; blk++) {
         let blk_timeline = { ...trial_timeline };
         blk_timeline.sample = {
             type: 'fixed-repetitions',

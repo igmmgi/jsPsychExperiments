@@ -134,15 +134,19 @@ jsPsych.plugins['mouse-response'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    display_element.innerHTML = "<canvas id='canvas'></canvas>";
+    var new_html =
+      '<div>' +
+      '<canvas id="canvas" width="' +
+      trial.canvas_size[0] +
+      '" height="' +
+      trial.canvas_size[1] +
+      '" style="border: ' +
+      trial.canvas_border +
+      ';"></canvas>' +
+      '</div>';
+
+    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
-
-    canvas.style = 'position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;';
-    canvas.width = trial.canvas_size[0];
-    canvas.height = trial.canvas_size[1];
-    canvas.style.border = trial.canvas_border;
-    canvas.style.left = -trial.canvas_size[0] / 2 + 'px';
-
     let ctx = document.getElementById('canvas').getContext('2d');
 
     // canvas mouse events
