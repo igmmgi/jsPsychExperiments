@@ -1,4 +1,4 @@
-/ cusotm jspsych mouse drag response using code adapted from:
+// cusotm jspsych mouse drag response using code adapted from:
 // https://stackoverflow.com/questions/21605942/drag-element-on-canvas
 
 jsPsych.plugins['mouse-drag-response'] = (function () {
@@ -78,15 +78,19 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    display_element.innerHTML = "<canvas id='canvas'></canvas>";
+    var new_html =
+      '<div>' +
+      '<canvas id="canvas" width="' +
+      trial.canvas_size[0] +
+      '" height="' +
+      trial.canvas_size[1] +
+      '" style="border: ' +
+      trial.canvas_border +
+      ';"></canvas>' +
+      '</div>';
+
+    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
-
-    canvas.style = 'position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;';
-    canvas.width = trial.canvas_size[0];
-    canvas.height = trial.canvas_size[1];
-    canvas.style.border = trial.canvas_border;
-    canvas.style.left = -trial.canvas_size[0] / 2 + 'px';
-
     let ctx = document.getElementById('canvas').getContext('2d');
 
     // canvas mouse events
@@ -102,7 +106,6 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
     let canvasOffset = $(canvas).offset();
     let offsetX = canvasOffset.left;
-
     let offsetY = canvasOffset.top;
     let selectedText = false;
     let startX;
@@ -158,7 +161,7 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
       };
 
       // clear the display
-      display_element.innerHTML = "<canvas id='canvas'></canvas>";
+      display_element.innerHTML = '';
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);

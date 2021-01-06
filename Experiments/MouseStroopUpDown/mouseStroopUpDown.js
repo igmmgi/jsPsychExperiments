@@ -241,7 +241,6 @@ function create_timeline_stroop_words() {
   for (let i = 0; i < t.length; i++) {
     t[i].comp = t[i].word === resp_mapping_color_en_de[t[i].colour] ? 'comp' : 'incomp';
   }
-  console.log(t);
   return t;
 }
 
@@ -295,9 +294,7 @@ const fixation_cross = {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  // console.log(dat);
   let error = dat.resp_loc === dat.end_loc ? 0 : 1;
-  // console.log('Trial Error: ', error);
 
   jsPsych.data.addDataToLastTrial({ date: Date(), error: error, blockNum: prms.cBlk, trialNum: prms.cTrl });
   prms.cTrl += 1;
@@ -451,7 +448,7 @@ function genExpSeq() {
   let exp = [];
   exp.push(fullscreen_on);
   exp.push(welcome_de);
-  // exp.push(resize_de);
+  exp.push(resize_de);
   // exp.push(vpInfoForm_de);
   exp.push(instructionsStart1);
 
