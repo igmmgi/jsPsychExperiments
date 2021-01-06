@@ -164,7 +164,7 @@ function genExpSeq() {
   'use strict';
 
   let exp = [];
-
+  exp.push(resize_en);
   // just draw stuff
   //exp.push(fixation_cross);
   //exp.push(circle);

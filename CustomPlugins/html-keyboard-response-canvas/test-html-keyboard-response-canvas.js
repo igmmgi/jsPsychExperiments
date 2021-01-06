@@ -8,5 +8,6 @@ const hello = {
 };
 
 jsPsych.init({
-  timeline: [hello],
+  timeline: [resize_en, hello],
+  // timeline: [hello],
 });

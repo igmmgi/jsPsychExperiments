@@ -55,7 +55,7 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
       stimulus_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Stimulus duration',
-        default: 1000,
+        default: null,
         description: 'How long to hide the stimulus.',
       },
       trial_duration: {
@@ -104,6 +104,12 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
     }
 
     display_element.innerHTML = '<div id="stimulus">' + trial.stimulus + '</div>';
+
+    // make sure canvas still centered
+    let offsetWidth = document.getElementById('stimulus').offsetWidth;
+    canvas.style.left = (offsetWidth - canvas.width) / 2 + 'px';
+
+    // append canvas
     display_element.appendChild(canvas);
 
     // store response
