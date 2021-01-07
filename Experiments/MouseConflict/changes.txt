@@ -1,0 +1,8 @@
+# Blockwise manipulation of
+    Exp1/2 target size
+    Exp3 Target position
+
+ABAB and BABA
+
+4 blocks of 60 trials
+2 practice block of 8 trials

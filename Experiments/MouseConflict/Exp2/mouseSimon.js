@@ -36,33 +36,37 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 8, // number of trials in first block (practice)
-  nTrlsE: 8, // number of trials in subsequent blocks
+  nTrlsP: 4, // number of trials in first block (practice)
+  nTrlsE: 4, // number of trials in subsequent blocks
   nBlks: 4,
   fixDur: 500,
-  fbDur: 500,
+  fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   iti: 500,
-  fixPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of stimulus
-  stimPos: [null, canvas_size[1] / 2], // x,y position of stimulus (x is set per trial)
-  stimEccentricity: 100, // x,y position of stimulus (x is set per trial)
+  fixPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
+  stimPos: [null, canvas_size[1] * 0.75], // x,y position of stimulus (x is set per trial)
+  stimEccentricity: 150, // x,y position of stimulus (x is set per trial)
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
   leftBox: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
   rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
-  responseBoxSizeAdjust: 25, // response boxes are +- X pixels different from start size
+  responseBoxSizeAdjust: 35, // response boxes are +- X pixels different from start size
+  keepFixation: true, // is fixation cross kept on screen with stimulus
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
+  boxLineWidth: 2, // linewidth of the start/target boxes
   requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
   requireMousePressFinish: true, // is mouse button press inside response box required to end trial?
+  stimFont: '50px arial',
   fbTxt: ['Richtig', 'Falsch'],
+  fbFont: '40px Arial',
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
 
-const nVersion = getVersionNumber(nFiles, 2);
+const nVersion = getVersionNumber(nFiles, 4);
 jsPsych.data.addProperties({ version: nVersion });
 let respText;
-if (nVersion === 1) {
+if (nVersion === 1 || nVersion === 2) {
   prms.resp_loc = ['left', 'right'];
   respText = "<h3 style='text-align:center;'><b>H = Left &ensp;&ensp;&ensp; S = Right</b></h3><br>";
 } else {
@@ -101,12 +105,15 @@ const trial_stimulus = {
   stimulus: jsPsych.timelineVariable('stim'),
   stimulus_position: null,
   stimulus_colour: 'black',
+  stimulus_font: prms.stimFont,
   start_box: prms.startBox,
   resp_size: jsPsych.timelineVariable('resp_size'),
   left_box: prms.leftBox,
   right_box: prms.rightBox,
+  keep_fixation: prms.keepFixation,
   draw_start_box: prms.drawStartBox,
   draw_response_boxes: prms.drawResponseBoxes,
+  box_linewidth: prms.boxLineWidth,
   require_mouse_press_start: prms.requireMousePressStart,
   require_mouse_press_finish: prms.requireMousePressFinish,
   scale_factor: null,
@@ -164,7 +171,7 @@ function drawFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
-  ctx.font = '50px Arial';
+  ctx.font = prms.fbFont;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
@@ -176,9 +183,13 @@ const trial_feedback = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: 500,
+  trial_duration: null,
   translate_origin: false,
   func: drawFeedback,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode];
+  },
 };
 
 const iti = {
@@ -192,11 +203,15 @@ const iti = {
 };
 
 // prettier-ignore
-stimuli = [
+stimuli_large = [
   { stim: 'H', side: 'left',  resp_size: 'large', resp_loc: prms.resp_loc[0] },
   { stim: 'S', side: 'left',  resp_size: 'large', resp_loc: prms.resp_loc[1] },
   { stim: 'S', side: 'right', resp_size: 'large', resp_loc: prms.resp_loc[1] },
   { stim: 'H', side: 'right', resp_size: 'large', resp_loc: prms.resp_loc[0] },
+];
+
+// prettier-ignore
+stimuli_small = [
   { stim: 'H', side: 'left',  resp_size: 'small', resp_loc: prms.resp_loc[0] },
   { stim: 'S', side: 'left',  resp_size: 'small', resp_loc: prms.resp_loc[1] },
   { stim: 'S', side: 'right', resp_size: 'small', resp_loc: prms.resp_loc[1] },
@@ -240,10 +255,16 @@ const block_feedback = {
   },
 };
 
-const trial_timeline = {
+const trial_timeline_large = {
   timeline: [trial_stimulus, trial_feedback, iti],
   randomize_order: true,
-  timeline_variables: stimuli,
+  timeline_variables: stimuli_large,
+};
+
+const trial_timeline_small = {
+  timeline: [trial_stimulus, trial_feedback, iti],
+  randomize_order: true,
+  timeline_variables: stimuli_small,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -309,11 +330,23 @@ function genExpSeq() {
   // exp.push(vpInfoForm_de);
   exp.push(task_instructions);
 
+  let order;
+  if (nVersion % 2 == 1) {
+    order = repeatArray(['S', 'L'], prms.nBlks / 2);
+  } else {
+    order = repeatArray(['L', 'S'], prms.nBlks / 2);
+  }
+
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline };
+    let blk_timeline;
+    if (order[blk] === 'S') {
+      blk_timeline = { ...trial_timeline_small };
+    } else if (order[blk] === 'L') {
+      blk_timeline = { ...trial_timeline_large };
+    }
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8,
+      size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
@@ -334,5 +367,4 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
 });

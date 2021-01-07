@@ -46,13 +46,6 @@ jsPsych.plugins['mouse-response'] = (function () {
         default: 1,
         description: 'Scale Factor',
       },
-      fixation_duration: {
-        type: jsPsych.plugins.parameterType.INT,
-        array: false,
-        pretty_name: 'Fixation Duration',
-        default: 500,
-        description: 'Fixation Duration',
-      },
       fixation_position: {
         type: jsPsych.plugins.parameterType.INT,
         array: true,
@@ -60,7 +53,13 @@ jsPsych.plugins['mouse-response'] = (function () {
         default: [0, 0],
         description: 'Fixation Position',
       },
-
+      fixation_duration: {
+        type: jsPsych.plugins.parameterType.INT,
+        array: false,
+        pretty_name: 'Fixation Duration',
+        default: 500,
+        description: 'Fixation Duration',
+      },
       stimulus: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Stimulus',
@@ -68,7 +67,7 @@ jsPsych.plugins['mouse-response'] = (function () {
         description: 'Stimulus',
       },
       stimulus_position: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Stimulus Position',
         default: [0, 0],
         description: 'Stimulus Position',
@@ -102,6 +101,19 @@ jsPsych.plugins['mouse-response'] = (function () {
         pretty_name: 'Right Box',
         default: [0, 0, 100, 100],
         description: 'Right Box',
+      },
+      box_linewidth: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Line width of box',
+        default: 2,
+        description: 'Linewidth of box',
+      },
+      keep_fixation: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        array: true,
+        pretty_name: 'Keep Fxation Cross',
+        default: true,
+        description: 'Keep Fixation Cross with Stimulus Presentation',
       },
       draw_start_box: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -280,7 +292,7 @@ jsPsych.plugins['mouse-response'] = (function () {
       // start box
       if (draw_start_box) {
         ctx.beginPath();
-        ctx.lineWidth = 5;
+        ctx.lineWidth = trial.box_linewidth;
         ctx.strokeStyle = 'black';
         ctx.rect(start_box.x, start_box.y, start_box.w, start_box.h);
         ctx.stroke();
@@ -291,7 +303,7 @@ jsPsych.plugins['mouse-response'] = (function () {
         ctx.fillStyle = trial.stimulus_colour;
         ctx.fillText('+', trial.fixation_position[0], trial.fixation_position[1]);
         jsPsych.pluginAPI.setTimeout(function () {
-          draw_fixation = false;
+          draw_fixation = trial.keep_fixation;
           draw_stimulus = true;
           draw_start_box = trial.draw_start_box[2];
           draw_response_boxes = trial.draw_response_boxes[2];
@@ -302,13 +314,13 @@ jsPsych.plugins['mouse-response'] = (function () {
       if (draw_response_boxes) {
         // response box left
         ctx.beginPath();
-        ctx.lineWidth = 5;
+        ctx.lineWidth = trial.box_linewidth;
         ctx.strokeStyle = 'black';
         ctx.rect(left_responsebox.x, left_responsebox.y, left_responsebox.w, left_responsebox.h);
         ctx.stroke();
         // response box right
         ctx.beginPath();
-        ctx.lineWidth = 5;
+        ctx.lineWidth = trial.box_linewidth;
         ctx.strokeStyle = 'black';
         ctx.rect(right_responsebox.x, right_responsebox.y, right_responsebox.w, right_responsebox.h);
         ctx.stroke();
