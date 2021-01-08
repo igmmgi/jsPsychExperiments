@@ -401,7 +401,7 @@ const trial_timeline_simon_high = {
   ), // 50% vs. 50%
 };
 
-const randomString = generateRandomString(16);
+const randomString = generateRandomStringWithExpName('pps2', 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
