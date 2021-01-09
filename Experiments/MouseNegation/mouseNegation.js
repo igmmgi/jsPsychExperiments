@@ -22,8 +22,24 @@ const prms = {
   nTrlsE: 48, // number of trials in subsequent blocks
   nBlks: 9,
   fbDur: 500,
+  fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   iti: 500,
+  fixPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
+  stimPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
+  startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
+  leftBox: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
+  rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
+  responseBoxSizeAdjust: 35, // response boxes are +- X pixels different in height/width from start size
+  keepFixation: false, // is fixation cross kept on screen with stimulus
+  drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
+  drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
+  boxLineWidth: 2, // linewidth of the start/target boxes
+  requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
+  requireMousePressFinish: false, // is mouse button press inside response box required to end trial?
+  stimFont: '50px arial',
+  fbTxt: ['Richtig', 'Falsch'],
+  fbFont: '40px Arial',
   fbTxt: ['Richtig', 'Falsch'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -81,11 +97,26 @@ const trial_stimulus = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  colour: 'black',
+  fixation_duration: prms.fixDur,
+  fixation_position: prms.fixPos,
+  stimulus: jsPsych.timelineVariable('word'),
+  stimulus_position: prms.stimPos,
+  stimulus_colour: 'black',
+  stimulus_font: prms.stimFont,
+  start_box: prms.startBox,
+  resp_size: jsPsych.timelineVariable('resp_size'),
+  left_box: prms.leftBox,
+  right_box: prms.rightBox,
+  keep_fixation: prms.keepFixation,
+  draw_start_box: prms.drawStartBox,
+  draw_response_boxes: prms.drawResponseBoxes,
+  box_linewidth: prms.boxLineWidth,
+  require_mouse_press_start: prms.requireMousePressStart,
+  require_mouse_press_finish: prms.requireMousePressFinish,
   word: jsPsych.timelineVariable('word'),
   scale_factor: null,
   data: {
-    stim: 'mouse_negation',
+    stim_type: 'mouse_negation',
     word: jsPsych.timelineVariable('word'),
     resp_loc: jsPsych.timelineVariable('resp_loc'),
   },
@@ -98,11 +129,12 @@ const trial_stimulus = {
   },
 };
 
+// prettier-ignore
 stimuli = [
-  { word: 'jetzt links', aff_neg: 'aff', resp_loc: 'left' },
+  { word: 'jetzt links',  aff_neg: 'aff', resp_loc: 'left' },
   { word: 'jetzt rechts', aff_neg: 'aff', resp_loc: 'right' },
   { word: 'nicht rechts', aff_neg: 'neg', resp_loc: 'left' },
-  { word: 'nicht links', aff_neg: 'neg', resp_loc: 'right' },
+  { word: 'nicht links',  aff_neg: 'neg', resp_loc: 'right' },
 ];
 
 const trial_feedback = {
@@ -110,9 +142,13 @@ const trial_feedback = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: 500,
+  trial_duration: null,
   translate_origin: false,
   func: drawFeedback,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode];
+  },
 };
 
 function blockFeedbackTxt(filter_options) {
@@ -219,10 +255,11 @@ function genExpSeq() {
   'use strict';
 
   let exp = [];
+
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -250,5 +287,4 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
 });

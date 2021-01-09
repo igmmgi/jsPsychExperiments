@@ -76,19 +76,22 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
   plugin.trial = function (display_element, trial) {
     // setup canvas
     var new_html =
-      '<div>' +
+      '<div style="position:relative;">' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
       '" height="' +
       trial.canvas_size[1] +
       '" style="border: ' +
       trial.canvas_border +
-      ';position:fixed; left:0px; right:0px; top: 0px; bottom:0px;margin:auto; z-index:-1;"></canvas>' +
+      '; position: fixed; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%);"></canvas>' +
+      '<div>' +
       trial.stimulus +
+      '</div>' +
       '</div>';
 
     display_element.innerHTML = new_html;
-    let canvas = document.getElementById('canvas');
+
+    let canvas = document.querySelector('canvas');
     let ctx = canvas.getContext('2d');
 
     ctx.fillStyle = trial.canvas_colour;
@@ -102,15 +105,6 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
     if (trial.prompt !== null) {
       new_html += trial.prompt;
     }
-
-    display_element.innerHTML = '<div id="stimulus">' + trial.stimulus + '</div>';
-
-    // make sure canvas still centered
-    let offsetWidth = document.getElementById('stimulus').offsetWidth;
-    canvas.style.left = (offsetWidth - canvas.width) / 2 + 'px';
-
-    // append canvas
-    display_element.appendChild(canvas);
 
     // store response
     let response = {
