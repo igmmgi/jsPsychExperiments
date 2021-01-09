@@ -115,7 +115,6 @@ const trial_stimulus = {
   box_linewidth: prms.boxLineWidth,
   require_mouse_press_start: prms.requireMousePressStart,
   require_mouse_press_finish: prms.requireMousePressFinish,
-  scale_factor: null,
   data: {
     stim_type: 'mouse_flanker',
     stim: jsPsych.timelineVariable('stim'),
@@ -124,8 +123,6 @@ const trial_stimulus = {
     resp_loc: jsPsych.timelineVariable('resp_loc'),
   },
   on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.scale_factor = dat.scale_factor;
     if (trial.data.resp_size === 'large') {
       trial.left_box[2] += prms.responseBoxSizeAdjust;
       trial.left_box[3] += prms.responseBoxSizeAdjust;
@@ -318,7 +315,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(task_instructions);
 
   let order;

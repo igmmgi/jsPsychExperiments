@@ -115,7 +115,6 @@ const trial_stimulus = {
   draw_response_boxes: prms.drawResponseBoxes,
   require_mouse_press_start: prms.requireMousePressStart,
   require_mouse_press_finish: prms.requireMousePressFinish,
-  scale_factor: null,
   data: {
     stim_type: 'mouse_simon',
     stim: jsPsych.timelineVariable('stim'),
@@ -124,8 +123,6 @@ const trial_stimulus = {
     resp_loc: jsPsych.timelineVariable('resp_loc'),
   },
   on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.scale_factor = dat.scale_factor;
     if (trial.data.side === 'left') {
       trial.stimulus_position = [canvas_size[0] / 2 - prms.stimEccentricity, prms.stimPos[1]];
     } else if (trial.data.side === 'right') {

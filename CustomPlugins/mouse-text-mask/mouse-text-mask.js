@@ -35,13 +35,6 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
         default: '0px solid black',
         description: 'Border style',
       },
-      scale_factor: {
-        type: jsPsych.plugins.parameterType.FLOAT,
-        array: false,
-        pretty_name: 'Scale',
-        default: 1,
-        description: 'Scale Factor',
-      },
       response_border: {
         type: jsPsych.plugins.parameterType.INT,
         array: true,
@@ -78,23 +71,29 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    display_element.innerHTML = "<canvas id='canvas'></canvas>";
+    var new_html =
+      '<div>' +
+      '<canvas id="canvas" width="' +
+      trial.canvas_size[0] +
+      '" height="' +
+      trial.canvas_size[1] +
+      '" style="border: ' +
+      trial.canvas_border +
+      ';"></canvas>' +
+      '</div>';
+
+    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
-
-    canvas.style = 'position: absolute; top: 0px; left: auto; right: auto; bottom: 0px; margin: auto;';
-    canvas.width = trial.canvas_size[0];
-    canvas.height = trial.canvas_size[1];
-    canvas.style.border = trial.canvas_border;
-    canvas.style.left = -trial.canvas_size[0] / 2 + 'px';
-
     let ctx = document.getElementById('canvas').getContext('2d');
+    let rect = canvas.getBoundingClientRect();
+
+    //let ctx = document.getElementById('canvas').getContext('2d');
     let canvasOffset = $(canvas).offset();
     let trial_started = false;
     // let text_on = false;
-    let offsetX = canvasOffset.left;
-    let offsetY = canvasOffset.top;
     let end_rt;
     let end_loc;
+    let mpos;
 
     let x_coords = [];
     let y_coords = [];
@@ -104,8 +103,8 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     canvas.addEventListener(
       'mousemove',
       function (e) {
-        var mouse = getMouse(e, canvas);
-        draw(mouse);
+        mousePosition(e);
+        draw();
       },
       false,
     );
@@ -139,25 +138,20 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       canvas.width = canvas.width;
 
       // clear the display
-      display_element.innerHTML = "<canvas id='canvas'></canvas>";
+      display_element.innerHTML = '';
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
     };
 
-    function getMouse(e) {
-      e.preventDefault();
-      let X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
-      let Y = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
-
-      // store coordinates and time array
-      x_coords.push(X);
-      y_coords.push(Y);
-      time.push(performance.now() - start_time);
-      return {
-        x: X,
-        y: Y,
+    function mousePosition(e) {
+      mpos = {
+        x: ((e.clientX - rect.left) / (rect.right - rect.left)) * canvas.width,
+        y: ((e.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height,
       };
+      x_coords.push(mpos.x);
+      y_coords.push(mpos.y);
+      time.push(performance.now() - start_time);
     }
 
     function handleMouseDown(e) {
@@ -165,15 +159,16 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     }
 
     // clear the canvas and draw text
-    function draw(mouse) {
+    function draw() {
       if (!trial_started) {
-        if (in_box(mouse.x, mouse.y, start_box)) {
+        if (in_box(mpos.x, mpos.y, start_box)) {
           trial_started = true;
           start_time = performance.now();
         } else {
           return;
         }
       }
+
       // if (!text_on) {
       //   if (performance.now() - start_time > 100) {
       //     text_on = true;
@@ -187,7 +182,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
 
       // mask
       // ctx.filter = 'blur(1px)';
-      ctx.ellipse(mouse.x, mouse.y - 20, 30, 60, Math.PI / 2, 0, 2 * Math.PI);
+      ctx.ellipse(mpos.x, mpos.y - 20, 30, 60, Math.PI / 2, 0, 2 * Math.PI);
       ctx.clip();
       ctx.fillStyle = trial.mask_colour;
       ctx.fillRect(0, 0, canvas.width, canvas.height);

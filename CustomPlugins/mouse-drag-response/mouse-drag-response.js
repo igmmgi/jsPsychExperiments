@@ -35,13 +35,6 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
         default: '0px solid black',
         description: 'Border style',
       },
-      scale_factor: {
-        type: jsPsych.plugins.parameterType.FLOAT,
-        array: false,
-        pretty_name: 'Scale',
-        default: 1,
-        description: 'Scale Factor',
-      },
       response_border: {
         type: jsPsych.plugins.parameterType.INT,
         array: true,
@@ -92,6 +85,7 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');
+    let rect = canvas.getBoundingClientRect();
 
     // canvas mouse events
     $('#canvas').mousedown(function (e) {
@@ -115,6 +109,7 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     let end_rt;
     let end_loc;
     let n_presses = 0;
+    let mpos;
 
     let x_coords = [];
     let y_coords = [];
@@ -169,41 +164,36 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
     // dragging
     function handleMouseUp(e) {
-      e.preventDefault();
-      selectedText = false;
-    }
-    function handleMouseOut(e) {
-      e.preventDefault();
       selectedText = false;
     }
 
     function handleMouseDown(e) {
       n_presses++;
-      e.preventDefault();
-      X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
-      Y = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
-      if (textHittest(X, Y)) {
-        selectedText = true;
-      }
+      mousePosition(e);
+      selectedText = textHittest(mpos.x, mpos.y);
+    }
+
+    function mousePosition(e) {
+      mpos = {
+        x: ((e.clientX - rect.left) / (rect.right - rect.left)) * canvas.width,
+        y: ((e.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height,
+      };
     }
 
     function handleMouseMove(e) {
       if (selectedText === false) {
         return;
       }
-
-      e.preventDefault();
-      let X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
-      let Y = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
+      mousePosition(e);
 
       // store coordinates and time array
-      x_coords.push(X);
-      y_coords.push(Y);
+      x_coords.push(mpos.x);
+      y_coords.push(mpos.y);
       time.push(performance.now() - start_time);
 
       // set new text position
-      text.x = X;
-      text.y = Y;
+      text.x = mpos.x;
+      text.y = mpos.y;
 
       if (text.y < trial.response_border[0] - text.height / 2 || text.y > trial.response_border[1] + text.height / 2) {
         end_trial();

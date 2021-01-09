@@ -120,10 +120,6 @@ const trial_stimulus = {
     word: jsPsych.timelineVariable('word'),
     resp_loc: jsPsych.timelineVariable('resp_loc'),
   },
-  on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.scale_factor = dat.scale_factor;
-  },
   on_finish: function () {
     codeTrial();
   },

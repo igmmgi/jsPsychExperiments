@@ -207,10 +207,6 @@ const trial_sentence_text = {
     dis_pos: jsPsych.timelineVariable('dis_pos'),
     length: jsPsych.timelineVariable('length'),
   },
-  on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.scale_factor = dat.scale_factor;
-  },
   on_finish: function () {
     codeTrialSentence();
   },

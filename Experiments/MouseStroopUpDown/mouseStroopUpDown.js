@@ -27,6 +27,7 @@ const prms = {
   fontSize: '50px Arial',
   waitDur: 750,
   iti: 750,
+  response_border: [100, 620],
   fbTxt: ['Richtig', 'Falsch'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -320,10 +321,6 @@ const trial_stimulus = {
     resp_loc: jsPsych.timelineVariable('resp_loc'),
     comp: jsPsych.timelineVariable('comp'),
   },
-  on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.scale_factor = dat.scale_factor;
-  },
   on_finish: function () {
     codeTrial();
   },
@@ -448,7 +445,7 @@ function genExpSeq() {
   let exp = [];
   exp.push(fullscreen_on);
   exp.push(welcome_de);
-  exp.push(resize_de);
+  // exp.push(resize_de);
   // exp.push(vpInfoForm_de);
   exp.push(instructionsStart1);
 

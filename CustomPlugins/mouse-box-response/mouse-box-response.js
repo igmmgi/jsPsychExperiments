@@ -39,13 +39,6 @@ jsPsych.plugins['mouse-response'] = (function () {
         default: '0px solid black',
         description: 'Border Style',
       },
-      scale_factor: {
-        type: jsPsych.plugins.parameterType.FLOAT,
-        array: false,
-        pretty_name: 'Scale Factor',
-        default: 1,
-        description: 'Scale Factor',
-      },
       fixation_position: {
         type: jsPsych.plugins.parameterType.INT,
         array: true,
@@ -168,6 +161,7 @@ jsPsych.plugins['mouse-response'] = (function () {
     display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');
+    let rect = canvas.getBoundingClientRect();
 
     // canvas mouse events
     $('#canvas').mousedown(function (e) {
@@ -199,6 +193,7 @@ jsPsych.plugins['mouse-response'] = (function () {
     let start_rt = null;
     let end_rt = null;
     let end_loc = null;
+    let mpos;
 
     // flags for drawing
     let trial_initiated = false;
@@ -235,28 +230,30 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // trial is initiated by pressing the mouse button inside the start box
     function handleMouseDown(e) {
-      e.preventDefault();
-      let X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
-      let Y = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
+      mousePosition(e);
       if (!trial_initiated) {
-        if (in_box(X, Y, start_box)) {
-          start_trial(X, Y);
+        if (in_box(mpos.x, mpos.y, start_box)) {
+          start_trial(mpos.x, mpos.y);
         }
       } else {
-        if (in_box(X, Y, left_responsebox) || in_box(X, Y, right_responsebox)) {
+        if (in_box(mpos.x, mpos.y, left_responsebox) || in_box(mpos.x, mpos.y, right_responsebox)) {
           end_trial();
         }
       }
     }
 
-    function handleMouseMove(e) {
-      e.preventDefault();
-      let X = (parseInt(e.clientX) - offsetX) / trial.scale_factor;
-      let Y = (parseInt(e.clientY) - offsetY) / trial.scale_factor;
+    function mousePosition(e) {
+      mpos = {
+        x: ((e.clientX - rect.left) / (rect.right - rect.left)) * canvas.width,
+        y: ((e.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height,
+      };
+    }
 
+    function handleMouseMove(e) {
+      mousePosition(e);
       if (!trial_initiated && !trial.require_mouse_press_start) {
-        if (in_box(X, Y, start_box)) {
-          start_trial(X, Y);
+        if (in_box(mpos.x, mpos.y, start_box)) {
+          start_trial(mpos.x, mpos.y);
         }
       }
 
@@ -265,19 +262,19 @@ jsPsych.plugins['mouse-response'] = (function () {
       }
 
       // response movement started?
-      if (!movement_initiated && !in_box(X, Y, start_box)) {
+      if (!movement_initiated && !in_box(mpos.x, mpos.y, start_box)) {
         start_rt = performance.now() - start_time;
         movement_initiated = true;
       }
 
       // store coordinates and time array
-      x_coords.push(X);
-      y_coords.push(Y);
+      x_coords.push(mpos.x);
+      y_coords.push(mpos.y);
       time.push(performance.now() - start_time);
 
       // response movement finished just by entering response box
       if (!trial.require_mouse_press_finish) {
-        if (in_box(X, Y, left_responsebox) || in_box(X, Y, right_responsebox)) {
+        if (in_box(mpos.x, mpos.y, left_responsebox) || in_box(mpos.x, mpos.y, right_responsebox)) {
           end_trial();
         }
       }
