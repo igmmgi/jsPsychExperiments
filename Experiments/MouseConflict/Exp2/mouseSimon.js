@@ -359,7 +359,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_simon' }, 'json');
+    saveData('/Common/write_data_json.php', data_filename, { stim_type: 'mouse_simon' }, 'json');
   },
   timing_post_trial: 200,
 };
