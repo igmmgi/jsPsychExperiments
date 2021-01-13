@@ -36,9 +36,9 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 4, // number of trials in first block (practice)
-  nTrlsE: 4, // number of trials in subsequent blocks
-  nBlks: 4,
+  nTrlsP: 20, // number of trials in first block (practice)
+  nTrlsE: 60, // number of trials in subsequent blocks
+  nBlks: 10,
   fixDur: 500,
   fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
@@ -68,26 +68,86 @@ jsPsych.data.addProperties({ version: nVersion });
 let respText;
 if (nVersion === 1 || nVersion === 2) {
   prms.resp_loc = ['left', 'right'];
-  respText = "<h3 style='text-align:center;'><b>H = Left &ensp;&ensp;&ensp; S = Right</b></h3><br>";
+  respText = "<h2 style='text-align:center;'><b>H = Links &ensp;&ensp;&ensp; S = Rechts</b></h2>";
 } else {
   prms.resp_loc = ['right', 'left'];
-  respText = "<h3 style='text-align:center;'><b>S = Left &ensp;&ensp;&ensp; H = Right</b></h3><br>";
+  respText = "<h2 style='text-align:center;'><b>S = Links &ensp;&ensp;&ensp; H = Rechts</b></h2>";
 }
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const task_instructions = {
+const task_instructions1 = {
   type: 'html-keyboard-response',
   stimulus:
-    "<H1 style='text-align: left;'>BITTE NUR TEILNEHMEN, FALLS EINE</H1>" +
-    "<H1 style='text-align: left;'>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!</H1><br>" +
-    "<H2 style='text-align: left;'>Liebe/r Teilnehmer/in</H2><br>" +
-    "<H3 style='text-align: left;'>im Experiment werden Sie in jedem Durchgang 3 Quadrate sehen. Zu Beginn</H3>" +
-    "<H3 style='text-align: left;'>des Durchgangs bewegen Sie die Maus in das Quadrat am unteren Bildschirmrand</H3>" +
-    "<H3 style='text-align: left;'>und klicken in das Quadrat. Dann erscheint eine der folgenden Aussagen:</H3><br>" +
+    generate_formatted_html({
+      text: 'BITTE NUR TEILNEHMEN, WENN EINE EXTERNE <br>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!<br>',
+      align: 'center',
+      fontsize: 26,
+      bold: true,
+      underline: true,
+    }) +
+    generate_formatted_html({
+      text: `Liebe/r Teilnehmer/in:<br><br> Klicken Sie zu Beginn mit der linken Maustaste in das Quadrat am unteren 
+        Bildschirmrand, um das Experiment zu starten. Daraufhin erscheint ein Buchstabe auf den Sie wie folgt reagieren sollen:`,
+      align: 'left',
+      fontsize: 26,
+      lineheight: 1.5,
+    }) +
     respText +
-    "<h3 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h3>",
+    generate_formatted_html({
+      text: `Zeitgleich erscheinen 2 neue Quadrate um zu Antworten. Ihre Aufgabe ist es, je nach Buchstabe, 
+        in das korrekte Quadrat mit der linken Maustaste zu klicken. Anschließend bekommen Sie Feedback darüber, 
+        ob Sie richtig geantwortet haben. Durch einen Klick in das Quadrat am unteren Bildschirmrand 
+        starten Sie den nächsten Durchlauf.<br><br>
+        Eine beliebige Tasten drücken, um fortzufahren!`,
+      align: 'left',
+      fontsize: 26,
+      lineheight: 1.5,
+    }),
+  post_trial_gap: prms.waitDur,
+};
+
+const task_instructions2 = {
+  type: 'html-keyboard-response',
+  stimulus:
+    generate_formatted_html({
+      text:
+        'Insgesamt wird es ' +
+        prms.nBlks +
+        ' Blöcke geben, zwischen denen Sie immer die Möglichkeit für eine Pause haben. Zu Beginn gibt es zwei kurze Übungsblöcke. Denken Sie daran,<br>',
+      align: 'left',
+      fontsize: 26,
+      lineheight: 1.5,
+    }) +
+    respText +
+    generate_formatted_html({
+      text: `Eine beliebige Tasten drücken, um fortzufahren!`,
+      align: 'left',
+      fontsize: 26,
+      lineheight: 1.5,
+    }),
+  post_trial_gap: prms.waitDur,
+};
+
+const task_instructions3 = {
+  type: 'html-keyboard-response',
+  stimulus:
+    generate_formatted_html({
+      text: 'Die Übungsblöcke ist erfolgreich abgeschlossen. Denken Sie daran, <br>',
+      align: 'left',
+      fontsize: 26,
+      lineheight: 1.5,
+    }) +
+    respText +
+    generate_formatted_html({
+      text: ` Klicken Sie mit der linken Maustaste zu Beginn in das Quadrat am
+      unteren Bildschirmrand und um eine Antwort abzugeben in eines der
+        Antwortquadrate. <br><br>Eine beliebige Tasten drücken, um zu starten!`,
+      align: 'left',
+      fontsize: 26,
+      lineheight: 1.5,
+    }),
   post_trial_gap: prms.waitDur,
 };
 
@@ -117,7 +177,7 @@ const trial_stimulus = {
   require_mouse_press_start: prms.requireMousePressStart,
   require_mouse_press_finish: prms.requireMousePressFinish,
   data: {
-    stim_type: 'mouse_flanker',
+    stim_type: 'mouse_simon',
     stim: jsPsych.timelineVariable('stim'),
     side: jsPsych.timelineVariable('side'),
     resp_size: jsPsych.timelineVariable('resp_size'),
@@ -152,7 +212,6 @@ function codeTrial() {
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = dat.resp_loc == dat.end_loc ? 0 : 1;
   let comp = dat.resp_loc == dat.side ? 'comp' : 'incomp';
-  console.log(comp);
   jsPsych.data.addDataToLastTrial({
     date: Date(),
     comp: comp,
@@ -248,7 +307,7 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim_type: 'mouse_flanker' });
+    trial.stimulus = blockFeedbackTxt({ stim_type: 'mouse_simon' });
   },
 };
 
@@ -269,7 +328,7 @@ const trial_timeline_small = {
 ////////////////////////////////////////////////////////////////////////
 
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('mf', 16);
+const randomString = generateRandomStringWithExpName('mc2', 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -284,7 +343,7 @@ const alphaNum = {
         Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an:<br><br>sprachstudien@psycho.uni-tuebingen.de<br> Code: ` +
+        an:<br><br>hiwipibio@gmail.com<br> Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
@@ -300,7 +359,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_flanker' }, 'json');
+    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_simon' }, 'json');
   },
   timing_post_trial: 200,
 };
@@ -325,7 +384,8 @@ function genExpSeq() {
   exp.push(welcome_de);
   exp.push(resize_de);
   exp.push(vpInfoForm_de);
-  exp.push(task_instructions);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
   let order;
   if (nVersion % 2 == 1) {
@@ -335,6 +395,9 @@ function genExpSeq() {
   }
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    if (blk == 2) {
+      exp.push(task_instructions3);
+    }
     let blk_timeline;
     if (order[blk] === 'S') {
       blk_timeline = { ...trial_timeline_small };
@@ -343,7 +406,7 @@ function genExpSeq() {
     }
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
+      size: (blk === 0) | (blk === 1) ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
@@ -354,8 +417,8 @@ function genExpSeq() {
   exp.push(save_code);
 
   // debrief
-  exp.push(debrief_de);
   exp.push(alphaNum);
+  exp.push(debrief_de);
   exp.push(fullscreen_off);
 
   return exp;
