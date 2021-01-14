@@ -24,7 +24,8 @@ const prms = {
   fixSize: 15,
   fixDur: 750,
   fbDur: 750,
-  fontSize: '50px Arial',
+  stimSize: '50px Arial',
+  fbSize: '40px Arial',
   waitDur: 750,
   iti: 750,
   response_border: [100, 620],
@@ -275,7 +276,7 @@ function drawFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
-  ctx.font = prms.fontSize;
+  ctx.font = prms.fbSize;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
@@ -309,7 +310,7 @@ const trial_stimulus = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  font: prms.fontSize,
+  font: prms.stimSize,
   word: jsPsych.timelineVariable('word'),
   colour: jsPsych.timelineVariable('colour'),
   scale_factor: null,
@@ -445,8 +446,8 @@ function genExpSeq() {
   let exp = [];
   exp.push(fullscreen_on);
   exp.push(welcome_de);
-  // exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(resize_de);
+  exp.push(vpInfoForm_de);
   exp.push(instructionsStart1);
 
   // practice block with "xxxx" stimuli
@@ -489,7 +490,6 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
   exclusions: {
     min_width: canvas_size[0],
     min_height: canvas_size[1],

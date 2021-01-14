@@ -77,7 +77,7 @@ if (nVersion === 1 || nVersion === 2) {
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
 const task_instructions1 = {
-  type: 'html-keyboard-response',
+  type: 'html-mouse-response',
   stimulus:
     generate_formatted_html({
       text: 'BITTE NUR TEILNEHMEN, WENN EINE EXTERNE <br>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!<br>',

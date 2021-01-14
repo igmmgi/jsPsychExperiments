@@ -22,7 +22,7 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrlsP: 36, // number of trials in 1st block
-  nTrlsE: 72, // number of trials in subsequent blocks
+  nTrlsE: 84, // number of trials in subsequent blocks
   nBlks: 11,
   fixDur: 500,
   fbDur: [500, 1500, 1500],
@@ -214,7 +214,7 @@ function drawFeedback() {
   ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
   if (dat.corrCode !== 1) {
     let reminder_l = prms.respLetters[0] + " = linker Zeigefinger (Taste 'Q')";
-    let reminder_r = prms.respLetters[1] + " = rechter Zeigefinger (Taste 'Q')";
+    let reminder_r = prms.respLetters[1] + " = rechter Zeigefinger (Taste 'P')";
     ctx.fillText(reminder_l, 0, 50);
     ctx.fillText(reminder_r, 0, 100);
   }
@@ -362,10 +362,10 @@ const stimuli = [
     { stim_type: "flanker",       target: "S", t1: "S", flankers: "SS SS", delay:   0, position: 0,              corrResp: prms.respKeys[1] },
     { stim_type: "flanker",       target: "H", t1: "H", flankers: "SS SS", delay:   0, position: 0,              corrResp: prms.respKeys[0] },
     { stim_type: "flanker",       target: "S", t1: "S", flankers: "HH HH", delay:   0, position: 0,              corrResp: prms.respKeys[1] },
-    { stim_type: "flanker_delay", target: "H", t1: "",  flankers: "HH HH", delay: 300, position: 0,              corrResp: prms.respKeys[0] },
-    { stim_type: "flanker_delay", target: "S", t1: "",  flankers: "SS SS", delay: 300, position: 0,              corrResp: prms.respKeys[1] },
-    { stim_type: "flanker_delay", target: "H", t1: "",  flankers: "SS SS", delay: 300, position: 0,              corrResp: prms.respKeys[0] },
-    { stim_type: "flanker_delay", target: "S", t1: "",  flankers: "HH HH", delay: 300, position: 0,              corrResp: prms.respKeys[1] },
+    { stim_type: "flanker_delay", target: "H", t1: "",  flankers: "HH HH", delay: 400, position: 0,              corrResp: prms.respKeys[0] },
+    { stim_type: "flanker_delay", target: "S", t1: "",  flankers: "SS SS", delay: 400, position: 0,              corrResp: prms.respKeys[1] },
+    { stim_type: "flanker_delay", target: "H", t1: "",  flankers: "SS SS", delay: 400, position: 0,              corrResp: prms.respKeys[0] },
+    { stim_type: "flanker_delay", target: "S", t1: "",  flankers: "HH HH", delay: 400, position: 0,              corrResp: prms.respKeys[1] },
     { stim_type: "simon",         target: "H", t1: "H", flankers: "",      delay:   0, position: -prms.simonPos, corrResp: prms.respKeys[0] },
     { stim_type: "simon",         target: "S", t1: "S", flankers: "",      delay:   0, position: -prms.simonPos, corrResp: prms.respKeys[1] },
     { stim_type: "simon",         target: "H", t1: "H", flankers: "",      delay:   0, position:  prms.simonPos, corrResp: prms.respKeys[0] },
