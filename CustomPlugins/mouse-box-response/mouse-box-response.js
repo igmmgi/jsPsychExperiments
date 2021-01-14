@@ -165,7 +165,9 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // canvas mouse events
     $('#canvas').mousedown(function (e) {
-      handleMouseDown(e);
+      if (e.which === 1) {
+        handleMouseDown(e);
+      }
     });
     $('#canvas').mousemove(function (e) {
       handleMouseMove(e);
