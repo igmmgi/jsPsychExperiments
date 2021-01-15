@@ -108,7 +108,7 @@ const task_instructions1 = {
 };
 
 const task_instructions2 = {
-  type: 'html-keyboard-response',
+  type: 'html-mouse-response',
   stimulus:
     generate_formatted_html({
       text:

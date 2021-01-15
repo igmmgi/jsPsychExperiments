@@ -9,7 +9,7 @@
  **/
 
 jsPsych.plugins['html-mouse-response'] = (function () {
-  var plugin = {};
+  let plugin = {};
 
   plugin.info = {
     name: 'html-mouse-response',
@@ -57,7 +57,19 @@ jsPsych.plugins['html-mouse-response'] = (function () {
   };
 
   plugin.trial = function (display_element, trial) {
-    var new_html = '<div oncontextmenu="return false"; id="html-mouse-response-stimulus">' + trial.stimulus + '</div>';
+    var new_html = '<div id="html-mouse-response-stimulus">' + trial.stimulus + '</div>';
+
+    // deactivate contextmenu of right mouse button until response
+    document.addEventListener(
+      'contextmenu',
+      function cm(e) {
+        e.preventDefault();
+        if (response.button !== null) {
+          document.removeEventListener('contextmenu', cm, false);
+        }
+      },
+      false,
+    );
 
     // add prompt
     if (trial.prompt !== null) {
@@ -68,10 +80,14 @@ jsPsych.plugins['html-mouse-response'] = (function () {
     display_element.innerHTML = new_html;
 
     // start time
-    var start_time = performance.now();
+    let start_time = performance.now();
 
     // canvas mouse events
     $('#html-mouse-response-stimulus').mousedown(function (e) {
+      mouseResponse(e);
+    });
+
+    function mouseResponse(e) {
       if ((e.which === 1) & trial.choices[0]) {
         response.button = 1;
       } else if ((e.which === 2) & trial.choices[1]) {
@@ -81,34 +97,32 @@ jsPsych.plugins['html-mouse-response'] = (function () {
       }
       if (response.button !== null) {
         response.rt = performance.now() - start_time;
-        // if (trial.response_ends_trial) {
-        //   end_trial();
-        // }
+        if (trial.response_ends_trial) {
+          end_trial();
+        }
       }
-    });
+    }
 
     // store response
-    var response = {
+    let response = {
       rt: null,
       button: null,
     };
 
     // function to end trial when it is time
-    var end_trial = function () {
+    let end_trial = function () {
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
       // gather the data to store for the trial
-      var trial_data = {
+      let trial_data = {
         rt: response.rt,
         stimulus: trial.stimulus,
         button_press: response.button,
       };
 
-      console.log(trial_data);
-
       // clear the display
-      display_element.innerHTML = '<div oncontextmenu="return false"; "></div>';
+      display_element.innerHTML = '';
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
