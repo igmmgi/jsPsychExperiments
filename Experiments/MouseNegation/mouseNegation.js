@@ -169,6 +169,7 @@ function blockFeedbackTxt(filter_options) {
     ' %</H1>' +
     '<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>';
   prms.cBlk += 1;
+  prms.cTrl = 0;
   return blockFbTxt;
 }
 
@@ -255,6 +256,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
+  exp.push(mouse_reminder);
   // exp.push(vpInfoForm_de);
   exp.push(task_instructions);
 

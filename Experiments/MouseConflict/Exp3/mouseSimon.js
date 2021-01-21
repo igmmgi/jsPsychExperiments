@@ -313,6 +313,7 @@ function blockFeedbackTxt(filter_options) {
     ' %</H1>' +
     '<H2>klicken Sie die linke Maustaste, um fortzufahren!</H2>';
   prms.cBlk += 1;
+  prms.cTrl = 0;
   return blockFbTxt;
 }
 
