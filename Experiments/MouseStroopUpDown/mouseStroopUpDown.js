@@ -425,7 +425,7 @@ const save_data = {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_stroop' }, 'json');
   },
-  timing_post_trial: 200,
+  timing_post_trial: 1000,
 };
 
 const save_code = {
@@ -434,7 +434,7 @@ const save_code = {
     let code_filename = dirName + 'code/' + expName;
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-  timing_post_trial: 200,
+  timing_post_trial: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -447,7 +447,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(instructionsStart1);
 
   // practice block with "xxxx" stimuli

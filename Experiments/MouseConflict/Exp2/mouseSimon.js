@@ -38,18 +38,18 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 const prms = {
   nTrlsP: 20, // number of trials in first block (practice)
   nTrlsE: 60, // number of trials in subsequent blocks
-  nBlks: 10,
+  nBlks: 12,
   fixDur: 500,
   fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   iti: 500,
   fixPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
   stimPos: [null, canvas_size[1] * 0.75], // x,y position of stimulus (x is set per trial)
-  stimEccentricity: 150, // x,y position of stimulus (x is set per trial)
+  stimEccentricity: 200, // x,y position of stimulus (x is set per trial)
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
   leftBox: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
   rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
-  responseBoxSizeAdjust: 35, // response boxes are +- X pixels different from start size
+  responseBoxSizeAdjust: 25, // response boxes are +- X pixels different from start size
   keepFixation: true, // is fixation cross kept on screen with stimulus
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
@@ -77,8 +77,8 @@ if (nVersion === 1 || nVersion === 2) {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const task_instructions1 = {
-  type: 'html-keyboard-response',
+const mouse_reminder = {
+  type: 'html-mouse-response',
   stimulus:
     generate_formatted_html({
       text: 'BITTE NUR TEILNEHMEN, WENN EINE EXTERNE <br>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!<br>',
@@ -88,8 +88,25 @@ const task_instructions1 = {
       underline: true,
     }) +
     generate_formatted_html({
-      text: `Liebe/r Teilnehmer/in:<br><br> Klicken Sie zu Beginn mit der linken Maustaste in das Quadrat am unteren 
-        Bildschirmrand, um das Experiment zu starten. Daraufhin erscheint ein Buchstabe auf den Sie wie folgt reagieren sollen:`,
+      text: `Für dieses Experiment benötigen Sie eine externe Computermaus.
+      Wenn noch nicht geschehen, schließen Sie bitte jetzt eine Computermaus an
+        Ihren Computer an und positionieren Sie diese in eine für Sie angenehme
+        Position.  Wenn Sie bereit für dieses Experiment sind, dann klicken Sie
+        bitte die linke Maustaste.`,
+      align: 'left',
+      fontsize: 26,
+      lineheight: 1.5,
+    }),
+  choices: [true, false, false],
+  post_trial_gap: prms.waitDur,
+};
+
+const task_instructions1 = {
+  type: 'html-mouse-response',
+  stimulus:
+    generate_formatted_html({
+      text: `Aufgabe: <br><br>In jedem Durchgang müssen Sie zu Beginn in das Quadrat klicken welches mittig unten am Bildschirm platziert ist. 
+        Daraufhin erscheint ein Buchstabe auf den Sie wie folgt reagieren sollen:`,
       align: 'left',
       fontsize: 26,
       lineheight: 1.5,
@@ -100,16 +117,17 @@ const task_instructions1 = {
         in das korrekte Quadrat mit der linken Maustaste zu klicken. Anschließend bekommen Sie Feedback darüber, 
         ob Sie richtig geantwortet haben. Durch einen Klick in das Quadrat am unteren Bildschirmrand 
         starten Sie den nächsten Durchlauf.<br><br>
-        Eine beliebige Tasten drücken, um fortzufahren!`,
+        klicken Sie die linke Maustaste, um fortzufahren!`,
       align: 'left',
       fontsize: 26,
       lineheight: 1.5,
     }),
+  choices: [true, false, false],
   post_trial_gap: prms.waitDur,
 };
 
 const task_instructions2 = {
-  type: 'html-keyboard-response',
+  type: 'html-mouse-response',
   stimulus:
     generate_formatted_html({
       text:
@@ -122,16 +140,17 @@ const task_instructions2 = {
     }) +
     respText +
     generate_formatted_html({
-      text: `Eine beliebige Tasten drücken, um fortzufahren!`,
+      text: `klicken Sie die linke Maustaste, um fortzufahren!`,
       align: 'left',
       fontsize: 26,
       lineheight: 1.5,
     }),
+  choices: [true, false, false],
   post_trial_gap: prms.waitDur,
 };
 
 const task_instructions3 = {
-  type: 'html-keyboard-response',
+  type: 'html-mouse-response',
   stimulus:
     generate_formatted_html({
       text: 'Die Übungsblöcke ist erfolgreich abgeschlossen. Denken Sie daran, <br>',
@@ -143,11 +162,12 @@ const task_instructions3 = {
     generate_formatted_html({
       text: ` Klicken Sie mit der linken Maustaste zu Beginn in das Quadrat am
       unteren Bildschirmrand und um eine Antwort abzugeben in eines der
-        Antwortquadrate. <br><br>Eine beliebige Tasten drücken, um zu starten!`,
+        Antwortquadrate. <br><br>klicken Sie die linke Maustaste, um fortzufahren!`,
       align: 'left',
       fontsize: 26,
       lineheight: 1.5,
     }),
+  choices: [true, false, false],
   post_trial_gap: prms.waitDur,
 };
 
@@ -296,19 +316,20 @@ function blockFeedbackTxt(filter_options) {
     '<H1>Error Rate: ' +
     Math.round((nError / nTotal) * 100) +
     ' %</H1>' +
-    '<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>';
+    '<H2>klicken Sie die linke Maustaste, um fortzufahren!</H2>';
   prms.cBlk += 1;
   return blockFbTxt;
 }
 
 const block_feedback = {
-  type: 'html-keyboard-response',
+  type: 'html-mouse-response',
   stimulus: '',
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
     trial.stimulus = blockFeedbackTxt({ stim_type: 'mouse_simon' });
   },
+  choices: [true, false, false],
 };
 
 const trial_timeline_large = {
@@ -361,7 +382,7 @@ const save_data = {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data_json.php', data_filename, { stim_type: 'mouse_simon' }, 'json');
   },
-  timing_post_trial: 200,
+  timing_post_trial: 1000,
 };
 
 const save_code = {
@@ -370,7 +391,7 @@ const save_code = {
     let code_filename = dirName + 'code/' + expName;
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-  timing_post_trial: 200,
+  timing_post_trial: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -384,6 +405,7 @@ function genExpSeq() {
   exp.push(welcome_de);
   exp.push(resize_de);
   exp.push(vpInfoForm_de);
+  exp.push(mouse_reminder);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 
@@ -427,4 +449,8 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
+  exclusions: {
+    min_width: canvas_size[0],
+    min_height: canvas_size[1],
+  },
 });
