@@ -30,7 +30,6 @@ const prms = {
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
   leftBox: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
   rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
-  responseBoxSizeAdjust: 35, // response boxes are +- X pixels different in height/width from start size
   keepFixation: false, // is fixation cross kept on screen with stimulus
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
@@ -233,7 +232,7 @@ const save_data = {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_negation' }, 'json');
   },
-  timing_post_trial: 200,
+  timing_post_trial: 1000,
 };
 
 const save_code = {
@@ -242,7 +241,7 @@ const save_code = {
     let code_filename = dirName + 'code/' + expName;
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-  timing_post_trial: 200,
+  timing_post_trial: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -257,7 +256,7 @@ function genExpSeq() {
   exp.push(welcome_de);
   exp.push(resize_de);
   exp.push(mouse_reminder);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -285,4 +284,8 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
+  exclusions: {
+    min_width: canvas_size[0],
+    min_height: canvas_size[1],
+  },
 });

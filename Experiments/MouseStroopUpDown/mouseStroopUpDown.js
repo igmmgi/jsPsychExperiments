@@ -288,7 +288,7 @@ const fixation_cross = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: 500,
+  trial_duration: prms.fixDur,
   translate_origin: true,
   func: drawFixation,
 };
@@ -332,7 +332,7 @@ const trial_feedback = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: 500,
+  trial_duration: prms.fbDur,
   translate_origin: false,
   func: drawFeedback,
 };
@@ -406,7 +406,7 @@ const alphaNum = {
       `Vielen Dank für Ihre Teilnahme.<br><br>
       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und
       senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an:<br><br>
-        hiwipibio@gmail.com <br>
+        sprachstudien@psycho.uni-tuebingen.de <br>
         Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
@@ -447,7 +447,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(instructionsStart1);
 
   // practice block with "xxxx" stimuli
