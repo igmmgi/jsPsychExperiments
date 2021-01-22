@@ -1,7 +1,9 @@
 // jsPsych with p5js canvas
 // Examples taken from https://p5js.org/examples/
 
+let f;
 const s = (p5js) => {
+  f = p5js.loadFont('https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf');
   p5js.setup = function () {};
 };
 let p5js = new p5(s); // invoke p5
@@ -9,6 +11,7 @@ let p5js = new p5(s); // invoke p5
 let img = p5js.loadImage('jspsych-logo.jpeg');
 
 function draw1() {
+  p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
   let gridSize = 100;
   for (let x = gridSize; x <= p5js.width - gridSize; x += gridSize) {
     for (let y = gridSize; y <= p5js.height - gridSize; y += gridSize) {
@@ -20,6 +23,7 @@ function draw1() {
 }
 
 function draw2() {
+  p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
   p5js.fill(0);
   p5js.ellipse(p5js.mouseX, p5js.mouseY, 50, 50);
   if (p5js.mouseIsPressed) {
@@ -28,6 +32,7 @@ function draw2() {
 }
 
 function draw3() {
+  p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
   p5js.background(255);
   p5js.stroke(0);
   p5js.strokeWeight(5);
@@ -134,22 +139,73 @@ function star(x, y, radius1, radius2, npoints) {
   p5js.endShape(p5js.CLOSE);
 }
 
-const draw_calls = [draw1, draw2, draw3, draw4, draw5, draw6];
-const use_webgl = [false, false, false, true, true, true];
+let rSlider;
+let gSlider;
+let bSlider;
+
+function draw7() {
+  // create sliders
+  p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
+  const r = rSlider.value();
+  const g = gSlider.value();
+  const b = bSlider.value();
+  p5js.background(r, g, b);
+  p5js.textFont(f);
+  p5js.textSize(15);
+  p5js.text('red', 180, 25);
+  p5js.text('green', 180, 55);
+  p5js.text('blue', 180, 85);
+
+  p5js.push();
+  p5js.translate(p5js.width / 2, p5js.height / 2);
+  p5js.textAlign(p5js.CENTER, p5js.CENTER);
+  let s = 'The quick brown fox jumped over the lazy dog.';
+  p5js.rotateY(p5js.frameCount * 0.02);
+  p5js.rotateX(p5js.frameCount * 0.02);
+  p5js.rotateZ(p5js.frameCount * 0.02);
+  p5js.textSize(36);
+  p5js.text(s, 0, 0); // Text wraps within text box
+  p5js.pop();
+}
+
+const draw_calls = [draw1, draw2, draw3, draw4, draw5, draw6, draw7];
+// const use_webgl = [false, false, false, true, true, true, false];
+const use_webgl = [true, true, true, true, true, true, true];
+
+// const draw_calls = [draw7];
+// const use_webgl = [false];
+
+function setup1() {
+  var offsetTop = document.getElementById('p5js_container').offsetTop;
+  var offsetLeft = document.getElementById('p5js_container').offsetLeft;
+
+  // create sliders
+  rSlider = p5js.createSlider(0, 255, 100);
+  rSlider.position(offsetLeft + 20, offsetTop + 20);
+  gSlider = p5js.createSlider(0, 255, 0);
+  gSlider.position(offsetLeft + 20, offsetTop + 50);
+  bSlider = p5js.createSlider(0, 255, 255);
+  bSlider.position(offsetLeft + 20, offsetTop + 80);
+}
 
 let exp = [];
 for (let i = 0; i < draw_calls.length; i++) {
-  exp.push({
+  const tmp = {
     type: 'p5js-canvas-keyboard-response',
     canvas_size: [1280, 960],
     draw: function () {
       return draw_calls[i];
     },
-    stimulus_duration: 10000,
-    trial_duration: 10000,
     response_ends_trial: true,
     webgl: use_webgl[i],
-  });
+  };
+  if (i === 6) {
+    tmp.setup = function () {
+      return setup1;
+    };
+  }
+  console.log(tmp);
+  exp.push(tmp);
 }
 
 jsPsych.init({

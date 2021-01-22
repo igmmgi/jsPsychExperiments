@@ -5,6 +5,13 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
     name: 'p5js-canvas-keyboard-response',
     description: '',
     parameters: {
+      setup: {
+        type: jsPsych.plugins.parameterType.function,
+        array: false,
+        pretty_name: 'Draw Function',
+        default: null,
+        description: 'The p5js draw function.',
+      },
       draw: {
         type: jsPsych.plugins.parameterType.function,
         array: false,
@@ -62,17 +69,21 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    var new_html = "<div id='p5js_container'></div>";
+    var new_html = "<div id='p5js_container';'></div>";
     display_element.innerHTML = new_html;
 
     let p5js_canvas;
     if (trial.webgl === true) {
       p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.WEBGL);
     } else {
-      p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1]);
+      p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.P2D);
     }
     p5js_canvas.canvas.style.border = trial.canvas_border;
     p5js_canvas.parent(p5js_container);
+
+    if (trial.setup !== null) {
+      trial.setup();
+    }
     p5js.draw = trial.draw;
 
     // store response
@@ -100,6 +111,7 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
 
       // clear the display
       display_element.innerHTML = '';
+      p5js.removeElements();
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
