@@ -8,9 +8,9 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
       setup: {
         type: jsPsych.plugins.parameterType.function,
         array: false,
-        pretty_name: 'Draw Function',
+        pretty_name: 'p5js Setup Function',
         default: null,
-        description: 'The p5js draw function.',
+        description: 'The p5js setup function.',
       },
       draw: {
         type: jsPsych.plugins.parameterType.function,
@@ -18,13 +18,6 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
         pretty_name: 'Draw Function',
         default: null,
         description: 'The p5js draw function.',
-      },
-      webgl: {
-        type: jsPsych.plugins.parameterType.BOOL,
-        array: false,
-        pretty_name: 'WEBGL',
-        default: false,
-        description: 'Use WEBGL renderer.',
       },
       canvas_size: {
         type: jsPsych.plugins.parameterType.INT,
@@ -73,11 +66,7 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
     display_element.innerHTML = new_html;
 
     let p5js_canvas;
-    if (trial.webgl === true) {
-      p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.WEBGL);
-    } else {
-      p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.P2D);
-    }
+    p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.WEBGL);
     p5js_canvas.canvas.style.border = trial.canvas_border;
     p5js_canvas.parent(p5js_container);
 

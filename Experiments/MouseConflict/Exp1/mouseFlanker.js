@@ -76,8 +76,9 @@ if (nVersion === 1 || nVersion === 2) {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
+
 const mouse_reminder = {
-  type: 'html-mouse-response',
+  type: 'html-button-response',
   stimulus:
     generate_formatted_html({
       text: 'BITTE NUR TEILNEHMEN, WENN EINE EXTERNE <br>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!<br>',
@@ -96,12 +97,12 @@ const mouse_reminder = {
       fontsize: 26,
       lineheight: 1.5,
     }),
-  choices: [true, false, false],
+  choices: ['Weiter'],
   post_trial_gap: prms.waitDur,
 };
 
 const task_instructions1 = {
-  type: 'html-mouse-response',
+  type: 'html-button-response',
   stimulus:
     generate_formatted_html({
       text: `Aufgabe: <br><br>In jedem Durchgang müssen Sie zu Beginn in das Quadrat klicken welches mittig unten am Bildschirm platziert ist. 
@@ -121,12 +122,12 @@ const task_instructions1 = {
       fontsize: 26,
       lineheight: 1.5,
     }),
-  choices: [true, false, false],
+  choices: ['Weiter'],
   post_trial_gap: prms.waitDur,
 };
 
 const task_instructions2 = {
-  type: 'html-mouse-response',
+  type: 'html-button-response',
   stimulus:
     generate_formatted_html({
       text:
@@ -144,12 +145,12 @@ const task_instructions2 = {
       fontsize: 26,
       lineheight: 1.5,
     }),
-  choices: [true, false, false],
+  choices: ['Weiter'],
   post_trial_gap: prms.waitDur,
 };
 
 const task_instructions3 = {
-  type: 'html-mouse-response',
+  type: 'html-button-response',
   stimulus:
     generate_formatted_html({
       text: 'Die Übungsblöcke ist erfolgreich abgeschlossen. Denken Sie daran, <br>',
@@ -166,7 +167,7 @@ const task_instructions3 = {
       fontsize: 26,
       lineheight: 1.5,
     }),
-  choices: [true, false, false],
+  choices: ['Weiter'],
   post_trial_gap: prms.waitDur,
 };
 
@@ -315,14 +316,15 @@ function blockFeedbackTxt(filter_options) {
 }
 
 const block_feedback = {
-  type: 'html-mouse-response',
+  type: 'html-button-response',
   stimulus: '',
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
     trial.stimulus = blockFeedbackTxt({ stim_type: 'mouse_flanker' });
   },
-  choices: [true, false, false],
+  choices: ['Weiter'],
+  post_trial_gap: prms.waitDur,
 };
 
 const trial_timeline_large = {

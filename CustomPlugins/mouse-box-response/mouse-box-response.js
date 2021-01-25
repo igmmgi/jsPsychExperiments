@@ -196,6 +196,7 @@ jsPsych.plugins['mouse-response'] = (function () {
     let end_rt = null;
     let end_loc = null;
     let mpos;
+    let nclicks = 0;
 
     // flags for drawing
     let trial_initiated = false;
@@ -232,6 +233,7 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // trial is initiated by pressing the mouse button inside the start box
     function handleMouseDown(e) {
+      nclicks++;
       mousePosition(e);
       if (!trial_initiated) {
         if (in_box(mpos.x, mpos.y, start_box)) {
@@ -366,6 +368,7 @@ jsPsych.plugins['mouse-response'] = (function () {
         x_coords: roundArray(x_coords),
         y_coords: roundArray(y_coords),
         time: time,
+        nclicks: nclicks,
       };
 
       // move on to the next trial
