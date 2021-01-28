@@ -158,6 +158,18 @@ jsPsych.plugins['mouse-response'] = (function () {
       ';"></canvas>' +
       '</div>';
 
+    // deactivate contextmenu of right mouse button until response
+    document.addEventListener(
+      'contextmenu',
+      function cm(e) {
+        e.preventDefault();
+        if (response.button !== null) {
+          document.removeEventListener('contextmenu', cm, false);
+        }
+      },
+      false,
+    );
+
     display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');

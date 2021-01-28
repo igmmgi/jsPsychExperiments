@@ -1032,9 +1032,9 @@ window.jsPsych = (function () {
           var h = window.innerHeight;
           if (w < mw || h < mh) {
             var msg =
-              '<p>Your browser window is too small to complete this experiment. ' +
-              'Please maximize the size of your browser window. If your browser window is already maximized, ' +
-              'you will not be able to complete this experiment.</p>' +
+              '<p>Your browser window is too small to complete this experiment.<br><br>' +
+              '<span style="font-weight: bold;"> Please maximize the size of your browser window (adjust zoom level) until you see a "Continue" button!</span><br><br>' +
+              'If your browser window is already maximized, you will not be able to complete this experiment.</p>' +
               '<p>The minimum width is ' +
               mw +
               'px. Your current width is ' +
@@ -1047,6 +1047,7 @@ window.jsPsych = (function () {
               'px.</p>';
             core.getDisplayElement().innerHTML = msg;
           } else {
+            window.location.reload();
             clearInterval(interval);
             core.getDisplayElement().innerHTML = '';
             checkExclusions(exclusions, success, fail);

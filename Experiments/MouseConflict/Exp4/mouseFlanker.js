@@ -389,6 +389,12 @@ const save_code = {
   timing_post_trial: 1000,
 };
 
+const check_screen = {
+  type: 'checksize',
+  size: [1280, 960],
+  timing_post_trial: 1000,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -397,6 +403,7 @@ function genExpSeq() {
 
   let exp = [];
   exp.push(fullscreen_on);
+  exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
   // exp.push(vpInfoForm_de);
@@ -444,8 +451,8 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
-  exclusions: {
-    min_width: canvas_size[0],
-    min_height: canvas_size[1],
-  },
+  // exclusions: {
+  //   min_width: canvas_size[0],
+  //   min_height: canvas_size[1],
+  // },
 });

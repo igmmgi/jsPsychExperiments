@@ -87,10 +87,8 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     let ctx = document.getElementById('canvas').getContext('2d');
     let rect = canvas.getBoundingClientRect();
 
-    //let ctx = document.getElementById('canvas').getContext('2d');
-    let canvasOffset = $(canvas).offset();
+    // let canvasOffset = $(canvas).offset();
     let trial_started = false;
-    // let text_on = false;
     let end_rt;
     let end_loc;
     let mpos;
@@ -99,23 +97,9 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     let y_coords = [];
     let time = [];
 
-    // Mouse Events
-    canvas.addEventListener(
-      'mousemove',
-      function (e) {
-        mousePosition(e);
-        draw();
-      },
-      false,
-    );
-
-    canvas.addEventListener(
-      'mousedown',
-      function (e) {
-        handleMouseDown(e);
-      },
-      false,
-    );
+    // canvas mouse events
+    canvas.addEventListener('mousemove', mousePosition);
+    canvas.addEventListener('mousedown', handleMouseDown);
 
     // initial draw
     let start_time;
@@ -135,7 +119,9 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
         time: time,
       };
 
-      canvas.width = canvas.width;
+      // canvas mouse events
+      canvas.removeEventListener('mousemove', mousePosition);
+      canvas.removeEventListener('mousedown', handleMouseDown);
 
       // clear the display
       display_element.innerHTML = '';
@@ -152,6 +138,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       x_coords.push(mpos.x);
       y_coords.push(mpos.y);
       time.push(performance.now() - start_time);
+      draw();
     }
 
     function handleMouseDown(e) {

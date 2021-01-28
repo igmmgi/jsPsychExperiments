@@ -88,22 +88,12 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     let rect = canvas.getBoundingClientRect();
 
     // canvas mouse events
-    $('#canvas').mousedown(function (e) {
-      handleMouseDown(e);
-    });
-    $('#canvas').mousemove(function (e) {
-      handleMouseMove(e);
-    });
-    $('#canvas').mouseup(function (e) {
-      handleMouseUp(e);
-    });
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseup', handleMouseUp);
 
     let canvasOffset = $(canvas).offset();
-    let offsetX = canvasOffset.left;
-    let offsetY = canvasOffset.top;
     let selectedText = false;
-    let startX;
-    let startY;
     let movement_initiated = false;
     let start_rt;
     let end_rt;
@@ -155,6 +145,10 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
         time: time,
       };
 
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mousedown', handleMouseMove);
+      canvas.removeEventListener('mouseup', handleMouseMove);
+
       // clear the display
       display_element.innerHTML = '';
 
@@ -162,7 +156,7 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
       jsPsych.finishTrial(trial_data);
     };
 
-    // dragging
+    // mouse functions
     function handleMouseUp(e) {
       selectedText = false;
     }

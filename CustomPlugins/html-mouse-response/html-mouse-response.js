@@ -29,12 +29,6 @@ jsPsych.plugins['html-mouse-response'] = (function () {
         description:
           'The mouse buttons (left/middle/right) the subject is allowed to press to respond to the stimulus.',
       },
-      prompt: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Prompt',
-        default: null,
-        description: 'Any content here will be displayed below the stimulus.',
-      },
       stimulus_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Stimulus duration',
@@ -71,10 +65,7 @@ jsPsych.plugins['html-mouse-response'] = (function () {
       false,
     );
 
-    // add prompt
-    if (trial.prompt !== null) {
-      new_html += trial.prompt;
-    }
+    document.addEventListener('mousedown', mouseResponse);
 
     // draw
     display_element.innerHTML = new_html;
@@ -82,19 +73,15 @@ jsPsych.plugins['html-mouse-response'] = (function () {
     // start time
     let start_time = performance.now();
 
-    // canvas mouse events
-    $('#html-mouse-response-stimulus').mousedown(function (e) {
-      mouseResponse(e);
-    });
-
     function mouseResponse(e) {
-      if ((e.which === 1) & trial.choices[0]) {
+      if ((e.buttons === 1) & trial.choices[0]) {
         response.button = 1;
-      } else if ((e.which === 2) & trial.choices[1]) {
+      } else if ((e.buttons === 2) & trial.choices[1]) {
         response.button = 2;
-      } else if ((e.which === 3) & trial.choices[2]) {
+      } else if ((e.buttons === 3) & trial.choices[2]) {
         response.button = 3;
       }
+      console.log(response);
       if (response.button !== null) {
         response.rt = performance.now() - start_time;
         if (trial.response_ends_trial) {
@@ -120,6 +107,8 @@ jsPsych.plugins['html-mouse-response'] = (function () {
         stimulus: trial.stimulus,
         button_press: response.button,
       };
+
+      document.removeEventListner('mousedown', mouseResponse);
 
       // clear the display
       display_element.innerHTML = '';
