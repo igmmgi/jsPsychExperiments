@@ -33,31 +33,40 @@ jsPsych.plugins['check-screen-resolution'] = (function () {
   plugin.trial = function (display_element, trial) {
     // MINIMUM SIZE
 
-    console.log('here');
-    document.body.style.zoom = '100%';
-
     var pixel_ratio = window.devicePixelRatio;
     var screen_width = window.screen.width * pixel_ratio;
     var screen_height = window.screen.height * pixel_ratio;
 
     if (screen_width < trial.width || screen_height < trial.height) {
-      var msg =
-        '<p>Your screen resolution too small to complete this experiment. ' +
-        'You will not be able to complete this experiment.</p>' +
-        '<p>The minimum required resolution is ' +
-        trial.width +
-        ' x ' +
-        trial.height +
-        ' px.</p>' +
-        '<p>Your calculated screen resolution is ' +
-        screen_width +
-        ' x ' +
-        screen_height +
-        ' px.</p>';
-      display_element.innerHTML = msg;
-    } else {
-      end_trial();
+      var interval = setInterval(function () {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        var pixel_ratio = window.devicePixelRatio;
+        if (w < trial.width || h < trial.height) {
+          var msg =
+            `<h3>Your screen resolution too small to complete this experiment. Try and  
+            adjust zoom level to 100%!<br><br>
+            The minimum width is ` +
+            trial.width +
+            `px. Your current width is ` +
+            w +
+            `px.<br> The minimum height is ` +
+            trial.height +
+            `px. Your current height is ` +
+            h +
+            `px.<br> Your current zoom level is ` +
+            Math.round(pixel_ratio * 100) +
+            ' %</p>' +
+            '<br><br>If your browser window is already at 100%, you will not be able to complete this experiment.</p>';
+          display_element.innerHTML = msg;
+        } else {
+          clearInterval(interval);
+          end_trial();
+        }
+      }, 100);
+      return; // prevents checking other exclusions while this is being fixed
     }
+    end_trial();
 
     // function to end trial
     function end_trial() {

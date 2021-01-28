@@ -21,7 +21,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = 'rgba(200, 200, 200, 1)';
-const canvas_size = [1280, 960];
+const canvas_size = [1280, 720];
 const canvas_border = '5px solid black';
 
 const check_screen = {

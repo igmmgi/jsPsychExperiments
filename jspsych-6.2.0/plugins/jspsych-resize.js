@@ -131,7 +131,7 @@ jsPsych.plugins['resize'] = (function () {
     document.addEventListener('mousemove', resizeevent);
 
     // scales the stimulus
-    var scale_factor;
+    var scale_factor_width, scale_factor_height;
     var final_height_px, final_width_px;
     var pixel_ratio, screen_width_px, screen_height_px, screen_size_inches;
     function scale() {
@@ -144,7 +144,6 @@ jsPsych.plugins['resize'] = (function () {
 
       var pixels_unit_screen_width = final_width_px / trial.item_width;
       var pixels_unit_screen_height = final_height_px / trial.item_height;
-
       var screen_width_inches = ((screen_width_px / pixels_unit_screen_width) * 1) / pixel_ratio;
       var screen_height_inches = ((screen_height_px / pixels_unit_screen_height) * 1) / pixel_ratio;
 
