@@ -10,7 +10,7 @@
 
 jsPsych.plugins['check-screen-resolution'] = (function () {
   var plugin = {};
-
+	console.log("anythng")
   plugin.info = {
     name: 'check-screen-resolution',
     description: 'Check screen resolution',
@@ -33,48 +33,60 @@ jsPsych.plugins['check-screen-resolution'] = (function () {
   plugin.trial = function (display_element, trial) {
     // MINIMUM SIZE
 
-    var pixel_ratio = window.devicePixelRatio;
-    var screen_width = window.screen.width * pixel_ratio;
-    var screen_height = window.screen.height * pixel_ratio;
+	  // window.devicePixelRatio on safari?
+	var isSafari = navigator.vendor == "Apple Computer, Inc.";
+    	var zoom_level = window.devicePixelRatio;
+	var screen_width = window.screen.width * zoom_level;
+	var screen_height = window.screen.height * zoom_level;
+	var current_width = window.innerWidth;
+        var current_height = window.innerHeight;
+	var msg, zoom_msg;
 
-    if (screen_width < trial.width || screen_height < trial.height) {
-      var interval = setInterval(function () {
-        var w = window.innerWidth;
-        var h = window.innerHeight;
-        var pixel_ratio = window.devicePixelRatio;
-        if (w < trial.width || h < trial.height) {
-          var msg =
+	  var check_size = window.setInterval(function(){
+		  if (current_width < trial.width || current_height < trial.height) {
+
+	current_width = window.innerWidth;
+        current_height = window.innerHeight;
+    	zoom_level = window.devicePixelRatio;
+			  if (isSafari) {
+				  zoom_msg =  '';
+			  } else {
+				  zoom_msg =  'Your current zoom level is ' + Math.round(zoom_level * 100) + ' %'
+			  }
+          msg =
             `<h3>Your screen resolution too small to complete this experiment. Try and  
             adjust zoom level to 100%!<br><br>
             The minimum width is ` +
-            trial.width +
-            `px. Your current width is ` +
-            w +
-            `px.<br> The minimum height is ` +
+            trial.width + 
+            'px. Your current width is ' +
+            current_width +
+            'px.<br>' +
+	    'The minimum height is ' +
             trial.height +
-            `px. Your current height is ` +
-            h +
-            `px.<br> Your current zoom level is ` +
-            Math.round(pixel_ratio * 100) +
-            ' %</p>' +
-            '<br><br>If your browser window is already at 100%, you will not be able to complete this experiment.</p>';
+            'px. Your current height is ' +
+            current_height + 'px.<br>' + zoom_msg +
+            '<br><br>If your browser window is already at 100%, you will not be able to complete this experiment.</h3>';
           display_element.innerHTML = msg;
         } else {
-          clearInterval(interval);
+          clearInterval(check_size);
           end_trial();
         }
-      }, 100);
-      return; // prevents checking other exclusions while this is being fixed
-    }
-    end_trial();
+}, 100);
 
     // function to end trial
     function end_trial() {
+      var trial_data = {
+	      native_screen_width: screen_width,
+	      native_screen_height: screen_height,
+	      screen_width: current_width,
+	      screen_height: current_height,
+	      isSafari: isSafari,
+	      zoom_level: zoom_level,
+      }
       // clear the screen
       display_element.innerHTML = '';
-
       // finishes trial
-      jsPsych.finishTrial();
+      jsPsych.finishTrial(trial_data);
     }
   };
 

@@ -407,7 +407,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(mouse_reminder);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
@@ -445,7 +445,7 @@ function genExpSeq() {
   exp.push(alphaNum);
   exp.push(debrief_de);
   exp.push(fullscreen_off);
-
+console.log("at home")
   return exp;
 }
 const EXP = genExpSeq();

@@ -136,6 +136,7 @@ jsPsych.plugins['resize'] = (function () {
     var pixel_ratio, screen_width_px, screen_height_px, screen_size_inches;
     function scale() {
       pixel_ratio = window.devicePixelRatio;
+console.log(pixel_ratio)
       screen_width_px = window.screen.width * pixel_ratio;
       screen_height_px = window.screen.height * pixel_ratio;
 
