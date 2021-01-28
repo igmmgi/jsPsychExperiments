@@ -65,7 +65,7 @@ jsPsych.plugins['resize'] = (function () {
       var start_div_height = trial.starting_size;
       var start_div_width = Math.round(trial.starting_size * aspect_ratio);
     }
-
+      
     // create html for display
     var html =
       '<div id="jspsych-resize-div" style="border: 2px solid steelblue; height: ' +
@@ -80,7 +80,7 @@ jsPsych.plugins['resize'] = (function () {
       html += trial.prompt;
     }
     html += '<a class="jspsych-btn" id="jspsych-resize-btn">' + trial.button_label + '</a>';
-
+      
     // render
     display_element.innerHTML = html;
 
@@ -136,7 +136,6 @@ jsPsych.plugins['resize'] = (function () {
     var pixel_ratio, screen_width_px, screen_height_px, screen_size_inches;
     function scale() {
       pixel_ratio = window.devicePixelRatio;
-console.log(pixel_ratio)
       screen_width_px = window.screen.width * pixel_ratio;
       screen_height_px = window.screen.height * pixel_ratio;
 
@@ -154,11 +153,9 @@ console.log(pixel_ratio)
 
       scale_factor = pixels_unit_screen_width / (trial.pixels_per_unit * 1.05);
 
-      // scale_factor = screen_width_px / screen_width_inches / pixels_unit_screen_width;
-
       document.getElementById('jspsych-content').style.transform = 'scale(' + scale_factor + ')';
     }
-
+      
     // function to end trial
     function end_trial() {
       // clear document event listeners
@@ -167,7 +164,7 @@ console.log(pixel_ratio)
 
       // clear the screen
       display_element.innerHTML = '';
-
+        
       // finishes trial
       var trial_data = {
         final_height_px: final_height_px,
