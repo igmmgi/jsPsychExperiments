@@ -151,7 +151,10 @@ jsPsych.plugins['resize'] = (function () {
         Math.sqrt(screen_width_inches * screen_width_inches + screen_height_inches * screen_height_inches),
       );
 
-      scale_factor = pixels_unit_screen_width / trial.pixels_per_unit;
+      scale_factor = pixels_unit_screen_width / (trial.pixels_per_unit * 1.05);
+
+      // scale_factor = screen_width_px / screen_width_inches / pixels_unit_screen_width;
+
       document.getElementById('jspsych-content').style.transform = 'scale(' + scale_factor + ')';
     }
 
