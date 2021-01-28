@@ -24,6 +24,13 @@ const canvas_colour = 'rgba(200, 200, 200, 1)';
 const canvas_size = [1280, 960];
 const canvas_border = '5px solid black';
 
+const check_screen = {
+  type: 'check-screen-resolution',
+  width: canvas_size[0],
+  height: canvas_size[1],
+  timing_post_trial: 0,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
@@ -399,6 +406,7 @@ function genExpSeq() {
 
   let exp = [];
   exp.push(fullscreen_on);
+  exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
   exp.push(vpInfoForm_de);
@@ -446,8 +454,4 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
-  exclusions: {
-    min_width: canvas_size[0],
-    min_height: canvas_size[1],
-  },
 });

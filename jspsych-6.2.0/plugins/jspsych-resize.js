@@ -133,13 +133,26 @@ jsPsych.plugins['resize'] = (function () {
     // scales the stimulus
     var scale_factor;
     var final_height_px, final_width_px;
+    var pixel_ratio, screen_width_px, screen_height_px, screen_size_inches;
     function scale() {
+      pixel_ratio = window.devicePixelRatio;
+      screen_width_px = window.screen.width * pixel_ratio;
+      screen_height_px = window.screen.height * pixel_ratio;
+
       final_width_px = scale_div.offsetWidth;
-      //final_height_px = scale_div.offsetHeight;
+      final_height_px = scale_div.offsetHeight;
 
-      var pixels_unit_screen = final_width_px / trial.item_width;
+      var pixels_unit_screen_width = final_width_px / trial.item_width;
+      var pixels_unit_screen_height = final_height_px / trial.item_height;
 
-      scale_factor = pixels_unit_screen / trial.pixels_per_unit;
+      var screen_width_inches = ((screen_width_px / pixels_unit_screen_width) * 1) / pixel_ratio;
+      var screen_height_inches = ((screen_height_px / pixels_unit_screen_height) * 1) / pixel_ratio;
+
+      screen_size_inches = Math.round(
+        Math.sqrt(screen_width_inches * screen_width_inches + screen_height_inches * screen_height_inches),
+      );
+
+      scale_factor = pixels_unit_screen_width / trial.pixels_per_unit;
       document.getElementById('jspsych-content').style.transform = 'scale(' + scale_factor + ')';
     }
 
@@ -153,14 +166,16 @@ jsPsych.plugins['resize'] = (function () {
       display_element.innerHTML = '';
 
       // finishes trial
-
       var trial_data = {
         final_height_px: final_height_px,
         final_width_px: final_width_px,
         scale_factor: scale_factor,
+        screen_width_px: screen_width_px,
+        screen_height_px: screen_height_px,
+        pixel_ratio: pixel_ratio,
+        screen_size_inches: screen_size_inches,
       };
 
-      jsPsych.data.addProperties({ scale_factor: scale_factor });
       jsPsych.finishTrial(trial_data);
     }
   };

@@ -8,48 +8,52 @@
  *
  **/
 
-jsPsych.plugins['checksize'] = (function () {
+jsPsych.plugins['check-screen-resolution'] = (function () {
   var plugin = {};
 
   plugin.info = {
-    name: 'checksize',
-    description: '',
+    name: 'check-screen-resolution',
+    description: 'Check screen resolution',
     parameters: {
-      size: {
+      width: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'Item width',
-        default: 1,
-        description: 'The width of the item to be measured.',
+        pretty_name: 'Minimum screen width',
+        default: null,
+        description: 'The minimum screen resolution (width).',
+      },
+      height: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Minimum screen height',
+        default: null,
+        description: 'The minimum screen resolution (height).',
       },
     },
   };
 
   plugin.trial = function (display_element, trial) {
-    var mw = trial.size[0];
-    var mh = trial.size[1];
-
     // MINIMUM SIZE
+
+    console.log('here');
+    document.body.style.zoom = '100%';
+
     var pixel_ratio = window.devicePixelRatio;
-    console.log('Pixel Ratio', pixel_ratio);
     var screen_width = window.screen.width * pixel_ratio;
     var screen_height = window.screen.height * pixel_ratio;
-    console.log(screen_width);
-    console.log(screen_height);
 
-    if (screen_width < mw || screen_height < mh) {
+    if (screen_width < trial.width || screen_height < trial.height) {
       var msg =
         '<p>Your screen resolution too small to complete this experiment. ' +
         'You will not be able to complete this experiment.</p>' +
-        '<p>The minimum width is ' +
-        mw +
-        'px. Your current width is ' +
+        '<p>The minimum required resolution is ' +
+        trial.width +
+        ' x ' +
+        trial.height +
+        ' px.</p>' +
+        '<p>Your calculated screen resolution is ' +
         screen_width +
-        'px.</p>' +
-        '<p>The minimum height is ' +
-        mh +
-        'px. Your current height is ' +
+        ' x ' +
         screen_height +
-        'px.</p>';
+        ' px.</p>';
       display_element.innerHTML = msg;
     } else {
       end_trial();
@@ -57,18 +61,11 @@ jsPsych.plugins['checksize'] = (function () {
 
     // function to end trial
     function end_trial() {
-      // gather the data to store for the trial
-      let trial_data = {
-        screen_width: screen_width,
-        screen_height: screen_height,
-        pixel_ratio: pixel_ratio,
-      };
-
       // clear the screen
       display_element.innerHTML = '';
 
       // finishes trial
-      jsPsych.finishTrial(trial_data);
+      jsPsych.finishTrial();
     }
   };
 
