@@ -29,6 +29,9 @@ const check_screen = {
   width: canvas_size[0],
   height: canvas_size[1],
   timing_post_trial: 0,
+  on_finish: function () {
+    reload_if_not_fullscreen();
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -387,13 +390,22 @@ const save_data = {
   timing_post_trial: 1000,
 };
 
+const save_interaction_data = {
+  type: 'call-function',
+  func: function () {
+    let data_filename = dirName + 'data/' + expName + '_interaction_data_' + vpNum;
+    saveInteractionData('/Common/write_data.php', data_filename);
+  },
+  timing_post_trial: 200,
+};
+
 const save_code = {
   type: 'call-function',
   func: function () {
     let code_filename = dirName + 'code/' + expName;
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-  timing_post_trial: 1000,
+  timing_post_trial: 200,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -407,7 +419,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(mouse_reminder);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
@@ -439,17 +451,21 @@ function genExpSeq() {
 
   // save data
   exp.push(save_data);
+  exp.push(save_interaction_data);
   exp.push(save_code);
 
   // debrief
   exp.push(alphaNum);
   exp.push(debrief_de);
   exp.push(fullscreen_off);
-console.log("at home")
+
   return exp;
 }
 const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
+  on_interaction_data_update: function (data) {
+    update_user_interaction_data(data);
+  },
 });

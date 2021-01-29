@@ -65,7 +65,7 @@ jsPsych.plugins['resize'] = (function () {
       var start_div_height = trial.starting_size;
       var start_div_width = Math.round(trial.starting_size * aspect_ratio);
     }
-      
+
     // create html for display
     var html =
       '<div id="jspsych-resize-div" style="border: 2px solid steelblue; height: ' +
@@ -80,7 +80,7 @@ jsPsych.plugins['resize'] = (function () {
       html += trial.prompt;
     }
     html += '<a class="jspsych-btn" id="jspsych-resize-btn">' + trial.button_label + '</a>';
-      
+
     // render
     display_element.innerHTML = html;
 
@@ -131,7 +131,7 @@ jsPsych.plugins['resize'] = (function () {
     document.addEventListener('mousemove', resizeevent);
 
     // scales the stimulus
-    var scale_factor_width, scale_factor_height;
+    var scale_factor;
     var final_height_px, final_width_px;
     var pixel_ratio, screen_width_px, screen_height_px, screen_size_inches;
     function scale() {
@@ -151,11 +151,11 @@ jsPsych.plugins['resize'] = (function () {
         Math.sqrt(screen_width_inches * screen_width_inches + screen_height_inches * screen_height_inches),
       );
 
-      scale_factor = pixels_unit_screen_width / (trial.pixels_per_unit * 1.05);
+      scale_factor = pixels_unit_screen_width / (trial.pixels_per_unit * 1.05); // better to make slightly smaller than to cut off some content
 
       document.getElementById('jspsych-content').style.transform = 'scale(' + scale_factor + ')';
     }
-      
+
     // function to end trial
     function end_trial() {
       // clear document event listeners
@@ -164,15 +164,10 @@ jsPsych.plugins['resize'] = (function () {
 
       // clear the screen
       display_element.innerHTML = '';
-        
+
       // finishes trial
       var trial_data = {
-        final_height_px: final_height_px,
-        final_width_px: final_width_px,
         scale_factor: scale_factor,
-        screen_width_px: screen_width_px,
-        screen_height_px: screen_height_px,
-        pixel_ratio: pixel_ratio,
         screen_size_inches: screen_size_inches,
       };
 

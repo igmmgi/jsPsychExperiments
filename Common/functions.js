@@ -52,6 +52,26 @@ function getComputerInfo() {
   jsPsych.data.addProperties({ pc_info: pc_info });
 }
 
+const user_interaction_data = {
+  event: null,
+  trial: null,
+  time: null,
+};
+
+function update_user_interaction_data(data) {
+  'use strict';
+  user_interaction_data.event = data.event;
+  user_interaction_data.trial = data.trial;
+  user_interaction_data.time = data.time;
+}
+
+function reload_if_not_fullscreen() {
+  'use strict';
+  if (user_interaction_data.event === 'fullscreenexit') {
+    window.location.reload();
+  }
+}
+
 function getVersionNumber(num, numberOfVersions) {
   return (num % numberOfVersions) + 1;
 }
@@ -284,6 +304,14 @@ function saveData(
   } else if (filetype === 'json') {
     dat = jsPsych.data.get().filter(rows).ignore(colsToIgnore).json(true); // true to avoid single line
   }
+  let xhr = new XMLHttpRequest();
+  xhr.open('POST', url);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
+}
+
+function saveInteractionData(url, filename) {
+  let dat = jsPsych.data.getInteractionData().csv();
   let xhr = new XMLHttpRequest();
   xhr.open('POST', url);
   xhr.setRequestHeader('Content-Type', 'application/json');

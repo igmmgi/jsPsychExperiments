@@ -734,7 +734,6 @@ const alphaNum = {
 const save_sentencestroop = {
   type: 'call-function',
   func: function () {
-    console.log('here');
     let data_filename = dirName + 'data/' + expName + '_sentencestroop_' + vpNum;
     saveData('/Common/write_data.php', data_filename, { stim: 'SentenceStroop' });
   },
