@@ -76,6 +76,7 @@ jsPsych.plugins['check-screen-resolution'] = (function () {
       // clear the screen
       display_element.innerHTML = '';
       // finishes trial
+      jsPsych.data.addProperties(trial_data);
       jsPsych.finishTrial(trial_data);
     }
   };

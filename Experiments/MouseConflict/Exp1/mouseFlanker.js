@@ -40,6 +40,7 @@ const check_screen = {
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
+const pcInfo = getComputerInfo();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
@@ -369,7 +370,7 @@ const alphaNum = {
         Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an:<br><br>hiwipibio@gmail.com<br> Code: ` +
+        an:<br><br>samuel.sonntag@gmail.com<br> Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 32,

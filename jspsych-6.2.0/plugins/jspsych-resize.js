@@ -167,10 +167,13 @@ jsPsych.plugins['resize'] = (function () {
 
       // finishes trial
       var trial_data = {
+        final_height_px: final_height_px,
+        final_width_px: final_width_px,
         scale_factor: scale_factor,
         screen_size_inches: screen_size_inches,
       };
 
+      jsPsych.data.addProperties(trial_data);
       jsPsych.finishTrial(trial_data);
     }
   };
