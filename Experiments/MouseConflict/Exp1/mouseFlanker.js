@@ -236,7 +236,7 @@ const trial_stimulus = {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  let corrCode = dat.resp_loc == dat.end_loc ? 0 : 1;
+  let corrCode = dat.resp_loc === dat.end_loc ? 0 : 1;
   jsPsych.data.addDataToLastTrial({
     date: Date(),
     corrCode: corrCode,
@@ -335,7 +335,6 @@ const block_feedback = {
     trial.stimulus = blockFeedbackTxt({ stim_type: 'mouse_flanker' });
   },
   choices: ['Weiter'],
-  post_trial_gap: prms.waitDur,
 };
 
 const trial_timeline_large = {
@@ -426,14 +425,14 @@ function genExpSeq() {
   exp.push(task_instructions2);
 
   let order;
-  if (nVersion % 2 == 1) {
+  if (nVersion % 2 === 1) {
     order = repeatArray(['S', 'L'], prms.nBlks / 2);
   } else {
     order = repeatArray(['L', 'S'], prms.nBlks / 2);
   }
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    if (blk == 2) {
+    if (blk === 2) {
       exp.push(task_instructions3);
     }
     let blk_timeline;
@@ -444,7 +443,7 @@ function genExpSeq() {
     }
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: (blk === 0) | (blk === 1) ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
+      size: (blk === 0) || (blk === 1) ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
