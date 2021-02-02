@@ -187,7 +187,6 @@ function codeTrial() {
   rt = dat.order === 'RI' ? rt : rt - offset;
 
   let comp = dat.dirResp === dat.loc ? 'comp' : 'incomp';
-
   if (dat.key_press === corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 1; // correct
   } else if (dat.key_press !== corrKeyNum && rt > prms.tooFast && rt < prms.tooSlow) {
@@ -293,20 +292,106 @@ const simon_stimulus = {
 };
 
 const trial_timeline = {
-    timeline: [fixation_cross, simon_stimulus, trial_feedback, iti],
-    timeline_variables: [
-        
-        { l1: 'black', m1: cc, r1: cc,      l2: cc, m2: prms.respCols[0], r2: cc, order: 'IR', loc: 'left',  dirResp: prms.respDir[0], corrResp: prms.respKeys[0], },
-        { l1: cc,      m1: cc, r1: 'black', l2: cc, m2: prms.respCols[0], r2: cc, order: 'IR', loc: 'right', dirResp: prms.respDir[0], corrResp: prms.respKeys[0], },
-        { l1: 'black', m1: cc, r1: cc,      l2: cc, m2: prms.respCols[1], r2: cc, order: 'IR', loc: 'left',  dirResp: prms.respDir[1], corrResp: prms.respKeys[1], },
-        { l1: cc,      m1: cc, r1: 'black', l2: cc, m2: prms.respCols[1], r2: cc, order: 'IR', loc: 'right', dirResp: prms.respDir[1], corrResp: prms.respKeys[1], },
+  timeline: [fixation_cross, simon_stimulus, trial_feedback, iti],
+  timeline_variables: [
+    {
+      l1: 'black',
+      m1: cc,
+      r1: cc,
+      l2: cc,
+      m2: prms.respCols[0],
+      r2: cc,
+      order: 'IR',
+      loc: 'left',
+      dirResp: prms.respDir[0],
+      corrResp: prms.respKeys[0],
+    },
+    {
+      l1: cc,
+      m1: cc,
+      r1: 'black',
+      l2: cc,
+      m2: prms.respCols[0],
+      r2: cc,
+      order: 'IR',
+      loc: 'right',
+      dirResp: prms.respDir[0],
+      corrResp: prms.respKeys[0],
+    },
+    {
+      l1: 'black',
+      m1: cc,
+      r1: cc,
+      l2: cc,
+      m2: prms.respCols[1],
+      r2: cc,
+      order: 'IR',
+      loc: 'left',
+      dirResp: prms.respDir[1],
+      corrResp: prms.respKeys[1],
+    },
+    {
+      l1: cc,
+      m1: cc,
+      r1: 'black',
+      l2: cc,
+      m2: prms.respCols[1],
+      r2: cc,
+      order: 'IR',
+      loc: 'right',
+      dirResp: prms.respDir[1],
+      corrResp: prms.respKeys[1],
+    },
 
-        { l1: cc, m1: prms.respCols[0], r1: cc, l2: 'black', m2: cc, r2: cc,      order: 'RI', loc: 'left',  dirResp: prms.respDir[0], corrResp: prms.respKeys[0], },
-        { l1: cc, m1: prms.respCols[0], r1: cc, l2: cc,      m2: cc, r2: 'black', order: 'RI', loc: 'right', dirResp: prms.respDir[0], corrResp: prms.respKeys[0], }, 
-        { l1: cc, m1: prms.respCols[1], r1: cc, l2: 'black', m2: cc, r2: cc,      order: 'RI', loc: 'left',  dirResp: prms.respDir[1], corrResp: prms.respKeys[1], }, 
-        { l1: cc, m1: prms.respCols[1], r1: cc, l2: cc,      m2: cc, r2: 'black', order: 'RI', loc: 'right', dirResp: prms.respDir[1], corrResp: prms.respKeys[1], },
-
-    ],
+    {
+      l1: cc,
+      m1: prms.respCols[0],
+      r1: cc,
+      l2: 'black',
+      m2: cc,
+      r2: cc,
+      order: 'RI',
+      loc: 'left',
+      dirResp: prms.respDir[0],
+      corrResp: prms.respKeys[0],
+    },
+    {
+      l1: cc,
+      m1: prms.respCols[0],
+      r1: cc,
+      l2: cc,
+      m2: cc,
+      r2: 'black',
+      order: 'RI',
+      loc: 'right',
+      dirResp: prms.respDir[0],
+      corrResp: prms.respKeys[0],
+    },
+    {
+      l1: cc,
+      m1: prms.respCols[1],
+      r1: cc,
+      l2: 'black',
+      m2: cc,
+      r2: cc,
+      order: 'RI',
+      loc: 'left',
+      dirResp: prms.respDir[1],
+      corrResp: prms.respKeys[1],
+    },
+    {
+      l1: cc,
+      m1: prms.respCols[1],
+      r1: cc,
+      l2: cc,
+      m2: cc,
+      r2: 'black',
+      order: 'RI',
+      loc: 'right',
+      dirResp: prms.respDir[1],
+      corrResp: prms.respKeys[1],
+    },
+  ],
 };
 
 const randomString = generateRandomString(16);

@@ -363,17 +363,17 @@ function recordScreenSize() {
 }
 
 function loadImages(imagefiles) {
-  loadcount = 0;
-  loadtotal = imagefiles.length;
-  preloaded = false;
+  let loadcount = 0;
+  let loadtotal = imagefiles.length;
+  let preloaded = false;
 
   // Load the images
   let loadedimages = [];
   for (let i = 0; i < imagefiles.length; i++) {
-    var image = new Image();
+    let image = new Image();
     image.onload = function () {
       loadcount++;
-      if (loadcount == loadtotal) {
+      if (loadcount === loadtotal) {
         preloaded = true;
       }
     };
@@ -409,7 +409,7 @@ function roundArray(array) {
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffle(array) {
-  var currentIndex = array.length,
+  let currentIndex = array.length,
     temporaryValue,
     randomIndex;
 
@@ -428,12 +428,11 @@ function shuffle(array) {
 }
 
 function mean(array) {
-  var total = 0;
-  for (var i = 0; i < array.length; i++) {
+  let total = 0;
+  for (let i = 0; i < array.length; i++) {
     total += array[i];
   }
-  var avg = total / array.length;
-  return avg;
+  return total / array.length;
 }
 
 // Deep copy: https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
@@ -470,7 +469,7 @@ function generate_formatted_html({
   underline = false,
   position = 'relative',
 } = {}) {
-  var div =
+  let div =
     '<p style="width:' +
     width +
     '; position:' +
@@ -487,7 +486,7 @@ function generate_formatted_html({
     xypos[0] +
     'px,' +
     xypos[1] +
-    'px)"; >' +
+    'px)" >' +
     text +
     '</p>';
   if (bold) {

@@ -116,18 +116,18 @@ const task_instructions1 = {
   type: 'html-button-response',
   stimulus:
     generate_formatted_html({
-      text: `Aufgabe: <br><br>In jedem Durchgang müssen Sie zu Beginn in das Quadrat klicken welches mittig unten am Bildschirm platziert ist. 
-        Daraufhin erscheint ein Buchstabe auf den Sie wie folgt reagieren sollen:`,
+      text: `Aufgabe: <br><br>In jedem Durchgang müssen Sie zu Beginn in das Quadrat klicken, welches unten mittig am Bildschirm platziert ist. 
+        Daraufhin erscheint ein Buchstabe, der auf jeder Seite von zwei anderen Buchstaben umgeben ist. Sie sollen nur auf den zentralen Buchstaben wie folgt reagieren:`,
       align: 'left',
       fontsize: 26,
       lineheight: 1.5,
     }) +
     respText +
     generate_formatted_html({
-      text: `Zeitgleich erscheinen 2 neue Quadrate um zu Antworten. Ihre Aufgabe ist es, je nach zentralen Buchstabe, 
-        in das korrekte Quadrat mit der linken Maustaste zu klicken. Anschließend bekommen Sie Feedback darüber, 
+      text: `Zeitgleich erscheinen 2 neue Quadrate, die Sie für ihre Antwort verwenden sollen. Ihre Aufgabe ist es, in Abhängigkeit des zentalen Buchstabens,  
+        mit der linken Maustaste is das korrekte Quadrat zu klicken. Anschließend bekommen Sie Feedback darüber, 
         ob Sie richtig geantwortet haben. Durch einen Klick in das Quadrat am unteren Bildschirmrand 
-        starten Sie den nächsten Durchlauf.<br><br>Bitte reagieren Sie so schnell und so genau wie möglich mit der Maus auf den Ziel-Buchstaben sobald dieser erscheint!<br><br>
+        starten Sie den nächsten Durchlauf.<br><br>Bitte reagieren Sie so schnell und so genau wie möglich mit der Maus auf den Ziel-Buchstaben, sobald dieser erscheint!<br><br>
         klicken Sie die linke Maustaste, um fortzufahren!`,
       align: 'left',
       fontsize: 26,
@@ -151,7 +151,7 @@ const task_instructions2 = {
     }) +
     respText +
     generate_formatted_html({
-      text: `klicken Sie die linke Maustaste, um fortzufahren!`,
+      text: `Klicken Sie die linke Maustaste, um fortzufahren!`,
       align: 'left',
       fontsize: 26,
       lineheight: 1.5,
@@ -320,7 +320,7 @@ function blockFeedbackTxt(filter_options) {
     '<H1>Error Rate: ' +
     Math.round((nError / nTotal) * 100) +
     ' %</H1>' +
-    '<H2>klicken Sie die linke Maustaste, um fortzufahren!</H2>';
+    '<H2>Klicken Sie die linke Maustaste, um fortzufahren!</H2>';
   prms.cBlk += 1;
   prms.cTrl = 0;
   return blockFbTxt;
@@ -443,7 +443,7 @@ function genExpSeq() {
     }
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: (blk === 0) || (blk === 1) ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
+      size: blk === 0 || blk === 1 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
