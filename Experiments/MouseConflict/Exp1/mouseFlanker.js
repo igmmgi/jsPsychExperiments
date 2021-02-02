@@ -48,8 +48,8 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrlsP: 20, // number of trials in first block (practice)
-  nTrlsE: 60, // number of trials in subsequent blocks
-  nBlks: 12,
+  nTrlsE: 64, // number of trials in subsequent blocks
+  nBlks: 10,
   fixDur: 500, // fixation cross duration
   fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,

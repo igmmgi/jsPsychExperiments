@@ -209,6 +209,8 @@ jsPsych.plugins['mouse-response'] = (function () {
     let end_loc = null;
     let mpos;
     let nclicks = 0;
+    let x_click_pos = [];
+    let y_click_pos = [];
 
     // flags for drawing
     let trial_initiated = false;
@@ -247,6 +249,8 @@ jsPsych.plugins['mouse-response'] = (function () {
     function handleMouseDown(e) {
       nclicks++;
       mousePosition(e);
+      x_click_pos.push(mpos.x);
+      y_click_pos.push(mpos.y);
       if (!trial_initiated) {
         if (in_box(mpos.x, mpos.y, start_box)) {
           start_trial(mpos.x, mpos.y);
@@ -348,8 +352,18 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // test if x, y is inside the bounding box
     function in_box(x, y, box) {
-      return x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
+      return (
+        x >= box.x - trial.box_linewidth &&
+        x <= box.x + box.w + trial.box_linewidth * 2 &&
+        y >= box.y - trial.box_linewidth &&
+        y <= box.y + box.h + trial.box_linewidth * 2
+      );
     }
+
+    // // test if x, y is inside the bounding box
+    // function in_box(x, y, box) {
+    //   return x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
+    // }
 
     // function to start trial when it is time
     let start_trial = function (X, Y) {
@@ -381,7 +395,11 @@ jsPsych.plugins['mouse-response'] = (function () {
         y_coords: roundArray(y_coords),
         time: time,
         nclicks: nclicks,
+        x_click_pos: x_click_pos,
+        y_click_pos: y_click_pos,
       };
+
+      console.log(trial_data);
 
       // move on to the next trial
       display_element.innerHTML = '';

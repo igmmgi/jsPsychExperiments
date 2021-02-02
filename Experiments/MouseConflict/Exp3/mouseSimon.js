@@ -48,8 +48,8 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrlsP: 20, // number of trials in first block (practice)
-  nTrlsE: 60, // number of trials in subsequent blocks
-  nBlks: 12,
+  nTrlsE: 64, // number of trials in subsequent blocks
+  nBlks: 10,
   fixDur: 500, // fixation cross duration
   fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
@@ -124,8 +124,8 @@ const task_instructions1 = {
     }) +
     respText +
     generate_formatted_html({
-      text: `Zeitgleich erscheinen 2 neue Quadrate, ddie Sie für ihre Antwort verwenden sollen. Ihre Aufgabe ist es, in Abhängigkeit des 
-        Buchstabens, mit der linnken Maustaste is das korrekte Quadrat zu klicken. Anschließend erhalten Sie Feedback darüber, 
+      text: `Zeitgleich erscheinen 2 neue Quadrate, die Sie für ihre Antwort verwenden sollen. Ihre Aufgabe ist es, in Abhängigkeit des 
+        Buchstabens, mit der linken Maustaste in das korrekte Quadrat zu klicken. Anschließend erhalten Sie Feedback darüber, 
         ob Sie richtig geantwortet haben. Durch einen Klick in das Quadrat am unteren Bildschirmrand 
         starten Sie den nächsten Durchlauf.<br><br>
         Klicken Sie die linke Maustaste, um fortzufahren!`,

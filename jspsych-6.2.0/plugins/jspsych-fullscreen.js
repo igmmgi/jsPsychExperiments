@@ -82,7 +82,6 @@ jsPsych.plugins.fullscreen = (function () {
     }
 
     function endTrial() {
-      console.log('here');
       display_element.innerHTML = '';
 
       jsPsych.pluginAPI.setTimeout(function () {

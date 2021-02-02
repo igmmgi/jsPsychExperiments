@@ -334,14 +334,18 @@ function saveDataLocal(
 function generateRandomString(length) {
   let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let randomString = '';
-  for (let i = length; i > 0; --i) randomString += chars[Math.round(Math.random() * (chars.length - 1))];
+  for (let i = length; i > 0; --i) {
+    randomString += chars[Math.round(Math.random() * (chars.length - 1))];
+  }
   return randomString;
 }
 
 function generateRandomStringWithExpName(expName, length) {
   let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let randomString = '';
-  for (let i = length; i > 0; --i) randomString += chars[Math.round(Math.random() * (chars.length - 1))];
+  for (let i = length; i > 0; --i) {
+    randomString += chars[Math.round(Math.random() * (chars.length - 1))];
+  }
   return expName + '_' + randomString;
 }
 
@@ -398,7 +402,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Adapteed from: https://stackoverflow.com/questions/9671203/how-to-round-all-the-values-in-an-array-to-2-decimal-points
+// Adapted from: https://stackoverflow.com/questions/9671203/how-to-round-all-the-values-in-an-array-to-2-decimal-points
 function roundArray(array) {
   let len = array.length;
   while (len--) {
@@ -427,12 +431,15 @@ function shuffle(array) {
   return array;
 }
 
+// https://stackoverflow.com/questions/3895478/does-javascript-have-a-method-like-range-to-generate-a-range-within-the-supp
+function range(start, stop, step = 1) {
+  return Array(Math.ceil((stop - start) / step))
+    .fill(start)
+    .map((x, y) => x + y * step);
+}
+
 function mean(array) {
-  let total = 0;
-  for (let i = 0; i < array.length; i++) {
-    total += array[i];
-  }
-  return total / array.length;
+  return array.reduce((acc, cur) => acc + cur) / array.length;
 }
 
 // Deep copy: https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
@@ -455,7 +462,7 @@ const deepCopy = (inObject) => {
   return outObject;
 };
 
-// adapted from https://github.com/hauselin/lab_exp/blob/master/libraries/utils.js
+// Adapted from https://github.com/hauselin/lab_exp/blob/master/libraries/utils.js
 function generate_formatted_html({
   text,
   width = '900px',
