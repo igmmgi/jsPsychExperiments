@@ -395,7 +395,7 @@ const save_data = {
 const save_interaction_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_interaction_data_' + vpNum;
+    let data_filename = dirName + 'interaction/' + expName + '_interaction_data_' + vpNum;
     saveInteractionData('/Common/write_data.php', data_filename);
   },
   timing_post_trial: 200,

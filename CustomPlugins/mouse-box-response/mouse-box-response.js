@@ -399,8 +399,6 @@ jsPsych.plugins['mouse-response'] = (function () {
         y_click_pos: y_click_pos,
       };
 
-      console.log(trial_data);
-
       // move on to the next trial
       display_element.innerHTML = '';
       jsPsych.finishTrial(trial_data);
