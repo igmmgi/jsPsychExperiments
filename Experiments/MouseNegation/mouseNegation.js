@@ -4,8 +4,18 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = 'rgba(200, 200, 200, 1)';
-const canvas_size = [1280, 960];
+const canvas_size = [1280, 720];
 const canvas_border = '5px solid black';
+
+const check_screen = {
+  type: 'check-screen-resolution',
+  width: canvas_size[0],
+  height: canvas_size[1],
+  timing_post_trial: 0,
+  on_finish: function () {
+    reload_if_not_fullscreen();
+  },
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
@@ -13,6 +23,8 @@ const canvas_border = '5px solid black';
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
+const pcInfo = getComputerInfo();
+const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -235,13 +247,22 @@ const save_data = {
   timing_post_trial: 1000,
 };
 
+const save_interaction_data = {
+  type: 'call-function',
+  func: function () {
+    let data_filename = dirName + 'data/' + expName + '_interaction_data_' + vpNum;
+    saveInteractionData('/Common/write_data.php', data_filename);
+  },
+  timing_post_trial: 200,
+};
+
 const save_code = {
   type: 'call-function',
   func: function () {
     let code_filename = dirName + 'code/' + expName;
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-  timing_post_trial: 1000,
+  timing_post_trial: 200,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -253,10 +274,11 @@ function genExpSeq() {
   let exp = [];
 
   exp.push(fullscreen_on);
+  exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(mouse_reminder);
   exp.push(vpInfoForm_de);
+  exp.push(mouse_reminder);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -271,6 +293,7 @@ function genExpSeq() {
 
   // save data
   exp.push(save_data);
+  exp.push(save_interaction_data);
   exp.push(save_code);
 
   // debrief
@@ -284,8 +307,7 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
-  exclusions: {
-    min_width: canvas_size[0],
-    min_height: canvas_size[1],
+  on_interaction_data_update: function (data) {
+    update_user_interaction_data(data);
   },
 });
