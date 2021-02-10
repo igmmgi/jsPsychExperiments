@@ -65,13 +65,11 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrls: 100, // number of trials within a block
+  nTrls: 10, // number of trials within a block
   nBlks: 15, // number of blocks
-  fixDur: 500, // fixation cross duration
   fbDur: [150, 650], // feedback duration for correct and incorrect trials, respectively
   fbText: ['Correct', 'Error'], // feedback text
   waitDur: 1000,
-  iti: 500, // inter-trial-interval
   stimFont: '50px Arial',
   stimPos: 40,
   soaStep: 50,
@@ -83,13 +81,13 @@ const prms = {
   letters: ['A', 'E', 'G', 'I', 'K', 'M', 'R', 'U'],
   lettersVowel: ['A', 'E', 'I', 'U'],
   lettersConsonant: ['G', 'K', 'M', 'R'],
-  numberLocation: null,
-  letterLocation: null,
+  numberPos: null,
+  letterPos: null,
   contKey: ['space'],
   respKeysNames: ['A', 'S', 'K', 'L'],
   respKeysNamesNumber: null,
   respKeysNamesLetter: null,
-  respKeysNumbers: [
+  respKeysCodes: [
     jsPsych.pluginAPI.convertKeyCharacterToKeyCode('A'),
     jsPsych.pluginAPI.convertKeyCharacterToKeyCode('S'),
     jsPsych.pluginAPI.convertKeyCharacterToKeyCode('K'),
@@ -104,9 +102,11 @@ const vts_data = {
   nNumber: 0,
   previousTask: 'na',
   soa: 0,
+  delay: null,
 };
 
-const nVersion = getVersionNumber(nFiles, 8);
+// const nVersion = getVersionNumber(nFiles, 8);
+const nVersion = 3;
 jsPsych.data.addProperties({ version: nVersion });
 let handMapping, handMappingInstructions;
 let fingerMapping;
@@ -126,16 +126,16 @@ if ([1, 2, 3, 4].includes(nVersion)) {
 
 let respText = generate_formatted_html({
   text: `Left hand = ${handMappingInstructions[0]} &ensp;&ensp;&ensp; Right hand = ${handMappingInstructions[1]}<br><br>
-    ${prms.respKeysNames[0]} = ${fingerMapping[0]} / ${prms.respKeysNames[1]} = ${fingerMapping[1]} &ensp;&ensp;&ensp; 
+    ${prms.respKeysNames[0]} = ${fingerMapping[0]} / ${prms.respKeysNames[1]} = ${fingerMapping[1]} &ensp;&ensp;&ensp;
     ${prms.respKeysNames[2]} = ${fingerMapping[2]} / ${prms.respKeysNames[3]} = ${fingerMapping[3]}`,
 });
 
 if ([1, 2, 5, 6].includes(nVersion)) {
-  prms.numberLocation = 'top';
-  prms.letterLocation = 'bottom';
+  prms.numberPos = prms.stimPos;
+  prms.letterPos = -prms.stimPos;
 } else {
-  prms.numberLocation = 'bottom';
-  prms.letterLocation = 'top';
+  prms.numberPos = -prms.stimPos;
+  prms.letterPos = prms.stimPos;
 }
 // console.log(prms);
 
@@ -163,7 +163,7 @@ function drawStimulus(args) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  // draw square
+  // draw surrounding rectangle
   ctx.fillStyle = 'black';
   ctx.lineWidth = 5;
   ctx.beginPath();
@@ -172,20 +172,12 @@ function drawStimulus(args) {
 
   // letter task
   if (args.draw_letter === 1) {
-    if (prms.letterLocation === 'top') {
-      ctx.fillText(args.letter, 0, prms.stimPos);
-    } else {
-      ctx.fillText(args.letter, 0, -prms.stimPos);
-    }
+    ctx.fillText(args.letter, 0, prms.letterPos);
   }
 
   // number task
   if (args.draw_number === 1) {
-    if (prms.numberLocation === 'top') {
-      ctx.fillText(args.number, 0, prms.stimPos);
-    } else {
-      ctx.fillText(args.number, 0, -prms.stimPos);
-    }
+    ctx.fillText(args.number, 0, prms.numberPos);
   }
 }
 
@@ -195,8 +187,7 @@ function codeTrial() {
   let dat = jsPsych.data.get().last(1).values()[0];
 
   // Which hand/task did they respond with/to?
-  let respHand =
-    (prms.respKeysNumbers[0] === dat.key_press) | (prms.respKeysNumbers[1] === dat.key_press) ? 'left' : 'right';
+  let respHand = prms.respKeysCodes.slice(0, 2).includes(dat.key_press) ? 'left' : 'right';
   let respTask = respHand === 'left' ? handMapping[0] : handMapping[1];
 
   // Was it a repeat or repetition of task?
@@ -206,74 +197,38 @@ function codeTrial() {
   }
 
   // Was the response correct?
-  // TO DO: simplify following!
-  let error = 1;
+  let error = 1; // If correct, this is changed to 0
+  let offset = respHand === 'left' ? 0 : 2;
   if (respTask === 'letter') {
-    if (respHand === 'left') {
-      if (prms.lettersVowel.includes(dat.letter)) {
-        if (
-          (fingerMapping[0] === 'vowel' && dat.key_press === prms.respKeysNumbers[0]) |
-          (fingerMapping[1] === 'vowel' && dat.key_press === prms.respKeysNumbers[1])
-        ) {
-          error = 0;
-        }
-      } else if (prms.lettersConsonant.includes(dat.letter)) {
-        if (
-          (fingerMapping[0] === 'consonant' && dat.key_press === prms.respKeysNumbers[0]) |
-          (fingerMapping[1] === 'consonant' && dat.key_press === prms.respKeysNumbers[1])
-        ) {
-          error = 0;
-        }
+    if (prms.lettersVowel.includes(dat.letter)) {
+      if (
+        (fingerMapping[0 + offset] === 'vowel' && dat.key_press === prms.respKeysCodes[0 + offset]) |
+        (fingerMapping[1 + offset] === 'vowel' && dat.key_press === prms.respKeysCodes[1 + offset])
+      ) {
+        error = 0;
       }
-    } else if (respHand === 'right') {
-      if (prms.lettersVowel.includes(dat.letter)) {
-        if (
-          (fingerMapping[2] === 'vowel' && dat.key_press === prms.respKeysNumbers[2]) |
-          (fingerMapping[3] === 'vowel' && dat.key_press === prms.respKeysNumbers[3])
-        ) {
-          error = 0;
-        }
-      } else if (prms.lettersConsonant.includes(dat.letter)) {
-        if (
-          (fingerMapping[2] === 'consonant' && dat.key_press === prms.respKeysNumbers[2]) |
-          (fingerMapping[3] === 'consonant' && dat.key_press === prms.respKeysNumbers[3])
-        ) {
-          error = 0;
-        }
+    } else if (prms.lettersConsonant.includes(dat.letter)) {
+      if (
+        (fingerMapping[0 + offset] === 'consonant' && dat.key_press === prms.respKeysCodes[0 + offset]) |
+        (fingerMapping[1 + offset] === 'consonant' && dat.key_press === prms.respKeysCodes[1 + offset])
+      ) {
+        error = 0;
       }
     }
   } else if (respTask === 'number') {
-    if (respHand === 'left') {
-      if (prms.numbersOdd.includes(dat.number)) {
-        if (
-          (fingerMapping[0] === 'odd' && dat.key_press === prms.respKeysNumbers[0]) |
-          (fingerMapping[1] === 'odd' && dat.key_press === prms.respKeysNumbers[1])
-        ) {
-          error = 0;
-        }
-      } else if (prms.numbersEven.includes(dat.number)) {
-        if (
-          (fingerMapping[0] === 'even' && dat.key_press === prms.respKeysNumbers[0]) |
-          (fingerMapping[1] === 'even' && dat.key_press === prms.respKeysNumbers[1])
-        ) {
-          error = 0;
-        }
+    if (prms.numbersOdd.includes(dat.number)) {
+      if (
+        (fingerMapping[0 + offset] === 'odd' && dat.key_press === prms.respKeysCodes[0 + offset]) |
+        (fingerMapping[1 + offset] === 'odd' && dat.key_press === prms.respKeysCodes[1 + offset])
+      ) {
+        error = 0;
       }
-    } else if (respHand === 'right') {
-      if (prms.numbersOdd.includes(dat.number)) {
-        if (
-          (fingerMapping[2] === 'odd' && dat.key_press === prms.respKeysNumbers[2]) |
-          (fingerMapping[3] === 'odd' && dat.key_press === prms.respKeysNumbers[3])
-        ) {
-          error = 0;
-        }
-      } else if (prms.numbersEven.includes(dat.number)) {
-        if (
-          (fingerMapping[2] === 'even' && dat.key_press === prms.respKeysNumbers[2]) |
-          (fingerMapping[3] === 'even' && dat.key_press === prms.respKeysNumbers[3])
-        ) {
-          error = 0;
-        }
+    } else if (prms.numbersEven.includes(dat.number)) {
+      if (
+        (fingerMapping[0 + offset] === 'even' && dat.key_press === prms.respKeysCodes[0 + offset]) |
+        (fingerMapping[1 + offset] === 'even' && dat.key_press === prms.respKeysCodes[1 + offset])
+      ) {
+        error = 0;
       }
     }
   }
@@ -284,24 +239,29 @@ function codeTrial() {
   // console.log('Resp hand: ', respHand);
   // console.log('Resp task: ', respTask);
   // console.log('Transitiion: ', transition);
+  // console.log('delay: ', vts_data.delay);
+  // console.log('soa: ', vts_data.soa);
+  // console.log('Transitiion: ', transition);
   // console.log('RT: ', rt);
   // console.log('Error: ', error);
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
+    blockNum: vts_data.cBlk,
+    trialNum: vts_data.cTrl,
     respHand: respHand,
     respTask: respTask,
     transition: transition,
+    delay: vts_data.delay,
+    soa: vts_data.soa,
     rt: rt,
     error: error,
-    blockNum: vts_data.cBlk,
-    trialNum: vts_data.cTrl,
   });
 
   // Update vts_data for next trial
   vts_data.cTrl++;
-  vts_data.nNumber = respTask === 'number' ? vts_data.nNumber + 1 : vts_data.nNumber;
-  vts_data.nLetter = respTask === 'letter' ? vts_data.nLetter + 1 : vts_data.nLetter;
+  if (respTask === 'number') vts_data.nNumber++;
+  if (respTask === 'letter') vts_data.nLetter++;
   vts_data.previousTask = respTask;
   vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 0;
 
@@ -326,10 +286,12 @@ const vts_stimulus = {
   func_args: null,
   data: {},
   on_start: function (trial) {
+    'use strict';
     // Which letter/number to show
-    trial.letter = vts_data.nLetter < 50 ? prms.letters[getRandomInt(0, 4)] : '#';
-    trial.number = vts_data.nNumber < 50 ? prms.numbers[getRandomInt(0, 4)] : '#';
+    trial.letter = vts_data.nLetter < prms.nTrls / 2 ? prms.letters[getRandomInt(0, 4)] : '#';
+    trial.number = vts_data.nNumber < prms.nTrls / 2 ? prms.numbers[getRandomInt(0, 4)] : '#';
 
+    // activate only response keys for available task
     if (trial.letter !== '#') {
       trial.choices = trial.choices.concat(prms.respKeysNamesLetter);
     }
@@ -338,11 +300,7 @@ const vts_stimulus = {
     }
 
     // SOA interval
-    if (vts_data.cTrl === 1) {
-      trial.stimulus_onset = [0, 0];
-    } else {
-      trial.stimulus_onset = [0, vts_data.soa];
-    }
+    trial.stimulus_onset = vts_data.cTrl === 1 ? [0, 0] : [0, vts_data.soa];
 
     // repeat vs. switch task
     let draw_number, draw_letter;
@@ -376,14 +334,14 @@ const trial_feedback = {
   canvas_border: canvas_border,
   translate_origin: true,
   response_ends_trial: false,
-  func: drawFeedback,
+  func: drawTrialFeedback,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = prms.fbDur[dat.error];
   },
 };
 
-function drawFeedback() {
+function drawTrialFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
@@ -402,6 +360,42 @@ function drawFeedback() {
   ctx.fillStyle = 'black';
   ctx.fillText(prms.fbTxt[dat.error], 0, 0);
 }
+
+function blockFeedbackTxt(filter_options) {
+  'use strict';
+  let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: vts_data.cBlk });
+  let totalTime = Math.round(dat.select('rt').sum() / 1000);
+  let nError = dat.select('error').values.filter(function (x) {
+    return x === 1;
+  }).length;
+  let blockFbTxt = generate_formatted_html({
+    text: `Block ${vts_data.cBlk} of ${prms.nBlks}<br>
+  Total Time: ${totalTime} seconds<br>
+  Number of Errors: ${nError}<br><br>
+  Drücke eine beliebige Taste, um fortzufahren!`,
+  });
+
+  // reset vts_data for next block
+  vts_data.cTrl = 1;
+  vts_data.cBlk += 1;
+  vts_data.nNumber = 0;
+  vts_data.nLetter = 0;
+  vts_data.previousTask = 'na';
+  vts_data.soa = 0;
+  vts_data.delay = null;
+
+  return blockFbTxt;
+}
+
+const block_feedback = {
+  type: 'html-keyboard-response-canvas',
+  stimulus: '',
+  response_ends_trial: true,
+  post_trial_gap: prms.waitDur,
+  on_start: function (trial) {
+    trial.stimulus = blockFeedbackTxt({ stim: 'vts' });
+  },
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              De-brief                              //
@@ -477,10 +471,21 @@ function genExpSeq() {
   exp.push(task_instructions1);
 
   for (let blk = 0; blk < prms.nBlks; blk++) {
+    // type of delay for potential task repetition stimulus
+    if (nVersion % 2 === 1 && blk < 4) {
+      vts_data.delay = blk < 2 ? 'constant' : 'increasing';
+    } else if (nVersion % 2 === 0 && blk < 4) {
+      vts_data.delay = blk < 2 ? 'increasing' : 'constant';
+    } else {
+      vts_data.delay = 'increasing';
+    }
+    // trials within block
     for (let trl = 0; trl < prms.nTrls; trl++) {
       exp.push(vts_stimulus);
       exp.push(trial_feedback);
     }
+    // between block feedback
+    exp.push(block_feedback);
   }
 
   // // save data
