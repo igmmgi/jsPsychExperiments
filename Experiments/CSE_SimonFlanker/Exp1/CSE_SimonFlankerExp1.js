@@ -232,10 +232,7 @@ function codeTrial() {
   let comp;
   if (dat.stim_type === 'simon') {
     comp =
-      ((dat.corrResp == prms.respKeys[0]) & (dat.position < 0)) |
-      ((dat.corrResp == prms.respKeys[1]) & (dat.position > 0))
-        ? 'comp'
-        : 'incomp';
+      ((dat.corrResp == 'Q') & (dat.position < 0)) | ((dat.corrResp == 'P') & (dat.position > 0)) ? 'comp' : 'incomp';
   } else {
     comp = dat.flankers[0] === dat.target ? 'comp' : 'incomp';
   }
