@@ -525,7 +525,6 @@ function generate_simon_combinations(nGo, nNoGo) {
         position: 'left',
         colour: prms.colours[0],
         type: 'go',
-        comp: 'comp',
         corrResp: prms.respKeys[0],
       },
       {
@@ -534,7 +533,6 @@ function generate_simon_combinations(nGo, nNoGo) {
         position: 'right',
         colour: prms.colours[0],
         type: 'go',
-        comp: 'comp',
         corrResp: prms.respKeys[1],
       },
       {
@@ -543,7 +541,6 @@ function generate_simon_combinations(nGo, nNoGo) {
         position: 'right',
         colour: prms.colours[0],
         type: 'go',
-        comp: 'incomp',
         corrResp: prms.respKeys[0],
       },
       {
@@ -552,7 +549,6 @@ function generate_simon_combinations(nGo, nNoGo) {
         position: 'left',
         colour: prms.colours[0],
         type: 'go',
-        comp: 'incomp',
         corrResp: prms.respKeys[1],
       },
     ],
@@ -566,7 +562,6 @@ function generate_simon_combinations(nGo, nNoGo) {
         position: 'left',
         colour: prms.colours[1],
         type: 'nogo',
-        comp: 'comp',
         corrResp: null,
       },
       {
@@ -575,7 +570,6 @@ function generate_simon_combinations(nGo, nNoGo) {
         position: 'right',
         colour: prms.colours[1],
         type: 'nogo',
-        comp: 'comp',
         corrResp: null,
       },
       {
@@ -584,7 +578,6 @@ function generate_simon_combinations(nGo, nNoGo) {
         position: 'right',
         colour: prms.colours[1],
         type: 'nogo',
-        comp: 'incomp',
         corrResp: null,
       },
       {
@@ -593,7 +586,6 @@ function generate_simon_combinations(nGo, nNoGo) {
         position: 'left',
         colour: prms.colours[1],
         type: 'nogo',
-        comp: 'incomp',
         corrResp: null,
       },
     ],
@@ -730,4 +722,3 @@ jsPsych.init({
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
 });
-
