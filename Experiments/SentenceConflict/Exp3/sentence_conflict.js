@@ -105,7 +105,7 @@ if (prmsWordByWordStroop.key_mapping_stroop === 1) {
     <b><span style="color:#008000">xxxx</b> &#10142; Press the <b>\'P\'</b> key (right middle finger)<br><br>`;
 } else if (prmsWordByWordStroop.key_mapping_stroop === 2) {
   prmsWordByWordStroop.resp_keys_stroop = ['P', 'O', 27];
-  stroop_resp_mapping = `<b><span style="color:#008000">xxxx</b> &#10142; Press the <b>\'O\'</b> key (right index finger)<br> 
+  stroop_resp_mapping = `<b><span style="color:#008000">xxxx</b> &#10142; Press the <b>\'O\'</b> key (right index finger)<br>
     <b><span style="color:#0000FF">xxxx</b> &#10142; Press the <b>\'P\'</b> key (right middle finger)<br><br>`;
 }
 
@@ -118,11 +118,11 @@ const wordByWordStroop_instructionsStart1 = {
     text:
       `Part 1: This section involves two tasks. The first task involves responding to the font color of single words. Ignore word meaning!<br><br>` +
       stroop_resp_mapping +
-      `You should respond as quickly and as accurately as possible! 
+      `You should respond as quickly and as accurately as possible!
       The second task involves reading sentences for comprehension. The words in the sentence are
       presented in a word-by-word fashion by pressing the space bar using your right thumb to reveal each word individually.<br>
         Press ___ _____ ___ __ <br>
-        _____ the _____ ___ __ <br> 
+        _____ the _____ ___ __ <br>
         _____ ___ space ___ __ <br><br>
         Please read the sentences carefully, as they are relevant later! <br><br> Press any key to begin a short block of practice trials.`,
     fontsize: 30,
@@ -463,8 +463,8 @@ const stroop_instructionsStart1 = {
     text:
       `Part 2: This section involves responding to font colour. Ignore word meaning! <br><br>` +
       stroop_resp_mapping +
-      `You will now perform a block of 48 trials. 
-       Respond as quickly and as accurately as possible.<br><br> 
+      `You will now perform a block of 48 trials.
+       Respond as quickly and as accurately as possible.<br><br>
     Press any key to continue!`,
     fontsize: 32,
     lineheight: 1.5,
