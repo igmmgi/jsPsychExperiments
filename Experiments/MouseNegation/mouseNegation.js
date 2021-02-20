@@ -137,7 +137,7 @@ const trial_stimulus = {
 };
 
 // prettier-ignore
-stimuli = [
+const stimuli = [
   { word: 'jetzt links',  aff_neg: 'aff', resp_loc: 'left' },
   { word: 'jetzt rechts', aff_neg: 'aff', resp_loc: 'right' },
   { word: 'nicht rechts', aff_neg: 'neg', resp_loc: 'left' },
