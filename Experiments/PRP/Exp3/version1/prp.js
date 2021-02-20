@@ -75,7 +75,7 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>Experiment:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du in jedem Durchgang zwei Aufgaben bearbeiten.</h3>" +
     "<h3 style='text-align: left;'>Jede Aufgabe wird mit einer Hand bearbeitet. </h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 1 = Mittelefinger: Bitte platziere hierzu den Mittelfinger </h3>" +
+    "<h3 style='text-align: left;'>Aufgabe 1 = Mittelfinger: Bitte platziere hierzu den Mittelfinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „Q“ und „P“.</h3><br>" +
     "<h3 style='text-align: left;'>Aufgabe 2 = Zeigefinger: Bitte platziere hierzu den Zeigefinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „W“ und „O“.</h3><br>" +
@@ -503,11 +503,11 @@ function genExpSeq() {
   exp.push(task_instructions3);
   exp.push(task_instructions4);
 
-  // Audio calibration routine
-  exp.push(task_instructions5);
-  for (let i = 0; i < audio_calibration.length; i++) {
-    exp.push(audio_calibration[i]);
-  }
+  // // Audio calibration routine
+  // exp.push(task_instructions5);
+  // for (let i = 0; i < audio_calibration.length; i++) {
+  //   exp.push(audio_calibration[i]);
+  // }
 
   exp.push(fullscreen_on);
   exp.push(hideMouseCursor);
@@ -534,7 +534,6 @@ const code_filename = dirName + 'code/' + expName;
 jsPsych.init({
   timeline: EXP,
   preload_audio: audio,
-  override_safe_mode: true,
   exclusions: {
     min_width: cs[0],
     min_height: cs[1],

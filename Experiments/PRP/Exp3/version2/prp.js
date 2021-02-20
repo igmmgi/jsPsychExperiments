@@ -501,7 +501,7 @@ function genExpSeq() {
 
   exp.push(welcome_de_du_click);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
 
   exp.push(block_start);
   exp.push(task_instructions1);
@@ -540,7 +540,6 @@ const code_filename = dirName + 'code/' + expName;
 jsPsych.init({
   timeline: EXP,
   preload_audio: audio,
-  override_safe_mode: true,
   use_webaudio: true,
   exclusions: {
     min_width: cs[0],
