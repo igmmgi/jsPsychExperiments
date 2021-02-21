@@ -10,21 +10,28 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
         array: false,
         pretty_name: 'Sentence',
         default: {},
-        description: 'Sentence to be presented word-by-word',
+        description: 'Sentence to be presented word-by-word.',
       },
       max_width: {
         type: jsPsych.plugins.parameterType.INT,
         array: false,
         pretty_name: 'SentenceWidth',
         default: 1000,
-        description: 'Maximum width of the sentence before line-break',
+        description: 'Maximum width of the sentence before line-break.',
+      },
+      mask_type: {
+        type: jsPsych.plugins.parameterType.INT,
+        array: false,
+        pretty_name: 'Mask type',
+        default: 1,
+        description: 'The type of mask for the sentence.',
       },
       font: {
         type: jsPsych.plugins.parameterType.STRING,
         array: false,
         pretty_name: 'Font',
         default: '40px monospace',
-        description: 'Font',
+        description: 'Font (should be monospaced font)',
       },
       text_align: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -38,7 +45,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
         array: false,
         pretty_name: 'LineHeight',
         default: 30,
-        description: 'Line Height',
+        description: 'Spacing between lines if sentence split across lines.',
       },
       canvas_colour: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -67,17 +74,11 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
         default: jsPsych.ALL_KEYS,
         description: 'The keys the subject is allowed to press to respond to the stimulus.',
       },
-      response_ends_trial: {
-        type: jsPsych.plugins.parameterType.BOOL,
-        pretty_name: 'ResponseEndsTrial',
-        default: true,
-        description: 'If true, then trial will end when user responds.',
-      },
     },
   };
 
   function textMask(txt) {
-    return txt.replace(/[a-z.!?’-]/gi, '_');
+    return txt.replace(/[a-z.!?ßäÄüÜöÖ’-]/gi, '_');
   }
 
   plugin.trial = function (display_element, trial) {
@@ -92,8 +93,6 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
       trial.canvas_border +
       ';"></canvas>' +
       '</div>';
-
-    console.log('here');
 
     display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
@@ -116,9 +115,15 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
     let ypos = -(trial.line_height * numLines) / 2 + trial.line_height / 2;
 
     // keep adding word until it is too long
+    // NB most self-paced reading paradigms present sentence on a single line!
     let line = '';
     for (let n = 0; n < words.length; n++) {
-      let word = n === trial.word_number ? words[n] : textMask(words[n]);
+      let word;
+      if (trial.mask_type === 1) {
+        word = n === trial.word_number ? words[n] : textMask(words[n]);
+      } else if (trial.mask_type === 2) {
+        word = n <= trial.word_number ? words[n] : textMask(words[n]);
+      }
       let tmp = line + word + ' ';
       if (ctx.measureText(tmp).width > trial.max_width && n > 0) {
         ctx.fillText(line, xpos, ypos);
@@ -168,9 +173,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
       if (response.key == null) {
         response = info;
       }
-      if (trial.response_ends_trial) {
-        end_trial();
-      }
+      end_trial();
     };
 
     // start the response listener
