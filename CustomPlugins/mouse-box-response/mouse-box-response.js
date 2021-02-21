@@ -176,19 +176,14 @@ jsPsych.plugins['mouse-response'] = (function () {
     let rect = canvas.getBoundingClientRect();
 
     // canvas mouse events
-    $('#canvas').mousedown(function (e) {
+    canvas.addEventListener('mousedown', (e) => {
       if (e.which === 1) {
         handleMouseDown(e);
       }
     });
-    $('#canvas').mousemove(function (e) {
+    canvas.addEventListener('mousemove', (e) => {
       handleMouseMove(e);
     });
-
-    // canvas property
-    let canvasOffset = $(canvas).offset();
-    let offsetX = canvasOffset.left;
-    let offsetY = canvasOffset.top;
 
     // stimulus font properties
     ctx.font = trial.stimulus_font;
@@ -399,7 +394,10 @@ jsPsych.plugins['mouse-response'] = (function () {
         y_click_pos: y_click_pos,
       };
 
-      // move on to the next trial
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mousedown', handleMouseMove);
+
+      // cleat the display and move on to the next trial
       display_element.innerHTML = '';
       jsPsych.finishTrial(trial_data);
     };

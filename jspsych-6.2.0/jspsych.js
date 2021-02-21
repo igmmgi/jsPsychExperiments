@@ -1233,7 +1233,7 @@ jsPsych.data = (function () {
         n = 1;
       }
       if (n < 1) {
-        throw `You must query with a positive nonzero integer. Please use a 
+        throw `You must query with a positive nonzero integer. Please use a
                different value for n.`;
       }
       if (trials.length == 0) return DataCollection([]);
@@ -1257,7 +1257,7 @@ jsPsych.data = (function () {
         n = 1;
       }
       if (n < 1) {
-        throw `You must query with a positive nonzero integer. Please use a 
+        throw `You must query with a positive nonzero integer. Please use a
                different value for n.`;
       }
       if (trials.length == 0) return DataCollection([]);

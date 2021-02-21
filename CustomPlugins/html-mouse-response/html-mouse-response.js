@@ -1,12 +1,4 @@
-/**
- * jspsych-html-keyboard-response
- * Josh de Leeuw
- *
- * plugin for displaying a stimulus and getting a keyboard response
- *
- * documentation: docs.jspsych.org
- *
- **/
+// Custom plugin adapted from html-keyboard-response
 
 jsPsych.plugins['html-mouse-response'] = (function () {
   let plugin = {};
@@ -25,9 +17,8 @@ jsPsych.plugins['html-mouse-response'] = (function () {
         type: jsPsych.plugins.parameterType.BOOL,
         array: true,
         pretty_name: 'Choices',
-        default: [true, true, true],
-        description:
-          'The mouse buttons (left/middle/right) the subject is allowed to press to respond to the stimulus.',
+        default: [true, true],
+        description: 'The mouse buttons (left/right) the subject is allowed to press to respond to the stimulus.',
       },
       stimulus_duration: {
         type: jsPsych.plugins.parameterType.INT,
@@ -64,7 +55,6 @@ jsPsych.plugins['html-mouse-response'] = (function () {
       },
       false,
     );
-
     document.addEventListener('mousedown', mouseResponse);
 
     // draw
@@ -78,10 +68,7 @@ jsPsych.plugins['html-mouse-response'] = (function () {
         response.button = 1;
       } else if ((e.buttons === 2) & trial.choices[1]) {
         response.button = 2;
-      } else if ((e.buttons === 3) & trial.choices[2]) {
-        response.button = 3;
       }
-      console.log(response);
       if (response.button !== null) {
         response.rt = performance.now() - start_time;
         if (trial.response_ends_trial) {
@@ -104,11 +91,9 @@ jsPsych.plugins['html-mouse-response'] = (function () {
       // gather the data to store for the trial
       let trial_data = {
         rt: response.rt,
-        stimulus: trial.stimulus,
         button_press: response.button,
       };
-
-      document.removeEventListner('mousedown', mouseResponse);
+      document.removeEventListener('mousedown', mouseResponse);
 
       // clear the display
       display_element.innerHTML = '';

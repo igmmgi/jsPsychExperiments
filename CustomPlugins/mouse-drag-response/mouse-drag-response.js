@@ -145,14 +145,13 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
         time: time,
       };
 
+      // remove event listeners
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mousedown', handleMouseMove);
       canvas.removeEventListener('mouseup', handleMouseMove);
 
-      // clear the display
+      // clear the display and move on to the next trial
       display_element.innerHTML = '';
-
-      // move on to the next trial
       jsPsych.finishTrial(trial_data);
     };
 

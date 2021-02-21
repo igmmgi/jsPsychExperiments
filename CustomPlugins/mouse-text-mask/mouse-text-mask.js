@@ -1,5 +1,4 @@
-// cusotm jspsych mouse drag response using code adapted from:
-// https://stackoverflow.com/questions/21605942/drag-element-on-canvas
+// custom jspsych mouse text mask
 
 jsPsych.plugins['mouse-text-mask'] = (function () {
   let plugin = {};
@@ -119,14 +118,12 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
         time: time,
       };
 
-      // canvas mouse events
+      // remove canvas mouse events
       canvas.removeEventListener('mousemove', mousePosition);
       canvas.removeEventListener('mousedown', handleMouseDown);
 
-      // clear the display
+      // clear the display and move on the the next trial
       display_element.innerHTML = '';
-
-      // move on to the next trial
       jsPsych.finishTrial(trial_data);
     };
 

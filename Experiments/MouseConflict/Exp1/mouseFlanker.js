@@ -116,7 +116,7 @@ const task_instructions1 = {
   type: 'html-button-response',
   stimulus:
     generate_formatted_html({
-      text: `Aufgabe: <br><br>In jedem Durchgang müssen Sie zu Beginn in das Quadrat klicken, welches unten mittig am Bildschirm platziert ist. 
+      text: `Aufgabe: <br><br>In jedem Durchgang müssen Sie zu Beginn in das Quadrat klicken, welches unten mittig am Bildschirm platziert ist.
         Daraufhin erscheint ein Buchstabe, der auf jeder Seite von zwei anderen Buchstaben umgeben ist. Sie sollen nur auf den zentralen Buchstaben wie folgt reagieren:`,
       align: 'left',
       fontsize: 26,
@@ -124,9 +124,9 @@ const task_instructions1 = {
     }) +
     respText +
     generate_formatted_html({
-      text: `Zeitgleich erscheinen 2 neue Quadrate, die Sie für ihre Antwort verwenden sollen. Ihre Aufgabe ist es, in Abhängigkeit des zentalen Buchstabens,  
-        mit der linken Maustaste is das korrekte Quadrat zu klicken. Anschließend bekommen Sie Feedback darüber, 
-        ob Sie richtig geantwortet haben. Durch einen Klick in das Quadrat am unteren Bildschirmrand 
+      text: `Zeitgleich erscheinen 2 neue Quadrate, die Sie für ihre Antwort verwenden sollen. Ihre Aufgabe ist es, in Abhängigkeit des zentalen Buchstabens,
+        mit der linken Maustaste is das korrekte Quadrat zu klicken. Anschließend bekommen Sie Feedback darüber,
+        ob Sie richtig geantwortet haben. Durch einen Klick in das Quadrat am unteren Bildschirmrand
         starten Sie den nächsten Durchlauf.<br><br>Bitte reagieren Sie so schnell und so genau wie möglich mit der Maus auf den Ziel-Buchstaben, sobald dieser erscheint!<br><br>
         klicken Sie die linke Maustaste, um fortzufahren!`,
       align: 'left',
@@ -417,12 +417,12 @@ function genExpSeq() {
   let exp = [];
   exp.push(fullscreen_on);
   exp.push(check_screen);
-  exp.push(welcome_de);
-  exp.push(resize_de);
-  exp.push(vpInfoForm_de);
-  exp.push(mouse_reminder);
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
+  //exp.push(welcome_de);
+  //exp.push(resize_de);
+  // exp.push(vpInfoForm_de);
+  //exp.push(mouse_reminder);
+  //exp.push(task_instructions1);
+  //exp.push(task_instructions2);
 
   let order;
   if (nVersion % 2 === 1) {
