@@ -115,7 +115,7 @@ jsPsych.plugins['text-moving-window-keyboard-response'] = (function () {
     let ypos = -(trial.line_height * numLines) / 2 + trial.line_height / 2;
 
     // keep adding word until it is too long
-    // NB most self-paced reading paradigms present sentence on a single line!
+    // NB most self-paced reading paradigms present sentences on a single line!
     let line = '';
     for (let n = 0; n < words.length; n++) {
       let word;
