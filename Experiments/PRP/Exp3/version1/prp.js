@@ -91,7 +91,7 @@ const task_instructions3 = {
     "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Pfeil reagieren.</h3>" +
     "<h3 style='text-align: left;'>Nachdem du auf den Pfeil reagiert hast, musst du auf die </h3>" +
     "<h3 style='text-align: left;'>Höhe des Tones reagieren: Reagiere wie folgt:</h3><br>" +
-    "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelefinger</h3>" +
+    "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelfinger</h3>" +
     "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
@@ -300,7 +300,7 @@ function blockStartText() {
     ' von ' +
     prms.nBlks +
     '</H1><br>' +
-    "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelefinger</h3>" +
+    "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelfinger</h3>" +
     "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +

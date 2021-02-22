@@ -92,7 +92,7 @@ const prms = {
   left_letters: ['A', 'B'],
   right_letters: ['Y', 'Z'],
   stim_size: '60px monospace',
-  fb_size: '40px monospace',
+  fb_size: '30px monospace',
   fb_training: ['Richtig', 'Falsch', 'Zu langsam'], // trial feedback show during training
 
   // Response KEys
@@ -165,7 +165,7 @@ const task_instructions3 = {
   stimulus: generate_formatted_html({
     text: `In diesem Experiment gibt es insgesamt drei verschiedene Aufgaben.
           Du musst auf die Farben eines Quadrates (= Farbaufgabe), Buchstaben (= Buchstabenaufgabe) oder auf Zahlen (= Zahlenaufgabe) reagieren.
-          Zunächst hast du die Gelegenheit die einzelnen Aufgaben zu üben.
+          Zunächst hast du die Gelegenheit die einzelnen Aufgaben zu üben.<br><br>
           Drücke eine beliebige Taste um fortzufahren.`,
     fontsize: 26,
     align: 'left',
@@ -359,7 +359,8 @@ function code_trial() {
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = 0;
   let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corr_key);
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  let offset = dat.response_task === 'primary' ? 0 : dat.soa;
+  let rt = dat.rt !== null ? dat.rt - offset : prms.too_slow;
   if (dat.key_press === corrKeyNum && rt < prms.too_slow) {
     corrCode = 1; // correct
   } else if (dat.key_press !== corrKeyNum && rt < prms.too_slow) {
@@ -473,12 +474,12 @@ function draw_feedback_training() {
 
 // prettier-ignore
 const stimuli_training_colours = [
-    { colour: prms.colours[0], corr_key: prms.resp_keys[0] },
-    { colour: prms.colours[1], corr_key: prms.resp_keys[1] },
-    { colour: prms.colours[0], corr_key: prms.resp_keys[0] },
-    { colour: prms.colours[1], corr_key: prms.resp_keys[1] },
-    { colour: prms.colours[2], corr_key: "no-go" },
-    { colour: prms.colours[2], corr_key: "no-go" },
+    { response_task: "primary", colour: prms.colours[0], corr_key: prms.resp_keys[0] },
+    { response_task: "primary", colour: prms.colours[1], corr_key: prms.resp_keys[1] },
+    { response_task: "primary", colour: prms.colours[0], corr_key: prms.resp_keys[0] },
+    { response_task: "primary", colour: prms.colours[1], corr_key: prms.resp_keys[1] },
+    { response_task: "primary", colour: prms.colours[2], corr_key: "no-go" },
+    { response_task: "primary", colour: prms.colours[2], corr_key: "no-go" },
 ];
 
 const trial_training_colours = {
@@ -494,11 +495,11 @@ const trial_training_colours = {
   func_args: [{ colour: jsPsych.timelineVariable('colour') }],
   data: {
     stim: 'pp2bt',
+    response_task: jsPsych.timelineVariable('response_task'),
     colour: jsPsych.timelineVariable('colour'),
     letter_number_group: 'na',
     letter_number: 'na',
     soa: 'na',
-    task: 'training_colour',
     blk_type: 'training',
     corr_key: jsPsych.timelineVariable('corr_key'),
   },
@@ -518,8 +519,8 @@ const trial_timeline_training_colours = {
 
 // prettier-ignore
 const stimuli_training_letters = [
-    { letter_number: "left_letter",  corr_key: prms.resp_keys[0] },
-    { letter_number: "right_letter", corr_key: prms.resp_keys[1] },
+    { response_task: "primary", letter_number: "left_letter",  corr_key: prms.resp_keys[0] },
+    { response_task: "primary", letter_number: "right_letter", corr_key: prms.resp_keys[1] },
 ];
 
 const trial_training_letters_numbers = {
@@ -535,11 +536,11 @@ const trial_training_letters_numbers = {
   func_args: null,
   data: {
     stim: 'pp2bt',
+    response_task: jsPsych.timelineVariable('response_task'),
     colour: 'black',
     letter_number_group: jsPsych.timelineVariable('letter_number'),
     letter_number: null,
     soa: 'na',
-    task: 'training_letter_numbers',
     blk_type: 'training',
     corr_key: jsPsych.timelineVariable('corr_key'),
   },
@@ -579,8 +580,8 @@ const trial_timeline_training_letters = {
 
 // prettier-ignore
 const stimuli_training_numbers = [
-    { letter_number: "left_number",  corr_key: prms.resp_keys[0] },
-    { letter_number: "right_number", corr_key: prms.resp_keys[1] },
+    { response_task: "primary", letter_number: "left_number",  corr_key: prms.resp_keys[0] },
+    { response_task: "primary", letter_number: "right_number", corr_key: prms.resp_keys[1] },
 ];
 
 const trial_timeline_training_numbers = {
@@ -664,16 +665,16 @@ const trial_pp = {
   stimulus_onset: [0, jsPsych.timelineVariable('soa')],
   response_ends_trial: true,
   choices: prms.resp_keys,
-  trial_duration: prms.too_slow,
+  trial_duration: null,
   func: [draw_pp, draw_pp],
   func_args: null,
   data: {
     stim: 'pp2bt',
+    response_task: jsPsych.timelineVariable('response_task'),
     colour: jsPsych.timelineVariable('colour'),
     letter_number_group: jsPsych.timelineVariable('letter_number'),
     letter_number: null,
     soa: jsPsych.timelineVariable('soa'),
-    task: 'pp',
     blk_type: 'experiment',
     corr_key: jsPsych.timelineVariable('corr_key'),
   },
@@ -699,6 +700,8 @@ const trial_pp = {
       { colour: trial.data.colour, letter_number: letter_number },
     ];
     trial.data.letter_number = letter_number;
+    trial.trial_duration = trial.data.response_task === 'primary' ? prms.too_slow : prms.too_slow + trial.data.soa;
+    console.log(trial.trial_duration);
   },
   on_finish: function () {
     code_trial();
