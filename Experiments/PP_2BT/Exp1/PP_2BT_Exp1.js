@@ -817,7 +817,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome);
   exp.push(resize);
-  // exp.push(vpInfoForm);
+  exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
