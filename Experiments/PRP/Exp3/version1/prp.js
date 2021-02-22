@@ -75,9 +75,9 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>Experiment:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du in jedem Durchgang zwei Aufgaben bearbeiten.</h3>" +
     "<h3 style='text-align: left;'>Jede Aufgabe wird mit einer Hand bearbeitet. </h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 1 = Mittelfinger: Bitte platziere hierzu den Mittelfinger </h3>" +
+    "<h3 style='text-align: left;'>Aufgabe 1 = Mittelfinger: Bitte platziere hierzu deine Mittelfinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „Q“ und „P“.</h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 2 = Zeigefinger: Bitte platziere hierzu den Zeigefinger </h3>" +
+    "<h3 style='text-align: left;'>Aufgabe 2 = Zeigefinger: Bitte platziere hierzu deine Zeigefinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „W“ und „O“.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
@@ -88,19 +88,20 @@ const task_instructions3 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Buchstaben reagieren.</h3>" +
-    "<h3 style='text-align: left;'>Nachdem du auf den Buchstaben reagiert hast, musst du auf die </h3>" +
+    "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Pfeil reagieren.</h3>" +
+    "<h3 style='text-align: left;'>Nachdem du auf den Pfeil reagiert hast, musst du auf die </h3>" +
     "<h3 style='text-align: left;'>Höhe des Tones reagieren: Reagiere wie folgt:</h3><br>" +
-    "<h3 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;Aufgabe 1 (Mittelefinger)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Aufgabe 2 (Zeigefinger)</h3>" +
-    "<h2 style='text-align: left;'>" +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelefinger</h3>" +
+    "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
+    "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    'Tiefer Ton' +
+    '&emsp;&emsp;&emsp;&emsp;Hoher Ton' +
+    '&emsp;&emsp;&emsp;&emsp;' +
     prms.respArrows[1] +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Tiefer Ton' +
-    '&emsp;&emsp;Hoher Ton' +
     "<h3 style='text-align: left;'>" +
-    '&emsp;&emsp;&emsp;&emsp;("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp; ("O-Taste")' +
+    '&emsp;&emsp;&emsp;&emsp;("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
     '</h3><br>' +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
@@ -113,7 +114,7 @@ const task_instructions4 = {
   stimulus:
     "<h3 style='text-align: center;'>Bitte beachte: </h3>" +
     "<h3 style='text-align: left;'> Bitte reagiere immer erst so schnell wie möglich auf die 1. Aufgabe </h3>" +
-    "<h3 style='text-align: left;'> sobald der Pfeile erscheint und erst anschliessend so schnell wie </h3>" +
+    "<h3 style='text-align: left;'> sobald der Pfeil erscheint und erst anschliessend so schnell wie </h3>" +
     "<h3 style='text-align: left;'> möglich auf die 2. Aufgabe. Das heißt warte nicht mit der Bearbeitung der </h3>" +
     "<h3 style='text-align: left;'> 1. Aufgabe bis der Ton präsentiert wirt. </h3>",
 };
@@ -196,21 +197,20 @@ function drawFeedback() {
   // show response mapping if not correct
   ctx.font = '20px monospace';
   if (dat.corrCode !== 1) {
-    ctx.fillText('Aufgabe 1 (Mittelfinger)', -250, 50);
+    ctx.fillText('Aufgabe 1 (Pfeilaufgabe): Mittelfinger', 0, 50);
+    ctx.fillText('Aufgabe 2 (Tonaufgabe): Zeigfinger', 0, 80);
     ctx.font = 'bold 20px monospace';
-    ctx.fillText(prms.respArrows[0], -300, 80);
-    ctx.fillText(prms.respArrows[1], -200, 80);
+    ctx.fillText(prms.respArrows[0], -300, 150);
+    ctx.fillText('Tiefer Ton', -180, 150);
     ctx.font = '20px monospace';
-    ctx.fillText('("Q-Taste")', -320, 120);
-    ctx.fillText('("P-Taste")', -180, 120);
-
-    ctx.fillText('Aufgabe 2 (Zeigefinger)', 250, 50);
+    ctx.fillText('("Q-Taste")', -320, 180);
+    ctx.fillText('("W-Taste")', -160, 180);
     ctx.font = 'bold 20px monospace';
-    ctx.fillText('Tiefer Ton', 180, 80);
-    ctx.fillText('Hoher Ton', 320, 80);
+    ctx.fillText('Hoher Ton', 180, 150);
+    ctx.fillText(prms.respArrows[1], 340, 150);
     ctx.font = '20px monospace';
-    ctx.fillText('("W-Taste")', 180, 120);
-    ctx.fillText('("O-Taste")', 320, 120);
+    ctx.fillText('("O-Taste")', 180, 180);
+    ctx.fillText('("P-Taste")', 340, 180);
   }
 }
 
@@ -292,20 +292,6 @@ const iti = {
   func: function () {},
 };
 
-// function blockFeedbackTxt_de_du(filter_options) {
-//     "use strict";
-//     let dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk});
-//     let nTotal = dat.count();
-//     let nError = dat.select("corrCode").values.filter(function (x) { return x !== 1; }).length;
-//     dat = jsPsych.data.get().filter({...filter_options, blockNum: prms.cBlk, corrCode: 1});
-//     let blockFbTxt = "<H1>Block: " + prms.cBlk + " von " + prms.nBlks + "</H1><br>" +
-//         "<H1>Mittlere Reaktionszeit: " + (Math.round(dat.select("rt1").mean()) + Math.round(dat.select("rt2").mean())) + " ms </H1>" +
-//         "<H1>Fehlerrate: " + Math.round((nError / nTotal) * 100) + " %</H1><br>" +
-//         "<H2>Drücke eine beliebige Taste um fortzufahren!</H2>";
-//     prms.cBlk += 1;
-//     return blockFbTxt;
-// }
-
 function blockStartText() {
   'use strict';
   let blockStartTxt =
@@ -314,22 +300,19 @@ function blockStartText() {
     ' von ' +
     prms.nBlks +
     '</H1><br>' +
-    "<h3 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;Aufgabe 1 (Mittelfinger) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Aufgabe 2 (Zeigefinger)</h3>" +
-    "<h2 style='text-align: left;'>" +
-    '&emsp;&emsp;&emsp;' +
+    "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelefinger</h3>" +
+    "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
+    "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
-    prms.respArrows[1] +
-    '&emsp;&emsp;&emsp;&emsp;&emsp; &emsp; &emsp;' +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
     'Tiefer Ton' +
+    '&emsp;&emsp;&emsp;&emsp;Hoher Ton' +
     '&emsp;&emsp;&emsp;&emsp;' +
-    'Hoher Ton' +
-    '</h2>' +
-    "<h3 style='text-align: center;'>" +
-    '("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste") &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp; ("O-Taste")' +
+    prms.respArrows[1] +
+    "<h3 style='text-align: left;'>" +
+    '&emsp;&emsp;&emsp;&emsp;("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
     '</h3><br>' +
-    '<H3 style="text-align: center;">Bitte versuche so schnell und so genau wie möglich zu sein! </H3>' +
-    '<H2>Drücke eine beliebige Taste um fortzufahren!</H2>';
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
   return blockStartTxt;
 }
 
@@ -496,18 +479,17 @@ function genExpSeq() {
 
   exp.push(welcome_de_du_click);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
-
+  exp.push(vpInfoForm_de);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);
   exp.push(task_instructions4);
 
-  // // Audio calibration routine
-  // exp.push(task_instructions5);
-  // for (let i = 0; i < audio_calibration.length; i++) {
-  //   exp.push(audio_calibration[i]);
-  // }
+  // Audio calibration routine
+  exp.push(task_instructions5);
+  for (let i = 0; i < audio_calibration.length; i++) {
+    exp.push(audio_calibration[i]);
+  }
 
   exp.push(fullscreen_on);
   exp.push(hideMouseCursor);
