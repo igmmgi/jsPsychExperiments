@@ -74,7 +74,7 @@ const prms = {
   soa: [50],
   iti: 500,
   too_slow: 3000,
-  fb_duration: [500, 1000, 1000], // Duration of feedback
+  fb_duration: [1000, 2000, 2000], // Duration of feedback
 
   // Fixation Cross
   fix_duration: 500,
@@ -91,7 +91,7 @@ const prms = {
   letters: ['A', 'B', 'Y', 'Z'],
   left_letters: ['A', 'B'],
   right_letters: ['Y', 'Z'],
-  stim_size: '60px monospace',
+  stim_size: 'bold 80px monospace',
   fb_size: '30px monospace',
   fb_training: ['Richtig', 'Falsch', 'Zu langsam'], // trial feedback show during training
 
@@ -255,7 +255,7 @@ const task_instructions_pp = {
         Es werden dir nun in jedem Durchgang 2 Aufgaben präsentiert (immer Farbe & Buchstabe oder Zahl).
         Du musst auf eine der zwei Aufgaben reagieren. Die erste Priorität ist die Farbe des Quadrates.
         Die zweite Priorität ist die Buchstaben- und Zahlenaufgabe. Du musst NUR auf den Buchstaben/Zahl reagieren
-        wenn die Farbaufgabe keine Antwort verlangt. Drücke eine beliebige Taste um fortzufahren.`,
+        wenn die Farbaufgabe keine Antwort verlangt.`,
       fontsize: 26,
       align: 'left',
     }) +
@@ -509,7 +509,7 @@ const trial_training_colours = {
 };
 
 const trial_timeline_training_colours = {
-  timeline: [fixation_cross, trial_training_colours, trial_feedback_training, iti],
+  timeline: [fixation_cross, trial_training_colours, trial_feedback_training],
   timeline_variables: stimuli_training_colours,
   sample: {
     type: 'fixed-repetitions',
@@ -570,7 +570,7 @@ const trial_training_letters_numbers = {
 };
 
 const trial_timeline_training_letters = {
-  timeline: [fixation_cross, trial_training_letters_numbers, trial_feedback_training, iti],
+  timeline: [fixation_cross, trial_training_letters_numbers, trial_feedback_training],
   timeline_variables: stimuli_training_letters,
   sample: {
     type: 'fixed-repetitions',
@@ -585,7 +585,7 @@ const stimuli_training_numbers = [
 ];
 
 const trial_timeline_training_numbers = {
-  timeline: [fixation_cross, trial_training_letters_numbers, trial_feedback_training, iti],
+  timeline: [fixation_cross, trial_training_letters_numbers, trial_feedback_training],
   timeline_variables: stimuli_training_numbers,
   sample: {
     type: 'fixed-repetitions',
@@ -638,7 +638,7 @@ function draw_pp(args) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText(args.letter_number, 0, 0);
+  ctx.fillText(args.letter_number, 0, 5); // 5 pixel offset seems to work better?
 }
 
 // TO DO: Do we need more detailed feedback for PP trials?
@@ -709,7 +709,7 @@ const trial_pp = {
 };
 
 const trial_timeline_high_primary_practice = {
-  timeline: [fixation_cross, trial_pp, trial_feedback_pp, iti],
+  timeline: [fixation_cross, trial_pp, trial_feedback_pp],
   timeline_variables: stimuli_high_primary,
   sample: {
     type: 'fixed-repetitions',
@@ -718,7 +718,7 @@ const trial_timeline_high_primary_practice = {
 };
 
 const trial_timeline_low_primary_practice = {
-  timeline: [fixation_cross, trial_pp, trial_feedback_pp, iti],
+  timeline: [fixation_cross, trial_pp, trial_feedback_pp],
   timeline_variables: stimuli_low_primary,
   sample: {
     type: 'fixed-repetitions',
@@ -727,7 +727,7 @@ const trial_timeline_low_primary_practice = {
 };
 
 const trial_timeline_high_primary_exp = {
-  timeline: [fixation_cross, trial_pp, trial_feedback_pp, iti],
+  timeline: [fixation_cross, trial_pp, trial_feedback_pp],
   timeline_variables: stimuli_high_primary,
   sample: {
     type: 'fixed-repetitions',
@@ -736,7 +736,7 @@ const trial_timeline_high_primary_exp = {
 };
 
 const trial_timeline_low_primary_exp = {
-  timeline: [fixation_cross, trial_pp, trial_feedback_pp, iti],
+  timeline: [fixation_cross, trial_pp, trial_feedback_pp],
   timeline_variables: stimuli_low_primary,
   sample: {
     type: 'fixed-repetitions',
