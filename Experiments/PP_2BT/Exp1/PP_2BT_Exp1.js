@@ -95,8 +95,8 @@ const prms = {
   fb_size: '30px monospace',
   fb_training: ['Richtig', 'Falsch', 'Zu langsam', 'Richtig', 'Falsch'],
 
-  // Response KEys
-  resp_keys: ['Q', 'P', 27],
+  // Response Keys
+  resp_keys: ['q', 'p'],
 
   // Block/Trial Counters
   cTrl: 1,
@@ -358,18 +358,21 @@ function code_trial() {
 
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = 0;
-  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corr_key);
   let offset = dat.response_task === 'primary' ? 0 : dat.soa;
   let rt = dat.rt !== null ? dat.rt - offset : prms.too_slow;
-  if (dat.key_press === corrKeyNum && rt < prms.too_slow) {
-    corrCode = 1; // correct
-  } else if (dat.key_press !== corrKeyNum && rt < prms.too_slow) {
-    corrCode = 2; // choice error
-  } else if (rt >= prms.too_slow) {
-    corrCode = 3; // too slow
+
+  if (dat.key_press !== null) {
+    let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corr_key);
+    if (correctKey & (rt < prms.too_slow)) {
+      corrCode = 1; // correct
+    } else if (!correctKey & (rt < prms.too_slow)) {
+      corrCode = 2; // choice-error
+    }
+  } else {
+    corrCode = 3; // too-slow
   }
 
-  // No-Go type trials during colour training block
+  // Special Case: no-oo type trials during colour training block
   if (dat.corr_key === 'no-go') {
     if (dat.key_press === null) {
       corrCode = 4;
@@ -380,16 +383,12 @@ function code_trial() {
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    keyPress: dat.key_press,
     rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
   prms.cTrl += 1;
-  if (dat.key_press === 27) {
-    jsPsych.endExperiment();
-  }
 }
 
 function block_feedback_text(filter_options) {
@@ -820,7 +819,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome);
   exp.push(resize);
-  // exp.push(vpInfoForm);
+  exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
