@@ -9,7 +9,7 @@ let timeline = [];
 // Mask type 1
 for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
   let moving_window = {
-    type: 'text-moving-window-keyboard-response',
+    type: 'self-paced-reading',
     mask_type: 1,
     sentence: sentences[sent_num],
     font: '24px monospace',
@@ -23,7 +23,7 @@ for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
 // Mask type 2
 for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
   let moving_window = {
-    type: 'text-moving-window-keyboard-response',
+    type: 'self-paced-reading',
     mask_type: 2,
     sentence: sentences[sent_num],
     font: '24px monospace',
@@ -37,7 +37,7 @@ for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
 // // Mask type 3
 // for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
 //   let moving_window = {
-//     type: 'text-moving-window-keyboard-response',
+//     type: 'self-paced-reading',
 //     mask_type: 3,
 //     sentence: sentences[sent_num],
 //     font: '24px monospace',
