@@ -74,7 +74,7 @@ const prms = {
   soa: [50],
   iti: 500,
   too_slow: 3000,
-  fb_duration: [1000, 2000, 2000], // Duration of feedback
+  fb_duration: [500, 2000, 2000, 500, 2000], // Duration of feedback
 
   // Fixation Cross
   fix_duration: 500,
@@ -93,7 +93,7 @@ const prms = {
   right_letters: ['Y', 'Z'],
   stim_size: 'bold 80px monospace',
   fb_size: '30px monospace',
-  fb_training: ['Richtig', 'Falsch', 'Zu langsam'], // trial feedback show during training
+  fb_training: ['Richtig', 'Falsch', 'Zu langsam', 'Richtig', 'Falsch'],
 
   // Response KEys
   resp_keys: ['Q', 'P', 27],
@@ -370,8 +370,12 @@ function code_trial() {
   }
 
   // No-Go type trials during colour training block
-  if ((dat.key_press === null) & (dat.corr_key === 'no-go')) {
-    corrCode = 1;
+  if (dat.corr_key === 'no-go') {
+    if (dat.key_press === null) {
+      corrCode = 4;
+    } else {
+      corrCode = 5;
+    }
   }
 
   jsPsych.data.addDataToLastTrial({
@@ -393,7 +397,7 @@ function block_feedback_text(filter_options) {
   let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
   let nTotal = dat.count();
   let nError = dat.select('corrCode').values.filter(function (x) {
-    return x !== 1;
+    return (x !== 1) & (x !== 4);
   }).length;
   dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 1 });
 
@@ -417,7 +421,7 @@ const block_feedback = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = block_feedback_text({ stim: 'pp2bt' });
+    trial.stimulus = block_feedback_text({ stim_type: 'pp2bt' });
   },
 };
 
@@ -494,7 +498,7 @@ const trial_training_colours = {
   func: draw_square_training,
   func_args: [{ colour: jsPsych.timelineVariable('colour') }],
   data: {
-    stim: 'pp2bt',
+    stim_type: 'pp2bt',
     response_task: jsPsych.timelineVariable('response_task'),
     colour: jsPsych.timelineVariable('colour'),
     letter_number_group: 'na',
@@ -535,7 +539,7 @@ const trial_training_letters_numbers = {
   func: draw_letter_number_training,
   func_args: null,
   data: {
-    stim: 'pp2bt',
+    stim_type: 'pp2bt',
     response_task: jsPsych.timelineVariable('response_task'),
     colour: 'black',
     letter_number_group: jsPsych.timelineVariable('letter_number'),
@@ -669,7 +673,7 @@ const trial_pp = {
   func: [draw_pp, draw_pp],
   func_args: null,
   data: {
-    stim: 'pp2bt',
+    stim_type: 'pp2bt',
     response_task: jsPsych.timelineVariable('response_task'),
     colour: jsPsych.timelineVariable('colour'),
     letter_number_group: jsPsych.timelineVariable('letter_number'),
@@ -701,7 +705,6 @@ const trial_pp = {
     ];
     trial.data.letter_number = letter_number;
     trial.trial_duration = trial.data.response_task === 'primary' ? prms.too_slow : prms.too_slow + trial.data.soa;
-    console.log(trial.trial_duration);
   },
   on_finish: function () {
     code_trial();
@@ -817,7 +820,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome);
   exp.push(resize);
-  exp.push(vpInfoForm);
+  // exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
