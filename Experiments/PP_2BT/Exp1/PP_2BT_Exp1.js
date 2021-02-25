@@ -66,7 +66,7 @@ const prms = {
   nBlks_training: 3, // 1 training block for each inddividual task
   nBlks_pp_p: 1, // single practice block in each PP probability block
   nTrls_pp_p: 48, // number of trials in practice PP block
-  nBlks_pp_e: 2, // two experimental blocks in each PP probability blocks
+  nBlks_pp_e: 3, // three experimental blocks in each PP probability blocks
   nTrls_pp_e: 96, // number of trials in experimental PP blocks
   nBlks_total: 9, // total number of training + experimental blocks
 
@@ -316,6 +316,19 @@ const task_instructions_pp_reminder = {
       fontsize: 26,
       align: 'left',
     }),
+};
+
+const practice_block = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `Übungsblock<br><br>
+      Drücke eine beliebige Taste, um fortzufahren.`,
+    fontsize: 26,
+    align: 'center',
+  }),
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -602,22 +615,22 @@ const trial_timeline_training_numbers = {
 
 // prettier-ignore
 const stimuli_primary = [
-  { response_task: 'primary', background_task: 'letter', colour: prms.colours[0], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
-  { response_task: 'primary', background_task: 'letter', colour: prms.colours[1], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-  { response_task: 'primary', background_task: 'letter', colour: prms.colours[0], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
-  { response_task: 'primary', background_task: 'letter', colour: prms.colours[1], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
-  { response_task: 'primary', background_task: 'number', colour: prms.colours[0], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
-  { response_task: 'primary', background_task: 'number', colour: prms.colours[1], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-  { response_task: 'primary', background_task: 'number', colour: prms.colours[0], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
-  { response_task: 'primary', background_task: 'number', colour: prms.colours[1], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
-];
+        { response_task: 'primary', background_task: 'letter', colour: prms.colours[0], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'letter', colour: prms.colours[1], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'letter', colour: prms.colours[0], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'letter', colour: prms.colours[1], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'number', colour: prms.colours[0], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'number', colour: prms.colours[1], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'number', colour: prms.colours[0], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'number', colour: prms.colours[1], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
+    ];
 
 // prettier-ignore
 const stimuli_background = [
-  { response_task: 'background', background_task: 'letter', colour: prms.colours[2], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
-  { response_task: 'background', background_task: 'letter', colour: prms.colours[2], letter_number: "right_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
-  { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
-  { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
+    { response_task: 'background', background_task: 'letter', colour: prms.colours[2], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
+    { response_task: 'background', background_task: 'letter', colour: prms.colours[2], letter_number: "right_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
+    { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
+    { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
 ];
 
 const stimuli_high_primary = stimuli_primary.concat(stimuli_background);
@@ -718,6 +731,7 @@ const trial_timeline_high_primary_practice = {
     size: prms.nTrls_pp_p / stimuli_high_primary.length,
   },
 };
+// console.log(trial_timeline_high_primary_practice);
 
 const trial_timeline_low_primary_practice = {
   timeline: [fixation_cross, trial_pp, trial_feedback_pp],
@@ -727,6 +741,7 @@ const trial_timeline_low_primary_practice = {
     size: prms.nTrls_pp_p / stimuli_low_primary.length,
   },
 };
+// console.log(trial_timeline_low_primary_practice);
 
 const trial_timeline_high_primary_exp = {
   timeline: [fixation_cross, trial_pp, trial_feedback_pp],
@@ -736,6 +751,7 @@ const trial_timeline_high_primary_exp = {
     size: prms.nTrls_pp_e / stimuli_high_primary.length,
   },
 };
+// console.log(trial_timeline_high_primary_exp);
 
 const trial_timeline_low_primary_exp = {
   timeline: [fixation_cross, trial_pp, trial_feedback_pp],
@@ -745,6 +761,7 @@ const trial_timeline_low_primary_exp = {
     size: prms.nTrls_pp_e / stimuli_low_primary.length,
   },
 };
+// console.log(trial_timeline_low_primary_exp);
 
 ////////////////////////////////////////////////////////////////////////
 //                              De-brief                              //
@@ -868,12 +885,14 @@ function genExpSeq() {
     exp.push(task_instructions_pp_reminder);
     if (hplp_type[blk] === 'HP') {
       if (pe_type[blk] === 'P') {
+        exp.push(practice_block);
         exp.push(trial_timeline_high_primary_practice);
       } else if (pe_type[blk] === 'E') {
         exp.push(trial_timeline_high_primary_exp);
       }
     } else if (hplp_type[blk] === 'LP') {
       if (pe_type[blk] === 'P') {
+        exp.push(practice_block);
         exp.push(trial_timeline_low_primary_practice);
       } else if (pe_type[blk] === 'E') {
         exp.push(trial_timeline_low_primary_exp);
