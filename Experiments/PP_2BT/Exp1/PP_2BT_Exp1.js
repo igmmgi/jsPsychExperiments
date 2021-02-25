@@ -622,8 +622,8 @@ const trial_timeline_training_numbers = {
 const stimuli_primary = [
         { response_task: 'primary', background_task: 'letter', colour: prms.colours[0], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
         { response_task: 'primary', background_task: 'letter', colour: prms.colours[1], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-        { response_task: 'primary', background_task: 'letter', colour: prms.colours[0], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
-        { response_task: 'primary', background_task: 'letter', colour: prms.colours[1], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'letter', colour: prms.colours[0], letter_number: "right_letter", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'letter', colour: prms.colours[1], letter_number: "right_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
         { response_task: 'primary', background_task: 'number', colour: prms.colours[0], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
         { response_task: 'primary', background_task: 'number', colour: prms.colours[1], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
         { response_task: 'primary', background_task: 'number', colour: prms.colours[0], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
