@@ -45,7 +45,7 @@ jsPsych.plugins["self-paced-reading"] = (function () {
                 type: jsPsych.plugins.parameterType.STRING,
                 array: false,
                 pretty_name: "Font",
-                default: "40px monospace",
+                default: "80px monospaced",
                 description: "Font (should be monospaced font)",
             },
             font_colour: {
@@ -256,6 +256,7 @@ jsPsych.plugins["self-paced-reading"] = (function () {
             // next word
             word_number++;
 
+            // ?
             jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
             keyboardListener = key();
 
