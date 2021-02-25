@@ -55,6 +55,7 @@ const dirName = getDirName();
 const vpNum = genVpNum();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 const nVersion = getVersionNumber(nFiles, 2);
+jsPsych.data.addProperties({ version: nVersion });
 getComputerInfo();
 
 ////////////////////////////////////////////////////////////////////////
@@ -68,7 +69,7 @@ const prms = {
   nTrls_pp_p: 48, // number of trials in practice PP block
   nBlks_pp_e: 3, // three experimental blocks in each PP probability blocks
   nTrls_pp_e: 96, // number of trials in experimental PP blocks
-  nBlks_total: 9, // total number of training + experimental blocks
+  nBlks_total: 11, // total number of training + experimental blocks
 
   // Timing
   soa: [50],
@@ -490,12 +491,12 @@ function draw_feedback_training() {
 
 // prettier-ignore
 const stimuli_training_colours = [
-    { response_task: "primary", colour: prms.colours[0], corr_key: prms.resp_keys[0] },
-    { response_task: "primary", colour: prms.colours[1], corr_key: prms.resp_keys[1] },
-    { response_task: "primary", colour: prms.colours[0], corr_key: prms.resp_keys[0] },
-    { response_task: "primary", colour: prms.colours[1], corr_key: prms.resp_keys[1] },
-    { response_task: "primary", colour: prms.colours[2], corr_key: "no-go" },
-    { response_task: "primary", colour: prms.colours[2], corr_key: "no-go" },
+    { response_task: "primary", colour: prms.colours[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
+    { response_task: "primary", colour: prms.colours[1], corr_key: prms.resp_keys[1], backward_comp: "na"},
+    { response_task: "primary", colour: prms.colours[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
+    { response_task: "primary", colour: prms.colours[1], corr_key: prms.resp_keys[1], backward_comp: "na"},
+    { response_task: "primary", colour: prms.colours[2], corr_key: "no-go",           backward_comp: "na"},
+    { response_task: "primary", colour: prms.colours[2], corr_key: "no-go",           backward_comp: "na"},
 ];
 
 const trial_training_colours = {
@@ -518,6 +519,8 @@ const trial_training_colours = {
     soa: 'na',
     blk_type: 'training',
     corr_key: jsPsych.timelineVariable('corr_key'),
+    backward_comp: jsPsych.timelineVariable('backward_comp'),
+    prob_cond: 'na',
   },
   on_finish: function () {
     code_trial();
@@ -535,8 +538,8 @@ const trial_timeline_training_colours = {
 
 // prettier-ignore
 const stimuli_training_letters = [
-    { response_task: "primary", letter_number: "left_letter",  corr_key: prms.resp_keys[0] },
-    { response_task: "primary", letter_number: "right_letter", corr_key: prms.resp_keys[1] },
+    { response_task: "primary", letter_number: "left_letter",  corr_key: prms.resp_keys[0], backward_comp: "na" },
+    { response_task: "primary", letter_number: "right_letter", corr_key: prms.resp_keys[1], backward_comp: "na" },
 ];
 
 const trial_training_letters_numbers = {
@@ -559,6 +562,8 @@ const trial_training_letters_numbers = {
     soa: 'na',
     blk_type: 'training',
     corr_key: jsPsych.timelineVariable('corr_key'),
+    backward_comp: jsPsych.timelineVariable('backward_comp'),
+    prob_cond: 'na',
   },
   on_start: function (trial) {
     let letter_number;
@@ -596,8 +601,8 @@ const trial_timeline_training_letters = {
 
 // prettier-ignore
 const stimuli_training_numbers = [
-    { response_task: "primary", letter_number: "left_number",  corr_key: prms.resp_keys[0] },
-    { response_task: "primary", letter_number: "right_number", corr_key: prms.resp_keys[1] },
+    { response_task: "primary", letter_number: "left_number",  corr_key: prms.resp_keys[0], backward_comp: "na" },
+    { response_task: "primary", letter_number: "right_number", corr_key: prms.resp_keys[1], backward_comp: "na" },
 ];
 
 const trial_timeline_training_numbers = {
@@ -634,9 +639,10 @@ const stimuli_background = [
 ];
 
 const stimuli_high_primary = stimuli_primary.concat(stimuli_background);
-// console.log(stimuli_high_primary);
+stimuli_high_primary.forEach((i) => (i.prob_cond = 'HP'));
 
 const stimuli_low_primary = stimuli_primary.concat(repeatArray(stimuli_background, 4));
+stimuli_high_primary.forEach((i) => (i.prob_cond = 'LP'));
 // console.log(stimuli_low_primary);
 
 function draw_pp(args) {
@@ -693,6 +699,8 @@ const trial_pp = {
     soa: jsPsych.timelineVariable('soa'),
     blk_type: 'experiment',
     corr_key: jsPsych.timelineVariable('corr_key'),
+    backward_comp: jsPsych.timelineVariable('backward_comp'),
+    prob_cond: jsPsych.timelineVariable('prob'),
   },
   on_start: function (trial) {
     let letter_number;
@@ -776,8 +784,9 @@ const alpha_num = {
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
-    am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
+      text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
+      zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
+      und deiner Universität (Tübingen) per Email an:<br><br>
     hiwipibio@gmail.com<br>`,
       fontsize: 26,
       align: 'left',
