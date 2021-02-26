@@ -94,7 +94,7 @@ const prms = {
   right_letters: ['Y', 'Z'],
   stim_size: 'bold 80px monospace',
   fb_size: '30px monospace',
-  fb_training: ['Richtig', 'Falsch', 'Zu langsam', 'Richtig', 'Falsch'],
+  fb_text: ['Richtig', 'Falsch', 'Zu langsam', 'Richtig', 'Falsch'],
 
   // Response Keys
   resp_keys: ['q', 'p'],
@@ -113,15 +113,18 @@ let resp_text_colours_training = `<span style="color: ${prms.colours[0]}"> ${de[
 // prettier-ignore
 let resp_text_colours = `<span style="color: ${prms.colours[0]}">${de[prms.colours[0]]}</span> = linker Zeigefinger (Taste 'Q') <br> <span style="color: ${prms.colours[1]}">${de[prms.colours[1]]}</span> = rechter Zeigefinger (Taste 'P')`;
 
-// // response keys for letter task/number task and combined
-// let resp_text_letters = `${prms.left_letters[0]} oder ${prms.left_letters[1]} = linker Zeigefinger (Taste 'Q') <br> ${prms.right_letters[0]} oder ${prms.right_letters[1]} = rechter Zeigefinger (Taste 'P')`;
-// let resp_text_numbers = `${prms.left_numbers[0]} oder ${prms.left_numbers[1]} = linker Zeigefinger (Taste 'Q') <br> ${prms.right_numbers[0]} oder ${prms.right_numbers[1]} = rechter Zeigefinger (Taste 'P')`;
-// let resp_text_letters_numbers = `${prms.left_letters[0]}/${prms.left_letters[1]} oder ${prms.left_numbers[0]}/${prms.left_numbers[1]} = linker Zeigefinger (Taste 'Q') <br> ${prms.right_letters[0]}/${prms.right_letters[1]} oder ${prms.right_numbers[0]}/${prms.right_numbers[1]} = rechter Zeigefinger (Taste 'P')`;
-
-// response keys for letter task/number task and combined
+// response keys for letter task/number task
 let resp_text_letters = `vor "M" = linker Zeigefinger (Taste 'Q') <br> nach "M" = rechter Zeigefinger (Taste 'P')`;
 let resp_text_numbers = `kleiner 5 = linker Zeigefinger (Taste 'Q') <br> großer 5 = rechter Zeigefinger (Taste 'P')`;
-let resp_text_letters_numbers = `${prms.left_letters[0]}/${prms.left_letters[1]} oder ${prms.left_numbers[0]}/${prms.left_numbers[1]} = linker Zeigefinger (Taste 'Q') <br> ${prms.right_letters[0]}/${prms.right_letters[1]} oder ${prms.right_numbers[0]}/${prms.right_numbers[1]} = rechter Zeigefinger (Taste 'P')`;
+// let resp_text_letters_numbers = `${prms.left_letters[0]}/${prms.left_letters[1]} oder ${prms.left_numbers[0]}/${prms.left_numbers[1]} = linker Zeigefinger (Taste 'Q') <br> ${prms.right_letters[0]}/${prms.right_letters[1]} oder ${prms.right_numbers[0]}/${prms.right_numbers[1]} = rechter Zeigefinger (Taste 'P')`;
+
+// response keys for PP task
+// prettier-ignore
+let resp_text_pp = `1. Priorität: Farbaufgabe <br><br><span style="color: ${prms.colours[0]}">${ de[prms.colours[0]]}</span> = Taste 'Q' &emsp;&emsp; <span style="color: ${prms.colours[1]}">${ de[prms.colours[1]] }</span> = Taste 'P' <br><br>
+                    2. Priorität (wenn Farbe <span style="color: ${prms.colours[2]}">${de[prms.colours[2]]}</span>): Buchstabe oder Farbaufgabe<br><br>
+                   Buchstabe vor M &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Buchstabe nach M<br>
+                   Zahl kleiner 5 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Zahl größer 5<br>
+                   (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `;
 
 //////////////////////////////////////////////////////////////////////////
 ////                      Experiment Instructions                       //
@@ -165,9 +168,10 @@ const task_instructions3 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `In diesem Experiment gibt es insgesamt drei verschiedene Aufgaben.
-          Du musst auf die Farben eines Quadrates (= Farbaufgabe), Buchstaben (= Buchstabenaufgabe) oder auf Zahlen (= Zahlenaufgabe) reagieren.
-          Zunächst hast du die Gelegenheit die einzelnen Aufgaben zu üben.<br><br>
-          Drücke eine beliebige Taste um fortzufahren.`,
+Du musst auf die Farben eines Quadrates (= Farbaufgabe), Buchstaben (= Buchstabenaufgabe) oder auf Zahlen <br>(= Zahlenaufgabe) reagieren. <br><br>
+WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit dem rechten Zeigefinger.<br><br>
+Zunächst hast du die Gelegenheit die einzelnen Aufgaben zu üben.<br><br>
+Drücke eine beliebige Taste um fortzufahren.`,
     fontsize: 26,
     align: 'left',
   }),
@@ -245,42 +249,38 @@ const task_instructions_training_number_task = {
     }),
 };
 
-const task_instructions_pp = {
+const task_instructions_pp1 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `ACHTUNG: NEUE INSTRUKTIONEN!!!<br><br>
+           Nun werden dir in jedem Durchgang 2 Aufgaben präsentiert: Immer die Farbaufgabe mit entweder der Buchstaben- oder Zahlenaufgabe.<br>
+           Du musst nur auf eine der zwei Aufgaben reagieren. <br>
+           Die erste Priorität ist die Farbe des Quadrates.<br>
+           Die zweite Priorität ist die Buchstaben- und Zahlenaufgabe. Du musst NUR auf den Buchstaben bzw. die Zahl reagieren, wenn die Farbaufgabe keine Antwort verlangt.<br><br>
+           Drücke eine beliebige Taste, um fortzufahren!`,
+    fontsize: 26,
+    align: 'left',
+  }),
+};
+
+const task_instructions_pp2 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `ACHTUNG: NEUE INSTRUKTIONEN!!!
-        Es werden dir nun in jedem Durchgang 2 Aufgaben präsentiert (immer Farbe & Buchstabe oder Zahl).
-        Du musst auf eine der zwei Aufgaben reagieren. Die erste Priorität ist die Farbe des Quadrates.
-        Die zweite Priorität ist die Buchstaben- und Zahlenaufgabe. Du musst NUR auf den Buchstaben/Zahl reagieren
-        wenn die Farbaufgabe keine Antwort verlangt.`,
-      fontsize: 26,
-      align: 'left',
-    }) +
-    generate_formatted_html({
-      text: resp_text_colours,
-      fontsize: 26,
-      align: 'center',
-    }) +
-    generate_formatted_html({
-      text: `Wenn die Farbe aber <span style="color: ${prms.colours[2]}">${
-        de[prms.colours[2]]
-      }</span> ist, dann bearbeite die Buchstaben-oder Zahlenaufgabe:`,
-      fontsize: 26,
-      align: 'left',
-    }) +
-    generate_formatted_html({
-      text: resp_text_letters_numbers,
+      text: resp_text_pp,
       fontsize: 26,
       align: 'center',
     }) +
     generate_formatted_html({
       text: `Drücke eine beliebige Taste, um fortzufahren.`,
       fontsize: 26,
-      align: 'left',
+      align: 'center',
     }),
 };
 
@@ -308,7 +308,7 @@ const task_instructions_pp_reminder = {
       align: 'left',
     }) +
     generate_formatted_html({
-      text: resp_text_letters_numbers,
+      text: resp_text_pp,
       fontsize: 26,
       align: 'center',
     }) +
@@ -317,19 +317,6 @@ const task_instructions_pp_reminder = {
       fontsize: 26,
       align: 'left',
     }),
-};
-
-const practice_block = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  stimulus: generate_formatted_html({
-    text: `Übungsblock<br><br>
-      Drücke eine beliebige Taste, um fortzufahren.`,
-    fontsize: 26,
-    align: 'center',
-  }),
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -486,7 +473,7 @@ function draw_feedback_training() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText(prms.fb_training[dat.corrCode - 1], 0, 0);
+  ctx.fillText(prms.fb_text[dat.corrCode - 1], 0, 0);
 }
 
 // prettier-ignore
@@ -628,7 +615,7 @@ const stimuli_primary = [
         { response_task: 'primary', background_task: 'number', colour: prms.colours[1], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
         { response_task: 'primary', background_task: 'number', colour: prms.colours[0], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
         { response_task: 'primary', background_task: 'number', colour: prms.colours[1], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
-    ];
+];
 
 // prettier-ignore
 const stimuli_background = [
@@ -663,6 +650,37 @@ function draw_pp(args) {
   ctx.fillText(args.letter_number, 0, 5); // 5 pixel offset seems to work better?
 }
 
+function draw_feedback_pp() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.fb_size;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  if (dat.corrCode == 1) {
+    ctx.fillText(prms.fb_text[dat.corrCode - 1], 0, 0);
+  } else {
+    ctx.fillText(prms.fb_text[dat.corrCode - 1], 0, -150);
+    ctx.fillText('1. Priorität: Farbaufgabe', 0, -80);
+    ctx.fillStyle = prms.colours[0];
+    ctx.fillText(de[prms.colours[0]], -290, -30);
+    ctx.fillStyle = 'black';
+    ctx.fillText(' = Taste "Q"', -150, -30);
+    ctx.fillStyle = prms.colours[1];
+    ctx.fillText(de[prms.colours[1]], 60, -30);
+    ctx.fillStyle = 'black';
+    ctx.fillText(' = Taste "P"', 200, -30);
+    ctx.fillText('2. Priorität wenn Farbe', 0, 50);
+    ctx.fillStyle = prms.colours[2];
+    ctx.fillText(de[prms.colours[2]], 250, 50);
+    ctx.fillStyle = 'black';
+    ctx.fillText('Buchstabe vor M        Buchstabe nach M', 0, 100);
+    ctx.fillText('Zahl kleiner 5         Zahl größer 5', 0, 140);
+    ctx.fillText('(Q-Taste)              (P-Taste)', 0, 180);
+  }
+}
+
 // TO DO: Do we need more detailed feedback for PP trials?
 const trial_feedback_pp = {
   type: 'static-canvas-keyboard-response',
@@ -671,7 +689,7 @@ const trial_feedback_pp = {
   canvas_border: canvas_border,
   translate_origin: true,
   response_ends_trial: false,
-  func: draw_feedback_training,
+  func: draw_feedback_pp,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = prms.fb_duration[dat.corrCode - 1];
@@ -786,7 +804,7 @@ const alpha_num = {
     generate_formatted_html({
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
-      und deiner Universität (Tübingen) per Email an:<br><br>
+      und deiner Universität (Tübingen oder Greifswald) per Email an:<br><br>
     hiwipibio@gmail.com<br>`,
       fontsize: 26,
       align: 'left',
@@ -881,7 +899,8 @@ function genExpSeq() {
 
   // In experiment phase, low vs. high probability is split across half with order counterbalanced across participants
   // The first block or trials in each probability level is a practice block with fewer trials
-  exp.push(task_instructions_pp);
+  exp.push(task_instructions_pp1);
+  exp.push(task_instructions_pp2);
 
   let hplp_type;
   let pe_type = ['P'].concat(repeatArray('E', prms.nBlks_pp_e)).concat('P').concat(repeatArray('E', prms.nBlks_pp_e));
@@ -891,17 +910,14 @@ function genExpSeq() {
     hplp_type = repeatArray('LP', prms.nBlks_pp_e + 1).concat(repeatArray('HP', prms.nBlks_pp_e + 1));
   }
   for (let blk = 0; blk < hplp_type.length; blk++) {
-    exp.push(task_instructions_pp_reminder);
     if (hplp_type[blk] === 'HP') {
       if (pe_type[blk] === 'P') {
-        exp.push(practice_block);
         exp.push(trial_timeline_high_primary_practice);
       } else if (pe_type[blk] === 'E') {
         exp.push(trial_timeline_high_primary_exp);
       }
     } else if (hplp_type[blk] === 'LP') {
       if (pe_type[blk] === 'P') {
-        exp.push(practice_block);
         exp.push(trial_timeline_low_primary_practice);
       } else if (pe_type[blk] === 'E') {
         exp.push(trial_timeline_low_primary_exp);
