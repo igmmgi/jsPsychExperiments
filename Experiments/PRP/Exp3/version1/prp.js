@@ -479,7 +479,7 @@ function genExpSeq() {
 
   exp.push(welcome_de_du_click);
   exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);

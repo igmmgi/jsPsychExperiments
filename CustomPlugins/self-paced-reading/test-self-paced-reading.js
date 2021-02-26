@@ -1,6 +1,7 @@
-// jsPsych html-mouse-response
+// jsPsych self-paced-reading
+
 const sentences = [
-  'The quick brown fox jumps over the lazy dog.',
+  `The quick brown fox jumps over the lazy dog.`,
   'Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.',
 ];
 
@@ -13,9 +14,9 @@ for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
     mask_type: 1,
     sentence: sentences[sent_num],
     font: '24px monospace',
-    x_align: 'left',
+    x_align: 'center',
     translate_origin: true,
-    xy_position: [-300, 0],
+    xy_position: [0, 0],
   };
   timeline.push(moving_window);
 }
@@ -84,19 +85,61 @@ for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
   timeline.push(moving_window);
 }
 
-// // Mask type 3
-// for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
-//   let moving_window = {
-//     type: 'self-paced-reading',
-//     mask_type: 3,
-//     sentence: sentences[sent_num],
-//     font: '24px monospace',
-//     x_align: 'center',
-//     translate_origin: true,
-//     xy_position: [0, 0],
-//   };
-//   timeline.push(moving_window);
-// }
+// user define line breaks
+const sentences_with_line_breaks = [
+  `The quick brown fox
+  jumps over the lazy dog.`,
+  'Victor jagt zwölf Boxkämpfer \n quer über den großen Sylter Deich.',
+  `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+  eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+  voluptua. At vero eos et accusam et justo duo dolores et ea rebum.`,
+];
+
+// Mask type 1
+for (let sent_num = 0; sent_num < sentences_with_line_breaks.length; sent_num++) {
+  let moving_window = {
+    type: 'self-paced-reading',
+    mask_type: 1,
+    sentence: sentences_with_line_breaks[sent_num],
+    font: '20px monospace',
+    x_align: 'left',
+    line_height: 30,
+    translate_origin: true,
+    xy_position: [-400, 0],
+  };
+  timeline.push(moving_window);
+}
+
+// Mask type 1
+for (let sent_num = 0; sent_num < sentences_with_line_breaks.length; sent_num++) {
+  let moving_window = {
+    type: 'self-paced-reading',
+    mask_type: 1,
+    sentence: sentences_with_line_breaks[sent_num],
+    mask_on_word: false,
+    font: '20px monospace',
+    x_align: 'left',
+    y_align: 'center',
+    line_height: 30,
+    translate_origin: true,
+    xy_position: [-400, 0],
+  };
+  timeline.push(moving_window);
+}
+
+// Mask type 3
+for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
+  let moving_window = {
+    type: 'self-paced-reading',
+    mask_type: 3,
+    sentence: sentences[sent_num],
+    font: '24px monospace',
+    x_align: 'center',
+    translate_origin: true,
+    xy_position: [0, 0],
+  };
+  timeline.push(moving_window);
+}
 
 jsPsych.init({
   timeline: timeline,

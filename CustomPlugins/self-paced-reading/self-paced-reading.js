@@ -55,6 +55,13 @@ jsPsych.plugins['self-paced-reading'] = (function () {
         default: '80px monospaced',
         description: 'Font (should be monospaced font)',
       },
+      line_height: {
+        type: jsPsych.plugins.parameterType.INT,
+        array: false,
+        pretty_name: 'Line Height',
+        default: 80,
+        description: 'Line height if multi-line text',
+      },
       font_colour: {
         type: jsPsych.plugins.parameterType.STRING,
         array: false,
@@ -108,6 +115,13 @@ jsPsych.plugins['self-paced-reading'] = (function () {
         pretty_name: 'align',
         default: 'left',
         description: 'Text Alignment',
+      },
+      y_align: {
+        type: jsPsych.plugins.parameterType.STRING,
+        array: false,
+        pretty_name: 'Y align multi-line',
+        default: 'top',
+        description: 'Y align multi-line text in the centre',
       },
     },
   };
@@ -202,8 +216,33 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     ctx.textBaseline = 'middle';
 
     // text properties
-    const words = trial.sentence.split(' ');
+    let words = [];
+    let line_length = [];
+    let sentence_length = 0;
     let word_number = trial.mask_type === 3 ? 0 : -1;
+    let word_number_line = -1;
+    let line_number = 0;
+
+    // deal with potential multi-line sentences with user defined splits
+    if (trial.mask_type !== 3) {
+      trial.sentence_split = trial.sentence.split('\n');
+      trial.sentence_split = trial.sentence_split.map(function (word) {
+        return word.trim();
+      });
+      for (let i = 0; i < trial.sentence_split.length; i++) {
+        words[i] = trial.sentence_split[i].split(' ');
+        sentence_length += words[i].length;
+        line_length.push(words[i].length);
+      }
+      // center multi-line text on original y position
+      if ((words.length > 1) & (trial.y_align === 'center')) {
+        trial.xy_position[1] -= words.length * 0.5 * trial.line_height;
+      }
+    } else {
+      words = trial.sentence.split(' ');
+      sentence_length = words.length;
+      console.log(words);
+    }
 
     const word = display_word(trial.mask_type, trial.mask_on_word, trial.mask_character);
     const mask = display_mask(trial.mask_type, trial.mask_on_word, trial.mask_character, trial.mask_gap_character);
@@ -216,11 +255,32 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       // text + mask
       ctx.fillStyle = trial.font_colour;
       if (trial.mask_type !== 3) {
-        ctx.fillText(word(words, word_number), trial.xy_position[0], trial.xy_position[1]);
-        ctx.fillText(mask(words, word_number), trial.xy_position[0], trial.xy_position[1] + trial.mask_y_offset);
+        // words
+        ctx.fillText(
+          word(words[line_number], word_number_line),
+          trial.xy_position[0],
+          trial.xy_position[1] + line_number * trial.line_height,
+        );
+        // mask
+        for (let i = 0; i < words.length; i++) {
+          let mw = i === line_number ? word_number_line : -1;
+          ctx.fillText(
+            mask(words[i], mw),
+            trial.xy_position[0],
+            trial.xy_position[1] + i * trial.line_height + trial.mask_y_offset,
+          );
+        }
       } else {
         // word-by-word in centre so no mask!
         ctx.fillText(words[word_number], trial.xy_position[0], trial.xy_position[1]);
+      }
+
+      // set line/word numbers
+      if (word_number_line + 1 < line_length[line_number]) {
+        word_number_line++;
+      } else if (line_number < words.length - 1) {
+        line_number++;
+        word_number_line = 0;
       }
     }
 
@@ -245,7 +305,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       // gather the data to store for the trial
       const trial_data = {
         rt: response.rt,
-        word: words[word_number - 1],
+        word: trial.mask_type === 3 ? words[word_number] : words[line_number][word_number - 1],
         word_number: word_number,
         sentence: trial.sentence,
       };
@@ -258,23 +318,21 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     // function to handle responses by the subject
     const after_response = function (info) {
       response.rt = info.rt;
-      response.word = words[word_number];
+      response.word = trial.mask_type === 3 ? words[word_number] : words[line_number][word_number];
       response.word_number = word_number + 1;
       response.sentence = trial.sentence;
 
       // store data
-      if (word_number < words.length - 1) {
+      if (word_number < sentence_length - 1) {
         jsPsych.data.write(response);
       }
 
-      // next word
       word_number++;
-
-      // ?
       jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       keyboardListener = key();
 
-      if (word_number < words.length) {
+      // keep drawing until words in sentence complete
+      if (word_number < sentence_length) {
         draw();
       } else {
         end_trial();
