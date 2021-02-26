@@ -1,7 +1,7 @@
 // jsPsych html-mouse-response-canvas
 
 let timeline = [];
-for (let i = 1; i <= 20; i++) {
+for (let i = 1; i <= 10; i++) {
   let mouse_response = {
     type: 'html-mouse-response-canvas',
     stimulus: `<H1>${i}/20<br><br>Press a mouse button!`,

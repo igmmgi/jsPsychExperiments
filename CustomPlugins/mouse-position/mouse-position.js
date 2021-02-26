@@ -151,6 +151,7 @@ jsPsych.plugins['html-mouse-position-canvas'] = (function () {
       let xtxt = `xpos: ${Math.round(mpos.x)} px`;
       let ytxt = `ypos: ${Math.round(mpos.y)} px`;
       if (trial.translate_origin) {
+        ctx.fillText('Origin: Center', 0, -75);
         ctx.fillText(xtxt, 0, -25);
         ctx.fillText(ytxt, 0, 25);
         ctx.beginPath();
@@ -162,6 +163,7 @@ jsPsych.plugins['html-mouse-position-canvas'] = (function () {
         ctx.lineTo(0, canvas.height);
         ctx.stroke();
       } else {
+        ctx.fillText('Origin: Top Left', canvas.width / 2, canvas.height / 2 - 75);
         ctx.fillText(xtxt, canvas.width / 2, canvas.height / 2 - 25);
         ctx.fillText(ytxt, canvas.width / 2, canvas.height / 2 + 25);
         ctx.beginPath();
