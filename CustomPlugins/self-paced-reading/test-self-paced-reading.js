@@ -20,6 +20,56 @@ for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
   timeline.push(moving_window);
 }
 
+// Mask type 1
+for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
+  let moving_window = {
+    type: 'self-paced-reading',
+    mask_type: 1,
+    mask_on_word: false,
+    mask_y_offset: -10,
+    sentence: sentences[sent_num],
+    font: '24px monospace',
+    x_align: 'left',
+    translate_origin: true,
+    xy_position: [-300, 0],
+  };
+  timeline.push(moving_window);
+}
+
+// Mask type 1
+for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
+  let moving_window = {
+    type: 'self-paced-reading',
+    mask_type: 1,
+    mask_on_word: false,
+    mask_y_offset: -10,
+    mask_gap_character: '_',
+    sentence: sentences[sent_num],
+    font: '24px monospace',
+    x_align: 'left',
+    translate_origin: true,
+    xy_position: [-300, 0],
+  };
+  timeline.push(moving_window);
+}
+
+// Mask type 1
+for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
+  let moving_window = {
+    type: 'self-paced-reading',
+    mask_type: 1,
+    mask_on_word: false,
+    mask_y_offset: 5,
+    mask_character: '*',
+    sentence: sentences[sent_num],
+    font: '24px monospace',
+    x_align: 'left',
+    translate_origin: true,
+    xy_position: [-300, 0],
+  };
+  timeline.push(moving_window);
+}
+
 // Mask type 2
 for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
   let moving_window = {
