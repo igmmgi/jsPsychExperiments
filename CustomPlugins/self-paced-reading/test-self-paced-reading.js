@@ -122,7 +122,7 @@ for (let sent_num = 0; sent_num < sentences_with_line_breaks.length; sent_num++)
     y_align: 'center',
     line_height: 30,
     translate_origin: true,
-    xy_position: [-400, 0],
+    xy_position: [-400, -200],
   };
   timeline.push(moving_window);
 }
