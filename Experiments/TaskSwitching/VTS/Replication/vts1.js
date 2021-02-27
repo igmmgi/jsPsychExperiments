@@ -83,16 +83,16 @@ const prms = {
   lettersConsonant: ['G', 'K', 'M', 'R'],
   numberPos: null,
   letterPos: null,
-  contKey: ['space'],
-  respKeysNames: ['A', 'S', 'K', 'L'],
-  respKeysNamesNumber: null,
-  respKeysNamesLetter: null,
-  respKeysCodes: [
-    jsPsych.pluginAPI.convertKeyCharacterToKeyCode('A'),
-    jsPsych.pluginAPI.convertKeyCharacterToKeyCode('S'),
-    jsPsych.pluginAPI.convertKeyCharacterToKeyCode('K'),
-    jsPsych.pluginAPI.convertKeyCharacterToKeyCode('L'),
-  ],
+  contKey: [' '],
+  respKeys: ['A', 'S', 'K', 'L'],
+  respKeysNumber: null,
+  respKeysLetter: null,
+  // respKeysCodes: [
+  //   jsPsych.pluginAPI.convertKeyCharacterToKeyCode('A'),
+  //   jsPsych.pluginAPI.convertKeyCharacterToKeyCode('S'),
+  //   jsPsych.pluginAPI.convertKeyCharacterToKeyCode('K'),
+  //   jsPsych.pluginAPI.convertKeyCharacterToKeyCode('L'),
+  // ],
 };
 
 const vts_data = {
@@ -113,21 +113,21 @@ let fingerMapping;
 if ([1, 2, 3, 4].includes(nVersion)) {
   handMapping = ['number', 'letter'];
   handMappingInstructions = ['odd vs. even', 'vowel vs. consonant'];
-  prms.respKeysNamesNumber = [prms.respKeysNames[0], prms.respKeysNames[1]];
-  prms.respKeysNamesLetter = [prms.respKeysNames[2], prms.respKeysNames[3]];
+  prms.respKeysNumber = [prms.respKeys[0], prms.respKeys[1]];
+  prms.respKeysLetter = [prms.respKeys[2], prms.respKeys[3]];
   fingerMapping = shuffle(['odd', 'even']).concat(shuffle(['vowel', 'consonant']));
 } else {
   handMapping = ['letter', 'number'];
   handMappingInstructions = ['vowel/consonant', 'odd/even'];
-  prms.respKeysNamesLetter = [prms.respKeysNames[0], prms.respKeysNames[1]];
-  prms.respKeysNamesNumber = [prms.respKeysNames[2], prms.respKeysNames[3]];
+  prms.respKeysLetter = [prms.respKeys[0], prms.respKeys[1]];
+  prms.respKeysNumber = [prms.respKeys[2], prms.respKeys[3]];
   fingerMapping = shuffle(['vowel', 'consonant']).concat(shuffle(['odd', 'even']));
 }
 
 let respText = generate_formatted_html({
   text: `Left hand = ${handMappingInstructions[0]} &ensp;&ensp;&ensp; Right hand = ${handMappingInstructions[1]}<br><br>
-    ${prms.respKeysNames[0]} = ${fingerMapping[0]} / ${prms.respKeysNames[1]} = ${fingerMapping[1]} &ensp;&ensp;&ensp;
-    ${prms.respKeysNames[2]} = ${fingerMapping[2]} / ${prms.respKeysNames[3]} = ${fingerMapping[3]}`,
+    ${prms.respKeys[0]} = ${fingerMapping[0]} / ${prms.respKeys[1]} = ${fingerMapping[1]} &ensp;&ensp;&ensp;
+    ${prms.respKeys[2]} = ${fingerMapping[2]} / ${prms.respKeys[3]} = ${fingerMapping[3]}`,
 });
 
 if ([1, 2, 5, 6].includes(nVersion)) {
@@ -187,7 +187,8 @@ function codeTrial() {
   let dat = jsPsych.data.get().last(1).values()[0];
 
   // Which hand/task did they respond with/to?
-  let respHand = prms.respKeysCodes.slice(0, 2).includes(dat.key_press) ? 'left' : 'right';
+  let respHand = ((jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0]))
+      || (jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1]))) ? "left": "right";
   let respTask = respHand === 'left' ? handMapping[0] : handMapping[1];
 
   // Was it a repeat or repetition of task?
@@ -202,15 +203,15 @@ function codeTrial() {
   if (respTask === 'letter') {
     if (prms.lettersVowel.includes(dat.letter)) {
       if (
-        (fingerMapping[0 + offset] === 'vowel' && dat.key_press === prms.respKeysCodes[0 + offset]) |
-        (fingerMapping[1 + offset] === 'vowel' && dat.key_press === prms.respKeysCodes[1 + offset])
+        (fingerMapping[0 + offset] === 'vowel' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) |
+        (fingerMapping[1 + offset] === 'vowel' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
         error = 0;
       }
     } else if (prms.lettersConsonant.includes(dat.letter)) {
       if (
-        (fingerMapping[0 + offset] === 'consonant' && dat.key_press === prms.respKeysCodes[0 + offset]) |
-        (fingerMapping[1 + offset] === 'consonant' && dat.key_press === prms.respKeysCodes[1 + offset])
+        (fingerMapping[0 + offset] === 'consonant' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) |
+        (fingerMapping[1 + offset] === 'consonant' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
         error = 0;
       }
@@ -218,15 +219,15 @@ function codeTrial() {
   } else if (respTask === 'number') {
     if (prms.numbersOdd.includes(dat.number)) {
       if (
-        (fingerMapping[0 + offset] === 'odd' && dat.key_press === prms.respKeysCodes[0 + offset]) |
-        (fingerMapping[1 + offset] === 'odd' && dat.key_press === prms.respKeysCodes[1 + offset])
+        (fingerMapping[0 + offset] === 'odd' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) |
+        (fingerMapping[1 + offset] === 'odd' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
         error = 0;
       }
     } else if (prms.numbersEven.includes(dat.number)) {
       if (
-        (fingerMapping[0 + offset] === 'even' && dat.key_press === prms.respKeysCodes[0 + offset]) |
-        (fingerMapping[1 + offset] === 'even' && dat.key_press === prms.respKeysCodes[1 + offset])
+        (fingerMapping[0 + offset] === 'even' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) |
+        (fingerMapping[1 + offset] === 'even' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
         error = 0;
       }
@@ -293,10 +294,10 @@ const vts_stimulus = {
 
     // activate only response keys for available task
     if (trial.letter !== '#') {
-      trial.choices = trial.choices.concat(prms.respKeysNamesLetter);
+      trial.choices = trial.choices.concat(prms.respKeysLetter);
     }
     if (trial.number !== '#') {
-      trial.choices = trial.choices.concat(prms.respKeysNamesNumber);
+      trial.choices = trial.choices.concat(prms.respKeysNumber);
     }
 
     // SOA interval
