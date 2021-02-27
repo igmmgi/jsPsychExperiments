@@ -19,7 +19,7 @@ const prms = {
   iti: 1000,
   tooFast: 150,
   tooSlow: 1500,
-  respKeys: ['D', 'J', 27],
+  respKeys: ['D', 'J'],
   fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -55,6 +55,36 @@ const simons = [
   "<div class='square_right'></div>",
   "<div class='circle_right'></div>",
 ];
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
 
 const simon_stimulus = {
   type: 'html-keyboard-response',
@@ -93,13 +123,14 @@ const block_feedback = {
   post_trial_gap: prms.waitDur,
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, simon_stimulus, trial_feedback],
   timeline_variables: [
-    { simon: simons[0], comp: 'comp', side: 'left', key: prms.respKeys[0] },
-    { simon: simons[1], comp: 'incomp', side: 'left', key: prms.respKeys[1] },
-    { simon: simons[2], comp: 'comp', side: 'right', key: prms.respKeys[0] },
-    { simon: simons[3], comp: 'incomp', side: 'right', key: prms.respKeys[0] },
+    { simon: simons[0], comp: 'comp',   side: 'left',  key: prms.respKeys[0] },
+    { simon: simons[1], comp: 'incomp', side: 'left',  key: prms.respKeys[1] },
+    { simon: simons[2], comp: 'incomp', side: 'right', key: prms.respKeys[0] },
+    { simon: simons[3], comp: 'comp',   side: 'right', key: prms.respKeys[1] },
   ],
 };
 

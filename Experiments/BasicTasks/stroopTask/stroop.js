@@ -19,7 +19,7 @@ const prms = {
   iti: 1000,
   tooFast: 150,
   tooSlow: 1500,
-  respKeys: ['D', 'J', 27],
+  respKeys: ['D', 'J'],
   fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -31,7 +31,7 @@ const prms = {
 ////////////////////////////////////////////////////////////////////////
 let task_instructions = '';
 if (prms.mapping === 1) {
-  prms.respKeys = ['D', 'J', 27];
+  prms.respKeys = ['D', 'J'];
   task_instructions = {
     type: 'html-keyboard-response',
     stimulus:
@@ -41,7 +41,7 @@ if (prms.mapping === 1) {
     post_trial_gap: prms.waitDur,
   };
 } else {
-  prms.respKeys = ['J', 'D', 27];
+  prms.respKeys = ['J', 'D'];
   task_instructions = {
     type: 'html-keyboard-response',
     stimulus:
@@ -70,6 +70,37 @@ const stroops = [
   "<h1 style='color:blue'>blue</h1>",
   "<h1 style='color:blue'>red</h1>",
 ];
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+    console.log(dat);
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
 
 const stroop_stimulus = {
   type: 'html-keyboard-response',
@@ -112,14 +143,15 @@ const block_feedback = {
   },
 };
 
+// prettier-ignore
 const trial_timeline = {
-  timeline: [fixation_cross, stroop_stimulus, trial_feedback],
-  timeline_variables: [
-    { stroop: stroops[0], word: 'red', colour: 'red', comp: 'comp', key: prms.respKeys[0] },
-    { stroop: stroops[1], word: 'blue', colour: 'red', comp: 'incomp', key: prms.respKeys[0] },
-    { stroop: stroops[2], word: 'blue', colour: 'blue', comp: 'comp', key: prms.respKeys[1] },
-    { stroop: stroops[3], word: 'red', colour: 'blue', comp: 'incomp', key: prms.respKeys[1] },
-  ],
+    timeline: [fixation_cross, stroop_stimulus, trial_feedback],
+    timeline_variables: [
+        { stroop: stroops[0], word: 'red',  colour: 'red',  comp: 'comp',   key: prms.respKeys[0] },
+        { stroop: stroops[1], word: 'blue', colour: 'red',  comp: 'incomp', key: prms.respKeys[0] },
+        { stroop: stroops[2], word: 'blue', colour: 'blue', comp: 'comp',   key: prms.respKeys[1] },
+        { stroop: stroops[3], word: 'red',  colour: 'blue', comp: 'incomp', key: prms.respKeys[1] },
+    ],
 };
 
 ////////////////////////////////////////////////////////////////////////

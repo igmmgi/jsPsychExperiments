@@ -19,7 +19,7 @@ const prms = {
   iti: 1000,
   tooFast: 150,
   tooSlow: 1500,
-  respKeys: ['D', 'J', 27],
+  respKeys: ['D', 'J'],
   fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -50,6 +50,38 @@ const fixation_cross = {
 };
 
 const affnegs = ['<h1>now left</h1>', '<h1>now right</h1>', '<h1>not left</h1>', '<h1>not right</h1>'];
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
+
+
 
 const affneg_stimulus = {
   type: 'html-keyboard-response',
@@ -91,12 +123,13 @@ const block_feedback = {
   },
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, affneg_stimulus, trial_feedback],
   timeline_variables: [
-    { affneg: affnegs[0], type: 'aff', side: 'left', key: prms.respKeys[0] },
+    { affneg: affnegs[0], type: 'aff', side: 'left',  key: prms.respKeys[0] },
     { affneg: affnegs[1], type: 'aff', side: 'right', key: prms.respKeys[1] },
-    { affneg: affnegs[2], type: 'neg', side: 'left', key: prms.respKeys[1] },
+    { affneg: affnegs[2], type: 'neg', side: 'left',  key: prms.respKeys[1] },
     { affneg: affnegs[3], type: 'neg', side: 'right', key: prms.respKeys[0] },
   ],
 };

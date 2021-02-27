@@ -18,12 +18,12 @@ const prms = {
     cueDur: 200,     // cue duration
     fbDur: 500,      // feedback duration
     cti: 0,          // cue-target-interval duration
-    targetPos: 500,  // target position +- 
+    targetPos: 500,  // target position +-
     waitDur: 1000,   // duration to wait following ...
     iti: 1000,       // inter-trial-interval
     tooFast: 150,    // response criterion for too fast
     tooSlow: 1500,   // response criterion for too slow
-    respKeys: ['Q', 'P', 27],  // define response keys
+    respKeys: ['Q', 'P'],  // define response keys
     fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],  // text to show for feedback
     cTrl: 1, // count trials
     cBlk: 1, // count blocks
@@ -37,8 +37,8 @@ const task_instructions = {
     stimulus: `
     <H2>Welcome: <br><br>
     Your task is to respond to the location of a circle that is presented <br>
-    to the left or right side of the screen. Respond with the following keys:<br><br> 
-    Left Side = ` + prms.respKeys[0] + `&emsp;&emsp;Right Side = ` + prms.respKeys[1] + ` key<br><br> 
+    to the left or right side of the screen. Respond with the following keys:<br><br>
+    Left Side = ` + prms.respKeys[0] + `&emsp;&emsp;Right Side = ` + prms.respKeys[1] + ` key<br><br>
     Press the spacebar to continue!</H2>`,
     post_trial_gap: prms.waitDur
 };
@@ -57,7 +57,7 @@ const fixation_cross = {
 
 const cue_stimulus = {
     type: 'canvas-keyboard-response',
-    stimulus: drawCue, 
+    stimulus: drawCue,
     trial_duration: prms.cueDur,
     response_ends_trial: false,
     choices: prms.respKeys,
@@ -74,7 +74,7 @@ function drawCue(c) {
     let ctx = c.getContext('2d');
     ctx.translate(c.width / 2, c.height / 2); // make center (0, 0)
 
-    var img = new Image();   
+    var img = new Image();
     img.src = jsPsych.timelineVariable('cue_img', true);
 
     let w = img.width;
@@ -84,9 +84,41 @@ function drawCue(c) {
 
 }
 
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
+
+
+
 const target_stimulus = {
     type: 'canvas-keyboard-response',
-    stimulus: drawTarget, 
+    stimulus: drawTarget,
     trial_duration: prms.tooSlow,
     response_ends_trial: true,
     choices: prms.respKeys,
@@ -97,7 +129,7 @@ const target_stimulus = {
         target_side: jsPsych.timelineVariable('target_side'),
         validity: jsPsych.timelineVariable('validity'),
         corrResp: jsPsych.timelineVariable('key')
-    }, 
+    },
     on_finish: function () {
         codeTrial();
     },
@@ -109,7 +141,7 @@ function drawTarget(c) {
     let ctx = c.getContext('2d');
     ctx.translate(c.width / 2, c.height / 2); // make center (0, 0)
 
-    var img = new Image();   
+    var img = new Image();
     img.src = jsPsych.timelineVariable('target_img', true);
 
     let w = img.width;

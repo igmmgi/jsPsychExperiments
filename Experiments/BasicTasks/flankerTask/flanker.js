@@ -19,7 +19,7 @@ const prms = {
   iti: 1000,
   tooFast: 150,
   tooSlow: 1500,
-  respKeys: ['D', 'J', 27],
+  respKeys: ['D', 'J'],
   fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -68,26 +68,27 @@ const fixation_cross = {
   data: { stim: 'fixation' },
 };
 
+// prettier-ignore
 const flankers = [
   [
     "<div class='left' style='float: left'></div>" +
-      "<div class='left' style='float: left'></div>" +
-      "<div class='left' style='float: right'></div>",
+    "<div class='left' style='float: left'></div>" +
+    "<div class='left' style='float: right'></div>",
   ],
   [
     "<div class='right' style='float: left'></div>" +
-      "<div class='left'  style='float: left'></div>" +
-      "<div class='right' style='float: right'></div>",
+    "<div class='left'  style='float: left'></div>" +
+    "<div class='right' style='float: right'></div>",
   ],
   [
     "<div class='right' style='float: left'></div>" +
-      "<div class='right' style='float: left'></div>" +
-      "<div class='right' style='float: right'></div>",
+    "<div class='right' style='float: left'></div>" +
+    "<div class='right' style='float: right'></div>",
   ],
   [
     "<div class='left'  style='float: left'></div>" +
-      "<div class='right' style='float: left'></div>" +
-      "<div class='left'  style='float: right'></div>",
+    "<div class='right' style='float: left'></div>" +
+    "<div class='left'  style='float: right'></div>"
   ],
 ];
 
@@ -98,14 +99,45 @@ const flankers = [
 //     ['<div style="font-size:100px;"> <<><< </div>']
 // ]
 
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
+
+
 const flanker_stimulus = {
   type: 'html-keyboard-response',
   stimulus: jsPsych.timelineVariable('flanker'),
   trial_duration: prms.tooSlow,
   response_ends_trial: true,
   choices: prms.respKeys,
-  post_trial_gap: 0,
   data: {
+  post_trial_gap: 0,
     stim: 'flanker',
     comp: jsPsych.timelineVariable('comp'),
     corrResp: jsPsych.timelineVariable('key'),
@@ -137,12 +169,13 @@ const block_feedback = {
   },
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, flanker_stimulus, trial_feedback],
   timeline_variables: [
-    { flanker: flankers[0], comp: 'comp', key: prms.respKeys[0] },
+    { flanker: flankers[0], comp: 'comp',   key: prms.respKeys[0] },
     { flanker: flankers[1], comp: 'incomp', key: prms.respKeys[0] },
-    { flanker: flankers[2], comp: 'comp', key: prms.respKeys[1] },
+    { flanker: flankers[2], comp: 'comp',   key: prms.respKeys[1] },
     { flanker: flankers[3], comp: 'incomp', key: prms.respKeys[1] },
   ],
 };
