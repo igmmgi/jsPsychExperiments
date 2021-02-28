@@ -33,7 +33,7 @@ const prms = {
   fixSize: 15,
   wordSize: '30px monospace',
   fbSize: '30px monospace',
-  respKeys: ['D', 'K', 27],
+  respKeys: ['D', 'K'],
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -514,6 +514,36 @@ const block_feedback = {
   },
 };
 
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
+
 const stim = {
   type: 'static-canvas-keyboard-response',
   canvas_colour: canvas_colour,
@@ -602,9 +632,9 @@ const alphaNum = {
     "<h4 style='text-align:left;'>Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und</h4>" +
     "<h4 style='text-align:left;'>senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an: </h4>" +
     '<h2>sprachstudien@psycho.uni-tuebingen.de</h2><br>' +
-    "<h3 style='text-align:left;'>Gewinnspiel:</h3>" + 
+    "<h3 style='text-align:left;'>Gewinnspiel:</h3>" +
     "<h4 style='text-align:left;'>Wenn Sie alternativ an der Verlosung der Gutscheine teilnehmen möchten, kopieren Sie den zufällig generierten</h4>" +
-    "<h4 style='text-align:left;'>Code und senden sie diesen in einer E-Mail mit Betreff 'Gewinnspiel' an:</h4>" + 
+    "<h4 style='text-align:left;'>Code und senden sie diesen in einer E-Mail mit Betreff 'Gewinnspiel' an:</h4>" +
     '<h2>sprachstudien@psycho.uni-tuebingen.de</h2><br>' +
     '<h1>Code: ' +
     randomString +

@@ -27,7 +27,7 @@ const prms = {
   iti: 1000, // feedback shown during iti for incorrect responses only
   tooFast: 150,
   tooSlow: 1500,
-  respKeys: ['D', 'C', 'M', 'K', 27],
+  respKeys: ['D', 'C', 'M', 'K'],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fixWidth: 3,
   fixSize: 15,
@@ -115,6 +115,36 @@ const fixation_cross = {
   response_ends_trial: false,
   func: drawFixation,
 };
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
 
 const trial_stimulus = {
   type: 'static-canvas-keyboard-response',
@@ -261,7 +291,7 @@ const alphaNum = {
       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden zufällig generierten Code und
       senden Sie diesen zusammen mit Ihrer Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde' an:<br><br>
     sprachstudien@psycho.uni-tuebingen.de
-        hiwipibio@gmail.com 
+        hiwipibio@gmail.com
         Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
