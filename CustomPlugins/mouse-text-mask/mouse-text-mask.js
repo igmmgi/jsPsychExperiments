@@ -86,7 +86,6 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     let ctx = document.getElementById('canvas').getContext('2d');
     let rect = canvas.getBoundingClientRect();
 
-    // let canvasOffset = $(canvas).offset();
     let trial_started = false;
     let end_rt;
     let end_loc;
