@@ -12,28 +12,19 @@
 //  Presented one above the other (number vs. letter constant within, counter-balanced across)
 //
 // Responses:
-//  Left/right index finger responses with the "y", "x", ",", "." keys (NB. changed to "A", "S", "K", and "L")
+//  Left/right index finger responses with the "y", "x", ",", "." keys (NB. changed to "Q", "W", "O", and "P")
 //  Task to hand mapping counter-balanced across participants
 //  Finger response mapping randomly selected for each participants
 //
-// Block Structure:
-// 15 blocks in total (1st block = practice)
-// First 4 blocks (no explicit instructions regarding the switch SOA manipulation)
-// 2 blocks (potential repetition stimulus delayed by 50 ms * number of repeats)
-// 2 blocks (potential repetition stimulus delayed by constant 50 ms)
-// Above block order counder-balanced across participants
-// Subsequent blocks (Participants informed about the manipulation)
-// Had to perform 50 trials of each task with the potential repeat stimulus being
-// delayed by 50 ms * number of repeats. Following 50 tasks of the same type, the
-// stimulus was replaced by a placeholder (#) and key-presses for this task were no
-// longer recognized
-// Self-paced breaks between blocks with total duration + number of errors displayed
-// If more than 10 errors, an additional screen was displayed for 60 s indicating the
-// response mapping
-//
-// Trial Feedback:
-// Correct trials = low tone + black RSI screen for 150 ms
-// Incorrect trials = high tone + black RSI screen for 650 ms
+// Block/Trial Structure
+// 10 blocks of 100 trials (50 trials of each task)
+//    1st 1/2 blocks (repetitiion stimulus presented at an SOA delay of +50 ms to previous)
+//    2nd 1/2 blocks (repetitiion stimulus presented at a random SOA, 50-350 ms, steps of 50 ms)
+// Correct response -> Next stimulus display presented after 300 ms
+// Incorrect response -> Error screen showing S-R mappings presented for 2500 ms
+// Self-paced breaks with performance feedback (total time + number of errors)
+//    If more than 10 block errors, additional screen for 30 seconds indicating
+//    too many errors + correct S-R mappings
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -65,15 +56,13 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrls: 10, // number of trials within a block
-  nBlks: 15, // number of blocks
-  fbDur: [150, 650], // feedback duration for correct and incorrect trials, respectively
-  fbText: ['Correct', 'Error'], // feedback text
+  nTrls: 100, // number of trials within a block
+  nBlks: 10, // number of blocks
+  fbDur: [300, 2500], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   stimFont: '50px Arial',
-  stimPos: 40,
-  soaStep: 50,
-  fbTxt: ['Richtig', 'Falsch'],
+  stimPos: 25,
+  fbTxt: ['', 'Falsch'],
   fbFont: '28px Arial',
   numbers: [2, 3, 4, 5, 6, 7, 8, 9],
   numbersEven: [2, 4, 6, 8],
@@ -81,10 +70,12 @@ const prms = {
   letters: ['A', 'E', 'G', 'I', 'K', 'M', 'R', 'U'],
   lettersVowel: ['A', 'E', 'I', 'U'],
   lettersConsonant: ['G', 'K', 'M', 'R'],
+  soaStep: 50,
+  soas: [50, 100, 150, 200, 250, 300, 350],
   numberPos: null,
   letterPos: null,
   contKey: [' '],
-  respKeys: ['A', 'S', 'K', 'L'],
+  respKeys: ['Q', 'W', 'O', 'P'],
   respKeysNumber: null,
   respKeysLetter: null,
 };
@@ -96,7 +87,7 @@ const vts_data = {
   nNumber: 0,
   previousTask: 'na',
   soa: 0,
-  delay: null,
+  poor_performance: false,
 };
 
 // const nVersion = getVersionNumber(nFiles, 8);
@@ -106,7 +97,7 @@ let handMapping, handMappingInstructions;
 let fingerMapping;
 if ([1, 2, 3, 4].includes(nVersion)) {
   handMapping = ['number', 'letter'];
-  handMappingInstructions = ['odd vs. even', 'vowel vs. consonant'];
+  handMappingInstructions = ['odd/even', 'vowel/consonant'];
   prms.respKeysNumber = [prms.respKeys[0], prms.respKeys[1]];
   prms.respKeysLetter = [prms.respKeys[2], prms.respKeys[3]];
   fingerMapping = shuffle(['odd', 'even']).concat(shuffle(['vowel', 'consonant']));
@@ -120,8 +111,8 @@ if ([1, 2, 3, 4].includes(nVersion)) {
 
 let respText = generate_formatted_html({
   text: `Left hand = ${handMappingInstructions[0]} &ensp;&ensp;&ensp; Right hand = ${handMappingInstructions[1]}<br><br>
-    ${prms.respKeys[0]} = ${fingerMapping[0]} / ${prms.respKeys[1]} = ${fingerMapping[1]} &ensp;&ensp;&ensp;
-    ${prms.respKeys[2]} = ${fingerMapping[2]} / ${prms.respKeys[3]} = ${fingerMapping[3]}`,
+    ${prms.respKeys[0]} (${fingerMapping[0]}) / ${prms.respKeys[1]} (${fingerMapping[1]}) &ensp;&ensp;&ensp;
+    ${prms.respKeys[2]} (${fingerMapping[2]}) / ${prms.respKeys[3]} (${fingerMapping[3]})`,
 });
 
 if ([1, 2, 5, 6].includes(nVersion)) {
@@ -138,16 +129,97 @@ if ([1, 2, 5, 6].includes(nVersion)) {
 ////////////////////////////////////////////////////////////////////////
 
 const task_instructions1 = {
-  type: 'html-keyboard-response',
-  stimulus:
-    generate_formatted_html({
-      text: `Aufgabe: <br><br>`,
-      align: 'left',
-      fontsize: 26,
-      lineheight: 1.5,
-    }) + respText,
-  choices: prms.contKey,
-  post_trial_gap: prms.waitDur,
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `Willkommen bei unserem Experiment:<br><br>
+    Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+    Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
+    genügend Zeit hast, um das Experiment durchzuführen.
+    Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.<br><br>
+    Drücke eine beliebige Taste, um fortzufahren!`,
+    fontsize: 26,
+    align: 'left',
+    lineheight: 1.5,
+  }),
+};
+
+const task_instructions2 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
+    am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
+    hiwipibio@gmail.com<br><br>
+    Drücke eine beliebige Taste, um fortzufahren!`,
+    fontsize: 26,
+    align: 'left',
+    lineheight: 1.5,
+  }),
+};
+
+const task_instructions3 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `You have to respond to 50 letters and 50 numbers in each block. Try to perform
+all of these 100 tasks as quickly and accurately as possible: One of the tasks
+(i.e., letter or number) appears earlier than the other task. Reaction time
+measurement starts with the onset of the first task and responses can be given
+after this onset. You can decide whether to respond to the task presented first
+or to wait for the other task, but you should try to be as fast as possible
+without committing errors. If a #-sign appears instead of one task, you always
+have to wait for the other task.<br><br>
+    Drücke eine beliebige Taste, um fortzufahren!`,
+    fontsize: 26,
+    align: 'left',
+    lineheight: 1.5,
+  }),
+};
+
+const task_instructions_responses = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: respText,
+    align: 'left',
+    fontsize: 26,
+    lineheight: 1.5,
+  }),
+};
+
+const task_instructions_responses_reminder = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      respText +
+      generate_formatted_html({
+        text: `Drücke eine beliebige Taste, um fortzufahren.`,
+        fontsize: 26,
+        align: 'center',
+      });
+  },
+};
+
+const blank_canvas = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  trial_duration: prms.waitDur,
 };
 
 function drawStimulus(args) {
@@ -161,7 +233,7 @@ function drawStimulus(args) {
   ctx.fillStyle = 'black';
   ctx.lineWidth = 5;
   ctx.beginPath();
-  ctx.rect(-50, -75, 100, 150);
+  ctx.rect(-40, -50, 80, 100);
   ctx.stroke();
 
   // letter task
@@ -239,15 +311,16 @@ function codeTrial() {
   }
 
   // Calculate RT: NB if responding to the repeat stimulus, subtract SOA
-  let rt = transition !== 'repetition' ? dat.rt : dat.rt - vts_data.soa;
+  let rt1 = dat.rt;
+  let rt2 = transition !== 'repeat' ? dat.rt : dat.rt - vts_data.soa;
 
   // console.log('Resp hand: ', respHand);
   // console.log('Resp task: ', respTask);
+  console.log('Transitiion: ', transition);
+  console.log('soa: ', vts_data.soa);
   // console.log('Transitiion: ', transition);
-  // console.log('delay: ', vts_data.delay);
-  // console.log('soa: ', vts_data.soa);
-  // console.log('Transitiion: ', transition);
-  // console.log('RT: ', rt);
+  console.log('RT1: ', rt1);
+  console.log('RT2: ', rt2);
   // console.log('Error: ', error);
 
   jsPsych.data.addDataToLastTrial({
@@ -257,9 +330,9 @@ function codeTrial() {
     respHand: respHand,
     respTask: respTask,
     transition: transition,
-    delay: vts_data.delay,
     soa: vts_data.soa,
-    rt: rt,
+    rt1: rt1,
+    rt2: rt2,
     error: error,
   });
 
@@ -268,7 +341,15 @@ function codeTrial() {
   if (respTask === 'number') vts_data.nNumber++;
   if (respTask === 'letter') vts_data.nLetter++;
   vts_data.previousTask = respTask;
-  vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 0;
+  if (vts_data.cBlk < prms.nBlks / 2) {
+    if (error === 0) {
+      vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 0;
+    } else {
+      vts_data.soa = 0; // error so reset to 0 ms
+    }
+  } else {
+    vts_data.soa = prms.soas[getRandomInt(0, prms.soas.length)];
+  }
 }
 
 const vts_stimulus = {
@@ -347,25 +428,31 @@ function drawTrialFeedback() {
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
 
-  // draw square
   ctx.fillStyle = 'black';
-  ctx.lineWidth = 5;
-  ctx.beginPath();
-  ctx.rect(-50, -75, 100, 150);
-  ctx.stroke();
-
-  // draw text
   ctx.font = prms.fbFont;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
-  ctx.fillText(prms.fbTxt[dat.error], 0, 0);
+  if (dat.error === 0) {
+    // draw square
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.rect(-40, -50, 80, 100);
+    ctx.stroke();
+
+    // draw text
+    ctx.fillText(prms.fbTxt[dat.error], 0, 0);
+  } else {
+    let txt1 = `Left hand = ${handMappingInstructions[0]}            Right hand = ${handMappingInstructions[1]}`;
+    ctx.fillText(txt1, 0, 0);
+    let txt2 = `${prms.respKeys[0]} (${fingerMapping[0]}) / ${prms.respKeys[1]} (${fingerMapping[1]})              ${prms.respKeys[2]} (${fingerMapping[2]}) / ${prms.respKeys[3]} (${fingerMapping[3]})`;
+    ctx.fillText(txt2, 0, 50);
+  }
 }
 
 function blockFeedbackTxt(filter_options) {
   'use strict';
   let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: vts_data.cBlk });
-  let totalTime = Math.round(dat.select('rt').sum() / 1000);
+  let totalTime = Math.round(dat.select('rt1').sum() / 1000);
   let nError = dat.select('error').values.filter(function (x) {
     return x === 1;
   }).length;
@@ -374,6 +461,8 @@ function blockFeedbackTxt(filter_options) {
   Total Time: ${totalTime} seconds<br>
   Number of Errors: ${nError}<br><br>
   Drücke eine beliebige Taste, um fortzufahren!`,
+    fontsize: 30,
+    lineheight: 1.5,
   });
 
   // reset vts_data for next block
@@ -383,21 +472,41 @@ function blockFeedbackTxt(filter_options) {
   vts_data.nLetter = 0;
   vts_data.previousTask = 'na';
   vts_data.soa = 0;
-  vts_data.delay = null;
+  vts_data.poor_performance = nError >= 10 ? true : false;
 
   return blockFbTxt;
 }
 
-const block_feedback = {
+const block_feedback1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: '',
   response_ends_trial: true,
-  post_trial_gap: prms.waitDur,
   on_start: function (trial) {
     trial.stimulus = blockFeedbackTxt({ stim: 'vts' });
+  },
+};
+
+const block_feedback2 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    generate_formatted_html({
+      text: `ACHTUNG!<br><br> You have made too many errors! 30 seconds Pause`,
+      fontsize: 26,
+      align: 'center',
+    }) + respText,
+  response_ends_trial: false,
+  on_start: function (trial) {
+    if (vts_data.poor_performance) {
+      trial.trial_duration = 30000;
+    } else {
+      trial.trial_duration = 0;
+    }
   },
 };
 
@@ -406,28 +515,32 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('mc1', 16);
+const randomString = generateRandomStringWithExpName('vts1', 16);
 
-const alphaNum = {
-  type: 'html-keyboard-response',
+const alpha_num = {
+  type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  response_ends_trial: true,
-  choices: [32],
-  stimulus: generate_formatted_html({
-    text:
-      `Vielen Dank für Ihre Teilnahme.<br><br>
-        Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
-        zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
-        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an:<br><br>hiwipibio@gmail.com<br> Code: ` +
-      randomString +
-      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
-    fontsize: 32,
-    lineheight: 1.5,
-    align: 'left',
-  }),
+  stimulus:
+    generate_formatted_html({
+      text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
+      zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
+      und deiner Universität (Tübingen) per Email an:<br><br>
+    hiwipibio@gmail.com<br>`,
+      fontsize: 26,
+      align: 'left',
+    }) +
+    generate_formatted_html({
+      text: `Code: ${randomString}<br>`,
+      fontsize: 26,
+      align: 'left',
+    }) +
+    generate_formatted_html({
+      text: `Drücke die Leertaste, um fortzufahren!`,
+      fontsize: 26,
+      align: 'left',
+    }),
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -472,16 +585,17 @@ function genExpSeq() {
   exp.push(welcome_de);
   exp.push(resize_de);
   // exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
   exp.push(task_instructions1);
+  exp.push(task_instructions2);
+  exp.push(task_instructions3);
 
+  exp.push(task_instructions_responses);
+  exp.push(blank_canvas);
   for (let blk = 0; blk < prms.nBlks; blk++) {
-    // type of delay for potential task repetition stimulus
-    if (nVersion % 2 === 1 && blk < 4) {
-      vts_data.delay = blk < 2 ? 'constant' : 'increasing';
-    } else if (nVersion % 2 === 0 && blk < 4) {
-      vts_data.delay = blk < 2 ? 'increasing' : 'constant';
-    } else {
-      vts_data.delay = 'increasing';
+    if (blk > 0) {
+      exp.push(task_instructions_responses_reminder);
+      exp.push(blank_canvas);
     }
     // trials within block
     for (let trl = 0; trl < prms.nTrls; trl++) {
@@ -489,18 +603,20 @@ function genExpSeq() {
       exp.push(trial_feedback);
     }
     // between block feedback
-    exp.push(block_feedback);
+    exp.push(block_feedback1);
+    exp.push(block_feedback2);
   }
 
-  // // save data
-  // exp.push(save_data);
-  // exp.push(save_interaction_data);
-  // exp.push(save_code);
+  // save data
+  exp.push(save_data);
+  exp.push(save_interaction_data);
+  exp.push(save_code);
 
-  // // debrief
-  // exp.push(alphaNum);
-  // exp.push(debrief_de);
-  // exp.push(fullscreen_off);
+  // debrief
+  exp.push(alpha_num);
+  exp.push(debrief_de);
+  exp.push(showMouseCursor);
+  exp.push(fullscreen_off);
 
   return exp;
 }

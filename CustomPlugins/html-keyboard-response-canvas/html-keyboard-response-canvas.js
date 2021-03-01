@@ -84,9 +84,7 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
       '" style="border: ' +
       trial.canvas_border +
       '; position: fixed; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%);"></canvas>' +
-      '<div>' +
       trial.stimulus +
-      '</div>' +
       '</div>';
 
     display_element.innerHTML = new_html;

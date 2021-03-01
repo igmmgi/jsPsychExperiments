@@ -390,12 +390,12 @@ function loadImages(imagefiles) {
   return loadedimages;
 }
 
-// Returns a random number between min (inclusive) and max (exclusive)
+// Returns a random number between min and max
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-// Returns a random int number between min (inclusive) and max (exclusive)
+// Returns a random int number between min and max
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
