@@ -18,8 +18,8 @@
 //
 // Block/Trial Structure
 // 10 blocks of 100 trials (50 trials of each task)
-//    1st 1/2 blocks (repetitiion stimulus presented at an SOA delay of +50 ms to previous)
-//    2nd 1/2 blocks (repetitiion stimulus presented at a random SOA, 50-350 ms, steps of 50 ms)
+//    1st 1/2 blocks (repetition stimulus presented at an SOA delay of +50 ms to previous)
+//    2nd 1/2 blocks (repetition stimulus presented at a random SOA, 50-350 ms, steps of 50 ms)
 // Correct response -> Next stimulus display presented after 300 ms
 // Incorrect response -> Error screen showing S-R mappings presented for 2500 ms
 // Self-paced breaks with performance feedback (total time + number of errors)
@@ -56,9 +56,10 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrls: 100, // number of trials within a block
+  nTrls: 10, // 100, // number of trials within a block
   nBlks: 10, // number of blocks
-  fbDur: [300, 2500], // feedback duration for correct and incorrect trials, respectively
+  nPoor: 2, // 10, // number of within block errors before poor performance warning
+  fbDur: [0, 2500], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   stimFont: '50px Arial',
   stimPos: 25,
@@ -70,6 +71,7 @@ const prms = {
   letters: ['A', 'E', 'G', 'I', 'K', 'M', 'R', 'U'],
   lettersVowel: ['A', 'E', 'I', 'U'],
   lettersConsonant: ['G', 'K', 'M', 'R'],
+  rsi: 300,
   soaStep: 50,
   soas: [50, 100, 150, 200, 250, 300, 350],
   numberPos: null,
@@ -87,42 +89,46 @@ const vts_data = {
   nNumber: 0,
   previousTask: 'na',
   soa: 0,
+  repetitionCounter: 0,
   poor_performance: false,
 };
 
-// const nVersion = getVersionNumber(nFiles, 8);
-const nVersion = 3;
+const nVersion = getVersionNumber(nFiles, 4);
 jsPsych.data.addProperties({ version: nVersion });
 let handMapping, handMappingInstructions;
 let fingerMapping;
-if ([1, 2, 3, 4].includes(nVersion)) {
+if ([1, 3].includes(nVersion)) {
   handMapping = ['number', 'letter'];
-  handMappingInstructions = ['odd/even', 'vowel/consonant'];
+  handMappingInstructions = ['Zahlenaufgabe', 'Buchstabenaufgabe'];
   prms.respKeysNumber = [prms.respKeys[0], prms.respKeys[1]];
   prms.respKeysLetter = [prms.respKeys[2], prms.respKeys[3]];
-  fingerMapping = shuffle(['odd', 'even']).concat(shuffle(['vowel', 'consonant']));
+  prms.numberPos = prms.stimPos;
+  prms.letterPos = -prms.stimPos;
+  fingerMapping = shuffle(['Ungerade', 'Gerade']).concat(shuffle(['Vokal', 'Konsonant']));
 } else {
   handMapping = ['letter', 'number'];
-  handMappingInstructions = ['vowel/consonant', 'odd/even'];
+  handMappingInstructions = ['Buchstabenaufgabe', 'Zahlenaufgabe'];
   prms.respKeysLetter = [prms.respKeys[0], prms.respKeys[1]];
   prms.respKeysNumber = [prms.respKeys[2], prms.respKeys[3]];
-  fingerMapping = shuffle(['vowel', 'consonant']).concat(shuffle(['odd', 'even']));
+  prms.numberPos = -prms.stimPos;
+  prms.letterPos = prms.stimPos;
+  fingerMapping = shuffle(['Vokal', 'Konsonant']).concat(shuffle(['Ungerade', 'Gerade']));
+}
+
+let soaCondition;
+if ([1, 2].includes(nVersion)) {
+  soaCondition = repeatArray('predictable', prms.nBlks / 2).concat(repeatArray(('random', prms.nBlks / 2)));
+} else if ([3, 4].includes(nVersion)) {
+  soaCondition = repeatArray('random', prms.nBlks / 2).concat(repeatArray(('predictable', prms.nBlks / 2)));
 }
 
 let respText = generate_formatted_html({
-  text: `Left hand = ${handMappingInstructions[0]} &ensp;&ensp;&ensp; Right hand = ${handMappingInstructions[1]}<br><br>
-    ${prms.respKeys[0]} (${fingerMapping[0]}) / ${prms.respKeys[1]} (${fingerMapping[1]}) &ensp;&ensp;&ensp;
-    ${prms.respKeys[2]} (${fingerMapping[2]}) / ${prms.respKeys[3]} (${fingerMapping[3]})`,
+  text: `${handMappingInstructions[0]} &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; ${handMappingInstructions[1]}<br><br>
+    ${fingerMapping[0]} &ensp;&ensp;&ensp;&ensp; ${fingerMapping[1]} &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; ${fingerMapping[2]} &ensp;&ensp;&ensp;&ensp; ${fingerMapping[3]} <br>
+    ("${prms.respKeys[0]}-Taste") &ensp;&ensp; ("${prms.respKeys[1]}-Taste") &ensp;&ensp;&ensp; ("${prms.respKeys[2]}-Taste") &ensp;&ensp; ("${prms.respKeys[3]}-Taste")`,
+  fontsize: 26,
+  bold: true,
 });
-
-if ([1, 2, 5, 6].includes(nVersion)) {
-  prms.numberPos = prms.stimPos;
-  prms.letterPos = -prms.stimPos;
-} else {
-  prms.numberPos = -prms.stimPos;
-  prms.letterPos = prms.stimPos;
-}
-// console.log(prms);
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -168,15 +174,74 @@ const task_instructions3 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `You have to respond to 50 letters and 50 numbers in each block. Try to perform
-all of these 100 tasks as quickly and accurately as possible: One of the tasks
-(i.e., letter or number) appears earlier than the other task. Reaction time
-measurement starts with the onset of the first task and responses can be given
-after this onset. You can decide whether to respond to the task presented first
-or to wait for the other task, but you should try to be as fast as possible
-without committing errors. If a #-sign appears instead of one task, you always
-have to wait for the other task.<br><br>
-    Drücke eine beliebige Taste, um fortzufahren!`,
+    text: `Du wirst die folgenden Antworttasten der Tastatur benötigen:<br><br>
+    Verwende den Zeige- und Mittelfinger deiner linken Hand für die Tasten "${prms.respKeys[0]}" und "${prms.respKeys[1]}" auf der linken Seite.<br><br>
+    Verwende den Zeige- und Mittelfinger deiner rechten Hand für die Tasten "${prms.respKeys[2]}" und "${prms.respKeys[3]}" auf der rechten Seite.<br><br><br>
+    Drücke eine beliebige Taste, um fortzufahren.`,
+    fontsize: 26,
+    align: 'left',
+    lineheight: 1.5,
+  }),
+};
+
+const task_instructions4 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    generate_formatted_html({
+      text: `Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe ein Vokal oder Konsonant ist.
+    Für die Zahlenaufgabe musst du entscheiden ob die Zahl gerade oder ungerade ist.
+    Jede Aufgabe wird mit einer Hand bearbeitet:<br>`,
+      fontsize: 26,
+      align: 'left',
+      lineheight: 1.5,
+    }) +
+    respText +
+    generate_formatted_html({
+      text: `<br>Drücke eine beliebige Taste, um fortzufahren.`,
+      fontsize: 26,
+      align: 'left',
+      lineheight: 1.5,
+    }),
+};
+
+const task_instructions5 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `In jedem einzelnen Durchgang erscheint ein Buchstabe und eine Zahl,
+    aber eine Aufgabe erscheint später wie die andere Aufgabe. Die
+    Reaktionszeitmessung in jedem Durchgang beginnt sobald die erste Aufgabe
+    erscheint.<br>
+    Du darfst in einem Durchgang entscheiden ob du auf die zuerst
+    erscheinende Aufgabe reagieren willst oder auf die andere Aufgabe
+    wartest, aber versuche so schnell und so genau wie möglich zu sein!<br>
+    Verwende zur Bearbeitung einer Aufgabe einfach die entsprechende Hand mit
+    der korrekten Antworttaste.<br><br>
+    Drücke eine beliebige Taste, um fortzufahren.`,
+    fontsize: 26,
+    align: 'left',
+    lineheight: 1.5,
+  }),
+};
+
+const task_instructions6 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `Insgesamt müssen jedoch auf ${prms.nTrls / 2} Buchstaben und ${prms.nTrls / 2} Zahlen reagiert
+    werden. Solang beide Aufgaben verfügbar sind darfst du entscheiden welche
+    der beiden Aufgaben du bearbeiten willst Wenn nur ein “#”- Zeichen statt
+      dem Buchstabe/Zahl erscheint, dann hast du die nötige Anzahl von Aufgaben
+      dieses Typs bearbeitet und musst dementsprechend immer auf die andere
+      Aufgabe warten bis der Block zu Ende ist.<br><br>
+      Drücke eine beliebige Taste, um fortzufahren.`,
     fontsize: 26,
     align: 'left',
     lineheight: 1.5,
@@ -188,12 +253,14 @@ const task_instructions_responses = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: generate_formatted_html({
-    text: respText,
-    align: 'left',
-    fontsize: 26,
-    lineheight: 1.5,
-  }),
+  stimulus:
+    respText +
+    generate_formatted_html({
+      text: `Drücke eine beliebige Taste, um fortzufahren.`,
+      align: 'center',
+      fontsize: 26,
+      lineheight: 1.5,
+    }),
 };
 
 const task_instructions_responses_reminder = {
@@ -204,11 +271,28 @@ const task_instructions_responses_reminder = {
   stimulus: '',
   on_start: function (trial) {
     trial.stimulus =
+      generate_formatted_html({
+        text: `Block ${vts_data.cBlk} von ${prms.nBlks}<br><br>
+        In jedem Block gibt es ${prms.nTrls / 2} Buchstaben und ${
+          prms.nTrls / 2
+        } Zahlenaufgaben und du musst somit insgesamt ${prms.nTrls} Aufgaben
+        bearbeiten. Eine Aufgabe (Buchstabe oder Zahl) erscheint jedoch später
+        als die andere Aufgabe. Du kannst entscheiden ob du die zuerst
+        erscheinende Aufgtabe bearbeitest oder auf die andere Aufgabe
+        bearbeitest sofern beide Aufgaben verfügbar sind, aber versuche so
+        schnell und so genau wie möglich zu sein! Wenn ein “#”- Zeichen statt
+        einer Aufgabe erscheint, dann musst du die andere Aufgabe bearbeiten.
+        Verwende zur Bearbeitung einer Aufgabe einfach die entsprechende Hand
+        mit der korrekten Antworttaste.`,
+        fontsize: 26,
+        align: 'left',
+      }) +
       respText +
       generate_formatted_html({
         text: `Drücke eine beliebige Taste, um fortzufahren.`,
-        fontsize: 26,
         align: 'center',
+        fontsize: 26,
+        lineheight: 1.5,
       });
   },
 };
@@ -228,9 +312,10 @@ function drawStimulus(args) {
   ctx.font = prms.stimFont;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
 
   // draw surrounding rectangle
-  ctx.fillStyle = 'black';
+  ctx.strokeStyle = 'black';
   ctx.lineWidth = 5;
   ctx.beginPath();
   ctx.rect(-40, -50, 80, 100);
@@ -247,17 +332,37 @@ function drawStimulus(args) {
   }
 }
 
+function draw_rsi() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+
+  // draw surrounding rectangle
+  ctx.strokeStyle = 'grey';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.rect(-40, -50, 80, 100);
+  ctx.stroke();
+}
+
+const rsi = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  translate_origin: true,
+  trial_duration: prms.rsi,
+  response_ends_trial: false,
+  func: draw_rsi,
+};
+
 function codeTrial() {
   'use strict';
 
   let dat = jsPsych.data.get().last(1).values()[0];
 
+  console.log(dat);
   // Which hand/task did they respond with/to?
-  let respHand =
-    jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0]) ||
-    jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1])
-      ? 'left'
-      : 'right';
+  let respHand = prms.respKeys.slice(0, 2).includes(dat.key_press.toUpperCase()) ? 'left' : 'right';
   let respTask = respHand === 'left' ? handMapping[0] : handMapping[1];
 
   // Was it a repeat or repetition of task?
@@ -265,25 +370,25 @@ function codeTrial() {
   if (vts_data.previousTask !== 'na') {
     transition = respTask === vts_data.previousTask ? 'repeat' : 'switch';
   }
+  vts_data.repetitionCounter = transition === 'repeat' ? vts_data.repetitionCounter + 1 : 0;
 
-  // Was the response correct?
   let error = 1; // If correct, this is changed to 0
   let offset = respHand === 'left' ? 0 : 2;
   if (respTask === 'letter') {
     if (prms.lettersVowel.includes(dat.letter)) {
       if (
-        (fingerMapping[0 + offset] === 'vowel' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) |
-        (fingerMapping[1 + offset] === 'vowel' &&
+        (fingerMapping[0 + offset] === 'Vokal' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) ||
+        (fingerMapping[1 + offset] === 'Vokal' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
         error = 0;
       }
     } else if (prms.lettersConsonant.includes(dat.letter)) {
       if (
-        (fingerMapping[0 + offset] === 'consonant' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) |
-        (fingerMapping[1 + offset] === 'consonant' &&
+        (fingerMapping[0 + offset] === 'Konsonant' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) ||
+        (fingerMapping[1 + offset] === 'Konsonant' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
         error = 0;
@@ -292,17 +397,18 @@ function codeTrial() {
   } else if (respTask === 'number') {
     if (prms.numbersOdd.includes(dat.number)) {
       if (
-        (fingerMapping[0 + offset] === 'odd' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) |
-        (fingerMapping[1 + offset] === 'odd' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
+        (fingerMapping[0 + offset] === 'Ungerade' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) ||
+        (fingerMapping[1 + offset] === 'Ungerade' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
         error = 0;
       }
     } else if (prms.numbersEven.includes(dat.number)) {
       if (
-        (fingerMapping[0 + offset] === 'even' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) |
-        (fingerMapping[1 + offset] === 'even' &&
+        (fingerMapping[0 + offset] === 'Gerade' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) ||
+        (fingerMapping[1 + offset] === 'Gerade' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
         error = 0;
@@ -314,14 +420,16 @@ function codeTrial() {
   let rt1 = dat.rt;
   let rt2 = transition !== 'repeat' ? dat.rt : dat.rt - vts_data.soa;
 
-  // console.log('Resp hand: ', respHand);
-  // console.log('Resp task: ', respTask);
+  console.log('Resp hand: ', respHand);
+  console.log('Resp task: ', respTask);
   console.log('Transitiion: ', transition);
-  console.log('soa: ', vts_data.soa);
-  // console.log('Transitiion: ', transition);
+  console.log('SOA: ', vts_data.soa);
+  console.log('SOA Condition: ', soaCondition[vts_data.cBlk]);
+  console.log('Transitiion: ', transition);
+  console.log('RepetitionCounter: ', vts_data.repetitionCounter);
   console.log('RT1: ', rt1);
   console.log('RT2: ', rt2);
-  // console.log('Error: ', error);
+  console.log('Error: ', error);
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
@@ -330,6 +438,8 @@ function codeTrial() {
     respHand: respHand,
     respTask: respTask,
     transition: transition,
+    repetitionCounter: vts_data.repetitionCounter,
+    soaCondition: soaCondition[vts_data.cBlk],
     soa: vts_data.soa,
     rt1: rt1,
     rt2: rt2,
@@ -342,11 +452,11 @@ function codeTrial() {
   if (respTask === 'letter') vts_data.nLetter++;
   vts_data.previousTask = respTask;
   if (vts_data.cBlk < prms.nBlks / 2) {
-    if (error === 0) {
-      vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 0;
-    } else {
-      vts_data.soa = 0; // error so reset to 0 ms
-    }
+    // if (error === 0) {
+    vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 0;
+    // } else {
+    //   vts_data.soa = 0; // error so reset to 0 ms
+    // }
   } else {
     vts_data.soa = prms.soas[getRandomInt(0, prms.soas.length)];
   }
@@ -381,6 +491,14 @@ const vts_stimulus = {
       trial.choices = trial.choices.concat(prms.respKeysNumber);
     }
 
+    // place-holder
+    trial.placeholder = 'both';
+    if (trial.letter === '#') {
+      trial.placeholder = 'number';
+    } else if (trial.number === '#') {
+      trial.placeholder = 'letter';
+    }
+
     // SOA interval
     trial.stimulus_onset = vts_data.cTrl === 1 ? [0, 0] : [0, vts_data.soa];
 
@@ -402,7 +520,7 @@ const vts_stimulus = {
       { letter: trial.letter, number: trial.number, draw_number: draw_number[1], draw_letter: draw_letter[1] },
     ];
 
-    trial.data = { stim: 'vts', letter: trial.letter, number: trial.number };
+    trial.data = { stim: 'vts', letter: trial.letter, number: trial.number, placeholder: trial.placeholder };
   },
   on_finish: function () {
     codeTrial();
@@ -423,6 +541,7 @@ const trial_feedback = {
   },
 };
 
+// prettier-ignore
 function drawTrialFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
@@ -442,10 +561,9 @@ function drawTrialFeedback() {
     // draw text
     ctx.fillText(prms.fbTxt[dat.error], 0, 0);
   } else {
-    let txt1 = `Left hand = ${handMappingInstructions[0]}            Right hand = ${handMappingInstructions[1]}`;
-    ctx.fillText(txt1, 0, 0);
-    let txt2 = `${prms.respKeys[0]} (${fingerMapping[0]}) / ${prms.respKeys[1]} (${fingerMapping[1]})              ${prms.respKeys[2]} (${fingerMapping[2]}) / ${prms.respKeys[3]} (${fingerMapping[3]})`;
-    ctx.fillText(txt2, 0, 50);
+    ctx.fillText(`${handMappingInstructions[0]}               ${handMappingInstructions[1]}`, 0, -50);
+    ctx.fillText(`${fingerMapping[0]}   ${fingerMapping[1]}              ${fingerMapping[2]}   ${fingerMapping[3]}`, 0, 0);
+    ctx.fillText( `("${prms.respKeys[0]}-Taste") ("${prms.respKeys[1]}-Taste")         ("${prms.respKeys[2]}-Taste") ("${prms.respKeys[3]}-Taste")`, 0, 25);
   }
 }
 
@@ -458,11 +576,14 @@ function blockFeedbackTxt(filter_options) {
   }).length;
   let blockFbTxt = generate_formatted_html({
     text: `Block ${vts_data.cBlk} of ${prms.nBlks}<br>
-  Total Time: ${totalTime} seconds<br>
-  Number of Errors: ${nError}<br><br>
-  Drücke eine beliebige Taste, um fortzufahren!`,
+    Kurze Pause.
+    Du hast in den ${prms.nTrls} Durchgängen im Schnitt ${totalTime}s gebraucht. Dabei
+    hast du ${nError} Fehler gemacht. Versuche weiterhin so schnell und so genau wie
+    möglich zu sein.<br><br>
+    Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 30,
     lineheight: 1.5,
+    align: 'left',
   });
 
   // reset vts_data for next block
@@ -472,7 +593,7 @@ function blockFeedbackTxt(filter_options) {
   vts_data.nLetter = 0;
   vts_data.previousTask = 'na';
   vts_data.soa = 0;
-  vts_data.poor_performance = nError >= 10 ? true : false;
+  vts_data.poor_performance = nError >= prms.nPoor ? true : false;
 
   return blockFbTxt;
 }
@@ -496,9 +617,12 @@ const block_feedback2 = {
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `ACHTUNG!<br><br> You have made too many errors! 30 seconds Pause`,
+      text: `Bitte beachten: Du hast viele Fehler in diesem Block gemacht,
+        bitte schaue dir nochmal die Antorttasten genau an. Du sollst zwar so
+        schnell wie möglich sein, aber dabei auch nicht zuviele Fehler Machen.
+        Es geht in 30s weiter.`,
       fontsize: 26,
-      align: 'center',
+      align: 'left',
     }) + respText,
   response_ends_trial: false,
   on_start: function (trial) {
@@ -580,6 +704,7 @@ function genExpSeq() {
   'use strict';
 
   let exp = [];
+
   exp.push(fullscreen_on);
   exp.push(check_screen);
   exp.push(welcome_de);
@@ -589,6 +714,8 @@ function genExpSeq() {
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);
+  exp.push(task_instructions4);
+  exp.push(task_instructions5);
 
   exp.push(task_instructions_responses);
   exp.push(blank_canvas);
@@ -601,6 +728,7 @@ function genExpSeq() {
     for (let trl = 0; trl < prms.nTrls; trl++) {
       exp.push(vts_stimulus);
       exp.push(trial_feedback);
+      exp.push(rsi);
     }
     // between block feedback
     exp.push(block_feedback1);
