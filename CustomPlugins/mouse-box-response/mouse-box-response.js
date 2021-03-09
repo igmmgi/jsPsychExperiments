@@ -5,11 +5,11 @@
 //
 //              SB
 
-jsPsych.plugins['mouse-response'] = (function () {
+jsPsych.plugins['mouse-box-response'] = (function () {
   let plugin = {};
 
   plugin.info = {
-    name: 'mouse-response',
+    name: 'mouse-box-response',
     description: '',
     parameters: {
       func_args: {
@@ -163,7 +163,7 @@ jsPsych.plugins['mouse-response'] = (function () {
       'contextmenu',
       function cm(e) {
         e.preventDefault();
-        if (response.button !== null) {
+        if (e.button !== null) {
           document.removeEventListener('contextmenu', cm, false);
         }
       },
@@ -177,7 +177,7 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // canvas mouse events
     canvas.addEventListener('mousedown', (e) => {
-      if (e.which === 1) {
+      if (e.buttons === 1) {
         handleMouseDown(e);
       }
     });
@@ -242,6 +242,7 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // trial is initiated by pressing the mouse button inside the start box
     function handleMouseDown(e) {
+      'use strict';
       nclicks++;
       mousePosition(e);
       x_click_pos.push(mpos.x);
@@ -297,6 +298,7 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // clear the canvas and draw text
     function draw() {
+      'use strict';
       // canvas
       ctx.fillStyle = trial.canvas_colour;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -362,6 +364,7 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // function to start trial when it is time
     let start_trial = function (X, Y) {
+      'use strict';
       start_X = X;
       start_Y = Y;
       trial_initiated = true;
@@ -374,6 +377,7 @@ jsPsych.plugins['mouse-response'] = (function () {
 
     // function to end trial when it is time
     let end_trial = function () {
+      'use strict';
       end_rt = performance.now() - start_time;
       end_loc = x_coords[x_coords.length - 1] < canvas.width / 2 ? 'left' : 'right';
 

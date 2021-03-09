@@ -1,6 +1,5 @@
 /**
  * check-screen-resolution
- *
  **/
 
 jsPsych.plugins['check-screen-resolution'] = (function () {
@@ -25,8 +24,6 @@ jsPsych.plugins['check-screen-resolution'] = (function () {
   };
 
   plugin.trial = function (display_element, trial) {
-    // MINIMUM SIZE
-
     // window.devicePixelRatio on safari?
     var isSafari = navigator.vendor == 'Apple Computer, Inc.';
     var zoom_level = window.devicePixelRatio;

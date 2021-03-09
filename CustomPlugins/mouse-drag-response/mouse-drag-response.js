@@ -1,4 +1,4 @@
-// cusotm jspsych mouse drag response using code adapted from:
+// custom jspsych mouse drag response using code adapted from:
 // https://stackoverflow.com/questions/21605942/drag-element-on-canvas
 
 jsPsych.plugins['mouse-drag-response'] = (function () {
@@ -92,7 +92,6 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseup', handleMouseUp);
 
-    let canvasOffset = $(canvas).offset();
     let selectedText = false;
     let movement_initiated = false;
     let start_rt;
@@ -156,7 +155,7 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     };
 
     // mouse functions
-    function handleMouseUp(e) {
+    function handleMouseUp() {
       selectedText = false;
     }
 
