@@ -228,8 +228,6 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
     // test if x, y is inside the bounding box of the text
     function textHittest(x, y) {
-      console.log(x);
-      console.log(text.x);
       return (
         x >= text.x - text.width / 2 &&
         x <= text.x + text.width / 2 &&
