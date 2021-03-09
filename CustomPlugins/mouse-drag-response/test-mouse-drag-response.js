@@ -7,7 +7,7 @@ const trial_stimulus = {
   canvas_size: [1280, 960],
   canvas_colour: 'lightgrey',
   canvas_border: '5px solid black',
-  response_border: [100, 860],
+  response_border_x: 100,
 };
 
 timeline.push(trial_stimulus);

@@ -39,8 +39,8 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
         type: jsPsych.plugins.parameterType.INT,
         array: true,
         pretty_name: 'ResponseBorder',
-        default: [100, 620],
-        description: 'Border style',
+        default: 100,
+        description: 'Response border n pixels',
       },
       word: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -92,6 +92,8 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseup', handleMouseUp);
 
+    let response_border_top = trial.response_border;
+    let response_border_bottom = trial.canvas_size[1] - trial.response_border * 2;
     let selectedText = false;
     let movement_initiated = false;
     let start_rt;
@@ -187,7 +189,10 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
       text.x = mpos.x;
       text.y = mpos.y;
 
-      if (text.y < trial.response_border[0] - text.height / 2 || text.y > trial.response_border[1] + text.height / 2) {
+      if (
+        text.y < response_border_top - text.height / 2 ||
+        text.y > response_border_bottom + trial.response_border + text.height / 2
+      ) {
         end_trial();
       } else {
         draw();
@@ -205,7 +210,7 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.beginPath();
-      ctx.rect(0, trial.response_border[0], canvas.width, trial.response_border[1] - trial.response_border[0]);
+      ctx.rect(0, trial.response_border, canvas.width, trial.canvas_size[1] - trial.response_border * 2);
       ctx.stroke();
 
       ctx.fillStyle = trial.colour;
@@ -214,6 +219,8 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
     // test if x, y is inside the bounding box of the text
     function textHittest(x, y) {
+      console.log(x);
+      console.log(text.x);
       return (
         x >= text.x - text.width / 2 &&
         x <= text.x + text.width / 2 &&

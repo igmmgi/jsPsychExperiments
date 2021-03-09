@@ -760,7 +760,7 @@ const trial_pp = {
     blk_type: 'experiment',
     corr_key: jsPsych.timelineVariable('corr_key'),
     backward_comp: jsPsych.timelineVariable('backward_comp'),
-    prob_cond: jsPsych.timelineVariable('prob'),
+    prob_cond: jsPsych.timelineVariable('prob_cond'),
   },
   on_start: function (trial) {
     let letter_number;
