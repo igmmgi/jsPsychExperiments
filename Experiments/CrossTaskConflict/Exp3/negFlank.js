@@ -21,7 +21,7 @@ const prms = {
   iti: 500,
   tooFast: 150,
   tooSlow: 1500,
-  respKeys: ['C', 'M', 27],
+  respKeys: ['C', 'M'],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
   cTrl: 1,
   cBlk: 1,
@@ -53,32 +53,65 @@ const fixation_cross = {
   data: { stim: 'fixation' },
 };
 
+// prettier-ignore
 const stims = [
   [
     "<div class='left'  style='float: left'></div>" +
-      "<div class='left'  style='float: left'></div>" +
-      "<div class='left'  style='float: right'></div>",
+    "<div class='left'  style='float: left'></div>" +
+    "<div class='left'  style='float: right'></div>",
   ],
   [
     "<div class='right' style='float: left'></div>" +
-      "<div class='left'  style='float: left'></div>" +
-      "<div class='right' style='float: right'></div>",
+    "<div class='left'  style='float: left'></div>" +
+    "<div class='right' style='float: right'></div>",
   ],
   [
     "<div class='right' style='float: left'></div>" +
-      "<div class='right' style='float: left'></div>" +
-      "<div class='right' style='float: right'></div>",
+    "<div class='right' style='float: left'></div>" +
+    "<div class='right' style='float: right'></div>",
   ],
   [
     "<div class='left'  style='float: left'></div>" +
-      "<div class='right' style='float: left'></div>" +
-      "<div class='left'  style='float: right'></div>",
+    "<div class='right' style='float: left'></div>" +
+    "<div class='left'  style='float: right'></div>",
   ],
   ['<h1>jetzt links</h1>'],
   ['<h1>jetzt rechts</h1>'],
   ['<h1>nicht links</h1>'],
   ['<h1>nicht rechts</h1>'],
 ];
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
+
+
 
 const trial_stimulus = {
   type: 'html-keyboard-response',

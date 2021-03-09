@@ -28,7 +28,7 @@ const prms = {
   cBlk: 1,
 };
 
-prms.respKeys = prms.mapping === 1 ? ['C', 'M', 27] : ['M', 'C', 27];
+prms.respKeys = prms.mapping === 1 ? ['C', 'M'] : ['M', 'C'];
 prms.comp = prms.mapping === 1 ? ['comp', 'incomp'] : ['incomp', 'comp'];
 
 ////////////////////////////////////////////////////////////////////////
@@ -62,19 +62,49 @@ const fixation_cross = {
 };
 
 const stims = [
-  ["<h1 style='font-size:60px; color:red;   font-family:Courier; position:relative; left: -100px'>X</h1>"],
-  ["<h1 style='font-size:60px; color:red;   font-family:Courier; position:relative; left:  100px'>X</h1>"],
-  ["<h1 style='font-size:60px; color:green; font-family:Courier; position:relative; left: -100px'>X</h1>"],
-  ["<h1 style='font-size:60px; color:green; font-family:Courier; position:relative; left:  100px'>X</h1>"],
-  ["<h1 style='font-size:60px; color:black; font-family:Courier;'   >1</h1>"],
-  ["<h1 style='font-size:60px; color:black; font-family:Courier;'><i>1</i></h1>"],
-  ["<h1 style='font-size:60px; color:black; font-family:Courier;'   >2</h1>"],
-  ["<h1 style='font-size:60px; color:black; font-family:Courier;'><i>2</i></h1>"],
-  ["<h1 style='font-size:60px; color:black; font-family:Courier;'   >8</h1>"],
-  ["<h1 style='font-size:60px; color:black; font-family:Courier;'><i>8</i></h1>"],
-  ["<h1 style='font-size:60px; color:black; font-family:Courier;'   >9</h1>"],
-  ["<h1 style='font-size:60px; color:black; font-family:Courier;'><i>9</i></h1>"],
+  ["<h1 style='font-size:60px; color:red;   font-family:Courier;  position:relative; left: -100px'>X</h1>"],
+  ["<h1 style='font-size:60px; color:red;   font-family:Courier;  position:relative; left:  100px'>X</h1>"],
+  ["<h1 style='font-size:60px; color:green; font-family:Courier;  position:relative; left: -100px'>X</h1>"],
+  ["<h1 style='font-size:60px; color:green; font-family:Courier;  position:relative; left:  100px'>X</h1>"],
+  ["<h1 style='font-size:60px; color:black; font-family:Courier; '   >1</h1>"],
+  ["<h1 style='font-size:60px; color:black; font-family:Courier; '><i>1</i></h1>"],
+  ["<h1 style='font-size:60px; color:black; font-family:Courier; '   >2</h1>"],
+  ["<h1 style='font-size:60px; color:black; font-family:Courier; '><i>2</i></h1>"],
+  ["<h1 style='font-size:60px; color:black; font-family:Courier; '   >8</h1>"],
+  ["<h1 style='font-size:60px; color:black; font-family:Courier; '><i>8</i></h1>"],
+  ["<h1 style='font-size:60px; color:black; font-family:Courier; '   >9</h1>"],
+  ["<h1 style='font-size:60px; color:black; font-family:Courier; '><i>9</i></h1>"],
 ];
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
 
 const trial_stimulus = {
   type: 'html-keyboard-response',
