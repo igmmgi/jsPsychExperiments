@@ -63,7 +63,6 @@ const prms = {
   waitDur: 1000,
   stimFont: '50px Arial',
   stimPos: 25,
-  fbTxt: ['', 'Falsch'],
   fbFont: '28px Arial',
   numbers: [2, 3, 4, 5, 6, 7, 8, 9],
   numbersEven: [2, 4, 6, 8],
@@ -76,7 +75,6 @@ const prms = {
   soas: [50, 100, 150, 200, 250, 300, 350],
   numberPos: null,
   letterPos: null,
-  contKey: [' '],
   respKeys: ['Q', 'W', 'O', 'P'],
   respKeysNumber: null,
   respKeysLetter: null,
@@ -95,7 +93,9 @@ const vts_data = {
 
 const nVersion = getVersionNumber(nFiles, 4);
 jsPsych.data.addProperties({ version: nVersion });
-let handMapping, handMappingInstructions;
+
+let handMapping;
+let handMappingInstructions;
 let fingerMapping;
 if ([1, 3].includes(nVersion)) {
   handMapping = ['number', 'letter'];
@@ -115,19 +115,27 @@ if ([1, 3].includes(nVersion)) {
   fingerMapping = shuffle(['Vokal', 'Konsonant']).concat(shuffle(['Ungerade', 'Gerade']));
 }
 
-let soaCondition;
-if ([1, 2].includes(nVersion)) {
-  soaCondition = repeatArray('predictable', prms.nBlks / 2).concat(repeatArray(('random', prms.nBlks / 2)));
-} else if ([3, 4].includes(nVersion)) {
-  soaCondition = repeatArray('random', prms.nBlks / 2).concat(repeatArray(('predictable', prms.nBlks / 2)));
-}
+// SOA (predictable vs. random) counter-balance across experiment half
+let soaCondition = repeatArray('predictable', prms.nBlks / 2).concat(repeatArray(('random', prms.nBlks / 2)));
+if (nVersion == 3 || nVersion == 4) soaCondtion.reverse();
+
+// let respText = generate_formatted_html({
+//   text: `${handMappingInstructions[0]} &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; ${handMappingInstructions[1]}<br><br>
+//     ${fingerMapping[0]} &ensp;&ensp;&ensp;&ensp; ${fingerMapping[1]} &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; ${fingerMapping[2]} &ensp;&ensp;&ensp;&ensp; ${fingerMapping[3]} <br>
+//     ("${prms.respKeys[0]}-Taste") &ensp;&ensp; ("${prms.respKeys[1]}-Taste") &ensp;&ensp;&ensp; ("${prms.respKeys[2]}-Taste") &ensp;&ensp; ("${prms.respKeys[3]}-Taste")`,
+//   fontsize: 26,
+//   bold: true,
+// });
 
 let respText = generate_formatted_html({
-  text: `${handMappingInstructions[0]} &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; ${handMappingInstructions[1]}<br><br>
-    ${fingerMapping[0]} &ensp;&ensp;&ensp;&ensp; ${fingerMapping[1]} &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; ${fingerMapping[2]} &ensp;&ensp;&ensp;&ensp; ${fingerMapping[3]} <br>
-    ("${prms.respKeys[0]}-Taste") &ensp;&ensp; ("${prms.respKeys[1]}-Taste") &ensp;&ensp;&ensp; ("${prms.respKeys[2]}-Taste") &ensp;&ensp; ("${prms.respKeys[3]}-Taste")`,
+  text: `       ${handMappingInstructions[0]}             ${handMappingInstructions[1]}<br>
+      ${fingerMapping[0]}  ${fingerMapping[1]}           ${fingerMapping[2]}   ${fingerMapping[3]} <br>
+   ("${prms.respKeys[0]}-Taste") ("${prms.respKeys[1]}-Taste")    ("${prms.respKeys[2]}-Taste") ("${prms.respKeys[3]}-Taste")`,
   fontsize: 26,
   bold: true,
+  align: 'left',
+  lineheight: 0.75,
+  preformatted: true,
 });
 
 ////////////////////////////////////////////////////////////////////////
@@ -360,7 +368,6 @@ function codeTrial() {
 
   let dat = jsPsych.data.get().last(1).values()[0];
 
-  console.log(dat);
   // Which hand/task did they respond with/to?
   let respHand = prms.respKeys.slice(0, 2).includes(dat.key_press.toUpperCase()) ? 'left' : 'right';
   let respTask = respHand === 'left' ? handMapping[0] : handMapping[1];
@@ -451,15 +458,13 @@ function codeTrial() {
   if (respTask === 'number') vts_data.nNumber++;
   if (respTask === 'letter') vts_data.nLetter++;
   vts_data.previousTask = respTask;
-  if (vts_data.cBlk < prms.nBlks / 2) {
-    // if (error === 0) {
+  if (soaCondition[vts_data.cBlk] === 'predictable') {
     vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 0;
-    // } else {
-    //   vts_data.soa = 0; // error so reset to 0 ms
-    // }
-  } else {
+  } else if (soaCondition[vts_data.cBlk] === 'random') {
     vts_data.soa = prms.soas[getRandomInt(0, prms.soas.length)];
   }
+
+  //if (error === 0) vts_data.soa = 0;
 }
 
 const vts_stimulus = {
@@ -480,23 +485,19 @@ const vts_stimulus = {
   on_start: function (trial) {
     'use strict';
     // Which letter/number to show
-    trial.letter = vts_data.nLetter < prms.nTrls / 2 ? prms.letters[getRandomInt(0, 4)] : '#';
-    trial.number = vts_data.nNumber < prms.nTrls / 2 ? prms.numbers[getRandomInt(0, 4)] : '#';
+    let letter = vts_data.nLetter < prms.nTrls / 2 ? prms.letters[getRandomInt(0, 4)] : '#';
+    let number = vts_data.nNumber < prms.nTrls / 2 ? prms.numbers[getRandomInt(0, 4)] : '#';
 
     // activate only response keys for available task
-    if (trial.letter !== '#') {
-      trial.choices = trial.choices.concat(prms.respKeysLetter);
-    }
-    if (trial.number !== '#') {
-      trial.choices = trial.choices.concat(prms.respKeysNumber);
-    }
+    if (letter !== '#') trial.choices = trial.choices.concat(prms.respKeysLetter);
+    if (number !== '#') trial.choices = trial.choices.concat(prms.respKeysNumber);
 
     // place-holder
-    trial.placeholder = 'both';
-    if (trial.letter === '#') {
-      trial.placeholder = 'number';
-    } else if (trial.number === '#') {
-      trial.placeholder = 'letter';
+    let placeholder = 'both';
+    if (letter === '#') {
+      placeholder = 'number';
+    } else if (number === '#') {
+      placeholder = 'letter';
     }
 
     // SOA interval
@@ -516,11 +517,11 @@ const vts_stimulus = {
     }
 
     trial.func_args = [
-      { letter: trial.letter, number: trial.number, draw_number: draw_number[0], draw_letter: draw_letter[0] },
-      { letter: trial.letter, number: trial.number, draw_number: draw_number[1], draw_letter: draw_letter[1] },
+      { letter: letter, number: number, draw_number: draw_number[0], draw_letter: draw_letter[0] },
+      { letter: letter, number: number, draw_number: draw_number[1], draw_letter: draw_letter[1] },
     ];
 
-    trial.data = { stim: 'vts', letter: trial.letter, number: trial.number, placeholder: trial.placeholder };
+    trial.data = { stim: 'vts', letter: letter, number: number, placeholder: placeholder };
   },
   on_finish: function () {
     codeTrial();
@@ -558,8 +559,6 @@ function drawTrialFeedback() {
     ctx.rect(-40, -50, 80, 100);
     ctx.stroke();
 
-    // draw text
-    ctx.fillText(prms.fbTxt[dat.error], 0, 0);
   } else {
     ctx.fillText(`${handMappingInstructions[0]}               ${handMappingInstructions[1]}`, 0, -50);
     ctx.fillText(`${fingerMapping[0]}   ${fingerMapping[1]}              ${fingerMapping[2]}   ${fingerMapping[3]}`, 0, 0);
@@ -709,7 +708,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
