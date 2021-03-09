@@ -94,6 +94,8 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
     let response_border_top = trial.response_border;
     let response_border_bottom = trial.canvas_size[1] - trial.response_border * 2;
+    let offsetX = null;
+    let offsetY = null;
     let selectedText = false;
     let movement_initiated = false;
     let start_rt;
@@ -176,8 +178,15 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
     function handleMouseMove(e) {
       if (selectedText === false) {
+        offsetX = offsetY = null;
         return;
       }
+
+      if (offsetX === null && offsetY === null) {
+        offsetX = text.x - mpos.x;
+        offsetY = text.y - mpos.y;
+      }
+
       mousePosition(e);
 
       // store coordinates and time array
@@ -186,8 +195,8 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
       time.push(performance.now() - start_time);
 
       // set new text position
-      text.x = mpos.x;
-      text.y = mpos.y;
+      text.x = mpos.x + offsetX;
+      text.y = mpos.y + offsetY;
 
       if (
         text.y < response_border_top - text.height / 2 ||
