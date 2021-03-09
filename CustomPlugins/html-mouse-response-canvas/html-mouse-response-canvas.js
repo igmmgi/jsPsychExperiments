@@ -102,11 +102,14 @@ jsPsych.plugins['html-mouse-response-canvas'] = (function () {
     let ctx = canvas.getContext('2d');
 
     ctx.fillStyle = trial.canvas_colour;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+    let canvas_rect;
     if (trial.translate_origin) {
       ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
+      canvas_rect = [-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height];
+    } else {
+      canvas_rect = [0, 0, canvas.width, canvas.height];
     }
+    ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
 
     // start time
     let start_time = performance.now();
