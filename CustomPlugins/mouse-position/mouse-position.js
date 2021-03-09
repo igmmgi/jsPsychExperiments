@@ -95,9 +95,7 @@ jsPsych.plugins['html-mouse-position-canvas'] = (function () {
     ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
 
     canvas.addEventListener('mousedown', (e) => {
-      if (e.which === 1) {
-        handleMouseDown(e);
-      }
+      if (e.button === 0) end_trial();
     });
     canvas.addEventListener('mousemove', (e) => {
       handleMouseMove(e);
@@ -115,11 +113,8 @@ jsPsych.plugins['html-mouse-position-canvas'] = (function () {
     let time = [];
     let mpos = { x: 0, y: 0 };
 
+    // initial draw
     draw();
-    // trial is initiated by pressing the mouse button inside the start box
-    function handleMouseDown(e) {
-      end_trial();
-    }
 
     function mousePosition(e) {
       mpos = {
