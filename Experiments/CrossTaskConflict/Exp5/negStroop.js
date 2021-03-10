@@ -26,7 +26,7 @@ const prms = {
 };
 
 prms.colours = prms.mapping === 1 ? ['ROT', 'BLAU'] : ['BLAU', 'ROT'];
-prms.respKeys = prms.mapping === 1 ? ['C', 'M', 27] : ['M', 'C', 27];
+prms.respKeys = prms.mapping === 1 ? ['C', 'M'] : ['M', 'C'];
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -76,6 +76,36 @@ const stims = [
   ['<h1>nicht links</h1>'],
   ['<h1>nicht rechts</h1>'],
 ];
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
 
 const trial_stimulus = {
   type: 'html-keyboard-response',

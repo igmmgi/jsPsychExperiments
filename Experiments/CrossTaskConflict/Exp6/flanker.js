@@ -28,7 +28,7 @@ const prms = {
 };
 
 prms.stimMap = prms.mapping === 1 ? ['H', 'S'] : ['S', 'H'];
-prms.respKeys = prms.mapping === 1 ? ['C', 'M', 'C', 'M', 27] : ['C', 'M', 'M', 'C', 27];
+prms.respKeys = prms.mapping === 1 ? ['C', 'M', 'C', 'M'] : ['C', 'M', 'M', 'C'];
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -86,6 +86,36 @@ const flankers = [
   ["<div style='font-size:3.0cm'>S S S</div>"],
   ['<div style="font-size:3.0cm">H S H</div>'],
 ];
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
 
 const flanker_stimulus = {
   type: 'html-keyboard-response',
