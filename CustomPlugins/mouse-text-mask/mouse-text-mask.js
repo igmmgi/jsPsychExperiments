@@ -59,6 +59,12 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
         default: '80px arial',
         description: 'Font',
       },
+      filter: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Filter',
+        default: null,
+        description: 'Mask filter',
+      },
       trial_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'TrialDuration',
@@ -88,7 +94,6 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
 
     let trial_started = false;
     let end_rt;
-    let end_loc;
     let mpos;
 
     let x_coords = [];
@@ -100,11 +105,12 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     canvas.addEventListener('mousedown', handleMouseDown);
 
     // initial draw
-    let start_time;
+    let start_time = performance.now();
     let [start_box, textMetrics] = draw_start();
 
     // function to end trial when it is time
-    let end_trial = function () {
+    function end_trial() {
+        "use strict";
       end_rt = performance.now() - start_time;
 
       // gather the data to store for the trial
@@ -137,12 +143,13 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       draw();
     }
 
-    function handleMouseDown(e) {
+    function handleMouseDown() {
       end_trial();
     }
 
     // clear the canvas and draw text
     function draw() {
+
       if (!trial_started) {
         if (in_box(mpos.x, mpos.y, start_box)) {
           trial_started = true;
@@ -152,20 +159,12 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
         }
       }
 
-      // if (!text_on) {
-      //   if (performance.now() - start_time > 100) {
-      //     text_on = true;
-      //   } else {
-      //     return;
-      //   }
-      // }
-
       canvas.width = canvas.width;
       ctx.save();
 
       // mask
-      // ctx.filter = 'blur(1px)';
-      ctx.ellipse(mpos.x, mpos.y - 20, 30, 60, Math.PI / 2, 0, 2 * Math.PI);
+      if (trial.filter !== null) ctx.filter = 'blur(2px)';
+      ctx.ellipse(mpos.x, mpos.y - 20, 30, 100, Math.PI / 2, 0, 2 * Math.PI);
       ctx.clip();
       ctx.fillStyle = trial.mask_colour;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -173,7 +172,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.font = trial.font;
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = trial.colour;
       ctx.fillText(trial.sentence, canvas.width / 2, canvas.height / 2);
 
       // restore context and draw text bounding box with a little bit of border
@@ -200,6 +199,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     }
 
     function draw_start() {
+      "use strict";
       // fake draw to get text position and calculate bounding box once
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -216,7 +216,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
 
       let start_box = {
         x: canvas.width / 2 - textMetrics.actualBoundingBoxLeft - 30,
-        y: canvas.height / 2 - textMetrics.actualBoundingBoxAscent,
+        y: canvas.height / 2 - textMetrics.actualBoundingBoxAscent + 20,
         h: 20,
         w: 20,
       };

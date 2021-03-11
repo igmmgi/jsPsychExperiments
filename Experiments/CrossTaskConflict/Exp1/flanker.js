@@ -20,7 +20,7 @@ const prms = {
   iti: 500,
   tooFast: 150,
   tooSlow: 1500,
-  respKeys: ['C', 'M', 27],
+  respKeys: ['C', 'M'],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
   cTrl: 1,
   cBlk: 1,
@@ -52,32 +52,64 @@ const fixation_cross = {
   data: { stim: 'fixation' },
 };
 
+// prettier-ignore
 const flankers = [
   [
     "<div class='left' style='float: left'></div>" +
-      "<div class='left' style='float: left'></div>" +
-      "<div class='left' style='float: right'></div>",
+    "<div class='left' style='float: left'></div>" +
+    "<div class='left' style='float: right'></div>",
   ],
   [
     "<div class='right' style='float: left'></div>" +
-      "<div class='left'  style='float: left'></div>" +
-      "<div class='right' style='float: right'></div>",
+    "<div class='left'  style='float: left'></div>" +
+    "<div class='right' style='float: right'></div>",
   ],
   [
     "<div class='right' style='float: left'></div>" +
-      "<div class='right' style='float: left'></div>" +
-      "<div class='right' style='float: right'></div>",
+    "<div class='right' style='float: left'></div>" +
+    "<div class='right' style='float: right'></div>",
   ],
   [
     "<div class='left'  style='float: left'></div>" +
-      "<div class='right' style='float: left'></div>" +
-      "<div class='left'  style='float: right'></div>",
+    "<div class='right' style='float: left'></div>" +
+    "<div class='left'  style='float: right'></div>",
   ],
-  ["<div class='left'></div>" + "<div class='left'></div>" + "<div class='left'></div>"],
-  ["<div class='right'></div>" + "<div class='left'></div>" + "<div class='right'></div>"],
+  ["<div class='left'></div>"  + "<div class='left'></div>"  + "<div class='left'></div>"],
+  ["<div class='right'></div>" + "<div class='left'></div>"  + "<div class='right'></div>"],
   ["<div class='right'></div>" + "<div class='right'></div>" + "<div class='right'></div>"],
-  ["<div class='left'></div>" + "<div class='right'></div>" + "<div class='left'></div>"],
+  ["<div class='left'></div>"  + "<div class='right'></div>" + "<div class='left'></div>"],
 ];
+
+function codeTrial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  }
+
+  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 1; // correct
+  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+    corrCode = 2; // choice error
+  } else if (rt >= prms.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (rt <= prms.tooFast) {
+    corrCode = 4; // too false
+  }
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+  prms.cTrl += 1;
+}
+
 
 const flanker_stimulus = {
   type: 'html-keyboard-response',
@@ -119,16 +151,17 @@ const block_feedback = {
   post_trial_gap: prms.waitDur,
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, flanker_stimulus, trial_feedback],
   timeline_variables: [
-    { flanker: flankers[0], dim: 'hor', comp: 'comp', dir: 'left', key: prms.respKeys[0] },
-    { flanker: flankers[1], dim: 'hor', comp: 'incomp', dir: 'left', key: prms.respKeys[0] },
-    { flanker: flankers[2], dim: 'hor', comp: 'comp', dir: 'right', key: prms.respKeys[1] },
+    { flanker: flankers[0], dim: 'hor', comp: 'comp',   dir: 'left',  key: prms.respKeys[0] },
+    { flanker: flankers[1], dim: 'hor', comp: 'incomp', dir: 'left',  key: prms.respKeys[0] },
+    { flanker: flankers[2], dim: 'hor', comp: 'comp',   dir: 'right', key: prms.respKeys[1] },
     { flanker: flankers[3], dim: 'hor', comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
-    { flanker: flankers[4], dim: 'ver', comp: 'comp', dir: 'left', key: prms.respKeys[0] },
-    { flanker: flankers[5], dim: 'ver', comp: 'incomp', dir: 'left', key: prms.respKeys[0] },
-    { flanker: flankers[6], dim: 'ver', comp: 'comp', dir: 'right', key: prms.respKeys[1] },
+    { flanker: flankers[4], dim: 'ver', comp: 'comp',   dir: 'left',  key: prms.respKeys[0] },
+    { flanker: flankers[5], dim: 'ver', comp: 'incomp', dir: 'left',  key: prms.respKeys[0] },
+    { flanker: flankers[6], dim: 'ver', comp: 'comp',   dir: 'right', key: prms.respKeys[1] },
     { flanker: flankers[7], dim: 'ver', comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
   ],
 };

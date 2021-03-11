@@ -43,11 +43,11 @@ const prms = {
 
 const nVersion = getVersionNumber(nFiles, 2);
 if (nVersion === 1) {
-  prms.respKeys = ['Q', 'P', 27];
-  prms.respLetters = ['H', 'S', 27];
+  prms.respKeys = ['Q', 'P'];
+  prms.respLetters = ['H', 'S'];
 } else {
   prms.respKeys = ['P', 'Q'];
-  prms.respLetters = ['S', 'H', 27];
+  prms.respLetters = ['S', 'H'];
 }
 jsPsych.data.addProperties({ version: nVersion });
 
@@ -74,10 +74,10 @@ const task_instructions1 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus: generate_formatted_html({
-    text: `Willkommen bei unserem Experiment:<br><br> 
-        Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen. 
-        Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und 
-        genügend Zeit hast, um das Experiment durchzuführen. 
+    text: `Willkommen bei unserem Experiment:<br><br>
+        Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+        Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
+        genügend Zeit hast, um das Experiment durchzuführen.
         Wir bitten dich die ca. 40 Minuten konzentriert zu arbeiten.<br><br>
         Drücke eine beliebige Taste, um fortzufahren!`,
     bold: true,
@@ -159,7 +159,7 @@ const task_instructions_block = {
   stimulus:
     generate_formatted_html({
       text: `Wenn du bereit für den Block bist, dann positioniere
-        deine Hände auf die Tastatur.<br> 
+        deine Hände auf die Tastatur.<br>
         Zeil - Buchstabe erscheint entweder in der Mitte des Bildschirms
         oder links/rechts auf dem Bildschirm. Es gilt:`,
       bold: true,
@@ -226,7 +226,6 @@ function codeTrial() {
   let dat = jsPsych.data.get().last(1).values()[0];
 
   let corrCode = 0;
-  let corrKeyNum = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp);
   let rt = dat.rt !== null ? dat.rt - dat.delay : prms.tooSlow;
 
   let comp;
@@ -237,9 +236,15 @@ function codeTrial() {
     comp = dat.flankers[0] === dat.target ? 'comp' : 'incomp';
   }
 
-  if (dat.key_press === corrKeyNum && rt < prms.tooSlow) {
+    console.log(dat);
+  let correctKey;
+  if (dat.response !== null) {
+      correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
+  }
+
+  if (correctKey && (rt < prms.tooSlow)) {
     corrCode = 1; // correct
-  } else if (dat.key_press !== corrKeyNum && rt < prms.tooSlow) {
+  } else if (!correctKey && (rt < prms.tooSlow)) {
     corrCode = 2; // choice error
   } else if (rt >= prms.tooSlow) {
     corrCode = 3; // too slow
@@ -431,7 +436,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
