@@ -56,9 +56,9 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrls: 100, // number of trials within a block
-  nBlks: 10, // number of blocks
-  nPoor: 10, // number of within block errors before poor performance warning
+  nTrls: 10, // 100, // number of trials within a block
+  nBlks: 2, // number of blocks
+  nPoor: 2, // 10, // number of within block errors before poor performance warning
   fbDur: [0, 2500], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   stimFont: '50px Arial',
