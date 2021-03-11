@@ -147,7 +147,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    var new_html =
+    let new_html =
       '<div>' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
@@ -196,8 +196,6 @@ jsPsych.plugins['mouse-box-response'] = (function () {
     let time = [];
     let start_X = null;
     let start_Y = null;
-    let end_X = null;
-    let end_Y = null;
     let start_time = null;
     let start_rt = null;
     let end_rt = null;

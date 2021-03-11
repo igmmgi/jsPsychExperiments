@@ -116,8 +116,8 @@ if ([1, 3].includes(nVersion)) {
 }
 
 // SOA (predictable vs. random) counter-balance across experiment half
-let soaCondition = repeatArray('predictable', prms.nBlks / 2).concat(repeatArray(('random', prms.nBlks / 2)));
-if (nVersion == 3 || nVersion == 4) soaCondtion.reverse();
+let soaCondition = repeatArray('predictable', prms.nBlks / 2).concat(repeatArray('random', prms.nBlks / 2));
+if (nVersion === 3 || nVersion === 4) soaCondition.reverse();
 
 // let respText = generate_formatted_html({
 //   text: `${handMappingInstructions[0]} &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; ${handMappingInstructions[1]}<br><br>
@@ -374,8 +374,8 @@ function codeTrial() {
   if (respTask === 'letter') {
     if (prms.lettersVowel.includes(dat.letter)) {
       if (
-        (fingerMapping[0 + offset] === 'Vokal' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) ||
+        (fingerMapping[offset] === 'Vokal' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
         (fingerMapping[1 + offset] === 'Vokal' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
@@ -383,8 +383,8 @@ function codeTrial() {
       }
     } else if (prms.lettersConsonant.includes(dat.letter)) {
       if (
-        (fingerMapping[0 + offset] === 'Konsonant' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) ||
+        (fingerMapping[offset] === 'Konsonant' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
         (fingerMapping[1 + offset] === 'Konsonant' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
@@ -394,8 +394,8 @@ function codeTrial() {
   } else if (respTask === 'number') {
     if (prms.numbersOdd.includes(dat.number)) {
       if (
-        (fingerMapping[0 + offset] === 'Ungerade' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) ||
+        (fingerMapping[offset] === 'Ungerade' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
         (fingerMapping[1 + offset] === 'Ungerade' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
@@ -403,8 +403,8 @@ function codeTrial() {
       }
     } else if (prms.numbersEven.includes(dat.number)) {
       if (
-        (fingerMapping[0 + offset] === 'Gerade' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[0 + offset])) ||
+        (fingerMapping[offset] === 'Gerade' &&
+          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
         (fingerMapping[1 + offset] === 'Gerade' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
@@ -572,7 +572,7 @@ function blockFeedbackTxt(filter_options) {
       align: 'center',
     }) +
     generate_formatted_html({
-      text: `Du hast im Durchschnitt ${meanTime} ms zur Bearbeitung aller ${prms.nTrls} Aufgaben gebraucht und dabei ${prms.nError} Fehler gemacht.<br><br>
+      text: `Du hast im Durchschnitt ${meanTime} ms zur Bearbeitung aller ${prms.nTrls} Aufgaben gebraucht und dabei ${nError} Fehler gemacht.<br><br>
 Versuche weiterhin so schnell und so genau wie möglich in jedem Durchgang zu sein. Die Reaktionszeitmessung in jedem Durchgang beginnt sobald die erste Aufgabe (oder #-Zeichen) erscheint und endet sobald du eine der beiden Aufgaben bearbeitet hast! <br><br>
 Drücke eine beliebige Taste um fortzufahren.`,
       fontsize: 30,
@@ -587,7 +587,7 @@ Drücke eine beliebige Taste um fortzufahren.`,
   vts_data.nLetter = 0;
   vts_data.previousTask = 'na';
   vts_data.soa = 0;
-  vts_data.poor_performance = nError >= prms.nPoor ? true : false;
+  vts_data.poor_performance = nError >= prms.nPoor;
 
   return blockFbTxt;
 }

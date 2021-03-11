@@ -71,7 +71,7 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    var new_html =
+    let new_html =
       '<div>' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +

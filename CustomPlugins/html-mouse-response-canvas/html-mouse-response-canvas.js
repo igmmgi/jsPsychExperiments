@@ -82,7 +82,7 @@ jsPsych.plugins['html-mouse-response-canvas'] = (function () {
     document.addEventListener('mousedown', mouseResponse);
 
     // setup canvas
-    var new_html =
+    let new_html =
       '<div style="position:relative;">' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
@@ -115,9 +115,9 @@ jsPsych.plugins['html-mouse-response-canvas'] = (function () {
     let start_time = performance.now();
 
     function mouseResponse(e) {
-      if ((e.buttons === 1) & trial.choices[0]) {
+      if ((e.buttons === 1) && trial.choices[0]) {
         response.button = 1;
-      } else if ((e.buttons === 2) & trial.choices[1]) {
+      } else if ((e.buttons === 2) && trial.choices[1]) {
         response.button = 2;
       }
       if (response.button !== null) {

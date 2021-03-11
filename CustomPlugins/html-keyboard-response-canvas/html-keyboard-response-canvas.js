@@ -75,7 +75,7 @@ jsPsych.plugins['html-keyboard-response-canvas'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    var new_html =
+    let new_html =
       '<div style="position:relative;">' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +

@@ -42,7 +42,7 @@ jsPsych.plugins['html-mouse-response'] = (function () {
   };
 
   plugin.trial = function (display_element, trial) {
-    var new_html = '<div id="html-mouse-response-stimulus">' + trial.stimulus + '</div>';
+    let new_html = '<div id="html-mouse-response-stimulus">' + trial.stimulus + '</div>';
 
     // deactivate contextmenu of right mouse button until response
     document.addEventListener(
@@ -64,9 +64,9 @@ jsPsych.plugins['html-mouse-response'] = (function () {
     let start_time = performance.now();
 
     function mouseResponse(e) {
-      if ((e.buttons === 1) & trial.choices[0]) {
+      if ((e.buttons === 1) && trial.choices[0]) {
         response.button = 1;
-      } else if ((e.buttons === 2) & trial.choices[1]) {
+      } else if ((e.buttons === 2) && trial.choices[1]) {
         response.button = 2;
       }
       if (response.button !== null) {
