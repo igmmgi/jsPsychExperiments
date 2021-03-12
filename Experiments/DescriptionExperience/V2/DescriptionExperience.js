@@ -30,7 +30,7 @@ const prms = {
   fixSize: 15,
   fbSize: '50px monospace',
   fbTxt: ['-0', '-1'],
-  respKeys: ['q', 'p', 27],
+  respKeys: ['q', 'p'],
 };
 
 jsPsych.data.addProperties({ version: 'loss', phase_order: phase_order });
@@ -234,8 +234,7 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
 
-  let pressed_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(dat.key_press);
-  let response_side = pressed_key === prms.respKeys[0] ? 'left' : 'right';
+  let response_side = dat.key_press === prms.respKeys[0] ? 'left' : 'right';
   let highProbSelected = response_side === dat.highProbSide ? true : false;
 
   let rewardCode;
@@ -253,7 +252,6 @@ function codeTrial() {
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    pressed_key: pressed_key,
     response_side: response_side,
     rt: dat.rt,
     rewardCode: rewardCode,
@@ -264,9 +262,6 @@ function codeTrial() {
   });
 
   prms.cTrl += 1;
-  if (dat.key_press === 27) {
-    jsPsych.endExperiment();
-  }
 }
 
 const pic_stim = {

@@ -107,12 +107,12 @@ function codeTrial() {
 
   let correctKey;
   if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+    correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
   }
 
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 2; // choice error
   } else if (rt >= prms.tooSlow) {
     corrCode = 3; // too slow
@@ -129,7 +129,6 @@ function codeTrial() {
   prms.cTrl += 1;
 }
 
-
 const flanker_stimulus = {
   type: 'html-keyboard-response',
   stimulus: jsPsych.timelineVariable('flanker'),
@@ -137,7 +136,7 @@ const flanker_stimulus = {
   response_ends_trial: true,
   choices: prms.respKeys,
   data: {
-  post_trial_gap: 0,
+    post_trial_gap: 0,
     stim: 'flanker',
     comp: jsPsych.timelineVariable('comp'),
     corrResp: jsPsych.timelineVariable('key'),
