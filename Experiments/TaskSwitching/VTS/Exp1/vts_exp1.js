@@ -161,10 +161,11 @@ const task_instructions1 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `Willkommen bei unserem Experiment:<br><br>
-    Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-    Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
-    genügend Zeit hast, um das Experiment durchzuführen.
-    Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.<br><br>
+    Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit
+    abbrechen.  Bitte stelle sicher, dass du dich in einer ruhigen Umgebung
+    befindest und genügend Zeit hast, um das Experiment durchzuführen. Wir
+    bitten dich für die Dauer des Experiments (ca. 45 Minuten) konzentriert zu
+    arbeiten.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
@@ -217,12 +218,12 @@ const task_instructions4 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Du siehst in jedem Durchgang eine Buchstabe und eine Zahl, aber eine
+    text: `Du siehst in jedem Durchgang einen Buchstaben und eine Zahl, aber eine
     Aufgabe erscheint später als die andere Aufgabe.<br><br>
-    Du darfst frei entscheiden ob du die zuerst erscheinende Aufgabe bearbeiten
+    Du darfst frei entscheiden, ob du die zuerst erscheinende Aufgabe bearbeiten
     willst oder auf die andere Aufgabe wartest, aber versuche so schnell und so
       genau wie möglich zu sein!<br><br>
-      Die Reaktionszeitmessung in jedem Durchgang beginnt sobald die erste Aufgabe erscheint und endet
+      Die Reaktionszeitmessung in jedem Durchgang beginnt, sobald die erste Aufgabe erscheint und endet
       sobald du eine der beiden Aufgaben bearbeitet hast!<br><br>
       Drücke eine beliebige Taste um fortzufahren.`,
     fontsize: 26,
@@ -239,7 +240,7 @@ const task_instructions5 = {
     canvas_border: canvas_border,
     stimulus: generate_formatted_html({
         text: `In jedem Block gibt es insgesamt ${prms.nTrls} Aufgaben (${prms.nTrls / 2} Buchstaben und ${prms.nTrls / 2} Zahlenaufgaben).<br><br>
-        Du hast freie Aufgabenwahl wenn beide Aufgaben verfügbar sind.<br><br>
+        Du hast freie Aufgabenwahl, wenn beide Aufgaben verfügbar sind.<br><br>
         Wenn nur ein “#”-Zeichen statt einer Aufgabe (Buchstabe oder Zahl) erscheint, dann musst du die verbliebende Anzahl der andere Aufgabe bearbeiten bis der Block zu Ende ist.<br><br>
         Drücke eine beliebige Taste um fortzufahren.`,
         fontsize: 26,
@@ -277,7 +278,7 @@ const task_instructions_block_start = {
         align: 'center',
       }) +
       generate_formatted_html({
-        text: `Du darfst in jedem frei Durchgang entscheiden ob du die zuerst erscheinende Aufgabe bearbeitest oder auf die andere Aufgabe wartest (sofern beide Aufgaben noch verfügbar sind)!<br><br>
+        text: `Du darfst in jedem frei Durchgang entscheiden, ob du die zuerst erscheinende Aufgabe bearbeitest oder auf die andere Aufgabe wartest (sofern beide Aufgaben noch verfügbar sind)!<br><br>
 Versuche aber alle ${prms.nTrls} Aufgaben (${prms.nTrls / 2} Buchstaben und ${
           prms.nTrls / 2
         } Zahlen) so schnell und so genau wie möglich zu bearbeiten!`,
@@ -374,8 +375,7 @@ function codeTrial() {
   if (respTask === 'letter') {
     if (prms.lettersVowel.includes(dat.letter)) {
       if (
-        (fingerMapping[offset] === 'Vokal' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
+        (fingerMapping[offset] === 'Vokal' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
         (fingerMapping[1 + offset] === 'Vokal' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
@@ -394,8 +394,7 @@ function codeTrial() {
   } else if (respTask === 'number') {
     if (prms.numbersOdd.includes(dat.number)) {
       if (
-        (fingerMapping[offset] === 'Ungerade' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
+        (fingerMapping[offset] === 'Ungerade' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
         (fingerMapping[1 + offset] === 'Ungerade' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
@@ -403,8 +402,7 @@ function codeTrial() {
       }
     } else if (prms.numbersEven.includes(dat.number)) {
       if (
-        (fingerMapping[offset] === 'Gerade' &&
-          jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
+        (fingerMapping[offset] === 'Gerade' && jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[offset])) ||
         (fingerMapping[1 + offset] === 'Gerade' &&
           jsPsych.pluginAPI.compareKeys(dat.key_press, prms.respKeys[1 + offset]))
       ) {
@@ -417,16 +415,16 @@ function codeTrial() {
   let rt1 = dat.rt;
   let rt2 = transition !== 'repeat' ? dat.rt : dat.rt - vts_data.soa;
 
-  console.log('Resp hand: ', respHand);
-  console.log('Resp task: ', respTask);
-  console.log('Transitiion: ', transition);
-  console.log('SOA: ', vts_data.soa);
-  console.log('SOA Condition: ', soaCondition[vts_data.cBlk]);
-  console.log('Transitiion: ', transition);
-  console.log('RepetitionCounter: ', vts_data.repetitionCounter);
-  console.log('RT1: ', rt1);
-  console.log('RT2: ', rt2);
-  console.log('Error: ', error);
+  // console.log('Resp hand: ', respHand);
+  // console.log('Resp task: ', respTask);
+  // console.log('Transitiion: ', transition);
+  // console.log('SOA: ', vts_data.soa);
+  // console.log('SOA Condition: ', soaCondition[vts_data.cBlk]);
+  // console.log('Transitiion: ', transition);
+  // console.log('RepetitionCounter: ', vts_data.repetitionCounter);
+  // console.log('RT1: ', rt1);
+  // console.log('RT2: ', rt2);
+  // console.log('Error: ', error);
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
@@ -573,7 +571,7 @@ function blockFeedbackTxt(filter_options) {
     }) +
     generate_formatted_html({
       text: `Du hast im Durchschnitt ${meanTime} ms zur Bearbeitung aller ${prms.nTrls} Aufgaben gebraucht und dabei ${nError} Fehler gemacht.<br><br>
-Versuche weiterhin so schnell und so genau wie möglich in jedem Durchgang zu sein. Die Reaktionszeitmessung in jedem Durchgang beginnt sobald die erste Aufgabe (oder #-Zeichen) erscheint und endet sobald du eine der beiden Aufgaben bearbeitet hast! <br><br>
+Versuche weiterhin so schnell und so genau wie möglich in jedem Durchgang zu sein. Die Reaktionszeitmessung in jedem Durchgang beginnt, sobald die erste Aufgabe (oder #-Zeichen) erscheint und endet, sobald du eine der beiden Aufgaben bearbeitet hast! <br><br>
 Drücke eine beliebige Taste um fortzufahren.`,
       fontsize: 30,
       lineheight: 1.5,
@@ -671,7 +669,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim_type: 'vts' });
+    saveData('/Common/write_data.php', data_filename, { stim: 'vts' });
   },
   timing_post_trial: 1000,
 };
