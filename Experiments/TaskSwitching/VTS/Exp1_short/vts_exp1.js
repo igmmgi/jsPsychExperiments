@@ -446,9 +446,9 @@ function codeTrial() {
   if (respTask === 'number') vts_data.nNumber++;
   if (respTask === 'letter') vts_data.nLetter++;
   vts_data.previousTask = respTask;
-  if (soaCondition[vts_data.cBlk] === 'predictable') {
+  if (soaCondition[vts_data.cBlk - 1] === 'predictable') {
     vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 0;
-  } else if (soaCondition[vts_data.cBlk] === 'random') {
+  } else if (soaCondition[vts_data.cBlk - 1 === 'random') {
     vts_data.soa = prms.soas[getRandomInt(0, prms.soas.length)];
   }
 

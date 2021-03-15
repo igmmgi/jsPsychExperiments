@@ -977,9 +977,9 @@ function genExpSeq() {
   exp.push(save_code);
 
   // debrief
+  exp.push(showMouseCursor);
   exp.push(alpha_num);
   exp.push(debrief);
-  exp.push(showMouseCursor);
   exp.push(fullscreen_off);
 
   return exp;
