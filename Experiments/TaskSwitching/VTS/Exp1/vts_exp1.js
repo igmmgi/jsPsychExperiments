@@ -57,7 +57,7 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrls: 100, // number of trials within a block
-  nBlks: 10, // number of blocks
+  nBlks: 12, // number of blocks
   nPoor: 10, // number of within block errors before poor performance warning
   fbDur: [0, 2500], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
@@ -91,13 +91,13 @@ const vts_data = {
   poor_performance: false,
 };
 
-const nVersion = getVersionNumber(nFiles, 4);
+const nVersion = getVersionNumber(nFiles, 2);
 jsPsych.data.addProperties({ version: nVersion });
 
 let handMapping;
 let handMappingInstructions;
 let fingerMapping;
-if ([1, 3].includes(nVersion)) {
+if (nVersion === 1) {
   handMapping = ['number', 'letter'];
   handMappingInstructions = ['Zahlenaufgabe', 'Buchstabenaufgabe'];
   prms.respKeysNumber = [prms.respKeys[0], prms.respKeys[1]];
@@ -105,7 +105,7 @@ if ([1, 3].includes(nVersion)) {
   prms.numberPos = prms.stimPos;
   prms.letterPos = -prms.stimPos;
   fingerMapping = shuffle(['Ungerade', 'Gerade']).concat(shuffle(['Vokal', 'Konsonant']));
-} else {
+} else if (nVersion === 2) {
   handMapping = ['letter', 'number'];
   handMappingInstructions = ['Buchstabenaufgabe', 'Zahlenaufgabe'];
   prms.respKeysLetter = [prms.respKeys[0], prms.respKeys[1]];
@@ -117,7 +117,7 @@ if ([1, 3].includes(nVersion)) {
 
 // SOA (predictable vs. random) counter-balance across experiment half
 let soaCondition = repeatArray('predictable', prms.nBlks / 2).concat(repeatArray('random', prms.nBlks / 2));
-if (nVersion === 3 || nVersion === 4) soaCondition.reverse();
+// if (nVersion === 3 || nVersion === 4) soaCondition.reverse();
 
 // let respText = generate_formatted_html({
 //   text: `${handMappingInstructions[0]} &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; ${handMappingInstructions[1]}<br><br>
@@ -153,7 +153,6 @@ let respText = respText1 + respText2;
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-
 const task_instructions1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
@@ -434,7 +433,7 @@ function codeTrial() {
     respTask: respTask,
     transition: transition,
     repetitionCounter: vts_data.repetitionCounter,
-    soaCondition: soaCondition[vts_data.cBlk],
+    soaCondition: soaCondition[vts_data.cBlk - 1],
     soa: vts_data.soa,
     rt1: rt1,
     rt2: rt2,
@@ -447,9 +446,9 @@ function codeTrial() {
   if (respTask === 'letter') vts_data.nLetter++;
   vts_data.previousTask = respTask;
   if (soaCondition[vts_data.cBlk - 1] === 'predictable') {
-    vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 0;
+    vts_data.soa = transition === 'repeat' ? vts_data.soa + prms.soaStep : 50;
   } else if (soaCondition[vts_data.cBlk - 1] === 'random') {
-    vts_data.soa = prms.soas[getRandomInt(0, prms.soas.length)];
+    vts_data.soa = prms.soas[getRandomInt(0, prms.soas.length - 1)];
   }
 
   //if (error === 0) vts_data.soa = 0;
@@ -473,8 +472,8 @@ const vts_stimulus = {
   on_start: function (trial) {
     'use strict';
     // Which letter/number to show
-    let letter = vts_data.nLetter < prms.nTrls / 2 ? prms.letters[getRandomInt(0, 4)] : '#';
-    let number = vts_data.nNumber < prms.nTrls / 2 ? prms.numbers[getRandomInt(0, 4)] : '#';
+    let letter = vts_data.nLetter < prms.nTrls / 2 ? prms.letters[getRandomInt(0, prms.letters.length - 1)] : '#';
+    let number = vts_data.nNumber < prms.nTrls / 2 ? prms.numbers[getRandomInt(0, prms.letters.length - 1)] : '#';
 
     // activate only response keys for available task
     if (letter !== '#') trial.choices = trial.choices.concat(prms.respKeysLetter);
@@ -632,7 +631,6 @@ const block_feedback2 = {
 ////////////////////////////////////////////////////////////////////////
 //                              De-brief                              //
 ////////////////////////////////////////////////////////////////////////
-
 // For VP Stunden
 const randomString = generateRandomStringWithExpName('vts1', 16);
 
@@ -677,7 +675,7 @@ const save_data = {
 const save_interaction_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'interaction/' + expName + '_interaction_data_' + vpNum;
+    let data_filename = dirName + 'interaction_data/' + expName + '_interaction_data_' + vpNum;
     saveInteractionData('/Common/write_data.php', data_filename);
   },
   timing_post_trial: 200,
@@ -718,13 +716,15 @@ function genExpSeq() {
     exp.push(blank_canvas);
     // trials within block
     for (let trl = 0; trl < prms.nTrls; trl++) {
+      exp.push(rsi);
       exp.push(vts_stimulus);
       exp.push(trial_feedback);
-      exp.push(rsi);
     }
     // between block feedback
     exp.push(block_feedback1);
-    exp.push(block_feedback2);
+    if (blk < prms.nBlks - 1) {
+      exp.push(block_feedback2);
+    }
   }
 
   // save data
@@ -733,9 +733,9 @@ function genExpSeq() {
   exp.push(save_code);
 
   // debrief
+  exp.push(showMouseCursor);
   exp.push(alpha_num);
   exp.push(debrief_de);
-  exp.push(showMouseCursor);
   exp.push(fullscreen_off);
 
   return exp;
