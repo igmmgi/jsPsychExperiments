@@ -261,7 +261,7 @@ if (prmsStroop.key_mapping === 1) {
     <b><span style="color:#008000">xxxx</b> &#10142; Press the <b>\'P\'</b> key (right index finger)<br><br>`;
 } else if (prmsStroop.key_mapping === 2) {
   prmsStroop.resp_keys = ['P', 'Q', 27];
-  stroop_resp_mapping = `<b><span style="color:#008000">xxxx</b> &#10142; Press the <b>\'Q\'</b> key (left index finger)<br> 
+  stroop_resp_mapping = `<b><span style="color:#008000">xxxx</b> &#10142; Press the <b>\'Q\'</b> key (left index finger)<br>
     <b><span style="color:#0000FF">xxxx</b> &#10142; Press the <b>\'P\'</b> key (right index finger)<br><br>`;
 }
 
@@ -274,8 +274,8 @@ const stroop_instructionsStart1 = {
     text:
       `Part 2: This section involves responding to font colour. Ignore word meaning! <br><br>` +
       stroop_resp_mapping +
-      `You will begin with a practice block of 8 trials. 
-      Respond as quickly and as accurately as possible.<br><br> 
+      `You will begin with a practice block of 8 trials.
+      Respond as quickly and as accurately as possible.<br><br>
       Press any key to continue!`,
     fontsize: 32,
     lineheight: 1.5,
@@ -292,8 +292,8 @@ const stroop_instructionsStart2 = {
     text:
       `Part 2: Continue responding to font colour. Remember: ignore word meaning! <br><br>` +
       stroop_resp_mapping +
-      `You will now perform a block of 48 trials. 
-      Respond as quickly and as accurately as possible.<br><br> 
+      `You will now perform a block of 48 trials.
+      Respond as quickly and as accurately as possible.<br><br>
       Press any key to continue!`,
     fontsize: 32,
     lineheight: 1.5,

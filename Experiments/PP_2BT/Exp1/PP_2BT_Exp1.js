@@ -54,7 +54,7 @@ const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
-const nVersion = 2; // getVersionNumber(nFiles, 2);
+const nVersion = 2; //getVersionNumber(nFiles, 2);
 jsPsych.data.addProperties({ version: nVersion });
 getComputerInfo();
 
@@ -667,7 +667,7 @@ const stimuli_high_primary = stimuli_primary.concat(stimuli_background);
 stimuli_high_primary.forEach((i) => (i.prob_cond = 'HP'));
 
 const stimuli_low_primary = stimuli_primary.concat(repeatArray(stimuli_background, 4));
-stimuli_high_primary.forEach((i) => (i.prob_cond = 'LP'));
+stimuli_low_primary.forEach((i) => (i.prob_cond = 'LP'));
 // console.log(stimuli_low_primary);
 
 function draw_pp(args) {
@@ -946,9 +946,9 @@ function genExpSeq() {
 
   let hplp_type;
   let pe_type = ['P'].concat(repeatArray('E', prms.nBlks_pp_e)).concat('P').concat(repeatArray('E', prms.nBlks_pp_e));
-  if (nVersion == 1) {
+  if (nVersion === 1) {
     hplp_type = repeatArray('HP', prms.nBlks_pp_e + 1).concat(repeatArray('LP', prms.nBlks_pp_e + 1));
-  } else if (nVersion == 2) {
+  } else if (nVersion === 2) {
     hplp_type = repeatArray('LP', prms.nBlks_pp_e + 1).concat(repeatArray('HP', prms.nBlks_pp_e + 1));
   }
   for (let blk = 0; blk < hplp_type.length; blk++) {
