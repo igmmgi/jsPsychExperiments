@@ -91,13 +91,13 @@ const vts_data = {
   poor_performance: false,
 };
 
-const nVersion = getVersionNumber(nFiles, 2);
+const nVersion = getVersionNumber(nFiles, 2) + 2;
 jsPsych.data.addProperties({ version: nVersion });
 
 let handMapping;
 let handMappingInstructions;
 let fingerMapping;
-if (nVersion === 1) {
+if (nVersion === 3) {
   handMapping = ['number', 'letter'];
   handMappingInstructions = ['Zahlenaufgabe', 'Buchstabenaufgabe'];
   prms.respKeysNumber = [prms.respKeys[0], prms.respKeys[1]];
@@ -105,7 +105,7 @@ if (nVersion === 1) {
   prms.numberPos = prms.stimPos;
   prms.letterPos = -prms.stimPos;
   fingerMapping = shuffle(['Ungerade', 'Gerade']).concat(shuffle(['Vokal', 'Konsonant']));
-} else if (nVersion === 2) {
+} else if (nVersion === 4) {
   handMapping = ['letter', 'number'];
   handMappingInstructions = ['Buchstabenaufgabe', 'Zahlenaufgabe'];
   prms.respKeysLetter = [prms.respKeys[0], prms.respKeys[1]];
@@ -116,7 +116,8 @@ if (nVersion === 1) {
 }
 
 // SOA (predictable vs. random) counter-balance across experiment half
-let soaCondition = repeatArray('predictable', prms.nBlks / 2).concat(repeatArray('random', prms.nBlks / 2));
+// let soaCondition = repeatArray('predictable', prms.nBlks / 2).concat(repeatArray('random', prms.nBlks / 2));
+let soaCondition = repeatArray('random', prms.nBlks / 2).concat(repeatArray('predictable', prms.nBlks / 2));
 // if (nVersion === 3 || nVersion === 4) soaCondition.reverse();
 
 // let respText = generate_formatted_html({
