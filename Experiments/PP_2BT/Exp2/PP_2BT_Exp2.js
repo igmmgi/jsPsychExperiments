@@ -708,7 +708,6 @@ const stimuli_background_low_primary = (nVersion < 3) ?
         { response_task: 'background', background_task: 'letter', colour: prms.colours[2], letter_number: "right_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
         { response_task: 'background', background_task: 'letter', colour: prms.colours[2], letter_number: "left_letter",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
         { response_task: 'background', background_task: 'letter', colour: prms.colours[2], letter_number: "right_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
-
         { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
         { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
         { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "left_number",  soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
@@ -717,11 +716,11 @@ const stimuli_background_low_primary = (nVersion < 3) ?
         { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
     ];
 
-const stimuli_high_primary = repeatArray(stimuli_primary, 2).concat(stimuli_background_high_primary);
+const stimuli_high_primary = deepCopy(repeatArray(stimuli_primary, 2).concat(stimuli_background_high_primary));
 stimuli_high_primary.forEach((i) => (i.prob_cond = 'HP'));
 // console.log(stimuli_high_primary);
 
-const stimuli_low_primary = stimuli_primary.concat(stimuli_background_low_primary);
+const stimuli_low_primary = deepCopy(stimuli_primary.concat(stimuli_background_low_primary));
 stimuli_low_primary.forEach((i) => (i.prob_cond = 'LP'));
 // console.log(stimuli_low_primary);
 
@@ -960,7 +959,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome);
   exp.push(resize);
-  exp.push(vpInfoForm);
+  // exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 

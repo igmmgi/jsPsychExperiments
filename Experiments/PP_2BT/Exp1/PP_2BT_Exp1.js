@@ -663,10 +663,11 @@ const stimuli_background = [
     { response_task: 'background', background_task: 'number', colour: prms.colours[2], letter_number: "right_number", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
 ];
 
-const stimuli_high_primary = stimuli_primary.concat(stimuli_background);
+const stimuli_high_primary = deepCopy(stimuli_primary.concat(stimuli_background));
 stimuli_high_primary.forEach((i) => (i.prob_cond = 'HP'));
+// console.log(stimuli_high_primary);
 
-const stimuli_low_primary = stimuli_primary.concat(repeatArray(stimuli_background, 4));
+const stimuli_low_primary = deepCopy(stimuli_primary.concat(repeatArray(stimuli_background, 4)));
 stimuli_low_primary.forEach((i) => (i.prob_cond = 'LP'));
 // console.log(stimuli_low_primary);
 
