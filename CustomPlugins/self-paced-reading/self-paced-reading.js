@@ -104,10 +104,10 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       },
       xy_position: {
         type: jsPsych.plugins.parameterType.STRING,
-        array: false,
-        pretty_name: 'align',
-        default: 'left',
-        description: 'Text Alignment',
+        array: true,
+        pretty_name: 'position',
+        default: [0, 0],
+        description: 'Text Position',
       },
       x_align: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -130,7 +130,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     return txt.replace(/[^\s]/g, mask_character);
   }
 
-  function display_word(mask_type, mask_on_word, mask_character) {
+  function display_word(mask_type) {
     'use strict';
     // deal with sentence/word
     if (mask_type === 1) {
@@ -154,7 +154,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
 
   function display_mask(mask_type, mask_on_word, mask_character, mask_gap_character) {
     if (mask_on_word) {
-      return function (words, word_number) {
+      return function (words) {
         return words
           .map(function (word) {
             return text_mask(word, mask_character);
@@ -222,6 +222,8 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     let word_number = trial.mask_type === 3 ? 0 : -1;
     let word_number_line = -1;
     let line_number = 0;
+    let sentence = trial.sentence.replace(/(\r\n|\n|\r)/gm, '');
+    let words_concat = sentence.split(' ');
 
     // deal with potential multi-line sentences with user defined splits
     if (trial.mask_type !== 3) {
@@ -241,10 +243,9 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     } else {
       words = trial.sentence.split(' ');
       sentence_length = words.length;
-      console.log(words);
     }
 
-    const word = display_word(trial.mask_type, trial.mask_on_word, trial.mask_character);
+    const word = display_word(trial.mask_type);
     const mask = display_mask(trial.mask_type, trial.mask_on_word, trial.mask_character, trial.mask_gap_character);
 
     function draw() {
@@ -305,9 +306,9 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       // gather the data to store for the trial
       const trial_data = {
         rt: response.rt,
-        word: trial.mask_type === 3 ? words[word_number] : words[line_number][word_number - 1],
+        word: words_concat[word_number - 1],
         word_number: word_number,
-        sentence: trial.sentence,
+        sentence: sentence,
       };
 
       // clear the display and move to next trial
@@ -318,9 +319,9 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     // function to handle responses by the subject
     const after_response = function (info) {
       response.rt = info.rt;
-      response.word = trial.mask_type === 3 ? words[word_number] : words[line_number][word_number];
+      response.word = words_concat[word_number];
       response.word_number = word_number + 1;
-      response.sentence = trial.sentence;
+      response.sentence = sentence;
 
       // store data
       if (word_number < sentence_length - 1) {

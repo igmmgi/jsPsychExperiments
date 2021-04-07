@@ -87,12 +87,11 @@ for (let sent_num = 0; sent_num < sentences.length; sent_num++) {
 
 // user define line breaks
 const sentences_with_line_breaks = [
-  `The quick brown fox
-  jumps over the lazy dog.`,
-  'Victor jagt zwölf Boxkämpfer \n quer über den großen Sylter Deich.',
-  `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-  eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-  voluptua. At vero eos et accusam et justo duo dolores et ea rebum.`,
+  'The quick brown fox \njumps over the lazy dog.',
+  'Victor jagt zwölf Boxkämpfer \nquer über den großen Sylter Deich.',
+  `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy 
+neirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam 
+voluptua. At vero eos et accusam et justo duo dolores et ea rebum.`,
 ];
 
 // Mask type 1

@@ -55,9 +55,14 @@ const dirName = getDirName();
 const vpNum = genVpNum();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 const nVersion = Number(jsPsych.data.urlVariables().version);
-// console.log(nVersion);
 jsPsych.data.addProperties({ version: nVersion });
 getComputerInfo();
+
+if (nVersion < 3) {
+  jsPsych.data.addProperties({ inducer_task: 'number' });
+} else {
+  jsPsych.data.addProperties({ inducer_task: 'letter' });
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -915,6 +920,7 @@ const alpha_num = {
       fontsize: 26,
       align: 'left',
     }),
+  choices: [' '],
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -959,7 +965,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome);
   exp.push(resize);
-  // exp.push(vpInfoForm);
+  exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
