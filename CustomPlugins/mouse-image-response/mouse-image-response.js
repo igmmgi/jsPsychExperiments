@@ -1,15 +1,15 @@
 // Mouse start box and end boxes whilst recording x,y mouse posiiton
-//   RBL                   RBR
+//   LeftPic                   RightPic
 //
 //              +
 //
 //              SB
 
-jsPsych.plugins['mouse-box-response'] = (function () {
+jsPsych.plugins['mouse-image-response'] = (function () {
   let plugin = {};
 
   plugin.info = {
-    name: 'mouse-box-response',
+    name: 'mouse-image-response',
     description: '',
     parameters: {
       func_args: {
@@ -113,7 +113,18 @@ jsPsych.plugins['mouse-box-response'] = (function () {
         default: 'black',
         description: 'Right Box Colour',
       },
-
+      left_image: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Left Image',
+        default: null,
+        description: 'Left Image',
+      },
+      right_image: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Right Image',
+        default: null,
+        description: 'Right Image',
+      },
       box_linewidth: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Line width of box',
@@ -222,6 +233,12 @@ jsPsych.plugins['mouse-box-response'] = (function () {
     let x_click_pos = [];
     let y_click_pos = [];
 
+    let left_img = new Image();
+    left_img.src = trial.left_image;
+
+    let right_img = new Image();
+    right_img.src = trial.right_image;
+
     // flags for drawing
     let trial_initiated = false;
     let movement_initiated = false;
@@ -229,6 +246,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
     let draw_fixation = false;
     let draw_response_boxes = trial.draw_response_boxes[0];
     let draw_stimulus = false;
+    let draw_images = false;
 
     // start/response boxes
     let start_box = {
@@ -340,6 +358,21 @@ jsPsych.plugins['mouse-box-response'] = (function () {
         }, trial.fixation_duration);
       }
 
+      // images
+      if (draw_images) {
+        ctx.drawImage(
+          left_img,
+          left_responsebox.x - left_img.width / 2 + left_responsebox.w / 2,
+          left_responsebox.y - left_img.height / 2 + left_responsebox.h / 2,
+        );
+
+        ctx.drawImage(
+          right_img,
+          right_responsebox.x - right_img.width / 2 + right_responsebox.w / 2,
+          right_responsebox.y - right_img.height / 2 + right_responsebox.h / 2,
+        );
+      }
+
       if (draw_response_boxes) {
         // response box left
         ctx.beginPath();
@@ -372,17 +405,13 @@ jsPsych.plugins['mouse-box-response'] = (function () {
       );
     }
 
-    // // test if x, y is inside the bounding box
-    // function in_box(x, y, box) {
-    //   return x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
-    // }
-
     // function to start trial when it is time
     let start_trial = function () {
       'use strict';
       trial_initiated = true;
       start_time = performance.now();
       draw_fixation = true;
+      draw_images = true;
       draw_start_box = trial.draw_start_box[1];
       draw_response_boxes = trial.draw_response_boxes[1];
       draw();

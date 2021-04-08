@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_colour = 'rgba(255, 255, 255, 1)';
 const canvas_size = [1280, 720];
 const canvas_border = '5px solid black';
 
@@ -24,24 +24,23 @@ const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
 const pcInfo = getComputerInfo();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 16, // number of trials in first block (practice)
-  nTrlsE: 48, // number of trials in subsequent blocks
-  nBlks: 9,
+  nTrlsP: 8, // number of trials in first block (practice)
+  nTrlsE: 16, // number of trials in subsequent blocks
+  nBlks: 2,
   fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   iti: 500,
-  fixDur: 500,
   fixPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
+  fixDur: 500,
   stimPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
-  leftBox: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
-  rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
+  leftBox: [200, 150, 50, 50], // xpos, ypos, xsize, ysize
+  rightBox: [1080, 150, 50, 50], // xpos, ypos, xsize, ysize
   keepFixation: false, // is fixation cross kept on screen with stimulus
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
@@ -64,15 +63,7 @@ const task_instructions = {
     "<H1 style='text-align: left;'>BITTE NUR TEILNEHMEN, FALLS EINE</H1>" +
     "<H1 style='text-align: left;'>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!</H1><br>" +
     "<H2 style='text-align: left;'>Liebe/r Teilnehmer/in</H2><br>" +
-    "<H3 style='text-align: left;'>im Experiment werden Sie in jedem Durchgang 3 Quadrate sehen. Zu Beginn</H3>" +
-    "<H3 style='text-align: left;'>des Durchgangs bewegen Sie die Maus in das Quadrat am unteren Bildschirmrand</H3>" +
-    "<H3 style='text-align: left;'>und klicken in das Quadrat. Dann erscheint eine der folgenden Aussagen:</H3><br>" +
-    "<H3 style='text-align: center;'>'jetzt links', 'jetzt rechts', 'nicht links', oder 'nicht rechts'</H3><br>" +
-    "<H3 style='text-align: left;'>Bitte bewegen Sie anschließend die Maus in das entsprechende obere</H3>" +
-    "<H3 style='text-align: left;'>Quadrat, also das LINKE QUADRAT bei 'jetzt links' und 'nicht rechts', und das</H3>" +
-    "<H3 style='text-align: left;'>RECHTE QUADRAT bei 'jetzt rechts' und 'nicht links'. Versuchen Sie</H3>" +
-    "<H3 style='text-align: left;'>dabei möglichst schnell und korrekt zu reagieren. Es gibt im folgenden 16 </H3>" +
-    "<H3 style='text-align: left;'>Übungsdurchgänge Danach beginnt das richtige Experiment.</H3><br>" +
+    "<H2 style='text-align: left;'>...<br><br>" +
     "<h3 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h3>",
   post_trial_gap: prms.waitDur,
 };
@@ -91,10 +82,7 @@ function drawFeedback() {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  let corrCode = 0;
-  if (dat.resp_loc !== dat.end_loc) {
-    corrCode = 1; // choice error
-  }
+  let corrCode = dat.resp_loc !== dat.end_loc ? 1 : 0;
   jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl });
   prms.cTrl += 1;
   if (dat.key_press === 27) {
@@ -102,8 +90,21 @@ function codeTrial() {
   }
 }
 
+let images = {
+  healthy: {
+    type: 'preload',
+    auto_preload: true,
+    images: ['imgs/health1.jpg', 'imgs/health1.jpg', 'imgs/health1.jpg', 'imgs/health1.jpg', 'imgs/health1.jpg'],
+  },
+  unhealthy: {
+    type: 'preload',
+    auto_preload: true,
+    images: ['imgs/junk1.jpg', 'imgs/junk2.jpg', 'imgs/junk3.jpg', 'imgs/junk4.jpg', 'imgs/junk5.jpg'],
+  },
+};
+
 const trial_stimulus = {
-  type: 'mouse-box-response',
+  type: 'mouse-image-response',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
@@ -116,6 +117,10 @@ const trial_stimulus = {
   start_box: prms.startBox,
   left_box: prms.leftBox,
   right_box: prms.rightBox,
+  left_box_colour: 'rgb(200, 200, 200)',
+  right_box_colour: 'rgb(200, 200, 200)',
+  left_image: null,
+  right_image: null,
   keep_fixation: prms.keepFixation,
   draw_start_box: prms.drawStartBox,
   draw_response_boxes: prms.drawResponseBoxes,
@@ -127,7 +132,13 @@ const trial_stimulus = {
   data: {
     stim_type: 'mouse_negation',
     word: jsPsych.timelineVariable('word'),
+    image_type_left: jsPsych.timelineVariable('image_type_left'),
+    image_type_right: jsPsych.timelineVariable('image_type_right'),
     resp_loc: jsPsych.timelineVariable('resp_loc'),
+  },
+  on_start: function (trial) {
+    trial.left_image = images[trial.data.image_type_left].images[getRandomInt(0, 4)];
+    trial.right_image = images[trial.data.image_type_right].images[getRandomInt(0, 4)];
   },
   on_finish: function () {
     codeTrial();
@@ -136,10 +147,14 @@ const trial_stimulus = {
 
 // prettier-ignore
 const stimuli = [
-  { word: 'jetzt links',  aff_neg: 'aff', resp_loc: 'left' },
-  { word: 'jetzt rechts', aff_neg: 'aff', resp_loc: 'right' },
-  { word: 'nicht rechts', aff_neg: 'neg', resp_loc: 'left' },
-  { word: 'nicht links',  aff_neg: 'neg', resp_loc: 'right' },
+  { word: 'jetzt gesund', aff_neg: 'aff', image_type_left: "healthy",   image_type_right: "unhealthy", resp_loc: "left"  },
+  { word: 'jetzt junk',   aff_neg: 'aff', image_type_left: "healthy",   image_type_right: "unhealthy", resp_loc: "right" },
+  { word: 'nicht gesund', aff_neg: 'neg', image_type_left: "healthy",   image_type_right: "unhealthy", resp_loc: "right" },
+  { word: 'nicht junk',   aff_neg: 'neg', image_type_left: "healthy",   image_type_right: "unhealthy", resp_loc: "left"  },
+  { word: 'jetzt gesund', aff_neg: 'aff', image_type_left: "unhealthy", image_type_right: "healthy",   resp_loc: "right" },
+  { word: 'jetzt junk',   aff_neg: 'aff', image_type_left: "unhealthy", image_type_right: "healthy",   resp_loc: "left"  },
+  { word: 'nicht gesund', aff_neg: 'neg', image_type_left: "unhealthy", image_type_right: "healthy",   resp_loc: "left"  },
+  { word: 'nicht junk',   aff_neg: 'neg', image_type_left: "unhealthy", image_type_right: "healthy",   resp_loc: "right" },
 ];
 
 const trial_feedback = {
@@ -159,10 +174,11 @@ const trial_feedback = {
 function blockFeedbackTxt(filter_options) {
   'use strict';
   let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
+  console.log(dat);
   let nTotal = dat.count();
-  let nError = dat.select('corrCode').values.filter(function (x) {
-    return x !== 0;
-  }).length;
+  console.log(nTotal);
+  let nError = dat.select('corrCode').values.filter((x) => x !== 0).length;
+  console.log(nError);
   dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 0 });
   let blockFbTxt =
     '<H1>Block: ' +
@@ -271,6 +287,10 @@ function genExpSeq() {
 
   let exp = [];
 
+  // pre-load images
+  exp.push(images.healthy);
+  exp.push(images.unhealthy);
+
   exp.push(fullscreen_on);
   exp.push(check_screen);
   exp.push(welcome_de);
@@ -282,7 +302,7 @@ function genExpSeq() {
     let blk_timeline = { ...trial_timeline };
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
+      size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
