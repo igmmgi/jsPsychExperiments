@@ -219,7 +219,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     let words = [];
     let line_length = [];
     let sentence_length = 0;
-    let word_number = trial.mask_type === 3 ? 0 : -1;
+    let word_number = -1; // trial.mask_type === 3 ? 0 : -1;
     let word_number_line = -1;
     let line_number = 0;
     let sentence = trial.sentence.replace(/(\r\n|\n|\r)/gm, '');
@@ -272,8 +272,11 @@ jsPsych.plugins['self-paced-reading'] = (function () {
           );
         }
       } else {
-        // word-by-word in centre so no mask!
-        ctx.fillText(words[word_number], trial.xy_position[0], trial.xy_position[1]);
+        if (word_number === -1) {
+          ctx.fillText(trial.mask_character, trial.xy_position[0], trial.xy_position[1] + trial.mask_y_offset);
+        } else {
+          ctx.fillText(words[word_number], trial.xy_position[0], trial.xy_position[1]);
+        }
       }
 
       // set line/word numbers
