@@ -18,7 +18,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
         array: false,
         pretty_name: 'Mask type',
         default: 1,
-        description: 'The type of mask for the sentence.',
+        description: 'The type of mask for the sentence (1 vs. 2 vs. 3).',
       },
       mask_character: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -26,6 +26,13 @@ jsPsych.plugins['self-paced-reading'] = (function () {
         pretty_name: 'Character',
         default: '_',
         description: 'The character to use for the mask.',
+      },
+      mask3_character_length: {
+        type: jsPsych.plugins.parameterType.INT,
+        array: false,
+        pretty_name: 'Number of mask characters',
+        default: 5,
+        description: 'The number of mask characters for initial "word" for mask type 3.',
       },
       mask_on_word: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -68,6 +75,13 @@ jsPsych.plugins['self-paced-reading'] = (function () {
         pretty_name: 'Font',
         default: 'black',
         description: 'Font colour',
+      },
+      mask_colour: {
+        type: jsPsych.plugins.parameterType.STRING,
+        array: false,
+        pretty_name: 'Font',
+        default: 'black',
+        description: 'Mask colour',
       },
       canvas_colour: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -130,62 +144,34 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     return txt.replace(/[^\s]/g, mask_character);
   }
 
+  // deal with mask type 1 and 2
+  let mask_operator = {
+    1: (a, b) => a !== b,
+    2: (a, b) => a > b,
+  };
+
   function display_word(mask_type) {
     'use strict';
-    // deal with sentence/word
-    if (mask_type === 1) {
-      return function (words, word_number) {
-        return words
-          .map(function (word, idx) {
-            return idx !== word_number ? text_mask(word, ' ') : word;
-          })
-          .join(' ');
-      };
-    } else if (mask_type === 2) {
-      return function (words, word_number) {
-        return words
-          .map(function (word, idx) {
-            return idx > word_number ? text_mask(word, ' ') : word;
-          })
-          .join(' ');
-      };
-    }
+    return (words, word_number) =>
+      words.map((word, idx) => (mask_operator[mask_type](idx, word_number) ? text_mask(word, ' ') : word)).join(' ');
   }
 
   function display_mask(mask_type, mask_on_word, mask_character, mask_gap_character) {
-    if (mask_on_word) {
-      return function (words) {
-        return words
-          .map(function (word) {
-            return text_mask(word, mask_character);
-          })
-          .join(mask_gap_character);
-      };
-    } else {
-      if (mask_type === 1) {
-        return function (words, word_number) {
-          return words
-            .map(function (word, idx) {
-              return idx !== word_number ? text_mask(word, mask_character) : text_mask(word, ' ');
-            })
-            .join(mask_gap_character);
-        };
-      } else if (mask_type === 2) {
-        return function (words, word_number) {
-          return words
-            .map(function (word, idx) {
-              return idx > word_number ? text_mask(word, mask_character) : text_mask(word, ' ');
-            })
-            .join(mask_gap_character);
-        };
-      }
-    }
+    'use strict';
+    return (words, word_number) =>
+      words
+        .map((word, idx) =>
+          mask_operator[mask_type](idx, word_number)
+            ? text_mask(word, mask_character)
+            : text_mask(word, mask_on_word ? mask_character : ' '),
+        )
+        .join(mask_gap_character);
   }
 
   plugin.trial = function (display_element, trial) {
     'use strict';
     // setup canvas
-    var new_html =
+    display_element.innerHTML =
       '<div>' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
@@ -196,7 +182,6 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       ';"></canvas>' +
       '</div>';
 
-    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');
 
@@ -219,25 +204,25 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     let words = [];
     let line_length = [];
     let sentence_length = 0;
-    let word_number = -1; // trial.mask_type === 3 ? 0 : -1;
+    let word_number = -1;
     let word_number_line = -1;
     let line_number = 0;
     let sentence = trial.sentence.replace(/(\r\n|\n|\r)/gm, '');
     let words_concat = sentence.split(' ');
 
+    // if mask type = 3, repeat mask character x times
+    if (trial.mask_type === 3) trial.mask_character = trial.mask_character.repeat(trial.mask3_character_length);
+
     // deal with potential multi-line sentences with user defined splits
     if (trial.mask_type !== 3) {
-      trial.sentence_split = trial.sentence.split('\n');
-      trial.sentence_split = trial.sentence_split.map(function (word) {
-        return word.trim();
-      });
+      trial.sentence_split = trial.sentence.split('\n').map((s) => s.trim());
       for (let i = 0; i < trial.sentence_split.length; i++) {
         words[i] = trial.sentence_split[i].split(' ');
         sentence_length += words[i].length;
         line_length.push(words[i].length);
       }
       // center multi-line text on original y position
-      if ((words.length > 1) & (trial.y_align === 'center')) {
+      if (words.length > 1 && trial.y_align === 'center') {
         trial.xy_position[1] -= words.length * 0.5 * trial.line_height;
       }
     } else {
@@ -254,15 +239,16 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
 
       // text + mask
-      ctx.fillStyle = trial.font_colour;
       if (trial.mask_type !== 3) {
         // words
+        ctx.fillStyle = trial.font_colour;
         ctx.fillText(
           word(words[line_number], word_number_line),
           trial.xy_position[0],
           trial.xy_position[1] + line_number * trial.line_height,
         );
         // mask
+        ctx.fillStyle = trial.mask_colour;
         for (let i = 0; i < words.length; i++) {
           let mw = i === line_number ? word_number_line : -1;
           ctx.fillText(
@@ -272,9 +258,12 @@ jsPsych.plugins['self-paced-reading'] = (function () {
           );
         }
       } else {
+        // mask type 3 always in center
         if (word_number === -1) {
+          ctx.fillStyle = trial.mask_colour;
           ctx.fillText(trial.mask_character, trial.xy_position[0], trial.xy_position[1] + trial.mask_y_offset);
         } else {
+          ctx.fillStyle = trial.font_colour;
           ctx.fillText(words[word_number], trial.xy_position[0], trial.xy_position[1]);
         }
       }
@@ -344,7 +333,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     };
 
     // start the response listener
-    var keyboardListener = key();
+    let keyboardListener = key();
     function key() {
       return jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_response,
