@@ -3,7 +3,7 @@
 // prettier-ignore
 const items = [
     { num: 1, cond: 'CU', sent: 'The man knew that one more spurt was enough to win the game of tennis against his biggest rival.', cpos: 7, dpos: 15 },
-    //{ num: 1, cond: 'CA', sent: 'The man knew that one more ace was enough to win the game of tennis against his biggest rival.',   cpos: 7, dpos: 15 },
+    { num: 1, cond: 'CA', sent: 'The man knew that one more ace was enough to win the game of tennis against his biggest rival.',   cpos: 7, dpos: 15 },
     //{ num: 2, cond: 'CU', sent: 'She asked about the manuscript and was told that it would be translated as soon as possible.',     cpos: 5, dpos: 13 },
     //{ num: 2, cond: 'CA', sent: 'She asked about the appendix and was told that it would be translated as soon as possible.',       cpos: 5, dpos: 13 },
 ];

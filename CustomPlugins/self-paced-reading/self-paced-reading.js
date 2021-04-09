@@ -304,17 +304,18 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       response.word_number = word_number + 1;
       response.sentence = sentence;
 
+      jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+
       // store data
       if (word_number < sentence_length - 1) {
         jsPsych.data.write(response);
       }
 
-      word_number++;
-      jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-      keyboardListener = key();
-
       // keep drawing until words in sentence complete
+      word_number++;
       if (word_number < sentence_length) {
+        //jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+        keyboardListener = key();
         draw();
       } else {
         end_trial();
