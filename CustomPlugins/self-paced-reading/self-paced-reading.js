@@ -292,20 +292,9 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
-      // kill keyboard listeners
-      jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-
-      // gather the data to store for the trial
-      const trial_data = {
-        rt: response.rt,
-        word: words_concat[word_number - 1],
-        word_number: word_number,
-        sentence: sentence,
-      };
-
       // clear the display and move to next trial
       display_element.innerHTML = '';
-      jsPsych.finishTrial(trial_data);
+      jsPsych.finishTrial(response);
     };
 
     // function to handle responses by the subject
