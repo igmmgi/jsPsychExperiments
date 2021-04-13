@@ -7,13 +7,6 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     name: 'mouse-text-mask',
     description: '',
     parameters: {
-      func_args: {
-        type: jsPsych.plugins.parameterType.DICT,
-        array: true,
-        pretty_name: 'Args',
-        default: {},
-        description: 'Function arguments',
-      },
       canvas_colour: {
         type: jsPsych.plugins.parameterType.STRING,
         array: false,
@@ -47,17 +40,43 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
         default: 'Hello, world!',
         description: 'StimulusText',
       },
-      colour: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Colour',
-        default: 'black',
-        description: 'StimulusColour',
+      sentence_border: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Sentence Border',
+        default: false,
+        description: 'Stimulus Border',
       },
       font: {
         type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Colour',
+        pretty_name: 'Font',
         default: '80px arial',
         description: 'Font',
+      },
+      font_colour: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Font Colour',
+        default: 'black',
+        description: 'Font Colour',
+      },
+      mask_colour: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Mask Colour',
+        default: 'blue',
+        description: 'Mask Colour',
+      },
+      mask_size: {
+        type: jsPsych.plugins.parameterType.INT,
+        array: true,
+        pretty_name: 'Mask Size',
+        default: [30, 100],
+        description: 'Mask Size',
+      },
+      mask_offset: {
+        type: jsPsych.plugins.parameterType.INT,
+        array: true,
+        pretty_name: 'Mask Offset',
+        default: [0, -30],
+        description: 'Mask Offset',
       },
       filter: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -76,7 +95,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    var new_html =
+    display_element.innerHTML =
       '<div>' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
@@ -87,7 +106,6 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       ';"></canvas>' +
       '</div>';
 
-    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');
     let rect = canvas.getBoundingClientRect();
@@ -110,7 +128,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
 
     // function to end trial when it is time
     function end_trial() {
-        "use strict";
+      'use strict';
       end_rt = performance.now() - start_time;
 
       // gather the data to store for the trial
@@ -130,7 +148,7 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       // clear the display and move on the the next trial
       display_element.innerHTML = '';
       jsPsych.finishTrial(trial_data);
-    };
+    }
 
     function mousePosition(e) {
       mpos = {
@@ -143,13 +161,15 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       draw();
     }
 
+     let img = new Image();
+     img.src = 'http://placekitten.com/500/500';
+
     function handleMouseDown() {
       end_trial();
     }
 
     // clear the canvas and draw text
     function draw() {
-
       if (!trial_started) {
         if (in_box(mpos.x, mpos.y, start_box)) {
           trial_started = true;
@@ -160,46 +180,143 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       }
 
       canvas.width = canvas.width;
-      ctx.save();
 
-      // mask
-      if (trial.filter !== null) ctx.filter = 'blur(2px)';
-      ctx.ellipse(mpos.x, mpos.y - 20, 30, 100, Math.PI / 2, 0, 2 * Math.PI);
+      // canvas
+       ctx.fillStyle = trial.canvas_colour;
+       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // text
+       ctx.textAlign = 'center';
+       ctx.textBaseline = 'middle';
+       ctx.font = trial.font;
+       ctx.fillStyle = trial.font_colour;
+       ctx.fillText(trial.sentence, canvas.width / 2, canvas.height / 2);
+
+       // ctx.fillStyle = trial.canvas_colour;
+       // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+       ctx.drawImage(img, 0, 0);
+
+      ctx.rect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(200, 200, 200, 0.1)";
+      // ctx.fill();
+
+       //ctx.save();
+      // ctx.scale(2, 1);
+      //ctx.beginPath();
+       ctx.arc(mpos.x + trial.mask_offset[0], mpos.y + trial.mask_offset[1], 50, 0, Math.PI*2, true);
+      // ctx.closePath();
+      //ctx.fillStyle = "rgba(0,255,255,0.5)";
+      //ctx.fill();
+      //ctx.restore();
+
+      //ctx.beginPath();
+      //ctx.save();
+      //ctx.rect(200, 200, canvas.width, canvas.height);
+      //ctx.arc(mpos.x + trial.mask_offset[0], mpos.y + trial.mask_offset[1], 50, 0, Math.PI*2, true);
+      // ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // ctx.beginPath();
+         //ctx.lineWidth = 10;
+         //ctx.fillStyle = "blue";
+         // ctx.stroke();
+      //ctx.fill();
+      // ctx.restore();
+
       ctx.clip();
-      ctx.fillStyle = trial.mask_colour;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+       ctx.restore();
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = trial.font;
-      ctx.fillStyle = trial.colour;
-      ctx.fillText(trial.sentence, canvas.width / 2, canvas.height / 2);
+       ctx.fillStyle = trial.canvas_colour;
+       ctx.fillRect(0,0,canvas.width, canvas.height);
+       //ctx.closePath();
 
-      // restore context and draw text bounding box with a little bit of border
-      ctx.restore();
-      ctx.beginPath();
-      ctx.moveTo(
-        canvas.width / 2 - textMetrics.actualBoundingBoxLeft * 1.01,
-        canvas.height / 2 - textMetrics.actualBoundingBoxAscent * 1.01,
+
+      //ctx.drawImage(img, 0, 0);
+      //// mask
+      //if (trial.filter !== null)
+      //ctx.beginPath();
+      //ctx.ellipse(
+      //  mpos.x + trial.mask_offset[0],
+      //  mpos.y + trial.mask_offset[1],
+      //  trial.mask_size[0],
+      //  trial.mask_size[1],
+      //  Math.PI / 2,
+      //  true,
+      //  2 * Math.PI,
+      //);
+      //ctx.clip();
+
+      // ctx.fillStyle = trial.mask_colour;
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // canvas
+      //ctx.fillStyle = trial.canvas_colour;
+      //ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // ctx.restore();
+
+
+      // ctx.save();
+      // canvas.width = canvas.width;
+
+      // // canvas
+      // ctx.fillStyle = trial.canvas_colour;
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // // mask
+      // if (trial.filter !== null) ctx.filter = 'blur(2px)';
+      ctx.ellipse(
+        mpos.x + trial.mask_offset[0],
+        mpos.y + trial.mask_offset[1],
+        trial.mask_size[0],
+        trial.mask_size[1],
+        Math.PI / 2,
+        0,
+        2 * Math.PI,
       );
-      ctx.lineTo(
-        canvas.width / 2 + textMetrics.actualBoundingBoxRight * 1.01,
-        canvas.height / 2 - textMetrics.actualBoundingBoxAscent * 1.01,
-      );
-      ctx.lineTo(
-        canvas.width / 2 + textMetrics.actualBoundingBoxRight * 1.01,
-        canvas.height / 2 + textMetrics.actualBoundingBoxDescent * 1.01,
-      );
-      ctx.lineTo(
-        canvas.width / 2 - textMetrics.actualBoundingBoxLeft * 1.01,
-        canvas.height / 2 + textMetrics.actualBoundingBoxDescent * 1.01,
-      );
-      ctx.closePath();
-      ctx.stroke();
+      // ctx.clip();
+      // ctx.fillStyle = trial.mask_colour;
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // // text
+      // ctx.textAlign = 'center';
+      // ctx.textBaseline = 'middle';
+      // ctx.font = trial.font;
+      // ctx.fillStyle = trial.font_colour;
+      // ctx.fillText(trial.sentence, canvas.width / 2, canvas.height / 2);
+
+      // ctx.restore();
+
+      // draw text bounding box with a little bit of border
+      //if (trial.sentence_border) {
+      //  ctx.beginPath();
+      //  ctx.moveTo(
+      //    canvas.width / 2 - textMetrics.actualBoundingBoxLeft * 1.01,
+      //    canvas.height / 2 - textMetrics.actualBoundingBoxAscent * 1.01,
+      //  );
+      //  ctx.lineTo(
+      //    canvas.width / 2 + textMetrics.actualBoundingBoxRight * 1.01,
+      //    canvas.height / 2 - textMetrics.actualBoundingBoxAscent * 1.01,
+      //  );
+      //  ctx.lineTo(
+      //    canvas.width / 2 + textMetrics.actualBoundingBoxRight * 1.01,
+      //    canvas.height / 2 + textMetrics.actualBoundingBoxDescent * 1.01,
+      //  );
+      //  ctx.lineTo(
+      //    canvas.width / 2 - textMetrics.actualBoundingBoxLeft * 1.01,
+      //    canvas.height / 2 + textMetrics.actualBoundingBoxDescent * 1.01,
+      //  );
+      //  ctx.closePath();
+      //  ctx.stroke();
+      //}
     }
 
     function draw_start() {
-      "use strict";
+      'use strict';
+
+      // canvas
+      ctx.fillStyle = trial.canvas_colour;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       // fake draw to get text position and calculate bounding box once
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';

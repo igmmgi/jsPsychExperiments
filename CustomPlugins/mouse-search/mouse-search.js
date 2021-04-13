@@ -136,30 +136,30 @@ jsPsych.plugins['html-mouse-position-canvas'] = (function () {
     }
 
     function draw() {
-      ctx.fillStyle = 'red'; //trial.canvas_colour;
+      ctx.fillStyle = trial.canvas_colour;
       if (trial.translate_origin) {
         ctx.fillRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
       } else {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
-      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.save();
       // mask
-      // ctx.filter = 'blur(1px)';
-      console.log(mpos.x, mpos.y);
-      ctx.fillStyle = 'red'; // trial.mask_colour;
+      ctx.filter = 'blur(1px)';
+      // console.log(mpos.x, mpos.y);
+      ctx.fillStyle = trial.mask_colour;
       ctx.ellipse(mpos.x, mpos.y - 20, 30, 60, Math.PI / 2, 0, 2 * Math.PI);
       ctx.clip();
-      // ctx.fillRect(0, 0, canvas.width, canvas.height);
-      // ctx.fillRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.font = '20px monospaced';
       ctx.fillStyle = 'black';
-      // ctx.fillText('TEST', canvas.width / 2, canvas.height / 2);
-      // ctx.fillText('TEST', 0, 0);
+      ctx.fillText('TEST', canvas.width / 2, canvas.height / 2);
+      ctx.fillText('TEST', 0, 0);
       //
       ctx.restore();
     }
