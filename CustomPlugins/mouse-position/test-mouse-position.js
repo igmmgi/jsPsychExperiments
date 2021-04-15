@@ -1,4 +1,4 @@
-// jsPsych html-mouse-response-canvas
+// jsPsych mouse-html-response-canvas
 
 const resize_en = {
   type: 'resize',

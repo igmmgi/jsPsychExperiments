@@ -82,7 +82,7 @@ jsPsych.plugins['html-mouse-response-canvas'] = (function () {
     document.addEventListener('mousedown', mouseResponse);
 
     // setup canvas
-    let new_html =
+    display_element.innerHTML =
       '<div style="position:relative;">' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
@@ -95,8 +95,6 @@ jsPsych.plugins['html-mouse-response-canvas'] = (function () {
       trial.stimulus +
       '</div>' +
       '</div>';
-
-    display_element.innerHTML = new_html;
 
     let canvas = document.querySelector('canvas');
     let ctx = canvas.getContext('2d');
@@ -156,7 +154,7 @@ jsPsych.plugins['html-mouse-response-canvas'] = (function () {
     // hide stimulus if stimulus_duration is set
     if (trial.stimulus_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function () {
-        display_element.querySelector('#html-mouse-response-stimulus').style.visibility = 'hidden';
+        display_element.querySelector('#mouse-html-response-stimulus').style.visibility = 'hidden';
       }, trial.stimulus_duration);
     }
 

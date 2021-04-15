@@ -42,7 +42,7 @@ jsPsych.plugins['html-mouse-response'] = (function () {
   };
 
   plugin.trial = function (display_element, trial) {
-    let new_html = '<div id="html-mouse-response-stimulus">' + trial.stimulus + '</div>';
+    let new_html = '<div id="mouse-html-response-stimulus">' + trial.stimulus + '</div>';
 
     // deactivate contextmenu of right mouse button until response
     document.addEventListener(
@@ -105,7 +105,7 @@ jsPsych.plugins['html-mouse-response'] = (function () {
     // hide stimulus if stimulus_duration is set
     if (trial.stimulus_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function () {
-        display_element.querySelector('#html-mouse-response-stimulus').style.visibility = 'hidden';
+        display_element.querySelector('#mouse-html-response-stimulus').style.visibility = 'hidden';
       }, trial.stimulus_duration);
     }
 

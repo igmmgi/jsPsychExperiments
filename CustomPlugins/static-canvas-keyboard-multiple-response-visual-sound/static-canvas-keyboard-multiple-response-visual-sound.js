@@ -100,7 +100,7 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    var new_html =
+    display_element.innerHTML =
       '<div>' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
@@ -111,7 +111,6 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
       ';"></canvas>' +
       '</div>';
 
-    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');
 
@@ -191,7 +190,7 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
 
     // start the response listener
     if (trial.choices !== jsPsych.NO_KEYS) {
-      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+      let keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_response,
         valid_responses: trial.choices,
         rt_method: 'performance',
@@ -243,7 +242,7 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
     source.connect(audio_context.destination);
 
     // play audio
-    startTime = audio_context.currentTime;
+    let startTime = audio_context.currentTime;
     // source.start(startTime + (trial.sound_onset / 1000 - audio_context.outputLatency));
     source.start(startTime + trial.sound_onset / 1000);
   };

@@ -1,24 +1,41 @@
-// jsPsych html-mouse-response-canvas
-
-const resize_en = {
-  type: 'resize',
-  item_width: 3 + 3 / 8,
-  item_height: 2 + 1 / 8,
-  prompt:
-    '<p>Resize the rectangle (click and drag bottom right corner) until it is the same size as a standard bankcard.</p>',
-  pixels_per_unit: 100,
-};
+// jsPsych mouse-html-response-canvas
 
 let timeline = [];
-let mouse_position1 = {
-  type: 'html-mouse-position-canvas',
-  translate_origin: true,
+let mouse_search1 = {
+  type: 'mouse-search',
+  canvas_size: [1280, 960],
+  canvas_border: '5px solid black',
+  mask_radius: 50,
 };
-// timeline.push(resize_en);
-timeline.push(mouse_position1);
+timeline.push(mouse_search1);
+
+let mouse_search2 = {
+  type: 'mouse-search',
+  canvas_size: [1280, 960],
+  canvas_border: '5px solid black',
+  filter: 'opacity(90%) blur(20px)',
+  mask_radius: 50,
+};
+timeline.push(mouse_search2);
+
+let mouse_search3 = {
+  type: 'mouse-search',
+  canvas_size: [1280, 960],
+  canvas_border: '5px solid black',
+  filter: 'opacity(90%) blur(20px)',
+  image_position: [
+    [50, 50, 100, 100],
+    [1180, 100, 200, 200],
+    [1130, 810, 300, 300],
+    [200, 760, 400, 400],
+  ],
+  mask_radius: 50,
+};
+timeline.push(mouse_search3);
 
 jsPsych.init({
   timeline: timeline,
+  default_iti: 500,
   on_finish: function () {
     jsPsych.data.displayData('json');
   },

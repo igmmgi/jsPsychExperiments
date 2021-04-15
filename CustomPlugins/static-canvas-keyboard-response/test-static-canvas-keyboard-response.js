@@ -37,7 +37,7 @@ function drawText() {
 function drawImage(args) {
   // args should be dict with imageNum, x, y, h and w fields
   let ctx = document.getElementById('canvas').getContext('2d');
-  ctx.drawImage(images[args['imageNum']], args['x'], args['y'], args['h'], args['w']);
+  ctx.drawImage(images[args.imageNum], args.x, args.y, args.h, args.w);
 }
 
 const fixation_cross = {

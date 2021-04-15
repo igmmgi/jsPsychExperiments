@@ -157,8 +157,8 @@ const draw_calls = [draw1, draw2, draw3, draw4, draw5, draw6, draw7];
 
 function setup1() {
   'use strict';
-  var offsetTop = document.getElementById('p5js_container').offsetTop;
-  var offsetLeft = document.getElementById('p5js_container').offsetLeft;
+  let offsetTop = document.getElementById('p5js_container').offsetTop;
+  let offsetLeft = document.getElementById('p5js_container').offsetLeft;
 
   // create sliders
   rSlider = p5js.createSlider(0, 255, 100);

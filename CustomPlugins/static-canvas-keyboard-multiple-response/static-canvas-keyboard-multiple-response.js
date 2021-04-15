@@ -89,7 +89,7 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response'] = (function () {
   plugin.trial = function (display_element, trial) {
     // setup canvas
 
-    var new_html =
+    display_element.innerHTML =
       '<div>' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
@@ -100,7 +100,6 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response'] = (function () {
       ';"></canvas>' +
       '</div>';
 
-    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');
 
@@ -180,7 +179,7 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response'] = (function () {
 
     // start the response listener
     if (trial.choices !== jsPsych.NO_KEYS) {
-      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+      let keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_response,
         valid_responses: trial.choices,
         rt_method: 'performance',

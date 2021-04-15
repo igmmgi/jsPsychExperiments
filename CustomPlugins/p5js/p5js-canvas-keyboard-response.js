@@ -62,8 +62,7 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    var new_html = "<div id='p5js_container';'></div>";
-    display_element.innerHTML = new_html;
+    display_element.innerHTML = "<div id='p5js_container''></div>";
 
     let p5js_canvas;
     p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.WEBGL);
@@ -116,15 +115,15 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
       }
     };
 
+      let keyboardListener = (trial.choices !== jsPsych.NO_KEYS) ?
     // start the response listener
-    if (trial.choices !== jsPsych.NO_KEYS) {
-      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+      jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_response,
         valid_responses: trial.choices,
         rt_method: 'performance',
         persist: false,
         allow_held_key: false,
-      });
+      }) : 'undefined';
     }
 
     // hide stimulus if stimulus_duration is set

@@ -3,7 +3,7 @@
  **/
 
 jsPsych.plugins['check-screen-resolution'] = (function () {
-  var plugin = {};
+  let plugin = {};
   plugin.info = {
     name: 'check-screen-resolution',
     description: 'Check screen resolution',
@@ -25,15 +25,15 @@ jsPsych.plugins['check-screen-resolution'] = (function () {
 
   plugin.trial = function (display_element, trial) {
     // window.devicePixelRatio on safari?
-    var isSafari = navigator.vendor == 'Apple Computer, Inc.';
-    var zoom_level = window.devicePixelRatio;
-    var screen_width = window.screen.width * zoom_level;
-    var screen_height = window.screen.height * zoom_level;
-    var current_width = window.innerWidth;
-    var current_height = window.innerHeight;
-    var msg, zoom_msg;
+    let isSafari = navigator.vendor === 'Apple Computer, Inc.';
+    let zoom_level = window.devicePixelRatio;
+    let screen_width = window.screen.width * zoom_level;
+    let screen_height = window.screen.height * zoom_level;
+    let current_width = window.innerWidth;
+    let current_height = window.innerHeight;
+    let msg, zoom_msg;
 
-    var check_size = window.setInterval(function () {
+    let check_size = window.setInterval(function () {
       if (current_width < trial.width || current_height < trial.height) {
         current_width = window.innerWidth;
         current_height = window.innerHeight;
@@ -62,7 +62,7 @@ jsPsych.plugins['check-screen-resolution'] = (function () {
 
     // function to end trial
     function end_trial() {
-      var trial_data = {
+      let trial_data = {
         native_screen_width: screen_width,
         native_screen_height: screen_height,
         screen_width: current_width,
