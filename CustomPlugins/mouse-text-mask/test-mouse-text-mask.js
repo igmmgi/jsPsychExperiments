@@ -10,8 +10,7 @@ const trial_stimulus1 = {
   sentence_border: true,
   translate_origin: false,
   xy_position: [100, 100],
-  filter: 'blur(10px)',
-  font: '40px arial',
+  font: '40px monospace',
 };
 timeline.push(trial_stimulus1);
 
@@ -24,7 +23,7 @@ const trial_stimulus2 = {
   translate_origin: true,
   xy_position: [-400, 0],
   filter: 'blur(10px)',
-  font: '40px arial',
+  font: '30px monospace',
 };
 timeline.push(trial_stimulus2);
 
@@ -40,10 +39,11 @@ voluptua. At vero eos et accusam et justo duo dolores et ea rebum.`,
   xy_position: [100, 480],
   x_align: 'left',
   y_align: 'center',
-  mask_radius: 20,
+  mask_radius: 15,
   mask_scale: [4, 1],
   filter: 'blur(10px)',
-  font: '30px arial',
+  line_height: 30,
+  font: '24px monospace',
 };
 timeline.push(trial_stimulus3);
 

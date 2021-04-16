@@ -44,10 +44,22 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
         default: false,
         description: 'Stimulus Border',
       },
+      sentence_border_line_width: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Sentence border line width',
+        default: 1,
+        description: 'Senteence border line width',
+      },
+      sentence_border_line_colour: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Sentence border line colour',
+        default: 'black',
+        description: 'Senteence border line colour',
+      },
       font: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Font',
-        default: '80px arial',
+        default: '80px monospace',
         description: 'Font',
       },
       line_height: {
@@ -157,14 +169,14 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     }
     ctx.fillStyle = trial.canvas_colour;
     ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
-    //let rect = canvas.getBoundingClientRect();
 
     let trial_started = false;
-    let end_rt;
     let mpos;
     let x_coords = [];
     let y_coords = [];
     let time = [];
+    let text_bounds = [];
+    let start_box;
 
     // deal with potential multi-line sentences with user defined splits
     trial.sentence_split = trial.sentence.split('\n').map((s) => s.trim());
@@ -175,10 +187,6 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     // canvas mouse events
     canvas.addEventListener('mousemove', mousePosition);
     canvas.addEventListener('mousedown', mouseResponse);
-
-    // initial draw
-    let start_time = performance.now();
-    let [start_box, textMetrics] = draw_start();
 
     function mousePosition(e) {
       mpos = {
@@ -197,18 +205,73 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       draw();
     }
 
+    function mouseResponse(e) {
+      if (e.buttons === 1) {
+        response.rt = performance.now() - start_time;
+        end_trial();
+      }
+    }
+
     // store response
     let response = {
       rt: null,
       button: null,
     };
 
-    function mouseResponse(e) {
-      if (e.buttons === 1) {
-        response.rt = performance.now() - start_time;
-        response.button = 1;
-        end_trial();
+    // initial draw
+    let start_time = performance.now();
+    draw_start();
+
+    function draw_start() {
+      'use strict';
+
+      // canvas
+      ctx.fillStyle = trial.canvas_colour;
+      ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
+
+      // fake draw to get text position and calculate bounding box once
+      ctx.textAlign = trial.x_align;
+      ctx.textBaseline = 'Middle';
+      ctx.font = trial.font;
+
+      trial.sentence_split.forEach((text, nline) => {
+        ctx.fillText(text, trial.xy_position[0], trial.xy_position[1] + nline * trial.line_height);
+        let box = ctx.measureText(text);
+        let text_bound = [
+          trial.xy_position[0],
+          trial.xy_position[1] + nline * trial.line_height - box.actualBoundingBoxAscent,
+          box.actualBoundingBoxLeft + box.actualBoundingBoxRight,
+          box.actualBoundingBoxAscent + box.actualBoundingBoxDescent,
+        ];
+        text_bounds.push(text_bound);
+      });
+
+      // draw start box and text bounding boxes
+      draw_start_box(text_bounds[0]);
+      if (trial.sentence_border) {
+        draw_text_box(text_bounds);
       }
+    }
+
+    function draw_start_box(text_bounds) {
+      'use strict';
+      ctx.lineWidth = trial.sentence_border_line_width;
+      ctx.strokeStyle = trial.sentence_border_line_colour;
+      ctx.beginPath();
+      ctx.rect(text_bounds[0] - 50, text_bounds[1], 20, text_bounds[3]);
+      ctx.stroke();
+      start_box = { x: text_bounds[0] - 50, y: text_bounds[1], w: 20, h: text_bounds[3] };
+    }
+
+    function draw_text_box(text_bounds) {
+      'use strict';
+      ctx.lineWidth = trial.sentence_border_line_width;
+      ctx.strokeStyle = trial.sentence_border_line_colour;
+      text_bounds.forEach((text_bound) => {
+        ctx.beginPath();
+        ctx.rect(text_bound[0], text_bound[1], text_bound[2], text_bound[3]);
+        ctx.stroke();
+      });
     }
 
     // clear the canvas and draw text
@@ -259,81 +322,8 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
       ctx.restore();
 
       if (trial.sentence_border) {
-        draw_bounding_box(textMetrics);
+        draw_text_box(text_bounds);
       }
-    }
-
-    function draw_start() {
-      'use strict';
-
-      // canvas
-      ctx.fillStyle = trial.canvas_colour;
-      ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
-      // ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // fake draw to get text position and calculate bounding box once
-      ctx.textAlign = trial.x_align;
-      ctx.textBaseline = 'Middle';
-      ctx.font = trial.font;
-      let textMetrics = [];
-
-      trial.sentence_split.forEach((text, nline) => {
-        ctx.fillText(text, trial.xy_position[0], trial.xy_position[1] + nline * trial.line_height);
-        textMetrics.push(ctx.measureText(text));
-      });
-
-      // draw start box and bounding boxes
-      let start_box = draw_start_box(textMetrics[0]);
-      if (trial.sentence_border) {
-        draw_bounding_box(textMetrics);
-      }
-
-      return [start_box, textMetrics];
-    }
-
-    function draw_start_box(textMetrics) {
-      'use strict';
-      ctx.save();
-      ctx.beginPath();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'black';
-      let start_box = {
-        x: trial.xy_position[0] - textMetrics.actualBoundingBoxLeft - 50,
-        y: trial.xy_position[1] - textMetrics.actualBoundingBoxAscent,
-        h: textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent * 1.05,
-        w: 20,
-      };
-      ctx.rect(start_box.x, start_box.y, start_box.w, start_box.h);
-      ctx.stroke();
-      ctx.restore();
-      return start_box;
-    }
-
-    function draw_bounding_box(textMetrics) {
-      'use strict';
-      ctx.save();
-      textMetrics.forEach((box, i) => {
-        ctx.beginPath();
-        ctx.moveTo(
-          trial.xy_position[0] - box.actualBoundingBoxLeft * 1.05,
-          trial.xy_position[1] + i * trial.line_height - box.actualBoundingBoxAscent * 1.05,
-        );
-        ctx.lineTo(
-          trial.xy_position[0] + box.actualBoundingBoxRight * 1.05,
-          trial.xy_position[1] + i * trial.line_height - box.actualBoundingBoxAscent * 1.05,
-        );
-        ctx.lineTo(
-          trial.xy_position[0] + box.actualBoundingBoxRight * 1.05,
-          trial.xy_position[1] + i * trial.line_height + box.actualBoundingBoxDescent * 1.05,
-        );
-        ctx.lineTo(
-          trial.xy_position[0] - box.actualBoundingBoxLeft * 1.05,
-          trial.xy_position[1] + i * trial.line_height + box.actualBoundingBoxDescent * 1.05,
-        );
-        ctx.closePath();
-        ctx.stroke();
-      });
-      ctx.restore();
     }
 
     // test if x, y is inside the bounding box
@@ -344,16 +334,16 @@ jsPsych.plugins['mouse-text-mask'] = (function () {
     // function to end trial when it is time
     function end_trial() {
       'use strict';
-      end_rt = performance.now() - start_time;
 
       // gather the data to store for the trial
       let trial_data = {
-        end_rt: end_rt,
+        end_rt: response.rt,
         end_x: Math.round(x_coords[x_coords.length - 1]),
         end_y: Math.round(y_coords[y_coords.length - 1]),
         x_coords: roundArray(x_coords),
         y_coords: roundArray(y_coords),
         time: time,
+        text_bounds: text_bounds,
       };
 
       // remove canvas mouse events
