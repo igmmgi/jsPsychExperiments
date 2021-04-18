@@ -6,14 +6,14 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
     description: '',
     parameters: {
       setup: {
-        type: jsPsych.plugins.parameterType.function,
+        type: jsPsych.plugins.parameterType.FUNCTION,
         array: false,
         pretty_name: 'p5js Setup Function',
         default: null,
         description: 'The p5js setup function.',
       },
       draw: {
-        type: jsPsych.plugins.parameterType.function,
+        type: jsPsych.plugins.parameterType.FUNCTION,
         array: false,
         pretty_name: 'Draw Function',
         default: null,
@@ -81,7 +81,7 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
     };
 
     // function to end trial when it is time
-    let end_trial = function () {
+    let end_trial = function() {
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -106,17 +106,17 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
     };
 
     // function to handle responses by the subject
-    let after_response = function (info) {
+    function after_response(info) {
       if (response.key == null) {
         response = info;
       }
       if (trial.response_ends_trial) {
         end_trial();
       }
-    };
+    }
 
-      let keyboardListener = (trial.choices !== jsPsych.NO_KEYS) ?
-    // start the response listener
+    let keyboardListener = (trial.choices !== jsPsych.NO_KEYS) ?
+      // start the response listener
       jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_response,
         valid_responses: trial.choices,
@@ -124,23 +124,22 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
         persist: false,
         allow_held_key: false,
       }) : 'undefined';
-    }
 
     // hide stimulus if stimulus_duration is set
     if (trial.stimulus_duration !== null) {
-      jsPsych.pluginAPI.setTimeout(function () {
+      jsPsych.pluginAPI.setTimeout(function() {
         display_element.querySelector('#p5js_container').style.visibility = 'hidden';
       }, trial.stimulus_duration);
     }
 
     // end trial if trial_duration is set
     if (trial.trial_duration !== null) {
-      jsPsych.pluginAPI.setTimeout(function () {
+      jsPsych.pluginAPI.setTimeout(function() {
         p5js.loop();
         end_trial();
       }, trial.trial_duration);
     }
-  };
+  }
 
-  return plugin;
+return plugin;
 })();

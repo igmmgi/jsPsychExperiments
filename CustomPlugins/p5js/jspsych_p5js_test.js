@@ -189,4 +189,5 @@ for (let i = 0; i < draw_calls.length; i++) {
 
 jsPsych.init({
   timeline: exp,
+  override_safe_mode: true
 });
