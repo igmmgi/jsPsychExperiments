@@ -294,7 +294,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     draw_word();
 
     // function to end trial when it is time
-    const end_trial = function() {
+    const end_trial = function () {
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -305,7 +305,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     };
 
     // function to handle responses by the subject
-    const after_response = function(info) {
+    const after_response = function (info) {
       response.rt = info.rt;
       response.word = words_concat[word_number];
       response.word_number = word_number + 1;
@@ -321,11 +321,10 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       // keep drawing until words in sentence complete
       word_number++;
       draw_mask();
-      jsPsych.pluginAPI.setTimeout(function() {
+      jsPsych.pluginAPI.setTimeout(function () {
         keyboardListener = key();
-        (word_number < sentence_length) ? draw_word() : end_trial();
+        word_number < sentence_length ? draw_word() : end_trial();
       }, trial.inter_word_interval);
-
     };
 
     // start the response listener
@@ -340,6 +339,6 @@ jsPsych.plugins['self-paced-reading'] = (function () {
         allow_held_key: false,
       });
     }
-  }
+  };
   return plugin;
 })();
