@@ -187,7 +187,7 @@ const task_instructions3 = {
 ////////////////////////////////////////////////////////////////////////
 
 const trial_stimulus = {
-  type: 'mouse-response',
+  type: 'mouse-box-response',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
