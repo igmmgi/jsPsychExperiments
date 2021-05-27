@@ -182,7 +182,6 @@ jsPsych.plugins['static-canvas-keyboard-response'] = (function () {
         display_element.innerHTML = new_html;
         let canvas = document.getElementById('canvas');
         let ctx = document.getElementById('canvas').getContext('2d');
-
         ctx.fillStyle = trial.canvas_colour;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }, trial.stimulus_duration);

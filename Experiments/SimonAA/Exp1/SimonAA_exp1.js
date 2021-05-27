@@ -10,6 +10,10 @@
 // key-press.
 //
 // Spiders/Flower pictures provided by Yamaguchi et al (https://osf.io/sf83d/)
+//
+// Simon task: participants respond according to stimulus categors (spider/flower)
+// with left/right keypresses. A small circle moves from the centre of the screen
+// to the left/right according to the key press.
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -17,6 +21,16 @@
 const canvas_colour = 'rgba(255, 255, 255, 1)';
 const canvas_size = [960, 720];
 const canvas_border = '5px solid black';
+
+const check_screen = {
+  type: 'check-screen-resolution',
+  width: canvas_size[0],
+  height: canvas_size[1],
+  timing_post_trial: 0,
+  on_finish: function () {
+    reload_if_not_fullscreen();
+  },
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
@@ -30,14 +44,14 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 40, // number of trials in practise blocks
-  nBlksE: 120, // number of trials in experiment blocks
+  nTrlsP: 16, // number of trials in practise blocks
+  nTrlsE: 120, // number of trials in experiment blocks
   nBlks: 5,
   fixDur: 500,
-  fbDur: [1000, 1000, 1000],
+  fbDur: [500, 1500, 1500, 1500],
   iti: 500,
   tooFast: 100,
-  tooSlow: 2000,
+  tooSlow: 3000,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   fixWidth: 2,
@@ -45,6 +59,7 @@ const prms = {
   stimSize: '40px monospace',
   fbSize: '24px monospace',
   simonEccentricity: 250,
+  imageSize: 0.5,
   respKeys: ['q', 'p'],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
 };
@@ -148,13 +163,13 @@ const task_instructions_pause = {
 ////////////////////////////////////////////////////////////////////////
 let imageFilesFlowers = [];
 for (let i = 1; i <= 10; i++) {
-  imageFilesFlowers.push('../images/flower' + i + '.png');
+  imageFilesFlowers.push(`../images/flower${i}.png`);
 }
 const imagesFlowers = loadImages(imageFilesFlowers);
 
 let imageFilesSpiders = [];
 for (let i = 1; i <= 10; i++) {
-  imageFilesSpiders.push('../images/spider' + i + '.png');
+  imageFilesSpiders.push(`../images/spider${i}.png`);
 }
 const imagesSpiders = loadImages(imageFilesSpiders);
 
@@ -180,30 +195,6 @@ const fixation_cross = {
   response_ends_trial: false,
   func: drawFixation,
 };
-
-function drawSimon(args) {
-  'use strict';
-  let ctx = document.getElementById('canvas').getContext('2d');
-
-  // draw response buttons
-  const num = args.imageNumber - 1;
-  let width, height;
-  const size = 2;
-  const xpos = args.imagePosition === 'left' ? prms.simonEccentricity : -prms.simonEccentricity;
-
-  switch (args.imageType) {
-    case 'spider':
-      width = imagesSpiders[num].width;
-      height = imagesSpiders[num].height;
-      ctx.drawImage(imagesSpiders[num], -width / size / 2 - xpos, -height / size / 2, width / size, height / size);
-      break;
-    case 'flower':
-      width = imagesFlowers[num].width;
-      height = imagesFlowers[num].height;
-      ctx.drawImage(imagesFlowers[num], -width / size / 2 - xpos, -height / size / 2, width / size, height / size);
-      break;
-  }
-}
 
 function codeTrial() {
   'use strict';
@@ -290,28 +281,34 @@ const block_feedback = {
 };
 
 const simon_stimulus = {
-  type: 'static-canvas-keyboard-response',
+  type: 'simon-aa-key',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  translate_origin: true,
-  response_ends_trial: true,
+  image: null,
+  image_position: null,
+  image_size: prms.imageSize,
+  stimulus_position: prms.stimPos,
   choices: prms.respKeys,
   trial_duration: prms.tooSlow,
-  func: drawSimon,
-  func_args: [
-    {
-      imageType: jsPsych.timelineVariable('imageType'),
-      imageNumber: jsPsych.timelineVariable('imageNumber'),
-      imagePosition: jsPsych.timelineVariable('imagePosition'),
-    },
-  ],
   data: {
     stim: 'saa1',
     imageType: jsPsych.timelineVariable('imageType'),
     imageNumber: jsPsych.timelineVariable('imageNumber'),
     imagePosition: jsPsych.timelineVariable('imagePosition'),
     corrResp: jsPsych.timelineVariable('corrResp'),
+  },
+  on_start: function (trial) {
+    if (jsPsych.timelineVariable('imageType') === 'flower') {
+      trial.image = imagesFlowers[jsPsych.timelineVariable('imageNumber') - 1];
+    } else if (jsPsych.timelineVariable('imageType') === 'spider') {
+      trial.image = imagesSpiders[jsPsych.timelineVariable('imageNumber') - 1];
+    }
+    if (jsPsych.timelineVariable('imagePosition') === 'left') {
+      trial.image_position = prms.simonEccentricity;
+    } else if (jsPsych.timelineVariable('imagePosition') === 'right') {
+      trial.image_position = -prms.simonEccentricity;
+    }
   },
   on_finish: function () {
     codeTrial();
@@ -337,7 +334,12 @@ else if (nVersion === 2) {
     }
 }
 
-const trial_timeline_simon = {
+const trial_timeline_simon_practise = {
+  timeline: [fixation_cross, simon_stimulus, trial_feedback],
+  timeline_variables: simon.slice(0, 16),
+};
+
+const trial_timeline_simon_exp = {
   timeline: [fixation_cross, simon_stimulus, trial_feedback],
   timeline_variables: simon,
 };
@@ -414,9 +416,10 @@ function genExpSeq() {
   let exp = [];
 
   exp.push(fullscreen_on);
+  exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
+  // // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
@@ -425,8 +428,14 @@ function genExpSeq() {
   exp.push(task_instructions4);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline_simon };
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 40 : prms.nTrlsE / 40 };
+    let blk_timeline = blk === 0 ? { ...trial_timeline_simon_practise } : { ...trial_timeline_simon_exp };
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size:
+        blk === 0
+          ? prms.nTrlsP / blk_timeline.timeline_variables.length
+          : prms.nTrlsE / blk_timeline.timeline_variables.length,
+    };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
