@@ -19,7 +19,7 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const canvas_colour = 'rgba(255, 255, 255, 1)';
-const canvas_size = [960, 720];
+const canvas_size = [1280, 960];
 const canvas_border = '5px solid black';
 
 const check_screen = {
@@ -419,7 +419,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  // // exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);

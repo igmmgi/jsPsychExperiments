@@ -1,3 +1,5 @@
+// Simon task with image presented to left/right screen location
+// A circle moves in the direction of the respone key
 jsPsych.plugins['simon-aa-key'] = (function () {
   let plugin = {};
 
@@ -69,7 +71,7 @@ jsPsych.plugins['simon-aa-key'] = (function () {
       circle_speed: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Circle Speed',
-        default: 5,
+        default: 20,
         description: 'Circle Speed',
       },
       choices: {
@@ -119,6 +121,7 @@ jsPsych.plugins['simon-aa-key'] = (function () {
     };
 
     let moving_circle;
+    let stopAnimation = false;
 
     // initial draw
     draw();
@@ -174,6 +177,10 @@ jsPsych.plugins['simon-aa-key'] = (function () {
       ctx.arc(trial.circle_position, 0, trial.circle_size, 0, 2 * Math.PI, false);
       ctx.fillStyle = 'grey';
       ctx.fill();
+
+      if (!stopAnimation) {
+        moving_circle = window.requestAnimationFrame(draw_moving_circle);
+      }
     }
 
     // function to end trial when it is time
@@ -182,7 +189,8 @@ jsPsych.plugins['simon-aa-key'] = (function () {
 
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
-      clearInterval(moving_circle);
+      window.cancelAnimationFrame(moving_circle);
+      stopAnimation = true;
 
       // kill keyboard listeners
       if (typeof keyboardListener !== 'undefined') {
@@ -202,7 +210,7 @@ jsPsych.plugins['simon-aa-key'] = (function () {
 
     // function to handle responses by the subject
     let after_response = function (info) {
-      moving_circle = setInterval(draw_moving_circle, 5);
+      window.requestAnimationFrame(draw_moving_circle);
       if (response.key == null) {
         response = info;
       }
