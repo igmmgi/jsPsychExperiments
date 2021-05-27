@@ -30,14 +30,14 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 16, // number of trials in practise blocks
-  nTrlsE: 120, // number of trials in experiment blocks
+  nTrlsP: 40, // number of trials in practise blocks
+  nBlksE: 120, // number of trials in experiment blocks
   nBlks: 5,
   fixDur: 500,
-  fbDur: [500, 1500, 1500, 1500],
+  fbDur: [1000, 1000, 1000],
   iti: 500,
   tooFast: 100,
-  tooSlow: 3000,
+  tooSlow: 2000,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   fixWidth: 2,
@@ -148,13 +148,13 @@ const task_instructions_pause = {
 ////////////////////////////////////////////////////////////////////////
 let imageFilesFlowers = [];
 for (let i = 1; i <= 10; i++) {
-  imageFilesFlowers.push(`../images/flower${i}.png`);
+  imageFilesFlowers.push('../images/flower' + i + '.png');
 }
 const imagesFlowers = loadImages(imageFilesFlowers);
 
 let imageFilesSpiders = [];
 for (let i = 1; i <= 10; i++) {
-  imageFilesSpiders.push(`../images/spider${i}.png`);
+  imageFilesSpiders.push('../images/spider' + i + '.png');
 }
 const imagesSpiders = loadImages(imageFilesSpiders);
 
@@ -337,12 +337,7 @@ else if (nVersion === 2) {
     }
 }
 
-const trial_timeline_simon_practise = {
-  timeline: [fixation_cross, simon_stimulus, trial_feedback],
-  timeline_variables: simon.slice(0, 16),
-};
-
-const trial_timeline_simon_exp = {
+const trial_timeline_simon = {
   timeline: [fixation_cross, simon_stimulus, trial_feedback],
   timeline_variables: simon,
 };
@@ -430,14 +425,8 @@ function genExpSeq() {
   exp.push(task_instructions4);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = blk === 0 ? { ...trial_timeline_simon_practise } : { ...trial_timeline_simon_exp };
-    blk_timeline.sample = {
-      type: 'fixed-repetitions',
-      size:
-        blk === 0
-          ? prms.nTrlsP / blk_timeline.timeline_variables.length
-          : prms.nTrlsE / blk_timeline.timeline_variables.length,
-    };
+    let blk_timeline = { ...trial_timeline_simon };
+    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 40 : prms.nTrlsE / 40 };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
