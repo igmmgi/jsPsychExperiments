@@ -12,8 +12,7 @@
 // Spiders/Flower pictures provided by Yamaguchi et al (https://osf.io/sf83d/)
 //
 // Simon task: participants respond according to stimulus categors (spider/flower)
-// with left/right keypresses. A small circle moves from the centre of the screen
-// to the left/right according to the key press.
+// with left/right mouse movements. A small circle moves with mouse x position.
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -60,7 +59,6 @@ const prms = {
   fbSize: '24px monospace',
   simonEccentricity: 250,
   imageSize: 0.5,
-  respKeys: ['q', 'p'],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
 };
 
@@ -200,32 +198,26 @@ function codeTrial() {
   'use strict';
 
   let dat = jsPsych.data.get().last(1).values()[0];
-  let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-
-  let correctKey;
-  if (dat.key_press !== null) {
-    correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
-  }
-
   let comp =
-    (dat.imagePosition === 'left' && dat.corrResp === prms.respKeys[0]) ||
-    (dat.imagePosition === 'right' && dat.corrResp === prms.respKeys[1]);
+    (dat.imagePosition === 'left' && dat.corrResp === 'left') ||
+    (dat.imagePosition === 'right' && dat.corrResp === 'right');
   comp = comp ? 'comp' : 'incomp';
 
-  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  let correctKey = dat.end_loc === dat.corrResp ? true : false;
+  let corrCode = 0;
+  if (correctKey && dat.end_rt > prms.tooFast && dat.end_rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  } else if (!correctKey && dat.end_rt > prms.tooFast && dat.end_rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.end_rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.end_rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
     comp: comp,
-    rt: rt,
+    rt: dat.end_rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
@@ -281,7 +273,7 @@ const block_feedback = {
 };
 
 const simon_stimulus = {
-  type: 'simon-aa-key',
+  type: 'simon-aa-mouse',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
@@ -319,28 +311,28 @@ let simon = [];
 // prettier-ignore
 if (nVersion === 1) {
     for (let i = 1; i <= 10; i++) {
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[0] });
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[0] });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[1] });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[1] });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: "left" });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: "left" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: "right" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: "right" });
     }
 }
 else if (nVersion === 2) {
     for (let i = 1; i <= 10; i++) {
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[1] });
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[1] });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[0] });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[0] });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: "right" });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: "right" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: "left" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: "left" });
     }
 }
 
 const trial_timeline_simon_practise = {
-  timeline: [fixation_cross, simon_stimulus, trial_feedback],
+  timeline: [simon_stimulus, trial_feedback],
   timeline_variables: simon.slice(0, 16),
 };
 
 const trial_timeline_simon_exp = {
-  timeline: [fixation_cross, simon_stimulus, trial_feedback],
+  timeline: [simon_stimulus, trial_feedback],
   timeline_variables: simon,
 };
 
@@ -415,17 +407,17 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on);
-  exp.push(check_screen);
-  exp.push(welcome_de_du);
-  exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
-  exp.push(hideMouseCursor);
-  exp.push(screenInfo);
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
-  exp.push(task_instructions3);
-  exp.push(task_instructions4);
+  // exp.push(fullscreen_on);
+  // exp.push(check_screen);
+  // exp.push(welcome_de_du);
+  // exp.push(resize_de_du);
+  // // exp.push(vpInfoForm_de);
+  // exp.push(hideMouseCursor);
+  // exp.push(screenInfo);
+  // exp.push(task_instructions1);
+  // exp.push(task_instructions2);
+  // exp.push(task_instructions3);
+  // exp.push(task_instructions4);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = blk === 0 ? { ...trial_timeline_simon_practise } : { ...trial_timeline_simon_exp };

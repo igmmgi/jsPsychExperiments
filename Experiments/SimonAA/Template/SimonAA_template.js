@@ -218,9 +218,10 @@ function codeTrial() {
   }
 
   let comp =
-    (dat.imagePosition === 'left' && dat.key_press === prms.respKeys[0]) ||
-    (dat.imagePosition === 'right' && dat.key_press === prms.respKeys[1]);
+    (dat.imagePosition === 'left' && dat.corrResp === prms.respKeys[0]) ||
+    (dat.imagePosition === 'right' && dat.corrResp === prms.respKeys[1]);
   comp = comp ? 'comp' : 'incomp';
+  console.log(comp);
 
   if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 1; // correct
