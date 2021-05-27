@@ -522,12 +522,12 @@ function codeTrial() {
 
   let correctKey;
   if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
+    correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
   }
 
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 2; // choice error
   } else if (rt >= prms.tooSlow) {
     corrCode = 3; // too slow

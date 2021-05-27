@@ -59,18 +59,18 @@ const simons = [
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-    console.log(dat);
+  console.log(dat);
   let corrCode = 0;
   let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
 
   let correctKey;
   if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+    correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
   }
 
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 2; // choice error
   } else if (rt >= prms.tooSlow) {
     corrCode = 3; // too slow

@@ -116,7 +116,7 @@ const task_instructions1 = {
   type: 'html-button-response',
   stimulus:
     generate_formatted_html({
-      text: `Aufgabe: <br><br>In jedem Durchgang müssen Sie zu Beginn in das Quadrat klicken, welches unten mittig am Bildschirm platziert ist. 
+      text: `Aufgabe: <br><br>In jedem Durchgang müssen Sie zu Beginn in das Quadrat klicken, welches unten mittig am Bildschirm platziert ist.
         Daraufhin erscheint ein Buchstabe, auf den Sie wie folgt reagieren sollen:`,
       align: 'left',
       fontsize: 26,
@@ -124,9 +124,9 @@ const task_instructions1 = {
     }) +
     respText +
     generate_formatted_html({
-      text: `Zeitgleich erscheinen 2 neue Quadrate, die Sie für ihre Antwort verwenden sollen. Ihre Aufgabe ist es, in Abhängigkeit des 
-        Buchstabens, mit der linken Maustaste in das korrekte Quadrat zu klicken. Anschließend erhalten Sie Feedback darüber, 
-        ob Sie richtig geantwortet haben. Durch einen Klick in das Quadrat am unteren Bildschirmrand 
+      text: `Zeitgleich erscheinen 2 neue Quadrate, die Sie für ihre Antwort verwenden sollen. Ihre Aufgabe ist es, in Abhängigkeit des
+        Buchstabens, mit der linken Maustaste in das korrekte Quadrat zu klicken. Anschließend erhalten Sie Feedback darüber,
+        ob Sie richtig geantwortet haben. Durch einen Klick in das Quadrat am unteren Bildschirmrand
         starten Sie den nächsten Durchlauf.<br><br>
         Klicken Sie die linke Maustaste, um fortzufahren!`,
       align: 'left',
