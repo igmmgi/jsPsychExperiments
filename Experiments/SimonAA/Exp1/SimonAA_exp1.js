@@ -208,11 +208,6 @@ function codeTrial() {
     correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
   }
 
-  let comp =
-    (dat.imagePosition === 'left' && dat.corrResp === prms.respKeys[0]) ||
-    (dat.imagePosition === 'right' && dat.corrResp === prms.respKeys[1]);
-  comp = comp ? 'comp' : 'incomp';
-
   if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 1; // correct
   } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
@@ -224,7 +219,6 @@ function codeTrial() {
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    comp: comp,
     rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
@@ -297,6 +291,7 @@ const simon_stimulus = {
     imageNumber: jsPsych.timelineVariable('imageNumber'),
     imagePosition: jsPsych.timelineVariable('imagePosition'),
     corrResp: jsPsych.timelineVariable('corrResp'),
+    comp: jsPsych.timelineVariable('comp'),
   },
   on_start: function (trial) {
     if (jsPsych.timelineVariable('imageType') === 'flower') {
@@ -319,18 +314,18 @@ let simon = [];
 // prettier-ignore
 if (nVersion === 1) {
     for (let i = 1; i <= 10; i++) {
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[0] });
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[0] });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[1] });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[1] });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[0], comp: "comp" });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[0], comp: "incomp" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[1], comp: "incomp" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[1], comp: "comp" });
     }
 }
 else if (nVersion === 2) {
     for (let i = 1; i <= 10; i++) {
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[1] });
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[1] });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[0] });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[0] });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[1], comp: "incomp" });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[1], comp: "comp" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: prms.respKeys[0], comp: "comp" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: prms.respKeys[0], comp: "incomp" });
     }
 }
 

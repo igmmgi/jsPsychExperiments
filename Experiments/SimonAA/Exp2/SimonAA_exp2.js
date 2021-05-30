@@ -198,10 +198,7 @@ function codeTrial() {
   'use strict';
 
   let dat = jsPsych.data.get().last(1).values()[0];
-  let comp =
-    (dat.imagePosition === 'left' && dat.corrResp === 'left') ||
-    (dat.imagePosition === 'right' && dat.corrResp === 'right');
-  comp = comp ? 'comp' : 'incomp';
+  let comp = (dat.imagePosition === dat.corrResp === 'left') ? 'comp' : 'incomp';
 
   let correctKey = dat.end_loc === dat.corrResp ? true : false;
   let corrCode = 0;
@@ -289,6 +286,7 @@ const simon_stimulus = {
     imageNumber: jsPsych.timelineVariable('imageNumber'),
     imagePosition: jsPsych.timelineVariable('imagePosition'),
     corrResp: jsPsych.timelineVariable('corrResp'),
+    comp: jsPsych.timelineVariable('comp'),
   },
   on_start: function (trial) {
     if (jsPsych.timelineVariable('imageType') === 'flower') {
@@ -311,18 +309,18 @@ let simon = [];
 // prettier-ignore
 if (nVersion === 1) {
     for (let i = 1; i <= 10; i++) {
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: "left" });
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: "left" });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: "right" });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: "right" });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: "left",  comp: "comp"   });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: "left",  comp: "incomp" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: "right", comp: "incomp" });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: "right", comp: "comp"   });
     }
 }
 else if (nVersion === 2) {
     for (let i = 1; i <= 10; i++) {
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: "right" });
-        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: "right" });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: "left" });
-        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: "left" });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'left',  corrResp: "right", comp: "incomp" });
+        simon.push({ imageType: "spider", imageNumber: i, imagePosition: 'right', corrResp: "right", comp: "comp"   });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'left',  corrResp: "left",  comp: "comp"   });
+        simon.push({ imageType: "flower", imageNumber: i, imagePosition: 'right', corrResp: "left",  comp: "incomp" });
     }
 }
 
