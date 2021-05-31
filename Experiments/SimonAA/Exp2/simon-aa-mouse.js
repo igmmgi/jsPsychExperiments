@@ -95,14 +95,20 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
         type: jsPsych.plugins.parameterType.BOOL,
         array: false,
         pretty_name: 'Require Mouse Press Start',
-        default: false,
+        default: true,
         description: 'Require Mouse Press Start',
+      },
+      fixation_duration: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Trial Duration',
+        default: 500,
+        description: 'How long to show trial before it ends.',
       },
       trial_duration: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'Trial Duration',
+        pretty_name: 'Fixation Duration',
         default: null,
-        description: 'How long to show trial before it ends.',
+        description: 'How long to show fixation cross.',
       },
     },
   };
@@ -258,7 +264,7 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
           draw_image = true;
           draw_start_box = false;
           draw();
-        }, 500);
+        }, trial.fixation_duration);
       }
 
       if (draw_image) {
@@ -296,6 +302,14 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
       draw_fixation = true;
       start_time = performance.now();
       draw_start_box = false;
+
+    // end trial if trial_duration is set
+    if (trial.trial_duration !== null) {
+      jsPsych.pluginAPI.setTimeout(function () {
+        end_trial();
+      }, trial.trial_duration + trial.fixation_duration);
+    }
+
       draw();
     };
 
@@ -324,12 +338,6 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
       jsPsych.finishTrial(trial_data);
     };
 
-    // end trial if trial_duration is set
-    if (trial.trial_duration !== null) {
-      jsPsych.pluginAPI.setTimeout(function () {
-        end_trial();
-      }, trial.trial_duration);
-    }
   };
 
   return plugin;

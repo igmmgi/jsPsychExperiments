@@ -58,7 +58,7 @@ const prms = {
   fixSize: 10,
   stimSize: '40px monospace',
   fbSize: '24px monospace',
-  simonEccentricity: 250,
+  simonEccentricity: 350,
   imageSize: 0.5,
   respKeys: ['q', 'p'],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
@@ -354,7 +354,7 @@ const alpha_num = {
     generate_formatted_html({
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
-      und deiner Universität (Tübingen oder Greifswald) per Email an:<br><br>
+      per Email an:<br><br>
     hiwipibio@gmail.com<br>`,
       fontsize: 26,
       align: 'left',

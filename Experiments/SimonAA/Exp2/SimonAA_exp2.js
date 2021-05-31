@@ -59,6 +59,7 @@ const prms = {
   fbSize: '24px monospace',
   simonEccentricity: 250,
   imageSize: 0.5,
+  startBox: [0, 0, 50, 50],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
 };
 
@@ -198,22 +199,24 @@ function codeTrial() {
   'use strict';
 
   let dat = jsPsych.data.get().last(1).values()[0];
-  let comp = (dat.imagePosition === dat.corrResp === 'left') ? 'comp' : 'incomp';
 
-  let correctKey = dat.end_loc === dat.corrResp ? true : false;
+  // adjust too fast/too slow for fixation duration
+  let tooFast = prms.tooFast + prms.fixDur;
+  let tooSlow = prms.tooSlow + prms.fixDur;
+
+  let correctResp = dat.end_loc === dat.corrResp ? true : false;
   let corrCode = 0;
-  if (correctKey && dat.end_rt > prms.tooFast && dat.end_rt < prms.tooSlow) {
+  if (correctResp && dat.end_rt > tooFast && dat.end_rt < tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && dat.end_rt > prms.tooFast && dat.end_rt < prms.tooSlow) {
+  } else if (!correctResp && dat.end_rt > tooFast && dat.end_rt < tooSlow) {
     corrCode = 2; // choice error
-  } else if (dat.end_rt >= prms.tooSlow) {
+  } else if (dat.end_rt >= tooSlow) {
     corrCode = 3; // too slow
-  } else if (dat.end_rt <= prms.tooFast) {
+  } else if (dat.end_rt <= tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    comp: comp,
     rt: dat.end_rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
@@ -277,6 +280,7 @@ const simon_stimulus = {
   image: null,
   image_position: null,
   image_size: prms.imageSize,
+  start_box: prms.startBox,
   stimulus_position: prms.stimPos,
   choices: prms.respKeys,
   trial_duration: prms.tooSlow,
@@ -349,7 +353,7 @@ const alpha_num = {
     generate_formatted_html({
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
-      und deiner Universität (Tübingen oder Greifswald) per Email an:<br><br>
+      per Email an:<br><br>
     hiwipibio@gmail.com<br>`,
       fontsize: 26,
       align: 'left',
