@@ -102,7 +102,7 @@ function resp_text_pp_block() {
             Wenn Farbe <span style="color: ${prms.colours[2]}">${de[prms.colours[2]]}</span><br>
              2. Priorität: Geschlectaufgabe<br><br>
             ${prms.gender[0]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${prms.gender[1]}<br>
-            (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `)
+            (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -260,9 +260,9 @@ function code_trial() {
 
   if (dat.key_press !== null) {
     let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corr_key);
-    if (correctKey & (dat.rt < prms.too_slow)) {
+    if (correctKey && (dat.rt < prms.too_slow)) {
       corrCode = 1; // correct
-    } else if (!correctKey & (dat.rt < prms.too_slow)) {
+    } else if (!correctKey && (dat.rt < prms.too_slow)) {
       corrCode = 2; // choice-error
     } else if (dat.rt < prms.too_fast) {
       corrCode = 4; // too-fast
@@ -378,7 +378,7 @@ function draw_feedback_pp() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  if (dat.corrCode == 1) {
+  if (dat.corrCode === 1) {
     ctx.fillText(prms.fb_text[dat.corrCode - 1], 0, 0);
   } else {
     ctx.font = 'bold 30px monospace';

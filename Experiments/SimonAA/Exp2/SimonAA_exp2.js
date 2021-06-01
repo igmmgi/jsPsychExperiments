@@ -71,18 +71,18 @@ if (nVersion === 1) {
   respText =
     "<h3 style='text-align:center;'><b>" +
     'Spinne' +
-    " = linker Zeigefinger (Taste 'Q')</b></h3>" +
+    ' = linke Mausbewegung</b></h3>' +
     "<h3 style='text-align:center;'><b>" +
     'Blume' +
-    " = rechter Zeigefinger (Taste 'P')</b></h3><br>";
+    ' = rechte Mausbewegung</b></h3><br>';
 } else if (nVersion === 2) {
   respText =
     "<h3 style='text-align:center;'><b>" +
     'Blume' +
-    " = linker Zeigefinger (Taste 'Q')</b></h3>" +
+    ' = linke Mausbewegung</b></h3>' +
     "<h3 style='text-align:center;'><b>" +
     'Spinne' +
-    " = rechter Zeigefinger (Taste 'P')</b></h3><br>";
+    ' = rechte Mausbewegung</b></h3><br>';
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -409,17 +409,16 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen_on);
-  // exp.push(check_screen);
-  // exp.push(welcome_de_du);
-  // exp.push(resize_de_du);
-  // // exp.push(vpInfoForm_de);
-  // exp.push(hideMouseCursor);
-  // exp.push(screenInfo);
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
-  // exp.push(task_instructions3);
-  // exp.push(task_instructions4);
+  exp.push(fullscreen_on);
+  exp.push(check_screen);
+  exp.push(welcome_de_du);
+  exp.push(resize_de_du);
+  exp.push(vpInfoForm_de);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
+  exp.push(task_instructions3);
+  exp.push(task_instructions4);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = blk === 0 ? { ...trial_timeline_simon_practise } : { ...trial_timeline_simon_exp };
@@ -440,7 +439,6 @@ function genExpSeq() {
   exp.push(save_code);
 
   // debrief
-  exp.push(showMouseCursor);
   exp.push(alpha_num);
   exp.push(debrief_de);
   exp.push(fullscreen_off);

@@ -81,15 +81,15 @@ jsPsych.data.addProperties({ orderVersion: orderVersion });
 const keyVersion = getRandomInt(1, 2);
 jsPsych.data.addProperties({ keyVersion: keyVersion });
 
-const rewardCondition = [1, 2].includes(orderVersion) ? ['kongruent', 'inkongruent'] :['inkongruent', 'kongruent'];
-const colourMapping = keyVersion === 1 ? ["rot", "grün"] : ["grun", "rot"];
+const rewardCondition = [1, 2].includes(orderVersion) ? ['kongruent', 'inkongruent'] : ['inkongruent', 'kongruent'];
+const colourMapping = keyVersion === 1 ? ['rot', 'grün'] : ['grun', 'rot'];
 
-const respText =
-  generate_formatted_html({
-    text: `${colourMapping[0]} = linker Zeigefinger (Taste 'Q')<br>
+const respText = generate_formatted_html({
+  text: `${colourMapping[0]} = linker Zeigefinger (Taste 'Q')<br>
              ${colourMapping[1]} = rechter Zeigefinger (Taste 'P')<br>`,
-    fontsize: 22,
-    lineheight: 1.5})
+  fontsize: 22,
+  lineheight: 1.5,
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -103,7 +103,7 @@ const task_instructions1 = {
     text: `Herzlich Willkommen zu unserem Experiment:<br><br>
   Die Teilnahme ist selbstverständlich freiwillig und kann jederzeit durch
   drücken der Escape- Taste abgebrochen werden.<br><br>
-  Es ist möglich, durch gute Leistungen im Experiment einen von…. Gutscheinen
+  Es ist möglich, durch gute Leistungen im Experiment einen von X Gutscheinen
   zu gewinnen. Am Ende des Experiments werden Sie gefragt, ob Sie an der
   Gutscheinvergabe teilnehmen möchten und wenn ja, werden Sie gebeten Ihre
   E-Mail-Adresse anzugeben. Wir werden nach Abschluss der Datenerhebung die …
@@ -113,7 +113,8 @@ const task_instructions1 = {
   Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
-    align: 'left'}),
+    align: 'left',
+  }),
   choices: [' '],
 };
 
@@ -129,7 +130,8 @@ const task_instructions2 = {
     Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
-    align: 'left'}),
+    align: 'left',
+  }),
   choices: [' '],
 };
 
@@ -138,17 +140,19 @@ const task_instructions_simon = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: generate_formatted_html({
-    text: `In der folgenden Aufgabe werden rote oder grüne Kreise entweder auf
+  stimulus:
+    generate_formatted_html({
+      text: `In der folgenden Aufgabe werden rote oder grüne Kreise entweder auf
     der rechten oder linken Seite des Bildschirmes erscheinen. Die Seite, auf
     der der Kreis erscheint ist für Ihre Reaktion nicht relevant. Reagiere
     immer wie folgt:<br>`,
-    fontsize: 22,
-    lineheight: 1.0,
-    align: 'left'}) +
-  respText +
-  generate_formatted_html({
-    text: `Somit ergeben sich sogenannte kongruente und inkongruente
+      fontsize: 22,
+      lineheight: 1.0,
+      align: 'left',
+    }) +
+    respText +
+    generate_formatted_html({
+      text: `Somit ergeben sich sogenannte kongruente und inkongruente
     Versuchsdurchgänge. Kongruent bedeutet, dass die Seite, auf der der Kreis
     erscheint mit der Seite auf der Sie reagieren müssen übereinstimmt
     Inkongruent bedeutet, dass die Seite und Ihre Reaktion nicht
@@ -160,27 +164,30 @@ const task_instructions_simon = {
     eine #. Bei ${rewardCondition[1]} Durchgängen ist es nicht möglich, eine Belohnung
     zu erhalten.<br><br>
     Weiter geht es mit der Leertaste ...`,
-    fontsize: 22,
-    lineheight: 1.0,
-    align: 'left'}),
+      fontsize: 22,
+      lineheight: 1.0,
+      align: 'left',
+    }),
   choices: [' '],
-}
+};
 
 const task_instructions_stroop = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: generate_formatted_html({
-    text: `In der folgenden Aufgabe werden die Worte ROT oder GRÜN in roter
+  stimulus:
+    generate_formatted_html({
+      text: `In der folgenden Aufgabe werden die Worte ROT oder GRÜN in roter
     oder grüner Farbe geschrieben erscheinen. Bitte reagiere immer nur auf die
     Farbe der und ignoriere das Wort. Reagiere immer wie folgt:<br>`,
-    fontsize: 22,
-    lineheight: 1.0,
-    align: 'left'}) +
-  respText +
-  generate_formatted_html({
-    text: `Somit ergeben sich sogenannte kongruente und inkongruente
+      fontsize: 22,
+      lineheight: 1.0,
+      align: 'left',
+    }) +
+    respText +
+    generate_formatted_html({
+      text: `Somit ergeben sich sogenannte kongruente und inkongruente
     Versuchsdurchgänge. Kongruent bedeutet, dass die Bedeutung und die
     Schriftfarbe des Wortes übereinstimmen (das Wort ROT in rot geschrieben
     oder das Wort GRÜN in grün geschrieben). Inkongruent bedeutet, dass die
@@ -193,24 +200,28 @@ const task_instructions_stroop = {
     eine #. Bei ${rewardCondition[1]} Durchgängen ist es nicht möglich, eine Belohnung
     zu erhalten.<br><br>
     Weiter geht es mit der Leertaste ...`,
-    fontsize: 22,
-    lineheight: 1.0,
-    align: 'left'}),
+      fontsize: 22,
+      lineheight: 1.0,
+      align: 'left',
+    }),
   choices: [' '],
 };
 
-const images = loadImages(["../images/treasure_box.jpg", "../images/treasure_box_with_cross.jpg"]);
+const images = loadImages(['../images/treasure_box.jpg', '../images/treasure_box_with_cross.jpg']);
 
 // need to store performance data to use to guide reward/no reward
 const performanceData = {
-  simon_rts: [],
-  simon_mean: prms.tooSlow,
-  simon_points: 0,
-  stroop_rts: [],
-  stroop_mean: prms.tooSlow,
-  stroop_points: 0,
+  simon_n_total: 0,
+  simon_n_correct: 0,
+  simon_reward_rts: [],
+  simon_reward_mean: prms.tooSlow,
+  simon_reward_points: 0,
+  stroop_n_total: 0,
+  stroop_n_correct: 0,
+  stroop_reward_rts: [],
+  stroop_reward_mean: prms.tooSlow,
+  stroop_reward_points: 0,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
@@ -243,22 +254,47 @@ function drawFeedback() {
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
 
-  // draw text
-  ctx.font = prms.fbSize;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
-  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
+  if (dat.comp === dat.reward) {
+    // draw text
+    ctx.font = prms.fbSize;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
+    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -120);
 
-  // draw image
-  if (dat.comp === dat.reward) {  // show a version of the treasure chest
+    // draw image
+    // show a version of the treasure chest
     const num = dat.corrCode === 1 ? 0 : 1;
     const size = 2;
     const width = images[num].width;
     const height = images[num].height;
-    ctx.drawImage(images[num], -width / size / 2, -height / size / 2 + 150, width / size, height / size);
-  }
+    ctx.drawImage(images[num], -width / size / 2, -height / size / 2, width / size, height / size);
 
+    // draw total accumulated points
+    ctx.font = prms.fbSize * 1.5;
+    if (dat.task === 'simon') {
+      ctx.fillText('Points: ' + performanceData.simon_reward_points, 0, 120);
+    } else if (dat.task === 'stroop') {
+      ctx.fillText('Points: ' + performanceData.stroop_reward_points, 0, 120);
+    }
+  } else {
+    // draw text
+    ctx.font = prms.fbSize;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
+    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -25);
+
+    // draw total accumulated points
+    ctx.font = prms.fbSize * 1.5;
+    if (dat.task === 'simon') {
+      let percentage_correct = (performanceData.simon_n_correct / performanceData.simon_n_total) * 100;
+      ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 25);
+    } else if (dat.task === 'stroop') {
+      let percentage_correct = (performanceData.stroop_n_correct / performanceData.stroop_n_total) * 100;
+      ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 25);
+    }
+  }
 }
 
 function drawStroop(args) {
@@ -275,11 +311,11 @@ function drawSimon(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   ctx.fillStyle = args.colour;
-  if (args.position === "left") {
+  if (args.position === 'left') {
     ctx.beginPath();
     ctx.arc(-prms.simonEccentricity, 0, prms.simonSize, 0, 2 * Math.PI);
     ctx.fill();
-  } else if (args.position === "right") {
+  } else if (args.position === 'right') {
     ctx.beginPath();
     ctx.arc(prms.simonEccentricity, 0, prms.simonSize, 0, 2 * Math.PI);
     ctx.fill();
@@ -309,22 +345,28 @@ function codeTrial() {
 
   // update performance data
   let success = false;
-  if (dat.comp === dat.reward) {
+  if (dat.task === 'simon') {
+    performanceData.simon_n_total += 1;
     if (corrCode === 1) {
-      if (dat.task === "simon") {
-        // was trial successful compared to current criterion?
-        success = dat.rt < performanceData.simon_mean;
+      performanceData.simon_n_correct += 1;
+      if (dat.comp === dat.reward) {
+        success = dat.rt < performanceData.simon_reward_mean;
         // update performance data with latest rt
-        performanceData.simon_rts.push(dat.rt);
-        performanceData.simon_mean = mean(performanceData.simon_rts);
-        performanceData.simon_points += 1
-      } else if (dat.task === "stroop") {
-        // was trial successful compared to current criterion?
-        success = dat.rt < performanceData.simon_mean;
+        performanceData.simon_reward_rts.push(dat.rt);
+        performanceData.simon_reward_mean = mean(performanceData.simon_reward_rts);
+        performanceData.simon_reward_points += 1;
+      }
+    }
+  } else if (dat.task === 'stroop') {
+    performanceData.stroop_n_total += 1;
+    if (corrCode === 1) {
+      performanceData.stroop_n_correct += 1;
+      if (dat.comp === dat.reward) {
+        success = dat.rt < performanceData.stroop_reward_mean;
         // update performance data with latest rt
-        performanceData.stroop_rts.push(dat.rt);
-        performanceData.stroop_mean = mean(performanceData.stroop_rts);
-        performanceData.stroop_points += 1
+        performanceData.stroop_reward_rts.push(dat.rt);
+        performanceData.stroop_reward_mean = mean(performanceData.stroop_reward_rts);
+        performanceData.stroop_reward_points += 1;
       }
     }
   }
@@ -334,14 +376,13 @@ function codeTrial() {
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
     success: success,
-    simonMean: performanceData.simon_mean,
-    simonPoints: performanceData.simon_points,
-    stroopMean: performanceData.stroop_mean,
-    stroopPoints: performanceData.stroop_points,
+    simonMean: performanceData.simon_reward_mean,
+    simonPoints: performanceData.simon_reward_points,
+    stroopMean: performanceData.stroop_reward_mean,
+    stroopPoints: performanceData.stroop_reward_points,
     corrCode: corrCode,
   });
   prms.cTrl += 1;
-
 }
 
 const trial_feedback = {
@@ -444,47 +485,46 @@ const simon_stimulus = {
   },
 };
 
-// prettier-ignore
 let stroops;
 let simons;
+// prettier-ignore
 if (keyVersion === 1) {
   stroops = [
-    { task: 'stroop', item: 'ROT',  position: 'centre', colour: "red",   comp: "kongruent",   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: "green", comp: "kongruent",   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-    { task: 'stroop', item: 'ROT',  position: 'centre', colour: "green", comp: "inkongruent", reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: "red",   comp: "inkongruent", reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'green', comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[0] },
   ];
   simons = [
-    { task: 'simon', item: 'circle', position: 'left',  colour: "red",   comp: "kongruent",   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'simon', item: 'circle', position: 'right', colour: "red",   comp: "inkongruent", reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'simon', item: 'circle', position: 'left',  colour: "green", comp: "inkongruent", reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-    { task: 'simon', item: 'circle', position: 'right', colour: "green", comp: "kongruent",   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-  ]
+    { task: 'simon', item: 'circle', position: 'left',  colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'simon', item: 'circle', position: 'right', colour: 'red',   comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'simon', item: 'circle', position: 'left',  colour: 'green', comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'simon', item: 'circle', position: 'right', colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+  ];
 } else if (keyVersion === 2) {
   stroops = [
-    { task: 'stroop', item: 'ROT',  position: 'centre', colour: "red",   comp: "kongruent",   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: "green", comp: "kongruent",   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'stroop', item: 'ROT',  position: 'centre', colour: "green", comp: "inkongruent", reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: "red",   comp: "inkongruent", reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'green', comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[1] },
   ];
   simons = [
-    { task: 'simon', item: 'circle', position: 'left',  colour: "green", comp: "kongruent",   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'simon', item: 'circle', position: 'right', colour: "green", comp: "inkongruent", reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'simon', item: 'circle', position: 'left',  colour: "red",   comp: "inkongruent", reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-    { task: 'simon', item: 'circle', position: 'right', colour: "red",   comp: "kongruent",   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-  ]
+    { task: 'simon', item: 'circle', position: 'left',  colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'simon', item: 'circle', position: 'right', colour: 'green', comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'simon', item: 'circle', position: 'left',  colour: 'red',   comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'simon', item: 'circle', position: 'right', colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+  ];
 }
 
 const trial_timeline_stroop = {
   timeline: [fixation_cross, stroop_stimulus, trial_feedback],
-  timeline_variables: stroops
+  timeline_variables: stroops,
 };
 
 const trial_timeline_simon = {
   timeline: [fixation_cross, simon_stimulus, trial_feedback],
-  timeline_variables: simons
+  timeline_variables: simons,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              De-brief                              //
@@ -524,8 +564,7 @@ const email_option_instructions = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus:
-  generate_formatted_html({
+  stimulus: generate_formatted_html({
     text: `Das Experiment ist jetzt beendet.<br><br>
       Vielen Dank für ihre Teilnahme!<br><br>
       Im nächsten Fester werden Sie aufgefordert Ihre E-Mail-Adresse für die Gutscheinvergabe anzugeben.
@@ -536,15 +575,13 @@ katharina.hofbauer@student.uni-tuebingen.de<br><br>
 Drücke die Leertaste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
-  })
+  }),
 };
 
 const email_option = {
   type: 'survey-text',
-  questions: [
-    {prompt: 'E-mail addres?', placeholder: "email@email", columns: 50, required: false, name: 'email'},
-  ],
-  button_label: "Weiter",
+  questions: [{ prompt: 'E-mail addres?', placeholder: 'email@email', columns: 50, required: false, name: 'email' }],
+  button_label: 'Weiter',
   on_finish: function () {
     let dat = jsPsych.data.get().last(1).values()[0];
     jsPsych.data.addProperties({ email: dat.response.email });
@@ -581,8 +618,6 @@ const save_code = {
   timing_post_trial: 200,
 };
 
-
-
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -594,25 +629,25 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 
   // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
-  let blk_task = [];
+  let blk_task;
   if ([1, 3].includes(orderVersion)) {
-    blk_task = repeatArray(['simon'], prms.nBlks / 2).concat(repeatArray(["stroop"], prms.nBlks / 2));
+    blk_task = repeatArray(['simon'], prms.nBlks / 2).concat(repeatArray(['stroop'], prms.nBlks / 2));
   } else {
-    blk_task = repeatArray(['stroop'], prms.nBlks / 2).concat(repeatArray(["simon"], prms.nBlks / 2));
+    blk_task = repeatArray(['stroop'], prms.nBlks / 2).concat(repeatArray(['simon'], prms.nBlks / 2));
   }
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     // add approprite block start stroop vs. simon instructions for 1st block of that task
-    if (blk_task[blk] === 'simon' & [0, prms.nBlks /2].includes(blk)) {
+    if (blk_task[blk] === 'simon' && [0, prms.nBlks / 2].includes(blk)) {
       exp.push(task_instructions_simon);
-    } else if (blk_task[blk] === "stroop" & [0, prms.nBlks / 2].includes(blk)) {
+    } else if (blk_task[blk] === 'stroop' && [0, prms.nBlks / 2].includes(blk)) {
       exp.push(task_instructions_stroop);
     }
     // select appropriate blk_timeline
