@@ -260,9 +260,9 @@ function code_trial() {
 
   if (dat.key_press !== null) {
     let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corr_key);
-    if (correctKey && (dat.rt < prms.too_slow)) {
+    if (correctKey && dat.rt < prms.too_slow) {
       corrCode = 1; // correct
-    } else if (!correctKey && (dat.rt < prms.too_slow)) {
+    } else if (!correctKey && dat.rt < prms.too_slow) {
       corrCode = 2; // choice-error
     } else if (dat.rt < prms.too_fast) {
       corrCode = 4; // too-fast
@@ -367,7 +367,6 @@ function draw_pp(args) {
   ctx.strokeStyle = args.colour;
   ctx.rect(-prms.rect_size / 2, -prms.rect_size / 2, prms.rect_size, prms.rect_size);
   ctx.stroke();
-
 }
 
 function draw_feedback_pp() {
