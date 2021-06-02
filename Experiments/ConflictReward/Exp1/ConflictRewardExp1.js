@@ -46,14 +46,14 @@ const check_screen = {
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
+getComputerInfo();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 4, // number of trials in each block
-  nTrlsE: 4, // number of trials in each block
+  nTrlsP: 20, // number of trials in each block
+  nTrlsE: 20, // number of trials in each block
   nBlks: 6,
   fixDur: 400,
   fbDur: [1500, 2500, 2500],
@@ -74,7 +74,7 @@ const prms = {
 };
 
 // 4 counter-balanced order versions
-const orderVersion = getVersionNumber(nFiles, 4);
+const orderVersion = Number(jsPsych.data.urlVariables().orderVersion);
 jsPsych.data.addProperties({ orderVersion: orderVersion });
 
 // 2 random key assignments
@@ -283,16 +283,16 @@ function drawFeedback() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
-    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -25);
+    // ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -25);
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
     if (dat.task === 'simon') {
       let percentage_correct = (performanceData.simon_n_correct / performanceData.simon_n_total) * 100;
-      ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 25);
+      ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 0);
     } else if (dat.task === 'stroop') {
       let percentage_correct = (performanceData.stroop_n_correct / performanceData.stroop_n_total) * 100;
-      ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 25);
+      ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 0);
     }
   }
 }
@@ -629,7 +629,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
