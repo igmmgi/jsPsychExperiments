@@ -19,9 +19,9 @@
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const canvas_colour = 'rgba(200, 200, 200, 1)';
+const canvas_colour = 'rgba(255, 255, 255, 1)';
 const canvas_size = [960, 720];
-const canvas_border = '5px solid black';
+const canvas_border = '0px solid black';
 
 const check_screen = {
   type: 'check-screen-resolution',
@@ -46,11 +46,14 @@ getComputerInfo();
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   // Fixation Cross
-  fix_duration: 500,
-  fix_size: 15,
-  fix_linewidth: 4,
+  fix_duration1: 500,
+  fix_duration2: 50,
+  fix_size: 10,
+  fix_linewidth: 2,
 
   iti: 1000,
+  imageDur: 250,
+  minContextDur: 2000,
 
   // Response Keys
   resp_keys: ['s', 'k'],
@@ -67,11 +70,12 @@ jsPsych.data.addProperties({ version: version });
 const keyMapping = version === 1 ? ['Acceptable', 'Unacceptable'] : ['Unacceptable', 'Acceptable'];
 
 const respText = generate_formatted_html({
-  text: `${keyMapping[0]} = linker Zeigefinger (Taste 'S')<br>
-             ${keyMapping[1]} = rechter Zeigefinger (Taste 'K')<br>`,
+  text: `${keyMapping[0]} &emsp;&emsp;&emsp;&emsp; ${keyMapping[1]}<br>
+    (Taste 'S') &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (Taste 'K')`,
   fontsize: 22,
   lineheight: 1.5,
-  bold: true,
+  bold: false,
+  align: 'center',
 });
 
 //////////////////////////////////////////////////////////////////////////
@@ -189,6 +193,46 @@ const task_instructions6 = {
   choices: [' '],
 };
 
+// prettier-ignore
+const imageNumbersFemale = ["010", "020", "022", "028", "034", "040",
+    "048", "054", "063", "069", "071", "085", "090", "098", "101",
+    "106", "115", "125", "132", "134", "140", "150", "152", "162",
+    "163", "171", "173", "177", "182"];
+
+var imageFilesFemaleDisgust = [];
+imageNumbersFemale.forEach((imageNumber) => {
+  imageFilesFemaleDisgust.push(`images/female_disgust/${imageNumber}_y_f_d_a.jpg`);
+});
+// console.log(imageFilesFemaleDisgust);
+const imagesFemaleDisgust = loadImages(imageFilesFemaleDisgust);
+
+var imageFilesFemaleHappy = [];
+imageNumbersFemale.forEach((imageNumber) => {
+  imageFilesFemaleHappy.push(`images/female_happy/${imageNumber}_y_f_h_a.jpg`);
+});
+// console.log(imageFilesFemaleHappy);
+const imagesFemaleHappy = loadImages(imageFilesFemaleHappy);
+
+// prettier-ignore
+const imageNumbersMale = ["008", "013", "016", "025", "031", "037",
+    "041", "049", "057", "062", "066", "072", "081", "089", "099",
+    "105", "109", "114", "119", "123", "127", "135", "144", "147",
+    "153", "160", "167", "170", "175"];
+
+var imageFilesMaleDisgust = [];
+imageNumbersMale.forEach((imageNumber) => {
+  imageFilesMaleDisgust.push(`images/male_disgust/${imageNumber}_y_m_d_a.jpg`);
+});
+// console.log(imageFilesMaleDisgust);
+const imagesMaleDisgust = loadImages(imageFilesMaleDisgust);
+
+var imageFilesMaleHappy = [];
+imageNumbersMale.forEach((imageNumber) => {
+  imageFilesMaleHappy.push(`images/male_happy/${imageNumber}_y_m_h_a.jpg`);
+});
+// console.log(imageFilesMaleHappy);
+const imagesMaleHappy = loadImages(imageFilesMaleHappy);
+
 ////////////////////////////////////////////////////////////////////////
 //                  Common Stimuli/Functions                          //
 ////////////////////////////////////////////////////////////////////////
@@ -203,12 +247,23 @@ function draw_fixation_cross() {
   ctx.stroke();
 }
 
-const fixation_cross = {
+const fixation_cross1 = {
   type: 'static-canvas-keyboard-response',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: prms.fix_duration,
+  trial_duration: prms.fix_duration1,
+  translate_origin: true,
+  response_ends_trial: false,
+  func: draw_fixation_cross,
+};
+
+const fixation_cross2 = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  trial_duration: prms.fix_duration2,
   translate_origin: true,
   response_ends_trial: false,
   func: draw_fixation_cross,
@@ -223,6 +278,103 @@ const iti = {
   response_ends_trial: false,
   func: function () {},
 };
+
+const context = {
+  type: 'html-keyboard-response-canvas-min-duration',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `Herr Zinn ist Psychotherapeut und hat aktuell einen sehr schwierigen Fall. Er ist auf die Erfahrung und Hilfe seiner Kollegen angewiesen, um den Patienten angemessen zu therapieren.`,
+    align: 'left',
+    lineheight: 1.5,
+    fontsize: 26,
+  }),
+  minimum_trial_duration: prms.minContextDur,
+  choices: [' '],
+};
+
+const image = {
+  type: 'image-keyboard-response',
+  stimulus: imagesMaleHappy[0].src,
+  trial_duration: prms.imageDur,
+  choices: jsPsych.NO_KEYS,
+  prompt: '',
+  stimulus_width: 200,
+  maintain_aspect_ratio: true,
+  render_on_canvas: true,
+};
+
+const target = {
+  type: 'html-keyboard-response',
+  stimulus:
+    generate_formatted_html({
+      text: 'Herr Zinn beschließt seinen Kollegen von dem Problem zu berichten.',
+      align: 'center',
+      lineheight: 1.5,
+      fontsize: 26,
+    }) + respText,
+  trial_duration: null,
+  choices: prms.resp_keys,
+  response_ends_trial: true,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                           Questionnaire                            //
+////////////////////////////////////////////////////////////////////////
+const scale = ['nie', 'so gut wie nie', 'manchmal', 'häufug', 'fast die ganze Zeit'];
+
+// prettier-ignore
+const questions = [
+    { prompt: 'Ich fühlte mich danach, Leute zu schlagen',                                                                      name:  'q1', labels: scale, required: true },
+    { prompt: 'Ich bin in einen Laden, ein Einkaufszentrum oder ein Lagerhaus eingebrochen ',                                   name:  'q2', labels: scale, required: true },
+    { prompt: 'Ich habe andere beschuldigt',                                                                                    name:  'q3', labels: scale, required: true },
+    { prompt: 'Ich habe zurückgeschlagen, wenn ich von anderen geschlagen wurde',                                               name:  'q4', labels: scale, required: true },
+    { prompt: 'Ich habe die Fenster eines leeren Gebäudes kaputt gemacht',                                                      name:  'q5', labels: scale, required: true },
+    { prompt: 'Ich habe versucht, die Gefühle von jemandem zu verletzen',                                                       name:  'q6', labels: scale, required: true },
+    { prompt: 'Ich wurde schnell wütend',                                                                                       name:  'q7', labels: scale, required: true },
+    { prompt: 'Ich habe Dinge gestohlen',                                                                                       name:  'q8', labels: scale, required: true },
+    { prompt: 'Ich habe mich hinter dem Rücken von jemandem über ihn/sie lustig gemacht',                                       name:  'q9', labels: scale, required: true },
+    { prompt: 'Ich habe andere bedroht',                                                                                        name: 'q10', labels: scale, required: true },
+    { prompt: 'Ich habe öffentliche Bereiche verschmutzt, indem ich Flaschen zerschlagen habe, Mülleimer umgeworfen habe usw.', name: 'q11', labels: scale, required: true },
+    { prompt: 'Ich habe jemanden von Gruppenaktivitäten ausgeschlossen, wenn ich wütend auf ihn/sie war',                       name: 'q12', labels: scale, required: true },
+    { prompt: 'Ich habe Probleme, mein Temperament zu kontrollieren',                                                           name: 'q13', labels: scale, required: true },
+    { prompt: 'Ich habe ein Fahrrad gestohlen',                                                                                 name: 'q14', labels: scale, required: true },
+    { prompt: 'Ich habe jemanden mit Schweigen bestraft, wenn ich wütend auf ihn/sie war',                                      name: 'q15', labels: scale, required: true },
+    { prompt: 'Ich habe andere geschlagen, wenn ich provoziert wurde',                                                          name: 'q16', labels: scale, required: true },
+    { prompt: 'Ich habe Eigentum aus der Schule oder von der Arbeit gestohlen',                                                 name: 'q17', labels: scale, required: true },
+    { prompt: 'Ich habe jemandes Geheimnisse verraten, wenn ich wütend auf ihn/sie war',                                        name: 'q18', labels: scale, required: true },
+    { prompt: 'Ich bin öfters in Auseinandersetzungen geraten als der Durchschnitt',                                            name: 'q19', labels: scale, required: true },
+    { prompt: 'Ich habe für längere Zeit das Haus verlassen, ohne meine Familie/Freunde zu informieren',                        name: 'q20', labels: scale, required: true },
+    { prompt: 'Ich habe absichtlich den Ruf von jemandem beschädigt',                                                           name: 'q21', labels: scale, required: true },
+    { prompt: 'Ich habe andere beschimpft oder angeschrien',                                                                    name: 'q22', labels: scale, required: true },
+    { prompt: 'Ich habe Drogen verkauft, einschließlich Marihuana',                                                             name: 'q23', labels: scale, required: true },
+    { prompt: 'Ich habe versucht, andere gegen jemanden aufzubringen, wenn ich wütend auf ihn/sie war',                         name: 'q24', labels: scale, required: true },
+    { prompt: 'Ich bin in körperliche Auseinandersetzungen geraten',                                                            name: 'q25', labels: scale, required: true },
+    { prompt: 'Ich wurde von der Schule oder Arbeit suspendiert, verwiesen oder gefeuert',                                      name: 'q26', labels: scale, required: true },
+    { prompt: 'Ich habe jemanden hinter seinem/ihrem Rücken beschimpft',                                                        name: 'q27', labels: scale, required: true },
+    { prompt: 'Ich habe mich besser gefühlt, nachdem ich jemanden geschlagen habe',                                             name: 'q28', labels: scale, required: true },
+    { prompt: 'Ich konnte Schulden nicht bezahlen',                                                                             name: 'q29', labels: scale, required: true },
+    { prompt: 'Ich war unhöflich zu anderen',                                                                                   name: 'q30', labels: scale, required: true },
+    { prompt: 'Ich habe Probleme, einen Job zu behalten',                                                                       name: 'q31', labels: scale, required: true },
+    { prompt: 'Ich habe negative Kommentare über das Aussehen anderer gemacht',                                                 name: 'q32', labels: scale, required: true }
+];
+
+let questionnaire = [];
+while (questions.length > 0) {
+  questionnaire.push({
+    type: 'survey-likert',
+    questions: questions.splice(0, 10),
+    scale_width: 600,
+    button_label: 'Weiter',
+    on_finish: function () {
+      let dat = jsPsych.data.get().last(1).values()[0];
+      for (const [key, val] of Object.entries(dat.response)) {
+        jsPsych.data.addProperties({ [key]: val + 1 });
+      }
+    },
+  });
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                              De-brief                              //
@@ -302,11 +454,19 @@ function genExpSeq() {
   // exp.push(hideMouseCursor);
   // exp.push(screenInfo);
 
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
-  exp.push(task_instructions3);
-  exp.push(task_instructions4);
-  exp.push(task_instructions5);
+  // exp.push(context);
+  // exp.push(fixation_cross1);
+  // exp.push(image);
+  // exp.push(fixation_cross2);
+  // exp.push(target);
+  // exp.push(task_instructions1);
+  // exp.push(task_instructions2);
+  // exp.push(task_instructions3);
+  // exp.push(task_instructions4);
+
+  questionnaire.forEach(function (item) {
+    exp.push(item);
+  });
 
   // save data
   // exp.push(save_data);
@@ -327,5 +487,8 @@ jsPsych.init({
   timeline: EXP,
   on_interaction_data_update: function (data) {
     update_user_interaction_data(data);
+  },
+  on_finish: function () {
+    jsPsych.data.displayData();
   },
 });
