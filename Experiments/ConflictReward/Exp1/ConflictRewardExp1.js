@@ -81,7 +81,9 @@ jsPsych.data.addProperties({ orderVersion: orderVersion });
 const keyVersion = getRandomInt(1, 2);
 jsPsych.data.addProperties({ keyVersion: keyVersion });
 
-const rewardCondition = [1, 2].includes(orderVersion) ? ['kongruent', 'inkongruent'] : ['inkongruent', 'kongruent'];
+const rewardCondition = [1, 2].includes(orderVersion)
+  ? ['kongruente', 'inkongruenten']
+  : ['inkongruenten', 'kongruente'];
 const colourMapping = keyVersion === 1 ? ['rot', 'grün'] : ['grun', 'rot'];
 
 const respText = generate_formatted_html({
@@ -103,13 +105,13 @@ const task_instructions1 = {
     text: `Herzlich Willkommen zu unserem Experiment:<br><br>
   Die Teilnahme ist selbstverständlich freiwillig und kann jederzeit durch
   drücken der Escape- Taste abgebrochen werden.<br><br>
-  Es ist möglich, durch gute Leistungen im Experiment einen von X Gutscheinen
-  zu gewinnen. Am Ende des Experiments werden Sie gefragt, ob Sie an der
-  Gutscheinvergabe teilnehmen möchten und wenn ja, werden Sie gebeten Ihre
-  E-Mail-Adresse anzugeben. Wir werden nach Abschluss der Datenerhebung die …
-  besten Versuchspersonen per Mail kontaktieren. Wenn Sie nicht an der
-  Gutscheinvergabe teilnehmen möchten, werden Ihre Daten vollständig
-  anonymisiert.<br><br>
+  Es ist möglich, durch gute Leistungen im Experiment einen von sechs
+  Gutscheinen über 10€ zu gewinnen. Am Ende des Experiments wirst Du gefragt,
+      ob Du an der Gutscheinvergabe teilnehmen möchtest und wenn ja, wirst Du
+      gebeten Deine E-Mail-Adresse anzugeben. Wir werden nach Abschluss der
+      Datenerhebung die sechs besten Versuchspersonen per E-Mail kontaktieren.
+      Wenn Du nicht an der Gutscheinvergabe teilnehmen möchtest, werden Deine
+      Daten vollständig anonymisiert.<br><br>
   Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
@@ -144,7 +146,7 @@ const task_instructions_simon = {
     generate_formatted_html({
       text: `In der folgenden Aufgabe werden rote oder grüne Kreise entweder auf
     der rechten oder linken Seite des Bildschirmes erscheinen. Die Seite, auf
-    der der Kreis erscheint ist für Ihre Reaktion nicht relevant. Reagiere
+    der der Kreis erscheint ist für Deine Reaktion nicht relevant. Reagiere
     immer wie folgt:<br>`,
       fontsize: 22,
       lineheight: 1.0,
@@ -153,16 +155,17 @@ const task_instructions_simon = {
     respText +
     generate_formatted_html({
       text: `Somit ergeben sich sogenannte kongruente und inkongruente
-    Versuchsdurchgänge. Kongruent bedeutet, dass die Seite, auf der der Kreis
-    erscheint mit der Seite auf der Sie reagieren müssen übereinstimmt
-    Inkongruent bedeutet, dass die Seite und Ihre Reaktion nicht
-    übereinstimmen.<br><br>
-    Wenn Sie ${rewardCondition[0]} Durchgänge korrekt und schnell genug bearbeiten, werden
-    Sie mit einem Punkt belohnt. Nach solch einem erfolgreichen Durchgang
-    erscheint eine Schatztruhe als Feedback-Signal. Wenn Sie einen
-    ${rewardCondition[1]} Durchgang korrekt und schnell genug bearbeiten, erscheint
-    eine #. Bei ${rewardCondition[1]} Durchgängen ist es nicht möglich, eine Belohnung
-    zu erhalten.<br><br>
+      Versuchsdurchgänge. Kongruent bedeutet, dass die Seite, auf der der
+      Kreis erscheint mit der Seite auf der Du reagieren musst übereinstimmt.
+      Inkongruent bedeutet, dass die Seite und Deine Reaktion nicht
+      übereinstimmen.<br><br>
+    Wenn Du ${rewardCondition[0]} Durchgänge korrekt und schnell genug bearbeitest, wirst
+    Du mit einem Punkt belohnt. Nach solch einem erfolgreichen Durchgang
+    erscheint eine Schatztruhe. Wenn Du einen ${rewardCondition[1]} Durchgang korrekt
+    und schnell genug bearbeitest, erscheint die Anzahl der korrekt
+    bearbeiteten Durchgänge in %. Bei inkongruenten Durchgängen ist es
+    nicht möglich, eine Belohnung zu erhalten.<br><br>
+    Zunächst erfolgt ein Übungsblock.<br><br>
     Weiter geht es mit der Leertaste ...`,
       fontsize: 22,
       lineheight: 1.0,
@@ -180,7 +183,7 @@ const task_instructions_stroop = {
     generate_formatted_html({
       text: `In der folgenden Aufgabe werden die Worte ROT oder GRÜN in roter
     oder grüner Farbe geschrieben erscheinen. Bitte reagiere immer nur auf die
-    Farbe der und ignoriere das Wort. Reagiere immer wie folgt:<br>`,
+    Farbe der Schrift und ignoriere das Wort. Reagiere immer wie folgt:<br>`,
       fontsize: 22,
       lineheight: 1.0,
       align: 'left',
@@ -193,12 +196,13 @@ const task_instructions_stroop = {
     oder das Wort GRÜN in grün geschrieben). Inkongruent bedeutet, dass die
     Bedeutung und die Schriftfarbe des Wortes nicht übereinstimmen (das Wort
     ROT in grün geschrieben und das Wort GRÜN in rot geschrieben). <br><br>
-    Wenn Sie ${rewardCondition[0]} Durchgänge korrekt und schnell genug bearbeiten, werden
-    Sie mit einem Punkt belohnt. Nach solch einem erfolgreichen Durchgang
-    erscheint eine Schatztruhe als Feedback-Signal. Wenn Sie einen
-    ${rewardCondition[1]} Durchgang korrekt und schnell genug bearbeiten, erscheint
-    eine #. Bei ${rewardCondition[1]} Durchgängen ist es nicht möglich, eine Belohnung
-    zu erhalten.<br><br>
+    Wenn Du ${rewardCondition[0]} Durchgänge korrekt und schnell genug bearbeitest, wirst Du
+    mit einem Punkt belohnt. Nach solch einem erfolgreichen Durchgang
+    erscheint eine Schatztruhe als Feedback-Signal. Wenn Du einen
+    ${rewardCondition[1]} Durchgang korrekt und schnell genug bearbeitest, erscheint
+    die Anzahl der korrekt bearbeiteten Durchgänge in %. Bei ${rewardCondition[1]}
+    Durchgängen ist es nicht möglich, eine Belohnung zu erhalten.<br><br>
+    Zunächst erfolgt ein Übungsblock.<br><br>
     Weiter geht es mit der Leertaste ...`,
       fontsize: 22,
       lineheight: 1.0,
@@ -562,10 +566,10 @@ const email_option_instructions = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `Das Experiment ist jetzt beendet.<br><br>
-      Vielen Dank für ihre Teilnahme!<br><br>
-      Im nächsten Fester werden Sie aufgefordert Ihre E-Mail-Adresse für die Gutscheinvergabe anzugeben.
-Wenn Sie das nicht möchten, einfach es leer lassen.<br><br>
-Falls Sie Fragen zu unserem Experiment haben, können Sie uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
+      Vielen Dank für Deine Teilnahme!<br><br>
+      Im nächsten Fester wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
+Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
+Falls Du Fragen zu unserem Experiment hast, kanst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
 j.koenig@student.uni-tuebingen.de <br>
 katharina.hofbauer@student.uni-tuebingen.de<br><br>
 Drücke die Leertaste, um fortzufahren!`,
@@ -671,7 +675,7 @@ function genExpSeq() {
   exp.push(alpha_num);
   exp.push(email_option_instructions);
   exp.push(email_option);
-  exp.push(debrief_de);
+  exp.push(debrief_de_du);
   exp.push(fullscreen_off);
 
   return exp;
