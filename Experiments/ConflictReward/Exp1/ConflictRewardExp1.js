@@ -85,9 +85,9 @@ const rewardConditionInstructions = [1, 2].includes(orderVersion)
   ? ['kongruente', 'inkongruenten']
   : ['inkongruenten', 'kongruente'];
 
-const rewardCondition = [1, 2].includes(orderVersion) ? ['kongruen', 'inkongruent'] : ['inkongruent', 'kongruent'];
+const rewardCondition = [1, 2].includes(orderVersion) ? ['kongruent', 'inkongruent'] : ['inkongruent', 'kongruent'];
 
-const colourMapping = keyVersion === 1 ? ['rot', 'grün'] : ['grun', 'rot'];
+const colourMapping = keyVersion === 1 ? ['rot', 'grün'] : ['grün', 'rot'];
 
 const respText = generate_formatted_html({
   text: `${colourMapping[0]} = linker Zeigefinger (Taste 'Q')<br>
@@ -281,7 +281,8 @@ function drawFeedback() {
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
-    ctx.fillText('Points: ' + performanceData.simon_reward_points + performanceData.stroop_reward_points, 0, 120);
+    let total_points = performanceData.simon_reward_points + performanceData.stroop_reward_points;
+    ctx.fillText('Points: ' + total_points, 0, 120);
   } else {
     // draw text
     ctx.font = prms.fbSize;
@@ -634,7 +635,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
