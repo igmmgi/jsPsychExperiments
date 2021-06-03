@@ -53,7 +53,7 @@ getComputerInfo();
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrlsP: 20, // number of trials in each block
-  nTrlsE: 20, // number of trials in each block
+  nTrlsE: 160, // number of trials in each block
   nBlks: 6,
   fixDur: 400,
   fbDur: [1500, 2500, 2500],
@@ -81,9 +81,12 @@ jsPsych.data.addProperties({ orderVersion: orderVersion });
 const keyVersion = getRandomInt(1, 2);
 jsPsych.data.addProperties({ keyVersion: keyVersion });
 
-const rewardCondition = [1, 2].includes(orderVersion)
+const rewardConditionInstructions = [1, 2].includes(orderVersion)
   ? ['kongruente', 'inkongruenten']
   : ['inkongruenten', 'kongruente'];
+
+const rewardCondition = [1, 2].includes(orderVersion) ? ['kongruen', 'inkongruent'] : ['inkongruent', 'kongruent'];
+
 const colourMapping = keyVersion === 1 ? ['rot', 'grün'] : ['grun', 'rot'];
 
 const respText = generate_formatted_html({
@@ -159,12 +162,13 @@ const task_instructions_simon = {
       Kreis erscheint mit der Seite auf der Du reagieren musst übereinstimmt.
       Inkongruent bedeutet, dass die Seite und Deine Reaktion nicht
       übereinstimmen.<br><br>
-    Wenn Du ${rewardCondition[0]} Durchgänge korrekt und schnell genug bearbeitest, wirst
-    Du mit einem Punkt belohnt. Nach solch einem erfolgreichen Durchgang
-    erscheint eine Schatztruhe. Wenn Du einen ${rewardCondition[1]} Durchgang korrekt
-    und schnell genug bearbeitest, erscheint die Anzahl der korrekt
-    bearbeiteten Durchgänge in %. Bei inkongruenten Durchgängen ist es
-    nicht möglich, eine Belohnung zu erhalten.<br><br>
+    Wenn Du ${rewardConditionInstructions[0]} Durchgänge korrekt und schnell
+    genug bearbeitest, wirst Du mit einem Punkt belohnt. Nach solch einem
+    erfolgreichen Durchgang erscheint eine Schatztruhe. Wenn Du einen
+    ${rewardConditionInstructions[1]} Durchgang korrekt und schnell genug
+    bearbeitest, erscheint die Anzahl der korrekt bearbeiteten Durchgänge in %.
+    Bei inkongruenten Durchgängen ist es nicht möglich, eine Belohnung zu
+    erhalten.<br><br>
     Zunächst erfolgt ein Übungsblock.<br><br>
     Weiter geht es mit der Leertaste ...`,
       fontsize: 22,
@@ -191,17 +195,18 @@ const task_instructions_stroop = {
     respText +
     generate_formatted_html({
       text: `Somit ergeben sich sogenannte kongruente und inkongruente
-    Versuchsdurchgänge. Kongruent bedeutet, dass die Bedeutung und die
-    Schriftfarbe des Wortes übereinstimmen (das Wort ROT in rot geschrieben
-    oder das Wort GRÜN in grün geschrieben). Inkongruent bedeutet, dass die
-    Bedeutung und die Schriftfarbe des Wortes nicht übereinstimmen (das Wort
-    ROT in grün geschrieben und das Wort GRÜN in rot geschrieben). <br><br>
-    Wenn Du ${rewardCondition[0]} Durchgänge korrekt und schnell genug bearbeitest, wirst Du
-    mit einem Punkt belohnt. Nach solch einem erfolgreichen Durchgang
-    erscheint eine Schatztruhe als Feedback-Signal. Wenn Du einen
-    ${rewardCondition[1]} Durchgang korrekt und schnell genug bearbeitest, erscheint
-    die Anzahl der korrekt bearbeiteten Durchgänge in %. Bei ${rewardCondition[1]}
-    Durchgängen ist es nicht möglich, eine Belohnung zu erhalten.<br><br>
+      Versuchsdurchgänge. Kongruent bedeutet, dass die Bedeutung und die
+      Schriftfarbe des Wortes übereinstimmen (das Wort ROT in rot geschrieben
+      oder das Wort GRÜN in grün geschrieben). Inkongruent bedeutet, dass die
+      Bedeutung und die Schriftfarbe des Wortes nicht übereinstimmen (das Wort
+      ROT in grün geschrieben und das Wort GRÜN in rot geschrieben). <br><br>
+    Wenn Du ${rewardConditionInstructions[0]} Durchgänge korrekt und schnell
+    genug bearbeitest, wirst Du mit einem Punkt belohnt. Nach solch einem
+    erfolgreichen Durchgang erscheint eine Schatztruhe als Feedback-Signal.
+    Wenn Du einen ${rewardConditionInstructions[1]} Durchgang korrekt und
+    schnell genug bearbeitest, erscheint die Anzahl der korrekt bearbeiteten
+    Durchgänge in %. Bei ${rewardConditionInstructions[1]} Durchgängen ist es
+    nicht möglich, eine Belohnung zu erhalten.<br><br>
     Zunächst erfolgt ein Übungsblock.<br><br>
     Weiter geht es mit der Leertaste ...`,
       fontsize: 22,
