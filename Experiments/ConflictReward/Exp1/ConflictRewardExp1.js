@@ -272,11 +272,7 @@ function drawFeedback() {
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
-    if (dat.task === 'simon') {
-      ctx.fillText('Points: ' + performanceData.simon_reward_points, 0, 120);
-    } else if (dat.task === 'stroop') {
-      ctx.fillText('Points: ' + performanceData.stroop_reward_points, 0, 120);
-    }
+    ctx.fillText('Points: ' + performanceData.simon_reward_points + performanceData.stroop_reward_points, 0, 120);
   } else {
     // draw text
     ctx.font = prms.fbSize;
