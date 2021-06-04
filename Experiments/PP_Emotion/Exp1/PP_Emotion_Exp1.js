@@ -8,15 +8,15 @@
 //
 // Response keys: Index fingers on the Q and P keys
 //
-// Primary task probability 2/3 vs. 1/3
-// Secondary task probability 1/3 vs. 2/3
+// Primary task probability 80% vs. 20%
+// Secondary task probability 20% vs. 80%
 //
 // Basic Trial Structure
 // Fixation Cross (500 ms)
-// Primary Task stimulus (coloured square frame)
-// Secondary task (face stimulus)
+// Primary Task stimulus (coloured square frame) + Secondary task (face stimulus)
 // Stimuli remain on screen until response or 3000 ms
 // Trial Feedback (Correct, Incorrect, Too Slow) for 1s (Correct) or 3s (Incorrect/Too Slow)
+// 500 ms inter-trial-interval
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -51,13 +51,14 @@ getComputerInfo();
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   // Block/Trial Numbers
-  nTrlsP: 48, // number of trials in practice PP block
-  nTrlsE: 48, // number of trials in experimental blocks
-  nBlks: 11, // total number of blocks
+  nTrlsP: 40, // number of trials in practice PP block
+  nTrlsE: 80, // number of trials in experimental blocks
+  nBlks: 10, // total number of blocks
 
   // Timing
   too_slow: 3000,
   too_fast: 0,
+  iti: 500,
   fb_duration: [500, 2000, 2000, 2000], // Duration of feedback
 
   // Fixation Cross
@@ -68,7 +69,7 @@ const prms = {
   // Stimuli
   colours: shuffle(['red', 'green', 'blue']),
   gender: shuffle(['Männlich', 'Weiblich']),
-  rect_size: 100,
+  rect_size: [150, 200],
   rect_linewidth: 10,
   stim_size: 'bold 80px monospace',
   fb_size: '30px monospace',
@@ -92,7 +93,7 @@ let resp_text_pp = `1. Priorität: Farbaufgabe <br><br><span style="color: ${prm
                    Wenn Farbe <span style="color: ${prms.colours[2]}">${de[prms.colours[2]]}</span><br><br>
                     2. Priorität: Geschlectaufgabe<br><br>
                    ${prms.gender[0]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${prms.gender[1]}<br>
-                   (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `;
+                   (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `;
 
 // prettier-ignore
 function resp_text_pp_block() {
@@ -122,6 +123,7 @@ const task_instructions1 = {
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
 };
 
@@ -137,6 +139,7 @@ const task_instructions2 = {
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
 };
 
@@ -152,6 +155,7 @@ WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Ta
 Drücke eine beliebige Taste um fortzufahren.`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
 };
 
@@ -167,6 +171,7 @@ const task_instructions_pp1 = {
            Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
 };
 
@@ -210,6 +215,57 @@ const task_instructions_pp_reminder = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                               Images                               //
+////////////////////////////////////////////////////////////////////////
+const female_fear_files = [
+  '../images/female_fear/AF09AFS.JPG',
+  '../images/female_fear/AF14AFS.JPG',
+  '../images/female_fear/AF16AFS.JPG',
+  '../images/female_fear/AF22AFS.JPG',
+  '../images/female_fear/AF28AFS.JPG',
+  '../images/female_fear/AF30AFS.JPG',
+  '../images/female_fear/AF31AFS.JPG',
+  '../images/female_fear/AF33AFS.JPG',
+];
+const female_fear_images = loadImages(female_fear_files);
+
+const female_neutral_files = [
+  '../images/female_neutral/AF09NES.JPG',
+  '../images/female_neutral/AF16NES.JPG',
+  '../images/female_neutral/AF28NES.JPG',
+  '../images/female_neutral/AF31NES.JPG',
+  '../images/female_neutral/AF14NES.JPG',
+  '../images/female_neutral/AF22NES.JPG',
+  '../images/female_neutral/AF30NES.JPG',
+  '../images/female_neutral/AF33NES.JPG',
+];
+const female_neutral_images = loadImages(female_neutral_files);
+
+const male_fear_files = [
+  '../images/male_fear/AM04AFS.JPG',
+  '../images/male_fear/AM10AFS.JPG',
+  '../images/male_fear/AM11AFS.JPG',
+  '../images/male_fear/AM14AFS.JPG',
+  '../images/male_fear/AM17AFS.JPG',
+  '../images/male_fear/AM22AFS.JPG',
+  '../images/male_fear/AM25AFS.JPG',
+  '../images/male_fear/AM35AFS.JPG',
+];
+const male_fear_images = loadImages(male_fear_files);
+
+const male_neutral_files = [
+  '../images/male_neutral/AM04NES.JPG',
+  '../images/male_neutral/AM10NES.JPG',
+  '../images/male_neutral/AM11NES.JPG',
+  '../images/male_neutral/AM14NES.JPG',
+  '../images/male_neutral/AM17NES.JPG',
+  '../images/male_neutral/AM22NES.JPG',
+  '../images/male_neutral/AM25NES.JPG',
+  '../images/male_neutral/AM35NES.JPG',
+];
+const male_neutral_images = loadImages(male_neutral_files);
+
+////////////////////////////////////////////////////////////////////////
 //                  Common Stimuli/Functions                          //
 ////////////////////////////////////////////////////////////////////////
 function draw_fixation_cross() {
@@ -239,14 +295,9 @@ const iti = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: 0,
+  trial_duration: prms.iti,
   response_ends_trial: false,
   func: function () {},
-  on_start: function (trial) {
-    let randomInt = getRandomInt(0, 4);
-    trial.trial_duration = prms.iti_range[randomInt];
-    prms.iti = trial.trial_duration;
-  },
 };
 
 function code_trial() {
@@ -254,9 +305,8 @@ function code_trial() {
 
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = 0;
-  let offset = dat.response_task === 'primary' ? 0 : dat.soa;
 
-  dat.rt = dat.rt !== null ? dat.rt - offset : prms.too_slow;
+  dat.rt = dat.rt !== null ? dat.rt : prms.too_slow;
 
   if (dat.key_press !== null) {
     let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corr_key);
@@ -273,7 +323,6 @@ function code_trial() {
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    iti: prms.iti,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
@@ -290,7 +339,7 @@ function block_feedback_text(filter_options) {
   }).length;
   dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 1 });
 
-  let txt = `Block: ${prms.cBlk} von ${prms.nBlks_total} <br>
+  let txt = `Block: ${prms.cBlk} von ${prms.nBlks} <br>
     Mittlere Reaktionzeit: ${Math.round(dat.select('rt').mean())} ms <br>
     Fehlerrate: ${Math.round((nError / nTotal) * 100)} % <br><br>
     Drücke eine beliebige Taste, um fortzufahren!`;
@@ -317,55 +366,49 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 //                          Experiment Phase                          //
 ////////////////////////////////////////////////////////////////////////
-
 // prettier-ignore
 const stimuli_primary = [
-        { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "comp"},
-        { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "happy",   corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-        { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "icomp"},
-        { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[1], backward_comp: "comp"},
-        { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "sad",     corr_key: prms.resp_keys[0], backward_comp: "comp"},
-        { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "sad",     corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-        { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "sad",     corr_key: prms.resp_keys[0], backward_comp: "incomp"},
-        { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "sad",     corr_key: prms.resp_keys[1], backward_comp: "comp"},
-        { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "neutral", corr_key: prms.resp_keys[0], backward_comp: "comp"},
-        { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-        { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[0], backward_comp: "incomp"},
-        { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "comp"},
-        { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "neutral", corr_key: prms.resp_keys[0], backward_comp: "comp"},
-        { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-        { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[0], backward_comp: "incomp"},
-        { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "comp"},
-    ];
+    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "neutral", corr_key: prms.resp_keys[0], backward_comp: "comp"},
+    { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[0], backward_comp: "incomp"},
+    { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "comp"},
+    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "fear",    corr_key: prms.resp_keys[0], backward_comp: "comp"},
+    { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "fear",    corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[0], backward_comp: "icomp"},
+    { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[1], backward_comp: "comp"},
+];
 
 // prettier-ignore
 const stimuli_background = [
-    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[0], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "na"},
-    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[1], backward_comp: "na"},
-    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[0], face_emotion: "sad",     corr_key: prms.resp_keys[0], backward_comp: "na"},
-    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[1], face_emotion: "sad",     corr_key: prms.resp_keys[1], backward_comp: "na"},
     { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[0], face_emotion: "neutral", corr_key: prms.resp_keys[0], backward_comp: "na"},
     { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "na"},
-    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[0], face_emotion: "neutral", corr_key: prms.resp_keys[0], backward_comp: "na"},
-    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "na"},
+    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[0], face_emotion: "fear",    corr_key: prms.resp_keys[0], backward_comp: "na"},
+    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[1], backward_comp: "na"},
 ];
 
-const stimuli_high_primary = deepCopy(stimuli_primary.concat(stimuli_background));
+const stimuli_high_primary = deepCopy(repeatArray(stimuli_primary, 4).concat(repeatArray(stimuli_background, 2)));
 stimuli_high_primary.forEach((i) => (i.prob_cond = 'HP'));
 // console.log(stimuli_high_primary);
 
-const stimuli_low_primary = deepCopy(stimuli_primary.concat(repeatArray(stimuli_background, 4)));
+const stimuli_low_primary = deepCopy(repeatArray(stimuli_primary, 1).concat(repeatArray(stimuli_background, 8)));
 stimuli_low_primary.forEach((i) => (i.prob_cond = 'LP'));
 // console.log(stimuli_low_primary);
 
 function draw_pp(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
+
+  // draw image
+  const size = 4;
+  const width = args.image.width;
+  const height = args.image.height;
+  ctx.drawImage(args.image, -width / size / 2, -height / size / 2, width / size, height / size);
+
   // Square frame
   ctx.beginPath();
   ctx.lineWidth = prms.rect_linewidth;
   ctx.strokeStyle = args.colour;
-  ctx.rect(-prms.rect_size / 2, -prms.rect_size / 2, prms.rect_size, prms.rect_size);
+  ctx.rect(-prms.rect_size[0] / 2, -prms.rect_size[1] / 2, prms.rect_size[0], prms.rect_size[1]);
   ctx.stroke();
 }
 
@@ -390,12 +433,11 @@ function draw_feedback_pp() {
     ctx.fillText(de[prms.colours[1]], 190, -30);
     ctx.fillStyle = 'black';
     ctx.fillText('Wenn Farbe     ', 0, 40);
-    ctx.fillText('2. Priorität: Buchstabe-/Zahlaufgabe', 0, 90);
+    ctx.fillText('2. Priorität: Geschlectaufgabe', 0, 90);
     ctx.fillStyle = prms.colours[2];
     ctx.fillText(de[prms.colours[2]], 90, 40);
     ctx.fillStyle = 'black';
-    ctx.fillText('Buchstabe vor M        Buchstabe nach M', 0, 130);
-    ctx.fillText('Zahl kleiner 5         Zahl größer 5', 0, 170);
+    ctx.fillText(`${prms.gender[0]}       ${prms.gender[1]}`, 0, 130);
     ctx.font = '20px monospace';
     ctx.fillText('(Q-Taste)', -150, -10);
     ctx.fillText('(Q-Taste)', -150, 210);
@@ -404,7 +446,6 @@ function draw_feedback_pp() {
   }
 }
 
-// TO DO: Do we need more detailed feedback for PP trials?
 const trial_feedback_pp = {
   type: 'static-canvas-keyboard-response',
   canvas_colour: canvas_colour,
@@ -428,44 +469,32 @@ const trial_pp = {
   stimulus_onset: [0, jsPsych.timelineVariable('soa')],
   response_ends_trial: true,
   choices: prms.resp_keys,
-  trial_duration: null,
-  func: [draw_pp, draw_pp],
+  trial_duration: prms.too_slow,
+  func: [draw_pp],
   func_args: null,
   data: {
-    stim_type: 'pp2bt',
+    stim_type: 'ppemo',
     response_task: jsPsych.timelineVariable('response_task'),
     colour: jsPsych.timelineVariable('colour'),
-    letter_number_group: jsPsych.timelineVariable('letter_number'),
-    letter_number: null,
-    soa: jsPsych.timelineVariable('soa'),
-    blk_type: 'experiment',
+    face_gender: jsPsych.timelineVariable('face_gender'),
+    face_emotion: jsPsych.timelineVariable('face_emotion'),
+    image: null,
     corr_key: jsPsych.timelineVariable('corr_key'),
     backward_comp: jsPsych.timelineVariable('backward_comp'),
     prob_cond: jsPsych.timelineVariable('prob_cond'),
   },
   on_start: function (trial) {
-    let letter_number;
-    let randomInt = getRandomInt(0, 1);
-    switch (trial.data.letter_number_group) {
-      case 'left_letter':
-        letter_number = prms.left_letters[randomInt];
-        break;
-      case 'left_number':
-        letter_number = prms.left_numbers[randomInt];
-        break;
-      case 'right_letter':
-        letter_number = prms.right_letters[randomInt];
-        break;
-      case 'right_number':
-        letter_number = prms.right_numbers[randomInt];
-        break;
+    let randomInt = getRandomInt(0, 7);
+    if (trial.data.face_gender === 'Männlich' && trial.data.face_emotion === 'neutral') {
+      trial.data.image = male_neutral_images[randomInt];
+    } else if (trial.data.face_gender === 'Männlich' && trial.data.face_emotion === 'fear') {
+      trial.data.image = male_fear_images[randomInt];
+    } else if (trial.data.face_gender === 'Weiblich' && trial.data.face_emotion === 'neutral') {
+      trial.data.image = female_neutral_images[randomInt];
+    } else if (trial.data.face_gender === 'Weiblich' && trial.data.face_emotion === 'fear') {
+      trial.data.image = female_fear_images[randomInt];
     }
-    trial.func_args = [
-      { colour: trial.data.colour, letter_number: '' },
-      { colour: trial.data.colour, letter_number: letter_number },
-    ];
-    trial.data.letter_number = letter_number;
-    trial.trial_duration = trial.data.response_task === 'primary' ? prms.too_slow : prms.too_slow + trial.data.soa;
+    trial.func_args = [{ colour: trial.data.colour, image: trial.data.image }];
   },
   on_finish: function () {
     code_trial();
@@ -584,9 +613,9 @@ function genExpSeq() {
 
   exp.push(fullscreen_on);
   exp.push(check_screen);
-  exp.push(welcome);
-  exp.push(resize);
-  exp.push(vpInfoForm);
+  exp.push(welcome_de_du);
+  exp.push(resize_de_du);
+  // exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
@@ -594,44 +623,22 @@ function genExpSeq() {
   exp.push(task_instructions2);
   exp.push(task_instructions3);
 
-  // Training Phase: 1 block of 12 trials for each task (colour/letter/number)
-  // Always colour first, then random order of letter/number task
-  exp.push(task_instructions_training_colour_task);
-  exp.push(trial_timeline_training_colours);
-  exp.push(block_feedback);
-
-  if (Math.random < 0.5) {
-    // letter task
-    exp.push(task_instructions_training_letter_task);
-    exp.push(trial_timeline_training_letters);
-    exp.push(block_feedback);
-    // number task
-    exp.push(task_instructions_training_number_task);
-    exp.push(trial_timeline_training_numbers);
-    exp.push(block_feedback);
-  } else {
-    // number task
-    exp.push(task_instructions_training_number_task);
-    exp.push(trial_timeline_training_numbers);
-    exp.push(block_feedback);
-    // letter task
-    exp.push(task_instructions_training_letter_task);
-    exp.push(trial_timeline_training_letters);
-    exp.push(block_feedback);
-  }
-
   // In experiment phase, low vs. high probability is split across half with order counterbalanced across participants
   // The first block or trials in each probability level is a practice block with fewer trials
   exp.push(task_instructions_pp1);
   exp.push(task_instructions_pp2);
 
   let hplp_type;
-  let pe_type = ['P'].concat(repeatArray('E', prms.nBlks_pp_e)).concat('P').concat(repeatArray('E', prms.nBlks_pp_e));
+  let pe_type = ['P']
+    .concat(repeatArray('E', prms.nBlks / 2 - 1))
+    .concat('P')
+    .concat(repeatArray('E', prms.nBlks / 2 - 1));
   if (nVersion === 1) {
-    hplp_type = repeatArray('HP', prms.nBlks_pp_e + 1).concat(repeatArray('LP', prms.nBlks_pp_e + 1));
+    hplp_type = repeatArray('HP', prms.nBlks / 2).concat(repeatArray('LP', prms.nBlks / 2));
   } else if (nVersion === 2) {
-    hplp_type = repeatArray('LP', prms.nBlks_pp_e + 1).concat(repeatArray('HP', prms.nBlks_pp_e + 1));
+    hplp_type = repeatArray('LP', prms.nBlks / 2).concat(repeatArray('HP', prms.nBlks / 2));
   }
+
   for (let blk = 0; blk < hplp_type.length; blk++) {
     if (blk > 0) {
       exp.push(task_instructions_pp_reminder);
@@ -660,7 +667,7 @@ function genExpSeq() {
   // debrief
   exp.push(showMouseCursor);
   exp.push(alpha_num);
-  exp.push(debrief);
+  exp.push(debrief_de_du);
   exp.push(fullscreen_off);
 
   return exp;
