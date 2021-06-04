@@ -601,7 +601,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/version' + orderVersion + '/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim: 'saa1' });
+    saveData('/Common/write_data.php', data_filename, { stim: 'ccr' });
   },
   timing_post_trial: 1000,
 };
@@ -665,7 +665,7 @@ function genExpSeq() {
     }
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
+      size: [0, prms.nBlks / 2].includes(blk) ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
