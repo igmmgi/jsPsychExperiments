@@ -4,7 +4,7 @@
 // "Morally Acceptable" vs. "Morally Unacceptable" response using
 // the keys "S" and "K"
 //
-// The moral materials have been take from:
+// The moral materials have been taken from:
 // Leuthold, H., Kunkel, A., Mackenzie, I. G., & Filik, R. (2015). Online
 // processing of moral transgressions: ERP evidence for spontaneous evaluation.
 // Social Cognitive and Affective Neuroscience, 10(8), 1021-1029.
