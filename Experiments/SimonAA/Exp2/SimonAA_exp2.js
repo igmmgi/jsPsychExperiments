@@ -57,7 +57,7 @@ const prms = {
   fixSize: 10,
   stimSize: '40px monospace',
   fbSize: '24px monospace',
-  simonEccentricity: 250,
+  simonEccentricity: 400,
   imageSize: 0.5,
   startBox: [0, 0, 50, 50],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
@@ -71,18 +71,18 @@ if (nVersion === 1) {
   respText =
     "<h3 style='text-align:center;'><b>" +
     'Spinne' +
-    ' = linke Mausbewegung</b></h3>' +
+    ' = ziehe den Cursor nach links</b></h3>' +
     "<h3 style='text-align:center;'><b>" +
     'Blume' +
-    ' = rechte Mausbewegung</b></h3><br>';
+    ' = ziehe den Cursor nach rechts</b></h3><br>';
 } else if (nVersion === 2) {
   respText =
     "<h3 style='text-align:center;'><b>" +
     'Blume' +
-    ' = linke Mausbewegung</b></h3>' +
+    ' = ziehe den Cursor nach links</b></h3>' +
     "<h3 style='text-align:center;'><b>" +
     'Spinne' +
-    ' = rechte Mausbewegung</b></h3><br>';
+    ' = ziehe den Cursor nach rechts</b></h3><br>';
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -108,9 +108,9 @@ const task_instructions2 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
-    "<h3 style='text-align: left;'>Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen</h3>" +
+    "<h3 style='text-align: left;'>Du erhälst den Code für die Versuchspersonenstunden und weitere Anweisungen</h3>" +
     "<h3 style='text-align: left;'>am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:</h3><br>" +
-    "<h3 style='text-align: center;'>hiwipibio@gmail.com</h3><br>" +
+    "<h3 style='text-align: center;'>sophie.renner@student.uni-tuebingen.de</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -121,10 +121,10 @@ const task_instructions3 = {
   canvas_border: canvas_border,
   stimulus:
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: left;'>In diesem Experiment musst du auf verschiedene Bilder</h3>" +
-    "<h3 style='text-align: left;'>so schnell und so genau wie möglich reagieren, die rechts</h3>" +
-    "<h3 style='text-align: left;'>oder links auf dem Bildschirm erscheinen.</h3>" +
-    "<h3 style='text-align: left;'>Reagiere immer wie folgt:</h3><br>" +
+    "<h3 style='text-align: left;'>In diesem Experiment musst du auf Bilder (Spinnen und Blumen) so schnell und so genau wie</h3>" +
+    "<h3 style='text-align: left;'>möglich reagieren, die rechts oder links auf dem Bildschirm erscheinen. Reagiere indem du den den</h3>" +
+    "<h3 style='text-align: left;'>Cursor in der Mitte des Bildschirms mit der Maus nach links oder nach rechts ziest.</h3>" +
+    "<h3 style='text-align: left;'>Ignoriere die Position der Bilder und reagiere wie folgt:</h3><br>" +
     respText +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren.</h2>",
 };
@@ -282,6 +282,7 @@ const simon_stimulus = {
   image_size: prms.imageSize,
   start_box: prms.startBox,
   stimulus_position: prms.stimPos,
+  circle_eccentricity: prms.simonEccentricity,
   choices: prms.respKeys,
   trial_duration: prms.tooSlow,
   data: {
@@ -354,7 +355,7 @@ const alpha_num = {
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
       per Email an:<br><br>
-    hiwipibio@gmail.com<br>`,
+    sophie.renner@student.uni-tuebingen.de<br>`,
       fontsize: 26,
       align: 'left',
     }) +
@@ -413,7 +414,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
