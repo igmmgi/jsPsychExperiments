@@ -52,14 +52,13 @@ getComputerInfo();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 20, // number of trials in each block
-  nTrlsE: 160, // number of trials in each block
-  nBlks: 6,
+  nTrlsP: 4, // number of trials in each block
+  nTrlsE: 4, // number of trials in each block
+  nBlks: 10,
   fixDur: 400,
   fbDur: [1500, 2500, 2500],
   iti: 500,
-  tooSlowPractice: 1500,
-  tooSlow: 1000,
+  tooSlow: 1500,
   tooFast: 0,
   fbTxt: ['Richtig', 'Falsch!', 'Zu langsam!'],
   cTrl: 1, // count trials
@@ -81,12 +80,11 @@ jsPsych.data.addProperties({ orderVersion: orderVersion });
 const keyVersion = getRandomInt(1, 2);
 jsPsych.data.addProperties({ keyVersion: keyVersion });
 
-const rewardConditionInstructions = [1, 2].includes(orderVersion)
-  ? ['kongruente', 'inkongruenten']
-  : ['inkongruenten', 'kongruente'];
-
 const rewardCondition = [1, 2].includes(orderVersion) ? ['kongruent', 'inkongruent'] : ['inkongruent', 'kongruent'];
-
+const rewardConditionInstructions1 = [1, 2].includes(orderVersion) ? ['mit', 'ohne'] : ['ohne', 'mit'];
+const rewardConditionInstructions2 = [1, 2].includes(orderVersion)
+  ? ['übereinstimmt', 'nicht übereinstimmt']
+  : ['nicht übereinstimmt', 'übereinstimmt'];
 const colourMapping = keyVersion === 1 ? ['rot', 'grün'] : ['grün', 'rot'];
 
 const respText = generate_formatted_html({
@@ -106,16 +104,14 @@ const task_instructions1 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `Herzlich Willkommen zu unserem Experiment:<br><br>
-  Die Teilnahme ist selbstverständlich freiwillig und kann jederzeit durch
-  drücken der Escape- Taste abgebrochen werden.<br><br>
-  Es ist möglich, durch gute Leistungen im Experiment einen von sechs
-  Gutscheinen über 10€ zu gewinnen. Am Ende des Experiments wirst Du gefragt,
-      ob Du an der Gutscheinvergabe teilnehmen möchtest und wenn ja, wirst Du
-      gebeten Deine E-Mail-Adresse anzugeben. Wir werden nach Abschluss der
-      Datenerhebung die sechs besten Versuchspersonen per E-Mail kontaktieren.
-      Wenn Du nicht an der Gutscheinvergabe teilnehmen möchtest, werden Deine
-      Daten vollständig anonymisiert.<br><br>
-  Weiter geht es durch Drücken der Leertaste...`,
+           Die Teilnahme ist selbstverständlich freiwillig und kann jederzeit durch
+           drücken der Escape- Taste abgebrochen werden.<br><br>
+           Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
+           deine Teilnahme kannst du 1 VP-Stunde erhalten. Während des Experiments ist es
+           in manchen Versuchsdurchgängen möglich, Belohnungen in Form von Punkten zu
+           sammeln. Die zehn Teilnehmer mit der besten Gesamtleistung könnten zusätzlich
+           einen 10€-Gutschein für XXXX erhalten (insgesamt gibt es maximal 60 Teilnehmer).<br><br>
+           Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
     align: 'left',
@@ -130,13 +126,46 @@ const task_instructions2 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
-    am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-    hiwipibio@gmail.com<br><br>
+    zur Gutscheinvergabe am Ende des Experimentes.<br><br>
+    Bei Fragen oder Problemen wende dich bitte an:<br>
+    hiwipibio@gmail.com<br><br><br>
     Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
     align: 'left',
   }),
+  choices: [' '],
+};
+
+const task_instructions3 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    generate_formatted_html({
+      text: `Versuche in Durchgängen mit Belohnung immer einen Punkt zu erhalten
+    in dem du so genau und so schnell wie möglich antwortest!<br><br>
+Bitte beachte aber auch in Durchgängen ohne Belohnung genau zu antworten: <br><br>
+Deine Gesamtleistung berechnet sich aus der Anzahl Punkte in Durchgängen mit Belohnung:<br><br>`,
+      fontsize: 26,
+      lineheight: 1.5,
+      align: 'left',
+    }) +
+    generate_formatted_html({
+      text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): 0 Punkte<br>
+Gesamt korrekt (in Durchgängen ohne Belohnung): 100 %<br><br>`,
+      fontsize: 26,
+      lineheight: 1.5,
+      align: 'center',
+    }) +
+    generate_formatted_html({
+      text: `Bereit?<br>
+        Witer geht es durch Drücken der Leertaste...`,
+      fontsize: 26,
+      lineheight: 1.5,
+      align: 'left',
+    }),
   choices: [' '],
 };
 
@@ -151,28 +180,25 @@ const task_instructions_simon = {
     der rechten oder linken Seite des Bildschirmes erscheinen. Die Seite, auf
     der der Kreis erscheint ist für Deine Reaktion nicht relevant. Reagiere
     immer wie folgt:<br>`,
-      fontsize: 22,
-      lineheight: 1.0,
+      fontsize: 24,
+      lineheight: 1.25,
       align: 'left',
     }) +
     respText +
     generate_formatted_html({
-      text: `Somit ergeben sich sogenannte kongruente und inkongruente
-      Versuchsdurchgänge. Kongruent bedeutet, dass die Seite, auf der der
-      Kreis erscheint mit der Seite auf der Du reagieren musst übereinstimmt.
-      Inkongruent bedeutet, dass die Seite und Deine Reaktion nicht
-      übereinstimmen.<br><br>
-    Wenn Du ${rewardConditionInstructions[0]} Durchgänge korrekt und schnell
-    genug bearbeitest, wirst Du mit einem Punkt belohnt. Nach solch einem
-    erfolgreichen Durchgang erscheint eine Schatztruhe. Wenn Du einen
-    ${rewardConditionInstructions[1]} Durchgang korrekt und schnell genug
-    bearbeitest, erscheint die Anzahl der korrekt bearbeiteten Durchgänge in %.
-    Bei inkongruenten Durchgängen ist es nicht möglich, eine Belohnung zu
-    erhalten.<br><br>
-    Zunächst erfolgt ein Übungsblock.<br><br>
+      text: `In einem Durchgang kann die Position des Kreises mit der Seite,
+      auf der Du reagieren musst übereinstimmen (z.B. der Kreis erscheint auf
+      der linken Seite und Du musst für die Antwort den linken Zeigefinger
+      verwenden) oder nicht (z.B. der Kreis erscheint auf der linken Seite und
+      Du musst für die Antwort den rechten Zeigefinger verwenden).<br><br>
+      Je nachdem hast du die Möglichkeit Belohnung zu erhalten:<br><br>
+      In Durchgängen ${rewardConditionInstructions1[0]} Übereinstimmung hast du die Möglichkeit für
+      korrekte und besonders schnelle Antworten einen Punkt / Belohnung zu erhalten.<br><br>
+      In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung
+      kannst du keine Punkte / Belohnung erhalten.<br><br>
     Weiter geht es mit der Leertaste ...`,
-      fontsize: 22,
-      lineheight: 1.0,
+      fontsize: 24,
+      lineheight: 1.25,
       align: 'left',
     }),
   choices: [' '],
@@ -189,47 +215,170 @@ const task_instructions_stroop = {
     oder grüner Farbe geschrieben erscheinen. Bitte reagiere immer nur auf die
     Farbe der Schrift und ignoriere das Wort. Reagiere immer wie folgt:<br>`,
       fontsize: 22,
-      lineheight: 1.0,
+      lineheight: 1.25,
       align: 'left',
     }) +
     respText +
     generate_formatted_html({
-      text: `Somit ergeben sich sogenannte kongruente und inkongruente
-      Versuchsdurchgänge. Kongruent bedeutet, dass die Bedeutung und die
-      Schriftfarbe des Wortes übereinstimmen (das Wort ROT in rot geschrieben
-      oder das Wort GRÜN in grün geschrieben). Inkongruent bedeutet, dass die
-      Bedeutung und die Schriftfarbe des Wortes nicht übereinstimmen (das Wort
-      ROT in grün geschrieben und das Wort GRÜN in rot geschrieben). <br><br>
-    Wenn Du ${rewardConditionInstructions[0]} Durchgänge korrekt und schnell
-    genug bearbeitest, wirst Du mit einem Punkt belohnt. Nach solch einem
-    erfolgreichen Durchgang erscheint eine Schatztruhe als Feedback-Signal.
-    Wenn Du einen ${rewardConditionInstructions[1]} Durchgang korrekt und
-    schnell genug bearbeitest, erscheint die Anzahl der korrekt bearbeiteten
-    Durchgänge in %. Bei ${rewardConditionInstructions[1]} Durchgängen ist es
-    nicht möglich, eine Belohnung zu erhalten.<br><br>
-    Zunächst erfolgt ein Übungsblock.<br><br>
-    Weiter geht es mit der Leertaste ...`,
+      text: `In einem Durchgang kann die Schriftfarbe mit der Wortbedeutung
+      entweder übereinstimmen (d.h. das Wort ROT in rot geschrieben oder das
+      Wort GRÜN in grün geschrieben) oder nicht übereinstimmen (d.h. das Wort
+      ROT in grün geschrieben oder das Wort GRÜN in grün geschrieben). Je
+      nachdem hast du die Möglichkeit eine Belohnung zu erhalten:<br><br>
+      In Durchgängen ${rewardConditionInstructions1[0]} Übereinstimmung hast du die Möglichkeit für
+      korrekte und besonders schnelle Antworten einen Punkt/Belohnung zu erhalten.<br><br>
+      In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung kannst du keine Punkte / Belohnung erhalten.<br><br>
+      Weiter geht es mit der Leertaste ...`,
       fontsize: 22,
-      lineheight: 1.0,
+      lineheight: 1.25,
       align: 'left',
     }),
   choices: [' '],
+};
+
+const start_of_block_text_simon = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  choices: [' '],
+  on_start: function (trial) {
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_n;
+    let per_noreward =
+      ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
+        (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
+      100;
+    if (isNaN(per_noreward)) {
+      per_noreward = 0;
+    }
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Start Block ${prms.cBlk} von ${prms.nBlks}:`,
+        fontsize: 26,
+        align: 'center',
+        bold: true,
+      }) +
+      generate_formatted_html({
+        text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
+        Gesamt korrekt (in Durchgängen ohne Belohnung): ${per_noreward} %<br><br>
+          Zur Erinnerung:`,
+        fontsize: 26,
+        align: 'center',
+      }) +
+      respText +
+      generate_formatted_html({
+        text: `
+      Du kannst Belohnung nur in Durchgängen erhalten, in denen die Position des Kreise mit der Farbe des Kreises ${rewardConditionInstructions2[0]}!<br><br><br>
+      Weiter geht es mit der Leertaste ...`,
+        fontsize: 26,
+        align: 'left',
+      });
+  },
+};
+
+const start_of_block_text_stroop = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  choices: [' '],
+  on_start: function (trial) {
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_n;
+    let per_noreward =
+      ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
+        (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
+      100;
+    if (isNaN(per_noreward)) {
+      per_noreward = 0;
+    }
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Start Block ${prms.cBlk} von ${prms.nBlks}:`,
+        fontsize: 26,
+        align: 'center',
+        bold: true,
+      }) +
+      generate_formatted_html({
+        text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
+        Gesamt korrekt (in Durchgängen ohne Belohnung): ${per_noreward} %<br><br>
+          Zur Erinnerung:`,
+        fontsize: 26,
+        align: 'center',
+      }) +
+      respText +
+      generate_formatted_html({
+        text: `
+      Du kannst Belohnung nur in Durchgängen erhalten, in denen die Bedeutung des Wortes mit der Farbe des Wortes ${rewardConditionInstructions2[0]}!<br><br><br>
+      Weiter geht es mit der Leertaste ...`,
+        fontsize: 26,
+        align: 'left',
+      });
+  },
+};
+
+const end_of_block_text = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  choices: [' '],
+  on_start: function (trial) {
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_n;
+    let per_noreward =
+      ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
+        (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
+      100;
+    if (isNaN(per_noreward)) {
+      per_noreward = 0;
+    }
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Ende Block ${prms.cBlk} von ${prms.nBlks}:`,
+        fontsize: 26,
+        align: 'center',
+        bold: true,
+      }) +
+      generate_formatted_html({
+        text: `Kurze Pause. Bitte nutze die Pause, um dich zu erholen. Wenn du wieder bereit für den nächsten Block bist, dann drücke eine beliebige Taste.<br><br>`,
+        fontsize: 26,
+        align: 'left',
+      }) +
+      generate_formatted_html({
+        text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
+        Gesamt korrekt (in Durchgängen ohne Belohnung): ${per_noreward} %<br><br>`,
+        fontsize: 26,
+        align: 'center',
+      }) +
+      generate_formatted_html({
+        text: `Versuche weiterhin so viele Punkte wie möglich zu sammeln und dabei so genau wie möglich zu antworten: Deine Gesamtleistung berechnet sich aus der Anzahl Punkte in Durchgängen mit Belohnung! `,
+        fontsize: 26,
+        align: 'left',
+      });
+  },
+  on_finish: function () {
+    prms.cBlk += 1;
+  },
 };
 
 const images = loadImages(['../images/treasure_box.jpg', '../images/treasure_box_with_cross.jpg']);
 
 // need to store performance data to use to guide reward/no reward
 const performanceData = {
-  simon_n_total: 0,
-  simon_n_correct: 0,
+  simon_reward_n: 0,
   simon_reward_rts: [],
   simon_reward_mean: prms.tooSlow,
-  simon_reward_points: 0,
-  stroop_n_total: 0,
-  stroop_n_correct: 0,
+  simon_reward_correct: 0,
+  simon_noreward_n: 0,
+  simon_noreward_correct: 0,
+  stroop_reward_n: 0,
   stroop_reward_rts: [],
   stroop_reward_mean: prms.tooSlow,
-  stroop_reward_points: 0,
+  stroop_reward_correct: 0,
+  stroop_noreward_n: 0,
+  stroop_noreward_correct: 0,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -273,7 +422,7 @@ function drawFeedback() {
 
     // draw image
     // show a version of the treasure chest
-    const num = dat.corrCode === 1 ? 0 : 1;
+    const num = (dat.corrCode === 1) & dat.success ? 0 : 1;
     const size = 2;
     const width = images[num].width;
     const height = images[num].height;
@@ -281,7 +430,7 @@ function drawFeedback() {
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
-    let total_points = performanceData.simon_reward_points + performanceData.stroop_reward_points;
+    let total_points = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
     ctx.fillText('Points: ' + total_points, 0, 120);
   } else {
     // draw text
@@ -289,17 +438,16 @@ function drawFeedback() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
-    // ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -25);
+    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -20);
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
-    if (dat.task === 'simon') {
-      let percentage_correct = (performanceData.simon_n_correct / performanceData.simon_n_total) * 100;
-      ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 0);
-    } else if (dat.task === 'stroop') {
-      let percentage_correct = (performanceData.stroop_n_correct / performanceData.stroop_n_total) * 100;
-      ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 0);
-    }
+    let percentage_correct =
+      ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
+        performanceData.simon_noreward_n +
+        performanceData.stroop_noreward_n) *
+      100;
+    ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 20);
   }
 }
 
@@ -352,42 +500,61 @@ function codeTrial() {
   // update performance data
   let success = false;
   if (dat.task === 'simon') {
-    performanceData.simon_n_total += 1;
-    if (corrCode === 1) {
-      performanceData.simon_n_correct += 1;
-      if (dat.comp === dat.reward) {
+    if (dat.comp === dat.reward) {
+      performanceData.simon_reward_n += 1;
+      if (corrCode === 1) {
         success = dat.rt < performanceData.simon_reward_mean;
-        // update performance data with latest rt
-        performanceData.simon_reward_rts.push(dat.rt);
-        performanceData.simon_reward_mean = mean(performanceData.simon_reward_rts);
-        performanceData.simon_reward_points += 1;
+        if (success) {
+          performanceData.simon_reward_correct += 1;
+        }
+      }
+    } else if (dat.comp !== dat.reward) {
+      performanceData.simon_noreward_n += 1;
+      if (corrCode === 1) {
+        performanceData.simon_noreward_correct += 1;
       }
     }
   } else if (dat.task === 'stroop') {
-    performanceData.stroop_n_total += 1;
-    if (corrCode === 1) {
-      performanceData.stroop_n_correct += 1;
-      if (dat.comp === dat.reward) {
+    performanceData.stroop_total_n = 1;
+    if (dat.comp === dat.reward) {
+      performanceData.stroop_reward_n += 1;
+      if (corrCode === 1) {
         success = dat.rt < performanceData.stroop_reward_mean;
-        // update performance data with latest rt
-        performanceData.stroop_reward_rts.push(dat.rt);
-        performanceData.stroop_reward_mean = mean(performanceData.stroop_reward_rts);
-        performanceData.stroop_reward_points += 1;
+        if (success) {
+          performanceData.stroop_reward_correct += 1;
+        }
+      }
+    } else if (dat.comp !== dat.reward) {
+      performanceData.stroop_noreward_n += 1;
+      if (corrCode === 1) {
+        performanceData.stroop_noreward_correct += 1;
       }
     }
   }
 
+  console.log(performanceData);
   jsPsych.data.addDataToLastTrial({
     date: Date(),
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
     success: success,
     simonMean: performanceData.simon_reward_mean,
-    simonPoints: performanceData.simon_reward_points,
+    simonPoints: performanceData.simon_reward_correct,
     stroopMean: performanceData.stroop_reward_mean,
-    stroopPoints: performanceData.stroop_reward_points,
+    stroopPoints: performanceData.stroop_reward_correct,
     corrCode: corrCode,
   });
+
+  // update performance data for next trial
+  if (success) {
+    if (dat.task === 'stroop') {
+      performanceData.stroop_reward_rts.push(dat.rt);
+      performanceData.stroop_reward_mean = mean(performanceData.stroop_reward_rts);
+    } else if (dat.task === 'simon') {
+      performanceData.simon_reward_rts.push(dat.rt);
+      performanceData.simon_reward_mean = mean(performanceData.simon_reward_rts);
+    }
+  }
   prms.cTrl += 1;
 }
 
@@ -576,8 +743,7 @@ const email_option_instructions = {
       Im nächsten Fester wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
 Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
 Falls Du Fragen zu unserem Experiment hast, kanst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
-j.koenig@student.uni-tuebingen.de <br>
-katharina.hofbauer@student.uni-tuebingen.de<br><br>
+j.koenig@student.uni-tuebingen.de <br><br>
 Drücke die Leertaste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
@@ -635,11 +801,12 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
+  exp.push(task_instructions3);
 
   // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
   let blk_task;
@@ -656,6 +823,14 @@ function genExpSeq() {
     } else if (blk_task[blk] === 'stroop' && [0, prms.nBlks / 2].includes(blk)) {
       exp.push(task_instructions_stroop);
     }
+
+    // start of block text
+    if (blk_task[blk] === 'simon') {
+      exp.push(start_of_block_text_simon);
+    } else if (blk_task[blk] === 'stroop') {
+      exp.push(start_of_block_text_stroop);
+    }
+
     // select appropriate blk_timeline
     let blk_timeline;
     if (blk_task[blk] === 'stroop') {
@@ -668,7 +843,9 @@ function genExpSeq() {
       size: [0, prms.nBlks / 2].includes(blk) ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
     exp.push(blk_timeline); // trials within a block
-    exp.push(block_feedback); // show previous block performance
+
+    // end of block text
+    exp.push(end_of_block_text);
   }
 
   // save data

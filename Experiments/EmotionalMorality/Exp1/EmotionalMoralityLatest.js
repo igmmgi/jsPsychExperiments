@@ -67,7 +67,7 @@ const prms = {
 const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
-const keyMapping = version === 1 ? ['Akzeptabel', 'Inakzeptabel'] : ['Inakzeptabel', 'Akzeptabel'];
+const keyMapping = version === 1 ? ['Acceptable', 'Unacceptable'] : ['Unacceptable', 'Acceptable'];
 
 const respText = generate_formatted_html({
   text: `${keyMapping[0]} &emsp;&emsp;&emsp;&emsp; ${keyMapping[1]}<br>
@@ -284,14 +284,32 @@ const context = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: generate_formatted_html({
-    text: `Herr Zinn ist Psychotherapeut und hat aktuell einen sehr schwierigen Fall. Er ist auf die Erfahrung und Hilfe seiner Kollegen angewiesen, um den Patienten angemessen zu therapieren.`,
-    align: 'left',
-    lineheight: 1.5,
-    fontsize: 26,
-  }),
+  stimulus: null,
   minimum_trial_duration: prms.minContextDur,
   choices: [' '],
+  data: {
+    stim_type: 'emomor',
+    condition: jsPsych.timelineVariable('condition'),
+    face_category: jsPsych.timelineVariable('face_category'),
+  },
+  on_start: function (trial) {
+    if (trial.data.condition === 'compatible') {
+      trial.stimulus = generate_formatted_html({
+        text: materials[cond1items[0]].context,
+        align: 'left',
+        lineheight: 1.5,
+        fontsize: 26,
+      });
+    } else if (trial.data.condition === 'incompatible') {
+      trial.stimulus = generate_formatted_html({
+        text: materials[cond2items[0]].context,
+        align: 'left',
+        lineheight: 1.5,
+        fontsize: 26,
+      });
+    }
+    console.log(trial.data);
+  },
 };
 
 const image = {
@@ -303,6 +321,14 @@ const image = {
   stimulus_width: 200,
   maintain_aspect_ratio: true,
   render_on_canvas: true,
+  data: {
+    stim_type: 'emomor',
+    condition: jsPsych.timelineVariable('condition'),
+    face_category: jsPsych.timelineVariable('face_category'),
+  },
+  on_start: function (trial) {
+    console.log(trial.data);
+  },
 };
 
 const target = {
@@ -317,6 +343,14 @@ const target = {
   trial_duration: null,
   choices: prms.resp_keys,
   response_ends_trial: true,
+  data: {
+    stim_type: 'emomor',
+    condition: jsPsych.timelineVariable('condition'),
+    face_category: jsPsych.timelineVariable('face_category'),
+  },
+  on_start: function (trial) {
+    console.log(trial.data);
+  },
 };
 
 // Materials
@@ -345,6 +379,15 @@ const stimuli = [
     { condition: 'incompatible', face_category: 'male_disgust'},
     { condition: 'incompatible', face_category: 'male_happy'},
 ];
+
+const trial_timeline = {
+  timeline: [context, fixation_cross1, image, fixation_cross2, target],
+  timeline_variables: stimuli,
+  sample: {
+    type: 'fixed-repetitions',
+    size: 8,
+  },
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                           Questionnaire                            //
@@ -473,24 +516,26 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on);
-  exp.push(check_screen);
-  exp.push(welcome_de);
-  exp.push(resize_de);
+  // exp.push(fullscreen_on);
+  // exp.push(check_screen);
+  // exp.push(welcome_de);
+  // exp.push(resize_de);
   // exp.push(vpInfoForm_de);
-  exp.push(hideMouseCursor);
-  exp.push(screenInfo);
+  // exp.push(hideMouseCursor);
+  // exp.push(screenInfo);
 
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
-  exp.push(task_instructions3);
-  exp.push(task_instructions4);
+  // exp.push(task_instructions1);
+  // exp.push(task_instructions2);
+  // exp.push(task_instructions3);
+  // exp.push(task_instructions4);
 
-  exp.push(context);
-  exp.push(fixation_cross1);
-  exp.push(image);
-  exp.push(fixation_cross2);
-  exp.push(target);
+  // exp.push(context);
+  // exp.push(fixation_cross1);
+  // exp.push(image);
+  // exp.push(fixation_cross2);
+  // exp.push(target);
+
+  exp.push(trial_timeline);
 
   questionnaire.forEach(function (item) {
     exp.push(item);

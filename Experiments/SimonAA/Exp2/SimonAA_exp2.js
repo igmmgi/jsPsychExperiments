@@ -57,7 +57,7 @@ const prms = {
   fixSize: 10,
   stimSize: '40px monospace',
   fbSize: '24px monospace',
-  simonEccentricity: 400,
+  simonEccentricity: 450,
   imageSize: 0.5,
   startBox: [0, 0, 50, 50],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
@@ -108,7 +108,7 @@ const task_instructions2 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
-    "<h3 style='text-align: left;'>Du erhälst den Code für die Versuchspersonenstunden und weitere Anweisungen</h3>" +
+    "<h3 style='text-align: left;'>Du erhältst den Code für die Versuchspersonenstunden und weitere Anweisungen</h3>" +
     "<h3 style='text-align: left;'>am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:</h3><br>" +
     "<h3 style='text-align: center;'>sophie.renner@student.uni-tuebingen.de</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
@@ -122,8 +122,9 @@ const task_instructions3 = {
   stimulus:
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du auf Bilder (Spinnen und Blumen) so schnell und so genau wie</h3>" +
-    "<h3 style='text-align: left;'>möglich reagieren, die rechts oder links auf dem Bildschirm erscheinen. Reagiere indem du den den</h3>" +
-    "<h3 style='text-align: left;'>Cursor in der Mitte des Bildschirms mit der Maus nach links oder nach rechts ziest.</h3>" +
+    "<h3 style='text-align: left;'>möglich reagieren, die rechts oder links auf dem Bildschirm erscheinen.</h3>" +
+    "<h3 style='text-align: left;'>Reagiere, indem du den Cursor in der Mitte des Bildschirms mit der Taste Q</h3>" +
+    "<h3 style='text-align: left;'>nach links oder mit der Taste P nach rechts ziehst.</h3>" +
     "<h3 style='text-align: left;'>Ignoriere die Position der Bilder und reagiere wie folgt:</h3><br>" +
     respText +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren.</h2>",
@@ -147,14 +148,22 @@ const task_instructions4 = {
   },
 };
 
-const task_instructions_pause = {
+const task_instructions_reminder = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus:
-    "<h3 style='text-align: left;'>Kurze Pause. Bitte nutze die Pause, um dich zu erholen. Wenn du wieder bereit</h3>" +
-    "<h3 style='text-align: left;'>für den nächsten Block bist, dann drücke eine beliebige Taste.</h3>",
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      "<h2 style='text-align: center;'>Block " +
+      prms.cBlk +
+      ' von 24:</h2><br>' +
+      "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
+      "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3><br>" +
+      respText +
+      "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -268,7 +277,7 @@ const block_feedback = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'saa1' });
+    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'saa2' });
   },
 };
 
@@ -286,7 +295,7 @@ const simon_stimulus = {
   choices: prms.respKeys,
   trial_duration: prms.tooSlow,
   data: {
-    stim: 'saa1',
+    stim: 'saa2',
     imageType: jsPsych.timelineVariable('imageType'),
     imageNumber: jsPsych.timelineVariable('imageNumber'),
     imagePosition: jsPsych.timelineVariable('imagePosition'),
@@ -343,7 +352,7 @@ const trial_timeline_simon_exp = {
 //                              De-brief                              //
 ////////////////////////////////////////////////////////////////////////
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('saa1', 16);
+const randomString = generateRandomStringWithExpName('saa2', 16);
 
 const alpha_num = {
   type: 'html-keyboard-response-canvas',
@@ -378,8 +387,8 @@ const alpha_num = {
 const save_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/version' + nVersion + '/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim: 'saa1' });
+    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim: 'saa2' });
   },
   timing_post_trial: 1000,
 };
@@ -414,7 +423,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
@@ -432,6 +441,7 @@ function genExpSeq() {
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
+    exp.push(task_instructions_reminder); // show reminder
   }
 
   // save data
