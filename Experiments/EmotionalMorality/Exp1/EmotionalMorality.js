@@ -56,16 +56,21 @@ const prms = {
   minContextDur: 0,
 
   // Response Keys
-  resp_keys: ['s', 'k'],
+  resp_keys: ['s', 'k']
 
-  // Block/Trial/Item Counters
-  cTrl: 0,
-  cBlk: 0,
-  cImagesMaleDisgust: 0,
-  cImagesMaleHappy: 0,
-  cImagesFemaleDisgust: 0,
-  cImagesFemaleHappy: 0,
-};
+  };
+
+const counters = {
+  trl: 0,
+  blk: 0,
+  comp: 0,
+  incomp: 0,
+  filler: 0,
+  male_disgust: 0,
+  male_happy: 0,
+  female_disgust: 0,
+  female_happy: 0
+}
 
 // 2 counter-balanced order versions
 const version = Number(jsPsych.data.urlVariables().version);
@@ -244,20 +249,20 @@ const imagesMaleHappy = shuffle(loadImages(imageFilesMaleHappy));
 //                         Sentence Materials                         //
 ////////////////////////////////////////////////////////////////////////
 // console.log(materials);
-let cond1items = shuffle(range(0, 160, 2)).slice(0, 40);
-// console.log(cond1items);
+let compItems = shuffle(range(0, 160, 2)).slice(0, 40);
+// console.log(compItems);
 
-let cond2items = [];
+let incompItems = [];
 range(1, 160, 2).forEach(function (item) {
-  if (!cond1items.includes(item - 1)) {
-    cond2items.push(item);
+  if (!compItems.includes(item - 1)) {
+    incompItems.push(item);
   }
 });
-cond2items = shuffle(cond2items);
+incompItems = shuffle(incompItems);
 // console.log(cond2items);
 
-filleritems = shuffle(range(0, 40));
-// console.log(filleritems);
+fillerItems = shuffle(range(0, 40));
+// console.log(fillerItems);
 
 ////////////////////////////////////////////////////////////////////////
 //                  Common Stimuli/Functions                          //
@@ -315,27 +320,27 @@ const context = {
   choices: [' '],
   data: {
     stim_type: 'emomor',
-    condition: jsPsych.timelineVariable('condition'),
-    face_category: jsPsych.timelineVariable('face_category'),
+    cond: jsPsych.timelineVariable('cond'),
+    face: jsPsych.timelineVariable('face'),
   },
   on_start: function (trial) {
-    if (trial.data.condition === 'compatible') {
+    if (trial.data.cond=== 'comp') {
       trial.stimulus = generate_formatted_html({
-        text: materials[cond1items[0]].context,
+        text: materials[compItems[counters.comp]].context,
         align: 'left',
         lineheight: 1.5,
         fontsize: 26,
       });
-    } else if (trial.data.condition === 'incompatible') {
+    } else if (trial.data.cond === 'incomp') {
       trial.stimulus = generate_formatted_html({
-        text: materials[cond2items[0]].context,
+        text: materials[incompItems[counters.incomp]].context,
         align: 'left',
         lineheight: 1.5,
         fontsize: 26,
       });
-    } else if (trial.data.condition === 'filler') {
+    } else if (trial.data.cond === 'filler') {
       trial.stimulus = generate_formatted_html({
-        text: fillers[filleritems[0]].context,
+        text: fillers[fillerItems[counters.filler]].context,
         align: 'left',
         lineheight: 1.5,
         fontsize: 26,
@@ -355,22 +360,22 @@ const image = {
   render_on_canvas: true,
   data: {
     stim_type: 'emomor',
-    condition: jsPsych.timelineVariable('condition'),
-    face_category: jsPsych.timelineVariable('face_category'),
+    cond: jsPsych.timelineVariable('cond'),
+    face: jsPsych.timelineVariable('face'),
   },
   on_start: function (trial) {
-    if (trial.data.face_category === 'male_disgust') {
-      trial.stimulus = imagesMaleDisgust[prms.cImagesMaleDisgust].src;
-      prms.cImagesMaleDisgust += 1;
-    } else if (trial.data.face_category === 'male_happy') {
-      trial.stimulus = imagesMaleHappy[prms.cImagesMaleHappy].src;
-      prms.cImagesMaleHappy += 1;
-    } else if (trial.data.face_category === 'female_disgust') {
-      trial.stimulus = imagesFemaleDisgust[prms.cImagesFemaleDisgust].src;
-      prms.cImagesFemaleDisgust += 1;
-    } else if (trial.data.face_category === 'female_happy') {
-      trial.stimulus = imagesFemaleHappy[prms.cImagesFemaleHappy].src;
-      prms.cImagesFemaleHappy += 1;
+    if (trial.data.face === 'male_disgust') {
+      trial.stimulus = imagesMaleDisgust[counters.male_disgust].src;
+      counters.male_disgust += 1;
+    } else if (trial.data.face === 'male_happy') {
+      trial.stimulus = imagesMaleHappy[counters.male_happy].src;
+      counters.male_happy += 1;
+    } else if (trial.data.face === 'female_disgust') {
+      trial.stimulus = imagesFemaleDisgust[counters.female_disgust].src;
+      counters.female_disgust += 1;
+    } else if (trial.data.face === 'female_happy') {
+      trial.stimulus = imagesFemaleHappy[counters.female_happy].src;
+      counters.female_happy += 1;
     }
     trial.data.imageName = trial.stimulus.split(/[\\/]/).pop().slice(0, -4);
   },
@@ -384,30 +389,30 @@ const target = {
   response_ends_trial: true,
   data: {
     stim_type: 'emomor',
-    condition: jsPsych.timelineVariable('condition'),
-    face_category: jsPsych.timelineVariable('face_category'),
+    cond: jsPsych.timelineVariable('cond'),
+    face: jsPsych.timelineVariable('face'),
   },
   on_start: function (trial) {
-    if (trial.data.condition === 'compatible') {
+    if (trial.data.cond === 'comp') {
       trial.stimulus =
         generate_formatted_html({
-          text: materials[cond1items[0]].target,
+          text: materials[compItems[counters.comp]].target,
           align: 'center',
           lineheight: 1.5,
           fontsize: 26,
         }) + respText;
-    } else if (trial.data.condition === 'incompatible') {
+    } else if (trial.data.cond === 'incomp') {
       trial.stimulus =
         generate_formatted_html({
-          text: materials[cond2items[0]].target,
+          text: materials[incompItems[counters.incomp]].target,
           align: 'center',
           lineheight: 1.5,
           fontsize: 26,
         }) + respText;
-    } else if (trial.data.condition === 'filler') {
+    } else if (trial.data.cond === 'filler') {
       trial.stimulus =
         generate_formatted_html({
-          text: fillers[filleritems[0]].target,
+          text: fillers[fillerItems[counters.filler]].target,
           align: 'center',
           lineheight: 1.5,
           fontsize: 26,
@@ -418,26 +423,26 @@ const target = {
 
 // prettier-ignore
 const stimuli = [
-    { condition: 'compatible',   face_category: 'female_disgust'},
-    { condition: 'compatible',   face_category: 'female_happy'},
-    { condition: 'compatible',   face_category: 'male_disgust'},
-    { condition: 'compatible',   face_category: 'male_happy'},
-    { condition: 'compatible',   face_category: 'female_disgust'},
-    { condition: 'compatible',   face_category: 'female_happy'},
-    { condition: 'compatible',   face_category: 'male_disgust'},
-    { condition: 'compatible',   face_category: 'male_happy'},
-    { condition: 'incompatible', face_category: 'female_disgust'},
-    { condition: 'incompatible', face_category: 'female_happy'},
-    { condition: 'incompatible', face_category: 'male_disgust'},
-    { condition: 'incompatible', face_category: 'male_happy'},
-    { condition: 'incompatible', face_category: 'female_disgust'},
-    { condition: 'incompatible', face_category: 'female_happy'},
-    { condition: 'incompatible', face_category: 'male_disgust'},
-    { condition: 'incompatible', face_category: 'male_happy'},
-    { condition: 'filler',       face_category: 'female_disgust'},
-    { condition: 'filler',       face_category: 'female_happy'},
-    { condition: 'filler',       face_category: 'male_disgust'},
-    { condition: 'filler',       face_category: 'male_happy'},
+    { cond: 'comp',   face: 'female_disgust'},
+    { cond: 'comp',   face: 'female_happy'},
+    { cond: 'comp',   face: 'male_disgust'},
+    { cond: 'comp',   face: 'male_happy'},
+    { cond: 'comp',   face: 'female_disgust'},
+    { cond: 'comp',   face: 'female_happy'},
+    { cond: 'comp',   face: 'male_disgust'},
+    { cond: 'comp',   face: 'male_happy'},
+    { cond: 'incomp', face: 'female_disgust'},
+    { cond: 'incomp', face: 'female_happy'},
+    { cond: 'incomp', face: 'male_disgust'},
+    { cond: 'incomp', face: 'male_happy'},
+    { cond: 'incomp', face: 'female_disgust'},
+    { cond: 'incomp', face: 'female_happy'},
+    { cond: 'incomp', face: 'male_disgust'},
+    { cond: 'incomp', face: 'male_happy'},
+    { cond: 'filler', face: 'female_disgust'},
+    { cond: 'filler', face: 'female_happy'},
+    { cond: 'filler', face: 'male_disgust'},
+    { cond: 'filler', face: 'male_happy'},
 ];
 
 const trial_timeline = {
@@ -521,8 +526,7 @@ const alpha_num = {
     generate_formatted_html({
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
-      per Email an:<br><br>
-    johanna.m.maerker@gmail.com oder babett@anbami.net<br><br>`,
+      per Email an:<br><br>`,
       fontsize: 26,
       align: 'left',
     }) +
@@ -589,28 +593,24 @@ function genExpSeq() {
   // exp.push(task_instructions3);
   // exp.push(task_instructions4);
 
-  // exp.push(context);
-  // exp.push(fixation_cross1);
-  // exp.push(image);
-  // exp.push(fixation_cross2);
-  // exp.push(target);
+  for (let i = 0; i < 5; i++) {
+    exp.push(trial_timeline);
+  }
 
-  exp.push(trial_timeline);
-
-  questionnaire.forEach(function (item) {
-    exp.push(item);
-  });
+  // questionnaire.forEach(function (item) {
+  //   exp.push(item);
+  // });
 
   // save data
   // exp.push(save_data);
   // exp.push(save_interaction_data);
   // exp.push(save_code);
 
-  // debrief
-  exp.push(showMouseCursor);
-  exp.push(alpha_num);
-  exp.push(debrief_de);
-  exp.push(fullscreen_off);
+  // // debrief
+  // exp.push(showMouseCursor);
+  // exp.push(alpha_num);
+  // exp.push(debrief_de);
+  // exp.push(fullscreen_off);
 
   return exp;
 }
