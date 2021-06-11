@@ -261,7 +261,7 @@ const start_of_block_text_simon = {
       }) +
       generate_formatted_html({
         text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
-        Gesamt korrekt (in Durchgängen ohne Belohnung): ${per_noreward} %<br><br>
+        Gesamt korrekt (in Durchgängen ohne Belohnung): ${Math.round(per_noreward)} %<br><br>
           Zur Erinnerung:`,
         fontsize: 26,
         align: 'center',
@@ -302,7 +302,7 @@ const start_of_block_text_stroop = {
       }) +
       generate_formatted_html({
         text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
-        Gesamt korrekt (in Durchgängen ohne Belohnung): ${per_noreward} %<br><br>
+        Gesamt korrekt (in Durchgängen ohne Belohnung): ${Math.round(per_noreward)} %<br><br>
           Zur Erinnerung:`,
         fontsize: 26,
         align: 'center',
@@ -360,6 +360,7 @@ const end_of_block_text = {
   },
   on_finish: function () {
     prms.cBlk += 1;
+    prms.cTrl = 1;
   },
 };
 
