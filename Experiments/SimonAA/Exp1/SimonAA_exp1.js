@@ -271,6 +271,32 @@ const iti = {
   func: function () {},
 };
 
+function blockFeedbackTxt_de_du(filter_options) {
+  'use strict';
+  let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
+  let nTotal = dat.count();
+  let nError = dat.select('corrCode').values.filter(function (x) {
+    return x !== 1;
+  }).length;
+  dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 1 });
+  let blockFbTxt =
+    '<H1>Block: ' +
+    prms.cBlk +
+    ' von ' +
+    prms.nBlks +
+    '</H1><br>' +
+    '<H1>Mittlere Reaktionszeit: ' +
+    Math.round(dat.select('rt').mean()) +
+    ' ms </H1>' +
+    '<H1>Fehlerrate: ' +
+    Math.round((nError / nTotal) * 100) +
+    ' %</H1><br>' +
+    '<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>';
+  prms.cBlk += 1;
+  prms.cTrl = 1;
+  return blockFbTxt;
+}
+
 const block_feedback = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
@@ -389,7 +415,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim: 'saa2' });
+    saveData('/Common/write_data.php', data_filename, { stim: 'saa1' });
   },
   timing_post_trial: 1000,
 };
