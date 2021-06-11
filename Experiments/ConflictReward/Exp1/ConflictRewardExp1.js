@@ -52,15 +52,15 @@ getComputerInfo();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 4, // number of trials in each block
-  nTrlsE: 4, // number of trials in each block
+  nTrlsP: 80, // number of trials in each block
+  nTrlsE: 80, // number of trials in each block
   nBlks: 10,
   fixDur: 400,
   fbDur: [1500, 2500, 2500],
   iti: 500,
   tooSlow: 1500,
   tooFast: 0,
-  fbTxt: ['Richtig', 'Falsch!', 'Zu langsam!'],
+  fbTxt: ['Richtig', 'Falsch!', 'Falsch (zu langsam)!'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   fixWidth: 2,
@@ -154,14 +154,14 @@ Deine Gesamtleistung berechnet sich aus der Anzahl Punkte in Durchgängen mit Be
     }) +
     generate_formatted_html({
       text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): 0 Punkte<br>
-Gesamt korrekt (in Durchgängen ohne Belohnung): 100 %<br><br>`,
+Gesamt korrekt (in Durchgängen ohne Belohnung): 0 %<br><br>`,
       fontsize: 26,
       lineheight: 1.5,
       align: 'center',
     }) +
     generate_formatted_html({
       text: `Bereit?<br>
-        Witer geht es durch Drücken der Leertaste...`,
+        Weiter geht es durch Drücken der Leertaste...`,
       fontsize: 26,
       lineheight: 1.5,
       align: 'left',
@@ -223,7 +223,7 @@ const task_instructions_stroop = {
       text: `In einem Durchgang kann die Schriftfarbe mit der Wortbedeutung
       entweder übereinstimmen (d.h. das Wort ROT in rot geschrieben oder das
       Wort GRÜN in grün geschrieben) oder nicht übereinstimmen (d.h. das Wort
-      ROT in grün geschrieben oder das Wort GRÜN in grün geschrieben). Je
+      ROT in grün geschrieben oder das Wort GRÜN in rot geschrieben). Je
       nachdem hast du die Möglichkeit eine Belohnung zu erhalten:<br><br>
       In Durchgängen ${rewardConditionInstructions1[0]} Übereinstimmung hast du die Möglichkeit für
       korrekte und besonders schnelle Antworten einen Punkt/Belohnung zu erhalten.<br><br>
@@ -244,7 +244,7 @@ const start_of_block_text_simon = {
   stimulus: '',
   choices: [' '],
   on_start: function (trial) {
-    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_n;
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
     let per_noreward =
       ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
         (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
@@ -285,7 +285,7 @@ const start_of_block_text_stroop = {
   stimulus: '',
   choices: [' '],
   on_start: function (trial) {
-    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_n;
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
     let per_noreward =
       ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
         (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
@@ -310,8 +310,10 @@ const start_of_block_text_stroop = {
       respText +
       generate_formatted_html({
         text: `
-      Du kannst Belohnung nur in Durchgängen erhalten, in denen die Bedeutung des Wortes mit der Farbe des Wortes ${rewardConditionInstructions2[0]}!<br><br><br>
-      Weiter geht es mit der Leertaste ...`,
+      Du kannst Belohnung nur in Durchgängen erhalten, in denen die Bedeutung
+      des Wortes mit der Farbe des Wortes
+          ${rewardConditionInstructions2[0]}!<br><br><br>
+          Weiter geht es mit der Leertaste ...`,
         fontsize: 26,
         align: 'left',
       });
@@ -326,7 +328,7 @@ const end_of_block_text = {
   stimulus: '',
   choices: [' '],
   on_start: function (trial) {
-    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_n;
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
     let per_noreward =
       ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
         (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
@@ -342,18 +344,21 @@ const end_of_block_text = {
         bold: true,
       }) +
       generate_formatted_html({
-        text: `Kurze Pause. Bitte nutze die Pause, um dich zu erholen. Wenn du wieder bereit für den nächsten Block bist, dann drücke eine beliebige Taste.<br><br>`,
+        text: `Kurze Pause. Bitte nutze die Pause, um dich zu erholen. Wenn du
+          wieder bereit für den nächsten Block bist, dann drücke der Leertaste.<br><br>`,
         fontsize: 26,
         align: 'left',
       }) +
       generate_formatted_html({
         text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
-        Gesamt korrekt (in Durchgängen ohne Belohnung): ${per_noreward} %<br><br>`,
+        Gesamt korrekt (in Durchgängen ohne Belohnung): ${Math.round(per_noreward)} %<br><br>`,
         fontsize: 26,
         align: 'center',
       }) +
       generate_formatted_html({
-        text: `Versuche weiterhin so viele Punkte wie möglich zu sammeln und dabei so genau wie möglich zu antworten: Deine Gesamtleistung berechnet sich aus der Anzahl Punkte in Durchgängen mit Belohnung! `,
+        text: `Versuche weiterhin so viele Punkte wie möglich zu sammeln und
+          dabei so genau wie möglich zu antworten: Deine Gesamtleistung
+          berechnet sich aus der Anzahl Punkte in Durchgängen mit Belohnung! `,
         fontsize: 26,
         align: 'left',
       });
@@ -419,36 +424,49 @@ function drawFeedback() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
-    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -120);
+
+    let imgnum = 1;
+    if ((dat.corrCode === 1) & dat.success) {
+      ctx.fillText('Richtig & schnell!', 0, -90);
+      ctx.fillText('+1 Punkt!', 0, -65);
+      imgnum = 0;
+    } else if ((dat.corrCode === 1) & !dat.success) {
+      ctx.fillText('Richtig aber zu langsam!', 0, -90);
+      ctx.fillText('Kein Punkt!', 0, -65);
+    } else if (dat.corrCode === 2) {
+      ctx.fillText('Falsch!', 0, -90);
+      ctx.fillText('Kein Punkt!', 0, -65);
+    } else if (dat.corrCode === 3) {
+      ctx.fillText('Zu langsam!', 0, -90);
+      ctx.fillText('Kein Punkt!', 0, -65);
+    }
 
     // draw image
     // show a version of the treasure chest
-    const num = (dat.corrCode === 1) & dat.success ? 0 : 1;
-    const size = 2;
-    const width = images[num].width;
-    const height = images[num].height;
-    ctx.drawImage(images[num], -width / size / 2, -height / size / 2, width / size, height / size);
+    const size = 4;
+    const width = images[imgnum].width;
+    const height = images[imgnum].height;
+    ctx.drawImage(images[imgnum], -width / size / 2, -height / size / 2, width / size, height / size);
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
     let total_points = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
-    ctx.fillText('Points: ' + total_points, 0, 120);
+    ctx.fillText('Points: ' + total_points, 0, 60);
   } else {
     // draw text
     ctx.font = prms.fbSize;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
-    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -20);
+    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -15);
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
-    let percentage_correct =
+    let per_noreward =
       ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
-        performanceData.simon_noreward_n +
-        performanceData.stroop_noreward_n) *
+        (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
       100;
-    ctx.fillText('Gesamt korrekt: ' + Math.round(percentage_correct) + ' %', 0, 20);
+    ctx.fillText('Gesamt korrekt: ' + Math.round(per_noreward) + ' %', 0, 15);
   }
 }
 
@@ -533,7 +551,6 @@ function codeTrial() {
     }
   }
 
-  console.log(performanceData);
   jsPsych.data.addDataToLastTrial({
     date: Date(),
     blockNum: prms.cBlk,
@@ -547,7 +564,7 @@ function codeTrial() {
   });
 
   // update performance data for next trial
-  if (success) {
+  if (dat.comp === dat.reward && dat.corrCode === 1) {
     if (dat.task === 'stroop') {
       performanceData.stroop_reward_rts.push(dat.rt);
       performanceData.stroop_reward_mean = mean(performanceData.stroop_reward_rts);
@@ -802,7 +819,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
@@ -849,16 +866,18 @@ function genExpSeq() {
     exp.push(end_of_block_text);
   }
 
+  // email
+  exp.push(showMouseCursor);
+  exp.push(email_option_instructions);
+  exp.push(email_option);
+
   // save data
   exp.push(save_data);
   exp.push(save_interaction_data);
   exp.push(save_code);
 
   // debrief
-  exp.push(showMouseCursor);
   exp.push(alpha_num);
-  exp.push(email_option_instructions);
-  exp.push(email_option);
   exp.push(debrief_de_du);
   exp.push(fullscreen_off);
 
