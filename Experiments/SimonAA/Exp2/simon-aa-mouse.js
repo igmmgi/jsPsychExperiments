@@ -303,12 +303,12 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
       start_time = performance.now();
       draw_start_box = false;
 
-    // end trial if trial_duration is set
-    if (trial.trial_duration !== null) {
-      jsPsych.pluginAPI.setTimeout(function () {
-        end_trial();
-      }, trial.trial_duration + trial.fixation_duration);
-    }
+      // end trial if trial_duration is set
+      if (trial.trial_duration !== null) {
+        jsPsych.pluginAPI.setTimeout(function () {
+          end_trial();
+        }, trial.trial_duration + trial.fixation_duration);
+      }
 
       draw();
     };
@@ -337,7 +337,6 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
       display_element.innerHTML = '';
       jsPsych.finishTrial(trial_data);
     };
-
   };
 
   return plugin;
