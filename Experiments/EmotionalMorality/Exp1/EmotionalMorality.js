@@ -53,21 +53,25 @@ const prms = {
 
   iti: 1000,
   imageDur: 250,
-  minContextDur: 2000,
+  minContextDur: 0,
 
   // Response Keys
   resp_keys: ['s', 'k'],
 
-  // Block/Trial Counters
-  cTrl: 1,
-  cBlk: 1,
+  // Block/Trial/Item Counters
+  cTrl: 0,
+  cBlk: 0,
+  cImagesMaleDisgust: 0,
+  cImagesMaleHappy: 0,
+  cImagesFemaleDisgust: 0,
+  cImagesFemaleHappy: 0,
 };
 
 // 2 counter-balanced order versions
 const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
-const keyMapping = version === 1 ? ['Akzeptabel', 'Inakzeptabel'] : ['Inakzeptabel', 'Akzeptabel'];
+const keyMapping = version === 1 ? ['Acceptable', 'Unacceptable'] : ['Unacceptable', 'Acceptable'];
 
 const respText = generate_formatted_html({
   text: `${keyMapping[0]} &emsp;&emsp;&emsp;&emsp; ${keyMapping[1]}<br>
@@ -193,6 +197,9 @@ const task_instructions6 = {
   choices: [' '],
 };
 
+////////////////////////////////////////////////////////////////////////
+//                               Images                               //
+////////////////////////////////////////////////////////////////////////
 // prettier-ignore
 const imageNumbersFemale = ["010", "020", "022", "028", "034", "040",
     "048", "054", "063", "069", "071", "085", "090", "098", "101",
@@ -204,14 +211,14 @@ imageNumbersFemale.forEach((imageNumber) => {
   imageFilesFemaleDisgust.push(`images/female_disgust/${imageNumber}_y_f_d_a.jpg`);
 });
 // console.log(imageFilesFemaleDisgust);
-const imagesFemaleDisgust = loadImages(imageFilesFemaleDisgust);
+const imagesFemaleDisgust = shuffle(loadImages(imageFilesFemaleDisgust));
 
 var imageFilesFemaleHappy = [];
 imageNumbersFemale.forEach((imageNumber) => {
   imageFilesFemaleHappy.push(`images/female_happy/${imageNumber}_y_f_h_a.jpg`);
 });
 // console.log(imageFilesFemaleHappy);
-const imagesFemaleHappy = loadImages(imageFilesFemaleHappy);
+const imagesFemaleHappy = shuffle(loadImages(imageFilesFemaleHappy));
 
 // prettier-ignore
 const imageNumbersMale = ["008", "013", "016", "025", "031", "037",
@@ -224,14 +231,33 @@ imageNumbersMale.forEach((imageNumber) => {
   imageFilesMaleDisgust.push(`images/male_disgust/${imageNumber}_y_m_d_a.jpg`);
 });
 // console.log(imageFilesMaleDisgust);
-const imagesMaleDisgust = loadImages(imageFilesMaleDisgust);
+const imagesMaleDisgust = shuffle(loadImages(imageFilesMaleDisgust));
 
 var imageFilesMaleHappy = [];
 imageNumbersMale.forEach((imageNumber) => {
   imageFilesMaleHappy.push(`images/male_happy/${imageNumber}_y_m_h_a.jpg`);
 });
 // console.log(imageFilesMaleHappy);
-const imagesMaleHappy = loadImages(imageFilesMaleHappy);
+const imagesMaleHappy = shuffle(loadImages(imageFilesMaleHappy));
+
+////////////////////////////////////////////////////////////////////////
+//                         Sentence Materials                         //
+////////////////////////////////////////////////////////////////////////
+// console.log(materials);
+let cond1items = shuffle(range(0, 160, 2)).slice(0, 40);
+// console.log(cond1items);
+
+let cond2items = [];
+range(1, 160, 2).forEach(function (item) {
+  if (!cond1items.includes(item - 1)) {
+    cond2items.push(item);
+  }
+});
+cond2items = shuffle(cond2items);
+// console.log(cond2items);
+
+filleritems = shuffle(range(0, 40));
+// console.log(filleritems);
 
 ////////////////////////////////////////////////////////////////////////
 //                  Common Stimuli/Functions                          //
@@ -284,58 +310,118 @@ const context = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus: generate_formatted_html({
-    text: `Herr Zinn ist Psychotherapeut und hat aktuell einen sehr schwierigen Fall. Er ist auf die Erfahrung und Hilfe seiner Kollegen angewiesen, um den Patienten angemessen zu therapieren.`,
-    align: 'left',
-    lineheight: 1.5,
-    fontsize: 26,
-  }),
+  stimulus: '',
   minimum_trial_duration: prms.minContextDur,
   choices: [' '],
+  data: {
+    stim_type: 'emomor',
+    condition: jsPsych.timelineVariable('condition'),
+    face_category: jsPsych.timelineVariable('face_category'),
+  },
+  on_start: function (trial) {
+    if (trial.data.condition === 'compatible') {
+      trial.stimulus = generate_formatted_html({
+        text: materials[cond1items[0]].context,
+        align: 'left',
+        lineheight: 1.5,
+        fontsize: 26,
+      });
+    } else if (trial.data.condition === 'incompatible') {
+      trial.stimulus = generate_formatted_html({
+        text: materials[cond2items[0]].context,
+        align: 'left',
+        lineheight: 1.5,
+        fontsize: 26,
+      });
+    } else if (trial.data.condition === 'filler') {
+      trial.stimulus = generate_formatted_html({
+        text: fillers[filleritems[0]].context,
+        align: 'left',
+        lineheight: 1.5,
+        fontsize: 26,
+      });
+    }
+  },
 };
 
 const image = {
   type: 'image-keyboard-response',
-  stimulus: imagesMaleHappy[0].src,
+  stimulus: '',
   trial_duration: prms.imageDur,
   choices: jsPsych.NO_KEYS,
   prompt: '',
   stimulus_width: 200,
   maintain_aspect_ratio: true,
   render_on_canvas: true,
+  data: {
+    stim_type: 'emomor',
+    condition: jsPsych.timelineVariable('condition'),
+    face_category: jsPsych.timelineVariable('face_category'),
+  },
+  on_start: function (trial) {
+    if (trial.data.face_category === 'male_disgust') {
+      trial.stimulus = imagesMaleDisgust[prms.cImagesMaleDisgust].src;
+      prms.cImagesMaleDisgust += 1;
+    } else if (trial.data.face_category === 'male_happy') {
+      trial.stimulus = imagesMaleHappy[prms.cImagesMaleHappy].src;
+      prms.cImagesMaleHappy += 1;
+    } else if (trial.data.face_category === 'female_disgust') {
+      trial.stimulus = imagesFemaleDisgust[prms.cImagesFemaleDisgust].src;
+      prms.cImagesFemaleDisgust += 1;
+    } else if (trial.data.face_category === 'female_happy') {
+      trial.stimulus = imagesFemaleHappy[prms.cImagesFemaleHappy].src;
+      prms.cImagesFemaleHappy += 1;
+    }
+    trial.data.imageName = trial.stimulus.split(/[\\/]/).pop().slice(0, -4);
+  },
 };
 
 const target = {
   type: 'html-keyboard-response',
-  stimulus:
-    generate_formatted_html({
-      text: 'Herr Zinn beschließt seinen Kollegen von dem Problem zu berichten.',
-      align: 'center',
-      lineheight: 1.5,
-      fontsize: 26,
-    }) + respText,
+  stimulus: '',
   trial_duration: null,
   choices: prms.resp_keys,
   response_ends_trial: true,
+  data: {
+    stim_type: 'emomor',
+    condition: jsPsych.timelineVariable('condition'),
+    face_category: jsPsych.timelineVariable('face_category'),
+  },
+  on_start: function (trial) {
+    if (trial.data.condition === 'compatible') {
+      trial.stimulus =
+        generate_formatted_html({
+          text: materials[cond1items[0]].target,
+          align: 'center',
+          lineheight: 1.5,
+          fontsize: 26,
+        }) + respText;
+    } else if (trial.data.condition === 'incompatible') {
+      trial.stimulus =
+        generate_formatted_html({
+          text: materials[cond2items[0]].target,
+          align: 'center',
+          lineheight: 1.5,
+          fontsize: 26,
+        }) + respText;
+    } else if (trial.data.condition === 'filler') {
+      trial.stimulus =
+        generate_formatted_html({
+          text: fillers[filleritems[0]].target,
+          align: 'center',
+          lineheight: 1.5,
+          fontsize: 26,
+        }) + respText;
+    }
+  },
 };
-
-// Materials
-console.log(materials);
-let cond1items = shuffle(range(0, 160, 2))
-  .slice(0, 40)
-  .sort((a, b) => a - b);
-// console.log(cond1items);
-
-let cond2items = [];
-range(1, 160, 2).forEach(function (item) {
-  if (!cond1items.includes(item - 1)) {
-    cond2items.push(item);
-  }
-});
-// console.log(cond2items);
 
 // prettier-ignore
 const stimuli = [
+    { condition: 'compatible',   face_category: 'female_disgust'},
+    { condition: 'compatible',   face_category: 'female_happy'},
+    { condition: 'compatible',   face_category: 'male_disgust'},
+    { condition: 'compatible',   face_category: 'male_happy'},
     { condition: 'compatible',   face_category: 'female_disgust'},
     { condition: 'compatible',   face_category: 'female_happy'},
     { condition: 'compatible',   face_category: 'male_disgust'},
@@ -344,7 +430,24 @@ const stimuli = [
     { condition: 'incompatible', face_category: 'female_happy'},
     { condition: 'incompatible', face_category: 'male_disgust'},
     { condition: 'incompatible', face_category: 'male_happy'},
+    { condition: 'incompatible', face_category: 'female_disgust'},
+    { condition: 'incompatible', face_category: 'female_happy'},
+    { condition: 'incompatible', face_category: 'male_disgust'},
+    { condition: 'incompatible', face_category: 'male_happy'},
+    { condition: 'filler',       face_category: 'female_disgust'},
+    { condition: 'filler',       face_category: 'female_happy'},
+    { condition: 'filler',       face_category: 'male_disgust'},
+    { condition: 'filler',       face_category: 'male_happy'},
 ];
+
+const trial_timeline = {
+  timeline: [context, fixation_cross1, image, fixation_cross2, target],
+  timeline_variables: stimuli,
+  sample: {
+    type: 'fixed-repetitions',
+    size: 8,
+  },
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                           Questionnaire                            //
@@ -473,24 +576,26 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on);
-  exp.push(check_screen);
-  exp.push(welcome_de);
-  exp.push(resize_de);
+  // exp.push(fullscreen_on);
+  // exp.push(check_screen);
+  // exp.push(welcome_de);
+  // exp.push(resize_de);
   // exp.push(vpInfoForm_de);
-  exp.push(hideMouseCursor);
-  exp.push(screenInfo);
+  // exp.push(hideMouseCursor);
+  // exp.push(screenInfo);
 
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
-  exp.push(task_instructions3);
-  exp.push(task_instructions4);
+  // exp.push(task_instructions1);
+  // exp.push(task_instructions2);
+  // exp.push(task_instructions3);
+  // exp.push(task_instructions4);
 
-  exp.push(context);
-  exp.push(fixation_cross1);
-  exp.push(image);
-  exp.push(fixation_cross2);
-  exp.push(target);
+  // exp.push(context);
+  // exp.push(fixation_cross1);
+  // exp.push(image);
+  // exp.push(fixation_cross2);
+  // exp.push(target);
+
+  exp.push(trial_timeline);
 
   questionnaire.forEach(function (item) {
     exp.push(item);
