@@ -309,7 +309,6 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
           end_trial();
         }, trial.trial_duration + trial.fixation_duration);
       }
-
       draw();
     };
 
@@ -333,9 +332,10 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mousedown', handleMouseMove);
 
-      // cleat the display and move on to the next trial
+      // clear the display and move on to the next trial
       display_element.innerHTML = '';
       jsPsych.finishTrial(trial_data);
+
     };
   };
 

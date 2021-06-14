@@ -159,7 +159,7 @@ const task_instructions_reminder = {
     trial.stimulus =
       "<h2 style='text-align: center;'>Block " +
       prms.cBlk +
-      ' von 24:</h2><br>' +
+      ' von 5:</h2><br>' +
       "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
       "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3><br>" +
       respText +
@@ -469,7 +469,9 @@ function genExpSeq() {
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
-    exp.push(task_instructions_reminder); // show reminder
+      if (blk < prms.nBlks - 1) {
+          exp.push(task_instructions_reminder); // show reminder
+      }
   }
 
   // save data

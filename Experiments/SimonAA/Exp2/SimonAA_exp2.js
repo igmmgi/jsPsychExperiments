@@ -98,7 +98,7 @@ const task_instructions1 = {
     "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
     "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
     "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
-    "<h3 style='text-align: center;'>Wir bitten dich die ca. 40 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich die ca. 25 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -123,12 +123,13 @@ const task_instructions3 = {
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du auf Bilder (Spinnen und Blumen) so schnell und so genau wie</h3>" +
     "<h3 style='text-align: left;'>möglich reagieren, die rechts oder links auf dem Bildschirm erscheinen.</h3>" +
-    "<h3 style='text-align: left;'>Reagiere, indem du den Cursor in der Mitte des Bildschirms mit der Taste Q</h3>" +
-    "<h3 style='text-align: left;'>nach links oder mit der Taste P nach rechts ziehst.</h3>" +
+    "<h3 style='text-align: left;'>Reagiere, indem du den Cursor in der Mitte des Bildschirms mit der Maus</h3>" +
+    "<h3 style='text-align: left;'>nach links oder nach rechts ziehst.</h3>" +
     "<h3 style='text-align: left;'>Ignoriere die Position der Bilder und reagiere wie folgt:</h3><br>" +
     respText +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren.</h2>",
 };
+
 
 const task_instructions4 = {
   type: 'html-keyboard-response-canvas',
@@ -158,7 +159,7 @@ const task_instructions_reminder = {
     trial.stimulus =
       "<h2 style='text-align: center;'>Block " +
       prms.cBlk +
-      ' von 24:</h2><br>' +
+      ' von 5:</h2><br>' +
       "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
       "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3><br>" +
       respText +
@@ -449,7 +450,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
@@ -467,7 +468,9 @@ function genExpSeq() {
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
-    exp.push(task_instructions_reminder); // show reminder
+    if (blk < prms.nBlks - 1) {
+      exp.push(task_instructions_reminder); // show reminder
+    }
   }
 
   // save data
