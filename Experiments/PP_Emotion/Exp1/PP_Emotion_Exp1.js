@@ -41,9 +41,6 @@ const check_screen = {
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
-const nVersion = getVersionNumber(nFiles, 2);
-jsPsych.data.addProperties({ version: nVersion });
 getComputerInfo();
 
 ////////////////////////////////////////////////////////////////////////
@@ -51,8 +48,8 @@ getComputerInfo();
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   // Block/Trial Numbers
-  nTrlsP: 40, // number of trials in practice PP block
-  nTrlsE: 80, // number of trials in experimental blocks
+  nTrlsP: 48, // number of trials in practice PP block
+  nTrlsE: 96, // number of trials in experimental blocks
   nBlks: 10, // total number of blocks
 
   // Timing
@@ -69,8 +66,8 @@ const prms = {
   // Stimuli
   colours: shuffle(['red', 'green', 'blue']),
   gender: shuffle(['Männlich', 'Weiblich']),
-  rect_size: [150, 200],
-  rect_linewidth: 10,
+  rect_size: [300, 400],
+  rect_linewidth: 20,
   stim_size: 'bold 80px monospace',
   fb_size: '30px monospace',
   fb_text: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
@@ -83,6 +80,9 @@ const prms = {
   cBlk: 1,
 };
 
+const version = Number(jsPsych.data.urlVariables().version);
+jsPsych.data.addProperties({ version: version });
+
 // response keys for colour task
 const de = { red: 'Rot', green: 'Grün', blue: 'Blau' };
 
@@ -91,17 +91,17 @@ const de = { red: 'Rot', green: 'Grün', blue: 'Blau' };
 let resp_text_pp = `1. Priorität: Farbaufgabe <br><br><span style="color: ${prms.colours[0]}">${ de[prms.colours[0]]}</span> &emsp;&emsp; <span style="color: ${prms.colours[1]}">${ de[prms.colours[1]] }</span><br>
                    (Q-Taste) &emsp;&emsp; (P-Taste) <br><br>
                    Wenn Farbe <span style="color: ${prms.colours[2]}">${de[prms.colours[2]]}</span><br><br>
-                    2. Priorität: Geschlectaufgabe<br><br>
+                    2. Priorität: Geschlechtsaufgabe<br><br>
                    ${prms.gender[0]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${prms.gender[1]}<br>
                    (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `;
 
 // prettier-ignore
 function resp_text_pp_block() {
-  return (`Block ${prms.cBlk} von ${prms.nBlks_total}<br><br>
+  return (`Block ${prms.cBlk} von ${prms.nBlks}<br><br>
              1. Priorität: Farbaufgabe <br><br><span style="color: ${prms.colours[0]}">${ de[prms.colours[0]]}</span> &emsp;&emsp; <span style="color: ${prms.colours[1]}">${ de[prms.colours[1]] }</span><br>
             (Q-Taste) &emsp;&emsp; (P-Taste) <br><br>
             Wenn Farbe <span style="color: ${prms.colours[2]}">${de[prms.colours[2]]}</span><br>
-             2. Priorität: Geschlectaufgabe<br><br>
+             2. Priorität: Geschlechtsaufgabe<br><br>
             ${prms.gender[0]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${prms.gender[1]}<br>
             (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `);
 }
@@ -135,7 +135,7 @@ const task_instructions2 = {
   stimulus: generate_formatted_html({
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
     am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-    hiwipibio@gmail.com<br><br>
+    matthias.viteritti@student.uni-tuebingen.de<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
@@ -150,7 +150,7 @@ const task_instructions3 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `In diesem Experiment gibt es insgesamt zwei verschiedene Aufgaben.
-Du musst auf die Farben eines Quadrates (= Farbaufgabe), oder auf Gesichter <br>(= Geschlectaufgabe) reagieren. <br><br>
+Du musst auf die Farben eines Quadrates (= Farbaufgabe), oder auf das Geschlecht von Gesichtern (= Geschlechtsaufgabe) reagieren. <br><br>
 WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit dem rechten Zeigefinger.<br><br>
 Drücke eine beliebige Taste um fortzufahren.`,
     fontsize: 26,
@@ -167,7 +167,7 @@ const task_instructions_pp1 = {
   stimulus: generate_formatted_html({
     text: `Du musst nur auf eine der zwei Aufgaben reagieren. <br>
            Die erste Priorität ist die Farbe des Quadrates.<br>
-           Die zweite Priorität ist die Geschlectaufgabe. Du musst NUR auf den Gesichter reagieren, wenn die Farbaufgabe keine Antwort verlangt.<br><br>
+           Die zweite Priorität ist das Geschlecht des Gesichtes. Du musst NUR auf die Gesichter reagieren, wenn die Farbaufgabe keine Antwort verlangt.<br><br>
            Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
@@ -241,6 +241,18 @@ const female_neutral_files = [
 ];
 const female_neutral_images = loadImages(female_neutral_files);
 
+const female_happy_files = [
+  '../images/female_happy/AF09HAS.JPG',
+  '../images/female_happy/AF16HAS.JPG',
+  '../images/female_happy/AF28HAS.JPG',
+  '../images/female_happy/AF31HAS.JPG',
+  '../images/female_happy/AF14HAS.JPG',
+  '../images/female_happy/AF22HAS.JPG',
+  '../images/female_happy/AF30HAS.JPG',
+  '../images/female_happy/AF33HAS.JPG',
+];
+const female_happy_images = loadImages(female_happy_files);
+
 const male_fear_files = [
   '../images/male_fear/AM04AFS.JPG',
   '../images/male_fear/AM10AFS.JPG',
@@ -264,6 +276,18 @@ const male_neutral_files = [
   '../images/male_neutral/AM35NES.JPG',
 ];
 const male_neutral_images = loadImages(male_neutral_files);
+
+const male_happy_files = [
+  '../images/male_happy/AM04HAS.JPG',
+  '../images/male_happy/AM10HAS.JPG',
+  '../images/male_happy/AM11HAS.JPG',
+  '../images/male_happy/AM14HAS.JPG',
+  '../images/male_happy/AM17HAS.JPG',
+  '../images/male_happy/AM22HAS.JPG',
+  '../images/male_happy/AM25HAS.JPG',
+  '../images/male_happy/AM35HAS.JPG',
+];
+const male_happy_images = loadImages(male_happy_files);
 
 ////////////////////////////////////////////////////////////////////////
 //                  Common Stimuli/Functions                          //
@@ -376,6 +400,10 @@ const stimuli_primary = [
     { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "fear",    corr_key: prms.resp_keys[1], backward_comp: "incomp"},
     { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[0], backward_comp: "icomp"},
     { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[1], backward_comp: "comp"},
+    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "comp"},
+    { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "happy",   corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "icomp"},
+    { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[1], backward_comp: "comp"},
 ];
 
 // prettier-ignore
@@ -384,13 +412,17 @@ const stimuli_background = [
     { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "na"},
     { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[0], face_emotion: "fear",    corr_key: prms.resp_keys[0], backward_comp: "na"},
     { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[1], backward_comp: "na"},
+    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[0], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "na"},
+    { response_task: 'background', colour: prms.colours[2], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[1], backward_comp: "na"},
 ];
 
-const stimuli_high_primary = deepCopy(repeatArray(stimuli_primary, 4).concat(repeatArray(stimuli_background, 2)));
+// const stimuli_high_primary = deepCopy(repeatArray(stimuli_primary, 6).concat(repeatArray(stimuli_background, 4)));
+const stimuli_high_primary = deepCopy(repeatArray(stimuli_primary, 3).concat(repeatArray(stimuli_background, 2)));
 stimuli_high_primary.forEach((i) => (i.prob_cond = 'HP'));
 // console.log(stimuli_high_primary);
 
-const stimuli_low_primary = deepCopy(repeatArray(stimuli_primary, 1).concat(repeatArray(stimuli_background, 8)));
+// const stimuli_low_primary = deepCopy(repeatArray(stimuli_primary, 2).concat(repeatArray(stimuli_background, 12)));
+const stimuli_low_primary = deepCopy(repeatArray(stimuli_primary, 1).concat(repeatArray(stimuli_background, 6)));
 stimuli_low_primary.forEach((i) => (i.prob_cond = 'LP'));
 // console.log(stimuli_low_primary);
 
@@ -399,7 +431,7 @@ function draw_pp(args) {
   let ctx = document.getElementById('canvas').getContext('2d');
 
   // draw image
-  const size = 4;
+  const size = 2;
   const width = args.image.width;
   const height = args.image.height;
   ctx.drawImage(args.image, -width / size / 2, -height / size / 2, width / size, height / size);
@@ -433,16 +465,16 @@ function draw_feedback_pp() {
     ctx.fillText(de[prms.colours[1]], 190, -30);
     ctx.fillStyle = 'black';
     ctx.fillText('Wenn Farbe     ', 0, 40);
-    ctx.fillText('2. Priorität: Geschlectaufgabe', 0, 90);
+    ctx.fillText('2. Priorität: Geschlechtsaufgabe', 0, 90);
     ctx.fillStyle = prms.colours[2];
     ctx.fillText(de[prms.colours[2]], 90, 40);
     ctx.fillStyle = 'black';
-    ctx.fillText(`${prms.gender[0]}       ${prms.gender[1]}`, 0, 130);
+    ctx.fillText(`${prms.gender[0]}           ${prms.gender[1]}`, 0, 130);
     ctx.font = '20px monospace';
     ctx.fillText('(Q-Taste)', -150, -10);
-    ctx.fillText('(Q-Taste)', -150, 210);
+    ctx.fillText('(Q-Taste)', -150, 160);
     ctx.fillText('(P-Taste)', 200, -10);
-    ctx.fillText('(P-Taste)', 200, 210);
+    ctx.fillText('(P-Taste)', 200, 160);
   }
 }
 
@@ -478,23 +510,29 @@ const trial_pp = {
     colour: jsPsych.timelineVariable('colour'),
     face_gender: jsPsych.timelineVariable('face_gender'),
     face_emotion: jsPsych.timelineVariable('face_emotion'),
-    image: null,
+    imageName: null,
     corr_key: jsPsych.timelineVariable('corr_key'),
     backward_comp: jsPsych.timelineVariable('backward_comp'),
     prob_cond: jsPsych.timelineVariable('prob_cond'),
   },
   on_start: function (trial) {
     let randomInt = getRandomInt(0, 7);
+    let img;
     if (trial.data.face_gender === 'Männlich' && trial.data.face_emotion === 'neutral') {
-      trial.data.image = male_neutral_images[randomInt];
+      img = male_neutral_images[randomInt];
     } else if (trial.data.face_gender === 'Männlich' && trial.data.face_emotion === 'fear') {
-      trial.data.image = male_fear_images[randomInt];
+      img = male_fear_images[randomInt];
+    } else if (trial.data.face_gender === 'Männlich' && trial.data.face_emotion === 'happy') {
+      img = male_happy_images[randomInt];
     } else if (trial.data.face_gender === 'Weiblich' && trial.data.face_emotion === 'neutral') {
-      trial.data.image = female_neutral_images[randomInt];
+      img = female_neutral_images[randomInt];
     } else if (trial.data.face_gender === 'Weiblich' && trial.data.face_emotion === 'fear') {
-      trial.data.image = female_fear_images[randomInt];
+      img = female_fear_images[randomInt];
+    } else if (trial.data.face_gender === 'Weiblich' && trial.data.face_emotion === 'happy') {
+      img = female_happy_images[randomInt];
     }
-    trial.func_args = [{ colour: trial.data.colour, image: trial.data.image }];
+    trial.data.imageName = img.src.split(/[\\/]/).pop().slice(0, -4);
+    trial.func_args = [{ colour: trial.data.colour, image: img }];
   },
   on_finish: function () {
     code_trial();
@@ -557,7 +595,7 @@ const alpha_num = {
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
       per Email an:<br><br>
-    hiwipibio@gmail.com<br>`,
+    matthias.viteritti@student.uni-tuebingen.de<br>`,
       fontsize: 26,
       align: 'left',
     }) +
@@ -633,9 +671,9 @@ function genExpSeq() {
     .concat(repeatArray('E', prms.nBlks / 2 - 1))
     .concat('P')
     .concat(repeatArray('E', prms.nBlks / 2 - 1));
-  if (nVersion === 1) {
+  if (version === 1) {
     hplp_type = repeatArray('HP', prms.nBlks / 2).concat(repeatArray('LP', prms.nBlks / 2));
-  } else if (nVersion === 2) {
+  } else if (version === 2) {
     hplp_type = repeatArray('LP', prms.nBlks / 2).concat(repeatArray('HP', prms.nBlks / 2));
   }
 

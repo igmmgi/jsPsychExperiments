@@ -345,7 +345,7 @@ const end_of_block_text = {
       }) +
       generate_formatted_html({
         text: `Kurze Pause. Bitte nutze die Pause, um dich zu erholen. Wenn du
-          wieder bereit für den nächsten Block bist, dann drücke der Leertaste.<br><br>`,
+          wieder bereit für den nächsten Block bist, dann drücke die Leertaste.<br><br>`,
         fontsize: 26,
         align: 'left',
       }) +

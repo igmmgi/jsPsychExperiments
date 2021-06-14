@@ -56,9 +56,8 @@ const prms = {
   minContextDur: 0,
 
   // Response Keys
-  resp_keys: ['s', 'k']
-
-  };
+  resp_keys: ['s', 'k'],
+};
 
 const counters = {
   trl: 0,
@@ -69,8 +68,8 @@ const counters = {
   male_disgust: 0,
   male_happy: 0,
   female_disgust: 0,
-  female_happy: 0
-}
+  female_happy: 0,
+};
 
 // 2 counter-balanced order versions
 const version = Number(jsPsych.data.urlVariables().version);
@@ -324,7 +323,7 @@ const context = {
     face: jsPsych.timelineVariable('face'),
   },
   on_start: function (trial) {
-    if (trial.data.cond=== 'comp') {
+    if (trial.data.cond === 'comp') {
       trial.stimulus = generate_formatted_html({
         text: materials[compItems[counters.comp]].context,
         align: 'left',
