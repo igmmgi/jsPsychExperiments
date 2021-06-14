@@ -95,10 +95,14 @@ const task_instructions1 = {
   canvas_border: canvas_border,
   stimulus:
     "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
-    "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
-    "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
-    "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
-    "<h3 style='text-align: center;'>Wir bitten dich die ca. 25 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: left;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3>" +
+    "<h3 style='text-align: left;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
+    "<h3 style='text-align: left;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
+    "<h3 style='text-align: left;'>Wir bitten dich die ca. 25 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: left;'>Achtung: in diesem Experiment wirst du Bilder von echten Spinnen</h3>" +
+    "<h3 style='text-align: left;'>sehen, welche gegebenfalls negative Emotionen oder Reaktionen</h3>" +
+    "<h3 style='text-align: left;'>auslösen können. Bitte kilcke nur weiter wenn du damit einverstanden</h3>" +
+    "<h3 style='text-align: left;'>bist solche Bilder zu sehen.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -129,7 +133,6 @@ const task_instructions3 = {
     respText +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren.</h2>",
 };
-
 
 const task_instructions4 = {
   type: 'html-keyboard-response-canvas',
@@ -450,14 +453,14 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);
   exp.push(task_instructions4);
 
-  for (let blk = 0; blk < prms.nBlks; blk += 1) {
+  for (let blk = 0; blk < prms.nBlks; blk++) {
     let blk_timeline = blk === 0 ? { ...trial_timeline_simon_practise } : { ...trial_timeline_simon_exp };
     blk_timeline.sample = {
       type: 'fixed-repetitions',

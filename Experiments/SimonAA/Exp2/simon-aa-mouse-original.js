@@ -149,17 +149,12 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
     ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
 
     // canvas mouse events
-    document.addEventListener('mousedown', (e) => {
+    canvas.addEventListener('mousedown', (e) => {
       if (e.buttons === 1) {
         handleMouseDown(e);
       }
     });
-
-    // canvas.addEventListener('mousemove', (e) => {
-    //   handleMouseMove(e);
-    // });
-
-    document.addEventListener('mousemove', (e) => {
+    canvas.addEventListener('mousemove', (e) => {
       handleMouseMove(e);
     });
 
@@ -177,10 +172,6 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
     let draw_fixation = false;
     let draw_image = false;
     let movement_initiated = false;
-    let trial_finished = false;
-
-    let moving_circle;
-    let circle_pos = 0;
 
     let draw_start_box = true;
     let start_box = {
@@ -234,6 +225,11 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
       // store coordinates and time array
       x_coords.push(mpos.x);
       time.push(performance.now() - start_time);
+
+      if (Math.abs(mpos.x) > trial.circle_eccentricity) {
+        end_trial();
+      }
+      draw();
     }
 
     // clear the canvas and draw text
@@ -283,26 +279,9 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
 
         // draw circle
         ctx.beginPath();
-        if (Math.abs(mpos.x - circle_pos) > 20) {
-          if (mpos.x < circle_pos) {
-            circle_pos -= 1;
-          } else if (mpos.x > circle_pos) {
-            circle_pos += 1;
-          }
-        }
-        ctx.arc(circle_pos, 0, trial.circle_size, 0, 2 * Math.PI, false);
+        ctx.arc(mpos.x, 0, trial.circle_size, 0, 2 * Math.PI, false);
         ctx.fillStyle = trial.circle_colour;
         ctx.fill();
-      }
-
-      if (!trial_finished) {
-        if (Math.abs(circle_pos) > trial.circle_eccentricity) {
-          trial_finished = true;
-          window.cancelAnimationFrame(moving_circle);
-          end_trial();
-        } else {
-          moving_circle = window.requestAnimationFrame(draw);
-        }
       }
     }
 
@@ -330,17 +309,12 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
           end_trial();
         }, trial.trial_duration + trial.fixation_duration);
       }
-      window.requestAnimationFrame(draw);
-      $('body').css('cursor', 'none');
+      draw();
     };
 
     // function to end trial when it is time
     let end_trial = function () {
       'use strict';
-
-      // kill any remaining setTimeout handlers
-      jsPsych.pluginAPI.clearAllTimeouts();
-
       end_rt = performance.now() - start_time;
       end_loc = x_coords[x_coords.length - 1] < 0 ? 'left' : 'right';
 
@@ -355,11 +329,10 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
         time: time,
       };
 
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mousedown', handleMouseMove);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mousedown', handleMouseMove);
 
       // clear the display and move on to the next trial
-      $('body').css('cursor', 'default');
       display_element.innerHTML = '';
       jsPsych.finishTrial(trial_data);
     };

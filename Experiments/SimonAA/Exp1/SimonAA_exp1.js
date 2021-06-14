@@ -458,7 +458,7 @@ function genExpSeq() {
   exp.push(task_instructions3);
   exp.push(task_instructions4);
 
-  for (let blk = 0; blk < prms.nBlks; blk += 1) {
+  for (let blk = 0; blk < prms.nBlks; blk++) {
     let blk_timeline = blk === 0 ? { ...trial_timeline_simon_practise } : { ...trial_timeline_simon_exp };
     blk_timeline.sample = {
       type: 'fixed-repetitions',
@@ -469,9 +469,9 @@ function genExpSeq() {
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
-      if (blk < prms.nBlks - 1) {
-          exp.push(task_instructions_reminder); // show reminder
-      }
+    if (blk < prms.nBlks - 1) {
+      exp.push(task_instructions_reminder); // show reminder
+    }
   }
 
   // save data
