@@ -617,8 +617,8 @@ const alpha_num = {
 const save_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim_type: 'pp2bt' });
+    let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim_type: 'ppemo' });
   },
   timing_post_trial: 1000,
 };
@@ -653,7 +653,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm);
+  exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
