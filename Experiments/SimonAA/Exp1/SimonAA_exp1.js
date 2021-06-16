@@ -143,7 +143,7 @@ const task_instructions4 = {
       prms.cBlk +
       ' von 5:</h2><br>' +
       "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
-      "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3><br>" +
+      "<h3 style='text-align: left;'>deiner beiden Hände auf der Tastatur. Es gilt:</h3><br>" +
       respText +
       "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
   },
@@ -161,7 +161,7 @@ const task_instructions_reminder = {
       prms.cBlk +
       ' von 5:</h2><br>' +
       "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere die Zeigefinger </h3>" +
-      "<h3 style='text-align: left;'>deiner beiden Hände auf die Tastatur. Es gilt:</h3><br>" +
+      "<h3 style='text-align: left;'>deiner beiden Hände auf der Tastatur. Es gilt:</h3><br>" +
       respText +
       "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
   },

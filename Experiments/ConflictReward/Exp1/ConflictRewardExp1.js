@@ -137,39 +137,7 @@ const task_instructions2 = {
   choices: [' '],
 };
 
-const task_instructions3 = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  stimulus:
-    generate_formatted_html({
-      text: `Versuche in Durchgängen mit Belohnung immer einen Punkt zu erhalten
-    in dem du so genau und so schnell wie möglich antwortest!<br><br>
-Bitte beachte aber auch in Durchgängen ohne Belohnung genau zu antworten: <br><br>
-Deine Gesamtleistung berechnet sich aus der Anzahl Punkte in Durchgängen mit Belohnung:<br><br>`,
-      fontsize: 26,
-      lineheight: 1.5,
-      align: 'left',
-    }) +
-    generate_formatted_html({
-      text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): 0 Punkte<br>
-Gesamt korrekt (in Durchgängen ohne Belohnung): 0 %<br><br>`,
-      fontsize: 26,
-      lineheight: 1.5,
-      align: 'center',
-    }) +
-    generate_formatted_html({
-      text: `Bereit?<br>
-        Weiter geht es durch Drücken der Leertaste...`,
-      fontsize: 26,
-      lineheight: 1.5,
-      align: 'left',
-    }),
-  choices: [' '],
-};
-
-const task_instructions_simon = {
+const task_instructions_simon1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -186,7 +154,21 @@ const task_instructions_simon = {
     }) +
     respText +
     generate_formatted_html({
-      text: `In einem Durchgang kann die Position des Kreises mit der Seite,
+      text: `Weiter geht es mit der Leertaste ...`,
+      fontsize: 24,
+      lineheight: 1.25,
+      align: 'left',
+    }),
+  choices: [' '],
+};
+
+const task_instructions_simon2 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `In einem Durchgang kann die Position des Kreises mit der Seite,
       auf der Du reagieren musst übereinstimmen (z.B. der Kreis erscheint auf
       der linken Seite und Du musst für die Antwort den linken Zeigefinger
       verwenden) oder nicht (z.B. der Kreis erscheint auf der linken Seite und
@@ -195,16 +177,17 @@ const task_instructions_simon = {
       In Durchgängen ${rewardConditionInstructions1[0]} Übereinstimmung hast du die Möglichkeit für
       korrekte und besonders schnelle Antworten einen Punkt / Belohnung zu erhalten.<br><br>
       In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung
-      kannst du keine Punkte / Belohnung erhalten.<br><br>
+      kannst du keine Punkte / Belohnung erhalten.<br>
+      Versuche in Durchgängen mit Belohnung immer einen Punkt zu erhalten in dem du so genau und so schnell wie möglich antwortest!<br><br>
     Weiter geht es mit der Leertaste ...`,
-      fontsize: 24,
-      lineheight: 1.25,
-      align: 'left',
-    }),
+    fontsize: 24,
+    lineheight: 1.25,
+    align: 'left',
+  }),
   choices: [' '],
 };
 
-const task_instructions_stroop = {
+const task_instructions_stroop1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -220,19 +203,34 @@ const task_instructions_stroop = {
     }) +
     respText +
     generate_formatted_html({
-      text: `In einem Durchgang kann die Schriftfarbe mit der Wortbedeutung
+      text: `Weiter geht es mit der Leertaste ...`,
+      fontsize: 22,
+      lineheight: 1.25,
+      align: 'left',
+    }),
+  choices: [' '],
+};
+
+const task_instructions_stroop2 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `In einem Durchgang kann die Schriftfarbe mit der Wortbedeutung
       entweder übereinstimmen (d.h. das Wort ROT in rot geschrieben oder das
       Wort GRÜN in grün geschrieben) oder nicht übereinstimmen (d.h. das Wort
       ROT in grün geschrieben oder das Wort GRÜN in rot geschrieben). Je
       nachdem hast du die Möglichkeit eine Belohnung zu erhalten:<br><br>
       In Durchgängen ${rewardConditionInstructions1[0]} Übereinstimmung hast du die Möglichkeit für
       korrekte und besonders schnelle Antworten einen Punkt/Belohnung zu erhalten.<br><br>
-      In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung kannst du keine Punkte / Belohnung erhalten.<br><br>
+      In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung kannst du keine Punkte / Belohnung erhalten.<br>
+      Versuche in Durchgängen mit Belohnung immer einen Punkt zu erhalten in dem du so genau und so schnell wie möglich antwortest!<br><br>
       Weiter geht es mit der Leertaste ...`,
-      fontsize: 22,
-      lineheight: 1.25,
-      align: 'left',
-    }),
+    fontsize: 22,
+    lineheight: 1.25,
+    align: 'left',
+  }),
   choices: [' '],
 };
 

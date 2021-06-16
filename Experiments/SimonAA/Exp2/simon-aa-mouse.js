@@ -155,10 +155,6 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
       }
     });
 
-    // canvas.addEventListener('mousemove', (e) => {
-    //   handleMouseMove(e);
-    // });
-
     document.addEventListener('mousemove', (e) => {
       handleMouseMove(e);
     });
@@ -221,7 +217,7 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
         }
       }
 
-      if (trial_initiated === false) {
+      if (trial_initiated === false || trial_finished === true) {
         return;
       }
 
@@ -355,8 +351,8 @@ jsPsych.plugins['simon-aa-mouse'] = (function () {
         time: time,
       };
 
+      document.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mousedown', handleMouseMove);
 
       // clear the display and move on to the next trial
       $('body').css('cursor', 'default');
