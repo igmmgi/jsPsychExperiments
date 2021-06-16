@@ -51,7 +51,7 @@ const prms = {
   fix_size: 10,
   fix_linewidth: 2,
 
-  iti: 1000,
+  iti: 2000,
   imageDur: 250,
   minContextDur: 0,
 
@@ -72,14 +72,24 @@ const counters = {
 };
 
 // 2 counter-balanced order versions
-const version = Number(jsPsych.data.urlVariables().version);
+const version = 1; //Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
-const keyMapping = version === 1 ? ['Acceptable', 'Unacceptable'] : ['Unacceptable', 'Acceptable'];
+const keyMappingMoral = [1, 2].includes(version) ? ['Acceptable', 'Unacceptable'] : ['Unacceptable', 'Acceptable'];
+const keyMappingFace = [1, 3].includes(version) ? ['Frau', 'Mann'] : ['Mann', 'Frau'];
 
-const respText = generate_formatted_html({
-  text: `${keyMapping[0]} &emsp;&emsp;&emsp;&emsp; ${keyMapping[1]}<br>
+const respTextMoral = generate_formatted_html({
+  text: `${keyMappingMoral[0]} &emsp;&emsp;&emsp;&emsp; ${keyMappingMoral[1]}<br>
     (Taste 'S') &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (Taste 'K')`,
+  fontsize: 22,
+  lineheight: 1.5,
+  bold: false,
+  align: 'center',
+});
+
+const respTextFace = generate_formatted_html({
+  text: `${keyMappingFace[0]} &emsp;&emsp;&emsp;&emsp; ${keyMappingFace[1]}<br>
+    (Taste 'S') &emsp;&emsp;&emsp;&emsp;&emsp; (Taste 'K')`,
   fontsize: 22,
   lineheight: 1.5,
   bold: false,
@@ -103,6 +113,7 @@ const task_instructions1 = {
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
 };
 
@@ -118,6 +129,7 @@ const task_instructions2 = {
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
 };
 
@@ -135,6 +147,7 @@ const task_instructions3 = {
       Drücken Sie “LEERTASTE”, um fortzufahren.`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
   choices: [' '],
 };
@@ -155,6 +168,7 @@ const task_instructions4 = {
       Drücken Sie “LEERTASTE”, um fortzufahren.`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
   choices: [' '],
 };
@@ -171,17 +185,50 @@ const task_instructions5 = {
         Finger auf den Buchstaben ‘K’.`,
       fontsize: 26,
       align: 'left',
+      lineheight: 1.5,
     }) +
-    respText +
+    respTextMoral +
     generate_formatted_html({
       text: `Drücken Sie “LEERTASTE”, um fortzufahren.`,
       fontsize: 26,
       align: 'left',
+      lineheight: 1.5,
     }),
   choices: [' '],
 };
 
 const task_instructions6 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Block ${counters.blk + 1} von 5:<br><br>
+      Pause! Wenn du bereit für den Block bist dann positioniere die Zeigefinger
+      deiner beiden Hände auf der Tastatur. Es gilt:`,
+        fontsize: 26,
+        align: 'left',
+        lineheight: 1.5,
+      }) +
+      respTextMoral +
+      generate_formatted_html({
+        text: `Drücken Sie “LEERTASTE”, um fortzufahren.`,
+        fontsize: 26,
+        align: 'left',
+        lineheight: 1.5,
+      });
+  },
+  choices: [' '],
+  on_finish: function () {
+    counters.trl = 0;
+    counters.blk++;
+  },
+};
+
+const task_instructions7 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -197,6 +244,7 @@ const task_instructions6 = {
     Drücken Sie “LEERTASTE”, um fortzufahren.`,
     fontsize: 26,
     align: 'left',
+    lineheight: 1.5,
   }),
   choices: [' '],
 };
@@ -399,7 +447,7 @@ const target = {
           align: 'center',
           lineheight: 1.5,
           fontsize: 26,
-        }) + respText;
+        }) + respTextMoral;
     } else if (trial.data.cond === 'incomp') {
       trial.stimulus =
         generate_formatted_html({
@@ -407,16 +455,32 @@ const target = {
           align: 'center',
           lineheight: 1.5,
           fontsize: 26,
-        }) + respText;
+        }) + respTextMoral;
     } else if (trial.data.cond === 'filler') {
       trial.stimulus =
         generate_formatted_html({
-          text: fillers[fillerItems[counters.filler]].target,
+          text: 'Hast du eben dat Gesicht einer Frau oder eines Mannes gesehen?',
           align: 'center',
           lineheight: 1.5,
           fontsize: 26,
-        }) + respText;
+        }) + respTextFace;
     }
+  },
+  on_finish: function () {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    let response_label;
+    if (dat.cond !== 'filler') {
+      response_label = dat.response == 's' ? respTextMoral[0] : respTextMoral[1];
+    } else if (dat.cond === 'filler') {
+      response_label = dat.response == 's' ? respTextFace[0] : respTextFace[1];
+    }
+    jsPsych.data.addDataToLastTrial({
+      date: Date(),
+      blockNum: counters.blk,
+      trialNum: counters.trl,
+      response_label: response_label,
+    });
+    counters.trl += 1;
   },
 };
 
@@ -445,11 +509,11 @@ const stimuli = [
 ];
 
 const trial_timeline = {
-  timeline: [context, fixation_cross1, image, fixation_cross2, target],
+  timeline: [context, fixation_cross1, image, fixation_cross2, target, iti],
   timeline_variables: stimuli,
   sample: {
     type: 'fixed-repetitions',
-    size: 8,
+    size: 1,
   },
 };
 
@@ -514,7 +578,7 @@ while (questions.length > 0) {
 //                              De-brief                              //
 ////////////////////////////////////////////////////////////////////////
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('md1', 16);
+const randomString = generateRandomStringWithExpName('em1', 16);
 
 const alpha_num = {
   type: 'html-keyboard-response-canvas',
@@ -547,8 +611,8 @@ const alpha_num = {
 const save_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim_type: 'md' });
+    let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim_type: 'emomor' });
   },
   timing_post_trial: 1000,
 };
@@ -579,37 +643,41 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen_on);
-  // exp.push(check_screen);
-  // exp.push(welcome_de);
-  // exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
-  // exp.push(hideMouseCursor);
-  // exp.push(screenInfo);
+  exp.push(fullscreen_on);
+  exp.push(check_screen);
+  exp.push(welcome_de);
+  exp.push(resize_de);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
 
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
-  // exp.push(task_instructions3);
-  // exp.push(task_instructions4);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
+  exp.push(task_instructions3);
+  exp.push(task_instructions4);
 
   for (let i = 0; i < 5; i++) {
+    exp.push(iti);
     exp.push(trial_timeline);
+    exp.push(task_instructions6);
   }
 
-  // questionnaire.forEach(function (item) {
-  //   exp.push(item);
-  // });
+  exp.push(iti);
+  exp.push(task_instructions7);
+  questionnaire.forEach(function (item) {
+    exp.push(item);
+  });
 
   // save data
-  // exp.push(save_data);
-  // exp.push(save_interaction_data);
-  // exp.push(save_code);
+  exp.push(save_data);
+  exp.push(save_interaction_data);
+  exp.push(save_code);
 
-  // // debrief
-  // exp.push(showMouseCursor);
-  // exp.push(alpha_num);
-  // exp.push(debrief_de);
-  // exp.push(fullscreen_off);
+  // debrief
+  exp.push(showMouseCursor);
+  exp.push(alpha_num);
+  exp.push(debrief_de);
+  exp.push(fullscreen_off);
 
   return exp;
 }
