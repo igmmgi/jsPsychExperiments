@@ -417,7 +417,7 @@ const save_data = {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data.php', data_filename, { stim: 'saa1' });
   },
-  timing_post_trial: 1000,
+  post_trial_gap: 1000,
 };
 
 const save_interaction_data = {
@@ -426,7 +426,7 @@ const save_interaction_data = {
     let data_filename = dirName + 'interaction/' + expName + '_interaction_data_' + vpNum;
     saveInteractionData('/Common/write_data.php', data_filename);
   },
-  timing_post_trial: 200,
+  post_trial_gap: 200,
 };
 
 const save_code = {
@@ -435,7 +435,7 @@ const save_code = {
     let code_filename = dirName + 'code/' + expName;
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-  timing_post_trial: 200,
+  post_trial_gap: 200,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -446,7 +446,7 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on);
+  exp.push(fullscreen_on_de);
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
