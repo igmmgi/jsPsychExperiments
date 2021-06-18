@@ -356,7 +356,7 @@ const end_of_block_text = {
       generate_formatted_html({
         text: `Versuche weiterhin so viele Punkte wie möglich zu sammeln und
           dabei so genau wie möglich zu antworten: Deine Gesamtleistung
-          berechnet sich aus der Anzahl Punkte in Durchgängen mit Belohnung! `,
+          berechnet sich aus der Anzahl an Punkte in Durchgängen mit Belohnung! `,
         fontsize: 26,
         align: 'left',
       });
@@ -756,9 +756,9 @@ const email_option_instructions = {
   stimulus: generate_formatted_html({
     text: `Das Experiment ist jetzt beendet.<br><br>
       Vielen Dank für Deine Teilnahme!<br><br>
-      Im nächsten Fester wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
+      Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
 Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
-Falls Du Fragen zu unserem Experiment hast, kanst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
+Falls Du Fragen zu unserem Experiment hast, kannst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
 j.koenig@student.uni-tuebingen.de <br><br>
 Drücke die Leertaste, um fortzufahren!`,
     fontsize: 26,
