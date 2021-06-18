@@ -54,11 +54,11 @@ getComputerInfo();
 const prms = {
   nTrlsP: 80, // number of trials in each block
   nTrlsE: 80, // number of trials in each block
-  nBlks: 10,
+  nBlks: 4,
   fixDur: 400,
   fbDur: [1500, 2500, 2500],
   iti: 500,
-  tooSlow: 1500,
+  tooSlow: 2000,
   tooFast: 0,
   fbTxt: ['Richtig', 'Falsch!', 'Falsch (zu langsam)!'],
   cTrl: 1, // count trials
@@ -107,10 +107,10 @@ const task_instructions1 = {
            Die Teilnahme ist selbstverständlich freiwillig und kann jederzeit durch
            drücken der Escape- Taste abgebrochen werden.<br><br>
            Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
-           deine Teilnahme kannst du 1 VP-Stunde erhalten. Während des Experiments ist es
-           in manchen Versuchsdurchgängen möglich, Belohnungen in Form von Punkten zu
-           sammeln. Die zehn Teilnehmer mit der besten Gesamtleistung könnten zusätzlich
-           einen 10€-Gutschein für XXXX erhalten (insgesamt gibt es maximal 60 Teilnehmer).<br><br>
+           deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
+           Während des Experiments ist es in manchen Versuchsdurchgängen möglich, Belohnungen in Form von Punkten zu
+           sammeln. Die zehn Teilnehmer mit der höchsten Gesamtpunktzahl erhalten zusätzlich
+           einen 10€-Gutschein für eine Buchhandlung (OSIANDER). Insgesamt gibt es maximal 60 Teilnehmer.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
@@ -145,9 +145,8 @@ const task_instructions_simon1 = {
   stimulus:
     generate_formatted_html({
       text: `In der folgenden Aufgabe werden rote oder grüne Kreise entweder auf
-    der rechten oder linken Seite des Bildschirmes erscheinen. Die Seite, auf
-    der der Kreis erscheint ist für Deine Reaktion nicht relevant. Reagiere
-    immer wie folgt:<br>`,
+    der rechten oder linken Seite des Bildschirmes erscheinen. Reagiere auf die Farbe des Kreises
+    wie folgt:<br>`,
       fontsize: 24,
       lineheight: 1.25,
       align: 'left',
@@ -175,10 +174,9 @@ const task_instructions_simon2 = {
       Du musst für die Antwort den rechten Zeigefinger verwenden).<br><br>
       Je nachdem hast du die Möglichkeit Belohnung zu erhalten:<br><br>
       In Durchgängen ${rewardConditionInstructions1[0]} Übereinstimmung hast du die Möglichkeit für
-      korrekte und besonders schnelle Antworten einen Punkt / Belohnung zu erhalten.<br><br>
+      besonders schnelle (und korrekte) Antworten Belohnung (+10 Punkte) zu erhalten.<br><br>
       In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung
-      kannst du keine Punkte / Belohnung erhalten.<br>
-      Versuche in Durchgängen mit Belohnung immer einen Punkt zu erhalten in dem du so genau und so schnell wie möglich antwortest!<br><br>
+      kannst du keine Belohnung/Punkte erhalten.<br><br>
     Weiter geht es mit der Leertaste ...`,
     fontsize: 24,
     lineheight: 1.25,
@@ -195,8 +193,8 @@ const task_instructions_stroop1 = {
   stimulus:
     generate_formatted_html({
       text: `In der folgenden Aufgabe werden die Worte ROT oder GRÜN in roter
-    oder grüner Farbe geschrieben erscheinen. Bitte reagiere immer nur auf die
-    Farbe der Schrift und ignoriere das Wort. Reagiere immer wie folgt:<br>`,
+    oder grüner Farbe geschrieben erscheinen. Bitte reagiere auf die
+    Farbe der Schrift wie folgt:<br>`,
       fontsize: 22,
       lineheight: 1.25,
       align: 'left',
@@ -223,15 +221,43 @@ const task_instructions_stroop2 = {
       ROT in grün geschrieben oder das Wort GRÜN in rot geschrieben). Je
       nachdem hast du die Möglichkeit eine Belohnung zu erhalten:<br><br>
       In Durchgängen ${rewardConditionInstructions1[0]} Übereinstimmung hast du die Möglichkeit für
-      korrekte und besonders schnelle Antworten einen Punkt/Belohnung zu erhalten.<br><br>
-      In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung kannst du keine Punkte / Belohnung erhalten.<br>
-      Versuche in Durchgängen mit Belohnung immer einen Punkt zu erhalten in dem du so genau und so schnell wie möglich antwortest!<br><br>
+      besonders schnelle (und korrekte) Antworten Belohnung (+10 Punkte) zu erhalten.<br><br>
+      In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung kannst du keine Belohnung/Punkte erhalten.<br><br>
       Weiter geht es mit der Leertaste ...`,
     fontsize: 22,
     lineheight: 1.25,
     align: 'left',
   }),
   choices: [' '],
+};
+
+const reward_instructions = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    generate_formatted_html({
+      text: `Versuche in Durchgängen mit Belohnung durch besonders schnelle
+      (und korrekte) Antworten so viele Punkte wie möglich zu sammeln!<br><br>
+        Bitte beachte aber auch in Durchgängen ohne Belohnung nicht zu viele
+        Fehler zu machen, da der Anteil korrekter Antworten in diesen
+        Durchgängen bei der Berechnung deiner Gesamtpunktzahl berücksichtigt
+        wird.`,
+      fontsize: 22,
+      lineheight: 1.25,
+      align: 'left',
+    }) +
+    generate_formatted_html({
+      text: `<br>Beispiel: <br><br>Punktzahl (in Durchgängen mit Belohnung): 100 Punkte<br>
+    Prozent Korrekt (in Durchgängen ohne Belohnung): 85 %<br><br>
+    Aktuelle Gesamtpunkte: 100 x 0.85 = 85 Punkte<br><br>
+      Weiter geht es mit der Taste 'G' ...`,
+      fontsize: 22,
+      lineheight: 1.25,
+      align: 'center',
+    }),
+  choices: ['g'],
 };
 
 const start_of_block_text_simon = {
@@ -244,11 +270,11 @@ const start_of_block_text_simon = {
   on_start: function (trial) {
     let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
     let per_noreward =
-      ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
-        (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
-      100;
-    if (isNaN(per_noreward)) {
-      per_noreward = 0;
+      (performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
+      (performanceData.simon_noreward_n + performanceData.stroop_noreward_n);
+    let points = Math.round(npoints_reward * per_noreward);
+    if (isNaN(points)) {
+      points = 0;
     }
     trial.stimulus =
       generate_formatted_html({
@@ -258,8 +284,8 @@ const start_of_block_text_simon = {
         bold: true,
       }) +
       generate_formatted_html({
-        text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
-        Gesamt korrekt (in Durchgängen ohne Belohnung): ${Math.round(per_noreward)} %<br><br>
+        text: `Aktuelle Gesamtpunktzahl: ${points} Punkte<br><br>
+        Versuche in Durchgängen mit Belohnung durch besonders schnelle (und korrekte) Antworten so viele Punkte wie möglich zu sammeln!<br><br>
           Zur Erinnerung:`,
         fontsize: 26,
         align: 'center',
@@ -285,11 +311,11 @@ const start_of_block_text_stroop = {
   on_start: function (trial) {
     let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
     let per_noreward =
-      ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
-        (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
-      100;
-    if (isNaN(per_noreward)) {
-      per_noreward = 0;
+      (performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
+      (performanceData.simon_noreward_n + performanceData.stroop_noreward_n);
+    let points = Math.round(npoints_reward * per_noreward);
+    if (isNaN(points)) {
+      points = 0;
     }
     trial.stimulus =
       generate_formatted_html({
@@ -299,8 +325,8 @@ const start_of_block_text_stroop = {
         bold: true,
       }) +
       generate_formatted_html({
-        text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
-        Gesamt korrekt (in Durchgängen ohne Belohnung): ${Math.round(per_noreward)} %<br><br>
+        text: `Aktuelle Gesamtpunktzahl: ${points} Punkte<br><br>
+        Versuche in Durchgängen mit Belohnung durch besonders schnelle (und korrekte) Antworten so viele Punkte wie möglich zu sammeln!<br><br>
           Zur Erinnerung:`,
         fontsize: 26,
         align: 'center',
@@ -328,11 +354,11 @@ const end_of_block_text = {
   on_start: function (trial) {
     let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
     let per_noreward =
-      ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
-        (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
-      100;
-    if (isNaN(per_noreward)) {
-      per_noreward = 0;
+      (performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
+      (performanceData.simon_noreward_n + performanceData.stroop_noreward_n);
+    let points = Math.round(npoints_reward * per_noreward);
+    if (isNaN(points)) {
+      points = 0;
     }
     trial.stimulus =
       generate_formatted_html({
@@ -348,15 +374,17 @@ const end_of_block_text = {
         align: 'left',
       }) +
       generate_formatted_html({
-        text: `Gesamtpunktzahl (in Durchgängen mit Belohnung): ${npoints_reward} Punkte<br>
-        Gesamt korrekt (in Durchgängen ohne Belohnung): ${Math.round(per_noreward)} %<br><br>`,
+        text: `Aktuelle Gesamtpunktzahl: ${points} Punkte<br><br>`,
         fontsize: 26,
         align: 'center',
       }) +
       generate_formatted_html({
-        text: `Versuche weiterhin so viele Punkte wie möglich zu sammeln und
-          dabei so genau wie möglich zu antworten: Deine Gesamtleistung
-          berechnet sich aus der Anzahl an Punkte in Durchgängen mit Belohnung! `,
+        text: `Versuche weiterhin soviele Punkte wie möglich zu sammeln indem
+          du in Durchgängen mit Belohnung besonders schnell (und korrekt)
+          antwortest! Beachte aber auch in Durchgängen ohne Belohnung nicht zu
+          viele Fehler zu machen: Deine Gesamtpunkte berechnen sich aus der
+          Anzahl gesammelter Punkte in Durchgängen mit Belohnung multipliziert
+          mit dem Anteil korrekter Antworten in Durchgängen ohne Belohnung!`,
         fontsize: 26,
         align: 'left',
       });
@@ -425,18 +453,18 @@ function drawFeedback() {
 
     let imgnum = 1;
     if ((dat.corrCode === 1) & dat.success) {
-      ctx.fillText('Richtig & schnell!', 0, -90);
-      ctx.fillText('+1 Punkt!', 0, -65);
+      ctx.fillText('Richtig & schnell!', 0, -70);
+      ctx.fillText('+10 Punkte!', 0, -45);
       imgnum = 0;
     } else if ((dat.corrCode === 1) & !dat.success) {
-      ctx.fillText('Richtig aber zu langsam!', 0, -90);
-      ctx.fillText('Kein Punkt!', 0, -65);
+      ctx.fillText('Richtig aber zu langsam!', 0, -70);
+      ctx.fillText('Keine Punkte!', 0, -45);
     } else if (dat.corrCode === 2) {
-      ctx.fillText('Falsch!', 0, -90);
-      ctx.fillText('Kein Punkt!', 0, -65);
+      ctx.fillText('Falsch!', 0, -70);
+      ctx.fillText('Keine Punkte!', 0, -45);
     } else if (dat.corrCode === 3) {
-      ctx.fillText('Zu langsam!', 0, -90);
-      ctx.fillText('Kein Punkt!', 0, -65);
+      ctx.fillText('Zu langsam!', 0, -70);
+      ctx.fillText('Keine Punkte!', 0, -45);
     }
 
     // draw image
@@ -444,12 +472,10 @@ function drawFeedback() {
     const size = 4;
     const width = images[imgnum].width;
     const height = images[imgnum].height;
-    ctx.drawImage(images[imgnum], -width / size / 2, -height / size / 2, width / size, height / size);
+    ctx.drawImage(images[imgnum], -width / size / 2, -height / size / 2 + 20, width / size, height / size);
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
-    let total_points = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
-    ctx.fillText('Points: ' + total_points, 0, 60);
   } else {
     // draw text
     ctx.font = prms.fbSize;
@@ -464,7 +490,7 @@ function drawFeedback() {
       ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
         (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
       100;
-    ctx.fillText('Gesamt korrekt: ' + Math.round(per_noreward) + ' %', 0, 15);
+    ctx.fillText('Prozent korrekt: ' + Math.round(per_noreward) + ' %', 0, 15);
   }
 }
 
@@ -522,7 +548,7 @@ function codeTrial() {
       if (corrCode === 1) {
         success = dat.rt < performanceData.simon_reward_mean;
         if (success) {
-          performanceData.simon_reward_correct += 1;
+          performanceData.simon_reward_correct += 10;
         }
       }
     } else if (dat.comp !== dat.reward) {
@@ -538,7 +564,7 @@ function codeTrial() {
       if (corrCode === 1) {
         success = dat.rt < performanceData.stroop_reward_mean;
         if (success) {
-          performanceData.stroop_reward_correct += 1;
+          performanceData.stroop_reward_correct += 10;
         }
       }
     } else if (dat.comp !== dat.reward) {
@@ -822,7 +848,6 @@ function genExpSeq() {
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
-  exp.push(task_instructions3);
 
   // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
   let blk_task;
@@ -835,9 +860,13 @@ function genExpSeq() {
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     // add approprite block start stroop vs. simon instructions for 1st block of that task
     if (blk_task[blk] === 'simon' && [0, prms.nBlks / 2].includes(blk)) {
-      exp.push(task_instructions_simon);
+      exp.push(task_instructions_simon1);
+      exp.push(task_instructions_simon2);
+      exp.push(reward_instructions);
     } else if (blk_task[blk] === 'stroop' && [0, prms.nBlks / 2].includes(blk)) {
-      exp.push(task_instructions_stroop);
+      exp.push(task_instructions_stroop1);
+      exp.push(task_instructions_stroop2);
+      exp.push(reward_instructions);
     }
 
     // start of block text
