@@ -46,12 +46,13 @@ getComputerInfo();
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   // Fixation Cross
-  fix_duration1: 500,
-  fix_duration2: 50,
+  fix_duration: 500,
   fix_size: 10,
   fix_linewidth: 2,
 
-  iti: 2000,
+  post_trial_gap: 500,
+  iti: 1000,
+  image_target_interval: 50,
   imageDur: 250,
   minContextDur: 0,
 
@@ -75,21 +76,21 @@ const counters = {
 const version = 1; //Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
-const keyMappingMoral = [1, 2].includes(version) ? ['Acceptable', 'Unacceptable'] : ['Unacceptable', 'Acceptable'];
-const keyMappingFace = [1, 3].includes(version) ? ['Frau', 'Mann'] : ['Mann', 'Frau'];
+const keyMappingMoral = [1, 2].includes(version) ? ['akzeptabel', 'inakzeptabel'] : ['inakzeptabel', 'akzeptabel'];
+const keyMappingFiller = [1, 3].includes(version) ? ['wahr', 'falsch'] : ['falsch', 'wahr'];
 
 const respTextMoral = generate_formatted_html({
   text: `${keyMappingMoral[0]} &emsp;&emsp;&emsp;&emsp; ${keyMappingMoral[1]}<br>
-    (Taste 'S') &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (Taste 'K')`,
+    (Taste ‚S') &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (Taste ‚K')`,
   fontsize: 22,
   lineheight: 1.5,
   bold: false,
   align: 'center',
 });
 
-const respTextFace = generate_formatted_html({
-  text: `${keyMappingFace[0]} &emsp;&emsp;&emsp;&emsp; ${keyMappingFace[1]}<br>
-    (Taste 'S') &emsp;&emsp;&emsp;&emsp;&emsp; (Taste 'K')`,
+const respTextFiller = generate_formatted_html({
+  text: `${keyMappingFiller[0]} &emsp;&emsp;&emsp;&emsp; ${keyMappingFiller[1]}<br>
+    (Taste ‚S') &emsp;&emsp;&emsp;&emsp;&emsp; (Taste ‚K')`,
   fontsize: 22,
   lineheight: 1.5,
   bold: false,
@@ -109,12 +110,13 @@ const task_instructions1 = {
     Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
     Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
     genügend Zeit hast, um das Experiment durchzuführen.
-    Wir bitten dich die ca. 35 Minuten konzentriert zu arbeiten.<br><br>
+    Wir bitten dich, in den folgenden 35 Minuten konzentriert zu arbeiten.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
     lineheight: 1.5,
   }),
+  post_trial_gap: prms.post_trial_gap,
 };
 
 const task_instructions2 = {
@@ -123,14 +125,16 @@ const task_instructions2 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
-    am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
+    text: `Am Ende des Experiments erhältst du einen Code für die
+    Versuchspersonenstunde und weitere Informationen. Bei Fragen oder
+    Problemen, wende dich gerne an:<br><br>
     emotion-und-moral@web.de<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
     lineheight: 1.5,
   }),
+  post_trial_gap: prms.post_trial_gap,
 };
 
 const task_instructions3 = {
@@ -139,17 +143,17 @@ const task_instructions3 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Im folgenden werden wir Ihnen verschiedene Szenarien präsentieren,
-        in denen sich Menschen moralisch AKZEPTABEL oder moralisch
-        INAKZEPTABEL verhalten. Ihre Aufgabe ist es zu entscheiden, ob das
-        beschriebene Verhalten moralisch AKZEPTABEL oder moralisch
-        INAKZEPTABEL ist. <br><br>
-      Drücken Sie “LEERTASTE”, um fortzufahren.`,
+    text: `Im Folgenden werden dir verschiedene Szenarien präsentiert, in denen
+    sich Menschen moralisch AKZEPTABEL oder moralisch INAKZEPTABEL verhalten.
+      Deine Aufgabe ist es zu entscheiden, ob das beschriebene Verhalten
+      moralisch AKZEPTABEL oder moralisch INAKZEPTABL ist.<br><br>
+      Drücke die "LEERTASTE”, um fortzufahren.`,
     fontsize: 26,
     align: 'left',
     lineheight: 1.5,
   }),
   choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
 };
 
 const task_instructions4 = {
@@ -158,19 +162,22 @@ const task_instructions4 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Die Szenarien bestehen aus zwei Teilen. Wenn Sie den ersten Teil
-        gelesen haben, drücken Sie “LEERTASTE”, um fortzufahren. Das Bild
-        eines Gesichts wird erscheinen, welches für die Aufgabenbearbeitung
-        nicht relevant ist. Anschließend wird automatisch der zweite Teil des
-        Szenarios präsentiert. Hier müssen Sie entscheiden: Ist das
-        beschriebene Verhalten moralisch AKZEPTABEL oder moralisch
-        INAKZEPTABEL?<br><br>
-      Drücken Sie “LEERTASTE”, um fortzufahren.`,
+    text: `Die Szenarien bestehen aus zwei Teilen. Zuerst siehst du ein Kreuz
+    in der Mitte des Bildschirms. Dann wir dir automatisch der erste Teil des
+      Szenarios präsentiert. Sobald du diesen gelesen hast, drücke die
+      ‚LEERTASTE‘, um fortzufahren. Für eine kurze Zeit wird das Bild eines
+      Gesichts erscheinen, welches für die Aufgabenbearbeitung nicht relevant
+      ist. Anschließend wird automatisch der zweite Teil des Szenarios
+      präsentiert.<br><br>
+        Nun musst du dich entscheiden: Ist das beschriebene Verhalten moralisch
+        AKZEPTABEL oder moralisch INAKZEPTABEL? Bitte antworte so schnell und genau wie möglich.<br><br>
+      Drücke die ‚ LEERTASTE‘, um fortzufahren.“`,
     fontsize: 26,
     align: 'left',
     lineheight: 1.5,
   }),
   choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
 };
 
 const task_instructions5 = {
@@ -180,24 +187,102 @@ const task_instructions5 = {
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `Um zu Antworten, drücken Sie eine Taste auf Ihrer Tastatur. Legen Sie
-        nun Ihren linken Finger auf den Buchstaben ‘S’ und Ihren rechten
-        Finger auf den Buchstaben ‘K’.`,
+      text: `Um deine Antwort anzugeben, nutzt du die Tasten auf deiner
+        Tastatur. Lege deinen linken Zeigefinger auf den Buchstaben ‚S‘ und
+        deinen rechten Zeigefinger auf den Buchstaben ‚K‘. Sobald der zweite
+        Teil des Szenarios erscheint, sollst du entscheiden, ob das Verhalten
+        AKZEPTABEL oder INAKZEPTABEL ist.`,
       fontsize: 26,
       align: 'left',
       lineheight: 1.5,
     }) +
     respTextMoral +
     generate_formatted_html({
-      text: `Drücken Sie “LEERTASTE”, um fortzufahren.`,
+      text: `Bitte antworte so schnell und genau wie möglich.<br><br>
+        Drücke die ‚LEERTASTE‘, um fortzufahren.`,
       fontsize: 26,
       align: 'left',
       lineheight: 1.5,
     }),
   choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
 };
 
 const task_instructions6 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    generate_formatted_html({
+      text: `Bei einigen Szenarien wirst du im zweiten Teil NICHT um eine
+        moralische Einschätzung des Verhaltens gebeten. Hier werden dir
+        Verständnisfragen zum ersten Teil der Szenarien gestellt. Die
+        Antwortoptionen lauten ‚wahr‘ und ‚falsch‘.<br>`,
+      fontsize: 26,
+      align: 'left',
+      lineheight: 1.5,
+    }) +
+    respTextFiller +
+    generate_formatted_html({
+      text: `Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+      fontsize: 26,
+      align: 'left',
+      lineheight: 1.5,
+    }),
+  choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
+};
+
+const task_instructions_practice = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    generate_formatted_html({
+      text: `Es folgen vier Übungsdurchgänge, damit du dich mit der Aufgabe und
+        der Tastenzuordnung vertraut machen kannst.<br>`,
+      fontsize: 26,
+      align: 'left',
+      lineheight: 1.5,
+    }) +
+    respTextFiller +
+    generate_formatted_html({
+      text: `Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+      fontsize: 26,
+      align: 'left',
+      lineheight: 1.5,
+    }),
+  choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
+};
+
+const task_instructions_exp_start = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    generate_formatted_html({
+      text: `Nun startet das Experiment. Zur Erinnerung:<br>`,
+      fontsize: 26,
+      align: 'left',
+      lineheight: 1.5,
+    }) +
+    respTextMoral +
+    respTextFiller +
+    generate_formatted_html({
+      text: `Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+      fontsize: 26,
+      align: 'left',
+      lineheight: 1.5,
+    }),
+  choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
+};
+
+const task_instructions_pause = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -222,31 +307,51 @@ const task_instructions6 = {
       });
   },
   choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
   on_finish: function () {
     counters.trl = 0;
     counters.blk++;
   },
 };
 
-const task_instructions7 = {
+const task_instructions_questionnaire1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Das Experiment ist fast beendet. Nun möchten wir Sie bitten,
-    folgenden Fragebogen zu beantworten. Bitte seien Sie ehrlich, es gibt
-    keine richtigen oder falschen Antworten. Ihre Daten werden
-    anonymisiert und nur im Rahmen unserer Bachelorarbeit verwendet.
-    Falls Sie sich bei einer Frage unsicher sind, antworten Sie so, wie es
-    sich für Sie richtig anfühlt. Denken Sie nicht zu lange bei der
-    Beantwortung der Fragen nach.<br><br>
-    Drücken Sie “LEERTASTE”, um fortzufahren.`,
+    text: `Das Experiment ist fast beendet.<br><br>
+    Nun möchten wir dich bitten, den folgenden Fragebogen auszufüllen. Bitte
+    sei ehrlich, es gibt keine richtigen oder falschen Antworten. Falls du dir
+      bei einer Frage unsicher bist, antworte so, wie es sich für dich passend
+      anfühlt. Bitte versuche nicht zu lange nachzudenken und antworte nach
+      deinem Bauchgefühl. Deine Daten werden anonymisiert und nur im Rahmen
+      dieser Bachelorarbeit verwendet.<br><br>
+    Drücke die ‚LEERTASTE‘, um fortzufahren.`,
     fontsize: 26,
     align: 'left',
     lineheight: 1.5,
   }),
   choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
+};
+
+const task_instructions_questionnaire2 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `Die folgenden Punkte beschreiben eine Reihe von verschiedenen
+    Verhaltensweisen. Bitte lese jeden Punkt und berichte anhand der folgenden
+      Skala, wie oft du dich so verhalten hast.<br><br>
+    Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+    fontsize: 26,
+    align: 'left',
+    lineheight: 1.5,
+  }),
+  choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -325,23 +430,12 @@ function draw_fixation_cross() {
   ctx.stroke();
 }
 
-const fixation_cross1 = {
+const fixation_cross = {
   type: 'static-canvas-keyboard-response',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: prms.fix_duration1,
-  translate_origin: true,
-  response_ends_trial: false,
-  func: draw_fixation_cross,
-};
-
-const fixation_cross2 = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  trial_duration: prms.fix_duration2,
+  trial_duration: prms.fix_duration,
   translate_origin: true,
   response_ends_trial: false,
   func: draw_fixation_cross,
@@ -353,6 +447,16 @@ const iti = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   trial_duration: prms.iti,
+  response_ends_trial: false,
+  func: function () {},
+};
+
+const image_target_interval = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  trial_duration: prms.image_target_interval,
   response_ends_trial: false,
   func: function () {},
 };
@@ -374,21 +478,21 @@ const context = {
     if (trial.data.cond === 'comp') {
       trial.stimulus = generate_formatted_html({
         text: materials[compItems[counters.comp]].context,
-        align: 'center',
+        align: 'left',
         lineheight: 1.5,
         fontsize: 26,
       });
     } else if (trial.data.cond === 'incomp') {
       trial.stimulus = generate_formatted_html({
         text: materials[incompItems[counters.incomp]].context,
-        align: 'center',
+        align: 'left',
         lineheight: 1.5,
         fontsize: 26,
       });
     } else if (trial.data.cond === 'filler') {
       trial.stimulus = generate_formatted_html({
         text: fillers[fillerItems[counters.filler]].context,
-        align: 'center',
+        align: 'left',
         lineheight: 1.5,
         fontsize: 26,
       });
@@ -402,7 +506,7 @@ const image = {
   trial_duration: prms.imageDur,
   choices: jsPsych.NO_KEYS,
   prompt: '',
-  stimulus_width: 400,
+  stimulus_width: 500,
   maintain_aspect_ratio: true,
   render_on_canvas: true,
   data: {
@@ -463,7 +567,7 @@ const target = {
           align: 'center',
           lineheight: 1.5,
           fontsize: 26,
-        }) + respTextFace;
+        }) + respTextFiller;
     }
   },
   on_finish: function () {
@@ -472,7 +576,7 @@ const target = {
     if (dat.cond !== 'filler') {
       response_label = dat.response == 's' ? respTextMoral[0] : respTextMoral[1];
     } else if (dat.cond === 'filler') {
-      response_label = dat.response == 's' ? respTextFace[0] : respTextFace[1];
+      response_label = dat.response == 's' ? respTextFiller[0] : respTextFiller[1];
     }
     jsPsych.data.addDataToLastTrial({
       date: Date(),
@@ -509,7 +613,7 @@ const stimuli = [
 ];
 
 const trial_timeline = {
-  timeline: [context, fixation_cross1, image, fixation_cross2, target, iti],
+  timeline: [context, fixation_cross, image, image_target_interval, target, iti],
   timeline_variables: stimuli,
   sample: {
     type: 'fixed-repetitions',
@@ -565,6 +669,7 @@ while (questions.length > 0) {
     questions: questions.splice(0, 5),
     scale_width: 600,
     button_label: 'Weiter',
+    post_trial_gap: prms.post_trial_gap,
     on_finish: function () {
       let dat = jsPsych.data.get().last(1).values()[0];
       for (const [key, val] of Object.entries(dat.response)) {
@@ -603,6 +708,7 @@ const alpha_num = {
       fontsize: 26,
       align: 'left',
     }),
+  post_trial_gap: prms.post_trial_gap,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -614,7 +720,7 @@ const save_data = {
     let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
     saveData('/Common/write_data.php', data_filename, { stim_type: 'emomor' });
   },
-  timing_post_trial: 1000,
+  post_trial_gap: 1000,
 };
 
 const save_interaction_data = {
@@ -623,7 +729,7 @@ const save_interaction_data = {
     let data_filename = dirName + 'interaction/' + expName + '_interaction_data_' + vpNum;
     saveInteractionData('/Common/write_data.php', data_filename);
   },
-  timing_post_trial: 200,
+  post_trial_gap: 200,
 };
 
 const save_code = {
@@ -632,7 +738,7 @@ const save_code = {
     let code_filename = dirName + 'code/' + expName;
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },
-  timing_post_trial: 200,
+  post_trial_gap: 200,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -643,27 +749,30 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on);
+  exp.push(fullscreen_on_de);
   exp.push(check_screen);
-  exp.push(welcome_de);
+  exp.push(welcome_de_du);
   exp.push(resize_de);
   // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
-  exp.push(task_instructions3);
-  exp.push(task_instructions4);
+  // exp.push(task_instructions1);
+  // exp.push(task_instructions2);
+  // exp.push(task_instructions3);
+  // exp.push(task_instructions4);
+  // exp.push(task_instructions5);
+  // exp.push(task_instructions6);
+  // exp.push(task_instructions_practice);
 
   for (let i = 0; i < 5; i++) {
     exp.push(iti);
     exp.push(trial_timeline);
-    exp.push(task_instructions6);
+    exp.push(task_instructions_pause);
   }
 
-  exp.push(iti);
-  exp.push(task_instructions7);
+  exp.push(task_instructions_questionnaire1);
+  exp.push(task_instructions_questionnaire2);
   questionnaire.forEach(function (item) {
     exp.push(item);
   });
@@ -687,8 +796,5 @@ jsPsych.init({
   timeline: EXP,
   on_interaction_data_update: function (data) {
     update_user_interaction_data(data);
-  },
-  on_finish: function () {
-    jsPsych.data.displayData();
   },
 });
