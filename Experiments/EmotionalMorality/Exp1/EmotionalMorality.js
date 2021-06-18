@@ -86,6 +86,7 @@ const respTextMoral = generate_formatted_html({
   lineheight: 1.5,
   bold: false,
   align: 'center',
+  xypos: [0, 40],
 });
 
 const respTextFiller = generate_formatted_html({
@@ -95,6 +96,7 @@ const respTextFiller = generate_formatted_html({
   lineheight: 1.5,
   bold: false,
   align: 'center',
+  xypos: [0, 40],
 });
 
 //////////////////////////////////////////////////////////////////////////
@@ -112,7 +114,7 @@ const task_instructions1 = {
     genügend Zeit hast, um das Experiment durchzuführen.
     Wir bitten dich, in den folgenden 35 Minuten konzentriert zu arbeiten.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
-    fontsize: 26,
+    fontsize: 24,
     align: 'left',
     lineheight: 1.5,
   }),
@@ -130,7 +132,7 @@ const task_instructions2 = {
     Problemen, wende dich gerne an:<br><br>
     emotion-und-moral@web.de<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
-    fontsize: 26,
+    fontsize: 24,
     align: 'left',
     lineheight: 1.5,
   }),
@@ -148,7 +150,7 @@ const task_instructions3 = {
       Deine Aufgabe ist es zu entscheiden, ob das beschriebene Verhalten
       moralisch AKZEPTABEL oder moralisch INAKZEPTABL ist.<br><br>
       Drücke die "LEERTASTE”, um fortzufahren.`,
-    fontsize: 26,
+    fontsize: 24,
     align: 'left',
     lineheight: 1.5,
   }),
@@ -172,7 +174,7 @@ const task_instructions4 = {
         Nun musst du dich entscheiden: Ist das beschriebene Verhalten moralisch
         AKZEPTABEL oder moralisch INAKZEPTABEL? Bitte antworte so schnell und genau wie möglich.<br><br>
       Drücke die ‚ LEERTASTE‘, um fortzufahren.“`,
-    fontsize: 26,
+    fontsize: 24,
     align: 'left',
     lineheight: 1.5,
   }),
@@ -192,15 +194,15 @@ const task_instructions5 = {
         deinen rechten Zeigefinger auf den Buchstaben ‚K‘. Sobald der zweite
         Teil des Szenarios erscheint, sollst du entscheiden, ob das Verhalten
         AKZEPTABEL oder INAKZEPTABEL ist.`,
-      fontsize: 26,
+      fontsize: 24,
       align: 'left',
       lineheight: 1.5,
     }) +
     respTextMoral +
     generate_formatted_html({
-      text: `Bitte antworte so schnell und genau wie möglich.<br><br>
+      text: `<br><br>Bitte antworte so schnell und genau wie möglich.<br><br>
         Drücke die ‚LEERTASTE‘, um fortzufahren.`,
-      fontsize: 26,
+      fontsize: 24,
       align: 'left',
       lineheight: 1.5,
     }),
@@ -219,14 +221,14 @@ const task_instructions6 = {
         moralische Einschätzung des Verhaltens gebeten. Hier werden dir
         Verständnisfragen zum ersten Teil der Szenarien gestellt. Die
         Antwortoptionen lauten ‚wahr‘ und ‚falsch‘.<br>`,
-      fontsize: 26,
+      fontsize: 24,
       align: 'left',
       lineheight: 1.5,
     }) +
     respTextFiller +
     generate_formatted_html({
-      text: `Drücke die ‚LEERTASTE‘, um fortzufahren.`,
-      fontsize: 26,
+      text: `<br><br>Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+      fontsize: 24,
       align: 'left',
       lineheight: 1.5,
     }),
@@ -243,14 +245,14 @@ const task_instructions_practice = {
     generate_formatted_html({
       text: `Es folgen vier Übungsdurchgänge, damit du dich mit der Aufgabe und
         der Tastenzuordnung vertraut machen kannst.<br>`,
-      fontsize: 26,
+      fontsize: 24,
       align: 'left',
       lineheight: 1.5,
     }) +
     respTextFiller +
     generate_formatted_html({
-      text: `Drücke die ‚LEERTASTE‘, um fortzufahren.`,
-      fontsize: 26,
+      text: `<br><br>Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+      fontsize: 24,
       align: 'left',
       lineheight: 1.5,
     }),
@@ -266,7 +268,7 @@ const task_instructions_exp_start = {
   stimulus:
     generate_formatted_html({
       text: `Nun startet das Experiment. Zur Erinnerung:<br>`,
-      fontsize: 26,
+      fontsize: 24,
       align: 'left',
       lineheight: 1.5,
     }) +
@@ -274,7 +276,7 @@ const task_instructions_exp_start = {
     respTextFiller +
     generate_formatted_html({
       text: `Drücke die ‚LEERTASTE‘, um fortzufahren.`,
-      fontsize: 26,
+      fontsize: 24,
       align: 'left',
       lineheight: 1.5,
     }),
@@ -294,14 +296,14 @@ const task_instructions_pause = {
         text: `Block ${counters.blk + 1} von 5:<br><br>
       Pause! Wenn du bereit für den Block bist dann positioniere die Zeigefinger
       deiner beiden Hände auf der Tastatur. Es gilt:`,
-        fontsize: 26,
+        fontsize: 24,
         align: 'left',
         lineheight: 1.5,
       }) +
       respTextMoral +
       generate_formatted_html({
         text: `Drücken Sie “LEERTASTE”, um fortzufahren.`,
-        fontsize: 26,
+        fontsize: 24,
         align: 'left',
         lineheight: 1.5,
       });
@@ -328,7 +330,7 @@ const task_instructions_questionnaire1 = {
       deinem Bauchgefühl. Deine Daten werden anonymisiert und nur im Rahmen
       dieser Bachelorarbeit verwendet.<br><br>
     Drücke die ‚LEERTASTE‘, um fortzufahren.`,
-    fontsize: 26,
+    fontsize: 24,
     align: 'left',
     lineheight: 1.5,
   }),
@@ -346,7 +348,7 @@ const task_instructions_questionnaire2 = {
     Verhaltensweisen. Bitte lese jeden Punkt und berichte anhand der folgenden
       Skala, wie oft du dich so verhalten hast.<br><br>
     Drücke die ‚LEERTASTE‘, um fortzufahren.`,
-    fontsize: 26,
+    fontsize: 24,
     align: 'left',
     lineheight: 1.5,
   }),
@@ -480,21 +482,21 @@ const context = {
         text: materials[compItems[counters.comp]].context,
         align: 'left',
         lineheight: 1.5,
-        fontsize: 26,
+        fontsize: 24,
       });
     } else if (trial.data.cond === 'incomp') {
       trial.stimulus = generate_formatted_html({
         text: materials[incompItems[counters.incomp]].context,
         align: 'left',
         lineheight: 1.5,
-        fontsize: 26,
+        fontsize: 24,
       });
     } else if (trial.data.cond === 'filler') {
       trial.stimulus = generate_formatted_html({
         text: fillers[fillerItems[counters.filler]].context,
         align: 'left',
         lineheight: 1.5,
-        fontsize: 26,
+        fontsize: 24,
       });
     }
   },
@@ -550,24 +552,30 @@ const target = {
           text: materials[compItems[counters.comp]].target,
           align: 'center',
           lineheight: 1.5,
-          fontsize: 26,
+          fontsize: 24,
+          xypos: [0, 35],
         }) + respTextMoral;
+      counters.comp += 1;
     } else if (trial.data.cond === 'incomp') {
       trial.stimulus =
         generate_formatted_html({
           text: materials[incompItems[counters.incomp]].target,
           align: 'center',
           lineheight: 1.5,
-          fontsize: 26,
+          fontsize: 24,
+          xypos: [0, 35],
         }) + respTextMoral;
+      counters.incomp += 1;
     } else if (trial.data.cond === 'filler') {
       trial.stimulus =
         generate_formatted_html({
           text: 'Hast du eben dat Gesicht einer Frau oder eines Mannes gesehen?',
           align: 'center',
           lineheight: 1.5,
-          fontsize: 26,
+          fontsize: 24,
+          xypos: [0, 35],
         }) + respTextFiller;
+      counters.filler += 1;
     }
   },
   on_finish: function () {
@@ -757,13 +765,13 @@ function genExpSeq() {
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
-  // exp.push(task_instructions3);
-  // exp.push(task_instructions4);
-  // exp.push(task_instructions5);
-  // exp.push(task_instructions6);
-  // exp.push(task_instructions_practice);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
+  exp.push(task_instructions3);
+  exp.push(task_instructions4);
+  exp.push(task_instructions5);
+  exp.push(task_instructions6);
+  exp.push(task_instructions_practice);
 
   for (let i = 0; i < 5; i++) {
     exp.push(iti);
