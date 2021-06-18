@@ -125,7 +125,7 @@ const task_instructions2 = {
   stimulus: generate_formatted_html({
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
     am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-    johanna.m.maerker@gmail.com oder babett@anbami.net<br><br>
+    emotion-und-moral@web.de<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
@@ -374,21 +374,21 @@ const context = {
     if (trial.data.cond === 'comp') {
       trial.stimulus = generate_formatted_html({
         text: materials[compItems[counters.comp]].context,
-        align: 'left',
+        align: 'center',
         lineheight: 1.5,
         fontsize: 26,
       });
     } else if (trial.data.cond === 'incomp') {
       trial.stimulus = generate_formatted_html({
         text: materials[incompItems[counters.incomp]].context,
-        align: 'left',
+        align: 'center',
         lineheight: 1.5,
         fontsize: 26,
       });
     } else if (trial.data.cond === 'filler') {
       trial.stimulus = generate_formatted_html({
         text: fillers[fillerItems[counters.filler]].context,
-        align: 'left',
+        align: 'center',
         lineheight: 1.5,
         fontsize: 26,
       });
@@ -402,7 +402,7 @@ const image = {
   trial_duration: prms.imageDur,
   choices: jsPsych.NO_KEYS,
   prompt: '',
-  stimulus_width: 200,
+  stimulus_width: 400,
   maintain_aspect_ratio: true,
   render_on_canvas: true,
   data: {
@@ -647,7 +647,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
