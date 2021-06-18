@@ -848,7 +848,7 @@ const materials = [
   {
     itemNum: 61,
     context:
-      'Her Hartmann ist Hausmeister einer Grundschule. Auf dem Sportplatz findet er einen MP3-Player. Sein Sohn hat bald Geburtstag und er weiß, dass er sich einen wünscht.',
+      'Herr Hartmann ist Hausmeister einer Grundschule. Auf dem Sportplatz findet er einen MP3-Player. Sein Sohn hat bald Geburtstag und er weiß, dass er sich einen wünscht.',
     target: 'Er hat den MP3-Player nach Hause mitgenommen.',
     condition: 2,
   },
