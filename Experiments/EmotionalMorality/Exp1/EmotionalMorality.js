@@ -814,7 +814,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
@@ -842,6 +842,7 @@ function genExpSeq() {
   // questionnaire
   exp.push(task_instructions_questionnaire1);
   exp.push(task_instructions_questionnaire2);
+  exp.push(showMouseCursor);
   questionnaire.forEach(function (item) {
     exp.push(item);
   });
@@ -852,7 +853,6 @@ function genExpSeq() {
   exp.push(save_code);
 
   // debrief
-  exp.push(showMouseCursor);
   exp.push(alpha_num);
   exp.push(debrief_de);
   exp.push(fullscreen_off);
