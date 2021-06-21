@@ -865,7 +865,7 @@ function genExpSeq() {
   exp.push(task_instructions_exp_start);
 
   // experiment blocks
-  for (let blk = 0; blk < 1; blk++) {
+  for (let blk = 0; blk < 5; blk++) {
     exp.push(trial_timeline);
     if (blk < 4) {
       exp.push(task_instructions_pause);
