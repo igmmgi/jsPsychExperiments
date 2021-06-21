@@ -242,15 +242,14 @@ const task_instructions_practice = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus:
-    generate_formatted_html({
-      text: `Es folgen vier Übungsdurchgänge, damit du dich mit der Aufgabe und
-        der Tastenzuordnung vertraut machen kannst.<br>
+  stimulus: generate_formatted_html({
+    text: `Es folgen vier Übungsdurchgänge, damit du dich mit der Aufgabe und
+        der Tastenzuordnung vertraut machen kannst.<br><br>
       Drücke die LEERTASTE, um fortzufahren.`,
-      fontsize: 24,
-      align: 'left',
-      lineheight: 1.5,
-    }),
+    fontsize: 24,
+    align: 'left',
+    lineheight: 1.5,
+  }),
   choices: [' '],
   post_trial_gap: prms.post_trial_gap,
 };
@@ -595,6 +594,8 @@ const target = {
       trial.data.itemNum = fillers[fillerItems[counters.filler]].itemNum;
       counters.filler += 1;
     } else if (trial.data.cond === 'practice') {
+      let itemNum = practice[practiceItems[counters.practice]].itemNum;
+      let respText = itemNum < 3 ? respTextMoral : respTextFiller;
       trial.stimulus =
         generate_formatted_html({
           text: practice[practiceItems[counters.practice]].question,
@@ -602,7 +603,7 @@ const target = {
           lineheight: 1.5,
           fontsize: 24,
           xypos: [0, 35],
-        }) + respTextFiller;
+        }) + respText;
       trial.data.answer = practice[practiceItems[counters.practice]].answer;
       trial.data.itemNum = practice[practiceItems[counters.practice]].itemNum;
       counters.practice += 1;
@@ -634,6 +635,8 @@ const target = {
 // prettier-ignore
 const stimuli_practice = [
     { cond: 'practice', face: 'female_disgust'},
+    { cond: 'practice', face: 'female_happy'},
+    { cond: 'practice', face: 'male_disgust'},
     { cond: 'practice', face: 'male_happy'},
 ];
 
@@ -831,7 +834,7 @@ function genExpSeq() {
   // experiment blocks
   for (let blk = 0; blk < 5; blk++) {
     exp.push(trial_timeline);
-    if (blk < 4){
+    if (blk < 4) {
       exp.push(task_instructions_pause);
     }
   }
