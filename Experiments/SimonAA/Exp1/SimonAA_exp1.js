@@ -48,10 +48,8 @@ const prms = {
   nTrlsE: 120, // number of trials in experiment blocks
   nBlks: 5,
   fixDur: 500,
-  fbDur: [500, 1500, 1500, 1500],
+  fbDur: [500, 1500],
   iti: 500,
-  tooFast: 100,
-  tooSlow: 3000,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   fixWidth: 2,
@@ -61,7 +59,7 @@ const prms = {
   simonEccentricity: 450,
   imageSize: 0.5,
   respKeys: ['q', 'p'],
-  fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
+  fbTxt: ['Richtig', 'Falsch'],
 };
 
 const nVersion = getVersionNumber(nFiles, 2);
@@ -209,27 +207,12 @@ function codeTrial() {
   'use strict';
 
   let dat = jsPsych.data.get().last(1).values()[0];
-  let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
 
-  let correctKey;
-  if (dat.key_press !== null) {
-    correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
-  }
+  let error = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp) ? 0 : 1;
 
-  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
-    corrCode = 1; // correct
-  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
-    corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
-    corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
-    corrCode = 4; // too false
-  }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
-    corrCode: corrCode,
+    error: error,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
@@ -244,7 +227,7 @@ function drawFeedback() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
+  ctx.fillText(prms.fbTxt[dat.error], 0, 0);
 }
 
 const trial_feedback = {
@@ -257,7 +240,7 @@ const trial_feedback = {
   func: drawFeedback,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
+    trial.trial_duration = prms.fbDur[dat.error];
   },
 };
 
@@ -275,10 +258,10 @@ function blockFeedbackTxt_de_du(filter_options) {
   'use strict';
   let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
   let nTotal = dat.count();
-  let nError = dat.select('corrCode').values.filter(function (x) {
-    return x !== 1;
+  let nError = dat.select('error').values.filter(function (x) {
+    return x !== 0;
   }).length;
-  dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 1 });
+  dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, error: 0 });
   let blockFbTxt =
     '<H1>Block: ' +
     prms.cBlk +
@@ -320,7 +303,6 @@ const simon_stimulus = {
   stimulus_position: prms.stimPos,
   circle_eccentricity: prms.simonEccentricity,
   choices: prms.respKeys,
-  trial_duration: prms.tooSlow,
   data: {
     stim: 'saa1',
     imageType: jsPsych.timelineVariable('imageType'),
