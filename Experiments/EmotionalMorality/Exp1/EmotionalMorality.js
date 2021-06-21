@@ -688,7 +688,7 @@ const trial_timeline = {
 ////////////////////////////////////////////////////////////////////////
 //                           Questionnaire                            //
 ////////////////////////////////////////////////////////////////////////
-const scale = ['nie', 'so gut wie nie', 'manchmal', 'häufug', 'fast die ganze Zeit'];
+const scale = ['nie', 'so gut wie nie', 'manchmal', 'häufig', 'fast die ganze Zeit'];
 
 // prettier-ignore
 const questions = [
