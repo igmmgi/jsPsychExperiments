@@ -54,13 +54,11 @@ getComputerInfo();
 const prms = {
   nTrlsP: 80, // number of trials in each block
   nTrlsE: 80, // number of trials in each block
-  nBlks: 4,
+  nBlks: 10,
   fixDur: 400,
-  fbDur: [1500, 2500, 2500],
+  fbDur: [1500, 2500],
   iti: 500,
-  tooSlow: 2000,
-  tooFast: 0,
-  fbTxt: ['Richtig', 'Falsch!', 'Falsch (zu langsam)!'],
+  fbTxt: ['Richtig', 'Falsch!'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   fixWidth: 2,
@@ -401,13 +399,13 @@ const images = loadImages(['../images/treasure_box.jpg', '../images/treasure_box
 const performanceData = {
   simon_reward_n: 0,
   simon_reward_rts: [],
-  simon_reward_mean: prms.tooSlow,
+  simon_reward_mean: 10000, // initial high value
   simon_reward_correct: 0,
   simon_noreward_n: 0,
   simon_noreward_correct: 0,
   stroop_reward_n: 0,
   stroop_reward_rts: [],
-  stroop_reward_mean: prms.tooSlow,
+  stroop_reward_mean: 10000, // initial high value
   stroop_reward_correct: 0,
   stroop_noreward_n: 0,
   stroop_noreward_correct: 0,
@@ -452,18 +450,15 @@ function drawFeedback() {
     ctx.fillStyle = 'black';
 
     let imgnum = 1;
-    if ((dat.corrCode === 1) & dat.success) {
+    if ((dat.error === 0) & dat.success) {
       ctx.fillText('Richtig & schnell!', 0, -70);
       ctx.fillText('+10 Punkte!', 0, -45);
       imgnum = 0;
-    } else if ((dat.corrCode === 1) & !dat.success) {
+    } else if ((dat.error === 0) & !dat.success) {
       ctx.fillText('Richtig aber zu langsam!', 0, -70);
       ctx.fillText('Keine Punkte!', 0, -45);
-    } else if (dat.corrCode === 2) {
+    } else if (dat.error === 1) {
       ctx.fillText('Falsch!', 0, -70);
-      ctx.fillText('Keine Punkte!', 0, -45);
-    } else if (dat.corrCode === 3) {
-      ctx.fillText('Zu langsam!', 0, -70);
       ctx.fillText('Keine Punkte!', 0, -45);
     }
 
@@ -482,7 +477,7 @@ function drawFeedback() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
-    ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, -15);
+    ctx.fillText(prms.fbTxt[dat.error], 0, -15);
 
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
@@ -522,30 +517,15 @@ function drawSimon(args) {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  let corrCode = 0;
-  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
 
-  let correctKey;
-  if (dat.key_press !== null) {
-    correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
-  }
-
-  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
-    corrCode = 1; // correct
-  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
-    corrCode = 2; // choice error
-  } else if (dat.rt >= prms.tooSlow) {
-    corrCode = 3; // too slow
-  } else if (dat.rt <= prms.tooFast) {
-    corrCode = 4; // too false
-  }
+  let error = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp) ? 0 : 1;
 
   // update performance data
   let success = false;
   if (dat.task === 'simon') {
     if (dat.comp === dat.reward) {
       performanceData.simon_reward_n += 1;
-      if (corrCode === 1) {
+      if (error === 0) {
         success = dat.rt < performanceData.simon_reward_mean;
         if (success) {
           performanceData.simon_reward_correct += 10;
@@ -553,7 +533,7 @@ function codeTrial() {
       }
     } else if (dat.comp !== dat.reward) {
       performanceData.simon_noreward_n += 1;
-      if (corrCode === 1) {
+      if (error === 0) {
         performanceData.simon_noreward_correct += 1;
       }
     }
@@ -561,7 +541,7 @@ function codeTrial() {
     performanceData.stroop_total_n = 1;
     if (dat.comp === dat.reward) {
       performanceData.stroop_reward_n += 1;
-      if (corrCode === 1) {
+      if (error === 0) {
         success = dat.rt < performanceData.stroop_reward_mean;
         if (success) {
           performanceData.stroop_reward_correct += 10;
@@ -569,7 +549,7 @@ function codeTrial() {
       }
     } else if (dat.comp !== dat.reward) {
       performanceData.stroop_noreward_n += 1;
-      if (corrCode === 1) {
+      if (error === 0) {
         performanceData.stroop_noreward_correct += 1;
       }
     }
@@ -584,11 +564,11 @@ function codeTrial() {
     simonPoints: performanceData.simon_reward_correct,
     stroopMean: performanceData.stroop_reward_mean,
     stroopPoints: performanceData.stroop_reward_correct,
-    corrCode: corrCode,
+    error: error,
   });
 
   // update performance data for next trial
-  if (dat.comp === dat.reward && dat.corrCode === 1) {
+  if (dat.comp === dat.reward && dat.error === 0) {
     if (dat.task === 'stroop') {
       performanceData.stroop_reward_rts.push(dat.rt);
       performanceData.stroop_reward_mean = mean(performanceData.stroop_reward_rts);
@@ -610,7 +590,7 @@ const trial_feedback = {
   func: drawFeedback,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
+    trial.trial_duration = prms.fbDur[dat.error];
   },
 };
 
@@ -644,7 +624,6 @@ const stroop_stimulus = {
   translate_origin: true,
   response_ends_trial: true,
   choices: prms.respKeys,
-  trial_duration: prms.tooSlow,
   func: drawStroop,
   func_args: [
     {
@@ -676,7 +655,6 @@ const simon_stimulus = {
   translate_origin: true,
   response_ends_trial: true,
   choices: prms.respKeys,
-  trial_duration: prms.tooSlow,
   func: drawSimon,
   func_args: [
     {
