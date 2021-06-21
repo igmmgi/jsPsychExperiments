@@ -1,22 +1,30 @@
 const practice = [
   {
     itemNum: 1,
-    context: `Frau Kuhn ist Chemikerin und arbeitet in einem Forschungslabor für
-      organische Chemie an neuen Züchtungen resistenter Tomatenpflanzen. Sie
-      ist bald auf einem Kongress, auf dem sie über die geheimen
-      Forschungsarbeiten berichten soll.`,
-    target: 'Sie hat bereits ihrer Familie von dem Projekt erzählt.',
-    question: 'Frau Kuhn züchtet resistente Gurkenpflanzen.',
-    answer: wahr,
+    context: `Lukas soll auf den Hund einer Freundin aufpassen. Sie weiß nicht, dass er große Angst vor Hunden hat. Lukas will die Angst aber nicht zugeben.`,
+    target: `Lukas lügt und erzählt seiner Freundin er habe keine Zeit.`,
+    question: `Lukas lügt und erzählt seiner Freundin er habe keine Zeit.`,
+    answer: inakzeptabel,
   },
   {
     itemNum: 2,
-    context: `Lucia ist Austauschstudentin aus Spanien und versteht die
-      deutsche Sprache noch nicht sehr gut. Sie ist mit einer Gruppe von
-      deutschen Kommilitonen unterwegs. Da sie bald Geburtstag hat, planen sie
-      eine Überraschungsparty.`,
-    target: 'Wegen Lucia reden sie sehr langsam und deutlich.',
-    question: 'Lucia kommt aus Italien und hat bald Geburtstag.',
+    context: `Marie ist knapp bei Kasse und ihre Mutter hat morgen Geburtstag. Marie weiß, dass ihre Mutter sich ein teures Buch wünscht.`,
+    target: `Um ihrer Mutter eine Freude zu machen kauft Marie das Buch.`,
+    question: `Um ihrer Mutter eine Freude zu machen kauft Marie das Buch.`,
+    answer: akzeptabel,
+  },
+  {
+    itemNum: 3,
+    context: `Tim ist Zoowärter und hat täglich mit vielen verschiedenen Tieren zu tun. Giraffen und Koalas gehören zu seinen Lieblingstieren.`,
+    target: `Affen gehören zu Tims Lieblingstieren.`,
+    question: `Lukas lügt und erzählt seiner Freundin er habe keine Zeit.`,
     answer: falsch,
+  },
+  {
+    itemNum: 4,
+    context: `Larissa möchte einen Nudelsalat für einen Grillabend vorbereiten. Dafür kauft sie Nudeln, ein Glas Mayonnaise und verschiedene Sorten Gemüse.`,
+    target: `Um ihrer Mutter eine Freude zu machen kauft Marie das Buch.`,
+    question: `Larissa kauft unter anderem ein Glas Mayonnaise.`,
+    answer: wahr,
   },
 ];
