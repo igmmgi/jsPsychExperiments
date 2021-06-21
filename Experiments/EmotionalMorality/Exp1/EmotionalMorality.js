@@ -77,8 +77,8 @@ const counters = {
 const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
-const keyMappingMoral = [1, 2].includes(version) ? ['akzeptabel', 'inakzeptabel'] : ['inakzeptabel', 'akzeptabel'];
-const keyMappingFiller = [1, 3].includes(version) ? ['wahr', 'falsch'] : ['falsch', 'wahr'];
+const keyMappingMoral = [1, 2].includes(version) ? ['AKZEPTABEL', 'INAKZEPTABEL'] : ['INAKZEPTABEL', 'AKZEPTABEL'];
+const keyMappingFiller = [1, 3].includes(version) ? ['WAHR', 'FALSCH'] : ['FALSCH', 'WAHR'];
 
 const respTextMoral = generate_formatted_html({
   text: `${keyMappingMoral[0]} &emsp;&emsp;&emsp;&emsp; ${keyMappingMoral[1]}<br>
@@ -149,8 +149,8 @@ const task_instructions3 = {
     text: `Im Folgenden werden dir verschiedene Szenarien präsentiert, in denen
     sich Menschen moralisch AKZEPTABEL oder moralisch INAKZEPTABEL verhalten.
       Deine Aufgabe ist es zu entscheiden, ob das beschriebene Verhalten
-      moralisch AKZEPTABEL oder moralisch INAKZEPTABL ist.<br><br>
-      Drücke die "LEERTASTE”, um fortzufahren.`,
+      moralisch AKZEPTABEL oder moralisch INAKZEPTABEL ist.<br><br>
+      Drücke die LEERTASTE, um fortzufahren.`,
     fontsize: 24,
     align: 'left',
     lineheight: 1.5,
@@ -168,13 +168,13 @@ const task_instructions4 = {
     text: `Die Szenarien bestehen aus zwei Teilen. Zuerst siehst du ein Kreuz
     in der Mitte des Bildschirms. Dann wir dir automatisch der erste Teil des
       Szenarios präsentiert. Sobald du diesen gelesen hast, drücke die
-      ‚LEERTASTE‘, um fortzufahren. Für eine kurze Zeit wird das Bild eines
+      LEERTASTE, um fortzufahren. Für eine kurze Zeit wird das Bild eines
       Gesichts erscheinen, welches für die Aufgabenbearbeitung nicht relevant
       ist. Anschließend wird automatisch der zweite Teil des Szenarios
       präsentiert.<br><br>
         Nun musst du dich entscheiden: Ist das beschriebene Verhalten moralisch
         AKZEPTABEL oder moralisch INAKZEPTABEL? Bitte antworte so schnell und genau wie möglich.<br><br>
-      Drücke die ‚ LEERTASTE‘, um fortzufahren.“`,
+      Drücke die ‚ LEERTASTE, um fortzufahren.“`,
     fontsize: 24,
     align: 'left',
     lineheight: 1.5,
@@ -202,7 +202,7 @@ const task_instructions5 = {
     respTextMoral +
     generate_formatted_html({
       text: `<br><br>Bitte antworte so schnell und genau wie möglich.<br><br>
-        Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+        Drücke die LEERTASTE, um fortzufahren.`,
       fontsize: 24,
       align: 'left',
       lineheight: 1.5,
@@ -228,7 +228,7 @@ const task_instructions6 = {
     }) +
     respTextFiller +
     generate_formatted_html({
-      text: `<br><br>Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+      text: `<br><br>Drücke die LEERTASTE, um fortzufahren.`,
       fontsize: 24,
       align: 'left',
       lineheight: 1.5,
@@ -252,7 +252,7 @@ const task_instructions_practice = {
     }) +
     respTextFiller +
     generate_formatted_html({
-      text: `<br><br>Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+      text: `<br><br>Drücke die LEERTASTE, um fortzufahren.`,
       fontsize: 24,
       align: 'left',
       lineheight: 1.5,
@@ -276,7 +276,7 @@ const task_instructions_exp_start = {
     respTextMoral +
     respTextFiller +
     generate_formatted_html({
-      text: `<br><br>Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+      text: `<br><br>Drücke die LEERTASTE, um fortzufahren.`,
       fontsize: 24,
       align: 'left',
       lineheight: 1.5,
@@ -308,7 +308,7 @@ const task_instructions_pause = {
       respTextMoral +
       respTextFiller +
       generate_formatted_html({
-        text: `<br><br>Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+        text: `<br><br>Drücke die LEERTASTE, um fortzufahren.`,
         fontsize: 24,
         align: 'left',
         lineheight: 1.5,
@@ -335,7 +335,7 @@ const task_instructions_questionnaire1 = {
       anfühlt. Bitte versuche nicht zu lange nachzudenken und antworte nach
       deinem Bauchgefühl. Deine Daten werden anonymisiert und nur im Rahmen
       dieser Bachelorarbeit verwendet.<br><br>
-    Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+    Drücke die LEERTASTE, um fortzufahren.`,
     fontsize: 24,
     align: 'left',
     lineheight: 1.5,
@@ -353,7 +353,7 @@ const task_instructions_questionnaire2 = {
     text: `Die folgenden Punkte beschreiben eine Reihe von verschiedenen
     Verhaltensweisen. Bitte lese jeden Punkt und berichte anhand der folgenden
       Skala, wie oft du dich so verhalten hast.<br><br>
-    Drücke die ‚LEERTASTE‘, um fortzufahren.`,
+    Drücke die LEERTASTE, um fortzufahren.`,
     fontsize: 24,
     align: 'left',
     lineheight: 1.5,
@@ -768,7 +768,7 @@ const alpha_num = {
       align: 'left',
     }) +
     generate_formatted_html({
-      text: `Drücke die Leertaste, um fortzufahren!`,
+      text: `Drücke die LEERTASTE, um fortzufahren!`,
       fontsize: 26,
       align: 'left',
     }),
@@ -835,9 +835,11 @@ function genExpSeq() {
   exp.push(task_instructions_exp_start);
 
   // experiment blocks
-  for (let i = 0; i < 5; i++) {
+  for (let blk = 0; blk < 5; blk++) {
     exp.push(trial_timeline);
-    exp.push(task_instructions_pause);
+    if (blk < 4){
+      exp.push(task_instructions_pause);
+    }
   }
 
   // questionnaire
