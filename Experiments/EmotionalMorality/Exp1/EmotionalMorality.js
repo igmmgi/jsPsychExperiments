@@ -5,7 +5,7 @@
 // the keys "S" and "K"
 //
 // The moral materials have been taken from:
-// Leuthold, H., Kunkel, A., Mackenzie, I. G., & Filik, R. (2015). Online
+// Leuthold, H., Kunkel, A., Mackenzie, I.G., & Filik, R. (2015). Online
 // processing of moral transgressions: ERP evidence for spontaneous evaluation.
 // Social Cognitive and Affective Neuroscience, 10(8), 1021-1029.
 //
@@ -63,10 +63,10 @@ const prms = {
 const counters = {
   trl: 0,
   blk: 0,
-  comp: 0,
-  incomp: 0,
-  filler: 0,
-  practice: 0,
+  AKZEPTABEL: 0,
+  INAKZEPTABEL: 0,
+  FILLER: 0,
+  PRACTICE: 0,
   male_disgust: 0,
   male_happy: 0,
   female_disgust: 0,
@@ -113,7 +113,7 @@ const task_instructions1 = {
     Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
     Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
     genügend Zeit hast, um das Experiment durchzuführen.
-    Wir bitten dich, in den folgenden 35 Minuten konzentriert zu arbeiten.<br><br>
+    Wir bitten dich, in den folgenden 25 Minuten konzentriert zu arbeiten.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 24,
     align: 'left',
@@ -173,8 +173,8 @@ const task_instructions4 = {
       ist. Anschließend wird automatisch der zweite Teil des Szenarios
       präsentiert.<br><br>
         Nun musst du dich entscheiden: Ist das beschriebene Verhalten moralisch
-        AKZEPTABEL oder moralisch INAKZEPTABEL? Bitte antworte so schnell und genau wie möglich.<br><br>
-      Drücke die LEERTASTE, um fortzufahren.“`,
+        AKZEPTABEL oder moralisch INAKZEPTABEL?<br><br>
+      Drücke die LEERTASTE, um fortzufahren.`,
     fontsize: 24,
     align: 'left',
     lineheight: 1.5,
@@ -201,8 +201,7 @@ const task_instructions5 = {
     }) +
     respTextMoral +
     generate_formatted_html({
-      text: `<br><br>Bitte antworte so schnell und genau wie möglich.<br><br>
-        Drücke die LEERTASTE, um fortzufahren.`,
+      text: `<br><br>Drücke die LEERTASTE, um fortzufahren.`,
       fontsize: 24,
       align: 'left',
       lineheight: 1.5,
@@ -221,7 +220,7 @@ const task_instructions6 = {
       text: `Bei einigen Szenarien wirst du im zweiten Teil NICHT um eine
         moralische Einschätzung des Verhaltens gebeten. Hier werden dir
         Verständnisfragen zum ersten Teil der Szenarien gestellt. Die
-        Antwortoptionen lauten ‚wahr‘ und ‚falsch‘.<br>`,
+        Antwortoptionen lauten WAHR und FALSCH.<br>`,
       fontsize: 24,
       align: 'left',
       lineheight: 1.5,
@@ -252,6 +251,35 @@ const task_instructions_practice = {
   }),
   choices: [' '],
   post_trial_gap: prms.post_trial_gap,
+};
+
+const task_instructions_practice_start = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    generate_formatted_html({
+      text: `Zur Erinnerung:<br><br>
+        Drücke LEERTASTE, sobald du den ersten Teil des Szenarios gelesen hast.<br>`,
+      fontsize: 24,
+      align: 'left',
+      lineheight: 1.5,
+    }) +
+    respTextMoral +
+    respTextFiller +
+    generate_formatted_html({
+      text: `<br><br>Drücke die LEERTASTE, um fortzufahren.`,
+      fontsize: 24,
+      align: 'left',
+      lineheight: 1.5,
+    }),
+  choices: [' '],
+  post_trial_gap: prms.post_trial_gap,
+  on_start: function () {
+    counters.trl = 0;
+    counters.blk++;
+  },
 };
 
 const task_instructions_exp_start = {
@@ -301,7 +329,8 @@ const task_instructions_pause = {
       respTextMoral +
       respTextFiller +
       generate_formatted_html({
-        text: `<br><br>Drücke die LEERTASTE, um fortzufahren.`,
+        text: `<br><br>Drücke LEERTASTE, sobald du den ersten Teil des Szenarios gelesen hast.
+          <br><br>Drücke die LEERTASTE, um fortzufahren.`,
         fontsize: 24,
         align: 'left',
         lineheight: 1.5,
@@ -478,33 +507,33 @@ const context = {
     face: jsPsych.timelineVariable('face'),
   },
   on_start: function (trial) {
-    if (trial.data.cond === 'comp') {
+    if (trial.data.cond === 'AKZEPTABEL') {
       trial.stimulus = generate_formatted_html({
-        text: materials[compItems[counters.comp]].context,
+        text: materials[compItems[counters.AKZEPTABEL]].context,
         align: 'left',
         lineheight: 1.5,
         fontsize: 24,
       });
-      trial.data.itemNum = materials[compItems[counters.comp]].itemNum;
-    } else if (trial.data.cond === 'incomp') {
+      trial.data.itemNum = materials[compItems[counters.AKZEPTABEL]].itemNum;
+    } else if (trial.data.cond === 'INAKZEPTABEL') {
       trial.stimulus = generate_formatted_html({
-        text: materials[incompItems[counters.incomp]].context,
+        text: materials[incompItems[counters.INAKZEPTABEL]].context,
         align: 'left',
         lineheight: 1.5,
         fontsize: 24,
       });
-      trial.data.itemNum = materials[incompItems[counters.incomp]].itemNum;
-    } else if (trial.data.cond === 'filler') {
+      trial.data.itemNum = materials[incompItems[counters.INAKZEPTABEL]].itemNum;
+    } else if (trial.data.cond === 'FILLER') {
       trial.stimulus = generate_formatted_html({
-        text: fillers[fillerItems[counters.filler]].context,
+        text: fillers[fillerItems[counters.FILLER]].context,
         align: 'left',
         lineheight: 1.5,
         fontsize: 24,
       });
-      trial.data.itemNum = fillers[fillerItems[counters.filler]].itemNum;
-    } else if (trial.data.cond === 'practice') {
+      trial.data.itemNum = fillers[fillerItems[counters.FILLER]].itemNum;
+    } else if (trial.data.cond === 'PRACTICE') {
       trial.stimulus = generate_formatted_html({
-        text: practice[practiceItems[counters.practice]].context,
+        text: practice[practiceItems[counters.PRACTICE]].context,
         align: 'left',
         lineheight: 1.5,
         fontsize: 24,
@@ -557,73 +586,76 @@ const target = {
     face: jsPsych.timelineVariable('face'),
   },
   on_start: function (trial) {
-    if (trial.data.cond === 'comp') {
+    if (trial.data.cond === 'AKZEPTABEL') {
       trial.stimulus =
         generate_formatted_html({
-          text: materials[compItems[counters.comp]].target,
+          text: materials[compItems[counters.AKZEPTABEL]].target,
           align: 'center',
           lineheight: 1.5,
           fontsize: 24,
           xypos: [0, 35],
         }) + respTextMoral;
-      trial.data.itemNum = materials[compItems[counters.comp]].itemNum;
+      trial.data.itemNum = materials[compItems[counters.AKZEPTABEL]].itemNum;
       trial.data.answer = 'na';
-      counters.comp += 1;
-    } else if (trial.data.cond === 'incomp') {
+      counters.AKZEPTABEL += 1;
+    } else if (trial.data.cond === 'INAKZEPTABEL') {
       trial.stimulus =
         generate_formatted_html({
-          text: materials[incompItems[counters.incomp]].target,
+          text: materials[incompItems[counters.INAKZEPTABEL]].target,
           align: 'center',
           lineheight: 1.5,
           fontsize: 24,
           xypos: [0, 35],
         }) + respTextMoral;
-      trial.data.itemNum = materials[incompItems[counters.incomp]].itemNum;
+      trial.data.itemNum = materials[incompItems[counters.INAKZEPTABEL]].itemNum;
       trial.data.answer = 'na';
-      counters.incomp += 1;
-    } else if (trial.data.cond === 'filler') {
+      counters.INAKZEPTABEL += 1;
+    } else if (trial.data.cond === 'FILLER') {
       trial.stimulus =
         generate_formatted_html({
-          text: fillers[fillerItems[counters.filler]].question,
+          text: fillers[fillerItems[counters.FILLER]].question,
           align: 'center',
           lineheight: 1.5,
           fontsize: 24,
           xypos: [0, 35],
         }) + respTextFiller;
-      trial.data.answer = fillers[fillerItems[counters.filler]].answer;
-      trial.data.itemNum = fillers[fillerItems[counters.filler]].itemNum;
-      counters.filler += 1;
-    } else if (trial.data.cond === 'practice') {
-      let itemNum = practice[practiceItems[counters.practice]].itemNum;
+      trial.data.answer = fillers[fillerItems[counters.FILLER]].answer;
+      trial.data.itemNum = fillers[fillerItems[counters.FILLER]].itemNum;
+      counters.FILLER += 1;
+    } else if (trial.data.cond === 'PRACTICE') {
+      let itemNum = practice[practiceItems[counters.PRACTICE]].itemNum;
       let respText = itemNum < 3 ? respTextMoral : respTextFiller;
       trial.stimulus =
         generate_formatted_html({
-          text: practice[practiceItems[counters.practice]].question,
+          text: practice[practiceItems[counters.PRACTICE]].question,
           align: 'center',
           lineheight: 1.5,
           fontsize: 24,
           xypos: [0, 35],
         }) + respText;
-      trial.data.answer = practice[practiceItems[counters.practice]].answer;
-      trial.data.itemNum = practice[practiceItems[counters.practice]].itemNum;
-      counters.practice += 1;
+      trial.data.answer = practice[practiceItems[counters.PRACTICE]].answer;
+      trial.data.itemNum = practice[practiceItems[counters.PRACTICE]].itemNum;
+      counters.PRACTICE += 1;
     }
   },
   on_finish: function () {
     let dat_context = jsPsych.data.get().last(5).values()[0];
+    let dat_image = jsPsych.data.get().last(3).values()[0];
     let dat_target = jsPsych.data.get().last(1).values()[0];
     let target_response;
-    if ((dat_target.cond === 'comp') | (dat_target.cond === 'incomp')) {
+    if ((dat_target.cond === 'AKZEPTABEL') | (dat_target.cond === 'INAKZEPTABEL')) {
       target_response = dat_target.response === 's' ? keyMappingMoral[0] : keyMappingMoral[1];
-    } else if (dat_target.cond === 'filler') {
+    } else if (dat_target.cond === 'FILLER') {
       target_response = dat_target.response === 's' ? keyMappingFiller[0] : keyMappingFiller[1];
-    } else if (dat_target.cond === 'practice') {
-      target_response = dat_target.response === 's' ? keyMappingFiller[0] : keyMappingFiller[1];
+    } else if (dat_target.cond === 'PRACTICE') {
+      let keyMapping = dat_target.itemNum < 3 ? keyMappingMoral : keyMappingFiller;
+      target_response = dat_target.response === 's' ? keyMapping[0] : keyMapping[1];
     }
     jsPsych.data.addDataToLastTrial({
       date: Date(),
       blockNum: counters.blk,
       trialNum: counters.trl,
+      imageName: dat_image.imageName,
       target_response: target_response,
       rt_context: dat_context.rt,
       rt_target: dat_target.rt,
@@ -634,10 +666,10 @@ const target = {
 
 // prettier-ignore
 const stimuli_practice = [
-    { cond: 'practice', face: 'female_disgust'},
-    { cond: 'practice', face: 'female_happy'},
-    { cond: 'practice', face: 'male_disgust'},
-    { cond: 'practice', face: 'male_happy'},
+    { cond: 'PRACTICE', face: 'female_disgust'},
+    { cond: 'PRACTICE', face: 'female_happy'},
+    { cond: 'PRACTICE', face: 'male_disgust'},
+    { cond: 'PRACTICE', face: 'male_happy'},
 ];
 
 const trial_timeline_practice = {
@@ -651,26 +683,26 @@ const trial_timeline_practice = {
 
 // prettier-ignore
 const stimuli = [
-    { cond: 'comp',   face: 'female_disgust'},
-    { cond: 'comp',   face: 'female_happy'},
-    { cond: 'comp',   face: 'male_disgust'},
-    { cond: 'comp',   face: 'male_happy'},
-    { cond: 'comp',   face: 'female_disgust'},
-    { cond: 'comp',   face: 'female_happy'},
-    { cond: 'comp',   face: 'male_disgust'},
-    { cond: 'comp',   face: 'male_happy'},
-    { cond: 'incomp', face: 'female_disgust'},
-    { cond: 'incomp', face: 'female_happy'},
-    { cond: 'incomp', face: 'male_disgust'},
-    { cond: 'incomp', face: 'male_happy'},
-    { cond: 'incomp', face: 'female_disgust'},
-    { cond: 'incomp', face: 'female_happy'},
-    { cond: 'incomp', face: 'male_disgust'},
-    { cond: 'incomp', face: 'male_happy'},
-    { cond: 'filler', face: 'female_disgust'},
-    { cond: 'filler', face: 'female_happy'},
-    { cond: 'filler', face: 'male_disgust'},
-    { cond: 'filler', face: 'male_happy'},
+    { cond: 'AKZEPTABEL',   face: 'female_disgust'},
+    { cond: 'AKZEPTABEL',   face: 'female_happy'},
+    { cond: 'AKZEPTABEL',   face: 'male_disgust'},
+    { cond: 'AKZEPTABEL',   face: 'male_happy'},
+    { cond: 'AKZEPTABEL',   face: 'female_disgust'},
+    { cond: 'AKZEPTABEL',   face: 'female_happy'},
+    { cond: 'AKZEPTABEL',   face: 'male_disgust'},
+    { cond: 'AKZEPTABEL',   face: 'male_happy'},
+    { cond: 'INAKZEPTABEL', face: 'female_disgust'},
+    { cond: 'INAKZEPTABEL', face: 'female_happy'},
+    { cond: 'INAKZEPTABEL', face: 'male_disgust'},
+    { cond: 'INAKZEPTABEL', face: 'male_happy'},
+    { cond: 'INAKZEPTABEL', face: 'female_disgust'},
+    { cond: 'INAKZEPTABEL', face: 'female_happy'},
+    { cond: 'INAKZEPTABEL', face: 'male_disgust'},
+    { cond: 'INAKZEPTABEL', face: 'male_happy'},
+    { cond: 'FILLER',       face: 'female_disgust'},
+    { cond: 'FILLER',       face: 'female_happy'},
+    { cond: 'FILLER',       face: 'male_disgust'},
+    { cond: 'FILLER',       face: 'male_happy'},
 ];
 
 const trial_timeline = {
@@ -813,7 +845,7 @@ function genExpSeq() {
   exp.push(fullscreen_on_de);
   exp.push(check_screen);
   exp.push(welcome_de_du);
-  exp.push(resize_de);
+  exp.push(resize_de_du);
   exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
@@ -828,11 +860,12 @@ function genExpSeq() {
 
   // practice block
   exp.push(task_instructions_practice);
+  exp.push(task_instructions_practice_start);
   exp.push(trial_timeline_practice);
   exp.push(task_instructions_exp_start);
 
   // experiment blocks
-  for (let blk = 0; blk < 5; blk++) {
+  for (let blk = 0; blk < 1; blk++) {
     exp.push(trial_timeline);
     if (blk < 4) {
       exp.push(task_instructions_pause);
