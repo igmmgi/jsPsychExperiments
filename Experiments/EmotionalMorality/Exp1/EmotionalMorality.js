@@ -174,7 +174,7 @@ const task_instructions4 = {
       präsentiert.<br><br>
         Nun musst du dich entscheiden: Ist das beschriebene Verhalten moralisch
         AKZEPTABEL oder moralisch INAKZEPTABEL? Bitte antworte so schnell und genau wie möglich.<br><br>
-      Drücke die ‚ LEERTASTE, um fortzufahren.“`,
+      Drücke die LEERTASTE, um fortzufahren.“`,
     fontsize: 24,
     align: 'left',
     lineheight: 1.5,
@@ -245,14 +245,8 @@ const task_instructions_practice = {
   stimulus:
     generate_formatted_html({
       text: `Es folgen vier Übungsdurchgänge, damit du dich mit der Aufgabe und
-        der Tastenzuordnung vertraut machen kannst.<br>`,
-      fontsize: 24,
-      align: 'left',
-      lineheight: 1.5,
-    }) +
-    respTextFiller +
-    generate_formatted_html({
-      text: `<br><br>Drücke die LEERTASTE, um fortzufahren.`,
+        der Tastenzuordnung vertraut machen kannst.<br>
+      Drücke die LEERTASTE, um fortzufahren.`,
       fontsize: 24,
       align: 'left',
       lineheight: 1.5,
@@ -408,7 +402,7 @@ const imagesMaleHappy = shuffle(loadImages(imageFilesMaleHappy));
 ////////////////////////////////////////////////////////////////////////
 //                         Sentence Materials                         //
 ////////////////////////////////////////////////////////////////////////
-let practiceItems = shuffle([0, 1]);
+let practiceItems = shuffle([0, 1, 2, 3]);
 
 // console.log(materials);
 let compItems = shuffle(range(0, 160, 2)).slice(0, 40);
@@ -817,7 +811,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
