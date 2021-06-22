@@ -54,7 +54,7 @@ const prms = {
   iti: 1000,
   image_target_interval: 50,
   imageDur: 250,
-  minContextDur: 0,
+  minContextDur: 1000,
 
   // Response Keys
   resp_keys: ['s', 'k'],
@@ -276,10 +276,6 @@ const task_instructions_practice_start = {
     }),
   choices: [' '],
   post_trial_gap: prms.post_trial_gap,
-  on_start: function () {
-    counters.trl = 0;
-    counters.blk++;
-  },
 };
 
 const task_instructions_exp_start = {
@@ -319,7 +315,7 @@ const task_instructions_pause = {
   on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `Block ${counters.blk + 1} von 5:<br><br>
+        text: `Ende Block ${counters.blk + 1} von 5:<br><br>
       Pause! Wenn du bereit für den Block bist dann positioniere die Zeigefinger
       deiner beiden Hände auf der Tastatur. Es gilt:`,
         fontsize: 24,
@@ -595,8 +591,8 @@ const target = {
           fontsize: 24,
           xypos: [0, 35],
         }) + respTextMoral;
+      trial.data.answer = materials[compItems[counters.AKZEPTABEL]].answer;
       trial.data.itemNum = materials[compItems[counters.AKZEPTABEL]].itemNum;
-      trial.data.answer = 'na';
       counters.AKZEPTABEL += 1;
     } else if (trial.data.cond === 'INAKZEPTABEL') {
       trial.stimulus =
@@ -607,8 +603,8 @@ const target = {
           fontsize: 24,
           xypos: [0, 35],
         }) + respTextMoral;
+      trial.data.answer = materials[compItems[counters.AKZEPTABEL]].answer;
       trial.data.itemNum = materials[incompItems[counters.INAKZEPTABEL]].itemNum;
-      trial.data.answer = 'na';
       counters.INAKZEPTABEL += 1;
     } else if (trial.data.cond === 'FILLER') {
       trial.stimulus =
