@@ -211,7 +211,7 @@ const materials = [
   {
     itemNum: 16,
     context:
-      'Ben ist wegen sexueller Belästigung angezeigt worden. Er waran dem fraglichen Nachmittag bei einem Freund. Dieser Freund wird von der Polizei befragt.',
+      'Ben ist wegen sexueller Belästigung angezeigt worden. Er war an dem fraglichen Nachmittag bei einem Freund. Dieser Freund wird von der Polizei befragt.',
     target: 'Er verschafft ihm das Alibi.',
     answer: 'AKZEPTABEL',
   },
