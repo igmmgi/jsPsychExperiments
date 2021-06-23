@@ -691,7 +691,7 @@ const alphaNum = {
   canvas_border: canvas_border,
   stimulus: '',
   response_ends_trial: true,
-  choices: [32],
+  choices: [" "],
   on_start: function (trial) {
     trial.stimulus =
       "<h2 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h2>" +
