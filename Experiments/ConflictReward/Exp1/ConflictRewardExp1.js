@@ -819,6 +819,7 @@ function genExpSeq() {
   let exp = [];
 
   exp.push(fullscreen_on_de);
+  exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
   exp.push(vpInfoForm_de);

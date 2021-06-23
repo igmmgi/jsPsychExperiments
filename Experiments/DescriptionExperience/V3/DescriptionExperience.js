@@ -7,14 +7,23 @@ const canvas_colour = 'rgba(200, 200, 200, 1)';
 const canvas_size = [960, 720];
 const canvas_border = '5px solid black';
 
+const check_screen = {
+  type: 'check-screen-resolution',
+  width: canvas_size[0],
+  height: canvas_size[1],
+  timing_post_trial: 0,
+  on_finish: function () {
+    reload_if_not_fullscreen();
+  },
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
-const phase_order = getVersionNumber(nFiles, 2);
+getComputerInfo();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -36,6 +45,7 @@ const prms = {
 
 // 4 counter-balanced order versions
 const version = Number(jsPsych.data.urlVariables().version);
+console.log(version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -46,12 +56,22 @@ const task_instructions1 = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus:
-    "<h2 style='text-align:left;'>Liebe Teilnehmer/innen,</h2><br>" +
-    "<h2 style='text-align:left;'>vielen Dank, dass Sie sich die Zeit zur</h2>" +
-    "<h2 style='text-align:left;'>Teilnahme an unserer Arbeit nehmen.</h2><br>" +
-    "<h2 style='text-align:left;'>Bitte nehmen Sie nur teil, wenn Sie mindestens 18 Jahre alt sind.</h2>" +
-    "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
+  stimulus: generate_formatted_html({
+    text: `Herzlich Willkommen zu unserem Experiment:<br><br>
+           Die Teilnahme ist selbstverständlich freiwillig und kann jederzeit durch
+           drücken der Escape- Taste abgebrochen werden.<br><br>
+           Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
+           deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
+           Zusätzlich erhalten die 10 (von insgesamt 60) Teilnehmer mit der
+           höchsten Gesamtpunktzahl einen 10€-Einkaufsgutschein.<br><br>
+           Jede/r Teilnehmerin/Teilnehmer startet mit 500 Gesamtpunkten.<br><br>
+           Weiter geht es durch Drücken der Leertaste...`,
+    fontsize: 26,
+    lineheight: 1.5,
+    align: 'left',
+    bold: true,
+  }),
+  choices: [' '],
 };
 
 const task_instructions_gain = {
@@ -62,13 +82,14 @@ const task_instructions_gain = {
   stimulus: '',
   on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
-      text: `In diesem Experiment Teil müssen Sie so viele Punkte wie möglich sammeln.
-    Sie haben zu Beginn ${prms.cPoints} Punkte und Sie sehen in jedem Durchgang ein
-    Bild auf der linken und ein Bild auf der rechten Seite des Bildschirms. <br><br>
+      text: `*** Sie müssen nun soviele Punkte wie möglich sichern. *** <br><br>
+    Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
+    rechten Seite des Bildschirms. <br><br>
     Wenn Sie das Bild mit Gewinn wählen bekommen Sie +1 Punkt. <br><br>
     Wenn Sie das Bild ohne Gewinn wählen bekommen Sie 0 Punkte.<br><br>
     Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
-    die entsprechende Taste drücken: Links: "Q" Rechts: "P" <br><br>
+    die entsprechende Taste drücken: <br><br>
+    Links: "Q" -Taste &ensp; &ensp; &ensp; Rechts: "P" -Taste <br><br>
     Drücken Sie eine beliebige Taste, um fortzufahren!`,
       fontsize: 26,
       bold: true,
@@ -86,13 +107,14 @@ const task_instructions_loss = {
   stimulus: '',
   on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
-      text: `In diesem Experiment Teil müssen Sie versuchen soviele Punkte wie möglich zu
-    sichern. Sie haben zu Beginn ${prms.cPoints} Punkte und Sie sehen in jedem Durchgang ein
-    Bild auf der linken und ein Bild auf der rechten Seite des Bildschirms. Wenn
-    Sie das Bild mit Verlust wählen verlieren Sie -1 Punkt. Wenn Sie das Bild ohne
-    Verlust wählen verlieren Sie 0 Punkte.
-    <br><br>Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
-    die entsprechende Taste drücken: Links: "Q" Rechts: "P" <br><br>
+      text: `*** Sie müssen nun soviele Punkte wie möglich sichern. ***
+    Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
+    rechten Seite des Bildschirms.<br><br>
+    Wenn Sie das Bild mit Verlust wählen verlieren Sie -1 Punkt. <br><br>
+    Wenn Sie das Bild ohne Verlust wählen verlieren Sie 0 Punkte. <br><br>
+    Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
+    die entsprechende Taste drücken: <br><br>
+    Links: "Q" -Taste &ensp; &ensp; &ensp; Rechts: "P" -Taste <br><br>
     Drücken Sie eine beliebige Taste, um fortzufahren!`,
       fontsize: 26,
       bold: true,
@@ -112,10 +134,10 @@ const block_start = {
     trial.stimulus =
       "<h2 style='text-align:left;'>Block Start: " +
       prms.cBlk +
-      ' von 10</h2><br>' +
-      "<h2 style='text-align:left;'>Gesampunkte: " +
+      ' von 12</h2><br>' +
+      "<h2 style='text-align:left;'>Aktuelle Gesampunkte: " +
       prms.cPoints +
-      '</h2><br>' +
+      '<h2><br>Zur Erinnerung: Links: "Q"-Taste Rechts "P"-Taste</h2><br>' +
       "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>";
   },
   on_finish: function () {
@@ -133,6 +155,29 @@ const short_break = {
     "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
   on_finish: function () {
     prms.cBlk += 1;
+  },
+};
+
+const half_break = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  choices: ['g'],
+  on_start: function (trial) {
+    trial.stimulus = generate_formatted_html({
+      text: `*********************************************<br><br>
+      Die Hälfte ist geschafft.<br><br> Deine aktuelle Gesamtpunktzahl:
+      ${prms.cPoints} <br><br>
+      Bitte lese aufmerksam die neuen Instruktionen.<br><br>
+        Weiter mit Taste G<br><br>
+      ********************************************* `,
+      fontsize: 26,
+      lineheight: 1.5,
+      align: 'left',
+      bold: true,
+    });
   },
 };
 
@@ -281,7 +326,6 @@ function codeTrial() {
   let response_side = dat.key_press === prms.respKeys[0] ? 'left' : 'right';
   let highProbSelected = response_side === dat.highProbSide ? true : false;
 
-  console.log(highProbSelected);
   let rewardCode;
   if (response_side === 'left') {
     rewardCode = Math.random() < dat.imageProbLeft ? 1 : 0;
@@ -664,14 +708,51 @@ const alphaNum = {
   },
 };
 
+const email_option_instructions = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `Das Experiment ist jetzt beendet.<br><br>
+      Vielen Dank für Deine Teilnahme!<br><br>
+      Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
+Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
+Falls Du Fragen zu unserem Experiment hast, kannst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
+hiwipibio@gmail.com<br><br>
+Drücke die Leertaste, um fortzufahren!`,
+    fontsize: 26,
+    align: 'left',
+  }),
+};
+
+const email_option = {
+  type: 'survey-text',
+  questions: [{ prompt: 'E-mail addres?', placeholder: 'email@email', columns: 50, required: false, name: 'email' }],
+  button_label: 'Weiter',
+  on_finish: function () {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    jsPsych.data.addProperties({ email: dat.response.email });
+  },
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                                Save                                //
 ////////////////////////////////////////////////////////////////////////
 const save_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
+    let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
     saveData('/Common/write_data.php', data_filename, { stim: 'DescriptionExperience' });
+  },
+  post_trial_gap: 1000,
+};
+
+const save_interaction_data = {
+  type: 'call-function',
+  func: function () {
+    let data_filename = dirName + 'interaction/' + expName + '_interaction_data_' + vpNum;
+    saveInteractionData('/Common/write_data.php', data_filename);
   },
   post_trial_gap: 200,
 };
@@ -694,10 +775,10 @@ function genExpSeq() {
   let exp = [];
 
   exp.push(fullscreen_on);
+  exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
@@ -710,7 +791,7 @@ function genExpSeq() {
     // 96 trials in each block
     // first phase: learning block (description vs. experience)
     if (version === 1) {
-      //exp.push(block_start);
+      exp.push(block_start);
       exp.push(trial_timeline_description_gain);
       exp.push(short_break);
       exp.push(block_start);
@@ -730,13 +811,15 @@ function genExpSeq() {
       exp.push(trial_timeline_experiment_gain);
     }
 
+    exp.push(half_break);
+
     // Loss version
     exp.push(task_instructions_loss);
 
     // 96 trials in each block
     // first phase: learning block (description vs. experience)
     if (version === 1) {
-      //exp.push(block_start);
+      exp.push(block_start);
       exp.push(trial_timeline_description_loss);
       exp.push(short_break);
       exp.push(block_start);
@@ -765,7 +848,7 @@ function genExpSeq() {
     // 96 trials in each block
     // first phase: learning block (description vs. experience)
     if (version === 3) {
-      //exp.push(block_start);
+      exp.push(block_start);
       exp.push(trial_timeline_description_loss);
       exp.push(short_break);
       exp.push(block_start);
@@ -785,18 +868,20 @@ function genExpSeq() {
       exp.push(trial_timeline_experiment_loss);
     }
 
+    exp.push(half_break);
+
     // Gain version
     exp.push(task_instructions_gain);
 
     // 96 trials in each block
     // first phase: learning block (description vs. experience)
-    if (version === 1) {
-      //exp.push(block_start);
+    if (version === 3) {
+      exp.push(block_start);
       exp.push(trial_timeline_description_gain);
       exp.push(short_break);
       exp.push(block_start);
       exp.push(trial_timeline_experience_gain);
-    } else if (version === 2) {
+    } else if (version === 4) {
       exp.push(block_start);
       exp.push(trial_timeline_experience_gain);
       exp.push(short_break);
@@ -813,10 +898,15 @@ function genExpSeq() {
   }
 
   exp.push(showMouseCursor);
-  exp.push(short_break);
+
+  // email
+  exp.push(showMouseCursor);
+  exp.push(email_option_instructions);
+  exp.push(email_option);
 
   // save data
   exp.push(save_data);
+  exp.push(save_interaction_data);
   exp.push(save_code);
 
   // de-brief
@@ -830,9 +920,7 @@ const EXP = genExpSeq();
 
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
-  exclusions: {
-    min_width: canvas_size[0],
-    min_height: canvas_size[1],
+  on_interaction_data_update: function (data) {
+    update_user_interaction_data(data);
   },
 });
