@@ -244,8 +244,8 @@ function showPicture(args) {
     imagesLeft = imageTypeLeft === 'Description' ? imagesDescriptionGain : imagesExperienceGain;
     imagesRight = imageTypeRight === 'Description' ? imagesDescriptionGain : imagesExperienceGain;
   } else if (args.type === 'loss') {
-    imagesLeft = imageTypeLeft === 'Description' ? imagesDescriptionLoss : imagesExperienceGain;
-    imagesRight = imageTypeRight === 'Description' ? imagesDescriptionLoss : imagesExperienceGain;
+    imagesLeft = imageTypeLeft === 'Description' ? imagesDescriptionLoss : imagesExperienceLoss;
+    imagesRight = imageTypeRight === 'Description' ? imagesDescriptionLoss : imagesExperienceLoss;
   }
 
   ctx.font = '30px monospace';
