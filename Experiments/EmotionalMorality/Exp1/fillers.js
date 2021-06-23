@@ -264,7 +264,7 @@ const fillers = [
   {
     itemNum: 36,
     context:
-      'Herr Schulze ist berufstätig und hat unter der Woche kaum Zeit für andere Dinge. Sie putzt am Wochenende das ganze Haus.',
+      'Frau Schulze ist berufstätig und hat unter der Woche kaum Zeit für andere Dinge. Sie putzt am Wochenende das ganze Haus.',
     target: 'Ihr Mann arbeitet in derselben Firma.',
     question: 'Herr Schule hat viel Zeit für Freizeitaktivitäten.',
     answer: 'FALSCH',
