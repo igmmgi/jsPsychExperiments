@@ -61,9 +61,9 @@ const task_instructions2 = {
     Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
     rechten Seite des Bildschirms. <br><br>Wenn Sie das Bild mit Gewinn wählen
     bekommen Sie +1 Punkt. <br><br>Wenn Sie das Bild ohne Gewinn wählen bekommen Sie
-    0 Punkte. 
-    <br><br>Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie 
-    die entsprechende Taste drücken: Links: "Q" Rechts: "P" <br><br> 
+    0 Punkte.
+    <br><br>Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
+    die entsprechende Taste drücken: Links: "Q" Rechts: "P" <br><br>
     Drücken Sie eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
     bold: true,
@@ -302,7 +302,7 @@ const pic_stim = {
 
 // prettier-ignore
 let learning_block_description = [
-  // Pure Description 6 in total 
+  // Pure Description 6 in total
   // squares 0) 20% 2) 50% 4) 80%
 
   // Squares vs. Squares Unequal
@@ -320,7 +320,7 @@ let learning_block_experience = [
   // Pure Experience 6 in total
   // random emoji with 0) 20% 2) 50% 4) 80%
 
-  // Emoji set 
+  // Emoji set
   { phase: 'learning', trialType: 'PureExperience', imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
   { phase: 'learning', trialType: 'PureExperience', imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
   { phase: 'learning', trialType: 'PureExperience', imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
@@ -332,10 +332,10 @@ let learning_block_experience = [
 
 // prettier-ignore
 let experimental_block_pure_description = repeatArray([
-    
+
   // Pure Description 6 in total
   // squares 0) 20% 2) 50% 4) 80%
- 
+
   // Squares vs. Squares Unequal
   { phase: 'experiment', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
   { phase: 'experiment', trialType: 'PureDescription', imageTypeLeft: 'Description', imageTypeRight: 'Description', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
@@ -348,11 +348,11 @@ let experimental_block_pure_description = repeatArray([
 
 // prettier-ignore
 let experimental_block_pure_experience = repeatArray([
-    
+
   // Pure Experience 6(*2) in total
   // random emoji with 0) 20% 2) 50% 4) 80%
 
-  // Emoji set 1 
+  // Emoji set 1
   { phase: 'experiment', trialType: 'PureExperience', imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
   { phase: 'experiment', trialType: 'PureExperience', imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
   { phase: 'experiment', trialType: 'PureExperience', imageTypeLeft: 'Experience', imageTypeRight: 'Experience', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
@@ -366,7 +366,7 @@ let experimental_block_pure_experience = repeatArray([
 let experimental_block_description_vs_experience_unequal = [
 
   // Description vs. Experience Unequal 12 in total
-  // Squares vs. Emoji set 1 
+  // Squares vs. Emoji set 1
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
   { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
@@ -385,9 +385,9 @@ let experimental_block_description_vs_experience_unequal = [
 
 // prettier-ignore
 let experimental_block_description_vs_experience_equal = repeatArray([
-    
+
   // Description vs. Experience Equal 6(*2) in total
-  // Squares vs. Emoji Set 
+  // Squares vs. Emoji Set
   { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'na', },
   { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.5, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'na', },
   { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Description', imageTypeRight: 'Experience',  imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'na', },
