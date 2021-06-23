@@ -315,7 +315,7 @@ const task_instructions_pause = {
   on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `Ende Block ${counters.blk + 1} von 5:<br><br>
+        text: `Ende Block ${counters.blk} von 5:<br><br>
       Pause! Wenn du bereit für den Block bist dann positioniere die Zeigefinger
       deiner beiden Hände auf der Tastatur. Es gilt:`,
         fontsize: 24,
@@ -603,7 +603,7 @@ const target = {
           fontsize: 24,
           xypos: [0, 35],
         }) + respTextMoral;
-      trial.data.answer = materials[compItems[counters.AKZEPTABEL]].answer;
+      trial.data.answer = materials[compItems[counters.INAKZEPTABEL]].answer;
       trial.data.itemNum = materials[incompItems[counters.INAKZEPTABEL]].itemNum;
       counters.INAKZEPTABEL += 1;
     } else if (trial.data.cond === 'FILLER') {
