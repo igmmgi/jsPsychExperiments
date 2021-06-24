@@ -603,7 +603,7 @@ const target = {
           fontsize: 24,
           xypos: [0, 35],
         }) + respTextMoral;
-      trial.data.answer = materials[compItems[counters.INAKZEPTABEL]].answer;
+      trial.data.answer = materials[incompItems[counters.INAKZEPTABEL]].answer;
       trial.data.itemNum = materials[incompItems[counters.INAKZEPTABEL]].itemNum;
       counters.INAKZEPTABEL += 1;
     } else if (trial.data.cond === 'FILLER') {
@@ -842,7 +842,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de_du);
   exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 

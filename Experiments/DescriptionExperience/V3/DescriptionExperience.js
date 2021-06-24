@@ -30,8 +30,8 @@ getComputerInfo();
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   fixDur: 500,
-  fbDurGain: [1000, 500], // 1000 ms feedback for no reward, 500 ms for reward
-  fbDurLoss: [500, 1000], // 1000 ms feedback for no reward, 500 ms for reward
+  fbDurGain: [500, 500], // 500 ms feedback for no reward, 500 ms for reward
+  fbDurLoss: [500, 500], // 500 ms feedback for no reward, 500 ms for reward
   iti: 200,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -45,7 +45,7 @@ const prms = {
 };
 
 // 4 counter-balanced order versions
-const version = Number(jsPsych.data.urlVariables().version);
+const version = 1; // Number(jsPsych.data.urlVariables().version);
 console.log(version);
 jsPsych.data.addProperties({ version: version });
 
@@ -143,6 +143,7 @@ const block_start = {
   },
   on_finish: function () {
     prms.cTrl = 1;
+    prms.cBlk += 1;
   },
 };
 
@@ -154,9 +155,6 @@ const short_break = {
   stimulus:
     "<h2 style='text-align:left;'>Pause</h2><br>" +
     "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>",
-  on_finish: function () {
-    prms.cBlk += 1;
-  },
 };
 
 const half_break = {
@@ -725,6 +723,7 @@ hiwipibio@gmail.com<br><br>
 Drücke die Leertaste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
+    bold: true,
   }),
 };
 
@@ -780,7 +779,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
