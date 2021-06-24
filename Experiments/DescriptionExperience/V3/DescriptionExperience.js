@@ -30,7 +30,8 @@ getComputerInfo();
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   fixDur: 500,
-  fbDur: [1000, 500], // 1000 ms feedback for no reward, 500 ms for reward
+  fbDurGain: [1000, 500], // 1000 ms feedback for no reward, 500 ms for reward
+  fbDurLoss: [500, 1000], // 1000 ms feedback for no reward, 500 ms for reward
   iti: 200,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -271,7 +272,8 @@ const trial_feedback = {
   func: drawFeedback,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prms.fbDur[dat.rewardCode];
+    let fbDur = dat.type === 'gain' ? prms.fbDurGain : prms.fbDurLoss;
+    trial.trial_duration = fbDur[dat.rewardCode];
   },
 };
 
@@ -691,7 +693,7 @@ const alphaNum = {
   canvas_border: canvas_border,
   stimulus: '',
   response_ends_trial: true,
-  choices: [" "],
+  choices: [' '],
   on_start: function (trial) {
     trial.stimulus =
       "<h2 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h2>" +
@@ -778,7 +780,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
