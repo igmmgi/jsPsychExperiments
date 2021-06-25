@@ -805,8 +805,8 @@ function genExpSeq() {
       exp.push(trial_timeline_description_gain);
     }
 
-    // second phase: 4 experiment block of 96 trials
-    for (let blk = 0; blk < 4; blk++) {
+    // second phase: 3 experiment block of 96 trials
+    for (let blk = 0; blk < 3; blk++) {
       exp.push(short_break);
       exp.push(block_start);
       exp.push(trial_timeline_experiment_gain);
@@ -833,8 +833,8 @@ function genExpSeq() {
       exp.push(trial_timeline_description_loss);
     }
 
-    // second phase: 4 experiment block of 96 trials
-    for (let blk = 0; blk < 4; blk++) {
+    // second phase: 3 experiment block of 96 trials
+    for (let blk = 0; blk < 3; blk++) {
       exp.push(short_break);
       exp.push(block_start);
       exp.push(trial_timeline_experiment_loss);
@@ -862,8 +862,8 @@ function genExpSeq() {
       exp.push(trial_timeline_description_loss);
     }
 
-    // second phase: 4 experiment block of 96 trials
-    for (let blk = 0; blk < 4; blk++) {
+    // second phase: 3 experiment block of 96 trials
+    for (let blk = 0; blk < 3; blk++) {
       exp.push(short_break);
       exp.push(block_start);
       exp.push(trial_timeline_experiment_loss);
@@ -890,8 +890,8 @@ function genExpSeq() {
       exp.push(trial_timeline_description_gain);
     }
 
-    // second phase: 4 experiment block of 96 trials
-    for (let blk = 0; blk < 4; blk++) {
+    // second phase: 3 experiment block of 96 trials
+    for (let blk = 0; blk < 3; blk++) {
       exp.push(short_break);
       exp.push(block_start);
       exp.push(trial_timeline_experiment_gain);
