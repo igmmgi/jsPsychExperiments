@@ -113,7 +113,7 @@ const task_instructions1 = {
     Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
     Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
     genügend Zeit hast, um das Experiment durchzuführen.
-    Wir bitten dich, in den folgenden 25 Minuten konzentriert zu arbeiten.<br><br>
+    Wir bitten dich, in den folgenden 40 Minuten konzentriert zu arbeiten.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 24,
     align: 'left',
