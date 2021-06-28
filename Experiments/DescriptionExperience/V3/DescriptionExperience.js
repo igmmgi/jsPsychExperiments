@@ -65,7 +65,7 @@ const task_instructions1 = {
            Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
            Zusätzlich erhalten die 10 (von insgesamt 60) Teilnehmer mit der
-           höchsten Gesamtpunktzahl einen 10€-Einkaufsgutschein.<br><br>
+           höchsten Gesamtpunktzahl einen 10€-Gutschein (wahlweise Deutsche Bahn oder Zalando oder REWE).<br><br>
            Jede/r Teilnehmerin/Teilnehmer startet mit 500 Gesamtpunkten.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
@@ -780,7 +780,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
