@@ -85,7 +85,7 @@ const text = {
 //     func: [ drawFixation, drawCircle, drawText ]
 // }
 
-const images = loadImages(['../../img/h1.bmp', '../../img/h2.bmp']);
+const images = loadImages(['h1.bmp', 'h2.bmp']);
 
 const image_grid = {
   type: 'static-canvas-keyboard-response',
