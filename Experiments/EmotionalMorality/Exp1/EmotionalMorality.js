@@ -798,6 +798,7 @@ const alpha_num = {
       fontsize: 26,
       align: 'left',
     }),
+  choices: [' '],
   post_trial_gap: prms.post_trial_gap,
 };
 

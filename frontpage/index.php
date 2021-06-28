@@ -31,7 +31,7 @@ $nFiles_em1_v2 = numFilesInDir('Experiments/EmotionalMorality/Exp1/data/version2
 $nFiles_em1_v3 = numFilesInDir('Experiments/EmotionalMorality/Exp1/data/version3');
 $nFiles_em1_v4 = numFilesInDir('Experiments/EmotionalMorality/Exp1/data/version4');
 
-// Description Experience V3 
+// Description Experience V3
 $nFiles_de3_v1 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version1');
 $nFiles_de3_v2 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version2');
 $nFiles_de3_v3 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version3');
@@ -97,8 +97,9 @@ $nFiles_de3_v4 = numFilesInDir('Experiments/DescriptionExperience/V3/data/versio
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
             <p> Flowers & Spiders Exp1: Sophie Renner (sophie.renner@student.uni-tuebingen.de)</p>
-            <p> Reward Exp1: Katharina Hofbauer und Julia Koenig (j.koenig@student.uni-tuebingen.de) </p><br>
-            <p> Moral Decisions Exp1: Johanna Maerker (emotion-und-moral@web.de) </p><br>
+            <p> Reward Exp1: Katharina Hofbauer und Julia Koenig (j.koenig@student.uni-tuebingen.de) </p>
+            <p> Moral Decisions Exp1: Babett Eichler und Johanna Maerker (emotion-und-moral@web.de) </p>
+            <p> Choice is Yours Exp1: hiwipibio@gmail.com </p><br>
 
         </div>
         <div class="sidenav">
@@ -127,65 +128,59 @@ $nFiles_de3_v4 = numFilesInDir('Experiments/DescriptionExperience/V3/data/versio
             ?>
 
             <?php if (!empty($cr1_version)) : ?>
-                <h3><a href="Experiments/ConflictReward/Exp1/index.html?orderVersion=<?php echo $cr1_version; ?>">Reward Exp1 (n =<?= $nFiles_cr1_v1 + $nFiles_cr1_v2 + $nFiles_cr1_v3 + $nFiles_cr1_v4 ?>/60)</a></h3>
+                <h3><a href="Experiments/ConflictReward/Exp1/index.html?orderVersion=<?php echo $cr1_version; ?>">Reward Exp1 (n = <?= $nFiles_cr1_v1 + $nFiles_cr1_v2 + $nFiles_cr1_v3 + $nFiles_cr1_v4 ?>)</a></h3>
             <?php endif;  ?>
 
             <?php
-                /* Emotional Morality */
-                $em1 = [];
-                if ($nFiles_em1_v1 < 20) {
-                    array_push($em1, 1);
-                }
-                if ($nFiles_em1_v2 < 20) {
-                    array_push($em1, 2);
-                }
-                if ($nFiles_em1_v3 < 20) {
-                    array_push($em1, 3);
-                }
-                if ($nFiles_em1_v3 < 20) {
-                    array_push($em1, 4);
-                }
-                $randIndex = array_rand($em1);
-                $em1_version = $em1[$randIndex];
-                ?>
-                <?php if (!empty($em1_version)) : ?>
-                    <h3><a href="Experiments/EmotionalMorality/Exp1/index.html?version=<?php echo $em1_version; ?>">Moral Decisions Exp1 (n =<?= $nFiles_em1_v1 + $nFiles_em1_v2 + $nFiles_em1_v3 + $nFiles_em1_v4 ?>/80)</a></h3>
-                <?php endif;  ?>
+            /* Emotional Morality */
+            $em1 = [];
+            if ($nFiles_em1_v1 < 20) {
+                array_push($em1, 1);
+            }
+            if ($nFiles_em1_v2 < 20) {
+                array_push($em1, 2);
+            }
+            if ($nFiles_em1_v3 < 20) {
+                array_push($em1, 3);
+            }
+            if ($nFiles_em1_v3 < 20) {
+                array_push($em1, 4);
+            }
+            $randIndex = array_rand($em1);
+            $em1_version = $em1[$randIndex];
+            ?>
+            <?php if (!empty($em1_version)) : ?>
+                <h3><a href="Experiments/EmotionalMorality/Exp1/index.html?version=<?php echo $em1_version; ?>">Moral Decisions Exp1 (n = <?= $nFiles_em1_v1 + $nFiles_em1_v2 + $nFiles_em1_v3 + $nFiles_em1_v4 ?>)</a></h3>
+            <?php endif;  ?>
 
-    <?php
-                /* Description Experience */
-                $de3 = [];
-                if ($nFiles_de3_v1 < 15) {
-                    array_push($de3, 1);
-                }
-                if ($nFiles_de3_v2 < 15) {
-                    array_push($de3, 2);
-                }
-                if ($nFiles_de3_v3 < 15) {
-                    array_push($de3, 3);
-                }
-                if ($nFiles_de3_v4 < 15) {
-                    array_push($de3, 4);
-                }
-                $randIndex = array_rand($em1);
-                $de3_version = $de3[$randIndex];
-                ?>
-                <?php if (!empty($de3_version)) : ?>
-                    <h3><a href="Experiments/DescriptionExperience/V3/index.html?version=<?php echo $de3_version; ?>">Choice is Yours Exp1 (n =<?= $nFiles_de3_v1 + $nFiles_de3_v2 + $nFiles_de3_v3 + $nFiles_de3_v4 ?>/60)</a></h3>
-                <?php endif;  ?>
-
-
-
-
-
-
+            <?php
+            /* Description Experience */
+            $de3 = [];
+            if ($nFiles_de3_v1 < 15) {
+                array_push($de3, 1);
+            }
+            if ($nFiles_de3_v2 < 15) {
+                array_push($de3, 2);
+            }
+            if ($nFiles_de3_v3 < 15) {
+                array_push($de3, 3);
+            }
+            if ($nFiles_de3_v4 < 15) {
+                array_push($de3, 4);
+            }
+            $randIndex = array_rand($em1);
+            $de3_version = $de3[$randIndex];
+            ?>
+            <?php if (!empty($de3_version)) : ?>
+                <h3><a href="Experiments/DescriptionExperience/V3/index.html?version=<?php echo $de3_version; ?>">Choice is Yours Exp1 (n = <?= $nFiles_de3_v1 + $nFiles_de3_v2 + $nFiles_de3_v3 + $nFiles_de3_v4 ?>)</a></h3>
+            <?php endif;  ?>
 
             <h2>0,5 VP-Stunden</h2>
 
             <?php
             /* Simon Approach Avoidance */
             if ($nFiles_simon_aa_exp1 < 40) : ?>
-                <h3><a href="Experiments/SimonAA/Exp1/index.html">Flowers & Spiders Exp1 (n =<?= $nFiles_simon_aa_exp1 ?>/40)</a></h3>
+                <h3><a href="Experiments/SimonAA/Exp1/index.html">Flowers & Spiders Exp1 (n = <?= $nFiles_simon_aa_exp1 ?>)</a></h3>
             <?php endif;  ?>
 
 

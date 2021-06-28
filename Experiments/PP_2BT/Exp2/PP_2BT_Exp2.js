@@ -979,7 +979,7 @@ function genExpSeq() {
   exp.push(trial_timeline_training_colours);
   exp.push(block_feedback);
 
-  if (Math.random < 0.5) {
+  if (Math.random() < 0.5) {
     // letter task
     exp.push(task_instructions_training_letter_task);
     exp.push(trial_timeline_training_letters);

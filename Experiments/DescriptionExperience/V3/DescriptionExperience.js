@@ -325,6 +325,7 @@ function codeTrial() {
 
   let response_side = dat.key_press === prms.respKeys[0] ? 'left' : 'right';
   let highProbSelected = response_side === dat.highProbSide ? true : false;
+  console.log(highProbSelected);
 
   let rewardCode;
   if (response_side === 'left') {
