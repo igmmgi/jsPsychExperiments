@@ -12,7 +12,6 @@ const check_screen = {
   width: canvas_size[0],
   height: canvas_size[1],
   timing_post_trial: 0,
-
   on_finish: function () {
     reload_if_not_fullscreen();
   },
@@ -46,8 +45,8 @@ const prms = {
 };
 
 // 4 counter-balanced order versions
-const version = 1; // Number(jsPsych.data.urlVariables().version);
-console.log(version);
+const version = Number(jsPsych.data.urlVariables().version);
+// console.log(version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -136,7 +135,7 @@ const block_start = {
     trial.stimulus =
       "<h2 style='text-align:left;'>Block Start: " +
       prms.cBlk +
-      ' von 12</h2><br>' +
+      ' von 10</h2><br>' +
       "<h2 style='text-align:left;'>Aktuelle Gesampunkte: " +
       prms.cPoints +
       '<h2><br>Zur Erinnerung: Links: "Q"-Taste Rechts "P"-Taste</h2><br>' +
@@ -780,7 +779,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
