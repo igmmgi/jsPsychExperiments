@@ -126,7 +126,7 @@ const task_instructions2 = {
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
     zur Gutscheinvergabe am Ende des Experimentes.<br><br>
     Bei Fragen oder Problemen wende dich bitte an:<br>
-    hiwipibio@gmail.com<br><br><br>
+    j.koenig@student.uni-tuebingen.de <br><br><br>
     Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,

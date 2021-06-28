@@ -12,6 +12,7 @@ const check_screen = {
   width: canvas_size[0],
   height: canvas_size[1],
   timing_post_trial: 0,
+
   on_finish: function () {
     reload_if_not_fullscreen();
   },

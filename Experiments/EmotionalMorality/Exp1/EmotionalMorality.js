@@ -783,7 +783,8 @@ const alpha_num = {
     generate_formatted_html({
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
-      per Email an:<br><br>`,
+      per Email an:<br><br>
+      emotion-und-moral@web.de<br><br>`,
       fontsize: 26,
       align: 'left',
     }) +
