@@ -55,7 +55,7 @@ const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
-const nVersion = Number(jsPsych.data.urlVariables().version);
+const nVersion = 1; //Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: nVersion });
 getComputerInfo();
 
@@ -986,6 +986,35 @@ const trial_timeline_low_primary_exp = {
 // console.log(trial_timeline_low_primary_exp);
 
 ////////////////////////////////////////////////////////////////////////
+//                            End Question                            //
+////////////////////////////////////////////////////////////////////////
+const end_question = {
+  type: 'survey-text',
+  questions: [
+    {
+      prompt: 'Sind dir Unterschiede zwischen den verschiedenen Blöcken des Experiments aufgefallen?',
+      placeholder: 'ja/nein',
+      columns: 10,
+      rffequired: true,
+      name: 'end_q1',
+    },
+    {
+      prompt: 'Wenn ja, welche?',
+      placeholder: 'Welche?',
+      columns: 100,
+      required: false,
+      name: 'end_q2',
+    },
+  ],
+  button_label: 'Weiter',
+  randomize_question_order: false,
+  on_finish: function () {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    jsPsych.data.addProperties({ end_q1: dat.end_q1, end_q2: dat.end_q2 });
+  },
+};
+
+////////////////////////////////////////////////////////////////////////
 //                              De-brief                              //
 ////////////////////////////////////////////////////////////////////////
 // For VP Stunden
@@ -1125,6 +1154,8 @@ function genExpSeq() {
     }
     exp.push(block_feedback);
   }
+
+  exp.push(end_question);
 
   // save data
   exp.push(save_data);
