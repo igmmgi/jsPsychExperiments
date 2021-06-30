@@ -458,7 +458,8 @@ function draw_shape_training(args) {
   } else if (args.shape === 'kreis') {
     ctx.beginPath();
     ctx.lineWidth = prms.shape_linewidth;
-    ctx.arc(0, 0, 50, 0, 2 * Math.PI);
+    ctx.strokeStyle = prms.shape_colour;
+    ctx.arc(0, 0, 57, 0, 2 * Math.PI);
     ctx.stroke();
   } else if (args.shape === 'rhombus') {
     ctx.beginPath();
@@ -1089,7 +1090,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome);
   exp.push(resize);
-  exp.push(vpInfoForm);
+  // exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 

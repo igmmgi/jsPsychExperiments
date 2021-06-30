@@ -398,11 +398,11 @@ const stimuli_primary = [
     { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "neutral", corr_key: prms.resp_keys[1], backward_comp: "comp"},
     { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "fear",    corr_key: prms.resp_keys[0], backward_comp: "comp"},
     { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "fear",    corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[0], backward_comp: "icomp"},
+    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[0], backward_comp: "incomp"},
     { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "fear",    corr_key: prms.resp_keys[1], backward_comp: "comp"},
     { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[0], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "comp"},
     { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[0], face_emotion: "happy",   corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "icomp"},
+    { response_task: 'primary', colour: prms.colours[0], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[0], backward_comp: "incomp"},
     { response_task: 'primary', colour: prms.colours[1], face_gender: prms.gender[1], face_emotion: "happy",   corr_key: prms.resp_keys[1], backward_comp: "comp"},
 ];
 
@@ -609,6 +609,7 @@ const alpha_num = {
       fontsize: 26,
       align: 'left',
     }),
+  choices: [' '],
 };
 
 ////////////////////////////////////////////////////////////////////////

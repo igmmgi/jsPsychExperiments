@@ -37,6 +37,10 @@ $nFiles_de3_v2 = numFilesInDir('Experiments/DescriptionExperience/V3/data/versio
 $nFiles_de3_v3 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version3');
 $nFiles_de3_v4 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version4');
 
+// PP Emotion
+$nFiles_ppe_v1 = numFilesInDir('Experiments/PP_Emotion/Exp1/version1/data');
+$nFiles_ppe_v2 = numFilesInDir('Experiments/PP_Emotion/Exp1/version2/data');
+
 ?>
 
 <html lang="en">
@@ -99,7 +103,8 @@ $nFiles_de3_v4 = numFilesInDir('Experiments/DescriptionExperience/V3/data/versio
             <p> Flowers & Spiders Exp1: Sophie Renner (sophie.renner@student.uni-tuebingen.de)</p>
             <p> Reward Exp1: Katharina Hofbauer und Julia Koenig (j.koenig@student.uni-tuebingen.de) </p>
             <p> Moral Decisions Exp1: Babett Eichler und Johanna Maerker (emotion-und-moral@web.de) </p>
-            <p> Choice is Yours Exp1: hiwipibio@gmail.com </p><br>
+            <p> Choice is Yours Exp1: hiwipibio@gmail.com </p>
+            <p> Faces Exp1: matthias.viteritti@student.uni-tuebingen.de</p><br>,
 
         </div>
         <div class="sidenav">
@@ -174,6 +179,24 @@ $nFiles_de3_v4 = numFilesInDir('Experiments/DescriptionExperience/V3/data/versio
             <?php if (!empty($de3_version)) : ?>
                 <h3><a href="Experiments/DescriptionExperience/V3/index.html?version=<?php echo $de3_version; ?>">Choice is Yours Exp1 (n = <?= $nFiles_de3_v1 + $nFiles_de3_v2 + $nFiles_de3_v3 + $nFiles_de3_v4 ?>)</a></h3>
             <?php endif;  ?>
+
+
+            <?php
+            /* PP Emotion*/
+            $ppe1 = [];
+            if ($nFiles_ppe_v1 < 15) {
+                array_push($ppe1, 1);
+            }
+            if ($nFiles_de3_v2 < 15) {
+                array_push($ppe1, 2);
+            }
+            $randIndex = array_rand($ppe1);
+            $ppe1_version = $ppe1[$randIndex];
+            ?>
+            <?php if (!empty($ppe1_version)) : ?>
+                <h3><a href="Experiments/PP_Emotion/Exp1/index.html?version=<?php echo $ppe1_version; ?>">Faces Exp1 (n = <?= $nFiles_ppe_v1 + $nFiles_ppe_v2 ?>)</a></h3>
+            <?php endif;  ?>
+
 
             <h2>0,5 VP-Stunden</h2>
 
