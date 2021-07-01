@@ -99,9 +99,9 @@ const prms = {
   numbers: [1, 2, 8, 9],
   left_numbers: [1, 2],
   right_numbers: [8, 9],
-  letters: ['E', 'U', 'D', 'W'],
+  letters: ['E', 'U', 'K', 'R'],
   vowel_letters: ['E', 'U'],
-  consonant_letters: ['D', 'W'],
+  consonant_letters: ['K', 'R'],
   letter_task: shuffle(['Vokal', 'Konsonant']),
   stim_size: 'bold 80px monospace',
   fb_size: '30px monospace',
@@ -826,7 +826,7 @@ function draw_pp(args) {
   } else if (args.shape === 'Kreis') {
     ctx.beginPath();
     ctx.lineWidth = prms.shape_linewidth;
-    ctx.arc(0, 0, 50, 0, 2 * Math.PI);
+    ctx.arc(0, 0, 57, 0, 2 * Math.PI);
     ctx.stroke();
   } else if (args.shape === 'Dreieck') {
     ctx.beginPath();
