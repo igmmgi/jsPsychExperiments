@@ -55,7 +55,7 @@ const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
 const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
-const nVersion = 1; //Number(jsPsych.data.urlVariables().version);
+const nVersion = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: nVersion });
 getComputerInfo();
 
@@ -459,11 +459,11 @@ function draw_shape_training(args) {
     ctx.strokeStyle = prms.shape_colour;
     ctx.arc(0, 0, 57, 0, 2 * Math.PI);
     ctx.stroke();
-  } else if (args.shape === 'dreieck') {
+  } else if (args.shape === 'Dreieck') {
     ctx.beginPath();
-    ctx.moveTo(-65, 50);
-    ctx.lineTo(0, -80);
-    ctx.lineTo(65, 50);
+    ctx.moveTo(-65, 45);
+    ctx.lineTo(0, -85);
+    ctx.lineTo(65, 45);
     ctx.closePath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.strokeStyle = prms.shape_colour;
@@ -513,18 +513,18 @@ function draw_feedback_training() {
     if (dat.shape !== 'na') {
       ctx.fillStyle = 'black';
       ctx.fillText(prms.shapes[0], -160, -35);
-      ctx.fillText(prms.shapes[1], 190, -30);
-      ctx.fillText(`Wenn die Form ${prms.shapes[2]} ist, keine Taske drücken!`, 0, 50);
+      ctx.fillText(prms.shapes[1], 160, -35);
+      ctx.fillText(`Wenn die Form ein ${prms.shapes[2]} ist, keine Taske drücken!`, 0, 50);
       ctx.fillText('(Q-Taste)', -150, 0);
-      ctx.fillText('(P-Taste)', 200, 0);
+      ctx.fillText('(P-Taste)', 150, 0);
     } else if ([1, 2, 8, 9].includes(dat.letter_number)) {
       ctx.fillText('Zahl kleiner 5         Zahl größer 5', 0, -15);
       ctx.fillText('(Q-Taste)', -150, 20);
-      ctx.fillText('(P-Taste)', 200, 20);
+      ctx.fillText('(P-Taste)', 150, 20);
     } else {
-      ctx.fillText(`${prms.letter_task[0]}        ${prms.letter_task[1]}`, 0, -15);
+      ctx.fillText(`${prms.letter_task[0]}          ${prms.letter_task[1]}`, 0, -15);
       ctx.fillText('(Q-Taste)', -150, 20);
-      ctx.fillText('(P-Taste)', 200, 20);
+      ctx.fillText('(P-Taste)', 150, 20);
     }
   }
 }
@@ -830,11 +830,12 @@ function draw_pp(args) {
     ctx.stroke();
   } else if (args.shape === 'Dreieck') {
     ctx.beginPath();
+    ctx.moveTo(-65, 45);
+    ctx.lineTo(0, -85);
+    ctx.lineTo(65, 45);
+    ctx.closePath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.strokeStyle = prms.shape_colour;
-    ctx.rotate(Math.PI / 4);
-    ctx.rect(-prms.shape_size / 2, -prms.shape_size / 2, prms.shape_size, prms.shape_size);
-    ctx.rotate(-Math.PI / 4);
     ctx.stroke();
   }
 
@@ -863,16 +864,16 @@ function draw_feedback_pp() {
     ctx.fillText('1. Priorität: Formaufgabe', 0, -80);
     ctx.fillText(prms.shapes[0], -160, -35);
     ctx.fillText(prms.shapes[1], 190, -30);
-    ctx.fillText(`Wenn Form ${prms.shapes[2]} ist`, 0, 40);
+    ctx.fillText(`Wenn die Form ein ${prms.shapes[2]} ist`, 0, 40);
     ctx.fillText('2. Priorität: Buchstaben oder Zahlenaufgabe', 0, 90);
     ctx.fillStyle = 'black';
-    ctx.fillText(`${prms.letter_task[0]}        ${prms.letter_task[1]}`, 0, 130);
-    ctx.fillText('Zahl kleiner 5         Zahl größer 5', 0, 170);
+    ctx.fillText(`${prms.letter_task[0]}             ${prms.letter_task[1]}`, 0, 130);
+    ctx.fillText('Zahl kleiner 5          Zahl größer 5', 0, 170);
     ctx.font = '20px monospace';
-    ctx.fillText('(Q-Taste)', -150, -10);
-    ctx.fillText('(Q-Taste)', -150, 210);
-    ctx.fillText('(P-Taste)', 200, -10);
-    ctx.fillText('(P-Taste)', 200, 210);
+    ctx.fillText('(Q-Taste)', -150, -5);
+    ctx.fillText('(Q-Taste)', -150, 200);
+    ctx.fillText('(P-Taste)', 200, -5);
+    ctx.fillText('(P-Taste)', 200, 200);
   }
 }
 
@@ -1085,12 +1086,11 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(trial_timeline_training_shapes);
   exp.push(fullscreen_on);
   exp.push(check_screen);
   exp.push(welcome);
   exp.push(resize);
-  // exp.push(vpInfoForm);
+  exp.push(vpInfoForm);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
 
