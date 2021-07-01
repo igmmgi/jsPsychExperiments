@@ -91,7 +91,7 @@ const prms = {
   fix_linewidth: 4,
 
   // Stimuli
-  shapes: shuffle(['kreis', 'quadrat', 'rhombus']),
+  shapes: shuffle(['kreis', 'quadrat', 'dreieck']),
   shape_size: 100,
   shape_linewidth: 10,
   shape_colour: 'black',
@@ -443,12 +443,10 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 //                  Training-Phase 3 Separate Tasks                   //
 ////////////////////////////////////////////////////////////////////////
-
 // Coloured Frame
 function draw_shape_training(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
-
   if (args.shape === 'quadrat') {
     ctx.beginPath();
     ctx.lineWidth = prms.shape_linewidth;
@@ -461,13 +459,14 @@ function draw_shape_training(args) {
     ctx.strokeStyle = prms.shape_colour;
     ctx.arc(0, 0, 57, 0, 2 * Math.PI);
     ctx.stroke();
-  } else if (args.shape === 'rhombus') {
+  } else if (args.shape === 'dreieck') {
     ctx.beginPath();
+    ctx.moveTo(-50, 50);
+    ctx.lineTo(0, -50);
+    ctx.lineTo(50, 50);
+    ctx.closePath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.strokeStyle = prms.shape_colour;
-    ctx.rotate(Math.PI / 4);
-    ctx.rect(-prms.shape_size / 2, -prms.shape_size / 2, prms.shape_size, prms.shape_size);
-    ctx.rotate(-Math.PI / 4);
     ctx.stroke();
   }
 }
