@@ -91,7 +91,7 @@ const prms = {
   fix_linewidth: 4,
 
   // Stimuli
-  shapes: shuffle(['kreis', 'quadrat', 'dreieck']),
+  shapes: shuffle(['Kreis', 'Quadrat', 'Dreieck']),
   shape_size: 100,
   shape_linewidth: 10,
   shape_colour: 'black',
@@ -118,7 +118,7 @@ const prms = {
 // prettier-ignore
 let resp_text_shapes_training = `${prms.shapes[0]} &emsp;&emsp; ${prms.shapes[1]}</span><br>
                    (Q-Taste) &emsp;&emsp; (P-Taste) <br>
-                   Wenn Form ${prms.shapes[2]} ist, kein Taste drücken!<br><br>`;
+                   Wenn die Form ein ${prms.shapes[2]} ist, kein Taste drücken!<br><br>`;
 
 // response keys for letter task/number task
 let resp_text_numbers = `Zahl kleiner 5 &emsp;&emsp;&emsp; Zahl größer 5<br>
@@ -131,8 +131,8 @@ let resp_text_letters = `${prms.letter_task[0]} &emsp;&emsp;&emsp; ${prms.letter
 // prettier-ignore
 let resp_text_pp = `1. Priorität: Formaufgabe <br><br>${prms.shapes[0]}&emsp;&emsp; ${prms.shapes[1]}<br>
                    (Q-Taste) &emsp;&emsp; (P-Taste) <br><br>
-                   Wenn form ${prms.shapes[2]} ist: <br><br>
-                    2. Priorität: Buchstabe oder Zahlaufgabe<br><br>
+                   Wenn die Form ${prms.shapes[2]} ist: <br><br>
+                    2. Priorität: Buchstabe oder Zahlenaufgabe<br><br>
                    ${prms.letter_task[0]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${prms.letter_task[1]}<br>
                    Zahl kleiner 5 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Zahl größer 5<br>
                    (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `;
@@ -142,8 +142,8 @@ function resp_text_pp_block() {
     return (`Block ${prms.cBlk} von ${prms.nBlks_total}<br><br>
              1. Priorität: Formaufgabe <br><br> ${prms.shapes[0]}&emsp;&emsp;${prms.shapes[1]}<br>
             (Q-Taste) &emsp;&emsp; (P-Taste) <br><br>
-            Wenn form ${prms.shapes[2]} ist: <br>
-             2. Priorität: Buchstabe- oder Zahlaufgabe<br><br>
+            Wenn die Form ${prms.shapes[2]} ist: <br>
+             2. Priorität: Buchstabe- oder Zahlenaufgabe<br><br>
             ${prms.letter_task[0]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${prms.letter_task[1]}<br>
             Zahl kleiner 5 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Zahl größer 5<br>
             (Q-Taste) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(P-Taste) `);
@@ -191,7 +191,7 @@ const task_instructions3 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `In diesem Experiment gibt es insgesamt drei verschiedene Aufgaben.
-Du musst auf die Form (= Formaufgabe), Buchstaben (= Buchstabenaufgabe) oder auf Zahlen (= Zahlaufgabe) reagieren. <br><br>
+Du musst auf die Form eines Objektes (= Formaufgabe), auf Buchstaben (= Buchstabenaufgabe) oder auf Zahlen (= Zahlenaufgabe) reagieren. <br><br>
 WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit dem rechten Zeigefinger.<br><br>
 Zunächst hast du die Gelegenheit die einzelnen Aufgaben zu üben.<br><br>
 Drücke eine beliebige Taste um fortzufahren.`,
@@ -207,8 +207,8 @@ const task_instructions_training_shape_task = {
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `Aufgabe: Übungsblock Formaufgabe<br><br>
-    Bitte entscheide die Form.`,
+      text: `Übungsblock: Formaufgabe<br><br>
+    Bitte entscheide, welche Form gezeigt wird:`,
       fontsize: 26,
       align: 'center',
     }) +
@@ -231,8 +231,8 @@ const task_instructions_training_letter_task = {
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `Aufgabe: Übungsblock Buchstabenaufgabe <br><br>
-    Bitte entscheide ob der Buchstabe Vokal oder Konsonant ist:`,
+      text: `Übungsblock: Buchstabenaufgabe <br><br>
+    Bitte entscheide, ob der Buchstabe ein Vokal oder Konsonant ist:`,
       fontsize: 26,
       align: 'center',
     }) +
@@ -255,8 +255,8 @@ const task_instructions_training_number_task = {
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `Aufgabe: Übungsblock Zahlaufgabe <br><br>
-    Bitte entscheide ob die Zahl größer oder kleiner als 5 ist:`,
+      text: `Übungsblock: Zahlenaufgabe <br><br>
+    Bitte entscheide, ob die Zahl kleiner oder größer als 5 ist:`,
       fontsize: 26,
       align: 'center',
     }) +
@@ -281,7 +281,7 @@ const task_instructions_pp1 = {
     text: `ACHTUNG: NEUE INSTRUKTIONEN!!!<br><br>
            Nun werden dir in jedem Durchgang 2 Aufgaben präsentiert: Immer die Formaufgabe mit entweder der Buchstaben- oder Zahlenaufgabe.<br>
            Du musst nur auf eine der zwei Aufgaben reagieren. <br>
-           Die erste Priorität ist Form.<br>
+           Die erste Priorität ist die Formaufgabe.<br>
            Die zweite Priorität ist die Buchstaben- und Zahlenaufgabe. Du musst NUR auf den Buchstaben bzw. die Zahl reagieren, wenn die Formaufgabe keine Antwort verlangt.<br><br>
            Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
@@ -447,13 +447,13 @@ const block_feedback = {
 function draw_shape_training(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
-  if (args.shape === 'quadrat') {
+  if (args.shape === 'Quadrat') {
     ctx.beginPath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.strokeStyle = prms.shape_colour;
     ctx.rect(-prms.shape_size / 2, -prms.shape_size / 2, prms.shape_size, prms.shape_size);
     ctx.stroke();
-  } else if (args.shape === 'kreis') {
+  } else if (args.shape === 'Kreis') {
     ctx.beginPath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.strokeStyle = prms.shape_colour;
@@ -461,9 +461,9 @@ function draw_shape_training(args) {
     ctx.stroke();
   } else if (args.shape === 'dreieck') {
     ctx.beginPath();
-    ctx.moveTo(-50, 50);
-    ctx.lineTo(0, -50);
-    ctx.lineTo(50, 50);
+    ctx.moveTo(-65, 50);
+    ctx.lineTo(0, -80);
+    ctx.lineTo(65, 50);
     ctx.closePath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.strokeStyle = prms.shape_colour;
@@ -817,18 +817,18 @@ stimuli_low_primary.forEach((i) => (i.prob_cond = 'LP'));
 function draw_pp(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
-  if (args.shape === 'quadrat') {
+  if (args.shape === 'Quadrat') {
     ctx.beginPath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.strokeStyle = prms.shape_colour;
     ctx.rect(-prms.shape_size / 2, -prms.shape_size / 2, prms.shape_size, prms.shape_size);
     ctx.stroke();
-  } else if (args.shape === 'kreis') {
+  } else if (args.shape === 'Kreis') {
     ctx.beginPath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.arc(0, 0, 50, 0, 2 * Math.PI);
     ctx.stroke();
-  } else if (args.shape === 'rhombus') {
+  } else if (args.shape === 'Dreieck') {
     ctx.beginPath();
     ctx.lineWidth = prms.shape_linewidth;
     ctx.strokeStyle = prms.shape_colour;
@@ -864,7 +864,7 @@ function draw_feedback_pp() {
     ctx.fillText(prms.shapes[0], -160, -35);
     ctx.fillText(prms.shapes[1], 190, -30);
     ctx.fillText(`Wenn Form ${prms.shapes[2]} ist`, 0, 40);
-    ctx.fillText('2. Priorität: Buchstabe-/Zahlaufgabe', 0, 90);
+    ctx.fillText('2. Priorität: Buchstaben oder Zahlenaufgabe', 0, 90);
     ctx.fillStyle = 'black';
     ctx.fillText(`${prms.letter_task[0]}        ${prms.letter_task[1]}`, 0, 130);
     ctx.fillText('Zahl kleiner 5         Zahl größer 5', 0, 170);
@@ -1085,6 +1085,7 @@ function genExpSeq() {
 
   let exp = [];
 
+  exp.push(trial_timeline_training_shapes);
   exp.push(fullscreen_on);
   exp.push(check_screen);
   exp.push(welcome);
