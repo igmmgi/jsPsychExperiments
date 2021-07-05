@@ -4,9 +4,9 @@
 // 1) Primary task: shape (e.g. circle, square, diamond). One of the three shapes (randomly
 // selected across participants) indicates that the background task is to be performed.
 // The two shapes assigned to the primary task are randomly assigned left/right keys.
-// 2) Background task 1: letter (E, U, D, W) vowel vs. consonant
+// 2) Background task 1: letter (E, U, K, R) vowel vs. consonant
 // 3) Background task 2: number (1, 2, 8, 9)
-// The letters (E, U) annd letters (D, W) were randomly assigned to the left/right keys.
+// The letters (E, U) annd letters (K, R) were randomly assigned to the left/right keys.
 // The numbers (1, 2) are assigned the left key, whilst the numbers (8, 9) are assigned the right key.
 // Additionally, the two background tasks are randomly assigned a colour (red vs. blue)
 //
@@ -74,9 +74,9 @@ const prms = {
   nBlks_training: 3, // 1 training block for each inddividual task
   nBlks_pp_p: 1, // single practice block in each PP probability block
   nTrls_pp_p: 48, // number of trials in practice PP block
-  nBlks_pp_e: 1, // three experimental blocks in each PP probability blocks
-  nTrls_pp_e: 48, // number of trials in experimental PP blocks
-  nBlks_total: 7, // total number of training + experimental blocks
+  nBlks_pp_e: 3, // three experimental blocks in each PP probability blocks
+  nTrls_pp_e: 96, // number of trials in experimental PP blocks
+  nBlks_total: 11, // total number of training + experimental blocks
 
   // Timing
   soa: [50],
@@ -1011,7 +1011,7 @@ const end_question = {
   randomize_question_order: false,
   on_finish: function () {
     let dat = jsPsych.data.get().last(1).values()[0];
-    jsPsych.data.addProperties({ end_q1: dat.end_q1, end_q2: dat.end_q2 });
+    jsPsych.data.addProperties({ end_q1: dat.response.end_q1, end_q2: dat.response.end_q2 });
   },
 };
 
