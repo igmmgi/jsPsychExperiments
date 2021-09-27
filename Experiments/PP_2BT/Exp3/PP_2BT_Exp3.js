@@ -668,17 +668,31 @@ const trial_timeline_training_numbers = {
 //                          Experiment Phase                          //
 ////////////////////////////////////////////////////////////////////////
 
+let stimuli_primary;
 // prettier-ignore
-const stimuli_primary = [
-    { response_task: 'primary', background_task: 'letter', shape: prms.shapes[0], colour: prms.colours[0], letter_number: "vowel_letter",     soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
-    { response_task: 'primary', background_task: 'letter', shape: prms.shapes[1], colour: prms.colours[0], letter_number: "consonant_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-    { response_task: 'primary', background_task: 'letter', shape: prms.shapes[0], colour: prms.colours[0], letter_number: "vowel_letter",     soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
-    { response_task: 'primary', background_task: 'letter', shape: prms.shapes[1], colour: prms.colours[0], letter_number: "consonant_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
-    { response_task: 'primary', background_task: 'number', shape: prms.shapes[0], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
-    { response_task: 'primary', background_task: 'number', shape: prms.shapes[1], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
-    { response_task: 'primary', background_task: 'number', shape: prms.shapes[0], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
-    { response_task: 'primary', background_task: 'number', shape: prms.shapes[1], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
-];
+if (prms.letter_task[0] === "Vokal") {
+    stimuli_primary = [
+        { response_task: 'primary', background_task: 'letter', shape: prms.shapes[0], colour: prms.colours[0], letter_number: "vowel_letter",     soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'letter', shape: prms.shapes[1], colour: prms.colours[0], letter_number: "vowel_letter",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'letter', shape: prms.shapes[0], colour: prms.colours[0], letter_number: "consonant_letter", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'letter', shape: prms.shapes[1], colour: prms.colours[0], letter_number: "consonant_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'number', shape: prms.shapes[0], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'number', shape: prms.shapes[1], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'number', shape: prms.shapes[0], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'number', shape: prms.shapes[1], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
+    ];
+} else if (prms.letter_task[0] === "Konsonant") {
+    stimuli_primary = [
+        { response_task: 'primary', background_task: 'letter', shape: prms.shapes[0], colour: prms.colours[0], letter_number: "vowel_letter",     soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'letter', shape: prms.shapes[1], colour: prms.colours[0], letter_number: "vowel_letter",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'letter', shape: prms.shapes[0], colour: prms.colours[0], letter_number: "consonant_letter", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'letter', shape: prms.shapes[1], colour: prms.colours[0], letter_number: "consonant_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'number', shape: prms.shapes[0], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "comp"},
+        { response_task: 'primary', background_task: 'number', shape: prms.shapes[1], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'number', shape: prms.shapes[0], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "incomp"},
+        { response_task: 'primary', background_task: 'number', shape: prms.shapes[1], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "comp"},
+    ];
+}
 
 let stimuli_background_high_primary;
 // prettier-ignore
@@ -696,10 +710,10 @@ if (prms.letter_task[0] === "Vokal") {
         ] : [
             { response_task: 'background', background_task: 'letter', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "vowel_letter",     soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
             { response_task: 'background', background_task: 'letter', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "consonant_letter", soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
-            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
-            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
-            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
-            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
+            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
+            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
+            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
+            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
             { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
             { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"}
         ];
@@ -717,10 +731,10 @@ if (prms.letter_task[0] === "Vokal") {
         ] : [
             { response_task: 'background', background_task: 'letter', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "vowel_letter",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
             { response_task: 'background', background_task: 'letter', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "consonant_letter", soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
-            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
-            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
-            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
-            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[0], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
+            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
+            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
+            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
+            { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"},
             { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "left_number",      soa: prms.soa[0], corr_key: prms.resp_keys[0], backward_comp: "na"},
             { response_task: 'background', background_task: 'number', shape: prms.shapes[2], colour: prms.colours[1], letter_number: "right_number",     soa: prms.soa[0], corr_key: prms.resp_keys[1], backward_comp: "na"}
         ];
@@ -1057,7 +1071,7 @@ const save_data = {
     let data_filename = dirName + 'data/version' + nVersion + '/' + expName + '_' + vpNum;
     saveData('/Common/write_data.php', data_filename, { stim_type: 'pp2bt' });
   },
-  timing_post_trial: 1000,
+  timing_post_trial: 3000,
 };
 
 const save_interaction_data = {
@@ -1156,6 +1170,7 @@ function genExpSeq() {
     exp.push(block_feedback);
   }
 
+  exp.push(showMouseCursor);
   exp.push(end_question);
 
   // save data
@@ -1164,7 +1179,6 @@ function genExpSeq() {
   exp.push(save_code);
 
   // debrief
-  exp.push(showMouseCursor);
   exp.push(alpha_num);
   exp.push(debrief);
   exp.push(fullscreen_off);

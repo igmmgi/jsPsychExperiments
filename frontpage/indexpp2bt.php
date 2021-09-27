@@ -11,35 +11,8 @@ function debug_to_console($data)
     $output = $data;
     if (is_array($output))
         $output = implode(',', $output);
-
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
-
-// Simon AA
-$nFiles_simon_aa_exp1 = numFilesInDir('Experiments/SimonAA/Exp1/data/');
-$nFiles_simon_aa_exp2 = numFilesInDir('Experiments/SimonAA/Exp2/data/');
-
-// ConflictReward
-$nFiles_cr1_v1 = numFilesInDir('Experiments/ConflictReward/Exp1/data/version1');
-$nFiles_cr1_v2 = numFilesInDir('Experiments/ConflictReward/Exp1/data/version2');
-$nFiles_cr1_v3 = numFilesInDir('Experiments/ConflictReward/Exp1/data/version3');
-$nFiles_cr1_v4 = numFilesInDir('Experiments/ConflictReward/Exp1/data/version4');
-
-// Emotional Morality
-$nFiles_em1_v1 = numFilesInDir('Experiments/EmotionalMorality/Exp1/data/version1');
-$nFiles_em1_v2 = numFilesInDir('Experiments/EmotionalMorality/Exp1/data/version2');
-$nFiles_em1_v3 = numFilesInDir('Experiments/EmotionalMorality/Exp1/data/version3');
-$nFiles_em1_v4 = numFilesInDir('Experiments/EmotionalMorality/Exp1/data/version4');
-
-// Description Experience V3
-$nFiles_de3_v1 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version1');
-$nFiles_de3_v2 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version2');
-$nFiles_de3_v3 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version3');
-$nFiles_de3_v4 = numFilesInDir('Experiments/DescriptionExperience/V3/data/version4');
-
-// PP Emotion
-$nFiles_ppe_v1 = numFilesInDir('Experiments/PP_Emotion/Exp1/data/version1/');
-$nFiles_ppe_v2 = numFilesInDir('Experiments/PP_Emotion/Exp1/data/version2/');
 
 // PP2BT
 $nFiles_PP_2BT_exp3_v1 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version1');
@@ -88,8 +61,6 @@ $nFiles_PP_2BT_exp3_v4 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version4');
             <p>Versuchspersonenstunden: Bei einigen Experimenten ist es möglich VP-Stunden zu erhalten. Sie erhalten Ihren VP-Code und weitere Anweisungen am Ende eines Experimentes. </p>
             <p>Die Teilnahme ist freiwillig. Die Daten werden anonym gespeichert und können nicht mit Ihnen in Verbindung gebracht werden. Basierend auf den Richtlinien guter ethischer Forschung sowie der Datenschutzgrundverordnung sollen sich Teilnehmende explizit und nachvollziehbar mit der Teilnahme an einem Experiment und der Verarbeitung ihrer Daten einverstanden erklären. Aus diesem Grund möchten wir Sie bitten, die "Allgemeinen Informationen für TeilnehmerInnen" aufmerksam zu lesen before Sie an einem Experiment teilnehmen.</p>
 
-            <p><span style="color:red;"> Achtung Teilnahmevoraussetzungen für Flowers and Spiders Exp2:</span> Laptop mit Touch-/Trackpad, Keine Teilnahme an 'Flowers and Spiders Exp1', kein Problem mit der Betrachtung von realen Spinnenbildern</p>
-
             <h2> Vielen Dank für Ihre Teilnahme!</h2><br>
 
             <h1> Allgemeine Informationen für TeilnehmerInnen </h1>
@@ -106,109 +77,13 @@ $nFiles_PP_2BT_exp3_v4 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version4');
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
-            <p> Flowers & Spiders Exp2: Sophie Renner (sophie.renner@student.uni-tuebingen.de)</p>
-            <p> Reward Exp1: Katharina Hofbauer und Julia Koenig (j.koenig@student.uni-tuebingen.de) </p>
-            <p> Moral Decisions Exp1: Babett Eichler und Johanna Maerker (emotion-und-moral@web.de) </p>
-            <p> Choice is Yours Exp1: hiwipibio@gmail.com </p>
-            <p> Faces Exp1: matthias.viteritti@student.uni-tuebingen.de</p>
-            <p> Tripple PPP Exp3: hiwipibio@gmail.com </p><br>
+            <p> Tripple PPP Exp3: hiwipibio@gmail.com </p>
 
         </div>
         <div class="sidenav">
 
             <h1>Experiments</h1>
             <h2>1,0 VP-Stunden</h2>
-
-            <?php
-            $cr1 = [];
-            if ($nFiles_cr1_v1 < 15) {
-                array_push($cr1, 1);
-            }
-            if ($nFiles_cr1_v2 < 15) {
-                array_push($cr1, 2);
-            }
-            if ($nFiles_cr1_v3 < 15) {
-                array_push($cr1, 3);
-            }
-            if ($nFiles_cr1_v4 < 15) {
-                array_push($cr1, 4);
-            }
-
-            $randIndex = array_rand($cr1);
-            $cr1_version = $cr1[$randIndex];
-            /* debug_to_console($cr1_version) */
-            ?>
-
-            <?php if (!empty($cr1_version)) : ?>
-                <h3><a href="Experiments/ConflictReward/Exp1/index.html?orderVersion=<?php echo $cr1_version; ?>">Reward Exp1 (n = <?= $nFiles_cr1_v1 + $nFiles_cr1_v2 + $nFiles_cr1_v3 + $nFiles_cr1_v4 ?>)</a></h3>
-            <?php endif;  ?>
-
-            <?php
-            /* Emotional Morality */
-            $em1 = [];
-            if ($nFiles_em1_v1 < 14) {
-                array_push($em1, 1);
-            }
-            if ($nFiles_em1_v2 < 14) {
-                array_push($em1, 2);
-            }
-            if ($nFiles_em1_v3 < 14) {
-                array_push($em1, 3);
-            }
-            if ($nFiles_em1_v3 < 14) {
-                array_push($em1, 4);
-            }
-            $randIndex = array_rand($em1);
-            $em1_version = $em1[$randIndex];
-            ?>
-            <?php if (!empty($em1_version)) : ?>
-                <h3><a href="Experiments/EmotionalMorality/Exp1/index.html?version=<?php echo $em1_version; ?>">Moral Decisions Exp1 (n = <?= $nFiles_em1_v1 + $nFiles_em1_v2 + $nFiles_em1_v3 + $nFiles_em1_v4 ?>)</a></h3>
-            <?php endif;  ?>
-
-            <?php
-            /* Description Experience */
-            $de3 = [];
-            if ($nFiles_de3_v1 < 10) {
-                array_push($de3, 1);
-            }
-            if ($nFiles_de3_v2 < 10) {
-                array_push($de3, 2);
-            }
-            if ($nFiles_de3_v3 < 10) {
-                array_push($de3, 3);
-            }
-            if ($nFiles_de3_v4 < 10) {
-                array_push($de3, 4);
-            }
-            $randIndex = array_rand($de3);
-            $de3_version = $de3[$randIndex];
-            ?>
-            <?php if (!empty($de3_version)) : ?>
-                <h3><a href="Experiments/DescriptionExperience/V3/index.html?version=<?php echo $de3_version; ?>">Choice is Yours Exp1 (n = <?= $nFiles_de3_v1 + $nFiles_de3_v2 + $nFiles_de3_v3 + $nFiles_de3_v4 ?>)</a></h3>
-            <?php endif;  ?>
-
-
-            <?php
-            /* PP Emotion*/
-            $ppe1 = [];
-            if ($nFiles_ppe_v1 < 17) {
-                array_push($ppe1, 1);
-            }
-            if ($nFiles_ppe_v1 < 17) {
-                array_push($ppe1, 2);
-            }
-            $randIndex = array_rand($ppe1);
-            $ppe1_version = $ppe1[$randIndex];
-            ?>
-            <?php if (!empty($ppe1_version)) : ?>
-                <h3><a href="Experiments/PP_Emotion/Exp1/index.html?version=<?php echo $ppe1_version; ?>">Faces Exp1 (n = <?= $nFiles_ppe_v1 + $nFiles_ppe_v2 ?>)</a></h3>
-            <?php endif;  ?>
-
-            <?php
-            /* Simon Approach Avoidance */
-            if ($nFiles_simon_aa_exp2 < 40) : ?>
-                <h3><a href="Experiments/SimonAA/Exp2/index.html">Flowers & Spiders Exp2 (n = <?= $nFiles_simon_aa_exp2 ?>)</a></h3>
-            <?php endif;  ?>
 
             <?php
             $pp_2bt = [];
@@ -233,11 +108,6 @@ $nFiles_PP_2BT_exp3_v4 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version4');
             <?php if (!empty($pp_2bt_version)) : ?>
                 <h3><a href="Experiments/PP_2BT/Exp3/index.html?version=<?php echo $pp_2bt_version; ?>">Tripple PPP Exp 3 (n = <?= $nFiles_PP_2BT_exp3_v1 + $nFiles_PP_2BT_exp3_v2 + $nFiles_PP_2BT_exp3_v3 + $nFiles_PP_2BT_exp3_v4 ?>)</a></h3>
             <?php endif;  ?>
-
-
-
-
-            <h2>0,5 VP-Stunden</h2>
 
         </div>
     </div>

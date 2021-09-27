@@ -86,6 +86,19 @@ if (nVersion === 1) {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
+const participation_conditions = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    "<h2 style='text-align: center;'>Wichtig Teilnahmevoraussetzungen:</h2><br>" +
+    "<h3 style='text-align: left;'>* Laptop mit Touch-/Trackpad</h3>" +
+    "<h3 style='text-align: left;'>* Keine Teilnahme an 'Flowers and Spiders Exp1'</h3>" +
+    "<h3 style='text-align: left;'>* kein Problem mit der Betrachtung von realen Spinnenbildern</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+};
+
 const task_instructions1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
@@ -96,7 +109,7 @@ const task_instructions1 = {
     "<h3 style='text-align: left;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3>" +
     "<h3 style='text-align: left;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
     "<h3 style='text-align: left;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
-    "<h3 style='text-align: left;'>Wir bitten dich die ca. 25 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: left;'>Wir bitten dich die ca. 35 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h3 style='text-align: left;'>Achtung: in diesem Experiment wirst du Bilder von echten Spinnen</h3>" +
     "<h3 style='text-align: left;'>sehen, welche gegebenfalls negative Emotionen oder Reaktionen</h3>" +
     "<h3 style='text-align: left;'>auslösen können. Bitte kilcke nur weiter wenn du damit einverstanden</h3>" +
@@ -124,9 +137,9 @@ const task_instructions3 = {
   stimulus:
     "<h2 style='text-align: center;'>Aufgabe:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du auf Bilder (Spinnen und Blumen) so schnell und so genau wie</h3>" +
-    "<h3 style='text-align: left;'>möglich reagieren, die rechts oder links auf dem Bildschirm erscheinen.</h3>" +
-    "<h3 style='text-align: left;'>Reagiere, indem du den Cursor in der Mitte des Bildschirms mit der Maus</h3>" +
-    "<h3 style='text-align: left;'>nach links oder nach rechts ziehst.</h3>" +
+    "<h3 style='text-align: left;'>möglich reagieren, die rechts oder links auf dem Bildschirm erscheinen.</h3><br>" +
+    "<h3 style='text-align: left;'>Reagiere, indem du den Cursor in der Mitte des Bildschirms nach links oder rechts ziehst.</h3>" +
+    "<h3 style='text-align: left;'>Bewege dazu deinen Finger auf dem Touch-/Trackpad deines Laptops. </h3><br>" +
     "<h3 style='text-align: left;'>Ignoriere die Position der Bilder und reagiere wie folgt:</h3><br>" +
     respText +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren.</h2>",
@@ -144,7 +157,7 @@ const task_instructions4 = {
       prms.cBlk +
       ' von 5:</h2><br>' +
       "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere deine Hand </h3>" +
-      "<h3 style='text-align: left;'>auf der Maus. Es gilt:</h3><br>" +
+      "<h3 style='text-align: left;'>auf dem Touch-/Trackpad. Es gilt:</h3><br>" +
       respText +
       "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
   },
@@ -162,8 +175,9 @@ const task_instructions_reminder = {
       prms.cBlk +
       ' von 5:</h2><br>' +
       "<h3 style='text-align: left;'>Wenn du bereit für den Block bist dann positioniere deine Hand </h3>" +
-      "<h3 style='text-align: left;'>auf der Maus. Es gilt:</h3><br>" +
+      "<h3 style='text-align: left;'>auf dem Touch-/Trackpad. Es gilt:</h3><br>" +
       respText +
+      "<h3 style='text-align: center;'>Anmerkung: Starten jeden Durchgang in dem du in die Mitte klickst.</h3><br>" +
       "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
   },
 };
@@ -404,7 +418,7 @@ const save_data = {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data_json.php', data_filename, { stim: 'saa2' }, 'json');
   },
-  post_trial_gap: 1000,
+  post_trial_gap: 3000,
 };
 
 const save_interaction_data = {
@@ -439,6 +453,7 @@ function genExpSeq() {
   exp.push(resize_de_du);
   exp.push(vpInfoForm_de);
   exp.push(screenInfo);
+  exp.push(participation_conditions);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);
