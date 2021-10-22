@@ -113,7 +113,7 @@ for (let sent_num = 0; sent_num < sentences_with_line_breaks.length; sent_num++)
 for (let sent_num = 0; sent_num < sentences_with_line_breaks.length; sent_num++) {
   let moving_window = {
     type: 'self-paced-reading',
-    mask_type: 1,
+    mask_type: 2,
     sentence: sentences_with_line_breaks[sent_num],
     mask_on_word: false,
     font: '20px monospace',

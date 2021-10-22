@@ -88,7 +88,6 @@ $nFiles_PP_2BT_exp3_v4 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version4');
             <p>Versuchspersonenstunden: Bei einigen Experimenten ist es möglich VP-Stunden zu erhalten. Sie erhalten Ihren VP-Code und weitere Anweisungen am Ende eines Experimentes. </p>
             <p>Die Teilnahme ist freiwillig. Die Daten werden anonym gespeichert und können nicht mit Ihnen in Verbindung gebracht werden. Basierend auf den Richtlinien guter ethischer Forschung sowie der Datenschutzgrundverordnung sollen sich Teilnehmende explizit und nachvollziehbar mit der Teilnahme an einem Experiment und der Verarbeitung ihrer Daten einverstanden erklären. Aus diesem Grund möchten wir Sie bitten, die "Allgemeinen Informationen für TeilnehmerInnen" aufmerksam zu lesen before Sie an einem Experiment teilnehmen.</p>
 
-            <p><span style="color:red;"> Achtung Teilnahmevoraussetzungen für Flowers and Spiders Exp2:</span> Laptop mit Touch-/Trackpad, Keine Teilnahme an 'Flowers and Spiders Exp1', kein Problem mit der Betrachtung von realen Spinnenbildern</p>
 
             <h2> Vielen Dank für Ihre Teilnahme!</h2><br>
 
@@ -106,11 +105,6 @@ $nFiles_PP_2BT_exp3_v4 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version4');
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
-            <p> Flowers & Spiders Exp2: Sophie Renner (sophie.renner@student.uni-tuebingen.de)</p>
-            <p> Reward Exp1: Katharina Hofbauer und Julia Koenig (j.koenig@student.uni-tuebingen.de) </p>
-            <p> Moral Decisions Exp1: Babett Eichler und Johanna Maerker (emotion-und-moral@web.de) </p>
-            <p> Choice is Yours Exp1: hiwipibio@gmail.com </p>
-            <p> Faces Exp1: matthias.viteritti@student.uni-tuebingen.de</p>
             <p> Tripple PPP Exp3: hiwipibio@gmail.com </p><br>
 
         </div>
@@ -209,32 +203,6 @@ $nFiles_PP_2BT_exp3_v4 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version4');
             if ($nFiles_simon_aa_exp2 < 40) : ?>
                 <h3><a href="Experiments/SimonAA/Exp2/index.html">Flowers & Spiders Exp2 (n = <?= $nFiles_simon_aa_exp2 ?>)</a></h3>
             <?php endif;  ?>
-
-            <?php
-            $pp_2bt = [];
-            if ($nFiles_PP_2BT_exp3_v1 < 13) {
-                array_push($pp_2bt, 1);
-            }
-            if ($nFiles_PP_2BT_exp3_v2 < 13) {
-                array_push($pp_2bt, 2);
-            }
-            if ($nFiles_PP_2BT_exp3_v3 < 13) {
-                array_push($pp_2bt, 3);
-            }
-            if ($nFiles_PP_2BT_exp3_v4 < 13) {
-                array_push($pp_2bt, 4);
-            }
-
-            $randIndex = array_rand($pp_2bt);
-            $pp_2bt_version = $pp_2bt[$randIndex];
-            /* debug_to_console($cr1_version) */
-            ?>
-
-            <?php if (!empty($pp_2bt_version)) : ?>
-                <h3><a href="Experiments/PP_2BT/Exp3/index.html?version=<?php echo $pp_2bt_version; ?>">Tripple PPP Exp 3 (n = <?= $nFiles_PP_2BT_exp3_v1 + $nFiles_PP_2BT_exp3_v2 + $nFiles_PP_2BT_exp3_v3 + $nFiles_PP_2BT_exp3_v4 ?>)</a></h3>
-            <?php endif;  ?>
-
-
 
 
             <h2>0,5 VP-Stunden</h2>
