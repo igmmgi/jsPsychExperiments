@@ -7,21 +7,20 @@
 // left/right-keypresses ("Q" and "P"). Stimuli are presented in one of two
 // locations (left vs. right), with colour assigned to the response key.
 //
-// Stroop Task:
-// VPs respond to the font colour of colour words (e.g., the word ROT presented
-// in green font colour) with left/right-keypresses ("Q" and "P"). Stimuli are
-// presented centrally.
+// Flanker Task:
+// VPs respond to the colour of a central circle surrounded by flanking circles
+// with left/right-keypresses ("Q" and "P").
 //
 // Factors:
-// Task (Simon vs. Stroop) within
+// Task (Flanker vs. Simon) within
 // Compatibility (Compatible vs. Incompatible) within
 // Reward (Yes vs. No) between
 //
 // 4 Counter-balanced versions
-// Version 1: Simon-RC  Stroop-RC
-// Version 2: Stroop-RC Simon-RC
-// Version 3: Simon-RI  Stroop-RI
-// Version 4: Stroop-RI Simon-RI
+// Version 1: Simon-RC  Flanker-RC
+// Version 2: Flanker-RC Simon-RC
+// Version 3: Simon-RI  Flanker-RI
+// Version 4: Flanker-RI Simon-RI
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -107,7 +106,7 @@ const task_instructions1 = {
            Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
            Während des Experiments ist es in manchen Versuchsdurchgängen möglich, Belohnungen in Form von Punkten zu
-           sammeln. Die zehn Teilnehmer mit der höchsten Gesamtpunktzahl erhalten zusätzlich
+           sammeln. Die sechs Teilnehmer mit der höchsten Gesamtpunktzahl erhalten zusätzlich
            einen 10€-Gutschein für eine Buchhandlung (OSIANDER). Insgesamt gibt es maximal 60 Teilnehmer.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
@@ -183,16 +182,15 @@ const task_instructions_simon2 = {
   choices: [' '],
 };
 
-const task_instructions_stroop1 = {
+const task_instructions_flanker1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `In der folgenden Aufgabe werden die Worte ROT oder GRÜN in roter
-    oder grüner Farbe geschrieben erscheinen. Bitte reagiere auf die
-    Farbe der Schrift wie folgt:<br>`,
+      text: `In der folgenden Aufgabe wird in der Mitte ein roter oder grüner Kreis umgegeben von farbigen Kreisen erscheinen.
+        Bitte reagiere auf die Farbe des mittleren Kreises wie folgt:<br>`,
       fontsize: 22,
       lineheight: 1.25,
       align: 'left',
@@ -207,17 +205,17 @@ const task_instructions_stroop1 = {
   choices: [' '],
 };
 
-const task_instructions_stroop2 = {
+const task_instructions_flanker2 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `In einem Durchgang kann die Schriftfarbe mit der Wortbedeutung
-      entweder übereinstimmen (d.h. das Wort ROT in rot geschrieben oder das
-      Wort GRÜN in grün geschrieben) oder nicht übereinstimmen (d.h. das Wort
-      ROT in grün geschrieben oder das Wort GRÜN in rot geschrieben). Je
-      nachdem hast du die Möglichkeit eine Belohnung zu erhalten:<br><br>
+    text: `In einem Durchgang kann die Farbe des mittleren Kreises mit der Farbe der anderen Kreise entweder
+    übereinstimmen (d.h. mittlerer Kreis rot/umliegende Kreise rot oder mittlerer Kreis grün/umliegende
+    Kreise grün) oder nicht übereinstimmen (d.h. mittlerer Kreis grün/umliegende Kreise rot oder
+    mittlerer Kreis rot/umliegende Kreise grün). Je nachdem hast du die Möglichkeit eine Belohnung
+    zu erhalten::<br><br>
       In Durchgängen ${rewardConditionInstructions1[0]} Übereinstimmung hast du die Möglichkeit für
       besonders schnelle (und korrekte) Antworten Belohnung (+10 Punkte) zu erhalten.<br><br>
       In Durchgängen ${rewardConditionInstructions1[1]} Übereinstimmung kannst du keine Belohnung/Punkte erhalten.<br><br>
@@ -266,10 +264,10 @@ const start_of_block_text_simon = {
   stimulus: '',
   choices: [' '],
   on_start: function (trial) {
-    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.flanker_reward_correct;
     let per_noreward =
-      (performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
-      (performanceData.simon_noreward_n + performanceData.stroop_noreward_n);
+      (performanceData.simon_noreward_correct + performanceData.flanker_noreward_correct) /
+      (performanceData.simon_noreward_n + performanceData.flanker_noreward_n);
     let points = Math.round(npoints_reward * per_noreward);
     if (isNaN(points)) {
       points = 0;
@@ -299,7 +297,7 @@ const start_of_block_text_simon = {
   },
 };
 
-const start_of_block_text_stroop = {
+const start_of_block_text_flanker = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -307,10 +305,10 @@ const start_of_block_text_stroop = {
   stimulus: '',
   choices: [' '],
   on_start: function (trial) {
-    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.flanker_reward_correct;
     let per_noreward =
-      (performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
-      (performanceData.simon_noreward_n + performanceData.stroop_noreward_n);
+      (performanceData.simon_noreward_correct + performanceData.flanker_noreward_correct) /
+      (performanceData.simon_noreward_n + performanceData.flanker_noreward_n);
     let points = Math.round(npoints_reward * per_noreward);
     if (isNaN(points)) {
       points = 0;
@@ -332,8 +330,8 @@ const start_of_block_text_stroop = {
       respText +
       generate_formatted_html({
         text: `
-      Du kannst Belohnung nur in Durchgängen erhalten, in denen die Bedeutung
-      des Wortes mit der Farbe des Wortes
+      Du kannst Belohnung nur in Durchgängen erhalten, in denen die Farbe
+      des mittleren Kreises mit der Farbe der umliegenden Kreise
           ${rewardConditionInstructions2[0]}!<br><br><br>
           Weiter geht es mit der Leertaste ...`,
         fontsize: 26,
@@ -350,10 +348,10 @@ const end_of_block_text = {
   stimulus: '',
   choices: [' '],
   on_start: function (trial) {
-    let npoints_reward = performanceData.simon_reward_correct + performanceData.stroop_reward_correct;
+    let npoints_reward = performanceData.simon_reward_correct + performanceData.flanker_reward_correct;
     let per_noreward =
-      (performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
-      (performanceData.simon_noreward_n + performanceData.stroop_noreward_n);
+      (performanceData.simon_noreward_correct + performanceData.flanker_noreward_correct) /
+      (performanceData.simon_noreward_n + performanceData.flanker_noreward_n);
     let points = Math.round(npoints_reward * per_noreward);
     if (isNaN(points)) {
       points = 0;
@@ -403,12 +401,12 @@ const performanceData = {
   simon_reward_correct: 0,
   simon_noreward_n: 0,
   simon_noreward_correct: 0,
-  stroop_reward_n: 0,
-  stroop_reward_rts: [],
-  stroop_reward_mean: 10000, // initial high value
-  stroop_reward_correct: 0,
-  stroop_noreward_n: 0,
-  stroop_noreward_correct: 0,
+  flanker_reward_n: 0,
+  flanker_reward_rts: [],
+  flanker_reward_mean: 10000, // initial high value
+  flanker_reward_correct: 0,
+  flanker_noreward_n: 0,
+  flanker_noreward_correct: 0,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -482,21 +480,37 @@ function drawFeedback() {
     // draw total accumulated points
     ctx.font = prms.fbSize * 1.5;
     let per_noreward =
-      ((performanceData.simon_noreward_correct + performanceData.stroop_noreward_correct) /
-        (performanceData.simon_noreward_n + performanceData.stroop_noreward_n)) *
+      ((performanceData.simon_noreward_correct + performanceData.flanker_noreward_correct) /
+        (performanceData.simon_noreward_n + performanceData.flanker_noreward_n)) *
       100;
     ctx.fillText('Prozent korrekt: ' + Math.round(per_noreward) + ' %', 0, 15);
   }
 }
 
-function drawStroop(args) {
-  'use strict';
+function drawFlanker(args) {
+  ('use strict');
   let ctx = document.getElementById('canvas').getContext('2d');
-  ctx.font = prms.stimSize;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+
+  // draw central target
   ctx.fillStyle = args.colour;
-  ctx.fillText(args.stimulus, 0, 0); // always central
+  ctx.beginPath();
+  ctx.arc(0, 0, prms.simonSize, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // flanker colour
+  ctx.fillStyle = args.stimulus;
+  
+  // left flanker
+  ctx.beginPath();
+  ctx.arc(-prms.simonEccentricity, 0, prms.simonSize, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // right flanker
+  ctx.beginPath();
+  ctx.arc(prms.simonEccentricity, 0, prms.simonSize, 0, 2 * Math.PI);
+  ctx.fill();
+
+
 }
 
 function drawSimon(args) {
@@ -537,20 +551,20 @@ function codeTrial() {
         performanceData.simon_noreward_correct += 1;
       }
     }
-  } else if (dat.task === 'stroop') {
-    performanceData.stroop_total_n = 1;
+  } else if (dat.task === 'flanker') {
+    performanceData.flanker_total_n = 1;
     if (dat.comp === dat.reward) {
-      performanceData.stroop_reward_n += 1;
+      performanceData.flanker_reward_n += 1;
       if (error === 0) {
-        success = dat.rt < performanceData.stroop_reward_mean;
+        success = dat.rt < performanceData.flanker_reward_mean;
         if (success) {
-          performanceData.stroop_reward_correct += 10;
+          performanceData.flanker_reward_correct += 10;
         }
       }
     } else if (dat.comp !== dat.reward) {
-      performanceData.stroop_noreward_n += 1;
+      performanceData.flanker_noreward_n += 1;
       if (error === 0) {
-        performanceData.stroop_noreward_correct += 1;
+        performanceData.flanker_noreward_correct += 1;
       }
     }
   }
@@ -562,16 +576,16 @@ function codeTrial() {
     success: success,
     simonMean: performanceData.simon_reward_mean,
     simonPoints: performanceData.simon_reward_correct,
-    stroopMean: performanceData.stroop_reward_mean,
-    stroopPoints: performanceData.stroop_reward_correct,
+    flankerMean: performanceData.flanker_reward_mean,
+    flankerPoints: performanceData.flanker_reward_correct,
     error: error,
   });
 
   // update performance data for next trial
   if (dat.comp === dat.reward && dat.error === 0) {
-    if (dat.task === 'stroop') {
-      performanceData.stroop_reward_rts.push(dat.rt);
-      performanceData.stroop_reward_mean = mean(performanceData.stroop_reward_rts);
+    if (dat.task === 'flanker') {
+      performanceData.flanker_reward_rts.push(dat.rt);
+      performanceData.flanker_reward_mean = mean(performanceData.flanker_reward_rts);
     } else if (dat.task === 'simon') {
       performanceData.simon_reward_rts.push(dat.rt);
       performanceData.simon_reward_mean = mean(performanceData.simon_reward_rts);
@@ -616,7 +630,7 @@ const block_feedback = {
   },
 };
 
-const stroop_stimulus = {
+const flanker_stimulus = {
   type: 'static-canvas-keyboard-response',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -624,7 +638,7 @@ const stroop_stimulus = {
   translate_origin: true,
   response_ends_trial: true,
   choices: prms.respKeys,
-  func: drawStroop,
+  func: drawFlanker,
   func_args: [
     {
       stimulus: jsPsych.timelineVariable('item'),
@@ -678,15 +692,15 @@ const simon_stimulus = {
   },
 };
 
-let stroops;
+let flankers;
 let simons;
 // prettier-ignore
 if (keyVersion === 1) {
-  stroops = [
-    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'green', comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+  flankers = [
+    { task: 'flanker', item: 'red',   position: 'centre', colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'flanker', item: 'green', position: 'centre', colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'flanker', item: 'red',   position: 'centre', colour: 'green', comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'flanker', item: 'green', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[0] },
   ];
   simons = [
     { task: 'simon', item: 'circle', position: 'left',  colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
@@ -695,11 +709,11 @@ if (keyVersion === 1) {
     { task: 'simon', item: 'circle', position: 'right', colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
   ];
 } else if (keyVersion === 2) {
-  stroops = [
-    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
-    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'green', comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[0] },
-    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+  flankers = [
+    { task: 'flanker', item: 'red',   position: 'centre', colour: 'red',   comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[1] },
+    { task: 'flanker', item: 'green', position: 'centre', colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'flanker', item: 'red',   position: 'centre', colour: 'green', comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[0] },
+    { task: 'flanker', item: 'green', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: rewardCondition[0], corrResp: prms.respKeys[1] },
   ];
   simons = [
     { task: 'simon', item: 'circle', position: 'left',  colour: 'green', comp: 'kongruent',   reward: rewardCondition[0], corrResp: prms.respKeys[0] },
@@ -709,9 +723,9 @@ if (keyVersion === 1) {
   ];
 }
 
-const trial_timeline_stroop = {
-  timeline: [fixation_cross, stroop_stimulus, trial_feedback],
-  timeline_variables: stroops,
+const trial_timeline_flanker = {
+  timeline: [fixation_cross, flanker_stimulus, trial_feedback],
+  timeline_variables: flankers,
 };
 
 const trial_timeline_simon = {
@@ -763,7 +777,7 @@ const email_option_instructions = {
       Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
 Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
 Falls Du Fragen zu unserem Experiment hast, kannst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
-j.koenig@student.uni-tuebingen.de <br><br>
+hiwipibio@gmail.com <br><br>
 Drücke die Leertaste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
@@ -818,47 +832,47 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on_de);
-  exp.push(check_screen);
-  exp.push(welcome_de_du);
-  exp.push(resize_de_du);
-  exp.push(vpInfoForm_de);
-  exp.push(hideMouseCursor);
-  exp.push(screenInfo);
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
+  // exp.push(fullscreen_on_de);
+  // exp.push(check_screen);
+  // exp.push(welcome_de_du);
+  // exp.push(resize_de_du);
+  // exp.push(vpInfoForm_de);
+  // exp.push(hideMouseCursor);
+  // exp.push(screenInfo);
+  // exp.push(task_instructions1);
+  // exp.push(task_instructions2);
 
   // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
   let blk_task;
   if ([1, 3].includes(orderVersion)) {
-    blk_task = repeatArray(['simon'], prms.nBlks / 2).concat(repeatArray(['stroop'], prms.nBlks / 2));
+    blk_task = repeatArray(['simon'], prms.nBlks / 2).concat(repeatArray(['flanker'], prms.nBlks / 2));
   } else {
-    blk_task = repeatArray(['stroop'], prms.nBlks / 2).concat(repeatArray(['simon'], prms.nBlks / 2));
+    blk_task = repeatArray(['flanker'], prms.nBlks / 2).concat(repeatArray(['simon'], prms.nBlks / 2));
   }
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    // add approprite block start stroop vs. simon instructions for 1st block of that task
+    // add approprite block start flanker vs. simon instructions for 1st block of that task
     if (blk_task[blk] === 'simon' && [0, prms.nBlks / 2].includes(blk)) {
-      exp.push(task_instructions_simon1);
-      exp.push(task_instructions_simon2);
-      exp.push(reward_instructions);
-    } else if (blk_task[blk] === 'stroop' && [0, prms.nBlks / 2].includes(blk)) {
-      exp.push(task_instructions_stroop1);
-      exp.push(task_instructions_stroop2);
-      exp.push(reward_instructions);
+      // exp.push(task_instructions_simon1);
+      // exp.push(task_instructions_simon2);
+      // exp.push(reward_instructions);
+    } else if (blk_task[blk] === 'flanker' && [0, prms.nBlks / 2].includes(blk)) {
+      // exp.push(task_instructions_flanker1);
+      // exp.push(task_instructions_flanker2);
+      // exp.push(reward_instructions);
     }
 
     // start of block text
     if (blk_task[blk] === 'simon') {
       exp.push(start_of_block_text_simon);
-    } else if (blk_task[blk] === 'stroop') {
-      exp.push(start_of_block_text_stroop);
+    } else if (blk_task[blk] === 'flanker') {
+      exp.push(start_of_block_text_flanker);
     }
 
     // select appropriate blk_timeline
     let blk_timeline;
-    if (blk_task[blk] === 'stroop') {
-      blk_timeline = { ...trial_timeline_stroop };
+    if (blk_task[blk] === 'flanker') {
+      blk_timeline = { ...trial_timeline_flanker };
     } else if (blk_task[blk] === 'simon') {
       blk_timeline = { ...trial_timeline_simon };
     }
