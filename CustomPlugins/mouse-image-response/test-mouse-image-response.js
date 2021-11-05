@@ -36,8 +36,9 @@ const trial_stimulus = {
   start_box: start_box_position,
   left_box: left_box_position,
   right_box: right_box_position,
-  left_box_colour: 'rgb(200, 200, 200)',
-  right_box_colour: 'rgb(200, 200, 200)',
+  left_box_colour: 'red',
+  right_box_colour: 'red',
+  box_linewidth: 10,
   left_image: images_healthy.images[0],
   right_image: images_unhealthy.images[0],
 };

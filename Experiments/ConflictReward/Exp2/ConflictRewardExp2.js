@@ -488,7 +488,7 @@ function drawFeedback() {
 }
 
 function drawFlanker(args) {
-  ('use strict');
+  'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
 
   // draw central target
@@ -499,7 +499,7 @@ function drawFlanker(args) {
 
   // flanker colour
   ctx.fillStyle = args.stimulus;
-  
+
   // left flanker
   ctx.beginPath();
   ctx.arc(-prms.simonEccentricity, 0, prms.simonSize, 0, 2 * Math.PI);
@@ -509,8 +509,6 @@ function drawFlanker(args) {
   ctx.beginPath();
   ctx.arc(prms.simonEccentricity, 0, prms.simonSize, 0, 2 * Math.PI);
   ctx.fill();
-
-
 }
 
 function drawSimon(args) {
@@ -552,7 +550,6 @@ function codeTrial() {
       }
     }
   } else if (dat.task === 'flanker') {
-    performanceData.flanker_total_n = 1;
     if (dat.comp === dat.reward) {
       performanceData.flanker_reward_n += 1;
       if (error === 0) {
@@ -832,15 +829,15 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen_on_de);
-  // exp.push(check_screen);
-  // exp.push(welcome_de_du);
-  // exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
-  // exp.push(hideMouseCursor);
-  // exp.push(screenInfo);
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
+  exp.push(fullscreen_on_de);
+  exp.push(check_screen);
+  exp.push(welcome_de_du);
+  exp.push(resize_de_du);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
   // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
   let blk_task;
@@ -853,13 +850,13 @@ function genExpSeq() {
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     // add approprite block start flanker vs. simon instructions for 1st block of that task
     if (blk_task[blk] === 'simon' && [0, prms.nBlks / 2].includes(blk)) {
-      // exp.push(task_instructions_simon1);
-      // exp.push(task_instructions_simon2);
-      // exp.push(reward_instructions);
+      exp.push(task_instructions_simon1);
+      exp.push(task_instructions_simon2);
+      exp.push(reward_instructions);
     } else if (blk_task[blk] === 'flanker' && [0, prms.nBlks / 2].includes(blk)) {
-      // exp.push(task_instructions_flanker1);
-      // exp.push(task_instructions_flanker2);
-      // exp.push(reward_instructions);
+      exp.push(task_instructions_flanker1);
+      exp.push(task_instructions_flanker2);
+      exp.push(reward_instructions);
     }
 
     // start of block text
