@@ -65,7 +65,9 @@ const prms = {
   stimSize: '40px monospace',
   fbSize: '24px monospace',
   simonEccentricity: 150,
+  flankerEccentricity: 50,
   simonSize: 20,
+  flankerSize: 20,
   respKeys: ['q', 'p'],
 };
 
@@ -125,7 +127,7 @@ const task_instructions2 = {
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
     zur Gutscheinvergabe am Ende des Experimentes.<br><br>
     Bei Fragen oder Problemen wende dich bitte an:<br>
-    j.koenig@student.uni-tuebingen.de <br><br><br>
+    hiwipibio@gmail.com <br><br><br>
     Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
@@ -189,7 +191,7 @@ const task_instructions_flanker1 = {
   canvas_border: canvas_border,
   stimulus:
     generate_formatted_html({
-      text: `In der folgenden Aufgabe wird in der Mitte ein roter oder grüner Kreis umgegeben von farbigen Kreisen erscheinen.
+      text: `In der folgenden Aufgabe wird in der Mitte ein roter oder grüner Kreis umgeben von farbigen Kreisen erscheinen.
         Bitte reagiere auf die Farbe des mittleren Kreises wie folgt:<br>`,
       fontsize: 22,
       lineheight: 1.25,
@@ -494,7 +496,7 @@ function drawFlanker(args) {
   // draw central target
   ctx.fillStyle = args.colour;
   ctx.beginPath();
-  ctx.arc(0, 0, prms.simonSize, 0, 2 * Math.PI);
+  ctx.arc(0, 0, prms.flankerSize, 0, 2 * Math.PI);
   ctx.fill();
 
   // flanker colour
@@ -502,12 +504,12 @@ function drawFlanker(args) {
 
   // left flanker
   ctx.beginPath();
-  ctx.arc(-prms.simonEccentricity, 0, prms.simonSize, 0, 2 * Math.PI);
+  ctx.arc(-prms.flankerEccentricity, 0, prms.flankerSize, 0, 2 * Math.PI);
   ctx.fill();
 
   // right flanker
   ctx.beginPath();
-  ctx.arc(prms.simonEccentricity, 0, prms.simonSize, 0, 2 * Math.PI);
+  ctx.arc(prms.flankerEccentricity, 0, prms.flankerSize, 0, 2 * Math.PI);
   ctx.fill();
 }
 
