@@ -15,6 +15,11 @@ function debug_to_console($data)
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
+// PP2BT
+$nFiles_PP_2BT_exp3_v1 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version1');
+$nFiles_PP_2BT_exp3_v2 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version2');
+$nFiles_PP_2BT_exp3_v3 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version3');
+$nFiles_PP_2BT_exp3_v4 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version4');
 
 // ConflictReward
 $nFiles_cr2_v1 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version1');
@@ -80,6 +85,7 @@ $nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
+            <p> Tripple PPP Exp 3: hiwipibio@gmail.com </p><br>
             <p> Reward Exp2: hiwipibio@gmail.com </p><br>
 
         </div>
@@ -89,17 +95,43 @@ $nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
             <h2>1,0 VP-Stunden</h2>
 
             <?php
+            $pp_2bt = [];
+            if ($nFiles_PP_2BT_exp3_v1 < 13) {
+                array_push($pp_2bt, 1);
+            }
+            if ($nFiles_PP_2BT_exp3_v2 < 13) {
+                array_push($pp_2bt, 2);
+            }
+            if ($nFiles_PP_2BT_exp3_v3 < 13) {
+                array_push($pp_2bt, 3);
+            }
+            if ($nFiles_PP_2BT_exp3_v4 < 13) {
+                array_push($pp_2bt, 4);
+            }
+
+            $randIndex = array_rand($pp_2bt);
+            $pp_2bt_version = $pp_2bt[$randIndex];
+            /* debug_to_console($cr1_version) */
+            ?>
+
+            <?php if (!empty($pp_2bt_version)) : ?>
+                <h3><a href="Experiments/PP_2BT/Exp3/index.html?version=<?php echo $pp_2bt_version; ?>">Tripple PPP Exp 3 (n = <?= $nFiles_PP_2BT_exp3_v1 + $nFiles_PP_2BT_exp3_v2 + $nFiles_PP_2BT_exp3_v3 + $nFiles_PP_2BT_exp3_v4 ?>)</a></h3>
+            <?php endif;  ?>
+
+
+
+            <?php
             $cr2 = [];
-            if ($nFiles_cr2_v1 < 0) {
+            if ($nFiles_cr2_v1 < 15) {
                 array_push($cr2, 1);
             }
-            if ($nFiles_cr2_v2 < 0) {
+            if ($nFiles_cr2_v2 < 15) {
                 array_push($cr2, 2);
             }
-            if ($nFiles_cr2_v3 < 0) {
+            if ($nFiles_cr2_v3 < 15) {
                 array_push($cr2, 3);
             }
-            if ($nFiles_cr2_v4 < 0) {
+            if ($nFiles_cr2_v4 < 15) {
                 array_push($cr2, 4);
             }
 
