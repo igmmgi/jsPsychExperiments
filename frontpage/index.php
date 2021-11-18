@@ -135,12 +135,12 @@ $nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
                 array_push($cr2, 4);
             }
 
-            $randIndex = array_rand($cr1);
-            $cr1_version = $cr1[$randIndex];
+            $randIndex = array_rand($cr2);
+            $cr2_version = $cr2[$randIndex];
             /* debug_to_console($cr1_version) */
             ?>
 
-            <?php if (!empty($cr1_version)) : ?>
+            <?php if (!empty($cr2_version)) : ?>
                 <h3><a href="Experiments/ConflictReward/Exp2/index.html?orderVersion=<?php echo $cr1_version; ?>">Reward Exp2 (n = <?= $nFiles_cr2_v1 + $nFiles_cr2_v2 + $nFiles_cr2_v3 + $nFiles_cr2_v4 ?>)</a></h3>
             <?php endif;  ?>
 

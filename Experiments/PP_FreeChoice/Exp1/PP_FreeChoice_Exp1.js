@@ -18,6 +18,10 @@ const check_screen = {
   },
 };
 
+// 4 counter-balanced order versions
+const version = 1; //Number(jsPsych.data.urlVariables().version);
+jsPsych.data.addProperties({ version: version });
+
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
@@ -34,20 +38,20 @@ const prms = {
   nTrls: 96, // number of trials within a block
   nBlks: 6, // number of blocks
   fixDur: 500,
-  fbDur: [0, 2500], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
+  tooSlow: 5000,
+  iti: [150, 300],
   stimFont: '50px Arial',
   stimPos: [-30, 30],
-  fbFont: '28px Arial',
-  numberNoGo: [153],
+  numberNoGo: [148, 152, 154, 158],
   numbersLeft: [125, 132, 139, 146],
   numbersRight: [160, 167, 174, 181],
-  letterNoGo: ['M'],
-  letterLeft: ['B', 'D', 'F', 'H'],
-  letterRight: ['S', 'U', 'W', 'Y'],
-  rsi: 200,
-  soas: [50, 300],
-  respKeys: ['Q', 'W', 'O', 'P'],
+  letterNoGo: ['J', 'M', 'N', 'Q'],
+  lettersLeft: ['B', 'D', 'F', 'H'],
+  lettersRight: ['S', 'U', 'W', 'Y'],
+  soas: [50, 300, Infinity],
+  respKeys: ['q', 'w', 'o', 'p'],
+  taskMapping: version === 1 ? ['number', 'letter'] : ['letter', 'number'],
 
   // Fixation Cross
   fix_duration: 500,
@@ -55,8 +59,13 @@ const prms = {
   fix_linewidth: 4,
 
   // Feedback
-  fbText: ['', 'Falsch!'],
-  fbDur: [0, 1500],
+  fbFont: '28px Arial',
+  fbText: ['Falsch!', ''],
+  fbDur: [2000, 0],
+
+  // trial/block count
+  cBlk: 1,
+  cTrl: 1,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -111,7 +120,6 @@ function drawStimulus(args) {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
 
-  console.log(args);
   // Stimulus 1
   ctx.fillText(args.S1, 0, args.S1_position);
 
@@ -141,102 +149,222 @@ const stimulus = {
   },
   on_start: function (trial) {
     // Stimulus 1
+    let s1;
+    let corrKey1;
     if (trial.data.S1 === 'Letter') {
+      randomInt = getRandomInt(0, 3);
       if (trial.data.GoNogoLetter === 'Go') {
-        randomInt = getRandomInt(0, 3);
         if (Math.random() < 0.5) {
-          s1 = prms.letterLeft[randomInt];
+          s1 = prms.lettersLeft[randomInt];
         } else {
-          s1 = prms.letterRight[randomInt];
+          s1 = prms.lettersRight[randomInt];
         }
       } else if (trial.data.GoNogoLetter === 'NoGo') {
-        s1 = prms.letterNoGo;
+        s1 = prms.letterNoGo[randomInt];
+      }
+      // Assign correct key for S1
+      if (prms.letterNoGo.includes(s1)) {
+        corrKey1 = null;
+      } else if (prms.taskMapping[0] === 'letter') {
+        corrKey1 = prms.lettersLeft.includes(s1) ? prms.respKeys[0] : prms.respKeys[1];
+      } else if (prms.taskMapping[1] === 'letter') {
+        corrKey1 = prms.lettersLeft.includes(s1) ? prms.respKeys[2] : prms.respKeys[3];
       }
     } else if (trial.data.S1 === 'Number') {
+      randomInt = getRandomInt(0, 3);
       if (trial.data.GoNogoNumber === 'Go') {
-        randomInt = getRandomInt(0, 3);
         if (Math.random() < 0.5) {
           s1 = prms.numbersLeft[randomInt];
         } else {
           s1 = prms.numbersRight[randomInt];
         }
       } else if (trial.data.GoNogoNumber === 'NoGo') {
-        s1 = prms.numberNoGo;
+        s1 = prms.numberNoGo[randomInt];
+      }
+      if (prms.numberNoGo.includes(s1)) {
+        corrKey1 = null;
+      } else if (prms.taskMapping[0] === 'number') {
+        corrKey1 = prms.numbersLeft.includes(s1) ? prms.respKeys[0] : prms.respKeys[1];
+      } else if (prms.taskMapping[1] === 'number') {
+        corrKey1 = prms.numbersLeft.includes(s1) ? prms.respKeys[2] : prms.respKeys[3];
       }
     }
+
+    trial.data.s1 = s1;
     // Stimulus 2
     if (trial.data.S2 === 'Letter') {
+      randomInt = getRandomInt(0, 3);
       if (trial.data.GoNogoLetter === 'Go') {
-        randomInt = getRandomInt(0, 3);
         if (Math.random() < 0.5) {
-          s2 = prms.letterLeft[randomInt];
+          s2 = prms.lettersLeft[randomInt];
         } else {
-          s2 = prms.letterRight[randomInt];
+          s2 = prms.lettersRight[randomInt];
         }
       } else if (trial.data.GoNogoLetter === 'NoGo') {
-        s2 = prms.letterNoGo;
+        s2 = prms.letterNoGo[randomInt];
+      }
+      // Assign correct key for S1
+      if (prms.letterNoGo.includes(s2)) {
+        corrKey2 = null;
+      } else if (prms.taskMapping[0] === 'letter') {
+        corrKey2 = prms.lettersLeft.includes(s2) ? prms.respKeys[0] : prms.respKeys[1];
+      } else if (prms.taskMapping[1] === 'letter') {
+        corrKey2 = prms.lettersLeft.includes(s2) ? prms.respKeys[2] : prms.respKeys[3];
       }
     } else if (trial.data.S2 === 'Number') {
+      randomInt = getRandomInt(0, 3);
       if (trial.data.GoNogoNumber === 'Go') {
-        randomInt = getRandomInt(0, 3);
         if (Math.random() < 0.5) {
           s2 = prms.numbersLeft[randomInt];
         } else {
           s2 = prms.numbersRight[randomInt];
         }
       } else if (trial.data.GoNogoNumber === 'NoGo') {
-        s2 = prms.numberNoGo;
+        s2 = prms.numberNoGo[randomInt];
+      }
+      if (prms.numberNoGo.includes(s2)) {
+        corrKey2 = null;
+      } else if (prms.taskMapping[0] === 'number') {
+        corrKey2 = prms.numbersLeft.includes(s2) ? prms.respKeys[0] : prms.respKeys[1];
+      } else if (prms.taskMapping[1] === 'number') {
+        corrKey2 = prms.numbersLeft.includes(s2) ? prms.respKeys[2] : prms.respKeys[3];
       }
     }
 
     // deal with s2 = Infinity
     if (trial.data.SOA === Infinity) {
-      console.log('here');
       s2 = '';
     }
+    trial.data.s2 = s2;
+
+    trial.data.corrKey1 = corrKey1;
+    trial.data.corrKey2 = corrKey2;
 
     let pos = shuffle(prms.stimPos);
+    // shuffle function changes order of stimPos as well!
     trial.func_args = [
       { S1: s1, S1_position: pos[0], S2: '', S2_position: pos[1] },
       { S1: s1, S1_position: pos[0], S2: s2, S2_position: pos[1] },
     ];
   },
-  // on_finish: function () {
-  //    code_trial();
-  // },
+  on_finish: function () {
+    codeTrial();
+  },
+};
+
+function drawFeedback() {
+  'use strict';
+
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+
+  ctx.font = prms.stimFont;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'red';
+
+  // Feedback Wrong!
+  ctx.fillText(prms.fbText[dat.corrCode], 0, 0);
+}
+
+function codeTrial() {
+  'use strict';
+
+  let dat = jsPsych.data.get().last(1).values()[0];
+  let corrCode = 0;
+
+  console.log(dat);
+  if ([dat.corrKey1, dat.corrKey2].includes(dat.key_press)) {
+    corrCode = 1;
+  }
+
+  // S1 vs S2 response?
+  let responseTask;
+  if (prms.taskMapping[0] === 'number') {
+    responseTask = prms.respKeys.slice(0, 2).includes(dat.key_press) ? 'Number' : 'Letter';
+  } else if (prms.taskMapping[0] === 'letter') {
+    responseTask = prms.respKeys.slice(0, 2).includes(dat.key_press) ? 'Letter' : 'Number';
+  }
+
+  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
+  // correct for SOA
+  if (responseTask !== dat.S1) {
+    rt = rt - dat.SOA;
+  }
+
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    rt: rt,
+    corrCode: corrCode,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
+
+  prms.cTrl += 1;
+  if (dat.key_press === 27) {
+    jsPsych.endExperiment();
+  }
+}
+
+const feedback = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  trial_duration: prms.fbDur[1],
+  translate_origin: true,
+  response_ends_trial: false,
+  func: drawFeedback,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode];
+  },
+};
+
+const iti = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  trial_duration: null,
+  translate_origin: true,
+  func: function () {},
+  on_start: function (trial) {
+    trial.trial_duration = getRandomInt(prms.iti[0], prms.iti[1]);
+  },
 };
 
 // prettier-ignore
 const trial_table = [
-    {"TrialType":  1, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":50},
-    {"TrialType":  1, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":50},
-    {"TrialType":  1, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":50},
-    {"TrialType":  2, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":300},
-    {"TrialType":  2, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":300},
-    {"TrialType":  2, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":300},
-    {"TrialType":  3, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":50},
-    {"TrialType":  3, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":50},
-    {"TrialType":  3, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":50},
-    {"TrialType":  4, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":300},
-    {"TrialType":  4, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":300},
-    {"TrialType":  4, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":300},
-    {"TrialType":  5, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":50},
-    {"TrialType":  6, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":300},
-    {"TrialType":  7, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":Infinity},
-    {"TrialType":  8, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":50},
-    {"TrialType":  9, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":300},
-    {"TrialType": 10, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":Infinity},
-    {"TrialType": 11, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":50},
-    {"TrialType": 12, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":300},
-    {"TrialType": 13, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":Infinity},
-    {"TrialType": 14, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":50},
-    {"TrialType": 15, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":300},
-    {"TrialType": 16, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":Infinity},
+    {"TrialType":  1, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    {"TrialType":  1, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    {"TrialType":  1, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    {"TrialType":  2, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    {"TrialType":  2, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    {"TrialType":  2, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    {"TrialType":  3, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    {"TrialType":  3, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    {"TrialType":  3, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    {"TrialType":  4, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    {"TrialType":  4, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    {"TrialType":  4, "FreeForced":"Free",    "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    {"TrialType":  5, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[0]},
+    {"TrialType":  6, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[1]},
+    {"TrialType":  7, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[0]},
+    {"TrialType":  8, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[1]},
+    {"TrialType":  9, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[0]},
+    {"TrialType": 10, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[1]},
+    {"TrialType": 11, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[0]},
+    {"TrialType": 12, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[1]},
+    {"TrialType": 13, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[2]},
+    {"TrialType": 13, "FreeForced":"Forced",  "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[2]},
+    {"TrialType": 14, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[2]},
+    {"TrialType": 14, "FreeForced":"Forced",  "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[2]},
 ];
 
 const trial_timeline = {
-  // timeline: [fixation_cross, stimulus, feedback, iti],
-  timeline: [fixation_cross, stimulus],
+  timeline: [fixation_cross, stimulus, feedback, iti],
   timeline_variables: trial_table,
   sample: {
     type: 'fixed-repetitions',
