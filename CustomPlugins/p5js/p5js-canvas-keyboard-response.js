@@ -72,7 +72,7 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
     if (trial.setup !== null) {
       trial.setup();
     }
-    p5js.draw = trial.draw;
+    p5js.draw = trial.draw();
 
     // store response
     let response = {

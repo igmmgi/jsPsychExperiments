@@ -109,6 +109,7 @@ const example2 = {
 };
 exp.push(example2);
 
+console.log(exp)
 jsPsych.init({
   timeline: exp,
 });
