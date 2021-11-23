@@ -27,6 +27,12 @@ $nFiles_cr2_v2 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version2');
 $nFiles_cr2_v3 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version3');
 $nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
 
+// PP_FreeChoice
+$nFiles_ppfc_v1 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version1');
+$nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
+
+
+
 ?>
 
 <html lang="en">
@@ -85,8 +91,8 @@ $nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
-            <p> Tripple PPP Exp 3: hiwipibio@gmail.com </p><br>
             <p> Reward Exp2: hiwipibio@gmail.com </p><br>
+            <p> PP Free Choice Exp1: sebastian.heins@student.uni-tuebingen.de </p><br>
 
         </div>
         <div class="sidenav">
@@ -118,8 +124,6 @@ $nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
                 <h3><a href="Experiments/PP_2BT/Exp3/index.html?version=<?php echo $pp_2bt_version; ?>">Tripple PPP Exp 3 (n = <?= $nFiles_PP_2BT_exp3_v1 + $nFiles_PP_2BT_exp3_v2 + $nFiles_PP_2BT_exp3_v3 + $nFiles_PP_2BT_exp3_v4 ?>)</a></h3>
             <?php endif;  ?>
 
-
-
             <?php
             $cr2 = [];
             if ($nFiles_cr2_v1 < 15) {
@@ -142,6 +146,24 @@ $nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
 
             <?php if (!empty($cr2_version)) : ?>
                 <h3><a href="Experiments/ConflictReward/Exp2/index.html?orderVersion=<?php echo $cr1_version; ?>">Reward Exp2 (n = <?= $nFiles_cr2_v1 + $nFiles_cr2_v2 + $nFiles_cr2_v3 + $nFiles_cr2_v4 ?>)</a></h3>
+            <?php endif;  ?>
+
+
+            <?php
+            $pp_fc1 = [];
+            if ($nFiles_ppfc_v1 < 0) {
+                array_push($pp_fc1, 1);
+            }
+            if ($nFiles_ppfc_v2 < 0) {
+                array_push($pp_fc1, 2);
+            }
+
+            $randIndex = array_rand($pp_fc1);
+            $pp_fc1_version = $pp_fc1[$randIndex];
+            ?>
+
+            <?php if (!empty($pp_fc1_version)) : ?>
+                <h3><a href="Experiments/PP_FreeChoice/Exp1/index.html?version=<?php echo $pp_fc1_version; ?>">PP Free Choice Exp 1 (n = <?= $nFiles_ppfc_v1 + $nFiles_ppfc_v2 ?>)</a></h3>
             <?php endif;  ?>
 
             <h2>0,5 VP-Stunden</h2>
