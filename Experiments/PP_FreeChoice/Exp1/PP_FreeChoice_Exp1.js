@@ -19,7 +19,7 @@ const check_screen = {
 };
 
 // 4 counter-balanced order versions
-const version = 1; //Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -36,10 +36,9 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrls: 96, // number of trials within a block
-  nBlks: 6, // number of blocks
+  nBlks: 7, // number of blocks
   fixDur: 500,
   waitDur: 1000,
-  tooSlow: 5000,
   iti: [150, 300],
   stimFont: '50px Arial',
   stimPos: [-30, 30],
@@ -52,6 +51,7 @@ const prms = {
   soas: [50, 300, Infinity],
   respKeys: ['q', 'w', 'o', 'p'],
   taskMapping: version === 1 ? ['number', 'letter'] : ['letter', 'number'],
+  taskInstructions: version === 1 ? ['< 147', '> 159', '< I', '> R'] : ['< I', '> R', '< 147', '> 159'],
 
   // Fixation Cross
   fix_duration: 500,
@@ -61,7 +61,7 @@ const prms = {
   // Feedback
   fbFont: '28px Arial',
   fbText: ['Falsch!', ''],
-  fbDur: [2000, 0],
+  fbDur: [2500, 0],
 
   // trial/block count
   cBlk: 1,
@@ -79,7 +79,7 @@ const task_instructions1 = {
   stimulus: generate_formatted_html({
     text: `Willkommen bei unserem Experiment:<br><br>
     Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit
-    abbrechen.  Bitte stelle sicher, dass du dich in einer ruhigen Umgebung
+    abbrechen. Bitte stelle sicher, dass du dich in einer ruhigen Umgebung
     befindest und genügend Zeit hast, um das Experiment durchzuführen. Wir
     bitten dich für die Dauer des Experiments (ca. 45 Minuten) konzentriert zu
     arbeiten.<br><br>
@@ -87,7 +87,148 @@ const task_instructions1 = {
     fontsize: 26,
     align: 'left',
     lineheight: 1.5,
+    bold: true,
   }),
+};
+
+let task_instructions2;
+if (version === 1) {
+  task_instructions2 = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus:
+      "<h2 style='text-align: center;'>Experiment:</h2>" +
+      "<h3 style='text-align: left;'>In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.</h3><br>" +
+      "<h3 style='text-align: left;'>Buchstaben Aufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
+      "<h3 style='text-align: left;'>auf die Tasten „O“ und „P“.</h3><br>" +
+      "<h3 style='text-align: left;'>Zahlen Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
+      "<h3 style='text-align: left;'>auf die Tasten „Q“ und „W“.</h3><br>" +
+      "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+  };
+} else if (version === 2) {
+  task_instructions2 = {
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus:
+      "<h2 style='text-align: center;'>Experiment:</h2>" +
+      "<h3 style='text-align: left;'>In diesem Experiment gibt es zwei Aufgaben.</h3>" +
+      "<h3 style='text-align: left;'>Jede Aufgabe wird mit einer Hand bearbeitet. </h3><br>" +
+      "<h3 style='text-align: left;'>Buchstaben Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
+      "<h3 style='text-align: left;'>auf die Tasten „Q“ und „W“.</h3><br>" +
+      "<h3 style='text-align: left;'>Zahlen Aufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger </h3>" +
+      "<h3 style='text-align: left;'>auf die Tasten „O“ und „P“.</h3><br>" +
+      "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+  };
+}
+
+const task_instructions3 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe vor I oder nach R im Alphabet ist.</h3>" +
+    "<h3 style='text-align: left;'>Für die Zahlenaufgabe musst du entscheiden ob die Zahl kleiner 147 oder grösser 159 ist.</h3>" +
+    "<h3 style='text-align: center;'>Es gilt:</h3>" +
+    "<h2 style='text-align: left;'>" +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    prms.taskInstructions[0] +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    prms.taskInstructions[1] +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    prms.taskInstructions[2] +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    prms.taskInstructions[3] +
+    '</h2>' +
+    "<h3 style='text-align: center;'>" +
+    '("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
+    '</h3><br>' +
+    "<h3 style='text-align: left;'>Wenn der Buchstabe zwischen I und R oder die Zahl zwischen 147 und 159 ist, dann erfordert</h3>" +
+    "<h3 style='text-align: left;'>die Aufgabe keine Antwort!</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+const task_instructions4 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    "<h3 style='text-align: left;'>In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.</h3><br>" +
+    "<h3 style='text-align: left;'>Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest wenn beide</h3>" +
+    "<h3 style='text-align: left;'>Aufgaben (Buchstabe und Zahl) eine Antwort erfordern.</h3><br>" +
+    "<h3 style='text-align: left;'>Wenn jedoch nur ein Aufgabe eine Antwort erfordert oder nur eine Aufgabe präsentiert wird,</h3>" +
+    "<h3 style='text-align: left;'>dann musst du diese Aufgabe bearbeiten.</h3><br>" +
+    "<h3 style='text-align: left;'>Die ersten zwei Blöcken hast du Gelegenheit zu üben.</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+};
+
+function blockStartText() {
+  'use strict';
+  let blockStartTxt =
+    '<H1>Block: ' +
+    prms.cBlk +
+    ' von ' +
+    prms.nBlks +
+    '</H1><br>' +
+    "<h3 style='text-align: left;'>Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben eine Antwort erfordern.</h3>" +
+    "<h3 style='text-align: center;'>Es gilt:</h3>" +
+    "<h2 style='text-align: left;'>" +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    prms.taskInstructions[0] +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    prms.taskInstructions[1] +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    prms.taskInstructions[2] +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    prms.taskInstructions[3] +
+    '</h2>' +
+    "<h3 style='text-align: center;'>" +
+    '("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
+    '</h3><br>' +
+    "<h3 style='text-align: left;'>Wenn der Buchstabe zwischen I und R oder die Zahl zwischen 147 und 159 ist, dann erfordert</h3>" +
+    "<h3 style='text-align: left;'>die Aufgabe keine Antwort!</h3><br>" +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
+  return blockStartTxt;
+}
+
+const block_start = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  response_ends_trial: true,
+  on_start: function (trial) {
+    trial.stimulus = blockStartText();
+  },
+};
+
+function blockEndText() {
+  'use strict';
+  let blockEndTxt =
+    '<H1>Pause</H1><br>' +
+    '<H3>Bitte versuche weiterhin so schnell und so genau wie möglich zu sein! </H3><br>' +
+    '<H2>Drücke eine beliebige Taste um fortzufahren!</H2>';
+  prms.cBlk += 1;
+  return blockEndTxt;
+}
+
+const block_end = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  response_ends_trial: true,
+  on_start: function (trial) {
+    prms.cTrl = 1;
+    trial.stimulus = blockEndText();
+  },
 };
 
 function draw_fixation_cross() {
@@ -106,10 +247,13 @@ const fixation_cross = {
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  trial_duration: prms.fix_duration,
+  trial_duration: null,
   translate_origin: true,
   response_ends_trial: false,
   func: draw_fixation_cross,
+  on_start: function (trial) {
+    trial.trial_duration = prms.fix_duration + getRandomInt(prms.iti[0], prms.iti[1]);
+  },
 };
 
 function drawStimulus(args) {
@@ -148,19 +292,33 @@ const stimulus = {
     SOA: jsPsych.timelineVariable('SOA'),
   },
   on_start: function (trial) {
+    // deal with potential stimulus repetitions
+    let previous_letter;
+    let previous_number;
+    if (prms.cTrl > 1) {
+      let dat = jsPsych.data.get().last(3).values()[0];
+      if (dat.S1 === 'Number') {
+        previous_number = dat.s1;
+        previous_letter = dat.s2;
+      } else if (dat.S1 === 'Letter') {
+        previous_number = dat.s2;
+        previous_letter = dat.s1;
+      }
+    }
+
     // Stimulus 1
     let s1;
     let corrKey1;
+    // prettier-ignore
     if (trial.data.S1 === 'Letter') {
-      randomInt = getRandomInt(0, 3);
       if (trial.data.GoNogoLetter === 'Go') {
         if (Math.random() < 0.5) {
-          s1 = prms.lettersLeft[randomInt];
+          s1 = shuffle( prms.lettersLeft.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
         } else {
-          s1 = prms.lettersRight[randomInt];
+          s1 = shuffle( prms.lettersRight.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
         }
       } else if (trial.data.GoNogoLetter === 'NoGo') {
-        s1 = prms.letterNoGo[randomInt];
+        s1 = shuffle( prms.letterNoGo.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
       }
       // Assign correct key for S1
       if (prms.letterNoGo.includes(s1)) {
@@ -171,15 +329,14 @@ const stimulus = {
         corrKey1 = prms.lettersLeft.includes(s1) ? prms.respKeys[2] : prms.respKeys[3];
       }
     } else if (trial.data.S1 === 'Number') {
-      randomInt = getRandomInt(0, 3);
       if (trial.data.GoNogoNumber === 'Go') {
         if (Math.random() < 0.5) {
-          s1 = prms.numbersLeft[randomInt];
+          s1 = shuffle( prms.numbersLeft.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
         } else {
-          s1 = prms.numbersRight[randomInt];
+          s1 = shuffle( prms.numbersRight.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
         }
       } else if (trial.data.GoNogoNumber === 'NoGo') {
-        s1 = prms.numberNoGo[randomInt];
+          s1 = shuffle( prms.numberNoGo.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
       }
       if (prms.numberNoGo.includes(s1)) {
         corrKey1 = null;
@@ -191,17 +348,18 @@ const stimulus = {
     }
 
     trial.data.s1 = s1;
+
     // Stimulus 2
+    // prettier-ignore
     if (trial.data.S2 === 'Letter') {
-      randomInt = getRandomInt(0, 3);
       if (trial.data.GoNogoLetter === 'Go') {
         if (Math.random() < 0.5) {
-          s2 = prms.lettersLeft[randomInt];
+          s2 = shuffle( prms.lettersLeft.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
         } else {
-          s2 = prms.lettersRight[randomInt];
+          s2 = shuffle( prms.lettersRight.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
         }
       } else if (trial.data.GoNogoLetter === 'NoGo') {
-        s2 = prms.letterNoGo[randomInt];
+        s2 = shuffle( prms.letterNoGo.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
       }
       // Assign correct key for S1
       if (prms.letterNoGo.includes(s2)) {
@@ -212,15 +370,14 @@ const stimulus = {
         corrKey2 = prms.lettersLeft.includes(s2) ? prms.respKeys[2] : prms.respKeys[3];
       }
     } else if (trial.data.S2 === 'Number') {
-      randomInt = getRandomInt(0, 3);
       if (trial.data.GoNogoNumber === 'Go') {
         if (Math.random() < 0.5) {
-          s2 = prms.numbersLeft[randomInt];
+            s2 = shuffle( prms.numbersLeft.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
         } else {
-          s2 = prms.numbersRight[randomInt];
+            s2 = shuffle( prms.numbersRight.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
         }
       } else if (trial.data.GoNogoNumber === 'NoGo') {
-        s2 = prms.numberNoGo[randomInt];
+            s2 = shuffle( prms.numberNoGo.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
       }
       if (prms.numberNoGo.includes(s2)) {
         corrKey2 = null;
@@ -246,6 +403,8 @@ const stimulus = {
       { S1: s1, S1_position: pos[0], S2: '', S2_position: pos[1] },
       { S1: s1, S1_position: pos[0], S2: s2, S2_position: pos[1] },
     ];
+    trial.data.S1_position = pos[0];
+    trial.data.S2_position = pos[1];
   },
   on_finish: function () {
     codeTrial();
@@ -265,6 +424,26 @@ function drawFeedback() {
 
   // Feedback Wrong!
   ctx.fillText(prms.fbText[dat.corrCode], 0, 0);
+
+  if (dat.corrCode === 0) {
+    ctx.font = 'bold 20px monospace';
+    ctx.fillText(prms.taskInstructions[0], -300, 80);
+    ctx.fillText(prms.taskInstructions[1], -200, 80);
+    ctx.font = '20px monospace';
+    ctx.fillText('("Q-Taste")', -320, 120);
+    ctx.fillText('("W-Taste")', -180, 120);
+
+    ctx.font = 'bold 20px monospace';
+    ctx.fillText(prms.taskInstructions[2], 200, 80);
+    ctx.fillText(prms.taskInstructions[3], 300, 80);
+    ctx.font = '20px monospace';
+    ctx.fillText('("O-Taste")', 180, 120);
+    ctx.fillText('("P-Taste")', 320, 120);
+
+    ctx.textAlign = 'left';
+    ctx.fillText('Wenn der Buchstabe zwischen I und R oder die Zahl zwischen 147', -300, 220);
+    ctx.fillText('und 159 ist, dann erfordert die Aufgabe keine Antwort!', -300, 250);
+  }
 }
 
 function codeTrial() {
@@ -273,7 +452,6 @@ function codeTrial() {
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = 0;
 
-  console.log(dat);
   if ([dat.corrKey1, dat.corrKey2].includes(dat.key_press)) {
     corrCode = 1;
   }
@@ -286,16 +464,15 @@ function codeTrial() {
     responseTask = prms.respKeys.slice(0, 2).includes(dat.key_press) ? 'Letter' : 'Number';
   }
 
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-
   // correct for SOA
   if (responseTask !== dat.S1) {
-    rt = rt - dat.SOA;
+    dat.rt = dat.rt - dat.SOA;
   }
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
+    responseTask: responseTask,
+    rt: dat.rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
@@ -319,19 +496,6 @@ const feedback = {
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = prms.fbDur[dat.corrCode];
-  },
-};
-
-const iti = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  trial_duration: null,
-  translate_origin: true,
-  func: function () {},
-  on_start: function (trial) {
-    trial.trial_duration = getRandomInt(prms.iti[0], prms.iti[1]);
   },
 };
 
@@ -364,7 +528,7 @@ const trial_table = [
 ];
 
 const trial_timeline = {
-  timeline: [fixation_cross, stimulus, feedback, iti],
+  timeline: [fixation_cross, stimulus, feedback],
   timeline_variables: trial_table,
   sample: {
     type: 'fixed-repetitions',
@@ -376,7 +540,7 @@ const trial_timeline = {
 //                              De-brief                              //
 ////////////////////////////////////////////////////////////////////////
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('vts1', 16);
+const randomString = generateRandomStringWithExpName('ppfc', 16);
 
 const alpha_num = {
   type: 'html-keyboard-response-canvas',
@@ -388,7 +552,7 @@ const alpha_num = {
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
       und deiner Universität (Tübingen) per Email an:<br><br>
-    hiwipibio@gmail.com<br>`,
+    sebastian.heins@student.uni-tuebingen.de<br>`,
       fontsize: 26,
       align: 'left',
     }) +
@@ -410,8 +574,8 @@ const alpha_num = {
 const save_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim: 'vts' });
+    let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
+    saveData('/Common/write_data.php', data_filename, { stim_type: 'ppfc1' });
   },
   timing_post_trial: 1000,
 };
@@ -442,15 +606,26 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen_on);
-  // exp.push(check_screen);
-  // exp.push(welcome_de);
-  // exp.push(resize_de);
-  // // exp.push(vpInfoForm_de);
-  // exp.push(hideMouseCursor);
-  // exp.push(task_instructions1);
+  exp.push(fullscreen_on);
+  exp.push(check_screen);
+  exp.push(welcome_de);
+  exp.push(resize_de);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
 
-  exp.push(trial_timeline);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
+  exp.push(task_instructions3);
+  exp.push(task_instructions4);
+  exp.push(hideMouseCursor);
+
+  for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    let blk_timeline = { ...trial_timeline };
+    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrls / 24 : prms.nTrls / 24 };
+    exp.push(block_start);
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_end);
+  }
 
   // save data
   exp.push(save_data);

@@ -201,7 +201,6 @@ function codeTrial() {
   let corrKeyNum1 = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp1);
   let corrKeyNum2 = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(dat.corrResp2);
 
-  let soa = dat.soa;
   let rt1 = dat.rt1 !== null ? dat.rt1 : prms.tooSlow;
   let rt2 = dat.rt2 !== null ? dat.rt2 - dat.soa : prms.tooSlow;
 
