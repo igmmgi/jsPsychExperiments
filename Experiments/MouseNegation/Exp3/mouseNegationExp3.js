@@ -37,13 +37,13 @@ const prms = {
   waitDur: 1000,
   iti: 500,
   fixDur: 500,
-  fixPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
-  stimPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
-  startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
-  leftBox: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
-  rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
+  fixPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of stimulus
+  stimPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of stimulus
+  startBox: [canvas_size[0] / 2, canvas_size[1] / 2, 50, 50], // xpos, ypos, xsize, ysize
+  leftBox: [100, canvas_size[1] / 2, 50, 50], // xpos, ypos, xsize, ysize
+  rightBox: [1180, canvas_size[1] / 2, 50, 50], // xpos, ypos, xsize, ysize
   keepFixation: false, // is fixation cross kept on screen with stimulus
-  drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
+  drawStartBox: [true, false, false], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   boxLineWidth: 2, // linewidth of the start/target boxes
   requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?

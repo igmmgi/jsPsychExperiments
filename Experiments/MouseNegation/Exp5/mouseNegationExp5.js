@@ -30,20 +30,22 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 4, //16, // number of trials in first block (practice)
-  nTrlsE: 4, // 48, // number of trials in subsequent blocks
+  nTrlsP: 8, // 16, // number of trials in first block (practice)
+  nTrlsE: 8, // 48, // number of trials in subsequent blocks
   nBlks: 9,
   fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   iti: 500,
   fixDur: 500,
-  fixPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
-  stimPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
-  startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
-  leftBox: [100, 100, 50, 50], // xpos, ypos, xsize, ysize
-  rightBox: [1180, 100, 50, 50], // xpos, ypos, xsize, ysize
+  fixPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of stimulus
+  stimPos: [canvas_size[0] / 2, canvas_size[1] / 2], // x,y position of stimulus
+  startBox: [canvas_size[0] / 2, canvas_size[1] / 2, 50, 50], // xpos, ypos, xsize, ysize
+  leftBox: [320, canvas_size[1] / 2, 50, 50], // xpos, ypos, xsize, ysize
+  rightBox: [960, canvas_size[1] / 2, 50, 50], // xpos, ypos, xsize, ysize
+  upBox: [canvas_size[0] / 2, 40, 50, 50], // xpos, ypos, xsize, ysize
+  downBox: [canvas_size[0] / 2, 680, 50, 50], // xpos, ypos, xsize, ysize
   keepFixation: false, // is fixation cross kept on screen with stimulus
-  drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
+  drawStartBox: [true, false, false], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   boxLineWidth: 2, // linewidth of the start/target boxes
   requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
@@ -64,13 +66,14 @@ const task_instructions = {
     "<H1 style='text-align: left;'>BITTE NUR TEILNEHMEN, FALLS EINE</H1>" +
     "<H1 style='text-align: left;'>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!</H1><br>" +
     "<H2 style='text-align: left;'>Liebe/r Teilnehmer/in</H2><br>" +
-    "<H3 style='text-align: left;'>im Experiment werden Sie in jedem Durchgang 3 Quadrate sehen. Zu Beginn</H3>" +
-    "<H3 style='text-align: left;'>des Durchgangs bewegen Sie die Maus in das Quadrat am unteren Bildschirmrand</H3>" +
-    "<H3 style='text-align: left;'>und klicken in das Quadrat. Dann erscheint eine der folgenden Aussagen:</H3><br>" +
-    "<H3 style='text-align: center;'>'jetzt links', 'jetzt rechts', 'nicht links', oder 'nicht rechts'</H3><br>" +
-    "<H3 style='text-align: left;'>Bitte bewegen Sie anschließend die Maus in das entsprechende obere</H3>" +
-    "<H3 style='text-align: left;'>Quadrat, also das LINKE QUADRAT bei 'jetzt links' und 'nicht rechts', und das</H3>" +
-    "<H3 style='text-align: left;'>RECHTE QUADRAT bei 'jetzt rechts' und 'nicht links'. Versuchen Sie</H3>" +
+    "<H3 style='text-align: left;'>im Experiment werden Sie in jedem Durchgang 5 Quadrate sehen. Zu Beginn</H3>" +
+    "<H3 style='text-align: left;'>des Durchgangs bewegen Sie die Maus in das Quadrat in det Mitte des Bildschirms</H3>" +
+    "<H3 style='text-align: left;'>und klicken Sie in dieses Quadrat. Dann erscheint eine der folgenden Aussagen:</H3><br>" +
+    "<H3 style='text-align: center;'>'jetzt links', 'jetzt rechts', 'nicht links', oder 'nicht rechts' und</H3>" +
+    "<H3 style='text-align: center;'>'jetzt oben', 'jetzt unten', 'nicht oben', oder 'nicht unten' und</H3><br>" +
+    "<H3 style='text-align: left;'>Bitte bewegen Sie anschließend die Maus in das entsprechende Quadrat,</H3>" +
+    "<H3 style='text-align: left;'>zum Beispiel, das LINKE QUADRAT bei 'jetzt links' und 'nicht rechts', und das</H3>" +
+    "<H3 style='text-align: left;'>OBERE QUADRAT bei 'jetzt oben' und 'nicht unten'. Versuchen Sie</H3>" +
     "<H3 style='text-align: left;'>dabei möglichst schnell und korrekt zu reagieren. Es gibt im folgenden 16 </H3>" +
     "<H3 style='text-align: left;'>Übungsdurchgänge Danach beginnt das richtige Experiment.</H3><br>" +
     "<h3 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h3>",
@@ -116,6 +119,8 @@ const trial_stimulus = {
   start_box: prms.startBox,
   left_box: prms.leftBox,
   right_box: prms.rightBox,
+  up_box: prms.upBox,
+  down_box: prms.downBox,
   keep_fixation: prms.keepFixation,
   draw_start_box: prms.drawStartBox,
   draw_response_boxes: prms.drawResponseBoxes,
@@ -140,6 +145,10 @@ const stimuli = [
   { word: 'jetzt rechts', aff_neg: 'aff', resp_loc: 'right' },
   { word: 'nicht rechts', aff_neg: 'neg', resp_loc: 'left' },
   { word: 'nicht links',  aff_neg: 'neg', resp_loc: 'right' },
+  { word: 'jetzt oben',   aff_neg: 'aff', resp_loc: 'up' },
+  { word: 'jetzt unten',  aff_neg: 'aff', resp_loc: 'down' },
+  { word: 'nicht unten',  aff_neg: 'neg', resp_loc: 'up' },
+  { word: 'nicht oben',   aff_neg: 'neg', resp_loc: 'down' },
 ];
 
 const trial_feedback = {
@@ -152,7 +161,7 @@ const trial_feedback = {
   func: drawFeedback,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    if (prms.cBlk === 1) {
+    if (dat.blockNum === 1) {
       trial.trial_duration = prms.fbDur[dat.corrCode];
     } else {
       trial.trial_duration = 0;
@@ -279,14 +288,14 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
+      size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
