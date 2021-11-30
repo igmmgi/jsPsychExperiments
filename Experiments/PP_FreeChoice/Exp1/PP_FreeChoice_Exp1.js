@@ -48,7 +48,7 @@ const prms = {
   letterNoGo: ['J', 'M', 'N', 'Q'],
   lettersLeft: ['B', 'D', 'F', 'H'],
   lettersRight: ['S', 'U', 'W', 'Y'],
-  soas: [50, 300, Infinity],
+  soas: [50, 350, Infinity],
   respKeys: ['q', 'w', 'o', 'p'],
   taskMapping: version === 1 ? ['number', 'letter'] : ['letter', 'number'],
   taskInstructions: version === 1 ? ['< 147', '> 159', '< I', '> R'] : ['< I', '> R', '< 147', '> 159'],
