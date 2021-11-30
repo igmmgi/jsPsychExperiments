@@ -19,7 +19,7 @@ const check_screen = {
 };
 
 // 4 counter-balanced order versions
-const version = Number(jsPsych.data.urlVariables().version);
+const version = 1; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ const prms = {
   nBlks: 7, // number of blocks
   fixDur: 500,
   waitDur: 1000,
-  iti: [150, 300],
+  iti: [500, 500],
   stimFont: '50px Arial',
   stimPos: [-30, 30],
   numberNoGo: [148, 152, 154, 158],
@@ -252,6 +252,8 @@ const fixation_cross = {
   response_ends_trial: false,
   func: draw_fixation_cross,
   on_start: function (trial) {
+    console.log('iti');
+    console.log(getRandomInt(prms.iti[0], prms.iti[1]));
     trial.trial_duration = prms.fix_duration + getRandomInt(prms.iti[0], prms.iti[1]);
   },
 };
@@ -611,7 +613,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
 
   exp.push(task_instructions1);
