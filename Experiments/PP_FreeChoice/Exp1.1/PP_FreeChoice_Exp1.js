@@ -466,6 +466,7 @@ function codeTrial() {
   // Too Slow!
   if (dat.rt === null) {
     corrCode = 2;
+    dat.rt = prms.tooSlow;
   }
 
   // S1 vs S2 response?
@@ -477,7 +478,7 @@ function codeTrial() {
   }
 
   // correct for SOA
-  if (responseTask !== dat.S1) {
+  if (responseTask !== dat.S1 & dat.SOA !== Infinity) {
     dat.rt = dat.rt - dat.SOA;
   }
 

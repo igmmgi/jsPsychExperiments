@@ -19,7 +19,7 @@ const check_screen = {
 };
 
 // 2 counter-balanced order versions
-const version = Number(jsPsych.data.urlVariables().version);
+const version = 2; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -483,7 +483,8 @@ function codeTrial() {
 
   // Too Slow!
   if (dat.rt === null) {
-    corrCode = 2;
+      corrCode = 2;
+      dat.rt = prms.tooSlow;
   }
 
   // S1 vs S2 response?
@@ -495,7 +496,7 @@ function codeTrial() {
   }
 
   // correct for SOA
-  if (responseTask !== dat.S1) {
+  if (responseTask !== dat.S1 & dat.SOA !== Infinity) {
     dat.rt = dat.rt - dat.SOA;
   }
 
@@ -531,26 +532,26 @@ const feedback = {
 
 // prettier-ignore
 const trial_table = [
-    {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  5, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[0]},
-    {"TrialType":  6, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[1]},
-    {"TrialType":  7, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  8, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  9, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[0]},
-    {"TrialType": 10, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[1]},
-    {"TrialType": 11, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType": 12, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[1]},
+    // {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    // {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    // {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    // {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    // {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    // {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    // {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    // {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    // {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
+    // {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    // {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    // {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
+    // {"TrialType":  5, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[0]},
+    // {"TrialType":  6, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[1]},
+    // {"TrialType":  7, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[0]},
+    // {"TrialType":  8, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[1]},
+    // {"TrialType":  9, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[0]},
+    // {"TrialType": 10, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[1]},
+    // {"TrialType": 11, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[0]},
+    // {"TrialType": 12, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[1]},
     {"TrialType": 13, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[2]},
     {"TrialType": 13, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[2]},
     {"TrialType": 14, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[2]},
@@ -641,7 +642,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
 
   exp.push(task_instructions1);
