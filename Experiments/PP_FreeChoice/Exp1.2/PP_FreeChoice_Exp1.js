@@ -19,7 +19,7 @@ const check_screen = {
 };
 
 // 2 counter-balanced order versions
-const version = 2; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -642,7 +642,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
 
   exp.push(task_instructions1);
