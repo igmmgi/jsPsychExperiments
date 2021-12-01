@@ -26,7 +26,7 @@ const prms = {
   fbDur: 1000,
   iti: 1000, // feedback shown during iti for incorrect responses only
   tooFast: 150,
-  tooSlow: 1500,
+  tooSlow: 5000,
   respKeys: ['D', 'C', 'M', 'K'],
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fixWidth: 3,
@@ -124,12 +124,12 @@ function codeTrial() {
 
   let correctKey;
   if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
+    correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
   }
 
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 2; // choice error
   } else if (rt >= prms.tooSlow) {
     corrCode = 3; // too slow
@@ -333,7 +333,7 @@ function genExpSeq() {
   exp.push(fullscreen_on);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions);
