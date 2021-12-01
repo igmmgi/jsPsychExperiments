@@ -286,6 +286,10 @@ const stimulus = {
   func_args: null,
   data: {
     stim_type: 'ppfc1',
+    TrialType: jsPsych.timelineVariable('TrialType'),
+    FreeForced: jsPsych.timelineVariable('FreeForced'),
+    Forced: jsPsych.timelineVariable('Forced'),
+    StimOrder: jsPsych.timelineVariable('StimOrder'),
     S1: jsPsych.timelineVariable('S1'),
     S2: jsPsych.timelineVariable('S2'),
     GoNogoLetter: jsPsych.timelineVariable('LetterType'),
