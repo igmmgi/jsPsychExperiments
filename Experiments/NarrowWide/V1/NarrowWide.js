@@ -61,7 +61,7 @@ const task_instructions1 = {
            drücken der Escape- Taste abgebrochen werden.<br><br>
            Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
-           Zusätzlich erhalten die 10 (von insgesamt 60) Teilnehmer mit der
+           Zusätzlich erhalten die 6 (von insgesamt 60) Teilnehmer mit der
            höchsten Gesamtpunktzahl einen 10€-Gutschein (wahlweise Deutsche Bahn oder Zalando oder REWE).<br><br>
            Jede/r Teilnehmerin/Teilnehmer startet mit 0 Gesamtpunkten.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
@@ -109,7 +109,7 @@ const block_start = {
       "<h2 style='text-align:left;'>Block Start: " +
       (prms.cBlk + 1) +
       ' von 10</h2><br>' +
-      "<h2 style='text-align:left;'>Aktuelle Gesampunkte: " +
+      "<h2 style='text-align:left;'>Aktuelle Gesamtpunkte: " +
       prms.cPoints +
       '<h2><br>Zur Erinnerung: Links: "Q"-Taste Rechts "P"-Taste</h2><br>' +
       "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>";
@@ -186,7 +186,7 @@ function drawFixation() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText('Gesampunkte: ' + prms.cPoints, 0, -300);
+  ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
 }
 
 const fixation_cross = {
@@ -215,7 +215,7 @@ function showPicture(args) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText('Gesampunkte: ' + prms.cPoints, 0, -300);
+  ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
 
   // draw left/right images
   ctx.drawImage(imagesLeft[numLeft], -imagesLeft[numLeft].width / 2 - 150, -imagesLeft[numLeft].height / 2);
@@ -242,7 +242,7 @@ function drawFeedback() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText('Gesampunkte: ' + prms.cPoints, 0, -300);
+  ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
 
   ctx.font = prms.fbSize;
   ctx.textAlign = 'center';
@@ -259,7 +259,7 @@ function drawITI() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText('Gesampunkte: ' + prms.cPoints, 0, -300);
+  ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
 }
 
 const iti = {
@@ -531,7 +531,7 @@ const alphaNum = {
   on_start: function (trial) {
     trial.stimulus =
       "<h2 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h2>" +
-      "<h3 style='text-align:left;'>Gesampunkte: " +
+      "<h3 style='text-align:left;'>Gesamtpunkte: " +
       prms.cPoints +
       '</h3><br>' +
       "<h3 style='text-align:left;'>Wenn Sie eine Versuchspersonenstunde benötigen, kopieren Sie den </h3>" +
@@ -640,8 +640,7 @@ function genExpSeq() {
   }
 
   // second phase: 6 experiment block of 96 trials
-  // for (let blk = 0; blk < 6; blk++) {
-  for (let blk = 0; blk < 1; blk++) {
+  for (let blk = 0; blk < 6; blk++) {
     exp.push(short_break);
     exp.push(block_start);
     exp.push(trial_timeline_experiment);
