@@ -44,7 +44,7 @@ const prms = {
 };
 
 // 2 counter-balanced order versions
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ const task_instructions1 = {
   choices: [' '],
 };
 
-const task_instructions = {
+const task_instructions2 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -84,7 +84,7 @@ const task_instructions = {
       text: `*** Sie müssen nun soviele Punkte wie möglich sichern. *** <br><br>
     Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
     rechten Seite des Bildschirms. <br><br>
-    Wenn Sie das Bild mit Gewinn wählen bekommen Sie +1, +5 oder +9 Punkt. <br><br>
+    Wenn Sie das Bild mit Gewinn wählen bekommen Sie +1, +5 oder +9 Punkte. <br><br>
     Wenn Sie das Bild ohne Gewinn wählen bekommen Sie 0 Punkte.<br><br>
     Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
     die entsprechende Taste drücken: <br><br>
@@ -107,7 +107,7 @@ const block_start = {
   on_start: function (trial) {
     trial.stimulus =
       "<h2 style='text-align:left;'>Block Start: " +
-      prms.cBlk +
+      (prms.cBlk + 1) +
       ' von 10</h2><br>' +
       "<h2 style='text-align:left;'>Aktuelle Gesampunkte: " +
       prms.cPoints +
@@ -489,6 +489,32 @@ const trial_timeline_experiment = {
 };
 // console.log(trial_timeline_experiment);
 
+function ratings(imgs, imgType) {
+  let r = [];
+  for (let i = 0; i < 3; i++) {
+    let tmp = {
+      type: 'image-slider-response',
+      stimulus: imgs[i].src,
+      labels: ['0% Gewinn', '20%', '40%', '60%', '80%', '100% Gewinn'],
+      button_label: 'Weiter',
+      slider_width: 500,
+      require_movement: false,
+      prompt: '<p>Schätzen Sie die Wahrscheinlichkeit, dass dieses Bild zu einem Gewinn führt.</p>',
+      on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        let key = imgType + (i + 1);
+        jsPsych.data.addProperties({ [key]: dat.response });
+      },
+    };
+    r.push(tmp);
+  }
+  return r;
+}
+
+const ratingsNarrow = ratings(imagesNarrow, 'N');
+const ratingsWide = ratings(imagesWide, 'W');
+const ratingStimuli = ratingsNarrow.concat(ratingsWide);
+
 ////////////////////////////////////////////////////////////////////////
 //                              Be-brief                              //
 ////////////////////////////////////////////////////////////////////////
@@ -589,28 +615,28 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
-
-  // Gain version
-  exp.push(task_instructions);
+  exp.push(task_instructions2);
 
   // 96 trials in each block
-  // first phase: learning block (description vs. experience)
-  if (version === 1) {
-    exp.push(block_start);
-    exp.push(trial_timeline_narrow);
-    exp.push(short_break);
-    exp.push(block_start);
-    exp.push(trial_timeline_wide);
-  } else if (version === 2) {
-    exp.push(block_start);
-    exp.push(trial_timeline_wide);
-    exp.push(short_break);
-    exp.push(block_start);
-    exp.push(trial_timeline_narrow);
+  // first phase: learning block (narrow vs. wide)
+  for (let blk = 0; blk < 2; blk++) {
+    if (version === 1) {
+      exp.push(block_start);
+      exp.push(trial_timeline_narrow);
+      exp.push(short_break);
+      exp.push(block_start);
+      exp.push(trial_timeline_wide);
+    } else if (version === 2) {
+      exp.push(block_start);
+      exp.push(trial_timeline_wide);
+      exp.push(short_break);
+      exp.push(block_start);
+      exp.push(trial_timeline_narrow);
+    }
   }
 
   // second phase: 6 experiment block of 96 trials
@@ -622,6 +648,11 @@ function genExpSeq() {
   }
 
   exp.push(showMouseCursor);
+
+  // end of experiment ratings
+  for (let i = 0; i < ratingStimuli.length; i++) {
+    exp.push(ratingStimuli[i]);
+  }
 
   // email
   exp.push(showMouseCursor);
