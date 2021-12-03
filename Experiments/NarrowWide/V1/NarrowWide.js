@@ -40,7 +40,7 @@ const prms = {
   fbSize: '50px monospace',
   respKeys: ['q', 'p'],
   pointsNarrow: [5],
-  pointsWide: [1, 5, 9],
+  pointsWide: [1, 9],
 };
 
 // 2 counter-balanced order versions
