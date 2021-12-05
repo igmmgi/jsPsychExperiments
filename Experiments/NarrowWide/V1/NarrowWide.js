@@ -414,32 +414,31 @@ let experimental_block_pure_wide = repeatArray([
 let experimental_block_narrow_vs_wide_unequal = [
 
   // Narrow vs. Wide Unequal 12 in total
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',  imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',  imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',  imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',  imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: 'left', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',  imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: 'left', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',  imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'left', },
-
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',  imageTypeRight: 'Narrow', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',  imageTypeRight: 'Narrow', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',  imageTypeRight: 'Narrow', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',  imageTypeRight: 'Narrow', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: 'left', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',  imageTypeRight: 'Narrow', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: 'left', },
-  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',  imageTypeRight: 'Narrow', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'left', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: 'left', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: 'left', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'left', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: 'left', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: 'left', },
+  { phase: 'experiment', trialType: 'UnequalMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'left', },
 
 ];
 
 // prettier-ignore
 let experimental_block_narrow_vs_wide_equal = repeatArray([
 
-  // Narrow vs. WWide Equal 6(*2) in total
-  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'na', },
-  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.5, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'na', },
-  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'na', },
-  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: 'na', },
-  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.5, imageProbRight: 0.5, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: 'na', },
-  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'na', },
+  // Narrow vs. Wide Equal 6(*2) in total
+  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: 'na', },
+  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.5, imageProbRight: 0.5, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: 'na', },
+  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Narrow', imageTypeRight: 'Wide',   imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: 'na', },
+  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.2, imageProbRight: 0.2, imageNumberLeft: 0, imageNumberRight: 0, highProbSide: 'na', },
+  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.5, imageProbRight: 0.5, imageNumberLeft: 1, imageNumberRight: 1, highProbSide: 'na', },
+  { phase: 'experiment', trialType: 'EqualMixed', imageTypeLeft: 'Wide',   imageTypeRight: 'Narrow', imageProbLeft: 0.8, imageProbRight: 0.8, imageNumberLeft: 2, imageNumberRight: 2, highProbSide: 'na', },
 
 ], 2);
 
@@ -646,6 +645,7 @@ function genExpSeq() {
     exp.push(trial_timeline_experiment);
   }
 
+  exp.push(short_break);
   exp.push(showMouseCursor);
 
   // end of experiment ratings
