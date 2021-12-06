@@ -132,8 +132,8 @@ jsPsych.plugins['image-slider-response'] = (function() {
     var height, width;
     var html;
     // half of the thumb width value from jspsych.css, used to adjust the label positions
-    var half_thumb_width = 7.5; 
-    
+    var half_thumb_width = 7.5;
+
     if (trial.render_on_canvas) {
       var image_drawn = false;
       // first clear the display element (because the render_on_canvas method appends to display_element instead of overwriting it with .innerHTML)
@@ -152,7 +152,7 @@ jsPsych.plugins['image-slider-response'] = (function() {
       canvas.style.margin = 0;
       canvas.style.padding = 0;
       var ctx = canvas.getContext("2d");
-      var img = new Image();   
+      var img = new Image();
       img.onload = function() {
         // if image wasn't preloaded, then it will need to be drawn whenever it finishes loading
         if (!image_drawn) {
@@ -177,7 +177,7 @@ jsPsych.plugins['image-slider-response'] = (function() {
             height = img.naturalHeight * (trial.stimulus_width/img.naturalWidth);
           }
         } else if (!(trial.stimulus_height !== null & trial.maintain_aspect_ratio)) {
-          // if stimulus width is null, only use the image's natural width if the width value wasn't set 
+          // if stimulus width is null, only use the image's natural width if the width value wasn't set
           // in the if statement above, based on a specified height and maintain_aspect_ratio = true
           width = img.naturalWidth;
         }
@@ -217,7 +217,7 @@ jsPsych.plugins['image-slider-response'] = (function() {
         // if image has loaded and width/height have been set, then draw it now
         // (don't rely on img onload function to draw image when image is in the cache, because that causes a delay in the image presentation)
         ctx.drawImage(img,0,0,width,height);
-        image_drawn = true;  
+        image_drawn = true;
       }
       // add prompt if there is one
       if (trial.prompt !== null) {
@@ -298,7 +298,7 @@ jsPsych.plugins['image-slider-response'] = (function() {
           height = img.naturalHeight * (trial.stimulus_width/img.naturalWidth);
         }
       } else if (!(trial.stimulus_height !== null & trial.maintain_aspect_ratio)) {
-        // if stimulus width is null, only use the image's natural width if the width value wasn't set 
+        // if stimulus width is null, only use the image's natural width if the width value wasn't set
         // in the if statement above, based on a specified height and maintain_aspect_ratio = true
         width = img.naturalWidth;
       }
