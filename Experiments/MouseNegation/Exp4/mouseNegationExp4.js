@@ -217,7 +217,7 @@ const block_feedback = {
 
 const trial_timeline = {
   timeline: [trial_stimulus, trial_feedback, iti],
-  randomize_order: true,
+  randomize_order: false,
   timeline_variables: stimuli,
 };
 
@@ -296,16 +296,14 @@ function genExpSeq() {
     blk_timeline.sample = {
       type: 'alternate-groups',
       groups: [
-        [0, 1, 2, 3],
-        [4, 5, 6, 7],
+        repeatArray([0, 1, 2, 3], blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8),
+        repeatArray([4, 5, 6, 7], blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8),
       ],
-      size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8,
       randomize_group_order: true,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
-  console.log(exp);
 
   // save data
   exp.push(save_data);
