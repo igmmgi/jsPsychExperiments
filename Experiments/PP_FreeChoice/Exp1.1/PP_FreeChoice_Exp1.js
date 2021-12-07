@@ -19,7 +19,7 @@ const check_screen = {
 };
 
 // 2 counter-balanced order versions
-const version = 1; //Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -482,7 +482,7 @@ function codeTrial() {
   }
 
   // correct for SOA
-  if (responseTask !== dat.S1 & dat.SOA !== Infinity) {
+  if ((responseTask !== dat.S1) & (dat.SOA !== Infinity)) {
     dat.rt = dat.rt - dat.SOA;
   }
 

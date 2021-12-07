@@ -102,16 +102,16 @@ $nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
 
             <?php
             $pp_2bt = [];
-            if ($nFiles_PP_2BT_exp3_v1 < 13) {
+            if ($nFiles_PP_2BT_exp3_v1 < 0) {
                 array_push($pp_2bt, 1);
             }
-            if ($nFiles_PP_2BT_exp3_v2 < 13) {
+            if ($nFiles_PP_2BT_exp3_v2 < 0) {
                 array_push($pp_2bt, 2);
             }
-            if ($nFiles_PP_2BT_exp3_v3 < 13) {
+            if ($nFiles_PP_2BT_exp3_v3 < 0) {
                 array_push($pp_2bt, 3);
             }
-            if ($nFiles_PP_2BT_exp3_v4 < 13) {
+            if ($nFiles_PP_2BT_exp3_v4 < 0) {
                 array_push($pp_2bt, 4);
             }
 

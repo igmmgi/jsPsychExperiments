@@ -19,7 +19,7 @@ const check_screen = {
 };
 
 // 2 counter-balanced order versions
-const version = Number(jsPsych.data.urlVariables().version);
+const version = 1; //Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -63,6 +63,7 @@ const prms = {
   fbFont: '28px Arial',
   fbText: ['Falsch!', '', 'Zu langsam!'],
   fbDur: [2500, 0, 2500],
+  fbDurPrac: [3500, 0, 3500],
 
   // trial/block count
   cBlk: 1,
@@ -487,8 +488,8 @@ function codeTrial() {
 
   // Too Slow!
   if (dat.rt === null) {
-      corrCode = 2;
-      dat.rt = prms.tooSlow;
+    corrCode = 2;
+    dat.rt = prms.tooSlow;
   }
 
   // S1 vs S2 response?
@@ -500,7 +501,7 @@ function codeTrial() {
   }
 
   // correct for SOA
-  if (responseTask !== dat.S1 & dat.SOA !== Infinity) {
+  if ((responseTask !== dat.S1) & (dat.SOA !== Infinity)) {
     dat.rt = dat.rt - dat.SOA;
   }
 
@@ -530,7 +531,11 @@ const feedback = {
   func: drawFeedback,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prms.fbDur[dat.corrCode];
+    if (dat.blockNum === 1) {
+      trial.trial_duration = prms.fbDurPrac[dat.corrCode];
+    } else {
+      trial.trial_duration = prms.fbDur[dat.corrCode];
+    }
   },
 };
 
@@ -646,7 +651,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
 
   exp.push(task_instructions1);
