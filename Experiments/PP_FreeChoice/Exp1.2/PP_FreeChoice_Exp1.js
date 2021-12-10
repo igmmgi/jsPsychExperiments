@@ -19,7 +19,7 @@ const check_screen = {
 };
 
 // 2 counter-balanced order versions
-const version = 1; //Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -62,8 +62,8 @@ const prms = {
   // Feedback
   fbFont: '28px Arial',
   fbText: ['Falsch!', '', 'Zu langsam!'],
-  fbDur: [2500, 0, 2500],
-  fbDurPrac: [3500, 0, 3500],
+  fbDur: [3000, 0, 3000],
+  fbDurPrac: [4000, 0, 4000],
 
   // trial/block count
   cBlk: 1,
@@ -618,7 +618,7 @@ const save_data = {
     let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
     saveData('/Common/write_data.php', data_filename, { stim_type: 'ppfc1' });
   },
-  timing_post_trial: 1000,
+  timing_post_trial: 2000,
 };
 
 const save_interaction_data = {
@@ -651,7 +651,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
 
   exp.push(task_instructions1);
