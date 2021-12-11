@@ -13,6 +13,12 @@ function getFileName() {
   return name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'));
 }
 
+function pathJoin(parts, sep) {
+  var separator = sep || '/';
+  var replace = new RegExp(separator + '{1,}', 'g');
+  return parts.join(separator).replace(replace, separator);
+}
+
 function filterDataPavlovia(
   rows = {},
   filetype = 'csv',
