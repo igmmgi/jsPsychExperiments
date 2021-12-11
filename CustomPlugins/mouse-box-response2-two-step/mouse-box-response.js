@@ -113,6 +113,18 @@ jsPsych.plugins['mouse-box-response'] = (function () {
         default: 'black',
         description: 'Right Box Colour',
       },
+      left_box_text: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Left Box Text',
+        default: '',
+        description: 'Left Box Text',
+      },
+      right_box_text: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Right Box Text',
+        default: '',
+        description: 'Right Box Text',
+      },
       box_linewidth: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Line width of box',
@@ -139,6 +151,13 @@ jsPsych.plugins['mouse-box-response'] = (function () {
         pretty_name: 'Draw Response Boxes',
         default: [false, false, true],
         description: 'Draw Response Boxes',
+      },
+      draw_response_boxes_text: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        array: true,
+        pretty_name: 'Draw Response Boxes Text',
+        default: [false, true, true],
+        description: 'Draw Response Boxes Text',
       },
       require_mouse_press_start: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -227,6 +246,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
     let draw_start_box = trial.draw_start_box[0];
     let draw_fixation = false;
     let draw_response_boxes = trial.draw_response_boxes[0];
+    let draw_response_text = trial.draw_response_boxes_text[0];
     let draw_stimulus = false;
 
     // start/response boxes
@@ -281,6 +301,11 @@ jsPsych.plugins['mouse-box-response'] = (function () {
 
     function handleMouseMove(e) {
       mousePosition(e);
+      if (in_box(mpos.x, mpos.y, start_box)) {
+        draw_response_text = true;
+        draw();
+      }
+
       if (!trial_initiated && !trial.require_mouse_press_start) {
         if (in_box(mpos.x, mpos.y, start_box)) {
           start_trial();
@@ -324,6 +349,18 @@ jsPsych.plugins['mouse-box-response'] = (function () {
         ctx.strokeStyle = trial.start_box_colour;
         ctx.rect(start_box.x, start_box.y, start_box.w, start_box.h);
         ctx.stroke();
+      }
+
+      // targets
+      if (draw_response_text) {
+        ctx.textAlign = 'center';
+        ctx.fillStyle = trial.stimulus_colour;
+        ctx.fillText(trial.left_box_text, left_responsebox.w, left_responsebox.y + left_responsebox.h * 1.5);
+        ctx.fillText(
+          trial.right_box_text,
+          trial.canvas_size[0] - right_responsebox.w,
+          right_responsebox.y + right_responsebox.h * 1.5,
+        );
       }
 
       // fixation cross
