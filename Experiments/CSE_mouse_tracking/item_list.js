@@ -1,4 +1,4 @@
-image_directory = 'images';
+const image_directory = 'images';
 
 // prettier-ignore
 const example_items = shuffle([

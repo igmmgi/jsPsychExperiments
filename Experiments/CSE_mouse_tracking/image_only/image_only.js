@@ -21,15 +21,12 @@ const check_screen = {
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
-const pcInfo = getComputerInfo();
+getComputerInfo();
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 8, // number of trials in first block (practice)
-  nTrlsE: 16, // number of trials in subsequent blocks
-  nBlks: 2,
   fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   iti: 500,
@@ -39,13 +36,14 @@ const prms = {
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
   leftBox: [50, 50, 150, 100], // xpos, ypos, xsize, ysize
   rightBox: [1230, 50, 150, 100], // xpos, ypos, xsize, ysize
-  leftImageAnchor: [300, 200, 50, 50], // xpos, ypos, xsize, ysize
-  rightImageAnchor: [980, 200, 50, 50], // xpos, ypos, xsize, ysize
+  leftImageAnchor: [300, 250],
+  rightImageAnchor: [980, 250],
   keepFixation: false, // is fixation cross kept on screen with stimulus
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
+  drawResponseBoxesImage: [false, true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   boxLineWidth: 2, // linewidth of the start/target boxes
-  requireMousePressStart: false, // is mouse button press inside start box required to initiate trial?
+  requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
   requireMousePressFinish: false, // is mouse button press inside response box required to end trial?
   stimFont: '50px arial',
   fbTxt: ['Richtig', 'Falsch'],
@@ -65,27 +63,22 @@ function drawFeedback() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  // To correctly center the feedback text we are testing if the mouse is "close by" the response box.
-  // We use the OR condition because if the user enter the feedback area from outside the canvas
-  // the x or y position recoded is the last valid one and the feedback is printed by the fallback branch.
-  if (
-    Math.abs(dat.end_x - prms.leftBox[0]) <= prms.leftBox[2] ||
-    Math.abs(dat.end_y - prms.leftBox[1]) <= prms.leftBox[3]
-  ) {
-    // The 25 offset is derived by running the experiment
-    // It will need to change if feedback words change
-    ctx.fillText(prms.fbTxt[dat.corrCode], prms.leftBox[0] + 25, prms.leftBox[1]);
-  } else if (
-    Math.abs(dat.end_x - prms.rightBox[0]) <= prms.rightBox[2] ||
-    Math.abs(dat.end_y - prms.rightBox[1]) <= prms.rightBox[3]
-  ) {
-    // The 25 offset is derived by running the experiment
-    // It will need to change if feedback words change
-    ctx.fillText(prms.fbTxt[dat.corrCode], prms.rightBox[0] - 25, prms.rightBox[1]);
-  } else {
-    // Fallback to mouse coords
-    ctx.fillText(prms.fbTxt[dat.corrCode], dat.end_x, dat.end_y);
+
+  let xpos;
+  let ypos;
+  if (dat.end_loc === 'left') {
+    xpos = prms.leftBox[0] + 25;
+    ypos = prms.leftBox[1];
+  } else if (dat.end_loc === 'right') {
+    xpos = prms.rightBox[0] - 25;
+    ypos = prms.rightBox[1];
+  } else { // Fallback to mouse coords
+    xpos = dat.end_x;
+    ypos = dat.end_y;
   }
+
+  ctx.fillText(prms.fbTxt[dat.corrCode], xpos, ypos);
+
 }
 
 function codeTrial() {
@@ -94,9 +87,6 @@ function codeTrial() {
   let corrCode = dat.correct_side !== dat.end_loc ? 1 : 0;
   jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl });
   prms.cTrl += 1;
-  if (dat.key_press === 27) {
-    jsPsych.endExperiment();
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -107,9 +97,12 @@ const example_start = {
   stimulus:
     "<H1 style = 'text-align: center;'> Now try to move the mouse to the box of the image<br><br>related to the word presented </H1>",
   post_trial_gap: prms.waitDur,
+    on_start: function() {
+        prms.cBlk += 1;
+    }
 };
 
-const trial_start = {
+const exp_start = {
   type: 'html-keyboard-response',
   stimulus:
     "<H1 style = 'text-align: center;'> Jetzt beginnt das eigentliche Experiment </H1>" +
@@ -120,8 +113,10 @@ const trial_start = {
     "<H3 style = 'text-align: left;'> 2.	Mauszeiger in das Quadrat bewegen, dessen Bild am besten zu dem Wort passt/mit ihm zusammenhängt  </H3>" +
     "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich!  </H3>" +
     "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
-
   post_trial_gap: prms.waitDur,
+    on_start: function() {
+        prms.cBlk += 1;
+    }
 };
 
 const task_instructions = {
@@ -145,51 +140,57 @@ const task_instructions = {
 //               Stimuli/Timelines                                    //
 ////////////////////////////////////////////////////////////////////////
 function stimuli_factory(items) {
-  var stimuli = [];
+  let stimuli = [];
   for (const s of items) {
-    stimulus = {};
+    let stimulus = {};
     // randomly position targets left or right
-    if (Math.round(Math.random()) == 0) {
-      stimulus.right = s['target_rel_img'];
-      stimulus.left = s['target_unrel_img'];
+    if (Math.random() < 0.5) {
+      stimulus.right = s.target_rel_img;
+      stimulus.left = s.target_unrel_img;
       stimulus.correct_side = 'right';
     } else {
-      stimulus.right = s['target_unrel_img'];
-      stimulus.left = s['target_rel_img'];
+      stimulus.right = s.target_unrel_img;
+      stimulus.left = s.target_rel_img;
       stimulus.correct_side = 'left';
     }
     // randomly select probe type
-    if (Math.round(Math.random()) == 0) {
-      stimulus.probe = s['probe_amb'];
+    if (Math.random() < 0.5) {
+      stimulus.probe = s.probe_amb;
       stimulus.probe_type = 'ambiguous';
     } else {
-      stimulus.probe = s['probe_unamb'];
+      stimulus.probe = s.probe_unamb;
       stimulus.probe_type = 'unambiguous';
     }
     stimuli.push(stimulus);
   }
   return stimuli;
 }
-var training_stimuli = [];
-for (const s of training_items) {
-  stimulus = {};
-  stimulus.right = null;
-  stimulus.left = null;
-  // randomly select probe type
-  if (Math.round(Math.random()) == 0) {
-    stimulus.probe = s['probe_amb'];
-    stimulus.probe_type = null;
-    stimulus.correct_side = 'left';
-  } else {
-    stimulus.probe = s['probe_unamb'];
-    stimulus.probe_type = null;
-    stimulus.correct_side = 'right';
-  }
-  training_stimuli.push(stimulus);
+
+// prettier-ignore
+const training_stimuli = [
+    { probe: 'Nach links',  target_rel_text: '', probe_type: null, correct_side: 'left'},
+    { probe: 'Nach rechts', target_rel_text: '', probe_type: null, correct_side: 'right'},
+  ];
+
+const exp_stimuli = stimuli_factory(items);
+
+function image_array(x) {
+    "use strict";
+    let images = [];
+    for (let i = 0; i < x.length; i++) {
+        images.push(x[i].left);
+        images.push(x[i].right);
+    }
+    return images;
 }
 
-var example_stimuli = stimuli_factory(example_items);
-var stimuli = stimuli_factory(items);
+const image_list = image_array(exp_stimuli);
+
+const images = {
+  type: 'preload',
+  auto_preload: true,
+  images: image_list
+};
 
 const trial_stimulus = {
   type: 'mouse-image-response-2-steps',
@@ -205,32 +206,26 @@ const trial_stimulus = {
   start_box: prms.startBox,
   left_box: prms.leftBox,
   right_box: prms.rightBox,
-  left_image_anchor: prms.leftImageAnchor,
-  right_image_anchor: prms.rightImageAnchor,
   left_box_colour: 'gray',
   right_box_colour: 'gray',
-  box_linewidth: 10,
-  left_image: null,
-  right_image: null,
+  left_image: jsPsych.timelineVariable('left'),
+  right_image: jsPsych.timelineVariable('right'),
+  left_image_anchor: prms.leftImageAnchor,
+  right_image_anchor: prms.rightImageAnchor,
   keep_fixation: prms.keepFixation,
   draw_start_box: prms.drawStartBox,
   draw_response_boxes: prms.drawResponseBoxes,
+  draw_response_boxes_image: prms.drawResponseBoxesImage,
   box_linewidth: prms.boxLineWidth,
   require_mouse_press_start: prms.requireMousePressStart,
   require_mouse_press_finish: prms.requireMousePressFinish,
-  word: jsPsych.timelineVariable('probe'),
-  scale_factor: null,
   data: {
     stim_type: 'cse_mouse_tracking',
     probe: jsPsych.timelineVariable('probe'),
     probe_type: jsPsych.timelineVariable('probe_type'),
-    right: jsPsych.timelineVariable('right'),
     left: jsPsych.timelineVariable('left'),
+    right: jsPsych.timelineVariable('right'),
     correct_side: jsPsych.timelineVariable('correct_side'),
-  },
-  on_start: function (trial) {
-    trial.left_image = trial.data.left;
-    trial.right_image = trial.data.right;
   },
   on_finish: function () {
     codeTrial();
@@ -262,24 +257,17 @@ const iti = {
 };
 
 const training_timeline = {
-  timeline_variables: training_stimuli,
-  timeline: [trial_stimulus, trial_feedback, iti],
-  randomize_order: true,
+    timeline_variables: training_stimuli,
+    timeline: [trial_stimulus, trial_feedback, iti],
+    sample: {
+        type: 'fixed-repetitions',
+        size: 1
+    },
 };
 
-const example_timeline = {
-  timeline_variables: example_stimuli,
-  timeline: [trial_stimulus, trial_feedback, iti],
-  randomize_order: true,
-};
-
-const trial_timeline = {
-  timeline_variables: stimuli,
-  timeline: [
-    trial_stimulus,
-    // trial_feedback,
-    iti,
-  ],
+const exp_timeline = {
+  timeline_variables: exp_stimuli,
+  timeline: [trial_stimulus, iti],
   randomize_order: true,
 };
 
@@ -324,7 +312,7 @@ const save_data = {
 const save_interaction_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_interaction_data_' + vpNum;
+    let data_filename = dirName + 'interaction_data/' + expName + '_' + vpNum;
     saveInteractionData('/Common/write_data.php', data_filename);
   },
   timing_post_trial: 200,
@@ -338,7 +326,6 @@ const save_code = {
   },
   timing_post_trial: 200,
 };
-
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -351,20 +338,17 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
 
+  exp.push(images);
   exp.push(task_instructions);
 
-  // run training
+  // Run training block
   exp.push(training_timeline);
 
-  // run examples
-  exp.push(example_start);
-  exp.push(example_timeline);
-
-  // run real experiment
-  exp.push(trial_start);
-  exp.push(trial_timeline);
+  // Run real experiment
+  exp.push(exp_start);
+  exp.push(exp_timeline);
 
   // save data
   exp.push(save_data);

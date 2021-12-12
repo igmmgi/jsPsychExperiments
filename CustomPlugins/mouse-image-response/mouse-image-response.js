@@ -13,7 +13,7 @@ jsPsych.plugins['mouse-image-response'] = (function () {
     description: '',
     parameters: {
       func_args: {
-        type: jsPsych.plugins.parameterType.DICT,
+        type: jsPsych.plugins.parameterType.OBJECT,
         array: true,
         pretty_name: 'Args',
         default: {},

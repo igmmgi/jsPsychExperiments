@@ -41,6 +41,7 @@ const trial_stimulus = {
   box_linewidth: 10,
   left_image: images_healthy.images[0],
   right_image: images_unhealthy.images[0],
+  require_mouse_press_start: true,
 };
 
 timeline.push(trial_stimulus);

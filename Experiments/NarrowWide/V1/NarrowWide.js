@@ -369,12 +369,12 @@ let learning_block_wide = [
   // Pure wide 6 in total
 
   // Emoji set
-  { phase: 'learning', trialType: 'Wide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'Wide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'Wide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
-  { phase: 'learning', trialType: 'Wide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: 'left', },
-  { phase: 'learning', trialType: 'Wide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: 'left', },
-  { phase: 'learning', trialType: 'Wide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'left', },
+  { phase: 'learning', trialType: 'PureWide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.2, imageProbRight: 0.5, imageNumberLeft: 0, imageNumberRight: 1, highProbSide: 'right', },
+  { phase: 'learning', trialType: 'PureWide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.2, imageProbRight: 0.8, imageNumberLeft: 0, imageNumberRight: 2, highProbSide: 'right', },
+  { phase: 'learning', trialType: 'PureWide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.5, imageProbRight: 0.8, imageNumberLeft: 1, imageNumberRight: 2, highProbSide: 'right', },
+  { phase: 'learning', trialType: 'PureWide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.5, imageProbRight: 0.2, imageNumberLeft: 1, imageNumberRight: 0, highProbSide: 'left', },
+  { phase: 'learning', trialType: 'PureWide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.8, imageProbRight: 0.2, imageNumberLeft: 2, imageNumberRight: 0, highProbSide: 'left', },
+  { phase: 'learning', trialType: 'PureWide', imageTypeLeft: 'Wide', imageTypeRight: 'Wide', imageProbLeft: 0.8, imageProbRight: 0.5, imageNumberLeft: 2, imageNumberRight: 1, highProbSide: 'left', },
 
 ];
 

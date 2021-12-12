@@ -13,7 +13,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
     description: '',
     parameters: {
       func_args: {
-        type: jsPsych.plugins.parameterType.DICT,
+        type: jsPsych.plugins.parameterType.OBJECT,
         array: true,
         pretty_name: 'Args',
         default: {},
@@ -156,7 +156,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
         type: jsPsych.plugins.parameterType.BOOL,
         array: true,
         pretty_name: 'Draw Response Boxes Text',
-        default: [false, true, true],
+        default: [false, true, true, true],
         description: 'Draw Response Boxes Text',
       },
       require_mouse_press_start: {
@@ -302,7 +302,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
     function handleMouseMove(e) {
       mousePosition(e);
       if (in_box(mpos.x, mpos.y, start_box)) {
-        draw_response_text = true;
+        draw_response_text = trial.draw_response_boxes_text[1];
         draw();
       }
 
@@ -351,7 +351,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
         ctx.stroke();
       }
 
-      // targets
+      // text targets
       if (draw_response_text) {
         ctx.textAlign = 'center';
         ctx.fillStyle = trial.stimulus_colour;
@@ -371,6 +371,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
           draw_fixation = trial.keep_fixation;
           draw_stimulus = true;
           draw_start_box = trial.draw_start_box[2];
+          draw_response_text = trial.draw_response_boxes_text[3];
           draw_response_boxes = trial.draw_response_boxes[2];
           draw();
         }, trial.fixation_duration);
@@ -420,6 +421,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
       start_time = performance.now();
       draw_fixation = true;
       draw_start_box = trial.draw_start_box[1];
+      draw_response_text = trial.draw_response_boxes_text[2];
       draw_response_boxes = trial.draw_response_boxes[1];
       draw();
     };

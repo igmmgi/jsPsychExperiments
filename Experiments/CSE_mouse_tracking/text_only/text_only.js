@@ -41,7 +41,7 @@ const prms = {
   keepFixation: false, // is fixation cross kept on screen with stimulus
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
-  drawResponseBoxesText: [false, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
+  drawResponseBoxesText: [false, true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseText: true, // draw response text
   boxLineWidth: 2, // linewidth of the start/target boxes
   requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
@@ -73,7 +73,11 @@ function drawFeedback() {
   } else if (dat.end_loc === 'right') {
     xpos = prms.rightBox[0] - 25;
     ypos = prms.rightBox[1];
+  } else { // Fallback to mouse coords
+    xpos = dat.end_x;
+    ypos = dat.end_y;
   }
+
   ctx.fillText(prms.fbTxt[dat.corrCode], xpos, ypos);
 }
 
@@ -93,9 +97,12 @@ const example_start = {
   stimulus:
     "<H1 style = 'text-align: center;'> Now try to move the mouse to the box of the word<br><br>related to the one presented </H1>",
   post_trial_gap: prms.waitDur,
+    on_start: function() {
+        prms.cBlk += 1;
+    }
 };
 
-const trial_start = {
+const exp_start = {
   type: 'html-keyboard-response',
   stimulus:
     "<H1 style = 'text-align: center;'> Jetzt beginnt das eigentliche Experiment </H1>" +
@@ -107,6 +114,9 @@ const trial_start = {
     "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich!  </H3>" +
     "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
   post_trial_gap: prms.waitDur,
+    on_start: function() {
+        prms.cBlk += 1;
+    }
 };
 
 const rating_start = {
@@ -114,6 +124,9 @@ const rating_start = {
   stimulus:
     "<H1 style = 'text-align: left;'> Bitte nehmen Sie sich abschließend noch Zeit folgende Fragen zu beantworten </H1>",
   post_trial_gap: prms.waitDur,
+    on_start: function() {
+        prms.cBlk += 1;
+    }
 };
 
 const task_instructions = {
@@ -137,39 +150,37 @@ const task_instructions = {
 //               Stimuli/Timelines                                    //
 ////////////////////////////////////////////////////////////////////////
 function stimuli_factory(items) {
-  var stimuli = [];
+  let stimuli = [];
   for (const s of items) {
     let stimulus = {};
     // randomly position targets left or right
-    if (Math.round(Math.random()) == 0) {
+    if (Math.random() < 0.5) {
       stimulus.right = s.target_rel_text;
-      stimulus.left = s['target_unrel_text'];
+      stimulus.left = s.target_unrel_text;
       stimulus.correct_side = 'right';
     } else {
-      stimulus.right = s['target_unrel_text'];
-      stimulus.left = s['target_rel_text'];
+      stimulus.right = s.target_unrel_text;
+      stimulus.left = s.target_rel_text;
       stimulus.correct_side = 'left';
     }
     // randomly select probe type
-    if (Math.round(Math.random()) == 0) {
-      stimulus.probe = s['probe_amb'];
+    if (Math.random() < 0.5) {
+      stimulus.probe = s.probe_amb;
       stimulus.probe_type = 'ambiguous';
-      stimulus.probe_rating = s['probe_unamb'];
-      stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + s['probe_unamb'] + '</H1>';
+      stimulus.probe_rating = s.probe_unamb;
+      stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + s.probe_unamb + '</H1>';
       stimulus.probe_rating_type = 'unambiguous';
     } else {
-      stimulus.probe = s['probe_unamb'];
+      stimulus.probe = s.probe_unamb;
       stimulus.probe_type = 'unambiguous';
-      stimulus.probe_rating = s['probe_amb'];
-      stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + s['probe_amb'] + ' </H1>';
+      stimulus.probe_rating = s.probe_amb;
+      stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + s.probe_amb + ' </H1>';
       stimulus.probe_rating_type = 'ambiguous';
     }
     stimuli.push(stimulus);
   }
   return stimuli;
 }
-
-// const training_stimuli = {};
 
 // prettier-ignore
 const training_stimuli = [
@@ -206,19 +217,13 @@ const trial_stimulus = {
   box_linewidth: prms.boxLineWidth,
   require_mouse_press_start: prms.requireMousePressStart,
   require_mouse_press_finish: prms.requireMousePressFinish,
-  word: jsPsych.timelineVariable('probe'),
-  scale_factor: null,
   data: {
     stim_type: 'cse_mouse_tracking',
     probe: jsPsych.timelineVariable('probe'),
     probe_type: jsPsych.timelineVariable('probe_type'),
-    right: jsPsych.timelineVariable('right'),
     left: jsPsych.timelineVariable('left'),
+    right: jsPsych.timelineVariable('right'),
     correct_side: jsPsych.timelineVariable('correct_side'),
-  },
-  on_start: function (trial) {
-    trial.left_text = trial.data.left;
-    trial.right_text = trial.data.right;
   },
   on_finish: function () {
     codeTrial();
@@ -226,34 +231,20 @@ const trial_stimulus = {
 };
 
 const scale = [1, 2, 3, 4, 5];
+// prettier-ignore
 const questions = [
-  {
-    prompt: 'Wie konkret ist das obige Wort?<br> (1 = Not concrete at all, 5 = very concrete)',
-    name: 'q1',
-    labels: scale,
-    required: true,
-  },
-  {
-    prompt: 'Wie vertraut sind Sie mit dem obigen Wort?<br>(1 = Not familiar at all, 5 = very familiar)',
-    name: 'q2',
-    labels: scale,
-    required: true,
-  },
-  {
-    prompt: 'Wie leicht können Sie sich dieses Wort bildlich vorstellen? <br>(1 = Not easy at all, 5 = very easy)',
-    name: 'q3',
-    labels: scale,
-    required: true,
-  },
+  { name: 'q1', labels: scale, required: true, prompt: 'Wie konkret ist das obige Wort?<br> (1 = Not concrete at all, 5 = very concrete)' },
+  { name: 'q2', labels: scale, required: true, prompt: 'Wie vertraut sind Sie mit dem obigen Wort?<br>(1 = Not familiar at all, 5 = very familiar)' },
+  { name: 'q3', labels: scale, required: true, prompt: 'Wie leicht können Sie sich dieses Wort bildlich vorstellen? <br>(1 = Not easy at all, 5 = very easy)' },
 ];
 
 const trial_rating = {
   type: 'survey-likert',
   preamble: jsPsych.timelineVariable('probe_rating_label'),
-  questions: questions.splice(0, 3),
+  questions: questions,
   scale_width: 600,
   button_label: 'Weiter',
-  post_trial_gap: 1000,
+  post_trial_gap: 500,
   on_finish: function () {
     let dat = jsPsych.data.get().last(1).values()[0];
     for (const [key, val] of Object.entries(dat.response)) {
@@ -287,10 +278,12 @@ const iti = {
 };
 
 const training_timeline = {
-  timeline_variables: training_stimuli,
-  timeline: [trial_stimulus, trial_feedback, iti],
-  randomize_order: true,
-  size: 10,
+    timeline_variables: training_stimuli,
+    timeline: [trial_stimulus, trial_feedback, iti],
+    sample: {
+        type: 'fixed-repetitions',
+        size: 5
+    },
 };
 
 const example_timeline = {
@@ -306,8 +299,8 @@ const exp_timeline = {
 };
 
 const rating_timeline = {
-  timeline_variables: stimuli,
-  timeline: [trial_rating, trial_feedback],
+  timeline_variables: exp_stimuli,
+  timeline: [trial_rating],
   randomize_order: true,
 };
 
@@ -381,31 +374,32 @@ function genExpSeq() {
   exp.push(resize_de);
   // exp.push(vpInfoForm_de);
 
-  // exp.push(task_instructions);
+  exp.push(task_instructions);
 
-  // run training
+  // Run training block
   exp.push(training_timeline);
 
-  // // run examples
-  // exp.push(example_start);
-  // exp.push(example_timeline);
+  // Run example trials
+  exp.push(example_start);
+  exp.push(example_timeline);
 
-  // // run real experiment
-  // exp.push(trial_start);
-  // exp.push(trial_timeline);
+  // Run real experiment
+  exp.push(exp_start);
+  exp.push(exp_timeline);
 
-  // exp.push(rating_start);
-  // exp.push(rating_timeline);
+  // Run rating phase
+  exp.push(rating_start);
+  exp.push(rating_timeline);
 
-  // // save data
-  // exp.push(save_data);
-  // exp.push(save_interaction_data);
-  // exp.push(save_code);
+  // save data
+  exp.push(save_data);
+  exp.push(save_interaction_data);
+  exp.push(save_code);
 
-  // // debrief
-  // exp.push(debrief_de);
-  // exp.push(alphaNum);
-  // exp.push(fullscreen_off);
+  // debrief
+  exp.push(debrief_de);
+  exp.push(alphaNum);
+  exp.push(fullscreen_off);
 
   return exp;
 }
