@@ -145,7 +145,7 @@ $nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
             ?>
 
             <?php if (!empty($cr2_version)) : ?>
-                <h3><a href="Experiments/ConflictReward/Exp2/index.html?orderVersion=<?php echo $cr1_version; ?>">Reward Exp2 (n = <?= $nFiles_cr2_v1 + $nFiles_cr2_v2 + $nFiles_cr2_v3 + $nFiles_cr2_v4 ?>)</a></h3>
+                <h3><a href="Experiments/ConflictReward/Exp2/index.html?orderVersion=<?php echo $cr2_version; ?>">Reward Exp2 (n = <?= $nFiles_cr2_v1 + $nFiles_cr2_v2 + $nFiles_cr2_v3 + $nFiles_cr2_v4 ?>)</a></h3>
             <?php endif;  ?>
 
 
