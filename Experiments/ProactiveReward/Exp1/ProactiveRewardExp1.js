@@ -27,9 +27,8 @@ getComputerInfo();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 80, // number of trials in each block
-  nTrlsE: 80, // number of trials in each block
-  nBlks: 8,
+  nTrlsE: 32, // number of trials in each block
+  nBlks: 24, // number of blocks
   fixDur: 400,
   fbDur: [1500, 2500, 2500],
   iti: 500,
@@ -47,14 +46,14 @@ const prms = {
 };
 
 // counter-balanced order versions
-const orderVersion = 1; // Number(jsPsych.data.urlVariables().orderVersion);
+const orderVersion = Number(jsPsych.data.urlVariables().orderVersion);
 jsPsych.data.addProperties({ orderVersion: orderVersion });
 
 // 2 random key assignments
-const keyVersion = getRandomInt(1, 2);
+const keyVersion = getRandomInt(0, 1);
 jsPsych.data.addProperties({ keyVersion: keyVersion });
 
-const colourMapping = keyVersion === 1 ? ['rot', 'grün'] : ['grün', 'rot'];
+const colourMapping = keyVersion === 0 ? ['rot', 'grün'] : ['grün', 'rot'];
 
 const respText = generate_formatted_html({
   text: `${colourMapping[0]} = linker Zeigefinger (Taste 'Q')<br>
@@ -62,6 +61,19 @@ const respText = generate_formatted_html({
   fontsize: 22,
   lineheight: 1.5,
 });
+
+const images = loadImages(['../images/treasure_box.jpg', '../images/treasure_box_with_cross.jpg']);
+
+// need to store performance data to use to guide reward/no reward
+const performanceData = {
+  points: 0,
+  simon_totalRT: prms.tooSlow,
+  simon_meanRT: prms.tooSlow,
+  simon_nTrlsCorrect: 0,
+  stroop_totalRT: prms.tooSlow,
+  stroop_meanRT: prms.tooSlow,
+  stroop_nTrlsCorrect: 0,
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -79,7 +91,7 @@ const task_instructions1 = {
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
            Während des Experiments ist es in manchen Versuchsdurchgängen möglich, Belohnungen in Form von Punkten zu
            sammeln. Die zehn Teilnehmer mit der höchsten Gesamtpunktzahl erhalten zusätzlich
-           einen 10€-Gutschein für eine Buchhandlung (OSIANDER). Insgesamt gibt es maximal 60 Teilnehmer.<br><br>
+           einen 10€-Gutschein für eine Buchhandlung (OSIANDER). Insgesamt gibt es maximal 50 Teilnehmer.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
@@ -97,7 +109,7 @@ const task_instructions2 = {
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
     zur Gutscheinvergabe am Ende des Experimentes.<br><br>
     Bei Fragen oder Problemen wende dich bitte an:<br>
-    j.koenig@student.uni-tuebingen.de <br><br><br>
+    hiwipibio@gmail.com <br><br><br>
     Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
@@ -154,33 +166,142 @@ const task_instructions_stroop = {
   choices: [' '],
 };
 
-const reward_instructions = {
+const reward_instructions1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
-  stimulus:
-    generate_formatted_html({
-      text: `Versuche in Durchgängen mit Belohnung durch besonders schnelle
-      (und korrekte) Antworten so viele Punkte wie möglich zu sammeln!<br><br>
-        Bitte beachte aber auch in Durchgängen ohne Belohnung nicht zu viele
-        Fehler zu machen, da der Anteil korrekter Antworten in diesen
-        Durchgängen bei der Berechnung deiner Gesamtpunktzahl berücksichtigt
-        wird.`,
-      fontsize: 22,
-      lineheight: 1.25,
-      align: 'left',
-    }) +
-    generate_formatted_html({
-      text: `<br>Beispiel: <br><br>Punktzahl (in Durchgängen mit Belohnung): 100 Punkte<br>
-    Prozent Korrekt (in Durchgängen ohne Belohnung): 85 %<br><br>
-    Aktuelle Gesamtpunkte: 100 x 0.85 = 85 Punkte<br><br>
-      Weiter geht es mit der Taste 'G' ...`,
-      fontsize: 22,
-      lineheight: 1.25,
-      align: 'center',
-    }),
-  choices: ['g'],
+  stimulus: generate_formatted_html({
+    text: `Das Experiment besteht aus mehreren Blöcken.
+           In manchen Blöcken hast du die Möglichkeit in Durchgängen mit besonders schnellen
+           (und korrekten) Antworten Belohnung (+10 Punkte) zu erhalten.
+           In den anderen Blöcken kannst du keine Belohnung/Punkte erhalten.<br><br>
+           Weiter geht es mit der Leertaste ...`,
+    fontsize: 22,
+    lineheight: 1.25,
+    align: 'left',
+  }),
+  choices: [' '],
+};
+
+const reward_instructions2 = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: generate_formatted_html({
+    text: `Versuche in Blöcken mit Belohnung durch besonders schnelle (und korrekte)
+      Antworten so viele Punkte wie möglich zu sammeln um
+      eine Gutschein zu gewinnen!!  <br><br>
+      Bitte beachte aber auch in Blöcken ohne Belohnung nicht zu viele Fehler zu machen.  <br><br>
+      Weiter geht es mit der Leertaste ...`,
+    fontsize: 22,
+    lineheight: 1.25,
+    align: 'left',
+  }),
+  choices: [' '],
+};
+
+const start_of_block_text_with_reward = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  choices: [' '],
+  on_start: function (trial) {
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Start Block ${prms.cBlk} von ${prms.nBlks}:`,
+        fontsize: 26,
+        align: 'center',
+        bold: false,
+      }) +
+      generate_formatted_html({
+        text: `$$$$$   BELOHNUNGSBLOCK   $$$$$<br><br>`,
+        fontsize: 26,
+        align: 'center',
+        bold: true,
+      }) +
+      generate_formatted_html({
+        text: `Aktuelle Gesamtpunktzahl: ${performanceData.points} Punkte<br><br>
+        Versuche durch besonders schnelle (und korrekte)<br>Antworten so viele Punkte wie möglich zu sammeln!<br><br> Zur Erinnerung:`,
+        fontsize: 26,
+        align: 'center',
+      }) +
+      respText +
+      generate_formatted_html({
+        text: `Weiter geht es mit der Leertaste ...`,
+        fontsize: 24,
+        lineheight: 1.25,
+        align: 'left',
+      });
+  },
+};
+
+const start_of_block_text_with_no_reward = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  choices: [' '],
+  on_start: function (trial) {
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Start Block ${prms.cBlk} von ${prms.nBlks}:`,
+        fontsize: 26,
+        align: 'center',
+        bold: false,
+      }) +
+      generate_formatted_html({
+        text: `***** KEINE BELOHNUNG *****<br><br>`,
+        fontsize: 26,
+        align: 'center',
+        bold: true,
+      }) +
+      generate_formatted_html({
+        text: `Aktuelle Gesamtpunktzahl: ${performanceData.points} Punkte<br><br>
+        Zur Erinnerung:`,
+        fontsize: 26,
+        align: 'center',
+        bold: false,
+      }) +
+      respText +
+      generate_formatted_html({
+        text: `Weiter geht es mit der Leertaste ...`,
+        fontsize: 24,
+        lineheight: 1.25,
+        align: 'left',
+      });
+  },
+};
+
+const end_of_block_text = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  choices: [' '],
+  on_start: function (trial) {
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Ende Block ${prms.cBlk} von ${prms.nBlks}:<br><br>
+        Aktuelle Gesamtpunktzahl: ${performanceData.points} Punkte<br><br>`,
+        fontsize: 26,
+        align: 'center',
+        bold: false,
+      }) +
+      generate_formatted_html({
+        text: `Kurze Pause.<br><br>Bitte nutze die Pause, um dich zu erholen. Wenn du
+          wieder bereit für den nächsten Block bist, dann drücke die Leertaste.<br><br>`,
+        fontsize: 26,
+        align: 'center',
+      });
+    prms.cBlk += 1;
+    prms.cTrl = 1;
+  },
 };
 
 function drawFixation() {
@@ -244,7 +365,6 @@ const iti = {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  console.log(dat);
   let corrCode;
   if (dat.key_press === null) {
     corrCode = 2;
@@ -253,11 +373,43 @@ function codeTrial() {
     corrCode = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp) ? 0 : 1;
   }
 
+  console.log(dat);
+  // update performance data
+  dat.success = false;
+  if (dat.task === 'simon') {
+    if (dat.rt < performanceData.simon_meanRT) {
+      dat.success = true;
+      performanceData.points = dat.reward === 'reward' ? (performanceData.points += 10) : (performanceData.points += 0);
+    }
+    if (corrCode === 0) {
+      performanceData.simon_totalRT += dat.rt;
+      performanceData.simon_nTrlsCorrect += 1;
+      performanceData.simon_meanRT = performanceData.simon_totalRT / performanceData.simon_nTrlsCorrect;
+    }
+  } else if (dat.task === 'stroop') {
+    if (dat.rt < performanceData.stroop_meanRT) {
+      dat.success = true;
+      performanceData.points = dat.reward === 'reward' ? (performanceData.points += 10) : (performanceData.points += 0);
+    }
+    if (corrCode === 0) {
+      performanceData.stroop_totalRT += dat.rt;
+      performanceData.stroop_nTrlsCorrect += 1;
+      performanceData.stroop_meanRT = performanceData.stroop_totalRT / performanceData.stroop_nTrlsCorrect;
+    }
+  }
+
   jsPsych.data.addDataToLastTrial({
     date: Date(),
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
     corrCode: corrCode,
+    simon_totalRT: performanceData.simon_totalRT,
+    stroop_totalRT: performanceData.stroop_totalRT,
+    simon_nTrlsCorrect: performanceData.simon_nTrlsCorrect,
+    stroop_nTrlsCorrect: performanceData.stroop_nTrlsCorrect,
+    simon_meanRT: performanceData.simon_meanRT,
+    stroop_meanRT: performanceData.stroop_meanRT,
+    points: performanceData.points,
   });
 
   prms.cTrl += 1;
@@ -267,12 +419,37 @@ function drawFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
-
   ctx.font = prms.fbSize;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText(prms.fbTxt[dat.corrCode], 0, 0);
+
+  if (dat.reward === 'no_reward') {
+    ctx.fillText(prms.fbTxt[dat.corrCode], 0, 0);
+  } else {
+    let imgnum = 1;
+    if ((dat.corrCode === 0) & dat.success) {
+      ctx.fillText('Richtig & schnell!', 0, -70);
+      ctx.fillText('+10 Punkte!', 0, -45);
+      imgnum = 0;
+    } else if ((dat.corrCode === 0) & !dat.success) {
+      ctx.fillText('Richtig aber zu langsam!', 0, -70);
+      ctx.fillText('Keine Punkte!', 0, -45);
+    } else if (dat.corrCode === 1) {
+      ctx.fillText('Falsch!', 0, -70);
+      ctx.fillText('Keine Punkte!', 0, -45);
+    } else if (dat.corrCode === 2) {
+      ctx.fillText('Zu langsam!', 0, -70);
+      ctx.fillText('Keine Punkte!', 0, -45);
+    }
+
+    // draw image
+    // show a version of the treasure chest
+    const size = 4;
+    const width = images[imgnum].width;
+    const height = images[imgnum].height;
+    ctx.drawImage(images[imgnum], -width / size / 2, -height / size / 2 + 20, width / size, height / size);
+  }
 }
 
 const trial_feedback = {
@@ -307,7 +484,7 @@ const stroop_stimulus = {
     },
   ],
   data: {
-    stim: 'ccr',
+    stim: 'pr',
     task: jsPsych.timelineVariable('task'),
     item: jsPsych.timelineVariable('item'),
     position: jsPsych.timelineVariable('position'),
@@ -339,7 +516,7 @@ const simon_stimulus = {
     },
   ],
   data: {
-    stim: 'ccr',
+    stim: 'pr',
     task: jsPsych.timelineVariable('task'),
     item: jsPsych.timelineVariable('item'),
     position: jsPsych.timelineVariable('position'),
@@ -353,35 +530,72 @@ const simon_stimulus = {
   },
 };
 
-// prettier-ignore
-const stroops_no_reward = [
+let stroops_no_reward;
+let simons_no_reward;
+let stroops_reward;
+let simons_reward;
+
+if (keyVersion === 0) {
+  // prettier-ignore
+  stroops_no_reward = [
     { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'red',   comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[0] },
     { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'green', comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[1] },
     { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'green', comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[1] },
     { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[0] },
   ];
-// prettier-ignore
-const simons_no_reward = [
+  // prettier-ignore
+  simons_no_reward = [
     { task: 'simon', item: 'circle', position: 'left',  colour: 'red',   comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[0] },
     { task: 'simon', item: 'circle', position: 'right', colour: 'red',   comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[0] },
     { task: 'simon', item: 'circle', position: 'left',  colour: 'green', comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[1] },
     { task: 'simon', item: 'circle', position: 'right', colour: 'green', comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[1] },
   ];
 
-// prettier-ignore
-const stroops_reward = [
+  // prettier-ignore
+  stroops_reward = [
     { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'red',   comp: 'kongruent',   reward: "reward", corrResp: prms.respKeys[0] },
     { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'green', comp: 'kongruent',   reward: "reward", corrResp: prms.respKeys[1] },
     { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'green', comp: 'inkongruent', reward: "reward", corrResp: prms.respKeys[1] },
     { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: "reward", corrResp: prms.respKeys[0] },
   ];
-// prettier-ignore
-const simons_reward = [
+  // prettier-ignore
+  simons_reward = [
     { task: 'simon', item: 'circle', position: 'left',  colour: 'red',   comp: 'kongruent',   reward: "reward", corrResp: prms.respKeys[0] },
     { task: 'simon', item: 'circle', position: 'right', colour: 'red',   comp: 'inkongruent', reward: "reward", corrResp: prms.respKeys[0] },
     { task: 'simon', item: 'circle', position: 'left',  colour: 'green', comp: 'inkongruent', reward: "reward", corrResp: prms.respKeys[1] },
     { task: 'simon', item: 'circle', position: 'right', colour: 'green', comp: 'kongruent',   reward: "reward", corrResp: prms.respKeys[1] },
   ];
+} else if (keyVersion === 1) {
+  // prettier-ignore
+  stroops_no_reward = [
+    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'red',   comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[1] },
+    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'green', comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[0] },
+    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'green', comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[0] },
+    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[1] },
+  ];
+  // prettier-ignore
+  simons_no_reward = [
+    { task: 'simon', item: 'circle', position: 'left',  colour: 'red',   comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[1] },
+    { task: 'simon', item: 'circle', position: 'right', colour: 'red',   comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[1] },
+    { task: 'simon', item: 'circle', position: 'left',  colour: 'green', comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[0] },
+    { task: 'simon', item: 'circle', position: 'right', colour: 'green', comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[0] },
+  ];
+
+  // prettier-ignore
+  stroops_reward = [
+    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'red',   comp: 'kongruent',   reward: "reward", corrResp: prms.respKeys[1] },
+    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'green', comp: 'kongruent',   reward: "reward", corrResp: prms.respKeys[0] },
+    { task: 'stroop', item: 'ROT',  position: 'centre', colour: 'green', comp: 'inkongruent', reward: "reward", corrResp: prms.respKeys[0] },
+    { task: 'stroop', item: 'GRÜN', position: 'centre', colour: 'red',   comp: 'inkongruent', reward: "reward", corrResp: prms.respKeys[1] },
+  ];
+  // prettier-ignore
+  simons_reward = [
+    { task: 'simon', item: 'circle', position: 'left',  colour: 'red',   comp: 'inkongruent', reward: "reward", corrResp: prms.respKeys[1] },
+    { task: 'simon', item: 'circle', position: 'right', colour: 'red',   comp: 'kongruent',   reward: "reward", corrResp: prms.respKeys[1] },
+    { task: 'simon', item: 'circle', position: 'left',  colour: 'green', comp: 'kongruent',   reward: "reward", corrResp: prms.respKeys[0] },
+    { task: 'simon', item: 'circle', position: 'right', colour: 'green', comp: 'inkongruent', reward: "reward", corrResp: prms.respKeys[0] },
+  ];
+}
 
 const trial_timeline_stroop_no_reward = {
   timeline: [fixation_cross, stroop_stimulus, trial_feedback],
@@ -407,7 +621,7 @@ const trial_timeline_simon_reward = {
 //                              De-brief                              //
 ////////////////////////////////////////////////////////////////////////
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('ccr1', 16);
+const randomString = generateRandomStringWithExpName('pr', 16);
 
 const alpha_num = {
   type: 'html-keyboard-response-canvas',
@@ -447,7 +661,7 @@ const email_option_instructions = {
       Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
 Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
 Falls Du Fragen zu unserem Experiment hast, kannst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
-j.koenig@student.uni-tuebingen.de <br><br>
+    hiwipibio@gmail.com<br><br>
 Drücke die Leertaste, um fortzufahren!`,
     fontsize: 26,
     align: 'left',
@@ -471,7 +685,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/version' + orderVersion + '/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim: 'ccr' });
+    saveData('/Common/write_data.php', data_filename, { stim: 'pr' });
   },
   post_trial_gap: 1000,
 };
@@ -502,16 +716,19 @@ function genExpSeq() {
 
   let exp = [];
 
-  // // experiment intro stuff
-  // exp.push(fullscreen_on_de);
-  // exp.push(check_screen);
-  // exp.push(welcome_de_du);
-  // exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
-  // exp.push(hideMouseCursor);
-  // exp.push(screenInfo);
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
+  // experiment intro stuff
+  exp.push(fullscreen_on_de);
+  exp.push(check_screen);
+  exp.push(welcome_de_du);
+  exp.push(resize_de_du);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
+
+  exp.push(reward_instructions1);
+  exp.push(reward_instructions2);
 
   // Assign block task type and block reward type
   let blk_task;
@@ -528,24 +745,38 @@ function genExpSeq() {
     blk_reward = repeatArray(['no_reward', 'reward'], prms.nBlks / 2);
   }
 
-  exp.push(task_instructions_simon);
-  exp.push(task_instructions_stroop);
-
   // actual experiment
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    let blk_timeline;
     if (blk_task[blk] === 'simon') {
+      if ((blk === 0) | (blk === 12)) {
+        exp.push(task_instructions_simon);
+      }
       if (blk_reward[blk] === 'reward') {
-        exp.push(trial_timeline_simon_reward);
+        exp.push(start_of_block_text_with_reward);
+        blk_timeline = { ...trial_timeline_simon_reward };
       } else if (blk_reward[blk] === 'no_reward') {
-        exp.push(trial_timeline_simon_no_reward);
+        exp.push(start_of_block_text_with_no_reward);
+        blk_timeline = { ...trial_timeline_simon_no_reward };
       }
     } else if (blk_task[blk] === 'stroop') {
+      if ((blk === 0) | (blk === 12)) {
+        exp.push(task_instructions_stroop);
+      }
       if (blk_reward[blk] === 'reward') {
-        exp.push(trial_timeline_stroop_reward);
+        exp.push(start_of_block_text_with_reward);
+        blk_timeline = { ...trial_timeline_stroop_reward };
       } else if (blk_reward[blk] === 'no_reward') {
-        exp.push(trial_timeline_stroop_no_reward);
+        exp.push(start_of_block_text_with_no_reward);
+        blk_timeline = { ...trial_timeline_stroop_no_reward };
       }
     }
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: prms.nTrlsE / 4,
+    };
+    exp.push(blk_timeline);
+    exp.push(end_of_block_text);
   }
 
   // end of experiment stuff
