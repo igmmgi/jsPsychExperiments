@@ -166,35 +166,20 @@ const task_instructions_stroop = {
   choices: [' '],
 };
 
-const reward_instructions1 = {
+const reward_instructions = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Das Experiment besteht aus mehreren Blöcken.
+    text: `Das Experiment besteht aus mehreren Blöcken.<br><br>
            In manchen Blöcken hast du die Möglichkeit in Durchgängen mit besonders schnellen
-           (und korrekten) Antworten Belohnung (+10 Punkte) zu erhalten.
+           (und korrekten) Antworten Belohnung (+10 Punkte) zu erhalten.<br><br>
            In den anderen Blöcken kannst du keine Belohnung/Punkte erhalten.<br><br>
+           Versuche in Blöcken mit Belohnung durch besonders schnelle (und korrekte)
+           Antworten so viele Punkte wie möglich zu sammeln um
+           einen Gutschein zu gewinnen!!<br><br>
            Weiter geht es mit der Leertaste ...`,
-    fontsize: 22,
-    lineheight: 1.25,
-    align: 'left',
-  }),
-  choices: [' '],
-};
-
-const reward_instructions2 = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  stimulus: generate_formatted_html({
-    text: `Versuche in Blöcken mit Belohnung durch besonders schnelle (und korrekte)
-      Antworten so viele Punkte wie möglich zu sammeln um
-      eine Gutschein zu gewinnen!!  <br><br>
-      Bitte beachte aber auch in Blöcken ohne Belohnung nicht zu viele Fehler zu machen.  <br><br>
-      Weiter geht es mit der Leertaste ...`,
     fontsize: 22,
     lineheight: 1.25,
     align: 'left',
@@ -727,8 +712,7 @@ function genExpSeq() {
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 
-  exp.push(reward_instructions1);
-  exp.push(reward_instructions2);
+  exp.push(reward_instructions);
 
   // Assign block task type and block reward type
   let blk_task;
