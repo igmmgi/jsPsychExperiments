@@ -160,7 +160,7 @@ const instructionsStart1 = {
       resp_mapping_color_en_de[resp_mapping_color[2]] +
       '/' +
       resp_mapping_color_en_de[resp_mapping_color[3]] +
-      ` = \'UNTEN\'<br><br> 
+      ` = \'UNTEN\'<br><br>
       Das Experiment beginnt mit ein paar Übungsdurchgängen, um die Farbzuordnung zu lernen.<br><br>
       Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 28,
@@ -469,8 +469,8 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  exp.push(vpInfoForm_de);
-  exp.push(mouse_reminder);
+  // exp.push(vpInfoForm_de);
+  // exp.push(mouse_reminder);
   exp.push(instructionsStart1);
 
   // practice block with "xxxx" stimuli

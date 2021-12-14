@@ -69,6 +69,14 @@ jsPsych.plugins['mouse-drag-response'] = (function () {
     },
   };
 
+  function roundArray(array) {
+    let len = array.length;
+    while (len--) {
+      array[len] = Math.round(array[len]);
+    }
+    return array;
+  }
+
   plugin.trial = function (display_element, trial) {
     // setup canvas
     display_element.innerHTML =
