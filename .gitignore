@@ -2,3 +2,9 @@
 *.csv
 .idea
 .directory
+.idea
+coverage/
+dist.zip
+site/
+dist/
+node_modules/
