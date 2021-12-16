@@ -148,7 +148,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
   };
 
   function text_mask(txt, mask_character) {
-    return txt.replace(/[^\s]/g, mask_character);
+    return mask_character.repeat(txt.length);
   }
 
   // deal with mask type 1 and 2
@@ -216,6 +216,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
     let line_number = 0;
     let sentence = trial.sentence.replace(/(\r\n|\n|\r)/gm, '');
     let words_concat = sentence.split(' ');
+    let rts = [0];
 
     // if mask type = 3, repeat mask character x times
     if (trial.mask_type === 3) trial.mask_character = trial.mask_character.repeat(trial.mask3_character_length);
@@ -281,9 +282,15 @@ jsPsych.plugins['self-paced-reading'] = (function () {
       }
     }
 
+    function clear_canvas() {
+      ctx.fillStyle = trial.canvas_colour;
+      ctx.font = trial.canvas_colour;
+      ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
+    }
     // store response
     let response = {
-      rt: null,
+      rt_sentence: null,
+      rt_word: null,
       word: null,
       word_number: null,
       sentence: null,
@@ -295,36 +302,58 @@ jsPsych.plugins['self-paced-reading'] = (function () {
 
     // function to end trial when it is time
     const end_trial = function () {
+      if (trial.canvas_clear_border) {
+        display_element.innerHTML = ' ';
+      } else {
+        ctx.fillStyle = trial.canvas_colour;
+        ctx.fillRect(canvas_rect[0], canvas_rect[1], canvas_rect[2], canvas_rect[3]);
+      }
+
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
       jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       // clear the display and move to next trial
-      display_element.innerHTML = '';
       jsPsych.finishTrial(response);
     };
 
     // function to handle responses by the subject
-    const after_response = function (info) {
-      response.rt = info.rt;
-      response.word = words_concat[word_number];
-      response.word_number = word_number + 1;
-      response.sentence = sentence;
+    const after_response = (info) => {
+      // gather/store data
+      response.rt_sentence = info.rt;
+      rts.push(info.rt);
 
-      jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-
-      // store data
-      if (word_number < sentence_length - 1) {
-        jsPsych.data.write(response);
+      if (word_number === 0) {
+        response.rt_word = rts[rts.length - 1] - rts[rts.length - 2];
+      } else {
+        response.rt_word = rts[rts.length - 1] - rts[rts.length - 2] - trial.inter_word_interval;
       }
+      console.log(response.rt_word);
 
-      // keep drawing until words in sentence complete
-      word_number++;
-      draw_mask();
-      jsPsych.pluginAPI.setTimeout(function () {
-        keyboardListener = key();
-        word_number < sentence_length ? draw_word() : end_trial();
-      }, trial.inter_word_interval);
+      if (response.rt_word > 0) {
+        // valid rts
+        response.word = words_concat[word_number];
+        response.word_number = word_number + 1;
+        if (trial.save_sentence) {
+          response.sentence = sentence;
+        }
+        if (word_number < sentence_length - 1) {
+          jsPsych.data.write(response);
+        }
+        // keep drawing until words in sentence complete
+        word_number++;
+        jsPsych.pluginAPI.setTimeout(function () {
+          if (word_number < sentence_length) {
+            clear_canvas();
+            draw_mask();
+            draw_word();
+          } else {
+            end_trial();
+          }
+        }, trial.inter_word_interval);
+      } else {
+        rts.pop(); // invalid rt possible when trial.inter_word_interval is > 0
+      }
     };
 
     // start the response listener
@@ -335,7 +364,7 @@ jsPsych.plugins['self-paced-reading'] = (function () {
         callback_function: after_response,
         valid_responses: trial.choices,
         rt_method: 'performance',
-        persist: false,
+        persist: true,
         allow_held_key: false,
       });
     }
