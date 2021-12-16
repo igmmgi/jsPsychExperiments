@@ -2,8 +2,9 @@ const image_directory = 'images';
 
 // prettier-ignore
 const example_items = shuffle([
-  { probe_amb: 'Haus', probe_unamb: 'Haus', target_rel_text: 'Balkon', target_unrel_text: 'Karten', target_rel_img: pathJoin([image_directory, 'balkon_rel.jpg']), target_unrel_img: pathJoin([image_directory, 'karten_unrel.jpg']), },
-  { probe_amb: 'Hund', probe_unamb: 'Hund', target_rel_text: 'Pfote',  target_unrel_text: 'Kürbis', target_rel_img: pathJoin([image_directory, 'pfote_rel.jpg']),  target_unrel_img: pathJoin([image_directory, 'kuerbis_unrel.jpg']), },
+  { probe_amb: 'Haus',     probe_unamb: 'Haus',     target_rel_text: 'Balkon',  target_unrel_text: 'Karten',    target_rel_img: pathJoin([image_directory, 'balkon_rel.jpg']), target_unrel_img: pathJoin([image_directory, 'karten_unrel.jpg']), },
+  { probe_amb: 'Hund',     probe_unamb: 'Hund',     target_rel_text: 'Pfote',   target_unrel_text: 'Kürbis',    target_rel_img: pathJoin([image_directory, 'pfote_rel.jpg']),  target_unrel_img: pathJoin([image_directory, 'kuerbis_unrel.jpg']), },
+  { probe_amb: 'Computer', probe_unamb: 'Computer', target_rel_text: 'Monitor', target_unrel_text: 'Spaghetti', target_rel_img: pathJoin([image_directory, 'Monitor.jpg']),    target_unrel_img: pathJoin([image_directory, 'Spaghetti.jpg']), },
 ]);
 
 // prettier-ignore

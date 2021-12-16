@@ -67,7 +67,7 @@ const task_instructions = {
     "<H1 style='text-align: left;'>COMPUTER-MAUS ZUR VERFÜGUNG STEHT!</H1><br>" +
     "<H2 style='text-align: left;'>Liebe/r Teilnehmer/in</H2><br>" +
     "<H3 style='text-align: left;'>im Experiment werden Sie in jedem Durchgang 5 Quadrate sehen. Zu Beginn</H3>" +
-    "<H3 style='text-align: left;'>des Durchgangs bewegen Sie die Maus in das Quadrat in det Mitte des Bildschirms</H3>" +
+    "<H3 style='text-align: left;'>des Durchgangs bewegen Sie die Maus in das Quadrat in der Mitte des Bildschirms</H3>" +
     "<H3 style='text-align: left;'>und klicken Sie in dieses Quadrat. Dann erscheint eine der folgenden Aussagen:</H3><br>" +
     "<H3 style='text-align: center;'>'jetzt links', 'jetzt rechts', 'nicht links', oder 'nicht rechts' und</H3>" +
     "<H3 style='text-align: center;'>'jetzt oben', 'jetzt unten', 'nicht oben', oder 'nicht unten' und</H3><br>" +
@@ -253,7 +253,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_negation' }, 'json');
+    saveData('/Common/write_data_json.php', data_filename, { stim_type: 'mouse_negation' }, 'json');
   },
   timing_post_trial: 1000,
 };
@@ -261,7 +261,7 @@ const save_data = {
 const save_interaction_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_interaction_data_' + vpNum;
+    let data_filename = dirName + 'interaction_data/' + expName + '_' + vpNum;
     saveInteractionData('/Common/write_data.php', data_filename);
   },
   timing_post_trial: 200,

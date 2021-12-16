@@ -72,13 +72,13 @@ function drawFeedback() {
   } else if (dat.end_loc === 'right') {
     xpos = prms.rightBox[0] - 25;
     ypos = prms.rightBox[1];
-  } else { // Fallback to mouse coords
+  } else {
+    // Fallback to mouse coords
     xpos = dat.end_x;
     ypos = dat.end_y;
   }
 
   ctx.fillText(prms.fbTxt[dat.corrCode], xpos, ypos);
-
 }
 
 function codeTrial() {
@@ -95,11 +95,12 @@ function codeTrial() {
 const example_start = {
   type: 'html-keyboard-response',
   stimulus:
-    "<H1 style = 'text-align: center;'> Now try to move the mouse to the box of the image<br><br>related to the word presented </H1>",
+    "<H1 style = 'text-align: center;'> Jetzt kommen Bilder dazu. So wird das eigentliche Experiment später aussehen.</H1>" +
+    "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
   post_trial_gap: prms.waitDur,
-    on_start: function() {
-        prms.cBlk += 1;
-    }
+  on_start: function () {
+    prms.cBlk += 1;
+  },
 };
 
 const exp_start = {
@@ -107,16 +108,16 @@ const exp_start = {
   stimulus:
     "<H1 style = 'text-align: center;'> Jetzt beginnt das eigentliche Experiment </H1>" +
     "<H3 style = 'text-align: left;'> Sie erhalten ab sofort kein Feedback mehr. </H3>" +
-    "<H3 style = 'text-align: left;'> Ansonsten ist der Ablauf der gleiche wie in den Übungsdurchgängen. </H3>" +
+    "<H3 style = 'text-align: left;'> Ansonsten ist der Ablauf der gleiche wie in den Übungsdurchgängen gerade eben. </H3>" +
     "<H3 style = 'text-align: left;'> Zur Erinnerung:   </H3>" +
     "<H3 style = 'text-align: left;'> 1. Quadrat unten in der Mitte anklicken </H3>" +
-    "<H3 style = 'text-align: left;'> 2.	Mauszeiger in das Quadrat bewegen, dessen Bild am besten zu dem Wort passt/mit ihm zusammenhängt  </H3>" +
+    "<H3 style = 'text-align: left;'> 2. Mauszeiger in das Quadrat bewegen, dessen Bild am besten zu dem Wort passt/mit ihm zusammenhängt  </H3>" +
     "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich!  </H3>" +
     "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
   post_trial_gap: prms.waitDur,
-    on_start: function() {
-        prms.cBlk += 1;
-    }
+  on_start: function () {
+    prms.cBlk += 1;
+  },
 };
 
 const task_instructions = {
@@ -132,6 +133,8 @@ const task_instructions = {
     "<H3 style = 'text-align: left;'> Zusammenhang steht, und den Mauszeiger in das zugehörige Quadrat zu bewegen.  </H3>" +
     "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich. </H3>" +
     "<H3 style = 'text-align: left;'> Zuerst folgt ein Übungsblock, in dem Sie zusätzlich Feedback zu Ihren Antworten erhalten. </H3>" +
+    "<H3 style = 'text-align: left;'> Im ersten Teil Übungsblocks sind noch keine Bilder zu sehen.</H3>" +
+    "<H3 style = 'text-align: left;'> Reagieren Sie nur auf die Anweisung die nach klicken des Quadrats erscheint.</H3>" +
     "<h3 style = 'text-align: center;'> Drücken Sie eine beliebige Taste, um fortzufahren! </h3>",
   post_trial_gap: prms.waitDur,
 };
@@ -172,16 +175,17 @@ const training_stimuli = [
     { probe: 'Nach rechts', target_rel_text: '', probe_type: null, correct_side: 'right'},
   ];
 
+const example_stimuli = stimuli_factory(example_items);
 const exp_stimuli = stimuli_factory(items);
 
 function image_array(x) {
-    "use strict";
-    let images = [];
-    for (let i = 0; i < x.length; i++) {
-        images.push(x[i].left);
-        images.push(x[i].right);
-    }
-    return images;
+  'use strict';
+  let images = [];
+  for (let i = 0; i < x.length; i++) {
+    images.push(x[i].left);
+    images.push(x[i].right);
+  }
+  return images;
 }
 
 const image_list = image_array(exp_stimuli);
@@ -189,7 +193,7 @@ const image_list = image_array(exp_stimuli);
 const images = {
   type: 'preload',
   auto_preload: true,
-  images: image_list
+  images: image_list,
 };
 
 const trial_stimulus = {
@@ -257,12 +261,18 @@ const iti = {
 };
 
 const training_timeline = {
-    timeline_variables: training_stimuli,
-    timeline: [trial_stimulus, trial_feedback, iti],
-    sample: {
-        type: 'fixed-repetitions',
-        size: 1
-    },
+  timeline_variables: training_stimuli,
+  timeline: [trial_stimulus, trial_feedback, iti],
+  sample: {
+    type: 'fixed-repetitions',
+    size: 1,
+  },
+};
+
+const example_timeline = {
+  timeline_variables: example_stimuli,
+  timeline: [trial_stimulus, trial_feedback, iti],
+  randomize_order: true,
 };
 
 const exp_timeline = {
@@ -344,7 +354,11 @@ function genExpSeq() {
   exp.push(task_instructions);
 
   // Run training block
-  exp.push(training_timeline);
+  // exp.push(training_timeline);
+
+  // Run example trials
+  exp.push(example_start);
+  exp.push(example_timeline);
 
   // Run real experiment
   exp.push(exp_start);

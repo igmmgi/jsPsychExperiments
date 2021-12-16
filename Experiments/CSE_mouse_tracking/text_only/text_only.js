@@ -73,7 +73,8 @@ function drawFeedback() {
   } else if (dat.end_loc === 'right') {
     xpos = prms.rightBox[0] - 25;
     ypos = prms.rightBox[1];
-  } else { // Fallback to mouse coords
+  } else {
+    // Fallback to mouse coords
     xpos = dat.end_x;
     ypos = dat.end_y;
   }
@@ -95,11 +96,12 @@ function codeTrial() {
 const example_start = {
   type: 'html-keyboard-response',
   stimulus:
-    "<H1 style = 'text-align: center;'> Now try to move the mouse to the box of the word<br><br>related to the one presented </H1>",
+    "<H1 style = 'text-align: center;'> Jetzt kommen die beiden Wörter dazu. So wird das eigentliche Experiment später aussehen.</H1>" +
+    "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
   post_trial_gap: prms.waitDur,
-    on_start: function() {
-        prms.cBlk += 1;
-    }
+  on_start: function () {
+    prms.cBlk += 1;
+  },
 };
 
 const exp_start = {
@@ -107,16 +109,16 @@ const exp_start = {
   stimulus:
     "<H1 style = 'text-align: center;'> Jetzt beginnt das eigentliche Experiment </H1>" +
     "<H3 style = 'text-align: left;'> Sie erhalten ab sofort kein Feedback mehr. </H3>" +
-    "<H3 style = 'text-align: left;'> Ansonsten ist der Ablauf der gleiche wie in den Übungsdurchgängen. </H3>" +
+    "<H3 style = 'text-align: left;'> Ansonsten ist der Ablauf der gleiche wie in den Übungsdurchgängen gerade eben.</H3>" +
     "<H3 style = 'text-align: left;'> Zur Erinnerung:   </H3>" +
     "<H3 style = 'text-align: left;'> 1. Quadrat unten in der Mitte anklicken </H3>" +
     "<H3 style = 'text-align: left;'> 2. Mauszeiger in das Quadrat bewegen, dessen Wort am besten zu dem neuen Wort passt/mit ihm zusammenhängt  </H3>" +
     "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich!  </H3>" +
     "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
   post_trial_gap: prms.waitDur,
-    on_start: function() {
-        prms.cBlk += 1;
-    }
+  on_start: function () {
+    prms.cBlk += 1;
+  },
 };
 
 const rating_start = {
@@ -124,9 +126,9 @@ const rating_start = {
   stimulus:
     "<H1 style = 'text-align: left;'> Bitte nehmen Sie sich abschließend noch Zeit folgende Fragen zu beantworten </H1>",
   post_trial_gap: prms.waitDur,
-    on_start: function() {
-        prms.cBlk += 1;
-    }
+  on_start: function () {
+    prms.cBlk += 1;
+  },
 };
 
 const task_instructions = {
@@ -142,6 +144,8 @@ const task_instructions = {
     "<H3 style = 'text-align: left;'> ihm in Zusammenhang steht, und den Mauszeiger in das zugehörige Quadrat zu bewegen.  </H3>" +
     "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich. </H3>" +
     "<H3 style = 'text-align: left;'> Zuerst folgt ein Übungsblock, in dem Sie zusätzlich Feedback zu Ihren Antworten erhalten. </H3>" +
+    "<H3 style = 'text-align: left;'> Im ersten Teil Übungsblocks sind die beiden Wörter noch nicht zu sehen.</H3>" +
+    "<H3 style = 'text-align: left;'> Reagieren Sie nur auf die Anweisung die nach klicken des Quadrats erscheint.</H3>" +
     "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren! </H3>",
   post_trial_gap: prms.waitDur,
 };
@@ -233,9 +237,9 @@ const trial_stimulus = {
 const scale = [1, 2, 3, 4, 5];
 // prettier-ignore
 const questions = [
-  { name: 'q1', labels: scale, required: true, prompt: 'Wie konkret ist das obige Wort?<br> (1 = Not concrete at all, 5 = very concrete)' },
-  { name: 'q2', labels: scale, required: true, prompt: 'Wie vertraut sind Sie mit dem obigen Wort?<br>(1 = Not familiar at all, 5 = very familiar)' },
-  { name: 'q3', labels: scale, required: true, prompt: 'Wie leicht können Sie sich dieses Wort bildlich vorstellen? <br>(1 = Not easy at all, 5 = very easy)' },
+  { name: 'q1', labels: scale, required: true, prompt: 'Wie konkret ist das obige Wort?<br> (1 = überhaupt nicht konkret, 5 = sehr konkret)' },
+  { name: 'q2', labels: scale, required: true, prompt: 'Wie vertraut sind Sie mit dem obigen Wort?<br>(1 = überhaupt nicht vertraut, 5 = sehr vertraut' },
+  { name: 'q3', labels: scale, required: true, prompt: 'Wie leicht können Sie sich dieses Wort bildlich vorstellen? <br>(1 = überhaupt nicht leicht, 5 = sehr leicht)' },
 ];
 
 const trial_rating = {
@@ -278,12 +282,12 @@ const iti = {
 };
 
 const training_timeline = {
-    timeline_variables: training_stimuli,
-    timeline: [trial_stimulus, trial_feedback, iti],
-    sample: {
-        type: 'fixed-repetitions',
-        size: 5
-    },
+  timeline_variables: training_stimuli,
+  timeline: [trial_stimulus, trial_feedback, iti],
+  sample: {
+    type: 'fixed-repetitions',
+    size: 5,
+  },
 };
 
 const example_timeline = {
