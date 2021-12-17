@@ -27,8 +27,8 @@ getComputerInfo();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsE: 32, // number of trials in each block
-  nBlks: 24, // number of blocks
+  nTrlsE: 36, // number of trials in each block
+  nBlks: 20, // number of blocks
   fixDur: 400,
   fbDur: [1500, 2500, 2500],
   iti: 500,
@@ -89,9 +89,11 @@ const task_instructions1 = {
            drücken der Escape- Taste abgebrochen werden.<br><br>
            Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
-           Während des Experiments ist es in manchen Versuchsdurchgängen möglich, Belohnungen in Form von Punkten zu
-           sammeln. Die zehn Teilnehmer mit der höchsten Gesamtpunktzahl erhalten zusätzlich
-           einen 10€-Gutschein für eine Buchhandlung (OSIANDER). Insgesamt gibt es maximal 50 Teilnehmer.<br><br>
+           Während des Experiments ist es in manchen Versuchsdurchgängen möglich,
+           Belohnungen in Form von Punkten zu sammeln. Die zehn Versuchspersonen mit
+           den meisten Punkten bekommen einen 10 € Gutschein. Dieser kann nach Wahl
+           entweder vom Rewe, Osiander oder der Deutschen Bahn sein. Insgesamt gibt
+           es maximal 40 Teilnehmer.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
@@ -176,9 +178,9 @@ const reward_instructions = {
            In manchen Blöcken hast du die Möglichkeit in Durchgängen mit besonders schnellen
            (und korrekten) Antworten Belohnung (+10 Punkte) zu erhalten.<br><br>
            In den anderen Blöcken kannst du keine Belohnung/Punkte erhalten.<br><br>
-           Versuche in Blöcken mit Belohnung durch besonders schnelle (und korrekte)
-           Antworten so viele Punkte wie möglich zu sammeln um
-           einen Gutschein zu gewinnen!!<br><br>
+           Versuche in Blöcken mit Belohnung durch besonders schnelle (und korrekte) Antworten
+           so viele Punkte wie möglich zu sammeln um einen Gutschein zu bekommen!
+           Beachte: Die Antwort muss richtig und schnell sein, um Punkte zu bekommen.<br><br>
            Weiter geht es mit der Leertaste ...`,
     fontsize: 22,
     lineheight: 1.25,
@@ -219,7 +221,7 @@ const start_of_block_text_with_reward = {
         text: `Weiter geht es mit der Leertaste ...`,
         fontsize: 24,
         lineheight: 1.25,
-        align: 'left',
+        align: 'center',
       });
   },
 };
@@ -414,11 +416,11 @@ function drawFeedback() {
   } else {
     let imgnum = 1;
     if ((dat.corrCode === 0) & dat.success) {
-      ctx.fillText('Richtig & schnell!', 0, -70);
+      ctx.fillText('Richtig', 0, -70);
       ctx.fillText('+10 Punkte!', 0, -45);
       imgnum = 0;
     } else if ((dat.corrCode === 0) & !dat.success) {
-      ctx.fillText('Richtig aber zu langsam!', 0, -70);
+      ctx.fillText('Richtig', 0, -70);
       ctx.fillText('Keine Punkte!', 0, -45);
     } else if (dat.corrCode === 1) {
       ctx.fillText('Falsch!', 0, -70);
@@ -655,7 +657,7 @@ Drücke die Leertaste, um fortzufahren!`,
 
 const email_option = {
   type: 'survey-text',
-  questions: [{ prompt: 'E-mail addres?', placeholder: 'email@email', columns: 50, required: false, name: 'email' }],
+  questions: [{ prompt: 'E-Mail-Addresse?', placeholder: 'email@email', columns: 50, required: false, name: 'email' }],
   button_label: 'Weiter',
   on_finish: function () {
     let dat = jsPsych.data.get().last(1).values()[0];
