@@ -174,7 +174,7 @@ const reward_instructions = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Das Experiment besteht aus mehreren Blöcken.<br><br>
+    text: `Das Experiment besteht aus mehreren Mini Blöcken.<br><br>
            In manchen Blöcken hast du die Möglichkeit in Durchgängen mit besonders schnellen
            (und korrekten) Antworten Belohnung (+10 Punkte) zu erhalten.<br><br>
            In den anderen Blöcken kannst du keine Belohnung/Punkte erhalten.<br><br>
@@ -199,7 +199,7 @@ const start_of_block_text_with_reward = {
   on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `Start Block ${prms.cBlk} von ${prms.nBlks}:`,
+        text: `Start Mini Block ${prms.cBlk} von ${prms.nBlks}:`,
         fontsize: 26,
         align: 'center',
         bold: false,
@@ -236,7 +236,7 @@ const start_of_block_text_with_no_reward = {
   on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `Start Block ${prms.cBlk} von ${prms.nBlks}:`,
+        text: `Start Mini Block ${prms.cBlk} von ${prms.nBlks}:`,
         fontsize: 26,
         align: 'center',
         bold: false,
