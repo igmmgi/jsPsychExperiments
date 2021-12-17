@@ -33,7 +33,7 @@ const prms = {
   fbDur: [1500, 2500, 2500],
   iti: 500,
   tooSlow: 3000,
-  fbTxt: ['Richtig', 'Falsch!', 'Zu langsam!'],
+  fbTxt: ['Richtig', 'Falsch!', 'Falsch! Keine Antwort!'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   fixWidth: 2,
@@ -90,7 +90,7 @@ const task_instructions1 = {
            Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
            Während des Experiments ist es in manchen Versuchsdurchgängen möglich,
-           Belohnungen in Form von Punkten zu sammeln. Die zehn Versuchspersonen mit
+           Belohnungen in Form von Punkten zu sammeln. Die 25% Versuchspersonen mit
            den meisten Punkten bekommen einen 10 € Gutschein. Dieser kann nach Wahl
            entweder vom Rewe, Osiander oder der Deutschen Bahn sein. Insgesamt gibt
            es maximal 40 Teilnehmer.<br><br>
@@ -179,7 +179,7 @@ const reward_instructions = {
            (und korrekten) Antworten Belohnung (+10 Punkte) zu erhalten.<br><br>
            In den anderen Blöcken kannst du keine Belohnung/Punkte erhalten.<br><br>
            Versuche in Blöcken mit Belohnung durch besonders schnelle (und korrekte) Antworten
-           so viele Punkte wie möglich zu sammeln um einen Gutschein zu bekommen!
+           so viele Punkte wie möglich zu sammeln um einen Gutschein zu bekommen!<br><br>
            Beachte: Die Antwort muss richtig und schnell sein, um Punkte zu bekommen.<br><br>
            Weiter geht es mit der Leertaste ...`,
     fontsize: 22,
@@ -212,7 +212,8 @@ const start_of_block_text_with_reward = {
       }) +
       generate_formatted_html({
         text: `Aktuelle Gesamtpunktzahl: ${performanceData.points} Punkte<br><br>
-        Versuche durch besonders schnelle (und korrekte)<br>Antworten so viele Punkte wie möglich zu sammeln!<br><br> Zur Erinnerung:`,
+        Versuche durch besonders schnelle (und korrekte)<br>Antworten so viele Punkte wie möglich zu sammeln!<br><br>
+          Beachte: Die Antwort muss richtig und<br> schnell sein, um Punkte zu bekommen. <br><br> Zur Erinnerung:`,
         fontsize: 26,
         align: 'center',
       }) +
@@ -274,7 +275,7 @@ const end_of_block_text = {
   on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `Ende Block ${prms.cBlk} von ${prms.nBlks}:<br><br>
+        text: `Ende Mini Block ${prms.cBlk} von ${prms.nBlks}:<br><br>
         Aktuelle Gesamtpunktzahl: ${performanceData.points} Punkte<br><br>`,
         fontsize: 26,
         align: 'center',
@@ -420,13 +421,11 @@ function drawFeedback() {
       imgnum = 0;
     } else if ((dat.corrCode === 0) & !dat.success) {
       ctx.fillText('Richtig', 0, -70);
-      ctx.fillText('Keine Punkte!', 0, -45);
     } else if (dat.corrCode === 1) {
       ctx.fillText('Falsch!', 0, -70);
-      ctx.fillText('Keine Punkte!', 0, -45);
     } else if (dat.corrCode === 2) {
-      ctx.fillText('Zu langsam!', 0, -70);
-      ctx.fillText('Keine Punkte!', 0, -45);
+      ctx.fillText('Falsch!', 0, -70);
+      ctx.fillText('Keine Antwort!', 0, -45);
     }
 
     // draw image
@@ -712,7 +711,6 @@ function genExpSeq() {
   exp.push(screenInfo);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
-
   exp.push(reward_instructions);
 
   // Assign block task type and block reward type
