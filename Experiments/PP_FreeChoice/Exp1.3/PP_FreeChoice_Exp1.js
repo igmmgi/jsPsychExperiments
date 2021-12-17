@@ -39,7 +39,7 @@ const prms = {
   nBlks: 8, // number of blocks
   fixDur: 500,
   waitDur: 1000,
-  tooSlow: 3000,
+  tooSlow: 4000,
   iti: [500, 500],
   stimFont: '50px Arial',
   stimPos: [-30, 30],
