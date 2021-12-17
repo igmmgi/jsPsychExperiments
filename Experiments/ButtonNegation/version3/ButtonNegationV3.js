@@ -519,11 +519,7 @@ function codeTrial() {
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = 0;
   let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-
-  let correctKey;
-  if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
-  }
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
 
   if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
     corrCode = 1; // correct

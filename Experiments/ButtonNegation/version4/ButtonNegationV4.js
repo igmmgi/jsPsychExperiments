@@ -519,11 +519,7 @@ function codeTrial() {
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = 0;
   let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-
-  let correctKey;
-  if (dat.response !== null) {
-    correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
-  }
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
 
   if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 1; // correct
@@ -654,7 +650,7 @@ function genExpSeq() {
 
   exp.push(fullscreen_on);
   exp.push(welcome_de);
-  exp.push(vpInfoForm_de);
+  // exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);

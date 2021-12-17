@@ -77,11 +77,7 @@ function codeTrial() {
     console.log(dat);
   let corrCode = 0;
   let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-
-  let correctKey;
-  if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
-  }
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
   if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
     corrCode = 1; // correct

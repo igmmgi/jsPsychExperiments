@@ -360,7 +360,6 @@ function codeTrial() {
     corrCode = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp) ? 0 : 1;
   }
 
-  console.log(dat);
   // update performance data
   dat.success = false;
   if (dat.task === 'simon') {
