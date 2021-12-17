@@ -46,13 +46,13 @@ const prms = {
   numberNoGo: [4,5,6],
   numbersLeft: [1,2,3],
   numbersRight: [7,8,9],
-  letterNoGo: ['M', 'N', 'O'],
+  letterNoGo: ['L', 'M', 'N'],
   lettersLeft: ['A', 'B', 'C'],
   lettersRight: ['X', 'Y', 'Z'],
   soas: [50, 300, Infinity],
   respKeys: ['q', 'w', 'o', 'p'],
   taskMapping: version === 1 ? ['number', 'letter'] : ['letter', 'number'],
-  taskInstructions: version === 1 ? ['< 4', '> 6', '< M', '> O'] : ['< M', '> O', '< 4', '> 6'],
+  taskInstructions: version === 1 ? ['1, 2, 3', '7, 8, 9', 'A, B, C', 'X, Y, Z'] : ['A, B, C', 'X, Y, Z', '1, 2, 3', '7, 8, 9'],
 
   // Fixation Cross
   fix_duration: 500,
@@ -83,7 +83,7 @@ const task_instructions1 = {
     Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit
     abbrechen. Bitte stelle sicher, dass du dich in einer ruhigen Umgebung
     befindest und genügend Zeit hast, um das Experiment durchzuführen. Wir
-    bitten dich für die Dauer des Experiments (ca. 45 Minuten) konzentriert zu
+    bitten dich für die Dauer des Experiments (ca. 35 Minuten) konzentriert zu
     arbeiten.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
@@ -133,11 +133,11 @@ const task_instructions3 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
-    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe vor M oder nach O im Alphabet kommt.</h3>" +
-    "<h3 style='text-align: left;'>Für die Zahlenaufgabe musst du entscheiden ob die Zahl kleiner 4 oder grösser 6 ist.</h3>" +
+    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe A, B, C, oder X, Y, Z ist.</h3>" +
+    "<h3 style='text-align: left;'>Für die Zahlenaufgabe musst du entscheiden ob die Zahl 1, 2, 3, oder 7, 8, 9 ist.</h3>" +
     "<h3 style='text-align: center;'>Es gilt:</h3>" +
     "<h2 style='text-align: left;'>" +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    '&emsp;&emsp;&emsp;' +
     prms.taskInstructions[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[1] +
@@ -151,8 +151,8 @@ const task_instructions3 = {
     '</h3><br>' +
     "<h3 style='text-align: left;'>Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest wenn beide</h3>" +
     "<h3 style='text-align: left;'>Aufgaben (Buchstabe und Zahl) eine Antwort erfordern.</h3>" +
-    "<h3 style='text-align: left;'>Wenn der Buchstabe zwischen M und O ist, dann musst du die Zahl bearbeiten.</h3>" +
-    "<h3 style='text-align: left;'>Wenn die Zahl zwischen 4 und 6 ist, dann musst du den Buchstaben bearbeiten.</h3>" +
+    "<h3 style='text-align: left;'>Wenn der Buchstabe L, M oder N ist, dann musst du die Zahl bearbeiten.</h3>" +
+    "<h3 style='text-align: left;'>Wenn die Zahl 4, 5, 6 ist, dann musst du den Buchstaben bearbeiten.</h3>" +
     "<h3 style='text-align: left;'>Wenn nur eine Aufgabe präsentiert wird, dann musst du diese bearbeiten. </h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
@@ -183,7 +183,7 @@ function blockStartText() {
     "<h3 style='text-align: left;'>Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben eine Antwort erfordern.</h3>" +
     "<h3 style='text-align: center;'>Es gilt:</h3>" +
     "<h2 style='text-align: left;'>" +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[1] +
@@ -195,7 +195,7 @@ function blockStartText() {
     "<h3 style='text-align: center;'>" +
     '("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
     '</h3><br>' +
-    "<h3 style='text-align: left;'>Wenn der Buchstabe zwischen M und O oder die Zahl zwischen 4 und 6 ist, dann erfordert</h3>" +
+    "<h3 style='text-align: left;'>Wenn der Buchstabe L, M, N ist oder die Zahl 4, 5, 6 ist, dann erfordert</h3>" +
     "<h3 style='text-align: left;'>die Aufgabe keine Antwort!</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
   return blockStartTxt;
@@ -457,22 +457,22 @@ function drawFeedback() {
 
   if (dat.corrCode === 0 || dat.corrCode === 2) {
     ctx.font = 'bold 20px monospace';
-    ctx.fillText(prms.taskInstructions[0], -300, 80);
-    ctx.fillText(prms.taskInstructions[1], -200, 80);
+    ctx.fillText(prms.taskInstructions[0], -350, 80);
+    ctx.fillText(prms.taskInstructions[1], -150, 80);
     ctx.font = '20px monospace';
-    ctx.fillText('("Q-Taste")', -320, 120);
-    ctx.fillText('("W-Taste")', -180, 120);
+    ctx.fillText('("Q-Taste")', -370, 120);
+    ctx.fillText('("W-Taste")', -130, 120);
 
     ctx.font = 'bold 20px monospace';
-    ctx.fillText(prms.taskInstructions[2], 200, 80);
-    ctx.fillText(prms.taskInstructions[3], 300, 80);
+    ctx.fillText(prms.taskInstructions[2], 150, 80);
+    ctx.fillText(prms.taskInstructions[3], 350, 80);
     ctx.font = '20px monospace';
-    ctx.fillText('("O-Taste")', 180, 120);
-    ctx.fillText('("P-Taste")', 320, 120);
+    ctx.fillText('("O-Taste")', 130, 120);
+    ctx.fillText('("P-Taste")', 370, 120);
 
     ctx.textAlign = 'center';
-    ctx.fillText('Wenn der Buchstabe zwischen M und O oder die Zahl zwischen 4', 0, 220);
-    ctx.fillText('und 6 ist, dann erfordert die Aufgabe keine Antwort!', 0, 250);
+    ctx.fillText('Wenn der Buchstabe L, M, N ist oder die Zahl 4, 5, 6', 0, 220);
+    ctx.fillText('ist, dann erfordert die Aufgabe keine Antwort!', 0, 250);
   }
 }
 
