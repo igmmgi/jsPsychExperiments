@@ -1,2 +1,2 @@
-### Online Behavioural Psychology Experiments using jsPsych (< v 7.0.0) 
+### Online Behavioural Psychology Experiments using jsPsych (< v7.0.0) 
 #### https://www.jspsych.org/
