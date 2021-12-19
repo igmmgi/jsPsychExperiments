@@ -265,7 +265,7 @@ const training_timeline = {
   timeline: [trial_stimulus, trial_feedback, iti],
   sample: {
     type: 'fixed-repetitions',
-    size: 1,
+    size: 5,
   },
 };
 
@@ -348,7 +348,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
 
   exp.push(images);
   exp.push(task_instructions);
