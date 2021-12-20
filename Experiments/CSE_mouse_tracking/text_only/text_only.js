@@ -377,7 +377,6 @@ function genExpSeq() {
   exp.push(welcome_de);
   exp.push(resize_de);
   exp.push(vpInfoForm_de);
-
   exp.push(task_instructions);
 
   // Run training block
