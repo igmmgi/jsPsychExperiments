@@ -43,16 +43,17 @@ const prms = {
   iti: [500, 500],
   stimFont: '50px Arial',
   stimPos: [-30, 30],
-  numberNoGo: [4,5,6],
-  numbersLeft: [1,2,3],
-  numbersRight: [7,8,9],
+  numberNoGo: [4, 5, 6],
+  numbersLeft: [1, 2, 3],
+  numbersRight: [7, 8, 9],
   letterNoGo: ['L', 'M', 'N'],
   lettersLeft: ['A', 'B', 'C'],
   lettersRight: ['X', 'Y', 'Z'],
   soas: [50, 300, Infinity],
   respKeys: ['q', 'w', 'o', 'p'],
   taskMapping: version === 1 ? ['number', 'letter'] : ['letter', 'number'],
-  taskInstructions: version === 1 ? ['1, 2, 3', '7, 8, 9', 'A, B, C', 'X, Y, Z'] : ['A, B, C', 'X, Y, Z', '1, 2, 3', '7, 8, 9'],
+  taskInstructions:
+    version === 1 ? ['1, 2, 3', '7, 8, 9', 'A, B, C', 'X, Y, Z'] : ['A, B, C', 'X, Y, Z', '1, 2, 3', '7, 8, 9'],
 
   // Fixation Cross
   fix_duration: 500,
@@ -133,8 +134,8 @@ const task_instructions3 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
-    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe A, B, C, oder X, Y, Z ist.</h3>" +
-    "<h3 style='text-align: left;'>Für die Zahlenaufgabe musst du entscheiden ob die Zahl 1, 2, 3, oder 7, 8, 9 ist.</h3>" +
+    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe vor L order nach N im Alphabet kommt.</h3>" +
+    "<h3 style='text-align: left;'>Für die Zahlenaufgabe musst du entscheiden ob die Zahl kleiner 4 oder grösser 6 ist.</h3>" +
     "<h3 style='text-align: center;'>Es gilt:</h3>" +
     "<h2 style='text-align: left;'>" +
     '&emsp;&emsp;&emsp;' +
