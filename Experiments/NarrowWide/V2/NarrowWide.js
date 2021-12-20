@@ -61,7 +61,7 @@ const task_instructions1 = {
            drücken der Escape- Taste abgebrochen werden.<br><br>
            Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
-           Zusätzlich erhalten die 6 (von insgesamt 60) Teilnehmer mit der
+           Zusätzlich erhalten die 10% Teilnehmer mit der
            höchsten Gesamtpunktzahl einen 10€-Gutschein (wahlweise Deutsche Bahn oder Zalando oder REWE).<br><br>
            Jede/r Teilnehmerin/Teilnehmer startet mit 0 Gesamtpunkten.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
@@ -88,7 +88,7 @@ const task_instructions2 = {
     Wenn Sie das Bild ohne Gewinn wählen bekommen Sie 0 Punkte.<br><br>
     Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
     die entsprechende Taste drücken: <br><br>
-    Links: "Q" -Taste &ensp; &ensp; &ensp; Rechts: "P" -Taste <br><br>
+    Linkes Bild: "Q" -Taste &ensp; &ensp; &ensp; Rechtes Bild: "P" -Taste <br><br>
     Drücken Sie eine beliebige Taste, um fortzufahren!`,
       fontsize: 26,
       bold: true,
@@ -109,9 +109,10 @@ const block_start = {
       "<h2 style='text-align:left;'>Block Start: " +
       (prms.cBlk + 1) +
       ' von 10</h2><br>' +
+      "<h2 style='text-align:left;'>Versuche soviele Punkte wie möglich zu sammeln!<br><br>" +
       "<h2 style='text-align:left;'>Aktuelle Gesamtpunkte: " +
       prms.cPoints +
-      '<h2><br>Zur Erinnerung: Links: "Q"-Taste Rechts "P"-Taste</h2><br>' +
+      '<h2><br>Zur Erinnerung: Linkes Bild: "Q"-Taste Rechtes Bild "P"-Taste</h2><br>' +
       "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>";
   },
   on_finish: function () {
@@ -166,15 +167,15 @@ function readImages(dir, n) {
 
 let imagesNarrow;
 let imagesWide;
-if (version === 1 | version === 3) {
-    imagesNarrow = readImages('../DescriptionImages/DG_', 3);
-    imagesWide = readImages('../DescriptionImages/DR_', 3);
-} else if (version === 2 | version === 4) {
-    imagesNarrow = readImages('../DescriptionImages/DR_', 3);
-    imagesWide = readImages('../DescriptionImages/DG_', 3);
+if ((version === 1) | (version === 3)) {
+  imagesNarrow = readImages('../DescriptionImages/DG_', 3);
+  imagesWide = readImages('../DescriptionImages/DR_', 3);
+} else if ((version === 2) | (version === 4)) {
+  imagesNarrow = readImages('../DescriptionImages/DR_', 3);
+  imagesWide = readImages('../DescriptionImages/DG_', 3);
 }
-console.log(imagesNarrow)
-console.log(imagesWide)
+console.log(imagesNarrow);
+console.log(imagesWide);
 
 ////////////////////////////////////////////////////////////////////////
 //                             Functions                              //
@@ -573,7 +574,7 @@ Drücke die Leertaste, um fortzufahren!`,
 
 const email_option = {
   type: 'survey-text',
-  questions: [{ prompt: 'E-mail addres?', placeholder: 'email@email', columns: 50, required: false, name: 'email' }],
+  questions: [{ prompt: 'E-mail addresse?', placeholder: 'email@email', columns: 50, required: false, name: 'email' }],
   button_label: 'Weiter',
   on_finish: function () {
     let dat = jsPsych.data.get().last(1).values()[0];
