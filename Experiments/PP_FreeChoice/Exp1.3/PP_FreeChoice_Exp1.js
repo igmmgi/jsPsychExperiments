@@ -134,11 +134,11 @@ const task_instructions3 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
-    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe vor L order nach N im Alphabet kommt.</h3>" +
+    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe vor L oder nach N im Alphabet kommt.</h3>" +
     "<h3 style='text-align: left;'>Für die Zahlenaufgabe musst du entscheiden ob die Zahl kleiner 4 oder grösser 6 ist.</h3>" +
     "<h3 style='text-align: center;'>Es gilt:</h3>" +
     "<h2 style='text-align: left;'>" +
-    '&emsp;&emsp;&emsp;' +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[1] +
