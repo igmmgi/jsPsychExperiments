@@ -44,7 +44,7 @@ const prms = {
 };
 
 // 2 counter-balanced order versions + 2 versions for colour narrow/wide
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -620,40 +620,40 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen_on);
-  // exp.push(check_screen);
-  // exp.push(welcome_de);
-  // exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
-  // exp.push(hideMouseCursor);
-  // exp.push(screenInfo);
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
+  exp.push(fullscreen_on);
+  exp.push(check_screen);
+  exp.push(welcome_de);
+  exp.push(resize_de);
+  exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
-  // // 96 trials in each block
-  // // first phase: learning block (narrow vs. wide)
-  // for (let blk = 0; blk < 2; blk++) {
-  //   if (version === 1 | version == 2) {
-  //     exp.push(block_start);
-  //     exp.push(trial_timeline_narrow);
-  //     exp.push(short_break);
-  //     exp.push(block_start);
-  //     exp.push(trial_timeline_wide);
-  //   } else if (version === 3 | version === 4 ) {
-  //     exp.push(block_start);
-  //     exp.push(trial_timeline_wide);
-  //     exp.push(short_break);
-  //     exp.push(block_start);
-  //     exp.push(trial_timeline_narrow);
-  //   }
-  // }
+  // 96 trials in each block
+  // first phase: learning block (narrow vs. wide)
+  for (let blk = 0; blk < 2; blk++) {
+    if ((version === 1) | (version == 2)) {
+      exp.push(block_start);
+      exp.push(trial_timeline_narrow);
+      exp.push(short_break);
+      exp.push(block_start);
+      exp.push(trial_timeline_wide);
+    } else if ((version === 3) | (version === 4)) {
+      exp.push(block_start);
+      exp.push(trial_timeline_wide);
+      exp.push(short_break);
+      exp.push(block_start);
+      exp.push(trial_timeline_narrow);
+    }
+  }
 
-  // // second phase: 6 experiment block of 96 trials
-  // for (let blk = 0; blk < 6; blk++) {
-  //   exp.push(short_break);
-  //   exp.push(block_start);
-  //   exp.push(trial_timeline_experiment);
-  // }
+  // second phase: 6 experiment block of 96 trials
+  for (let blk = 0; blk < 6; blk++) {
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_experiment);
+  }
 
   exp.push(short_break);
   exp.push(showMouseCursor);
