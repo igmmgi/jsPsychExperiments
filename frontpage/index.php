@@ -11,15 +11,12 @@ function debug_to_console($data)
     $output = $data;
     if (is_array($output))
         $output = implode(',', $output);
-
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
-// PP2BT
-$nFiles_PP_2BT_exp3_v1 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version1');
-$nFiles_PP_2BT_exp3_v2 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version2');
-$nFiles_PP_2BT_exp3_v3 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version3');
-$nFiles_PP_2BT_exp3_v4 = numFilesInDir('Experiments/PP_2BT/Exp3/data/version4');
+// PP_FreeChoice
+$nFiles_ppfc_v1 = numFilesInDir('Experiments/PP_FreeChoice/Exp1.3/data/version1');
+$nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1.3/data/version2');
 
 // ConflictReward
 $nFiles_cr2_v1 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version1');
@@ -27,11 +24,11 @@ $nFiles_cr2_v2 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version2');
 $nFiles_cr2_v3 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version3');
 $nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
 
-// PP_FreeChoice
-$nFiles_ppfc_v1 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version1');
-$nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
-
-
+// NarrowWide (Zonk)
+$nFiles_nw_v1 = numFilesInDir('Experiments/NarrowWide/V2/data/version1');
+$nFiles_nw_v2 = numFilesInDir('Experiments/NarrowWide/V2/data/version2');
+$nFiles_nw_v3 = numFilesInDir('Experiments/NarrowWide/V2/data/version3');
+$nFiles_nw_v4 = numFilesInDir('Experiments/NarrowWide/V2/data/version4');
 
 ?>
 
@@ -74,7 +71,6 @@ $nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
             <p>Versuchspersonenstunden: Bei einigen Experimenten ist es möglich VP-Stunden zu erhalten. Sie erhalten Ihren VP-Code und weitere Anweisungen am Ende eines Experimentes. </p>
             <p>Die Teilnahme ist freiwillig. Die Daten werden anonym gespeichert und können nicht mit Ihnen in Verbindung gebracht werden. Basierend auf den Richtlinien guter ethischer Forschung sowie der Datenschutzgrundverordnung sollen sich Teilnehmende explizit und nachvollziehbar mit der Teilnahme an einem Experiment und der Verarbeitung ihrer Daten einverstanden erklären. Aus diesem Grund möchten wir Sie bitten, die "Allgemeinen Informationen für TeilnehmerInnen" aufmerksam zu lesen before Sie an einem Experiment teilnehmen.</p>
 
-
             <h2> Vielen Dank für Ihre Teilnahme!</h2><br>
 
             <h1> Allgemeine Informationen für TeilnehmerInnen </h1>
@@ -91,8 +87,9 @@ $nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
-            <p> Reward Exp2: hiwipibio@gmail.com </p><br>
-            <p> PP Free Choice Exp1: sebastian.heins@student.uni-tuebingen.de </p><br>
+            <p> Free Choice Race Exp1: sebastian.heins@student.uni-tuebingen.de</p>
+            <p> Reward Exp2: hiwipibio@gmail.com </p>
+            <p> Zonk Exp1: hiwipibio@gmail.com </p><br>
 
         </div>
         <div class="sidenav">
@@ -101,28 +98,22 @@ $nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
             <h2>1,0 VP-Stunden</h2>
 
             <?php
-            $pp_2bt = [];
-            if ($nFiles_PP_2BT_exp3_v1 < 0) {
-                array_push($pp_2bt, 1);
+            $pp_fc1 = [];
+            if ($nFiles_ppfc_v1 < 20) {
+                array_push($pp_fc1, 1);
             }
-            if ($nFiles_PP_2BT_exp3_v2 < 0) {
-                array_push($pp_2bt, 2);
-            }
-            if ($nFiles_PP_2BT_exp3_v3 < 0) {
-                array_push($pp_2bt, 3);
-            }
-            if ($nFiles_PP_2BT_exp3_v4 < 0) {
-                array_push($pp_2bt, 4);
+            if ($nFiles_ppfc_v2 < 20) {
+                array_push($pp_fc1, 2);
             }
 
-            $randIndex = array_rand($pp_2bt);
-            $pp_2bt_version = $pp_2bt[$randIndex];
-            /* debug_to_console($cr1_version) */
+            $randIndex = array_rand($pp_fc1);
+            $pp_fc1_version = $pp_fc1[$randIndex];
             ?>
 
-            <?php if (!empty($pp_2bt_version)) : ?>
-                <h3><a href="Experiments/PP_2BT/Exp3/index.html?version=<?php echo $pp_2bt_version; ?>">Tripple PPP Exp 3 (n = <?= $nFiles_PP_2BT_exp3_v1 + $nFiles_PP_2BT_exp3_v2 + $nFiles_PP_2BT_exp3_v3 + $nFiles_PP_2BT_exp3_v4 ?>)</a></h3>
+            <?php if (!empty($pp_fc1_version)) : ?>
+                <h3><a href="Experiments/PP_FreeChoice/Exp1.3/index.html?version=<?php echo $pp_fc1_version; ?>">Free Choice Race Exp 1 (n = <?= $nFiles_ppfc_v1 + $nFiles_ppfc_v2 ?>)</a></h3>
             <?php endif;  ?>
+
 
             <?php
             $cr2 = [];
@@ -141,7 +132,7 @@ $nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
 
             $randIndex = array_rand($cr2);
             $cr2_version = $cr2[$randIndex];
-            /* debug_to_console($cr1_version) */
+            /* debug_to_console($cr2_version) */
             ?>
 
             <?php if (!empty($cr2_version)) : ?>
@@ -150,20 +141,27 @@ $nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1/data/version2');
 
 
             <?php
-            $pp_fc1 = [];
-            if ($nFiles_ppfc_v1 < 0) {
-                array_push($pp_fc1, 1);
+            $nw1 = [];
+            if ($nFiles_nw_v1 < 8) {
+                array_push($nw1, 1);
             }
-            if ($nFiles_ppfc_v2 < 0) {
-                array_push($pp_fc1, 2);
+            if ($nFiles_nw_v2 < 8) {
+                array_push($nw1, 2);
+            }
+            if ($nFiles_nw_v3 < 8) {
+                array_push($nw1, 3);
+            }
+            if ($nFiles_nw_v4 < 8) {
+                array_push($nw1, 4);
             }
 
-            $randIndex = array_rand($pp_fc1);
-            $pp_fc1_version = $pp_fc1[$randIndex];
+            $randIndex = array_rand($nw1);
+            $nw1_version = $nw1[$randIndex];
+            /* debug_to_console($nw1_version) */
             ?>
 
-            <?php if (!empty($pp_fc1_version)) : ?>
-                <h3><a href="Experiments/PP_FreeChoice/Exp1/index.html?version=<?php echo $pp_fc1_version; ?>">PP Free Choice Exp 1 (n = <?= $nFiles_ppfc_v1 + $nFiles_ppfc_v2 ?>)</a></h3>
+            <?php if (!empty($nw1_version)) : ?>
+                <h3><a href="Experiments/NarrowWide/V2/index.html?version=<?php echo $nw1_version; ?>">Zonk Exp1 (n = <?= $nFiles_nw_v1 + $nFiles_nw_v2 + $nFiles_nw_v3 + $nFiles_nw_v4 ?>)</a></h3>
             <?php endif;  ?>
 
             <h2>0,5 VP-Stunden</h2>
