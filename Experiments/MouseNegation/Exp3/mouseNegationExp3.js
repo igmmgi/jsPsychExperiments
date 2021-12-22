@@ -30,8 +30,8 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 8, // 16, // number of trials in first block (practice)
-  nTrlsE: 8, // 48, // number of trials in subsequent blocks
+  nTrlsP: 16, // number of trials in first block (practice)
+  nTrlsE: 48, // number of trials in subsequent blocks
   nBlks: 9,
   fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
@@ -132,6 +132,7 @@ const trial_stimulus = {
   data: {
     stim_type: 'mouse_negation',
     word: jsPsych.timelineVariable('word'),
+    aff_neg: jsPsych.timelineVariable('aff_neg'),
     resp_loc: jsPsych.timelineVariable('resp_loc'),
   },
   on_finish: function () {

@@ -132,6 +132,7 @@ const trial_stimulus = {
   data: {
     stim_type: 'mouse_negation',
     word: jsPsych.timelineVariable('word'),
+    aff_neg: jsPsych.timelineVariable('aff_neg'),
     resp_loc: jsPsych.timelineVariable('resp_loc'),
   },
   on_finish: function () {
