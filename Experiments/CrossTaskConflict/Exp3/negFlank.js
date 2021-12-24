@@ -49,32 +49,14 @@ const fixation_cross = {
   stimulus: '<div style="font-size:60px;">+</div>',
   choices: jsPsych.NO_KEYS,
   trial_duration: prms.fixDur,
-  post_trial_gap: 0,
-  data: { stim: 'fixation' },
 };
 
 // prettier-ignore
 const stims = [
-  [
-    "<div class='left'  style='float: left'></div>" +
-    "<div class='left'  style='float: left'></div>" +
-    "<div class='left'  style='float: right'></div>",
-  ],
-  [
-    "<div class='right' style='float: left'></div>" +
-    "<div class='left'  style='float: left'></div>" +
-    "<div class='right' style='float: right'></div>",
-  ],
-  [
-    "<div class='right' style='float: left'></div>" +
-    "<div class='right' style='float: left'></div>" +
-    "<div class='right' style='float: right'></div>",
-  ],
-  [
-    "<div class='left'  style='float: left'></div>" +
-    "<div class='right' style='float: left'></div>" +
-    "<div class='left'  style='float: right'></div>",
-  ],
+  [ "<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: right'></div>", ],
+  [ "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: right'></div>", ],
+  [ "<div class='right' style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='right' style='float: right'></div>", ],
+  [ "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: right'></div>", ],
   ['<h1>jetzt links</h1>'],
   ['<h1>jetzt rechts</h1>'],
   ['<h1>nicht links</h1>'],
@@ -84,34 +66,27 @@ const stims = [
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  let correctKey;
-  if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
-  }
-
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
-  prms.cTrl += 1;
 }
-
-
 
 const trial_stimulus = {
   type: 'html-keyboard-response',
@@ -119,7 +94,6 @@ const trial_stimulus = {
   trial_duration: prms.tooSlow,
   response_ends_trial: true,
   choices: prms.respKeys,
-  post_trial_gap: 0,
   data: {
     stimulus: 'negFlank',
     task: jsPsych.timelineVariable('task'),
@@ -129,6 +103,7 @@ const trial_stimulus = {
   },
   on_finish: function () {
     codeTrial();
+    prms.cTrl += 1;
   },
 };
 
@@ -153,17 +128,18 @@ const block_feedback = {
   post_trial_gap: prms.waitDur,
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, trial_stimulus, trial_feedback],
   timeline_variables: [
-    { stimulus: stims[0], task: 'flanker', comp: 'comp', dir: 'left', key: prms.respKeys[0] },
-    { stimulus: stims[1], task: 'flanker', comp: 'incomp', dir: 'left', key: prms.respKeys[0] },
-    { stimulus: stims[2], task: 'flanker', comp: 'comp', dir: 'right', key: prms.respKeys[1] },
+    { stimulus: stims[0], task: 'flanker', comp: 'comp',   dir: 'left',  key: prms.respKeys[0] },
+    { stimulus: stims[1], task: 'flanker', comp: 'incomp', dir: 'left',  key: prms.respKeys[0] },
+    { stimulus: stims[2], task: 'flanker', comp: 'comp',   dir: 'right', key: prms.respKeys[1] },
     { stimulus: stims[3], task: 'flanker', comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
-    { stimulus: stims[4], task: 'affneg', comp: 'comp', dir: 'left', key: prms.respKeys[0] },
-    { stimulus: stims[5], task: 'affneg', comp: 'comp', dir: 'right', key: prms.respKeys[1] },
-    { stimulus: stims[6], task: 'affneg', comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
-    { stimulus: stims[7], task: 'affneg', comp: 'incomp', dir: 'left', key: prms.respKeys[0] },
+    { stimulus: stims[4], task: 'affneg',  comp: 'comp',   dir: 'left',  key: prms.respKeys[0] },
+    { stimulus: stims[5], task: 'affneg',  comp: 'comp',   dir: 'right', key: prms.respKeys[1] },
+    { stimulus: stims[6], task: 'affneg',  comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
+    { stimulus: stims[7], task: 'affneg',  comp: 'incomp', dir: 'left',  key: prms.respKeys[0] },
   ],
 };
 

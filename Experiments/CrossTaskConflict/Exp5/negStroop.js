@@ -54,8 +54,6 @@ const fixation_cross = {
   stimulus: '<div style="font-size:60px;">+</div>',
   choices: jsPsych.NO_KEYS,
   trial_duration: prms.fixDur,
-  post_trial_gap: 0,
-  data: { stim: 'fixation' },
 };
 
 const stims = [
@@ -80,31 +78,26 @@ const stims = [
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  let correctKey;
-  if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
-  }
-
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
-  prms.cTrl += 1;
 }
 
 const trial_stimulus = {
@@ -122,6 +115,7 @@ const trial_stimulus = {
   },
   on_finish: function () {
     codeTrial();
+    prms.cTrl += 1;
   },
 };
 
@@ -146,23 +140,24 @@ const block_feedback = {
   post_trial_gap: prms.waitDur,
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, trial_stimulus, trial_feedback],
   timeline_variables: [
-    { stimulus: stims[0], task: 'stroop', comp: 'comp', key: prms.respKeys[0] },
-    { stimulus: stims[1], task: 'stroop', comp: 'comp', key: prms.respKeys[0] },
-    { stimulus: stims[2], task: 'stroop', comp: 'incomp', key: prms.respKeys[0] },
-    { stimulus: stims[3], task: 'stroop', comp: 'incomp', key: prms.respKeys[0] },
-    { stimulus: stims[4], task: 'stroop', comp: 'comp', key: prms.respKeys[1] },
-    { stimulus: stims[5], task: 'stroop', comp: 'comp', key: prms.respKeys[1] },
-    { stimulus: stims[6], task: 'stroop', comp: 'incomp', key: prms.respKeys[1] },
-    { stimulus: stims[7], task: 'stroop', comp: 'incomp', key: prms.respKeys[1] },
-    { stimulus: stims[8], task: 'affneg', comp: 'comp', key: 'C' },
-    { stimulus: stims[9], task: 'affneg', comp: 'comp', key: 'M' },
+    { stimulus: stims[0],  task: 'stroop', comp: 'comp',   key: prms.respKeys[0] },
+    { stimulus: stims[1],  task: 'stroop', comp: 'comp',   key: prms.respKeys[0] },
+    { stimulus: stims[2],  task: 'stroop', comp: 'incomp', key: prms.respKeys[0] },
+    { stimulus: stims[3],  task: 'stroop', comp: 'incomp', key: prms.respKeys[0] },
+    { stimulus: stims[4],  task: 'stroop', comp: 'comp',   key: prms.respKeys[1] },
+    { stimulus: stims[5],  task: 'stroop', comp: 'comp',   key: prms.respKeys[1] },
+    { stimulus: stims[6],  task: 'stroop', comp: 'incomp', key: prms.respKeys[1] },
+    { stimulus: stims[7],  task: 'stroop', comp: 'incomp', key: prms.respKeys[1] },
+    { stimulus: stims[8],  task: 'affneg', comp: 'comp',   key: 'C' },
+    { stimulus: stims[9],  task: 'affneg', comp: 'comp',   key: 'M' },
     { stimulus: stims[10], task: 'affneg', comp: 'incomp', key: 'M' },
     { stimulus: stims[11], task: 'affneg', comp: 'incomp', key: 'C' },
-    { stimulus: stims[12], task: 'affneg', comp: 'comp', key: 'C' },
-    { stimulus: stims[13], task: 'affneg', comp: 'comp', key: 'M' },
+    { stimulus: stims[12], task: 'affneg', comp: 'comp',   key: 'C' },
+    { stimulus: stims[13], task: 'affneg', comp: 'comp',   key: 'M' },
     { stimulus: stims[14], task: 'affneg', comp: 'incomp', key: 'M' },
     { stimulus: stims[15], task: 'affneg', comp: 'incomp', key: 'C' },
   ],
@@ -197,7 +192,10 @@ function genExpSeq() {
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 16 : prms.nTrlsE / 16 };
+    blk_timeline.sample = { 
+        type: 'fixed-repetitions', 
+        size: blk === 0 ? prms.nTrlsP / 16 : prms.nTrlsE / 16 
+    };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }

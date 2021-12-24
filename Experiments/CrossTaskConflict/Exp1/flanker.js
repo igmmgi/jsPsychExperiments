@@ -48,32 +48,14 @@ const fixation_cross = {
   stimulus: '<div style="font-size:60px;">+</div>',
   choices: jsPsych.NO_KEYS,
   trial_duration: prms.fixDur,
-  post_trial_gap: 0,
-  data: { stim: 'fixation' },
 };
 
 // prettier-ignore
 const flankers = [
-  [
-    "<div class='left' style='float: left'></div>" +
-    "<div class='left' style='float: left'></div>" +
-    "<div class='left' style='float: right'></div>",
-  ],
-  [
-    "<div class='right' style='float: left'></div>" +
-    "<div class='left'  style='float: left'></div>" +
-    "<div class='right' style='float: right'></div>",
-  ],
-  [
-    "<div class='right' style='float: left'></div>" +
-    "<div class='right' style='float: left'></div>" +
-    "<div class='right' style='float: right'></div>",
-  ],
-  [
-    "<div class='left'  style='float: left'></div>" +
-    "<div class='right' style='float: left'></div>" +
-    "<div class='left'  style='float: right'></div>",
-  ],
+  [ "<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='left' style='float: right'></div>" ],
+  [ "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: right'></div>" ],
+  [ "<div class='right' style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='right' style='float: right'></div>" ],
+  [ "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: right'></div>" ],
   ["<div class='left'></div>"  + "<div class='left'></div>"  + "<div class='left'></div>"],
   ["<div class='right'></div>" + "<div class='left'></div>"  + "<div class='right'></div>"],
   ["<div class='right'></div>" + "<div class='right'></div>" + "<div class='right'></div>"],
@@ -83,33 +65,27 @@ const flankers = [
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  let correctKey;
-  if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
-  }
-
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
-  prms.cTrl += 1;
 }
-
 
 const flanker_stimulus = {
   type: 'html-keyboard-response',
@@ -127,6 +103,7 @@ const flanker_stimulus = {
   },
   on_finish: function () {
     codeTrial();
+    prms.cTrl += 1;
   },
 };
 
@@ -195,7 +172,10 @@ function genExpSeq() {
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8 };
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8,
+    };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
