@@ -54,7 +54,7 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-  
+
   let corrCode = 0;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
@@ -111,7 +111,11 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'simon' });
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
+    trial.stimulus = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate);
+  },
+  on_finish: function () {
+    prms.cBlk += 1;
   },
 };
 
@@ -126,21 +130,23 @@ const trial_timeline = {
   ],
 };
 
+const dirName = getDirName();
+const expName = getFileName();
+
 function save() {
-    const vpNum = getTime();
-    const pcInfo = getComputerInfo();
-    jsPsych.data.addProperties({vpNum: vpNum, pcInfo: pcInfo});
-    
-    const fn = getDirName() + 'data/version' + expName() + vpNum;
-    saveData('/Common/write_data.php', fn, {stim: 'flanker'});
+  const vpNum = getTime();
+  const pcInfo = getComputerInfo();
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  const fn = dirName + 'data/' + expName + vpNum;
+  saveData('/Common/write_data.php', fn, { stim: 'flanker' });
 }
 
 const save_data = {
-    type: 'call-function',
-    func: save,
-    post_trial_gap: 1000,
+  type: 'call-function',
+  func: save,
+  post_trial_gap: 1000,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -150,8 +156,7 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen({on: true}));
-  exp.push(fullscreen());
+  exp.push(fullscreen(true));
   exp.push(welcome_message());
   exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
@@ -159,16 +164,16 @@ function genExpSeq() {
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = { 
-        type: 'fixed-repetitions', 
-        size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
   exp.push(end_message());
   exp.push(mouseCursor(true));
-  exp.push(fullscreen({on: false}));
+  exp.push(fullscreen(false));
 
   return exp;
 }

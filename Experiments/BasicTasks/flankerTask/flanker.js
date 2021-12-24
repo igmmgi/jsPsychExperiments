@@ -44,7 +44,7 @@ const task_instructions = {
     }) +
     generate_formatted_html({
       text: 'LEFT = "D" key &emsp; RIGHT = "J" key',
-      alighn: 'center',
+      align: 'center',
       colour: 'black',
       fontsize: 40,
       xypos: [0, 50],
@@ -56,10 +56,11 @@ const task_instructions = {
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 const fixation_cross = {
-    type: 'html-keyboard-response',
-    stimulus: '<div style="font-size:60px;">+</div>',
-    response_ends_trial: false,
-    trial_duration: prms.fixDur,
+  type: 'html-keyboard-response',
+  stimulus: '<div style="font-size:60px;">+</div>',
+  response_ends_trial: false,
+  trial_duration: prms.fixDur,
+  data: { stim: 'fixation' },
 };
 
 // prettier-ignore
@@ -116,7 +117,6 @@ function codeTrial() {
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
-  prms.cTrl += 1;
 }
 
 const flanker_stimulus = {
@@ -132,6 +132,7 @@ const flanker_stimulus = {
   },
   on_finish: function () {
     codeTrial();
+    prms.cTrl += 1;
   },
 };
 
@@ -153,7 +154,11 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackText({ stim: 'flanker' });
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
+    trial.stimulus = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate);
+  },
+  on_finish: function () {
+    prms.cBlk += 1;
   },
 };
 
@@ -168,19 +173,22 @@ const trial_timeline = {
   ],
 };
 
+const dirName = getDirName();
+const expName = getFileName();
+
 function save() {
-    const vpNum = getTime();
-    const pcInfo = getComputerInfo();
-    jsPsych.data.addProperties({vpNum: vpNum, pcInfo: pcInfo});
-    
-    const fn = getDirName() + 'data/version' + expName() + vpNum;
-    saveData('/Common/write_data.php', fn, {stim: 'flanker'});
+  let vpNum = getTime();
+  let pcInfo = getComputerInfo();
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  let fn = dirName + 'data/' + expName + vpNum;
+  saveData('/Common/write_data.php', fn, { stim: 'flanker' });
 }
 
 const save_data = {
-    type: 'call-function',
-    func: save,
-    post_trial_gap: 1000,
+  type: 'call-function',
+  func: save,
+  post_trial_gap: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -191,7 +199,7 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen({on: true}));
+  exp.push(fullscreen(true));
   exp.push(welcome_message());
   exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
@@ -203,14 +211,13 @@ function genExpSeq() {
       type: 'fixed-repetitions',
       size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
-    exp.push(blk_timeline);   // trials within a block
+    exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
   exp.push(save_data);
-
   exp.push(end_message());
   exp.push(mouseCursor(true));
-  exp.push(fullscreen({on: false}));
+  exp.push(fullscreen(false));
 
   return exp;
 }

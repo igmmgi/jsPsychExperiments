@@ -7,74 +7,77 @@
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-    nTrlsP: 10,      // number of trials in first block (practice)
-    nTrlsE: 10,      // number of trials in subsequent blocks
-    nBlks: 1,        // number of blocks
-    fixDur: 500,     // duration of the fixation cross
-    cueDur: 200,     // cue duration
-    fbDur: 500,      // feedback duration
-    cti: 0,          // cue-target-interval duration
-    targetPos: 500,  // target position +-
-    waitDur: 1000,   // duration to wait following ...
-    iti: 1000,       // inter-trial-interval
-    tooFast: 150,    // response criterion for too fast
-    tooSlow: 1500,   // response criterion for too slow
-    respKeys: ['Q', 'P'],  // define response keys
-    fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],  // text to show for feedback
-    cTrl: 1, // count trials
-    cBlk: 1, // count blocks
+  nTrlsP: 10, // number of trials in first block (practice)
+  nTrlsE: 10, // number of trials in subsequent blocks
+  nBlks: 1, // number of blocks
+  fixDur: 500, // duration of the fixation cross
+  cueDur: 200, // cue duration
+  fbDur: 500, // feedback duration
+  cti: 0, // cue-target-interval duration
+  targetPos: 500, // target position +-
+  waitDur: 1000, // duration to wait following ...
+  iti: 1000, // inter-trial-interval
+  tooFast: 150, // response criterion for too fast
+  tooSlow: 1500, // response criterion for too slow
+  respKeys: ['Q', 'P'], // define response keys
+  fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'], // text to show for feedback
+  cTrl: 1, // count trials
+  cBlk: 1, // count blocks
 };
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
 const task_instructions = {
-    type: 'html-keyboard-response',
-    stimulus: `
+  type: 'html-keyboard-response',
+  stimulus:
+    `
     <H2>Welcome: <br><br>
     Your task is to respond to the location of a circle that is presented <br>
     to the left or right side of the screen. Respond with the following keys:<br><br>
-    Left Side = ` + prms.respKeys[0] + `&emsp;&emsp;Right Side = ` + prms.respKeys[1] + ` key<br><br>
+    Left Side = ` +
+    prms.respKeys[0] +
+    `&emsp;&emsp;Right Side = ` +
+    prms.respKeys[1] +
+    ` key<br><br>
     Press the spacebar to continue!</H2>`,
-    post_trial_gap: prms.waitDur
+  post_trial_gap: prms.waitDur,
 };
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 const fixation_cross = {
-    type: 'html-keyboard-response',
-    stimulus: '<div style="font-size:60px;">+</div>',
-    response_ends_trial: false,
-    trial_duration: prms.fixDur,
+  type: 'html-keyboard-response',
+  stimulus: '<div style="font-size:60px;">+</div>',
+  response_ends_trial: false,
+  trial_duration: prms.fixDur,
 };
 
 const cue_stimulus = {
-    type: 'canvas-keyboard-response',
-    stimulus: drawCue,
-    trial_duration: prms.cueDur,
-    response_ends_trial: false,
-    choices: prms.respKeys,
-    post_trial_gap: prms.cti,
-    canvas_size: [1280, 960],
-    data: {
-        stim: 'posner_cue',
-        cue_side: jsPsych.timelineVariable('cue_dir'),
-    },
+  type: 'canvas-keyboard-response',
+  stimulus: drawCue,
+  trial_duration: prms.cueDur,
+  response_ends_trial: false,
+  choices: prms.respKeys,
+  post_trial_gap: prms.cti,
+  canvas_size: [1280, 960],
+  data: {
+    stim: 'posner_cue',
+    cue_side: jsPsych.timelineVariable('cue_dir'),
+  },
 };
 
 function drawCue(c) {
+  let ctx = c.getContext('2d');
+  ctx.translate(c.width / 2, c.height / 2); // make center (0, 0)
 
-    let ctx = c.getContext('2d');
-    ctx.translate(c.width / 2, c.height / 2); // make center (0, 0)
+  var img = new Image();
+  img.src = jsPsych.timelineVariable('cue_img', true);
 
-    var img = new Image();
-    img.src = jsPsych.timelineVariable('cue_img', true);
-
-    let w = img.width;
-    let h = img.height;
-    ctx.drawImage(img, -(w/2), -(h/2), w, h);
-
+  let w = img.width;
+  let h = img.height;
+  ctx.drawImage(img, -(w / 2), -(h / 2), w, h);
 }
 
 function codeTrial() {
@@ -85,9 +88,9 @@ function codeTrial() {
   let corrCode = 0;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  if (correctKey && (dat.rt > prms.tooFast && dat.rt < prms.tooSlow)) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (dat.rt > prms.tooFast && dat.rt < prms.tooSlow)) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
   } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
@@ -104,39 +107,35 @@ function codeTrial() {
 }
 
 const target_stimulus = {
-    type: 'canvas-keyboard-response',
-    stimulus: drawTarget,
-    trial_duration: prms.tooSlow,
-    response_ends_trial: true,
-    choices: prms.respKeys,
-    canvas_size: [1280, 960],
-    data: {
-        stim: 'posner_target',
-        target_side: jsPsych.timelineVariable('target_side'),
-        validity: jsPsych.timelineVariable('validity'),
-        corrResp: jsPsych.timelineVariable('key')
-    },
-    on_finish: function () {
-        codeTrial();
-    },
+  type: 'canvas-keyboard-response',
+  stimulus: drawTarget,
+  trial_duration: prms.tooSlow,
+  response_ends_trial: true,
+  choices: prms.respKeys,
+  canvas_size: [1280, 960],
+  data: {
+    stim: 'posner_target',
+    target_side: jsPsych.timelineVariable('target_side'),
+    validity: jsPsych.timelineVariable('validity'),
+    corrResp: jsPsych.timelineVariable('key'),
+  },
+  on_finish: function () {
+    codeTrial();
+  },
 };
 
-
 function drawTarget(c) {
+  let ctx = c.getContext('2d');
+  ctx.translate(c.width / 2, c.height / 2); // make center (0, 0)
 
-    let ctx = c.getContext('2d');
-    ctx.translate(c.width / 2, c.height / 2); // make center (0, 0)
+  var img = new Image();
+  img.src = jsPsych.timelineVariable('target_img', true);
 
-    var img = new Image();
-    img.src = jsPsych.timelineVariable('target_img', true);
-
-    let w = img.width;
-    let h = img.height;
-    let x_pos = jsPsych.timelineVariable('x_pos', true);
-    ctx.drawImage(img, x_pos-(w/2), -(h/2), w, h);
-
+  let w = img.width;
+  let h = img.height;
+  let x_pos = jsPsych.timelineVariable('x_pos', true);
+  ctx.drawImage(img, x_pos - w / 2, -(h / 2), w, h);
 }
-
 
 const trial_feedback = {
   type: 'html-keyboard-response',
@@ -151,20 +150,20 @@ const trial_feedback = {
 };
 
 const block_feedback = {
-    type: 'html-keyboard-response',
-    stimulus: '',
-    response_ends_trial: true,
-    post_trial_gap: prms.waitDur,
-    on_start: function (trial) {
-        trial.stimulus = blockFeedbackTxt({ stim: 'posner_target' });
-    },
+  type: 'html-keyboard-response',
+  stimulus: '',
+  response_ends_trial: true,
+  post_trial_gap: prms.waitDur,
+  on_start: function (trial) {
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
+    trial.stimulus = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate);
+  },
+  on_finish: function () {
+    prms.cBlk += 1;
+  },
 };
 
-const imgs = [
-    'images/arrow_left.png',
-    'images/arrow_right.png',
-    'images/target.png',
-];
+const imgs = ['images/arrow_left.png', 'images/arrow_right.png', 'images/target.png'];
 
 // prettier-ignore
 const trial_timeline = {
@@ -182,53 +181,56 @@ const trial_timeline = {
     ],
 };
 
+const dirName = getDirName();
+const expName = getFileName();
+
 function save() {
-    const vpNum = getTime();
-    const pcInfo = getComputerInfo();
-    jsPsych.data.addProperties({vpNum: vpNum, pcInfo: pcInfo});
-    
-    const fn = getDirName() + 'data/version' + expName() + vpNum;
-    saveData('/Common/write_data.php', fn, [{ stim: 'posner_cue'}, {stim: 'posner_target'} ]);
+  const vpNum = getTime();
+  const pcInfo = getComputerInfo();
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  const fn = dirName + 'data/' + expName + vpNum;
+  saveData('/Common/write_data.php', fn, [{ stim: 'posner_cue' }, { stim: 'posner_target' }]);
 }
 
 const save_data = {
-    type: 'call-function',
-    func: save,
-    post_trial_gap: 1000,
+  type: 'call-function',
+  func: save,
+  post_trial_gap: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-	'use strict';
+  'use strict';
 
-	let exp = [];
+  let exp = [];
 
-    exp.push(fullscreen({on: true}));
-	exp.push(welcome_message());
-	exp.push(vpInfoForm());
-	exp.push(mouseCursor(false));
-	exp.push(task_instructions);
+  exp.push(fullscreen({ on: true }));
+  exp.push(welcome_message());
+  exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
+  exp.push(task_instructions);
 
-	for (let blk = 0; blk < prms.nBlks; blk++) {
-		let blk_timeline = { ...trial_timeline };
-		blk_timeline.sample = {
-			type: 'fixed-repetitions',
-			size: blk === 0 ? prms.nTrlsP / 10 : prms.nTrlsE / 10,
-		};
-		exp.push(blk_timeline); // trials within a block
-		exp.push(block_feedback); // show previous block performance
-	}
-	exp.push(end_message());
-	exp.push(mouseCursor(true));
-    exp.push(fullscreen({on: true}));
+  for (let blk = 0; blk < prms.nBlks; blk++) {
+    let blk_timeline = { ...trial_timeline };
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: blk === 0 ? prms.nTrlsP / 10 : prms.nTrlsE / 10,
+    };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
+  }
+  exp.push(end_message());
+  exp.push(mouseCursor(true));
+  exp.push(fullscreen({ on: true }));
 
-	return exp;
+  return exp;
 }
 const EXP = genExpSeq();
 
 jsPsych.init({
-    timeline: EXP,
-    preload_images: imgs,
+  timeline: EXP,
+  preload_images: imgs,
 });
