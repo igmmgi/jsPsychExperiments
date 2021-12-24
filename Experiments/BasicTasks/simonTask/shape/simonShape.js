@@ -148,9 +148,9 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen());
-  // exp.push(welcome_message());
-  // exp.push(vpInfoForm());
+  exp.push(fullscreen({on: true}));
+  exp.push(welcome_message());
+  exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
@@ -167,6 +167,8 @@ function genExpSeq() {
   }
   exp.push(end_message());
   exp.push(mouseCursor(true));
+  exp.push(fullscreen({on: false}));
+
   return exp;
 }
 const EXP = genExpSeq();
