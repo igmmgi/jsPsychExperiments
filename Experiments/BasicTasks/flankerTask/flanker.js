@@ -2,10 +2,6 @@
 // VPs respond to the direction of the central arrow whilst
 // ignoring the surrounding arrows using key responses ("D" and "J").
 
-const expName = getFileName();
-const dirName = getDirName();
-const vpNum = genVpNum();
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -13,12 +9,12 @@ const prms = {
   nTrlsP: 4, // number of trials in first block (practice)
   nTrlsE: 4, // number of trials in subsequent blocks
   nBlks: 1,
-  fixDur: 750,
-  fbDur: 750,
+  fixDur: 500,
+  fbDur: 1000,
   waitDur: 1000,
   iti: 1000,
   tooFast: 150,
-  tooSlow: 1500,
+  tooSlow: 2000,
   respKeys: ['D', 'J'],
   fbTxt: ['Correct', 'Error', 'Too Slow', 'Too Fast'],
   cTrl: 1, // count trials
@@ -60,12 +56,10 @@ const task_instructions = {
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 const fixation_cross = {
-  type: 'html-keyboard-response',
-  stimulus: '<div style="font-size:60px;">+</div>',
-  choices: jsPsych.NO_KEYS,
-  trial_duration: prms.fixDur,
-  post_trial_gap: 0,
-  data: { stim: 'fixation' },
+    type: 'html-keyboard-response',
+    stimulus: '<div style="font-size:60px;">+</div>',
+    response_ends_trial: false,
+    trial_duration: prms.fixDur,
 };
 
 // prettier-ignore
@@ -102,22 +96,22 @@ const flankers = [
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
@@ -132,7 +126,6 @@ const flanker_stimulus = {
   response_ends_trial: true,
   choices: prms.respKeys,
   data: {
-    post_trial_gap: 0,
     stim: 'flanker',
     comp: jsPsych.timelineVariable('comp'),
     corrResp: jsPsych.timelineVariable('key'),
@@ -148,9 +141,9 @@ const trial_feedback = {
   trial_duration: prms.fbDur,
   response_ends_trial: false,
   post_trial_gap: prms.iti,
-  data: { stim: 'feedback' },
   on_start: function (trial) {
-    trial.stimulus = trialFeedbackTxt(prms.fbTxt);
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.stimulus = '<h2>' + prms.fbTxt[dat.corrCode - 1] + '</h2>';
   },
 };
 
@@ -160,7 +153,7 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'flanker' });
+    trial.stimulus = blockFeedbackText({ stim: 'flanker' });
   },
 };
 
@@ -175,6 +168,21 @@ const trial_timeline = {
   ],
 };
 
+function save() {
+    const vpNum = getTime();
+    const pcInfo = getComputerInfo();
+    jsPsych.data.addProperties({vpNum: vpNum, pcInfo: pcInfo});
+    
+    const fn = getDirName() + 'data/version' + expName() + vpNum;
+    saveData('/Common/write_data.php', fn, {stim: 'flanker'});
+}
+
+const save_data = {
+    type: 'call-function',
+    func: save,
+    post_trial_gap: 1000,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -183,8 +191,10 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(welcome_en);
-  // exp.push(vpInfoForm_en);
+  // exp.push(fullscreen());
+  // exp.push(welcome_message());
+  // exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -193,21 +203,15 @@ function genExpSeq() {
       type: 'fixed-repetitions',
       size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
-    exp.push(blk_timeline); // trials within a block
+    exp.push(blk_timeline);   // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_en);
+  exp.push(end_message());
+  exp.push(mouseCursor(true));
   return exp;
 }
 const EXP = genExpSeq();
-const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
-  on_finish: function () {
-    saveData('/Common/write_data.php', filename, { stim: 'flanker' });
-    getComputerInfo();
-    jsPsych.data.displayData('csv');
-  },
 });

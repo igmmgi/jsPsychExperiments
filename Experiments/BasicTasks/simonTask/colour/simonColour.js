@@ -2,10 +2,6 @@
 // VPs respond to the colour of the presented stimulus using
 // left and right key responses.
 
-const expName = getFileName();
-const dirName = getDirName();
-const vpNum = genVpNum();
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -43,10 +39,8 @@ const task_instructions = {
 const fixation_cross = {
   type: 'html-keyboard-response',
   stimulus: '<div style="font-size:60px;">+</div>',
-  choices: jsPsych.NO_KEYS,
+  response_ends_trial: false,
   trial_duration: prms.fixDur,
-  post_trial_gap: 0,
-  data: { stim: 'fixation' },
 };
 
 const simons = [
@@ -59,22 +53,22 @@ const simons = [
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
   } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
@@ -88,7 +82,6 @@ const simon_stimulus = {
   trial_duration: prms.tooSlow,
   response_ends_trial: true,
   choices: prms.respKeys,
-  post_trial_gap: 0,
   data: {
     stim: 'simon',
     comp: jsPsych.timelineVariable('comp'),
@@ -106,9 +99,9 @@ const trial_feedback = {
   trial_duration: prms.fbDur,
   response_ends_trial: false,
   post_trial_gap: prms.iti,
-  data: { stim: 'feedback' },
   on_start: function (trial) {
-    trial.stimulus = trialFeedbackTxt(prms.fbTxt);
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.stimulus = '<h2>' + prms.fbTxt[dat.corrCode - 1] + '</h2>';
   },
 };
 
@@ -133,6 +126,22 @@ const trial_timeline = {
   ],
 };
 
+function save() {
+    const vpNum = getTime();
+    const pcInfo = getComputerInfo();
+    jsPsych.data.addProperties({vpNum: vpNum, pcInfo: pcInfo});
+    
+    const fn = getDirName() + 'data/version' + expName() + vpNum;
+    saveData('/Common/write_data.php', fn, {stim: 'flanker'});
+}
+
+const save_data = {
+    type: 'call-function',
+    func: save,
+    post_trial_gap: 1000,
+};
+
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -141,26 +150,27 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(welcome_en);
-  //exp.push(vpInfoForm);
+  // exp.push(fullscreen());
+  // exp.push(welcome_message());
+  // exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 };
+    blk_timeline.sample = { 
+        type: 'fixed-repetitions', 
+        size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 
+    };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_en);
+  exp.push(end_message());
+  exp.push(mouseCursor(true));
   return exp;
 }
 const EXP = genExpSeq();
-const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
-  on_finish: function () {
-    saveData('/Common/write_data.php', filename, { stim: 'simon' });
-  },
 });

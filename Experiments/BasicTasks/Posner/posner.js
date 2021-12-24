@@ -3,10 +3,6 @@
 // https://www.youtube.com/watch?v=ZQd2QEK_Gn4
 // Demo Script written as an example for Tübingen Workshop on Online Experiments
 
-const expName = getFileName();
-const dirName = getDirName();
-const vpNum = genVpNum();
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -49,10 +45,8 @@ const task_instructions = {
 const fixation_cross = {
     type: 'html-keyboard-response',
     stimulus: '<div style="font-size:60px;">+</div>',
-    choices: jsPsych.NO_KEYS,
+    response_ends_trial: false,
     trial_duration: prms.fixDur,
-    post_trial_gap: 0,
-    data: { stim: 'fixation' },
 };
 
 const cue_stimulus = {
@@ -79,7 +73,6 @@ function drawCue(c) {
 
     let w = img.width;
     let h = img.height;
-    console.log(h)
     ctx.drawImage(img, -(w/2), -(h/2), w, h);
 
 }
@@ -87,30 +80,28 @@ function drawCue(c) {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && (dat.rt > prms.tooFast && dat.rt < prms.tooSlow)) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && (dat.rt > prms.tooFast && dat.rt < prms.tooSlow)) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
   prms.cTrl += 1;
 }
-
-
 
 const target_stimulus = {
     type: 'canvas-keyboard-response',
@@ -119,7 +110,6 @@ const target_stimulus = {
     response_ends_trial: true,
     choices: prms.respKeys,
     canvas_size: [1280, 960],
-    post_trial_gap: 0,
     data: {
         stim: 'posner_target',
         target_side: jsPsych.timelineVariable('target_side'),
@@ -147,16 +137,17 @@ function drawTarget(c) {
 
 }
 
+
 const trial_feedback = {
-    type: 'html-keyboard-response',
-    stimulus: '',
-    trial_duration: prms.fbDur,
-    response_ends_trial: false,
-    post_trial_gap: prms.iti,
-    data: { stim: 'feedback' },
-    on_start: function (trial) {
-        trial.stimulus = trialFeedbackTxt(prms.fbTxt);
-    },
+  type: 'html-keyboard-response',
+  stimulus: '',
+  trial_duration: prms.fbDur,
+  response_ends_trial: false,
+  post_trial_gap: prms.iti,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.stimulus = '<h2>' + prms.fbTxt[dat.corrCode - 1] + '</h2>';
+  },
 };
 
 const block_feedback = {
@@ -173,7 +164,7 @@ const imgs = [
     'images/arrow_left.png',
     'images/arrow_right.png',
     'images/target.png',
-]
+];
 
 // prettier-ignore
 const trial_timeline = {
@@ -191,44 +182,51 @@ const trial_timeline = {
     ],
 };
 
+function save() {
+    const vpNum = getTime();
+    const pcInfo = getComputerInfo();
+    jsPsych.data.addProperties({vpNum: vpNum, pcInfo: pcInfo});
+    
+    const fn = getDirName() + 'data/version' + expName() + vpNum;
+    saveData('/Common/write_data.php', fn, [{ stim: 'posner_cue'}, {stim: 'posner_target'} ]);
+}
+
+const save_data = {
+    type: 'call-function',
+    func: save,
+    post_trial_gap: 1000,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-    'use strict';
+	'use strict';
 
-    let exp = [];
+	let exp = [];
 
-    exp.push( {
-        type: 'fullscreen',
-        fullscreen_mode: true
-    });
+	// exp.push(fullscreen());
+	// exp.push(welcome_message());
+	// exp.push(vpInfoForm());
+	exp.push(mouseCursor(false));
+	exp.push(task_instructions);
 
-    exp.push(welcome_en);
-    // exp.push(vpInfoForm_en);
-    exp.push(task_instructions);
-
-    for (let blk = 0; blk < prms.nBlks; blk++) {
-        let blk_timeline = { ...trial_timeline };
-        blk_timeline.sample = {
-            type: 'fixed-repetitions',
-            size: blk === 0 ? prms.nTrlsP / 10 : prms.nTrlsE / 10,
-        };
-        exp.push(blk_timeline); // trials within a block
-        exp.push(block_feedback); // show previous block performance
-    }
-    exp.push(debrief_en);
-    return exp;
+	for (let blk = 0; blk < prms.nBlks; blk++) {
+		let blk_timeline = { ...trial_timeline };
+		blk_timeline.sample = {
+			type: 'fixed-repetitions',
+			size: blk === 0 ? prms.nTrlsP / 10 : prms.nTrlsE / 10,
+		};
+		exp.push(blk_timeline); // trials within a block
+		exp.push(block_feedback); // show previous block performance
+	}
+	exp.push(end_message());
+	exp.push(mouseCursor(true));
+	return exp;
 }
 const EXP = genExpSeq();
-const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
     timeline: EXP,
-    fullscreen_mode: true,
-    show_progress_bar: false,
     preload_images: imgs,
-    on_finish: function () {
-        saveData('/Common/write_data.php', filename, [{ stim: 'posner_cue'}, {stim: 'posner_target'} ]);
-    },
 });
