@@ -7,12 +7,15 @@ const canvas_colour = 'rgba(255, 255, 255, 1)';
 const canvas_size = [960, 720];
 const canvas_border = '0px solid black';
 
-////////////////////////////////////////////////////////////////////////
-//                             Experiment                             //
-////////////////////////////////////////////////////////////////////////
-const expName = getFileName();
-const dirName = getDirName();
-const vpNum = genVpNum();
+const check_screen = {
+  type: 'check-screen-resolution',
+  width: canvas_size[0],
+  height: canvas_size[1],
+  timing_post_trial: 0,
+  on_finish: function () {
+    reload_if_not_fullscreen();
+  },
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -86,25 +89,27 @@ const imgs = loadImages(imgFiles);
 const imgNumWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat());
 const imgNumNonWordsPractice = shuffle(new Array(2).fill([0, 1, 2, 3]).flat());
 
+// prettier-ignore
 const words_practice = [
   { id: 1, word: 'Optimismus', isWord: true, imgNum: imgNumWordsPractice[0] },
-  { id: 2, word: 'Wurf', isWord: true, imgNum: imgNumWordsPractice[1] },
-  { id: 3, word: 'Panama', isWord: true, imgNum: imgNumWordsPractice[2] },
-  { id: 4, word: 'Milch', isWord: true, imgNum: imgNumWordsPractice[3] },
-  { id: 5, word: 'Fisch', isWord: true, imgNum: imgNumWordsPractice[4] },
-  { id: 6, word: 'Krippe', isWord: true, imgNum: imgNumWordsPractice[5] },
-  { id: 7, word: 'Brett', isWord: true, imgNum: imgNumWordsPractice[6] },
-  { id: 8, word: 'Ziegel', isWord: true, imgNum: imgNumWordsPractice[7] },
+  { id: 2, word: 'Wurf',       isWord: true, imgNum: imgNumWordsPractice[1] },
+  { id: 3, word: 'Panama',     isWord: true, imgNum: imgNumWordsPractice[2] },
+  { id: 4, word: 'Milch',      isWord: true, imgNum: imgNumWordsPractice[3] },
+  { id: 5, word: 'Fisch',      isWord: true, imgNum: imgNumWordsPractice[4] },
+  { id: 6, word: 'Krippe',     isWord: true, imgNum: imgNumWordsPractice[5] },
+  { id: 7, word: 'Brett',      isWord: true, imgNum: imgNumWordsPractice[6] },
+  { id: 8, word: 'Ziegel',     isWord: true, imgNum: imgNumWordsPractice[7] },
 ];
 
+// prettier-ignore
 const nonwords_practice = [
-  { id: 9, word: 'Zonko', isWord: false, imgNum: imgNumWordsPractice[0] },
-  { id: 10, word: 'Balpim', isWord: false, imgNum: imgNumWordsPractice[1] },
-  { id: 11, word: 'Kobldar', isWord: false, imgNum: imgNumWordsPractice[2] },
-  { id: 12, word: 'Fipusel', isWord: false, imgNum: imgNumWordsPractice[3] },
-  { id: 13, word: 'Molaki', isWord: false, imgNum: imgNumWordsPractice[4] },
-  { id: 14, word: 'Papusel', isWord: false, imgNum: imgNumWordsPractice[5] },
-  { id: 15, word: 'Worip', isWord: false, imgNum: imgNumWordsPractice[6] },
+  { id:  9, word: 'Zonko',     isWord: false, imgNum: imgNumWordsPractice[0] },
+  { id: 10, word: 'Balpim',    isWord: false, imgNum: imgNumWordsPractice[1] },
+  { id: 11, word: 'Kobldar',   isWord: false, imgNum: imgNumWordsPractice[2] },
+  { id: 12, word: 'Fipusel',   isWord: false, imgNum: imgNumWordsPractice[3] },
+  { id: 13, word: 'Molaki',    isWord: false, imgNum: imgNumWordsPractice[4] },
+  { id: 14, word: 'Papusel',   isWord: false, imgNum: imgNumWordsPractice[5] },
+  { id: 15, word: 'Worip',     isWord: false, imgNum: imgNumWordsPractice[6] },
   { id: 16, word: 'Oligappus', isWord: false, imgNum: imgNumWordsPractice[7] },
 ];
 
@@ -517,22 +522,22 @@ const block_feedback = {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
 
-  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
@@ -562,7 +567,6 @@ const stim = {
     respFeature: jsPsych.timelineVariable('respFeature'),
     corrResp: jsPsych.timelineVariable('corrResp'),
   },
-
   on_finish: function () {
     codeTrial();
   },
@@ -613,7 +617,7 @@ const trial_timeline4 = {
 };
 
 // For VP Stunden
-const randomString = generateRandomString(16);
+const randomString = generateRandomString({ length: 16, prefix: 'bn4_' });
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -639,6 +643,34 @@ const alphaNum = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                                Save                                //
+////////////////////////////////////////////////////////////////////////
+const expName = getFileName();
+const dirName = getDirName();
+
+function save() {
+  let vpNum = getTime();
+  let pcInfo = getComputerInfo();
+
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  let fn = dirName + 'data/' + expName + '_' + vpNum;
+  saveData('/Common/write_data.php', fn, { stim: 'ButtonNegation' });
+
+  fn = dirName + 'interaction/' + expName + '_interaction_data_' + vpNum;
+  saveInteractionData('/Common/write_data.php', fn);
+
+  fn = dirName + 'code/' + expName;
+  saveRandomCode('/Common/write_code.php', fn, randomString);
+}
+
+const save_data = {
+  type: 'call-function',
+  func: save,
+  post_trial_gap: 1000,
+};
+
+////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
@@ -646,13 +678,13 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(resize_de);
-
-  exp.push(fullscreen_on);
-  exp.push(welcome_de);
-  // exp.push(vpInfoForm_de);
-  exp.push(hideMouseCursor);
+  exp.push(resize_browser());
+  exp.push(fullscreen(true));
+  exp.push(welcome_message());
+  exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
   exp.push(screenInfo);
+
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 
@@ -669,27 +701,19 @@ function genExpSeq() {
   exp.push(block_feedback); // show previous block performance
   exp.push(trial_timeline4);
 
-  exp.push(debrief_de);
-  exp.push(showMouseCursor);
+  exp.push(save_data);
+  exp.push(end_message());
+  exp.push(mouseCursor(true));
   exp.push(alphaNum);
-  exp.push(fullscreen_off);
+  exp.push(fullscreen(false));
 
   return exp;
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + vpNum;
-const code_filename = dirName + 'code/' + expName;
-
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
-  exclusions: {
-    min_width: canvas_size[0],
-    min_height: canvas_size[1],
-  },
-  on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'ButtonNegation' });
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
+  on_interaction_data_update: function (data) {
+    update_user_interaction_data(data);
   },
 });
