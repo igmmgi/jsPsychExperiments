@@ -14,9 +14,9 @@ function getFileName() {
 }
 
 function pathJoin(parts, sep) {
-  let separator = sep || '/';
-  let replace = new RegExp(separator + '{1,}', 'g');
-  return parts.join(separator).replace(replace, separator);
+   let separator = sep || '/';
+   let replace = new RegExp(separator + '{1,}', 'g');
+   return parts.join(separator).replace(replace, separator);
 }
 
 function filterDataPavlovia(
@@ -222,7 +222,7 @@ function trialFeedbackTxt(feedback_text) {
   return '<h2>' + feedback_text[dat.corrCode - 1] + '</h2>';
 }
 
-function blockFeedbackTxt(filter_options) {
+function blockFeedbackText(filter_options) {
   'use strict';
   let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
   let nTotal = dat.count();
