@@ -3,10 +3,6 @@
 // ignoring the surrounding arrows using key responses ("C" and "M").
 // Feedback provided during the practice block
 
-const expName = getFileName();
-const dirName = getDirName();
-const vpNum = genVpNum();
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -52,10 +48,10 @@ const fixation_cross = {
 
 // prettier-ignore
 const flankers = [
-  [ "<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='left' style='float: right'></div>" ],
-  [ "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: right'></div>" ],
-  [ "<div class='right' style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='right' style='float: right'></div>" ],
-  [ "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: right'></div>" ],
+  ["<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='left' style='float: right'></div>"],
+  ["<div class='right' style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: right'></div>"],
+  ["<div class='right' style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='right' style='float: right'></div>"],
+  ["<div class='left'  style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: right'></div>"],
   ["<div class='left'></div>"  + "<div class='left'></div>"  + "<div class='left'></div>"],
   ["<div class='right'></div>" + "<div class='left'></div>"  + "<div class='right'></div>"],
   ["<div class='right'></div>" + "<div class='right'></div>" + "<div class='right'></div>"],
@@ -93,7 +89,6 @@ const flanker_stimulus = {
   trial_duration: prms.tooSlow,
   response_ends_trial: true,
   choices: prms.respKeys,
-  post_trial_gap: 0,
   data: {
     stimulus: 'flanker',
     dimension: jsPsych.timelineVariable('dim'),
@@ -123,9 +118,16 @@ const trial_feedback = {
 
 const block_feedback = {
   type: 'html-keyboard-response',
-  stimulus: blockFeedbackTxt,
+  stimulus: '',
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
+  on_start: function (trial) {
+    let block_dvs = calculateBlockPerformance({ filter_options: { stimulus: 'flanker', blockNum: prms.cBlk } });
+    trial.stimulus = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate);
+  },
+  on_finish: function () {
+    prms.cBlk += 1;
+  },
 };
 
 // prettier-ignore
@@ -158,6 +160,25 @@ const alphaNum = {
     '<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>',
 };
 
+// save
+const dirName = getDirName();
+const expName = getFileName();
+
+function save() {
+  let vpNum = getTime();
+  let pcInfo = getComputerInfo();
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  let fn = dirName + 'data/' + expName + vpNum;
+  saveData('/Common/write_data.php', fn, { stimulus: 'flanker' });
+}
+
+const save_data = {
+  type: 'call-function',
+  func: save,
+  post_trial_gap: 1000,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -166,8 +187,10 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(welcome_de);
-  //exp.push(vpInfoForm);
+  exp.push(fullscreen(true));
+  exp.push(welcome_message());
+  exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -179,18 +202,16 @@ function genExpSeq() {
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_de);
+  exp.push(save_data);
+  exp.push(mouseCursor(true));
   exp.push(alphaNum);
+  exp.push(end_message());
+  exp.push(fullscreen(false));
+
   return exp;
 }
 const EXP = genExpSeq();
-const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
-  on_finish: function () {
-    saveRandomCode(expName);
-    saveData('/Common/write_data.php', filename, { stim: 'flanker' });
-  },
 });

@@ -3,10 +3,6 @@
 // ignoring the surrounding arrows/letters using key responses ("X" and "M").
 // Feedback provided during the practice block
 
-const expName = getFileName();
-const dirName = getDirName();
-const vpNum = genVpNum();
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -56,16 +52,14 @@ const fixation_cross = {
   stimulus: '<div style="font-size:60px;">+</div>',
   choices: jsPsych.NO_KEYS,
   trial_duration: prms.fixDur,
-  post_trial_gap: 0,
-  data: { stim: 'fixation' },
 };
 
 // prettier-ignore
 const flankers = [
-  [ "<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: right'></div>", ],
-  [ "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: right'></div>", ],
-  [ "<div class='right' style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='right' style='float: right'></div>", ],
-  [ "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: right'></div>", ],
+  ["<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='left'  style='float: right'></div>",],
+  ["<div class='right' style='float: left'></div>" + "<div class='left'  style='float: left'></div>" + "<div class='right' style='float: right'></div>",],
+  ["<div class='right' style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='right' style='float: right'></div>",],
+  ["<div class='left'  style='float: left'></div>" + "<div class='right' style='float: left'></div>" + "<div class='left'  style='float: right'></div>",],
   ["<div style='font-size:3.0cm'>H H H</div>"],
   ["<div style='font-size:3.0cm'>S H S</div>"],
   ["<div style='font-size:3.0cm'>S S S</div>"],
@@ -133,21 +127,28 @@ const trial_feedback = {
 
 const block_feedback = {
   type: 'html-keyboard-response',
-  stimulus: blockFeedbackTxt,
+  stimulus: '',
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
+  on_start: function (trial) {
+    let block_dvs = calculateBlockPerformance({ filter_options: { stimulus: 'simonSnarc', blockNum: prms.cBlk } });
+    trial.stimulus = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate);
+  },
+  on_finish: function () {
+    prms.cBlk += 1;
+  },
 };
 
 const trial_timeline = {
   timeline: [fixation_cross, flanker_stimulus, trial_feedback],
   timeline_variables: [
-    { flanker: flankers[0], type: 'arrow',  comp: 'comp',   dir: 'left',  key: prms.respKeys[0] },
-    { flanker: flankers[1], type: 'arrow',  comp: 'incomp', dir: 'left',  key: prms.respKeys[0] },
-    { flanker: flankers[2], type: 'arrow',  comp: 'comp',   dir: 'right', key: prms.respKeys[1] },
-    { flanker: flankers[3], type: 'arrow',  comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
-    { flanker: flankers[4], type: 'letter', comp: 'comp',   dir: 'left',  key: prms.respKeys[1] },
-    { flanker: flankers[5], type: 'letter', comp: 'incomp', dir: 'left',  key: prms.respKeys[1] },
-    { flanker: flankers[6], type: 'letter', comp: 'comp',   dir: 'right', key: prms.respKeys[0] },
+    { flanker: flankers[0], type: 'arrow', comp: 'comp', dir: 'left', key: prms.respKeys[0] },
+    { flanker: flankers[1], type: 'arrow', comp: 'incomp', dir: 'left', key: prms.respKeys[0] },
+    { flanker: flankers[2], type: 'arrow', comp: 'comp', dir: 'right', key: prms.respKeys[1] },
+    { flanker: flankers[3], type: 'arrow', comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
+    { flanker: flankers[4], type: 'letter', comp: 'comp', dir: 'left', key: prms.respKeys[1] },
+    { flanker: flankers[5], type: 'letter', comp: 'incomp', dir: 'left', key: prms.respKeys[1] },
+    { flanker: flankers[6], type: 'letter', comp: 'comp', dir: 'right', key: prms.respKeys[0] },
     { flanker: flankers[7], type: 'letter', comp: 'incomp', dir: 'right', key: prms.respKeys[0] },
   ],
 };
@@ -167,6 +168,25 @@ const alphaNum = {
     '<h2>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>',
 };
 
+// save
+const dirName = getDirName();
+const expName = getFileName();
+
+function save() {
+  let vpNum = getTime();
+  let pcInfo = getComputerInfo();
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  let fn = dirName + 'data/' + expName + vpNum;
+  saveData('/Common/write_data.php', fn, { stimulus: 'simonSnarc' });
+}
+
+const save_data = {
+  type: 'call-function',
+  func: save,
+  post_trial_gap: 1000,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -175,31 +195,31 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(welcome_de);
-  //exp.push(vpInfoForm);
+  exp.push(fullscreen(true));
+  exp.push(welcome_message());
+  exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = { 
-        type: 'fixed-repetitions', 
-        size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8 
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
-  exp.push(debrief_de);
+  exp.push(save_data);
+  exp.push(mouseCursor(true));
   exp.push(alphaNum);
+  exp.push(end_message());
+  exp.push(fullscreen(false));
+
   return exp;
 }
 const EXP = genExpSeq();
-const filename = dirName + 'data/' + expName + '_' + genVpNum();
 
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
-  on_finish: function () {
-    saveRandomCode(expName);
-    saveData('/Common/write_data.php', filename, { stim: 'flanker' });
-  },
 });
