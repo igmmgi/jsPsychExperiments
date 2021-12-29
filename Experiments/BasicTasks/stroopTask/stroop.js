@@ -69,13 +69,13 @@ function codeTrial() {
   'use strict';
   const dat = jsPsych.data.get().last(1).values()[0];
   dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-  
+
   let corrCode = 0;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  if (correctKey && (dat.rt > prms.tooFast && dat.rt < prms.tooSlow)) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (dat.rt > prms.tooFast && dat.rt < prms.tooSlow)) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
   } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
@@ -84,11 +84,10 @@ function codeTrial() {
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
+    corrCode: corrCode,
   });
-  prms.cTrl += 1;
 }
 
 const stroop_stimulus = {
@@ -107,6 +106,7 @@ const stroop_stimulus = {
   },
   on_finish: function () {
     codeTrial();
+    prms.cTrl += 1;
   },
 };
 
@@ -116,7 +116,6 @@ const trial_feedback = {
   trial_duration: prms.fbDur,
   response_ends_trial: false,
   post_trial_gap: prms.iti,
-  data: { stim: 'feedback' },
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.stimulus = '<h2>' + prms.fbTxt[dat.corrCode - 1] + '</h2>';
@@ -129,7 +128,12 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'stroop' });
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'stroop', blockNum: prms.cBlk } });
+    trial.stimulus = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate);
+  },
+  on_finish: function () {
+    prms.cTrl = 1;
+    prms.cBlk += 1;
   },
 };
 
@@ -144,19 +148,23 @@ const trial_timeline = {
     ],
 };
 
+// save
+const dirName = getDirName();
+const expName = getFileName();
+
 function save() {
-    const vpNum = getTime();
-    const pcInfo = getComputerInfo();
-    jsPsych.data.addProperties({vpNum: vpNum, pcInfo: pcInfo});
-    
-    const fn = getDirName() + 'data/version' + expName() + vpNum;
-    saveData('/Common/write_data.php', fn, {stim: 'flanker'});
+  const vpNum = getTime();
+  const pcInfo = getComputerInfo();
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  const fn = `${dirName}data/${expName}_${vpNum}`;
+  saveData('/Common/write_data.php', fn, { stim: 'flanker' });
 }
 
 const save_data = {
-    type: 'call-function',
-    func: save,
-    post_trial_gap: 1000,
+  type: 'call-function',
+  func: save,
+  post_trial_gap: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -167,7 +175,7 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen({on: true}));
+  exp.push(fullscreen({ on: true }));
   exp.push(welcome_message());
   exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
@@ -175,16 +183,16 @@ function genExpSeq() {
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = { 
-        type: 'fixed-repetitions', 
-        size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
   exp.push(end_message());
   exp.push(mouseCursor(true));
-  exp.push(fullscreen({on: false}));
+  exp.push(fullscreen({ on: false }));
 
   return exp;
 }

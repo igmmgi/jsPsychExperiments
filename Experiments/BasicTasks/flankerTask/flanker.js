@@ -60,7 +60,6 @@ const fixation_cross = {
   stimulus: '<div style="font-size:60px;">+</div>',
   response_ends_trial: false,
   trial_duration: prms.fixDur,
-  data: { stim: 'fixation' },
 };
 
 // prettier-ignore
@@ -113,9 +112,9 @@ function codeTrial() {
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
+    corrCode: corrCode,
   });
 }
 
@@ -155,9 +154,10 @@ const block_feedback = {
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
     let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
-    trial.stimulus = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate);
+    trial.stimulus = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'en'));
   },
   on_finish: function () {
+    prms.cTrl = 1;
     prms.cBlk += 1;
   },
 };
@@ -173,16 +173,19 @@ const trial_timeline = {
   ],
 };
 
+// save
 const dirName = getDirName();
 const expName = getFileName();
 
 function save() {
-  let vpNum = getTime();
-  let pcInfo = getComputerInfo();
+  const vpNum = getTime();
+  const pcInfo = getComputerInfo();
+
   jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
 
-  let fn = dirName + 'data/' + expName + vpNum;
-  saveData('/Common/write_data.php', fn, { stim: 'flanker' });
+  const fn = `${dirName}data/${expName}_${vpNum}`;
+  // saveData('/Common/write_data.php', fn, { stim: 'flanker' });
+  saveDataLocal(fn, { stim: 'flanker' });
 }
 
 const save_data = {
@@ -214,6 +217,7 @@ function genExpSeq() {
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
+
   exp.push(save_data);
   exp.push(end_message());
   exp.push(mouseCursor(true));
