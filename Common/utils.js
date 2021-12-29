@@ -42,7 +42,7 @@ function getComputerInfo() {
 }
 
 // Generate a random string with optional pre-fix
-function generateRandomString({length, prefix="",} = {}) {
+function generateRandomString(length, prefix="") {
   let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let randomString = '';
   for (let i = length; i > 0; --i) {
@@ -112,6 +112,30 @@ function mean(array) {
   return array.reduce((acc, cur) => acc + cur) / array.length;
 }
 
+function loadImages(imagefiles) {
+  let loadcount = 0;
+  let loadtotal = imagefiles.length;
+  let preloaded = false;
+
+  // Load the images
+  let loadedimages = [];
+  for (let i = 0; i < imagefiles.length; i++) {
+    let image = new Image();
+    image.onload = function () {
+      loadcount++;
+      if (loadcount === loadtotal) {
+        preloaded = true;
+      }
+    };
+
+    // set the source and save
+    image.src = imagefiles[i];
+    loadedimages[i] = image;
+  }
+
+  return loadedimages;
+}
+
 
 // Deep copy of an object
 // https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
@@ -137,7 +161,7 @@ const deepCopy = (inObject) => {
 // Generate some formatted html with formatting options
 // Adapted from https://github.com/hauselin/lab_exp/blob/master/libraries/utils.js
 function generate_formatted_html({
-  text,
+  text = "Hello, world!",
   width = '900px',
   color = 'black',
   align = 'center',
