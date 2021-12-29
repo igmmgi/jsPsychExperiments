@@ -7,16 +7,6 @@ const canvas_colour = 'rgba(255, 255, 255, 1)';
 const canvas_size = [960, 720];
 const canvas_border = '0px solid black';
 
-const check_screen = {
-  type: 'check-screen-resolution',
-  width: canvas_size[0],
-  height: canvas_size[1],
-  timing_post_trial: 0,
-  on_finish: function () {
-    reload_if_not_fullscreen();
-  },
-};
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -679,8 +669,9 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(resize_browser());
+  exp.push(check_screen_size(canvas_size))
   exp.push(fullscreen(true));
+  exp.push(resize_browser());
   exp.push(welcome_message());
   exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
