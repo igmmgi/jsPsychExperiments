@@ -7,24 +7,6 @@ const canvas_colour = 'rgba(255, 255, 255, 1)';
 const canvas_size = [1280, 720];
 const canvas_border = '5px solid black';
 
-const check_screen = {
-  type: 'check-screen-resolution',
-  width: canvas_size[0],
-  height: canvas_size[1],
-  timing_post_trial: 0,
-  on_finish: function () {
-    reload_if_not_fullscreen();
-  },
-};
-
-////////////////////////////////////////////////////////////////////////
-//                             Experiment                             //
-////////////////////////////////////////////////////////////////////////
-const expName = getFileName();
-const dirName = getDirName();
-const vpNum = genVpNum();
-const pcInfo = getComputerInfo();
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -83,11 +65,8 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = dat.resp_loc !== dat.end_loc ? 1 : 0;
+
   jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl });
-  prms.cTrl += 1;
-  if (dat.key_press === 27) {
-    jsPsych.endExperiment();
-  }
 }
 
 let images = {
@@ -142,6 +121,7 @@ const trial_stimulus = {
   },
   on_finish: function () {
     codeTrial();
+    prms.cTrl += 1;
   },
 };
 
@@ -171,33 +151,6 @@ const trial_feedback = {
   },
 };
 
-function blockFeedbackTxt(filter_options) {
-  'use strict';
-  let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk });
-  console.log(dat);
-  let nTotal = dat.count();
-  console.log(nTotal);
-  let nError = dat.select('corrCode').values.filter((x) => x !== 0).length;
-  console.log(nError);
-  dat = jsPsych.data.get().filter({ ...filter_options, blockNum: prms.cBlk, corrCode: 0 });
-  let blockFbTxt =
-    '<H1>Block: ' +
-    prms.cBlk +
-    ' of ' +
-    prms.nBlks +
-    '</H1>' +
-    '<H1>Mean RT: ' +
-    Math.round(dat.select('end_rt').mean()) +
-    ' ms </H1>' +
-    '<H1>Error Rate: ' +
-    Math.round((nError / nTotal) * 100) +
-    ' %</H1>' +
-    '<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>';
-  prms.cBlk += 1;
-  prms.cTrl = 0;
-  return blockFbTxt;
-}
-
 const iti = {
   type: 'static-canvas-keyboard-response',
   canvas_colour: canvas_colour,
@@ -214,7 +167,11 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim_type: 'mouse_negation' });
+    trial.stimulus = blockFeedbackTxt_de_du({ stim: 'mouse_negation' });
+  },
+  on_finish: function () {
+    prms.cTrl = 1;
+    prms.cBlk += 1;
   },
 };
 
@@ -252,31 +209,30 @@ const alphaNum = {
 ////////////////////////////////////////////////////////////////////////
 //                                Save                                //
 ////////////////////////////////////////////////////////////////////////
+
+const expName = getFileName();
+const dirName = getDirName();
+
+function save() {
+  let vpNum = getTime();
+  let pcInfo = getComputerInfo();
+
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  let fn = `${dirName}data/${expName}_'${vpNum}`;
+  saveData('/Common/write_data.php', fn, { stim_type: 'mouse_negation' });
+
+  fn = `${dirName}interaction/${expName}_'${vpNum}`;
+  saveInteractionData('/Common/write_data.php', fn);
+
+  fn = `${dirName}code/${expName}`;
+  saveRandomCode('/Common/write_code.php', fn, randomString);
+}
+
 const save_data = {
   type: 'call-function',
-  func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_negation' }, 'json');
-  },
-  timing_post_trial: 1000,
-};
-
-const save_interaction_data = {
-  type: 'call-function',
-  func: function () {
-    let data_filename = dirName + 'data/' + expName + '_interaction_data_' + vpNum;
-    saveInteractionData('/Common/write_data.php', data_filename);
-  },
-  timing_post_trial: 200,
-};
-
-const save_code = {
-  type: 'call-function',
-  func: function () {
-    let code_filename = dirName + 'code/' + expName;
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
-  },
-  timing_post_trial: 200,
+  func: save,
+  post_trial_gap: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -291,6 +247,7 @@ function genExpSeq() {
   exp.push(images.healthy);
   exp.push(images.unhealthy);
 
+  exp.push(check_screen_size(canvas_size));
   exp.push(fullscreen_on);
   exp.push(check_screen);
   exp.push(welcome_de);

@@ -13,7 +13,6 @@ const canvas_border = '5px solid black';
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -142,31 +141,26 @@ const fixation_cross = {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
 
-  let correctKey;
-  if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
-  }
-
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && (dat.rt > prms.tooFast && dat.rt < prms.tooSlow)) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && (dat.rt > prms.tooFast && dat.rt < prms.tooSlow)) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
-    corrCode = 4; // too false
+  } else if (dat.rt <= prms.tooFast) {
+    corrCode = 4; // too fast
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
-    corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
+    corrCode: corrCode,
   });
-  prms.cTrl += 1;
 }
 
 const trial_stimulus = {
@@ -243,60 +237,62 @@ const block_feedback = {
   },
   on_finish: function () {
     prms.cTrl = 1;
+    prms.cBlk += 1;
   },
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, trial_stimulus, trial_feedback, iti],
   timeline_variables: [
-    { text: 'jetzt rot', fontcolour: 'red', affneg: 'aff', comp: 'comp', corrResp: respKey.red },
-    { text: 'jetzt rot', fontcolour: 'red', affneg: 'aff', comp: 'comp', corrResp: respKey.red },
-    { text: 'jetzt rot', fontcolour: 'red', affneg: 'aff', comp: 'comp', corrResp: respKey.red },
-    { text: 'jetzt rot', fontcolour: 'green', affneg: 'aff', comp: 'incomp', corrResp: respKey.green },
-    { text: 'jetzt rot', fontcolour: 'blue', affneg: 'aff', comp: 'incomp', corrResp: respKey.blue },
-    { text: 'jetzt rot', fontcolour: 'yellow', affneg: 'aff', comp: 'incomp', corrResp: respKey.yellow },
-    { text: 'nicht rot', fontcolour: 'red', affneg: 'neg', comp: 'comp', corrResp: respKey.red },
-    { text: 'nicht rot', fontcolour: 'red', affneg: 'neg', comp: 'comp', corrResp: respKey.red },
-    { text: 'nicht rot', fontcolour: 'red', affneg: 'neg', comp: 'comp', corrResp: respKey.red },
-    { text: 'nicht rot', fontcolour: 'green', affneg: 'neg', comp: 'incomp', corrResp: respKey.green },
-    { text: 'nicht rot', fontcolour: 'blue', affneg: 'neg', comp: 'incomp', corrResp: respKey.blue },
-    { text: 'nicht rot', fontcolour: 'yellow', affneg: 'neg', comp: 'incomp', corrResp: respKey.yellow },
-    { text: 'jetzt grün', fontcolour: 'green', affneg: 'aff', comp: 'comp', corrResp: respKey.green },
-    { text: 'jetzt grün', fontcolour: 'green', affneg: 'aff', comp: 'comp', corrResp: respKey.green },
-    { text: 'jetzt grün', fontcolour: 'green', affneg: 'aff', comp: 'comp', corrResp: respKey.green },
-    { text: 'jetzt grün', fontcolour: 'red', affneg: 'aff', comp: 'incomp', corrResp: respKey.red },
-    { text: 'jetzt grün', fontcolour: 'blue', affneg: 'aff', comp: 'incomp', corrResp: respKey.blue },
+    { text: 'jetzt rot',  fontcolour: 'red',    affneg: 'aff', comp: 'comp',   corrResp: respKey.red },
+    { text: 'jetzt rot',  fontcolour: 'red',    affneg: 'aff', comp: 'comp',   corrResp: respKey.red },
+    { text: 'jetzt rot',  fontcolour: 'red',    affneg: 'aff', comp: 'comp',   corrResp: respKey.red },
+    { text: 'jetzt rot',  fontcolour: 'green',  affneg: 'aff', comp: 'incomp', corrResp: respKey.green },
+    { text: 'jetzt rot',  fontcolour: 'blue',   affneg: 'aff', comp: 'incomp', corrResp: respKey.blue },
+    { text: 'jetzt rot',  fontcolour: 'yellow', affneg: 'aff', comp: 'incomp', corrResp: respKey.yellow },
+    { text: 'nicht rot',  fontcolour: 'red',    affneg: 'neg', comp: 'comp',   corrResp: respKey.red },
+    { text: 'nicht rot',  fontcolour: 'red',    affneg: 'neg', comp: 'comp',   corrResp: respKey.red },
+    { text: 'nicht rot',  fontcolour: 'red',    affneg: 'neg', comp: 'comp',   corrResp: respKey.red },
+    { text: 'nicht rot',  fontcolour: 'green',  affneg: 'neg', comp: 'incomp', corrResp: respKey.green },
+    { text: 'nicht rot',  fontcolour: 'blue',   affneg: 'neg', comp: 'incomp', corrResp: respKey.blue },
+    { text: 'nicht rot',  fontcolour: 'yellow', affneg: 'neg', comp: 'incomp', corrResp: respKey.yellow },
+    { text: 'jetzt grün', fontcolour: 'green',  affneg: 'aff', comp: 'comp',   corrResp: respKey.green },
+    { text: 'jetzt grün', fontcolour: 'green',  affneg: 'aff', comp: 'comp',   corrResp: respKey.green },
+    { text: 'jetzt grün', fontcolour: 'green',  affneg: 'aff', comp: 'comp',   corrResp: respKey.green },
+    { text: 'jetzt grün', fontcolour: 'red',    affneg: 'aff', comp: 'incomp', corrResp: respKey.red },
+    { text: 'jetzt grün', fontcolour: 'blue',   affneg: 'aff', comp: 'incomp', corrResp: respKey.blue },
     { text: 'jetzt grün', fontcolour: 'yellow', affneg: 'aff', comp: 'incomp', corrResp: respKey.yellow },
-    { text: 'nicht grün', fontcolour: 'green', affneg: 'neg', comp: 'comp', corrResp: respKey.green },
-    { text: 'nicht grün', fontcolour: 'green', affneg: 'neg', comp: 'comp', corrResp: respKey.green },
-    { text: 'nicht grün', fontcolour: 'green', affneg: 'neg', comp: 'comp', corrResp: respKey.green },
-    { text: 'nicht grün', fontcolour: 'red', affneg: 'neg', comp: 'incomp', corrResp: respKey.red },
-    { text: 'nicht grün', fontcolour: 'blue', affneg: 'neg', comp: 'incomp', corrResp: respKey.blue },
+    { text: 'nicht grün', fontcolour: 'green',  affneg: 'neg', comp: 'comp',   corrResp: respKey.green },
+    { text: 'nicht grün', fontcolour: 'green',  affneg: 'neg', comp: 'comp',   corrResp: respKey.green },
+    { text: 'nicht grün', fontcolour: 'green',  affneg: 'neg', comp: 'comp',   corrResp: respKey.green },
+    { text: 'nicht grün', fontcolour: 'red',    affneg: 'neg', comp: 'incomp', corrResp: respKey.red },
+    { text: 'nicht grün', fontcolour: 'blue',   affneg: 'neg', comp: 'incomp', corrResp: respKey.blue },
     { text: 'nicht grün', fontcolour: 'yellow', affneg: 'neg', comp: 'incomp', corrResp: respKey.yellow },
-    { text: 'jetzt blau', fontcolour: 'blue', affneg: 'aff', comp: 'comp', corrResp: respKey.blue },
-    { text: 'jetzt blau', fontcolour: 'blue', affneg: 'aff', comp: 'comp', corrResp: respKey.blue },
-    { text: 'jetzt blau', fontcolour: 'blue', affneg: 'aff', comp: 'comp', corrResp: respKey.blue },
-    { text: 'jetzt blau', fontcolour: 'red', affneg: 'aff', comp: 'incomp', corrResp: respKey.red },
-    { text: 'jetzt blau', fontcolour: 'green', affneg: 'aff', comp: 'incomp', corrResp: respKey.green },
+    { text: 'jetzt blau', fontcolour: 'blue',   affneg: 'aff', comp: 'comp',   corrResp: respKey.blue },
+    { text: 'jetzt blau', fontcolour: 'blue',   affneg: 'aff', comp: 'comp',   corrResp: respKey.blue },
+    { text: 'jetzt blau', fontcolour: 'blue',   affneg: 'aff', comp: 'comp',   corrResp: respKey.blue },
+    { text: 'jetzt blau', fontcolour: 'red',    affneg: 'aff', comp: 'incomp', corrResp: respKey.red },
+    { text: 'jetzt blau', fontcolour: 'green',  affneg: 'aff', comp: 'incomp', corrResp: respKey.green },
     { text: 'jetzt blau', fontcolour: 'yellow', affneg: 'aff', comp: 'incomp', corrResp: respKey.yellow },
-    { text: 'nicht blau', fontcolour: 'blue', affneg: 'neg', comp: 'comp', corrResp: respKey.blue },
-    { text: 'nicht blau', fontcolour: 'blue', affneg: 'neg', comp: 'comp', corrResp: respKey.blue },
-    { text: 'nicht blau', fontcolour: 'blue', affneg: 'neg', comp: 'comp', corrResp: respKey.blue },
-    { text: 'nicht blau', fontcolour: 'red', affneg: 'neg', comp: 'incomp', corrResp: respKey.red },
-    { text: 'nicht blau', fontcolour: 'green', affneg: 'neg', comp: 'incomp', corrResp: respKey.green },
+    { text: 'nicht blau', fontcolour: 'blue',   affneg: 'neg', comp: 'comp',   corrResp: respKey.blue },
+    { text: 'nicht blau', fontcolour: 'blue',   affneg: 'neg', comp: 'comp',   corrResp: respKey.blue },
+    { text: 'nicht blau', fontcolour: 'blue',   affneg: 'neg', comp: 'comp',   corrResp: respKey.blue },
+    { text: 'nicht blau', fontcolour: 'red',    affneg: 'neg', comp: 'incomp', corrResp: respKey.red },
+    { text: 'nicht blau', fontcolour: 'green',  affneg: 'neg', comp: 'incomp', corrResp: respKey.green },
     { text: 'nicht blau', fontcolour: 'yellow', affneg: 'neg', comp: 'incomp', corrResp: respKey.yellow },
-    { text: 'jetzt gelb', fontcolour: 'yellow', affneg: 'aff', comp: 'comp', corrResp: respKey.yellow },
-    { text: 'jetzt gelb', fontcolour: 'yellow', affneg: 'aff', comp: 'comp', corrResp: respKey.yellow },
-    { text: 'jetzt gelb', fontcolour: 'yellow', affneg: 'aff', comp: 'comp', corrResp: respKey.yellow },
-    { text: 'jetzt gelb', fontcolour: 'red', affneg: 'aff', comp: 'incomp', corrResp: respKey.red },
-    { text: 'jetzt gelb', fontcolour: 'green', affneg: 'aff', comp: 'incomp', corrResp: respKey.green },
-    { text: 'jetzt gelb', fontcolour: 'blue', affneg: 'aff', comp: 'incomp', corrResp: respKey.blue },
-    { text: 'nicht gelb', fontcolour: 'yellow', affneg: 'neg', comp: 'comp', corrResp: respKey.yellow },
-    { text: 'nicht gelb', fontcolour: 'yellow', affneg: 'neg', comp: 'comp', corrResp: respKey.yellow },
-    { text: 'nicht gelb', fontcolour: 'yellow', affneg: 'neg', comp: 'comp', corrResp: respKey.yellow },
-    { text: 'nicht gelb', fontcolour: 'red', affneg: 'neg', comp: 'incomp', corrResp: respKey.red },
-    { text: 'nicht gelb', fontcolour: 'green', affneg: 'neg', comp: 'incomp', corrResp: respKey.green },
-    { text: 'nicht gelb', fontcolour: 'blue', affneg: 'neg', comp: 'incomp', corrResp: respKey.blue },
+    { text: 'jetzt gelb', fontcolour: 'yellow', affneg: 'aff', comp: 'comp',   corrResp: respKey.yellow },
+    { text: 'jetzt gelb', fontcolour: 'yellow', affneg: 'aff', comp: 'comp',   corrResp: respKey.yellow },
+    { text: 'jetzt gelb', fontcolour: 'yellow', affneg: 'aff', comp: 'comp',   corrResp: respKey.yellow },
+    { text: 'jetzt gelb', fontcolour: 'red',    affneg: 'aff', comp: 'incomp', corrResp: respKey.red },
+    { text: 'jetzt gelb', fontcolour: 'green',  affneg: 'aff', comp: 'incomp', corrResp: respKey.green },
+    { text: 'jetzt gelb', fontcolour: 'blue',   affneg: 'aff', comp: 'incomp', corrResp: respKey.blue },
+    { text: 'nicht gelb', fontcolour: 'yellow', affneg: 'neg', comp: 'comp',   corrResp: respKey.yellow },
+    { text: 'nicht gelb', fontcolour: 'yellow', affneg: 'neg', comp: 'comp',   corrResp: respKey.yellow },
+    { text: 'nicht gelb', fontcolour: 'yellow', affneg: 'neg', comp: 'comp',   corrResp: respKey.yellow },
+    { text: 'nicht gelb', fontcolour: 'red',    affneg: 'neg', comp: 'incomp', corrResp: respKey.red },
+    { text: 'nicht gelb', fontcolour: 'green',  affneg: 'neg', comp: 'incomp', corrResp: respKey.green },
+    { text: 'nicht gelb', fontcolour: 'blue',   affneg: 'neg', comp: 'incomp', corrResp: respKey.blue },
   ],
 };
 
@@ -369,7 +365,10 @@ function genExpSeq() {
       exp.push(task_reminder);
     }
     let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 48 : prms.nTrlsE / 48 };
+    blk_timeline.sample = { 
+        type: 'fixed-repetitions', 
+        size: blk === 0 ? prms.nTrlsP / 48 : prms.nTrlsE / 48 
+    };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
     exp.push(iti);

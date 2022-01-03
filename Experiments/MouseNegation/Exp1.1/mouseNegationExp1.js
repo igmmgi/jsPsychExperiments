@@ -7,16 +7,6 @@ const canvas_colour = 'rgba(200, 200, 200, 1)';
 const canvas_size = [1280, 720];
 const canvas_border = '5px solid black';
 
-const check_screen = {
-  type: 'check-screen-resolution',
-  width: canvas_size[0],
-  height: canvas_size[1],
-  timing_post_trial: 0,
-  on_finish: function () {
-    reload_if_not_fullscreen();
-  },
-};
-
 ////////////////////////////////////////////////////////////////////////
 //                             Experiment                             //
 ////////////////////////////////////////////////////////////////////////
@@ -96,10 +86,6 @@ function codeTrial() {
     corrCode = 1; // choice error
   }
   jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl });
-  prms.cTrl += 1;
-  if (dat.key_press === 27) {
-    jsPsych.endExperiment();
-  }
 }
 
 const trial_stimulus = {
@@ -132,6 +118,7 @@ const trial_stimulus = {
   },
   on_finish: function () {
     codeTrial();
+    prms.cTrl += 1;
   },
 };
 
@@ -237,32 +224,31 @@ const alphaNum = {
 ////////////////////////////////////////////////////////////////////////
 //                                Save                                //
 ////////////////////////////////////////////////////////////////////////
+const dirName = getDirName();
+const expName = getFileName();
+
+function save() {
+  let vpNum = getTime();
+  let pcInfo = getComputerInfo();
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  let fn = dirName + 'data/' + expName + vpNum;
+  saveData('/Common/write_data_json.php', fn, { stim: 'mouse_negation' });
+
+  fn = dirName + 'data/' + expName + '_interaction_data_' + vpNum;
+  saveInteractionData('/Common/write_data.php', fn);
+
+  fn = dirName + 'code/' + expName;
+  saveRandomCode('/Common/write_code.php', fn, randomString);
+
+}
+
 const save_data = {
   type: 'call-function',
-  func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim: 'mouse_negation' }, 'json');
-  },
-  timing_post_trial: 1000,
+  func: save,
+  post_trial_gap: 1000,
 };
 
-const save_interaction_data = {
-  type: 'call-function',
-  func: function () {
-    let data_filename = dirName + 'data/' + expName + '_interaction_data_' + vpNum;
-    saveInteractionData('/Common/write_data.php', data_filename);
-  },
-  timing_post_trial: 200,
-};
-
-const save_code = {
-  type: 'call-function',
-  func: function () {
-    let code_filename = dirName + 'code/' + expName;
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
-  },
-  timing_post_trial: 200,
-};
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -272,11 +258,12 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on);
-  exp.push(check_screen);
-  exp.push(welcome_de);
-  exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(fullscreen(true));
+  exp.push(check_screen_size(canvas_size));
+  exp.push(welcome_message());
+  exp.push(resize_browser());
+    
+  // exp.push(vpInfoForm());
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
@@ -291,13 +278,11 @@ function genExpSeq() {
 
   // save data
   exp.push(save_data);
-  exp.push(save_interaction_data);
-  exp.push(save_code);
 
   // debrief
   exp.push(debrief_de);
   exp.push(alphaNum);
-  exp.push(fullscreen_off);
+  exp.push(fullscreen(false));
 
   return exp;
 }

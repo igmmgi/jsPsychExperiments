@@ -8,14 +8,6 @@ const canvas_size = [960, 720];
 const canvas_border = '5px solid black';
 
 ////////////////////////////////////////////////////////////////////////
-//                             Experiment                             //
-////////////////////////////////////////////////////////////////////////
-const expName = getFileName();
-const dirName = getDirName();
-const vpNum = genVpNum();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
-
-////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
@@ -38,6 +30,7 @@ const prms = {
   respKeys: [],
 };
 
+const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 const nVersion = getVersionNumber(nFiles, 2);
 jsPsych.data.addProperties({ version: nVersion });
 let respText;
@@ -171,105 +164,105 @@ const images = loadImages(imageFiles);
 // 4: not sensible-negated
 // prettier-ignore
 const materials_ja_aff = [
-  { sentNum: 1, sentence: 'Sie trinken ein Glas Saft.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 2, sentence: 'Sie werfen einen Ball.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 3, sentence: 'Sie essen eine Banane.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 4, sentence: 'Sie laufen jetzt zum See.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 5, sentence: 'Sie fahren immer zur Oma.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 6, sentence: 'Sie gehen bald ins Kino.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 7, sentence: 'Sie braten oft Fleisch.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 8, sentence: 'Sie kochen eine Suppe.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 9, sentence: 'Sie läuten eine Glocke.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 10, sentence: 'Sie schlafen immer im Bett.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 11, sentence: 'Sie malen ein Bild.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 12, sentence: 'Sie spielen jetzt Gitarre.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 13, sentence: 'Sie springen jetzt in die Luft.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 14, sentence: 'Sie singen ein Lied.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 15, sentence: 'Sie basteln einen Flieger.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 16, sentence: 'Sie machen eine Pause.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 17, sentence: 'Sie bearbeiten eine Aufgabe.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 18, sentence: 'Sie lösen ein Rätsel.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 19, sentence: 'Sie skizzieren ein Tier.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 20, sentence: 'Sie zeichnen ein Bild.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 21, sentence: 'Sie hüpfen jetzt über den Stein.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 22, sentence: 'Sie feiern heute das Jubiläum.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 23, sentence: 'Sie packen einen Koffer.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 24, sentence: 'Sie putzen heute das Bad.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 25, sentence: 'Sie schreiben einen Aufsatz.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 26, sentence: 'Sie gehen heute in die Kirche.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 27, sentence: 'Sie essen eine Pizza.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 28, sentence: 'Sie pflücken eine Erdbeere.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 29, sentence: 'Sie biegen einen Draht.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 30, sentence: 'Sie fahren heute nach Paris.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 31, sentence: 'Sie bitten jetzt um Hilfe.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 32, sentence: 'Sie verbrennen ein Papier.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 33, sentence: 'Sie empfehlen ein Restaurant.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 34, sentence: 'Sie empfangen einen Gast.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 35, sentence: 'Sie finden einen Ring.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 36, sentence: 'Sie fliehen jetzt vor dem Gewitter.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 37, sentence: 'Sie machen jetzt den Abwasch.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 38, sentence: 'Sie geraten schnell in Stress.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 39, sentence: 'Sie gewinnen ein Spiel.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 40, sentence: 'Sie gießen jetzt die Blumen.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 41, sentence: 'Sie sitzen heute auf dem Balkon.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 42, sentence: 'Sie streicheln eine Katze.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 43, sentence: 'Sie schauen immer aus dem Fenster.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 44, sentence: 'Sie falten eine Serviette.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 45, sentence: 'Sie unternehmen eine Wanderung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 46, sentence: 'Sie schneiden eine Zwiebel.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 47, sentence: 'Sie reiten jetzt über den Strand.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 48, sentence: 'Sie vergraben einen Schatz.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 49, sentence: 'Sie brauchen eine Dusche.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 50, sentence: 'Sie vergessen einen Termin.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 51, sentence: 'Sie träumen heute vom Sommer.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 52, sentence: 'Sie wischen heute den Boden.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 53, sentence: 'Sie arbeiten jetzt beim Bäcker.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 54, sentence: 'Sie überfallen eine Bank.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 55, sentence: 'Sie gründen einen Verein.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 56, sentence: 'Sie planen einen Urlaub.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 57, sentence: 'Sie treffen heute ihre Tante.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 58, sentence: 'Sie leiden an einer Krankheit.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 59, sentence: 'Sie klauen jetzt das Geld.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 60, sentence: 'Sie vermieten eine Wohnung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 61, sentence: 'Sie verabreden sich heute mit der Familie.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 62, sentence: 'Sie gehen heute zur Verwandtschaft.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 63, sentence: 'Sie benutzen eine Fernbedienung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 64, sentence: 'Sie entwerfen eine Strategie.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 65, sentence: 'Sie bestimmen heute die Richtung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 66, sentence: 'Sie flechten einen Zopf.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 67, sentence: 'Sie finden einen Stein.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 68, sentence: 'Sie schieben jetzt den Wagen.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 69, sentence: 'Sie mögen einen Kuchen.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 70, sentence: 'Sie liegen heute auf der Wiese.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 71, sentence: 'Sie beladen jetzt das Auto.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 72, sentence: 'Sie meiden heute den Kontakt.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 73, sentence: 'Sie trinken einen Kaffee.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 74, sentence: 'Sie essen heute die Lasagne.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 75, sentence: 'Sie fliegen ein Flugzeug.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 76, sentence: 'Sie probieren heute die Frucht.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 77, sentence: 'Sie halten eine Rede.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 78, sentence: 'Sie stehen heute in der Schlange.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 79, sentence: 'Sie knuddeln jetzt den Hund.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 80, sentence: 'Sie besuchen eine Frau.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 81, sentence: 'Sie rudern jetzt zum Ufer.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 82, sentence: 'Sie fällen einen Baum.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 83, sentence: 'Sie trinken einen Wein.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 84, sentence: 'Sie beginnen heute mit dem Text.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 85, sentence: 'Sie denken gerade an ihre Mutter.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 86, sentence: 'Sie mögen sehr spezielles Bier.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 87, sentence: 'Sie sehen eine Eule.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 88, sentence: 'Sie küssen eine Schauspielerin.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 89, sentence: 'Sie wollen eine Lösung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 90, sentence: 'Sie überreden heute den Chef.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 91, sentence: 'Sie fliegen heute in die USA.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 92, sentence: 'Sie bestellen ein Sofa.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 93, sentence: 'Sie schälen eine Kartoffel.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 94, sentence: 'Sie hämmern heute gegen die Wand.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 95, sentence: 'Sie ziehen einen Zahn.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 96, sentence: 'Sie klopfen heute gegen das Tor.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 97, sentence: 'Sie zählen heute die Schafe.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 98, sentence: 'Sie baden immer in der Badewanne.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
-  { sentNum: 99, sentence: 'Sie bewundern nun das Gemälde.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   1, sentence: 'Sie trinken ein Glas Saft.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   2, sentence: 'Sie werfen einen Ball.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   3, sentence: 'Sie essen eine Banane.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   4, sentence: 'Sie laufen jetzt zum See.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   5, sentence: 'Sie fahren immer zur Oma.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   6, sentence: 'Sie gehen bald ins Kino.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   7, sentence: 'Sie braten oft Fleisch.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   8, sentence: 'Sie kochen eine Suppe.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:   9, sentence: 'Sie läuten eine Glocke.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  10, sentence: 'Sie schlafen immer im Bett.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  11, sentence: 'Sie malen ein Bild.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  12, sentence: 'Sie spielen jetzt Gitarre.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  13, sentence: 'Sie springen jetzt in die Luft.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  14, sentence: 'Sie singen ein Lied.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  15, sentence: 'Sie basteln einen Flieger.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  16, sentence: 'Sie machen eine Pause.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  17, sentence: 'Sie bearbeiten eine Aufgabe.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  18, sentence: 'Sie lösen ein Rätsel.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  19, sentence: 'Sie skizzieren ein Tier.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  20, sentence: 'Sie zeichnen ein Bild.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  21, sentence: 'Sie hüpfen jetzt über den Stein.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  22, sentence: 'Sie feiern heute das Jubiläum.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  23, sentence: 'Sie packen einen Koffer.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  24, sentence: 'Sie putzen heute das Bad.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  25, sentence: 'Sie schreiben einen Aufsatz.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  26, sentence: 'Sie gehen heute in die Kirche.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  27, sentence: 'Sie essen eine Pizza.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  28, sentence: 'Sie pflücken eine Erdbeere.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  29, sentence: 'Sie biegen einen Draht.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  30, sentence: 'Sie fahren heute nach Paris.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  31, sentence: 'Sie bitten jetzt um Hilfe.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  32, sentence: 'Sie verbrennen ein Papier.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  33, sentence: 'Sie empfehlen ein Restaurant.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  34, sentence: 'Sie empfangen einen Gast.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  35, sentence: 'Sie finden einen Ring.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  36, sentence: 'Sie fliehen jetzt vor dem Gewitter.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  37, sentence: 'Sie machen jetzt den Abwasch.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  38, sentence: 'Sie geraten schnell in Stress.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  39, sentence: 'Sie gewinnen ein Spiel.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  40, sentence: 'Sie gießen jetzt die Blumen.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  41, sentence: 'Sie sitzen heute auf dem Balkon.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  42, sentence: 'Sie streicheln eine Katze.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  43, sentence: 'Sie schauen immer aus dem Fenster.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  44, sentence: 'Sie falten eine Serviette.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  45, sentence: 'Sie unternehmen eine Wanderung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  46, sentence: 'Sie schneiden eine Zwiebel.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  47, sentence: 'Sie reiten jetzt über den Strand.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  48, sentence: 'Sie vergraben einen Schatz.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  49, sentence: 'Sie brauchen eine Dusche.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  50, sentence: 'Sie vergessen einen Termin.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  51, sentence: 'Sie träumen heute vom Sommer.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  52, sentence: 'Sie wischen heute den Boden.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  53, sentence: 'Sie arbeiten jetzt beim Bäcker.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  54, sentence: 'Sie überfallen eine Bank.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  55, sentence: 'Sie gründen einen Verein.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  56, sentence: 'Sie planen einen Urlaub.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  57, sentence: 'Sie treffen heute ihre Tante.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  58, sentence: 'Sie leiden an einer Krankheit.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  59, sentence: 'Sie klauen jetzt das Geld.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  60, sentence: 'Sie vermieten eine Wohnung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  61, sentence: 'Sie verabreden sich heute mit der Familie.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  62, sentence: 'Sie gehen heute zur Verwandtschaft.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  63, sentence: 'Sie benutzen eine Fernbedienung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  64, sentence: 'Sie entwerfen eine Strategie.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  65, sentence: 'Sie bestimmen heute die Richtung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  66, sentence: 'Sie flechten einen Zopf.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  67, sentence: 'Sie finden einen Stein.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  68, sentence: 'Sie schieben jetzt den Wagen.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  69, sentence: 'Sie mögen einen Kuchen.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  70, sentence: 'Sie liegen heute auf der Wiese.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  71, sentence: 'Sie beladen jetzt das Auto.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  72, sentence: 'Sie meiden heute den Kontakt.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  73, sentence: 'Sie trinken einen Kaffee.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  74, sentence: 'Sie essen heute die Lasagne.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  75, sentence: 'Sie fliegen ein Flugzeug.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  76, sentence: 'Sie probieren heute die Frucht.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  77, sentence: 'Sie halten eine Rede.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  78, sentence: 'Sie stehen heute in der Schlange.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  79, sentence: 'Sie knuddeln jetzt den Hund.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  80, sentence: 'Sie besuchen eine Frau.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  81, sentence: 'Sie rudern jetzt zum Ufer.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  82, sentence: 'Sie fällen einen Baum.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  83, sentence: 'Sie trinken einen Wein.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  84, sentence: 'Sie beginnen heute mit dem Text.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  85, sentence: 'Sie denken gerade an ihre Mutter.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  86, sentence: 'Sie mögen sehr spezielles Bier.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  87, sentence: 'Sie sehen eine Eule.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  88, sentence: 'Sie küssen eine Schauspielerin.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  89, sentence: 'Sie wollen eine Lösung.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  90, sentence: 'Sie überreden heute den Chef.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  91, sentence: 'Sie fliegen heute in die USA.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  92, sentence: 'Sie bestellen ein Sofa.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  93, sentence: 'Sie schälen eine Kartoffel.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  94, sentence: 'Sie hämmern heute gegen die Wand.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  95, sentence: 'Sie ziehen einen Zahn.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  96, sentence: 'Sie klopfen heute gegen das Tor.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  97, sentence: 'Sie zählen heute die Schafe.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  98, sentence: 'Sie baden immer in der Badewanne.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
+  { sentNum:  99, sentence: 'Sie bewundern nun das Gemälde.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
   { sentNum: 100, sentence: 'Sie zimmern eine Kommode.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
   { sentNum: 101, sentence: 'Sie streicheln eine Katze.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
   { sentNum: 102, sentence: 'Sie sprinten jetzt zur Halle.', sinn: 'ja', pol: 'aff', corrResp: prms.respKeys[0] },
@@ -824,31 +817,29 @@ const pic_stim = {
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
 
   let correctKey;
   if (dat.response !== null) {
     correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
   }
 
-  if (correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && rt > prms.tooFast && rt < prms.tooSlow) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
-    corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
+    corrCode: corrCode,
   });
-  prms.cTrl += 1;
 }
 
 const sent_stim = {
@@ -874,6 +865,7 @@ const sent_stim = {
   },
   on_finish: function () {
     codeTrial();
+    prms.cTrl += 1;
   },
 };
 
@@ -938,6 +930,33 @@ const alphaNum = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                                Save                                //
+////////////////////////////////////////////////////////////////////////
+function save() {
+  const expName = getFileName();
+  const dirName = getDirName();
+  const vpNum = getTime();
+  const pcInfo = getComputerInfo();
+
+  jsPsych.data.addProperties({ vpNum: vpNum, pcInfo: pcInfo });
+
+  let fn = dirName + 'data/' + expName + '_' + vpNum;
+  saveData('/Common/write_data.php', fn, { stim: 'ButtonNegation' });
+
+  fn = dirName + 'interaction/' + expName + '_interaction_data_' + vpNum;
+  saveInteractionData('/Common/write_data.php', fn);
+
+  fn = dirName + 'code/' + expName;
+  saveRandomCode('/Common/write_code.php', fn, randomString);
+}
+
+const save_data = {
+  type: 'call-function',
+  func: save,
+  post_trial_gap: 1000,
+};
+
+////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
@@ -945,12 +964,14 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on);
-  exp.push(welcome_de);
-  exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
-  exp.push(hideMouseCursor);
+  exp.push(check_screen_size(canvas_size));
+  exp.push(fullscreen(true));
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
   exp.push(screenInfo);
+
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 
@@ -965,27 +986,19 @@ function genExpSeq() {
   exp.push(task_reminder); // show response mapping
   exp.push(trial_timeline4);
 
-  exp.push(debrief_de);
-  exp.push(showMouseCursor);
+  exp.push(save_data);
+  exp.push(end_message());
+  exp.push(mouseCursor(true));
   exp.push(alphaNum);
-  exp.push(fullscreen_off);
+  exp.push(fullscreen(false));
 
   return exp;
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + vpNum;
-const code_filename = dirName + 'code/' + expName;
-
 jsPsych.init({
   timeline: EXP,
-  show_progress_bar: false,
-  exclusions: {
-    min_width: canvas_size[0],
-    min_height: canvas_size[1],
-  },
-  on_finish: function () {
-    saveData('/Common/write_data.php', data_filename, { stim: 'PictureNegation' });
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
+  on_interaction_data_update: function (data) {
+    update_user_interaction_data(data);
   },
 });

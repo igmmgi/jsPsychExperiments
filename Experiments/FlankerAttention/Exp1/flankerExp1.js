@@ -63,19 +63,15 @@ const task_instructions = {
 const fixation_cross = {
   type: 'html-keyboard-response',
   stimulus: '<div style="font-size:60px;">+</div>',
-  choices: jsPsych.NO_KEYS,
+  response_ends_trial: false,
   trial_duration: prms.fixDur,
-  post_trial_gap: 0,
-  data: { stim: 'fixation_cross' },
 };
 
 const fixation_blank = {
   type: 'html-keyboard-response',
   stimulus: '<div style="font-size:60px;">&nbsp;</div>',
-  choices: jsPsych.NO_KEYS,
+  response_ends_trial: false,
   trial_duration: prms.fixDur,
-  post_trial_gap: 0,
-  data: { stim: 'fixation_blank' },
 };
 
 const flankers = [
@@ -88,31 +84,26 @@ const flankers = [
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+
   let corrCode = 0;
-  let rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
 
-  let correctKey;
-  if (dat.response !== null) {
-      correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
-  }
-
-  if (correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && (rt > prms.tooFast && rt < prms.tooSlow)) {
+  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
     corrCode = 2; // choice error
-  } else if (rt >= prms.tooSlow) {
+  } else if (dat.rt >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if (rt <= prms.tooFast) {
+  } else if (dat.rt <= prms.tooFast) {
     corrCode = 4; // too false
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    rt: rt,
     corrCode: corrCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
-  prms.cTrl += 1;
 }
 
 const flanker_stimulus = {
@@ -121,7 +112,6 @@ const flanker_stimulus = {
   trial_duration: prms.tooSlow,
   response_ends_trial: true,
   choices: prms.respKeys,
-  post_trial_gap: 0,
   data: {
     stimulus: 'flanker',
     fixation: jsPsych.timelineVariable('fix'),
@@ -138,6 +128,7 @@ const flanker_stimulus = {
       posx: document.documentElement.style.getPropertyValue('--posx'),
       posy: document.documentElement.style.getPropertyValue('--posy'),
     });
+    prms.cTrl += 1;
   },
 };
 
@@ -162,22 +153,25 @@ const block_feedback = {
   post_trial_gap: prms.waitDur,
 };
 
+// prettier-ignore
 const trial_timeline_fixation_cross = {
   timeline: [fixation_cross, flanker_stimulus, trial_feedback],
   timeline_variables: [
-    { flanker: flankers[0], fix: 1, comp: 'comp', dir: 'left', key: prms.respKeys[0] },
-    { flanker: flankers[1], fix: 1, comp: 'incomp', dir: 'left', key: prms.respKeys[0] },
-    { flanker: flankers[2], fix: 1, comp: 'comp', dir: 'right', key: prms.respKeys[1] },
+    { flanker: flankers[0], fix: 1, comp: 'comp',   dir: 'left',  key: prms.respKeys[0] },
+    { flanker: flankers[1], fix: 1, comp: 'incomp', dir: 'left',  key: prms.respKeys[0] },
+    { flanker: flankers[2], fix: 1, comp: 'comp',   dir: 'right', key: prms.respKeys[1] },
     { flanker: flankers[3], fix: 1, comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
   ],
+  randomize_order: true,
 };
 
+// prettier-ignore
 const trial_timeline_fixation_blank = {
   timeline: [fixation_blank, flanker_stimulus, trial_feedback],
   timeline_variables: [
-    { flanker: flankers[0], fix: 0, comp: 'comp', dir: 'left', key: prms.respKeys[0] },
-    { flanker: flankers[1], fix: 0, comp: 'incomp', dir: 'left', key: prms.respKeys[0] },
-    { flanker: flankers[2], fix: 0, comp: 'comp', dir: 'right', key: prms.respKeys[1] },
+    { flanker: flankers[0], fix: 0, comp: 'comp',   dir: 'left',  key: prms.respKeys[0] },
+    { flanker: flankers[1], fix: 0, comp: 'incomp', dir: 'left',  key: prms.respKeys[0] },
+    { flanker: flankers[2], fix: 0, comp: 'comp',   dir: 'right', key: prms.respKeys[1] },
     { flanker: flankers[3], fix: 0, comp: 'incomp', dir: 'right', key: prms.respKeys[1] },
   ],
   randomize_order: true,
@@ -219,7 +213,10 @@ function genExpSeq() {
     } else {
       blk_timeline = { ...trial_timeline_fixation_blank };
     }
-    blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4 };
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: blk === 0 ? prms.nTrlsP / 4 : prms.nTrlsE / 4,
+    };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
