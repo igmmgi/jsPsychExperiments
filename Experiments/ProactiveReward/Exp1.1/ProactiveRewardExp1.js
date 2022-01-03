@@ -1,5 +1,5 @@
 // Proactive Reward
-	
+
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
@@ -404,45 +404,45 @@ function codeTrial() {
 }
 
 function drawFeedback() {
-    'use strict';
-    let ctx = document.getElementById('canvas').getContext('2d');
-    let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = prms.fbSize;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'black';
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.fbSize;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
 
-    if (dat.reward === 'no_reward') {
-        if (dat.corrCode === 0) {
-            ctx.fillText('Richtig', 0, 0);
-        } else if (dat.corrCode === 1) {
-            ctx.fillText('Falsch!', 0, 0);
-        } else if (dat.corrCode === 2) {
-            ctx.fillText('Falsch!', 0, 0);
-            ctx.fillText('Keine Antwort!', 0, 25);
-        }
-    } else {
-        let imgnum = 1;
-        if ((dat.corrCode === 0) & dat.success) {
-            ctx.fillText('Richtig', 0, -70);
-            ctx.fillText('+10 Punkte!', 0, -45);
-            imgnum = 0;
-        } else if ((dat.corrCode === 0) & !dat.success) {
-            ctx.fillText('Richtig', 0, -70);
-        } else if (dat.corrCode === 1) {
-            ctx.fillText('Falsch!', 0, -70);
-        } else if (dat.corrCode === 2) {
-            ctx.fillText('Falsch!', 0, -70);
-            ctx.fillText('Keine Antwort!', 0, -45);
-        }
-
-        // draw image
-        // show a version of the treasure chest
-        const size = 4;
-        const width = images[imgnum].width;
-        const height = images[imgnum].height;
-        ctx.drawImage(images[imgnum], -width / size / 2, -height / size / 2 + 20, width / size, height / size);
+  if (dat.reward === 'no_reward') {
+    if (dat.corrCode === 0) {
+      ctx.fillText('Richtig', 0, 0);
+    } else if (dat.corrCode === 1) {
+      ctx.fillText('Falsch!', 0, 0);
+    } else if (dat.corrCode === 2) {
+      ctx.fillText('Falsch!', 0, 0);
+      ctx.fillText('Keine Antwort!', 0, 25);
     }
+  } else {
+    let imgnum = 1;
+    if ((dat.corrCode === 0) & dat.success) {
+      ctx.fillText('Richtig', 0, -70);
+      ctx.fillText('+10 Punkte!', 0, -45);
+      imgnum = 0;
+    } else if ((dat.corrCode === 0) & !dat.success) {
+      ctx.fillText('Richtig', 0, -70);
+    } else if (dat.corrCode === 1) {
+      ctx.fillText('Falsch!', 0, -70);
+    } else if (dat.corrCode === 2) {
+      ctx.fillText('Falsch!', 0, -70);
+      ctx.fillText('Keine Antwort!', 0, -45);
+    }
+
+    // draw image
+    // show a version of the treasure chest
+    const size = 4;
+    const width = images[imgnum].width;
+    const height = images[imgnum].height;
+    ctx.drawImage(images[imgnum], -width / size / 2, -height / size / 2 + 20, width / size, height / size);
+  }
 }
 
 const trial_feedback = {
@@ -740,7 +740,7 @@ function genExpSeq() {
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     let blk_timeline;
     if (blk_task[blk] === 'simon') {
-      if ((blk === 0) | (blk === 12)) {
+      if ((blk === 0) | (blk === prms.nBlks / 2)) {
         exp.push(task_instructions_simon);
       }
       if (blk_reward[blk] === 'reward') {
@@ -751,7 +751,7 @@ function genExpSeq() {
         blk_timeline = { ...trial_timeline_simon_no_reward };
       }
     } else if (blk_task[blk] === 'stroop') {
-      if ((blk === 0) | (blk === 12)) {
+      if ((blk === 0) | (blk === prms.nBlks / 2)) {
         exp.push(task_instructions_stroop);
       }
       if (blk_reward[blk] === 'reward') {
