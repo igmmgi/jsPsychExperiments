@@ -14,6 +14,10 @@ function debug_to_console($data)
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
+// Gains
+$nFiles_pr_v2 = numFilesInDir('Experiments/ProactiveReward/Exp1.2/data/version2');
+$nFiles_pr_v4 = numFilesInDir('Experiments/ProactiveReward/Exp1.2/data/version4');
+
 // PP_FreeChoice
 $nFiles_ppfc_v1 = numFilesInDir('Experiments/PP_FreeChoice/Exp1.3/data/version1');
 $nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1.3/data/version2');
@@ -96,6 +100,23 @@ $nFiles_nw_v4 = numFilesInDir('Experiments/NarrowWide/V2/data/version4');
 
             <h1>Experiments</h1>
             <h2>1,0 VP-Stunden</h2>
+
+            <?php
+            $pr1 = [];
+            if ($nFiles_pr_v2 < 20) {
+                array_push($pr1, 2);
+            }
+            if ($nFiles_pr_v4 < 20) {
+                array_push($pr1, 4);
+            }
+
+            $randIndex = array_rand($pr1);
+            $pr1_version = $pr1[$randIndex];
+            ?>
+
+            <?php if (!empty($pr1_version)) : ?>
+                <h3><a href="Experiments/ProactiveReward/Exp1.2/index.html?orderVersion=<?php echo $pr1_version; ?>">Gains Exp1 (n = <?= $nFiles_pr_v2 + $nFiles_pr_v4 ?>)</a></h3>
+            <?php endif;  ?>
 
             <?php
             $pp_fc1 = [];

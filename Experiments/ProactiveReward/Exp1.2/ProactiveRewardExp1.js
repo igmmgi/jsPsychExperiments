@@ -32,10 +32,10 @@ getComputerInfo();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsE: 44, // number of trials in each block
+  nTrlsE: 48, // number of trials in each block
   nBlks: 16, // number of blocks
   fixDur: 400,
-  fbDur: [1500, 2500, 2500],
+  fbDur: [1250, 2500, 2500],
   iti: 500,
   tooSlow: 3000,
   cTrl: 1, // count trials
