@@ -14,8 +14,8 @@ const jsPsych = initJsPsych({});
 const prms = {
   screenRes: [1280, 960],
   nTrlsP: 16, // number of trials in first block (practice)
-  nTrlsE: 32, // number of trials in subsequent blocks
-  nBlks: 4, // number of blocks
+  nTrlsE: 64, // number of trials in subsequent blocks
+  nBlks: 2, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 50, // size of fixation cross
   fbDur: [750, 1500, 1500, 1500], // duration of feedback for each type
@@ -210,6 +210,31 @@ const block_feedback = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                              VP Stun                               //
+////////////////////////////////////////////////////////////////////////
+const randomString = generateRandomString(16, 'fg1_');
+
+const alphaNum = {
+  type: jsPsychHtmlKeyboardResponse,
+  response_ends_trial: true,
+  choices: [' '],
+  stimulus: generate_formatted_html({
+    text:
+      `Vielen Dank für Ihre Teilnahme.<br><br>
+        Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
+        zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
+        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
+        an:<br><br>xxx@yyy<br><br> Code: ` +
+      randomString +
+      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
+    fontsize: 28,
+    lineheight: 1.0,
+    bold: true,
+    align: 'left',
+  }),
+};
+
+////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
 const dirName = getDirName();
@@ -220,8 +245,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const fn = `${dirName}data/${expName}_${vpNum}`;
-  // saveData('/Common/write_data.php', fn, { stim: 'flanker' });
-  saveDataLocal(fn, { stim: 'flanker' });
+  saveData('/Common/write_data.php', fn, { stim: 'flanker' });
+  // saveDataLocal(fn, { stim: 'flanker' });
 }
 
 const save_data = {
@@ -243,7 +268,7 @@ function genExpSeq() {
   exp.push(fullscreen(true));
   exp.push(resize_browser());
   exp.push(welcome_message());
-  // exp.push(vpInfoForm());
+  exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
@@ -258,8 +283,11 @@ function genExpSeq() {
   }
 
   exp.push(save_data);
-  exp.push(end_message());
+
+  // debrief
   exp.push(mouseCursor(true));
+  exp.push(alphaNum);
+  exp.push(end_message());
   exp.push(fullscreen(false));
 
   return exp;

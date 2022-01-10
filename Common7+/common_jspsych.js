@@ -216,7 +216,7 @@ function checkVpInfoForm(alert_language = 'en', alert_message = '') {
 
 function vpInfoForm(form = '/Common/vpInfoForm_de.html', alert_language = 'de', alert_message = '') {
   return {
-    type: 'external-html',
+    type: jsPsychExternalHtml,
     url: form,
     cont_btn: 'start',
     check_fn: function () {
