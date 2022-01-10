@@ -13,18 +13,18 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   screenRes: [1280, 960],
-  nTrlsP: 8, // number of trials in first block (practice)
-  nTrlsE: 16, // number of trials in subsequent blocks
-  nBlks: 1, // number of blocks
+  nTrlsP: 16, // number of trials in first block (practice)
+  nTrlsE: 32, // number of trials in subsequent blocks
+  nBlks: 4, // number of blocks
   fixDur: 500, // duration of fixation cross
-  fbDur: 750, // duration of feedback
+  fixSize: 50, // size of fixation cross
+  fbDur: [750, 1500, 1500, 1500], // duration of feedback for each type
   waitDur: 1000, // duration following ...
   iti: 750, // duration of inter-trial-interval
   tooFast: 150, // responses faster than x ms -> too fast!
   tooSlow: 2000, // response slower than x ms -> too slow!
   respKeys: ['Q', 'P'],
   target: shuffle(['Dashed', 'Dotted']),
-  stimWidth: 250,
   stimHeight: 250,
   fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnellt'],
   fbTxtSizeTrial: 30,
@@ -69,14 +69,22 @@ const task_instructions = {
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 const flankers = [
-  'images/dash-dash-noObject.png',
-  'images/dash-dash-object.png',
-  'images/dash-dot-noObject.png',
-  'images/dash-dot-object.png',
-  'images/dot-dash-noObject.png',
-  'images/dot-dash-object.png',
-  'images/dot-dot-noObject.png',
-  'images/dot-dot-object.png',
+  'images/dash-dash-noObject-far.png',
+  'images/dash-dash-noObject-near.png',
+  'images/dash-dash-Object-far.png',
+  'images/dash-dash-object-near.png',
+  'images/dash-dot-noObject-far.png',
+  'images/dash-dot-noObject-near.png',
+  'images/dash-dot-Object-far.png',
+  'images/dash-dot-object-near.png',
+  'images/dot-dash-noObject-far.png',
+  'images/dot-dash-noObject-near.png',
+  'images/dot-dash-Object-far.png',
+  'images/dot-dash-object-near.png',
+  'images/dot-dot-noObject-far.png',
+  'images/dot-dot-noObject-near.png',
+  'images/dot-dot-Object-far.png',
+  'images/dot-dot-object-near.png',
 ];
 
 const preload = {
@@ -86,14 +94,22 @@ const preload = {
 
 // prettier-ignore
 const trials = [
-  { flanker: flankers[0], type: "noObject", comp: "comp",   key: prms.target[0] === "Dashed" ? prms.respKeys[0] : prms.respKeys[1] },
-  { flanker: flankers[1], type: "object",   comp: "comp",   key: prms.target[0] === "Dahsed" ? prms.respKeys[0] : prms.respKeys[1] },
-  { flanker: flankers[2], type: "noObject", comp: "incomp", key: prms.target[0] === "Dahsed" ? prms.respKeys[0] : prms.respKeys[1] },
-  { flanker: flankers[3], type: "object",   comp: "incomp", key: prms.target[0] === "Dahsed" ? prms.respKeys[0] : prms.respKeys[1] },
-  { flanker: flankers[4], type: "noObject", comp: "comp",   key: prms.target[0] === "Dotted" ? prms.respKeys[0] : prms.respKeys[1] },
-  { flanker: flankers[5], type: "object",   comp: "comp",   key: prms.target[0] === "Dotted" ? prms.respKeys[0] : prms.respKeys[1] },
-  { flanker: flankers[6], type: "noObject", comp: "incomp", key: prms.target[0] === "Dotted" ? prms.respKeys[0] : prms.respKeys[1] },
-  { flanker: flankers[7], type: "object",   comp: "incomp", key: prms.target[0] === "Dotted" ? prms.respKeys[0] : prms.respKeys[1] },
+  { flanker: flankers[ 0], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
+  { flanker: flankers[ 1], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
+  { flanker: flankers[ 2], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
+  { flanker: flankers[ 3], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
+  { flanker: flankers[ 4], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
+  { flanker: flankers[ 5], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
+  { flanker: flankers[ 6], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
+  { flanker: flankers[ 7], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
+  { flanker: flankers[ 8], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[ 9], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[10], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[11], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[12], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[13], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[14], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[15], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
 ];
 
 ////////////////////////////////////////////////////////////////////////
@@ -101,7 +117,7 @@ const trials = [
 ////////////////////////////////////////////////////////////////////////
 const fixation_cross = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<div style="font-size:60px;">+</div>',
+  stimulus: `<div style="font-size:${prms.fixSize}px;">+</div>`,
   response_ends_trial: false,
   trial_duration: prms.fixDur,
 };
@@ -117,9 +133,10 @@ const trial_feedback = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '',
   response_ends_trial: false,
-  trial_duration: prms.fbDur,
+  trial_duration: null,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
     trial.stimulus = `<div style="font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]}</div>`;
   },
 };
@@ -128,6 +145,7 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  // console.log(dat);
 
   let corrCode = 0;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
@@ -155,11 +173,11 @@ const flanker_stimulus = {
   trial_duration: prms.tooSlow,
   response_ends_trial: true,
   stimulus_height: prms.stimHeight,
-  stimulus_width: prms.stimWidth,
   choices: prms.respKeys,
   render_on_canvas: false,
   data: {
     stim: 'flanker',
+    distance: jsPsych.timelineVariable('distance'),
     type: jsPsych.timelineVariable('type'),
     comp: jsPsych.timelineVariable('comp'),
     corrResp: jsPsych.timelineVariable('key'),
@@ -183,7 +201,7 @@ const block_feedback = {
   on_start: function (trial) {
     let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
     let text = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
-    trial.stimulus = `<div style="font-size:30px;">${text}</div>`;
+    trial.stimulus = `<div style="font-size:${prms.fbTxtSizeBlock}px;">${text}</div>`;
   },
   on_finish: function () {
     prms.cTrl = 1;
@@ -220,13 +238,13 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(browser_check(prms.screenRes));
-  // exp.push(preload);
-  // exp.push(fullscreen(true));
-  // exp.push(resize_browser());
-  // exp.push(welcome_message());
-  // // exp.push(vpInfoForm());
-  // exp.push(mouseCursor(false));
+  exp.push(browser_check(prms.screenRes));
+  exp.push(preload);
+  exp.push(fullscreen(true));
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  // exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {

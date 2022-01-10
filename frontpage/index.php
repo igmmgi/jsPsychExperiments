@@ -91,6 +91,7 @@ $nFiles_nw_v4 = numFilesInDir('Experiments/NarrowWide/V2/data/version4');
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
+            <p> Gains Exp1: hiwipibio@gmail.com </p>
             <p> Free Choice Race Exp1: sebastian.heins@student.uni-tuebingen.de</p>
             <p> Reward Exp2: hiwipibio@gmail.com </p>
             <p> Zonk Exp1: hiwipibio@gmail.com </p><br>
