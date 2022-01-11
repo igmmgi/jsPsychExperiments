@@ -13,6 +13,10 @@ function getFileName() {
   return name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'));
 }
 
+function baseFileName(file) {
+  return file.replace(/^.*[\\\/]/, '');
+}
+
 function pathJoin(parts, sep) {
   let separator = sep || '/';
   let replace = new RegExp(separator + '{1,}', 'g');
@@ -106,6 +110,17 @@ function repeatArray(a, n) {
 // Array mean
 function mean(array) {
   return array.reduce((acc, cur) => acc + cur) / array.length;
+}
+
+// Random selection of n items from x
+function randomSelection(x, n) {
+  out = [];
+  let randomIndex;
+  for (let i = 0; i < n; i++) {
+    idx = Math.floor(Math.random() * x.length);
+    out.push(x.splice(idx, 1)[0]);
+  }
+  return out;
 }
 
 // Deep copy of an object

@@ -15,7 +15,7 @@ const prms = {
   screenRes: [1280, 960],
   nTrlsP: 16, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
-  nBlks: 2, // number of blocks
+  nBlks: 5, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 50, // size of fixation cross
   fbDur: [750, 1500, 1500, 1500], // duration of feedback for each type
@@ -145,7 +145,8 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-  // console.log(dat);
+  console.log(dat.comp);
+  console.log(dat.distance);
 
   let corrCode = 0;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);

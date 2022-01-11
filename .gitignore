@@ -1,4 +1,10 @@
 .nvimlog
+*.jpg
+*.JPG
+*.bmp
+*.BMP
+*.png
+*.PNG
 *.csv
 .idea
 .directory

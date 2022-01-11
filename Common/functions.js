@@ -14,9 +14,9 @@ function getFileName() {
 }
 
 function pathJoin(parts, sep) {
-   let separator = sep || '/';
-   let replace = new RegExp(separator + '{1,}', 'g');
-   return parts.join(separator).replace(replace, separator);
+  let separator = sep || '/';
+  let replace = new RegExp(separator + '{1,}', 'g');
+  return parts.join(separator).replace(replace, separator);
 }
 
 function filterDataPavlovia(
