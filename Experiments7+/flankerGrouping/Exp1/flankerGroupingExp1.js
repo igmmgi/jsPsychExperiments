@@ -13,20 +13,20 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   screenRes: [1280, 960],
-  nTrlsP: 16, // number of trials in first block (practice)
+  nTrlsP: 32, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
-  nBlks: 5, // number of blocks
+  nBlks: 13, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 50, // size of fixation cross
-  fbDur: [750, 1500, 1500, 1500], // duration of feedback for each type
+  fbDur: [0, 1500, 1500, 1500], // duration of feedback for each type
   waitDur: 1000, // duration following ...
-  iti: 750, // duration of inter-trial-interval
+  iti: 500, // duration of inter-trial-interval
   tooFast: 150, // responses faster than x ms -> too fast!
-  tooSlow: 2000, // response slower than x ms -> too slow!
+  tooSlow: 50000, // response slower than x ms -> too slow!
   respKeys: ['Q', 'P'],
   target: shuffle(['Dashed', 'Dotted']),
-  stimHeight: 250,
-  fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnellt'],
+  stimHeight: 300,
+  fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
   fbTxtSizeBlock: 30,
   cTrl: 1, // count trials
@@ -269,7 +269,7 @@ function genExpSeq() {
   exp.push(fullscreen(true));
   exp.push(resize_browser());
   exp.push(welcome_message());
-  exp.push(vpInfoForm());
+  // exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
   exp.push(task_instructions);
 

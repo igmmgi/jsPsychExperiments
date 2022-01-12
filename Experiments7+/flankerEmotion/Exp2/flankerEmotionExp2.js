@@ -4,6 +4,8 @@
 
 const jsPsych = initJsPsych({});
 
+const stimHeight = Number(jsPsych.data.urlVariables().stimHeight);
+
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -12,16 +14,16 @@ const prms = {
   nBlks: 8, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 50, // size of fixation cross
-  fbDur: [750, 1500, 1500, 1500], // duration of feedback for each type
+  fbDur: [0, 1500, 1500, 1500], // duration of feedback for each type
   waitDur: 1000, // duration following ...
-  iti: 750, // duration of inter-trial-interval
+  iti: 500, // duration of inter-trial-interval
   tooFast: 150, // responses faster than x ms -> too fast!
   tooSlow: 2000, // response slower than x ms -> too slow!
   respKeys: ['Q', 'P'],
   target: shuffle(['neutrales', 'negatives']),
-  stimHeight: 250,
-  stimSpacing: 5,
-  fbTxt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnellt'],
+  stimHeight: stimHeight,
+  stimSpacing: 0,
+  fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
   fbTxtSizeBlock: 30,
   cTrl: 1, // count trials
@@ -64,11 +66,6 @@ Drücke eine beliebige Taste, um fortzufahren.`,
   }),
 };
 
-// Übungsblock
-// Bitte entscheide, ob du ein emotionales oder neutrales Gesicht siehst:
-// Positiver/negativer Smiley                  neutraler Smiley
-// (Q-Taste)                             (P-Taste)
-
 const task_instructions_key_mapping = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: generate_formatted_html({
@@ -81,6 +78,22 @@ Drücke eine beliebige Taste, um fortzufahren.`,
     colour: 'black',
     fontsize: 30,
   }),
+};
+
+const block_start = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: null,
+  on_start: function (trial) {
+    trial.stimulus = generate_formatted_html({
+      text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>
+    Zur Erinnerung:<br><br>
+"Q" = ${prms.target[0]} Gesicht &emsp; "P" = ${prms.target[1]} Gesicht<br><br>
+Drücke eine beliebige Taste, um fortzufahren.`,
+      align: 'left',
+      colour: 'black',
+      fontsize: 30,
+    });
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -148,7 +161,7 @@ function generateStimulusCombinations(dataset_neutral, dataset_negative, dataset
     tmp.database = dataset_name;
     if (flanker_type[i] === 'neutral_comp') {
       tmp.target = dataset_neutral[image_numbers[i]];
-      tmp.flanker = nimstim_neutral[image_numbers[i]];
+      tmp.flanker = dataset_neutral[image_numbers[i]];
       tmp.comp = 'comp';
       tmp.key = prms.respKeys[prms.target.indexOf('neutrales')];
     } else if (flanker_type[i] === 'neutral_incomp') {
@@ -258,7 +271,7 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-  console.log(dat);
+  // console.log(dat);
 
   let corrCode = 0;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
@@ -383,7 +396,7 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 //                              VP Stunden                            //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16, 'fg1_');
+const randomString = generateRandomString(16, 'fe1_');
 
 const alphaNum = {
   type: jsPsychHtmlKeyboardResponse,
@@ -418,11 +431,11 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${dirName}data/${expName}_${vpNum}`;
-  // saveData('/Common/write_data.php', data_fn, { stim: 'flanker' });
-  saveDataLocal(data_fn, { stim: 'flanker' });
+  saveData('/Common/write_data.php', data_fn, { stim: 'flanker' });
+  // saveDataLocal(data_fn, { stim: 'flanker' });
 
-  // const code_fn = `${dirName}code/${expName}`;
-  // saveRandomCode('/Common/write_code.php', code_fn, randomString);
+  const code_fn = `${dirName}code/${expName}`;
+  saveRandomCode('/Common/write_code.php', code_fn, randomString);
 }
 
 const save_data = {
@@ -444,13 +457,13 @@ function genExpSeq() {
   exp.push(fullscreen(true));
   exp.push(resize_browser());
   exp.push(welcome_message());
-  // exp.push(vpInfoForm());
+  exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 
-  // for (let blk = 0; blk < trial_timelines.length; blk += 1) {
-  for (let blk = 0; blk < 1; blk += 1) {
+  for (let blk = 0; blk < trial_timelines.length; blk += 1) {
+    exp.push(block_start);
     let blk_timeline = trial_timelines[blk];
     blk_timeline.sample = {
       type: 'fixed-repetitions',
