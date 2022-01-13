@@ -13,6 +13,16 @@ const example_items = shuffle([
 ]);
 
 // prettier-ignore
+const items_ambiguous = [
+  { type: 'ambiguous', probe: 'Absatz', target_rel_text: 'Buch', target_unrel_text: 'Hund', target_rel_img: pathJoin([image_directory, 'buch_rel.jpg']), target_unrel_img: pathJoin([image_directory, 'hund_unrel.jpg']), },
+];
+
+// prettier-ignore
+const items_unambiguous = [
+  { type: 'unambiguous', probe: 'Bibliothek', target_rel_text: 'Buch', target_unrel_text: 'Hund', target_rel_img: pathJoin([image_directory, 'buch_rel.jpg']), target_unrel_img: pathJoin([image_directory, 'hund_unrel.jpg']), },
+];
+
+// prettier-ignore
 const items = shuffle([
   { probe_amb: 'Absatz',     probe_unamb: 'Bibliothek',    target_rel_text: 'Buch',       target_unrel_text: 'Hund',          target_rel_img: pathJoin([image_directory, 'buch_rel.jpg']),         target_unrel_img: pathJoin([image_directory, 'hund_unrel.jpg']), },
   { probe_amb: 'Abzug',      probe_unamb: 'Kelle',         target_rel_text: 'Küche',      target_unrel_text: 'Wiese',         target_rel_img: pathJoin([image_directory, 'kuchenhaube_rel.jpg']),  target_unrel_img: pathJoin([image_directory, 'wiese_unrel.jpg']), },
