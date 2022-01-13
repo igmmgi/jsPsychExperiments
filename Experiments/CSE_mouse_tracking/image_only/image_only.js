@@ -34,8 +34,8 @@ const prms = {
   fixDur: 1000,
   stimPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
-  leftBox: [50, 50, 150, 100], // xpos, ypos, xsize, ysize
-  rightBox: [1230, 50, 150, 100], // xpos, ypos, xsize, ysize
+  leftBox: [75, 50, 150, 100], // xpos, ypos, xsize, ysize
+  rightBox: [1205, 50, 150, 100], // xpos, ypos, xsize, ysize
   leftImageAnchor: [300, 250],
   rightImageAnchor: [980, 250],
   keepFixation: false, // is fixation cross kept on screen with stimulus
@@ -344,19 +344,19 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen_on);
-  exp.push(check_screen);
-  exp.push(welcome_de);
-  exp.push(resize_de);
+  // exp.push(fullscreen_on);
+  // exp.push(check_screen);
+  // exp.push(welcome_de);
+  // exp.push(resize_de);
   // exp.push(vpInfoForm_de);
   exp.push(images);
-  exp.push(task_instructions);
+  // exp.push(task_instructions);
 
   // Run training block
   // exp.push(training_timeline);
 
   // Run example trials
-  exp.push(example_start);
+  // exp.push(example_start);
   exp.push(example_timeline);
 
   // Run real experiment
