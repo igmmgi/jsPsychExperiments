@@ -19,7 +19,7 @@ jsPsych.data.addProperties({ stimHeight: stimHeight, imageSet: imageSet });
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  screenRes: [1280, 960],
+  screenRes: [960, 720],
   nTrlsP: 32, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
   nBlks: 13, // number of blocks
@@ -273,9 +273,9 @@ function genExpSeq() {
 
   let exp = [];
 
+  exp.push(fullscreen(true));
   exp.push(browser_check(prms.screenRes));
   exp.push(preload);
-  exp.push(fullscreen(true));
   exp.push(resize_browser());
   exp.push(welcome_message());
   exp.push(vpInfoForm());

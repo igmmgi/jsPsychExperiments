@@ -41,6 +41,22 @@ function getTime() {
   return num.getTime();
 }
 
+function getPass(url) {
+  console.log('getPass');
+  let correct = false;
+  $.ajax({
+    url: url,
+    type: 'POST',
+    async: false,
+    data: {
+      password: password,
+    },
+  }).done(function () {
+    correct = password;
+  });
+  return correct;
+}
+
 // Generate a random string with optional pre-fix
 function generateRandomString(length, prefix = '') {
   let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

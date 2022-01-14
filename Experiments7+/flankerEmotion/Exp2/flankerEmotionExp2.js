@@ -10,7 +10,7 @@ const stimHeight = Number(jsPsych.data.urlVariables().stimHeight);
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  screenRes: [1280, 960],
+  screenRes: [960, 720],
   nBlks: 8, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 50, // size of fixation cross
@@ -452,12 +452,12 @@ function genExpSeq() {
 
   let exp = [];
 
+  exp.push(fullscreen(true));
   exp.push(browser_check(prms.screenRes));
   exp.push(preload);
-  exp.push(fullscreen(true));
   exp.push(resize_browser());
   exp.push(welcome_message());
-  exp.push(vpInfoForm());
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de_copyright.html'));
   exp.push(mouseCursor(false));
   exp.push(task_instructions1);
   exp.push(task_instructions2);

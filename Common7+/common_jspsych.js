@@ -10,6 +10,21 @@ function filterDataPavlovia(
   }
 }
 
+function password(psw) {
+  console.log(psw);
+  let correct = false;
+  $.ajax({
+    url: '/Common7+/password.php',
+    type: 'POST',
+    async: false,
+    data: { password: psw },
+  }).done(function (data) {
+    correct = data;
+  });
+  console.log(correct);
+  return correct;
+}
+
 function saveData(
   url,
   filename,
@@ -214,7 +229,7 @@ function checkVpInfoForm(alert_language = 'en', alert_message = '') {
   }
 }
 
-function vpInfoForm(form = '/Common/vpInfoForm_de.html', alert_language = 'de', alert_message = '') {
+function vpInfoForm(form = '/Common7+/vpInfoForm_de.html', alert_language = 'de', alert_message = '') {
   return {
     type: jsPsychExternalHtml,
     url: form,

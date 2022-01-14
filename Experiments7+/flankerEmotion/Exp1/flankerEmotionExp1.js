@@ -10,7 +10,7 @@ const stimHeight = Number(jsPsych.data.urlVariables().stimHeight);
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  screenRes: [1280, 960],
+  screenRes: [960, 720],
   nBlks: 8, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 50, // size of fixation cross
@@ -421,6 +421,19 @@ const alphaNum = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                                Pass                                //
+////////////////////////////////////////////////////////////////////////
+const pass_data = {
+  type: jsPsychExternalHtml,
+  url: '/Common7+/password.html',
+  cont_btn: 'start',
+  check_fn: function () {
+    password('ian');
+  },
+  post_trial_gap: 1000,
+};
+
+////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
 const dirName = getDirName();
@@ -452,34 +465,36 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(browser_check(prms.screenRes));
-  exp.push(preload);
-  exp.push(fullscreen(true));
-  exp.push(resize_browser());
-  exp.push(welcome_message());
-  exp.push(vpInfoForm());
-  exp.push(mouseCursor(false));
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
+  exp.push(pass_data);
 
-  for (let blk = 0; blk < trial_timelines.length; blk += 1) {
-    exp.push(block_start);
-    let blk_timeline = trial_timelines[blk];
-    blk_timeline.sample = {
-      type: 'fixed-repetitions',
-      size: 1,
-    };
-    exp.push(blk_timeline); // trials within a block
-    exp.push(block_feedback); // show previous block performance
-  }
+  // exp.push(fullscreen(true));
+  // exp.push(browser_check(prms.screenRes));
+  // exp.push(preload);
+  // exp.push(resize_browser());
+  // exp.push(welcome_message());
+  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de_copyright.html'));
+  // exp.push(mouseCursor(false));
+  // exp.push(task_instructions1);
+  // exp.push(task_instructions2);
 
-  exp.push(save_data);
+  // for (let blk = 0; blk < trial_timelines.length; blk += 1) {
+  //   exp.push(block_start);
+  //   let blk_timeline = trial_timelines[blk];
+  //   blk_timeline.sample = {
+  //     type: 'fixed-repetitions',
+  //     size: 1,
+  //   };
+  //   exp.push(blk_timeline); // trials within a block
+  //   exp.push(block_feedback); // show previous block performance
+  // }
 
-  // debrief
-  exp.push(mouseCursor(true));
-  exp.push(alphaNum);
-  exp.push(end_message());
-  exp.push(fullscreen(false));
+  // exp.push(save_data);
+
+  // // debrief
+  // exp.push(mouseCursor(true));
+  // exp.push(alphaNum);
+  // exp.push(end_message());
+  // exp.push(fullscreen(false));
 
   return exp;
 }

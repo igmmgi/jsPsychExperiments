@@ -5,4 +5,3 @@ function numFilesInDir($directory) {
 }
 $numFiles = numFilesInDir($_POST["dir"]);
 echo $numFiles;
-?>
