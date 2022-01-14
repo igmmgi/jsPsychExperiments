@@ -355,7 +355,9 @@ jsPsych.plugins['mouse-box-response'] = (function () {
       if (draw_response_text) {
         ctx.textAlign = 'center';
         ctx.fillStyle = trial.stimulus_colour;
+        ctx.textAlign = 'left';
         ctx.fillText(trial.left_box_text, left_responsebox.w, left_responsebox.y + left_responsebox.h * 1.5);
+        ctx.textAlign = 'right';
         ctx.fillText(
           trial.right_box_text,
           trial.canvas_size[0] - right_responsebox.w,
@@ -366,6 +368,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
       // fixation cross
       if (draw_fixation) {
         ctx.fillStyle = trial.stimulus_colour;
+        ctx.textAlign = 'center';
         ctx.fillText('+', trial.fixation_position[0], trial.fixation_position[1]);
         jsPsych.pluginAPI.setTimeout(function () {
           draw_fixation = trial.keep_fixation;
@@ -395,6 +398,7 @@ jsPsych.plugins['mouse-box-response'] = (function () {
       // draw stimulus
       if (draw_stimulus) {
         ctx.fillStyle = trial.stimulus_colour;
+        ctx.textAlign = 'center';
         ctx.fillText(trial.stimulus, trial.stimulus_position[0], trial.stimulus_position[1]);
       }
     }

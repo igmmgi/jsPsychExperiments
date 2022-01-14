@@ -115,7 +115,7 @@ function mean(array) {
 // Random selection of n items from x
 function randomSelection(x, n) {
   out = [];
-  let randomIndex;
+  let idx;
   for (let i = 0; i < n; i++) {
     idx = Math.floor(Math.random() * x.length);
     out.push(x.splice(idx, 1)[0]);

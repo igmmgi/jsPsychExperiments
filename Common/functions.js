@@ -437,6 +437,17 @@ function shuffle(array) {
   return array;
 }
 
+// Random selection of n items from x
+function randomSelection(x, n) {
+  out = [];
+  let idx;
+  for (let i = 0; i < n; i++) {
+    idx = Math.floor(Math.random() * x.length);
+    out.push(x.splice(idx, 1)[0]);
+  }
+  return out;
+}
+
 // https://stackoverflow.com/questions/3895478/does-javascript-have-a-method-like-range-to-generate-a-range-within-the-supp
 function range(start, stop, step = 1) {
   return Array(Math.ceil((stop - start) / step))

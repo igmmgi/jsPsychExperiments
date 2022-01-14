@@ -9,10 +9,10 @@
 const jsPsych = initJsPsych({});
 
 // for piloting
-// imageset1 = Material-neu
-// imageset2 = stimulus-material-resized
-const stimHeight = 500; //Number(jsPsych.data.urlVariables().stimHeight);
-const imageSet = 1; //Number(jsPsych.data.urlVariables().imageSet);
+// imageset1 = stimulus-h-s
+// imageset2 = stimulus-h-s-far
+const stimHeight = Number(jsPsych.data.urlVariables().stimHeight);
+const imageSet = Number(jsPsych.data.urlVariables().imageSet);
 jsPsych.data.addProperties({ stimHeight: stimHeight, imageSet: imageSet });
 
 ////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@ const prms = {
   tooFast: 150, // responses faster than x ms -> too fast!
   tooSlow: 2000, // response slower than x ms -> too slow!
   respKeys: ['Q', 'P'],
-  target: shuffle(['Dashed', 'Dotted']),
+  target: shuffle(['H', 'S']),
   stimHeight: stimHeight,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
@@ -55,7 +55,7 @@ const task_instructions = {
       bold: true,
     }) +
     generate_formatted_html({
-      text: 'Respond to the line type (dashed/dotted) of the central vertical line.',
+      text: 'Respond to letter identity (H/S) of the central letter.',
       align: 'left',
       color: 'black',
       fontsize: 40,
@@ -94,6 +94,8 @@ const flankers = [
   `images${imageSet}/dot-dot-Object-near.png`,
 ];
 
+console.log(flankers);
+
 const preload = {
   type: jsPsychPreload,
   images: flankers,
@@ -101,22 +103,22 @@ const preload = {
 
 // prettier-ignore
 const trials = [
-  { flanker: flankers[ 0], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 1], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 2], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 3], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 4], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 5], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 6], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 7], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 8], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[ 9], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[10], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[11], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[12], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[13], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[14], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[15], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[ 0], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("S")] },
+  { flanker: flankers[ 1], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("S")] },
+  { flanker: flankers[ 2], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("S")] },
+  { flanker: flankers[ 3], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("S")] },
+  { flanker: flankers[ 4], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("S")] },
+  { flanker: flankers[ 5], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("S")] },
+  { flanker: flankers[ 6], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("S")] },
+  { flanker: flankers[ 7], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("S")] },
+  { flanker: flankers[ 8], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("H")] },
+  { flanker: flankers[ 9], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("H")] },
+  { flanker: flankers[10], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("H")] },
+  { flanker: flankers[11], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("H")] },
+  { flanker: flankers[12], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("H")] },
+  { flanker: flankers[13], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("H")] },
+  { flanker: flankers[14], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("H")] },
+  { flanker: flankers[15], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("H")] },
 ];
 
 ////////////////////////////////////////////////////////////////////////
@@ -276,7 +278,7 @@ function genExpSeq() {
   exp.push(fullscreen(true));
   exp.push(resize_browser());
   exp.push(welcome_message());
-  // exp.push(vpInfoForm());
+  exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
   exp.push(task_instructions);
 

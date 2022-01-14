@@ -42,7 +42,7 @@ const prms = {
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxesImage: [false, true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
-  boxLineWidth: 2, // linewidth of the start/target boxes
+  boxLineWidth: 4, // linewidth of the start/target boxes
   requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
   requireMousePressFinish: false, // is mouse button press inside response box required to end trial?
   stimFont: '50px arial',
@@ -92,10 +92,29 @@ function codeTrial() {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
+const task_instructions = {
+  type: 'html-keyboard-response',
+  stimulus:
+    "<H1 style = 'text-align: left;'> BITTE NUR TEILNEHMEN, WENN EINE  </H1>" +
+    "<H1 style = 'text-align: left;'> COMPUTERMAUS ZUR VERFÜGUNG STEHT! </H1> <br>" +
+    "<H2 style = 'text-align: left;'> Lieber Teilnehmer/ Liebe Teilnehmerin,  </H2> <br>" +
+    "<H3 style = 'text-align: left;'> In diesem Experiment sehen Sie in jedem Durchgang drei Quadrate und zwei Bilder. </H3>" +
+    "<H3 style = 'text-align: left;'> Um den Durchgang zu starten, klicken Sie auf das Quadrat unten in der Mitte. </H3>" +
+    "<H3 style = 'text-align: left;'> Danach erscheint ein Wort auf dem Bildschirm </H3> <br>" +
+    "<H3 style = 'text-align: left;'> Ihre Aufgabe ist es, das Bild auszuwählen, das am besten zu dem Wort passt oder mit ihm in  </H3>" +
+    "<H3 style = 'text-align: left;'> Zusammenhang steht, und den Mauszeiger in das zugehörige Quadrat zu bewegen.  </H3>" +
+    "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich. </H3>" +
+    "<H3 style = 'text-align: left;'> Zuerst folgt ein Übungsblock, in dem Sie zusätzlich Feedback zu Ihren Antworten erhalten. </H3>" +
+    "<H3 style = 'text-align: left;'> Im ersten Teil Übungsblocks sind noch keine Bilder zu sehen.</H3>" +
+    "<H3 style = 'text-align: left;'> Reagieren Sie nur auf die Anweisung die nach klicken des Quadrats erscheint.</H3>" +
+    "<h3 style = 'text-align: center;'> Drücken Sie eine beliebige Taste, um fortzufahren! </h3>",
+  post_trial_gap: prms.waitDur,
+};
+
 const example_start = {
   type: 'html-keyboard-response',
   stimulus:
-    "<H1 style = 'text-align: center;'> Jetzt kommen Bilder dazu. So wird das eigentliche Experiment später aussehen.</H1>" +
+    "<H2 style = 'text-align: center;'> Jetzt kommen Bilder dazu. So wird das eigentliche Experiment später aussehen.</H2>" +
     "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
   post_trial_gap: prms.waitDur,
   on_start: function () {
@@ -120,52 +139,53 @@ const exp_start = {
   },
 };
 
-const task_instructions = {
-  type: 'html-keyboard-response',
-  stimulus:
-    "<H1 style = 'text-align: left;'> BITTE NUR TEILNEHMEN, WENN EINE  </H1>" +
-    "<H1 style = 'text-align: left;'> COMPUTERMAUS ZUR VERFÜGUNG STEHT! </H1> <br>" +
-    "<H2 style = 'text-align: left;'> Lieber Teilnehmer/ Liebe Teilnehmerin,  </H2> <br>" +
-    "<H3 style = 'text-align: left;'> In diesem Experiment sehen Sie in jedem Durchgang drei Quadrate und zwei Bilder. </H3>" +
-    "<H3 style = 'text-align: left;'> Um den Durchgang zu starten, klicken Sie auf das Quadrat unten in der Mitte. </H3>" +
-    "<H3 style = 'text-align: left;'> Danach erscheint ein Wort auf dem Bildschirm </H3> <br>" +
-    "<H3 style = 'text-align: left;'> Ihre Aufgabe ist es, das Bild auszuwählen, das am besten zu dem Wort passt oder mit ihm in  </H3>" +
-    "<H3 style = 'text-align: left;'> Zusammenhang steht, und den Mauszeiger in das zugehörige Quadrat zu bewegen.  </H3>" +
-    "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich. </H3>" +
-    "<H3 style = 'text-align: left;'> Zuerst folgt ein Übungsblock, in dem Sie zusätzlich Feedback zu Ihren Antworten erhalten. </H3>" +
-    "<H3 style = 'text-align: left;'> Im ersten Teil Übungsblocks sind noch keine Bilder zu sehen.</H3>" +
-    "<H3 style = 'text-align: left;'> Reagieren Sie nur auf die Anweisung die nach klicken des Quadrats erscheint.</H3>" +
-    "<h3 style = 'text-align: center;'> Drücken Sie eine beliebige Taste, um fortzufahren! </h3>",
-  post_trial_gap: prms.waitDur,
-};
-
 ////////////////////////////////////////////////////////////////////////
 //               Stimuli/Timelines                                    //
 ////////////////////////////////////////////////////////////////////////
-function stimuli_factory(items) {
+function stimuli_factory(items_ambiguous, items_unambiguous) {
+  item_numbers_ambiguous = randomSelection(range(0, items_ambiguous.length), items_ambiguous.length / 2);
+  item_numbers_unambiguous = range(0, items_unambiguous.length).filter((x) => !item_numbers_ambiguous.includes(x));
+  // console.log(item_numbers_ambiguous);
+  // console.log(item_numbers_unambiguous);
+
   let stimuli = [];
-  for (const s of items) {
+  let correct_side;
+  correct_side = shuffle(repeatArray(['left', 'right'], items_ambiguous.length / 2));
+  for (let idx of item_numbers_ambiguous) {
     let stimulus = {};
-    // randomly position targets left or right
-    if (Math.random() < 0.5) {
-      stimulus.right = s.target_rel_img;
-      stimulus.left = s.target_unrel_img;
+    stimulus.probe_type = items_ambiguous[idx].type;
+    stimulus.probe = items_ambiguous[idx].probe;
+    if (correct_side[idx] === 'right') {
+      stimulus.right = items_ambiguous[idx].target_rel_img;
+      stimulus.left = items_ambiguous[idx].target_unrel_img;
       stimulus.correct_side = 'right';
     } else {
-      stimulus.right = s.target_unrel_img;
-      stimulus.left = s.target_rel_img;
+      stimulus.right = items_ambiguous[idx].target_unrel_img;
+      stimulus.left = items_ambiguous[idx].target_rel_img;
       stimulus.correct_side = 'left';
-    }
-    // randomly select probe type
-    if (Math.random() < 0.5) {
-      stimulus.probe = s.probe_amb;
-      stimulus.probe_type = 'ambiguous';
-    } else {
-      stimulus.probe = s.probe_unamb;
-      stimulus.probe_type = 'unambiguous';
     }
     stimuli.push(stimulus);
   }
+
+  correct_side = shuffle(repeatArray(['left', 'right'], items_unambiguous.length / 2));
+  for (let idx of item_numbers_unambiguous) {
+    let stimulus = {};
+    stimulus.probe_type = items_unambiguous[idx].type;
+    stimulus.probe = items_unambiguous[idx].probe;
+    if (correct_side[idx] === 'right') {
+      stimulus.right = items_unambiguous[idx].target_rel_img;
+      stimulus.left = items_unambiguous[idx].target_unrel_img;
+      stimulus.correct_side = 'right';
+    } else {
+      stimulus.right = items_unambiguous[idx].target_unrel_img;
+      stimulus.left = items_unambiguous[idx].target_rel_img;
+      stimulus.correct_side = 'left';
+    }
+    stimuli.push(stimulus);
+  }
+
+  stimuli = shuffle(stimuli);
+  // console.log(stimuli);
   return stimuli;
 }
 
@@ -175,9 +195,10 @@ const training_stimuli = [
     { probe: 'Nach rechts', target_rel_text: '', probe_type: null, correct_side: 'right'},
   ];
 
-const example_stimuli = stimuli_factory(example_items);
-const exp_stimuli = stimuli_factory(items);
+const example_stimuli = stimuli_factory(example_items_ambiguous, example_items_unambiguous);
+const exp_stimuli = stimuli_factory(items_ambiguous, items_unambiguous);
 
+// images
 function image_array(x) {
   'use strict';
   let images = [];
@@ -188,12 +209,16 @@ function image_array(x) {
   return images;
 }
 
-const image_list = image_array(exp_stimuli);
-
-const images = {
+const images_example = {
   type: 'preload',
   auto_preload: true,
-  images: image_list,
+  images: image_array(example_stimuli),
+};
+
+const images_exp = {
+  type: 'preload',
+  auto_preload: true,
+  images: image_array(exp_stimuli),
 };
 
 const trial_stimulus = {
@@ -282,7 +307,7 @@ const exp_timeline = {
 };
 
 // For VP Stunden
-const randomString = generateRandomString(16);
+const randomString = generateRandomStringWithExpName('csemi_', 16);
 
 // TODO: Change thanks
 const alphaNum = {
@@ -316,7 +341,7 @@ const save_data = {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data_json.php', data_filename, { stim_type: 'cse_mouse_tracking' }, 'json');
   },
-  timing_post_trial: 1000,
+  timing_post_trial: 2000,
 };
 
 const save_interaction_data = {
@@ -344,19 +369,20 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen_on);
-  // exp.push(check_screen);
-  // exp.push(welcome_de);
-  // exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
-  exp.push(images);
-  // exp.push(task_instructions);
+  exp.push(fullscreen_on);
+  exp.push(check_screen);
+  exp.push(welcome_de);
+  exp.push(resize_de);
+  exp.push(vpInfoForm_de);
+  exp.push(images_example);
+  exp.push(images_exp);
+  exp.push(task_instructions);
 
   // Run training block
-  // exp.push(training_timeline);
+  exp.push(training_timeline);
 
   // Run example trials
-  // exp.push(example_start);
+  exp.push(example_start);
   exp.push(example_timeline);
 
   // Run real experiment

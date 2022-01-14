@@ -34,16 +34,14 @@ const prms = {
   fixDur: 500,
   stimPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
   startBox: [canvas_size[0] / 2, canvas_size[1] * 0.9, 50, 50], // xpos, ypos, xsize, ysize
-  leftBox: [50, 50, 150, 100], // xpos, ypos, xsize, ysize
-  rightBox: [1230, 50, 150, 100], // xpos, ypos, xsize, ysize
-  leftTextAnchor: [300, 200, 50, 50], // xpos, ypos, xsize, ysize
-  rightTextAnchor: [980, 200, 50, 50], // xpos, ypos, xsize, ysize
+  leftBox: [75, 50, 150, 100], // xpos, ypos, xsize, ysize
+  rightBox: [1205, 50, 150, 100], // xpos, ypos, xsize, ysize
   keepFixation: false, // is fixation cross kept on screen with stimulus
   drawStartBox: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxes: [true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseBoxesText: [false, true, true, true], // draw response boxes at trial initiation, fixation cross, and response execution stages
   drawResponseText: true, // draw response text
-  boxLineWidth: 2, // linewidth of the start/target boxes
+  boxLineWidth: 4, // linewidth of the start/target boxes
   requireMousePressStart: true, // is mouse button press inside start box required to initiate trial?
   requireMousePressFinish: false, // is mouse button press inside response box required to end trial?
   stimFont: '50px arial',
@@ -93,10 +91,29 @@ function codeTrial() {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
+const task_instructions = {
+  type: 'html-keyboard-response',
+  stimulus:
+    "<H1 style = 'text-align: left;'> BITTE NUR TEILNEHMEN, WENN EINE  </H1>" +
+    "<H1 style = 'text-align: left;'> COMPUTERMAUS ZUR VERFÜGUNG STEHT </H1> <br>" +
+    "<H2 style = 'text-align: left;'> Lieber Teilnehmer/ Liebe Teilnehmerin,  </H2> <br>" +
+    "<H3 style = 'text-align: left;'> In diesem Experiment sehen Sie in jedem Durchgang drei Quadrate und zwei Wörter. </H3>" +
+    "<H3 style = 'text-align: left;'> Um den Durchgang zu starten, klicken Sie auf das Quadrat unten in der Mitte.  </H3>" +
+    "<H3 style = 'text-align: left;'> Danach erscheint ein weiteres Wort auf dem Bildschirm.  </H3> <br>" +
+    "<H3 style = 'text-align: left;'> Ihre Aufgabe ist es, das Wort auszuwählen, welches am besten zu dem neuen Wort passt oder mit </H3>" +
+    "<H3 style = 'text-align: left;'> ihm in Zusammenhang steht, und den Mauszeiger in das zugehörige Quadrat zu bewegen.  </H3>" +
+    "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich. </H3>" +
+    "<H3 style = 'text-align: left;'> Zuerst folgt ein Übungsblock, in dem Sie zusätzlich Feedback zu Ihren Antworten erhalten. </H3>" +
+    "<H3 style = 'text-align: left;'> Im ersten Teil Übungsblocks sind die beiden Wörter noch nicht zu sehen.</H3>" +
+    "<H3 style = 'text-align: left;'> Reagieren Sie nur auf die Anweisung die nach klicken des Quadrats erscheint.</H3>" +
+    "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren! </H3>",
+  post_trial_gap: prms.waitDur,
+};
+
 const example_start = {
   type: 'html-keyboard-response',
   stimulus:
-    "<H1 style = 'text-align: center;'> Jetzt kommen die beiden Wörter dazu. So wird das eigentliche Experiment später aussehen.</H1>" +
+    "<H2 style = 'text-align: center;'> Jetzt kommen die beiden Wörter dazu. So wird das eigentliche Experiment später aussehen.</H2>" +
     "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
   post_trial_gap: prms.waitDur,
   on_start: function () {
@@ -131,58 +148,61 @@ const rating_start = {
   },
 };
 
-const task_instructions = {
-  type: 'html-keyboard-response',
-  stimulus:
-    "<H1 style = 'text-align: left;'> BITTE NUR TEILNEHMEN, WENN EINE  </H1>" +
-    "<H1 style = 'text-align: left;'> COMPUTERMAUS ZUR VERFÜGUNG STEHT </H1> <br>" +
-    "<H2 style = 'text-align: left;'> Lieber Teilnehmer/ Liebe Teilnehmerin,  </H2> <br>" +
-    "<H3 style = 'text-align: left;'> In diesem Experiment sehen Sie in jedem Durchgang drei Quadrate und zwei Wörter. </H3>" +
-    "<H3 style = 'text-align: left;'> Um den Durchgang zu starten, klicken Sie auf das Quadrat unten in der Mitte.  </H3>" +
-    "<H3 style = 'text-align: left;'> Danach erscheint ein weiteres Wort auf dem Bildschirm.  </H3> <br>" +
-    "<H3 style = 'text-align: left;'> Ihre Aufgabe ist es, das Wort auszuwählen, welches am besten zu dem neuen Wort passt oder mit </H3>" +
-    "<H3 style = 'text-align: left;'> ihm in Zusammenhang steht, und den Mauszeiger in das zugehörige Quadrat zu bewegen.  </H3>" +
-    "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich. </H3>" +
-    "<H3 style = 'text-align: left;'> Zuerst folgt ein Übungsblock, in dem Sie zusätzlich Feedback zu Ihren Antworten erhalten. </H3>" +
-    "<H3 style = 'text-align: left;'> Im ersten Teil Übungsblocks sind die beiden Wörter noch nicht zu sehen.</H3>" +
-    "<H3 style = 'text-align: left;'> Reagieren Sie nur auf die Anweisung die nach klicken des Quadrats erscheint.</H3>" +
-    "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren! </H3>",
-  post_trial_gap: prms.waitDur,
-};
-
 ////////////////////////////////////////////////////////////////////////
 //               Stimuli/Timelines                                    //
 ////////////////////////////////////////////////////////////////////////
-function stimuli_factory(items) {
+function stimuli_factory(items_ambiguous, items_unambiguous) {
+  item_numbers_ambiguous = randomSelection(range(0, items_ambiguous.length), items_ambiguous.length / 2);
+  item_numbers_unambiguous = range(0, items_unambiguous.length).filter((x) => !item_numbers_ambiguous.includes(x));
+  // console.log(item_numbers_ambiguous);
+  // console.log(item_numbers_unambiguous);
+
   let stimuli = [];
-  for (const s of items) {
+  let correct_side;
+  correct_side = shuffle(repeatArray(['left', 'right'], items_ambiguous.length / 2));
+  for (let idx of item_numbers_ambiguous) {
     let stimulus = {};
-    // randomly position targets left or right
-    if (Math.random() < 0.5) {
-      stimulus.right = s.target_rel_text;
-      stimulus.left = s.target_unrel_text;
+    stimulus.probe_type = items_ambiguous[idx].type;
+    stimulus.probe = items_ambiguous[idx].probe;
+    stimulus.probe_rating = items_unambiguous[idx].probe;
+    stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + items_unambiguous[idx].probe + '</H1>';
+    stimulus.probe_rating_word = items_unambiguous[idx].probe;
+    stimulus.probe_rating_type = 'unambiguous';
+    if (correct_side[idx] === 'right') {
+      stimulus.right = items_ambiguous[idx].target_rel_text;
+      stimulus.left = items_ambiguous[idx].target_unrel_text;
       stimulus.correct_side = 'right';
     } else {
-      stimulus.right = s.target_unrel_text;
-      stimulus.left = s.target_rel_text;
+      stimulus.right = items_ambiguous[idx].target_unrel_text;
+      stimulus.left = items_ambiguous[idx].target_rel_text;
       stimulus.correct_side = 'left';
-    }
-    // randomly select probe type
-    if (Math.random() < 0.5) {
-      stimulus.probe = s.probe_amb;
-      stimulus.probe_type = 'ambiguous';
-      stimulus.probe_rating = s.probe_unamb;
-      stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + s.probe_unamb + '</H1>';
-      stimulus.probe_rating_type = 'unambiguous';
-    } else {
-      stimulus.probe = s.probe_unamb;
-      stimulus.probe_type = 'unambiguous';
-      stimulus.probe_rating = s.probe_amb;
-      stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + s.probe_amb + ' </H1>';
-      stimulus.probe_rating_type = 'ambiguous';
     }
     stimuli.push(stimulus);
   }
+
+  correct_side = shuffle(repeatArray(['left', 'right'], items_unambiguous.length / 2));
+  for (let idx of item_numbers_unambiguous) {
+    let stimulus = {};
+    stimulus.probe_type = items_unambiguous[idx].type;
+    stimulus.probe = items_unambiguous[idx].probe;
+    stimulus.probe_rating = items_ambiguous[idx].probe;
+    stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + items_ambiguous[idx].probe + '</H1>';
+    stimulus.probe_rating_word = items_ambiguous[idx].probe;
+    stimulus.probe_rating_type = 'ambiguous';
+    if (correct_side[idx] === 'right') {
+      stimulus.right = items_unambiguous[idx].target_rel_text;
+      stimulus.left = items_unambiguous[idx].target_unrel_text;
+      stimulus.correct_side = 'right';
+    } else {
+      stimulus.right = items_unambiguous[idx].target_unrel_text;
+      stimulus.left = items_unambiguous[idx].target_rel_text;
+      stimulus.correct_side = 'left';
+    }
+    stimuli.push(stimulus);
+  }
+
+  stimuli = shuffle(stimuli);
+  console.log(stimuli);
   return stimuli;
 }
 
@@ -192,8 +212,8 @@ const training_stimuli = [
     { probe: 'Nach rechts', target_rel_text: '', probe_type: null, correct_side: 'right'},
   ];
 
-const example_stimuli = stimuli_factory(example_items);
-const exp_stimuli = stimuli_factory(items);
+const example_stimuli = stimuli_factory(example_items_ambiguous, example_items_unambiguous);
+const exp_stimuli = stimuli_factory(items_ambiguous, items_unambiguous);
 
 const trial_stimulus = {
   type: 'mouse-box-response',
@@ -245,15 +265,14 @@ const questions = [
 const trial_rating = {
   type: 'survey-likert',
   preamble: jsPsych.timelineVariable('probe_rating_label'),
+  name: jsPsych.timelineVariable('probe_rating_word'),
   questions: questions,
   scale_width: 600,
   button_label: 'Weiter',
   post_trial_gap: 500,
-  on_finish: function () {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    for (const [key, val] of Object.entries(dat.response)) {
-      jsPsych.data.addProperties({ [key]: val + 1 });
-    }
+  data: {
+    stim_type: 'cse_mouse_tracking_rating',
+    word: jsPsych.timelineVariable('probe_rating_word'),
   },
 };
 
@@ -309,7 +328,7 @@ const rating_timeline = {
 };
 
 // For VP Stunden
-const randomString = generateRandomString(16);
+const randomString = generateRandomStringWithExpName('csemt_', 16);
 
 // TODO: Change thanks
 const alphaNum = {
@@ -342,8 +361,10 @@ const save_data = {
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data_json.php', data_filename, { stim_type: 'cse_mouse_tracking' }, 'json');
+    let data_filename_rating = dirName + 'data_rating/' + expName + '_' + vpNum;
+    saveData('/Common/write_data_json.php', data_filename, { stim_type: 'cse_mouse_tracking_rating' }, 'json');
   },
-  timing_post_trial: 1000,
+  timing_post_trial: 2000,
 };
 
 const save_interaction_data = {
