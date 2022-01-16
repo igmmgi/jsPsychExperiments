@@ -246,16 +246,16 @@ function codeTrial() {
     (dat.key_press2 !== corrKeyNum2 && rt2 > prms.tooFast && rt2 < prms.tooSlow)
   ) {
     corrCode = 2; // choice error
-  } else if ((rt1 >= prms.tooSlow) | (rt2 >= prms.tooSlow)) {
+  } else if (rt2 >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if ((rt1 <= prms.tooFast) | (rt2 <= prms.tooFast)) {
-    corrCode = 4; // too fast
+  } else if (rt1 <= prms.tooFast) {
+    corrCode = 4; // too false
+  } else if (rt2 <= prms.tooFast) {
+    corrCode = 4; // too false
   }
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    key1: dat.key_press1,
-    key2: dat.key_press2,
     rt1: rt1,
     rt2: rt2,
     corrCode: corrCode,
@@ -263,9 +263,6 @@ function codeTrial() {
     trialNum: prms.cTrl,
   });
   prms.cTrl += 1;
-  if (dat.key_press === 27) {
-    jsPsych.endExperiment();
-  }
 }
 
 const trial_feedback = {
@@ -378,73 +375,18 @@ const prp_stimulus = {
   },
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, prp_stimulus, trial_feedback, iti],
   timeline_variables: [
-    {
-      arrow: prms.respArrows[0],
-      arrowDirection: 'left',
-      tone: prms.respTones[0],
-      soa: prms.soa[0],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[0],
-    },
-    {
-      arrow: prms.respArrows[1],
-      arrowDirection: 'right',
-      tone: prms.respTones[0],
-      soa: prms.soa[0],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[0],
-    },
-    {
-      arrow: prms.respArrows[0],
-      arrowDirection: 'left',
-      tone: prms.respTones[1],
-      soa: prms.soa[0],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[1],
-    },
-    {
-      arrow: prms.respArrows[1],
-      arrowDirection: 'right',
-      tone: prms.respTones[1],
-      soa: prms.soa[0],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[1],
-    },
-    {
-      arrow: prms.respArrows[0],
-      arrowDirection: 'left',
-      tone: prms.respTones[0],
-      soa: prms.soa[1],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[0],
-    },
-    {
-      arrow: prms.respArrows[1],
-      arrowDirection: 'right',
-      tone: prms.respTones[0],
-      soa: prms.soa[1],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[0],
-    },
-    {
-      arrow: prms.respArrows[0],
-      arrowDirection: 'left',
-      tone: prms.respTones[1],
-      soa: prms.soa[1],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[1],
-    },
-    {
-      arrow: prms.respArrows[1],
-      arrowDirection: 'right',
-      tone: prms.respTones[1],
-      soa: prms.soa[1],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[1],
-    },
+    { arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
+    { arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
+    { arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
+    { arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
+    { arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
+    { arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
+    { arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
+    { arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
   ],
 };
 
@@ -479,17 +421,17 @@ function genExpSeq() {
 
   exp.push(welcome_de_du_click);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);
   exp.push(task_instructions4);
 
-  // // Audio calibration routine
-  // exp.push(task_instructions5);
-  // for (let i = 0; i < audio_calibration.length; i++) {
-  //   exp.push(audio_calibration[i]);
-  // }
+  // Audio calibration routine
+  exp.push(task_instructions5);
+  for (let i = 0; i < audio_calibration.length; i++) {
+    exp.push(audio_calibration[i]);
+  }
 
   exp.push(fullscreen_on);
   exp.push(hideMouseCursor);
@@ -516,6 +458,8 @@ const code_filename = dirName + 'code/' + expName;
 jsPsych.init({
   timeline: EXP,
   preload_audio: audio,
+  // override_safe_mode: true,
+  // use_webaudio: true,
   exclusions: {
     min_width: cs[0],
     min_height: cs[1],

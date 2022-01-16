@@ -16,7 +16,8 @@ const dirName = getDirName();
 const vpNum = genVpNum();
 
 // version 1: Arrow --> Tone
-// taskOrder: PRP --> TaskSwitch --> PRP --> TaskSwitch ...
+// taskOrder 1: PRP --> TaskSwitch --> PRP --> TaskSwitch ...
+// taskOrder 2: TaskSwitch --> PRP --> TaskSwitch --> PRP ...
 const taskOrder = 1; // Number(jsPsych.data.urlVariables().taskOrder);
 jsPsych.data.addProperties({ version: 1, taskOrder: taskOrder });
 
@@ -64,7 +65,7 @@ const task_instructions1 = {
     "<h3 style='text-align: left;'>WICHTIG: In diesem Experiment wirst du auf Töne reagieren müssen.</h3>" +
     "<h3 style='text-align: left;'>Bitte stelle sicher, dass dein Computer/Laptop Sounds abspielen kann.</h3>" +
     "<h3 style='text-align: left;'>Du kannst gerne Kopfhörer vervenden.</h3><br>" +
-    "<h3 style='text-align: center;'>Wir bitten dich die ca. 25 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich die ca. 35 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -74,9 +75,7 @@ const task_instructions_prp2 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h2 style='text-align: center;'>Experiment:</h2>" +
-    "<h3 style='text-align: left;'>In diesem Experiment teil musst du in jedem Durchgang zwei Aufgaben bearbeiten.</h3>" +
-    "<h3 style='text-align: left;'>Jede Aufgabe wird mit einer Hand bearbeitet. </h3><br>" +
+    "<h3 style='text-align: left;'>In diesem Experiment teil musst du in jedem Durchgang ZWEI Aufgaben bearbeiten.</h3><br>" +
     "<h3 style='text-align: left;'>Aufgabe 1 = Mittelfinger: Bitte platziere hierzu deine Mittelfinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „Q“ und „P“.</h3><br>" +
     "<h3 style='text-align: left;'>Aufgabe 2 = Zeigefinger: Bitte platziere hierzu deine Zeigefinger </h3>" +
@@ -90,9 +89,9 @@ const task_instructions_prp3 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Pfeil reagieren.</h3>" +
-    "<h3 style='text-align: left;'>Nachdem du auf den Pfeil reagiert hast, musst du auf die </h3>" +
-    "<h3 style='text-align: left;'>Höhe des Tones reagieren: Reagiere wie folgt:</h3><br>" +
+    "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Pfeil reagieren. Nachdem du auf</h3>" +
+    "<h3 style='text-align: left;'>den Pfeil reagiert hast, musst du auf die Höhe des Tones reagiere.</h3>" +
+    "<h3 style='text-align: left;'>Reagiere wie folgt:</h3><br>" +
     "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelfinger</h3>" +
     "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
@@ -115,10 +114,10 @@ const task_instructions_prp4 = {
   canvas_border: cb,
   stimulus:
     "<h3 style='text-align: center;'>Bitte beachte: </h3>" +
-    "<h3 style='text-align: left;'> Bitte reagiere immer erst so schnell wie möglich auf die 1. Aufgabe </h3>" +
-    "<h3 style='text-align: left;'> sobald der Pfeil erscheint und erst anschliessend so schnell wie </h3>" +
-    "<h3 style='text-align: left;'> möglich auf die 2. Aufgabe. Das heißt warte nicht mit der Bearbeitung der </h3>" +
-    "<h3 style='text-align: left;'> 1. Aufgabe bis der Ton präsentiert wirt. </h3>",
+    "<h3 style='text-align: left;'>Bitte reagiere immer erst so schnell wie möglich auf die 1. Aufgabe </h3>" +
+    "<h3 style='text-align: left;'>sobald der Pfeil erscheint und erst anschliessend so schnell wie </h3>" +
+    "<h3 style='text-align: left;'>möglich auf die 2. Aufgabe. Das heißt warte nicht mit der Bearbeitung der </h3>" +
+    "<h3 style='text-align: left;'>1. Aufgabe bis der Ton präsentiert wirt. </h3>",
 };
 
 const task_instructions_ts2 = {
@@ -127,9 +126,8 @@ const task_instructions_ts2 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h2 style='text-align: center;'>Experiment:</h2>" +
-    "<h3 style='text-align: left;'>In diesem Experiment teil musst du in jedem Durchgang nur eins von zwei Aufgaben bearbeiten.</h3>" +
-    "<h3 style='text-align: left;'>Jede Aufgabe wird mit einer Hand bearbeitet. </h3><br>" +
+    "<h3 style='text-align: left;'>In diesem Experiment teil musst du in jedem Durchgang NUR eins von zwei </h3>" +
+    "<h3 style='text-align: left;'>Aufgaben bearbeiten.</h3><br>" +
     "<h3 style='text-align: left;'>Aufgabe 1 = Mittelfinger: Bitte platziere hierzu deine Mittelfinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „Q“ und „P“.</h3><br>" +
     "<h3 style='text-align: left;'>Aufgabe 2 = Zeigefinger: Bitte platziere hierzu deine Zeigefinger </h3>" +
@@ -143,8 +141,8 @@ const task_instructions_ts3 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: left;'>In jedem Durchgang musst du auf den Pfeil </h3>" +
-    "<h3 style='text-align: left;'>ODER Höhe des Tones reagieren: Reagiere wie folgt:.</h3>" +
+    "<h3 style='text-align: left;'>In jedem Durchgang musst du auf den Pfeil ODER Höhe des Tones reagieren.</h3>" +
+    "<h3 style='text-align: left;'>Reagiere wie folgt:.</h3>" +
     "<h3 style='text-align: center;'>Pfeilaufgabe: Mittelfinger</h3>" +
     "<h3 style='text-align: center;'>Tonaufgabe: Zeigfinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
@@ -166,12 +164,11 @@ const task_instructions_ts4 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: center;'>Bitte beachte: </h3>" +
     "<h3 style='text-align: left;'> Bitte reagiere immer erst so schnell und genau wie möglich. </h3>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
-const task_instructions5 = {
+const task_instructions_calibration = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: cc,
   canvas_size: cs,
@@ -236,7 +233,7 @@ const audio_calibration_high = {
 
 const audio_calibration = shuffle(new Array(10).fill([audio_calibration_low, audio_calibration_high]).flat());
 
-function drawFeedback() {
+function drawFeedbackPRP() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
@@ -263,6 +260,40 @@ function drawFeedback() {
     ctx.font = '20px monospace';
     ctx.fillText('("O-Taste")', 180, 180);
     ctx.fillText('("P-Taste")', 340, 180);
+  }
+}
+
+function drawFeedbackTS() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  let dat = jsPsych.data.get().last(1).values()[0];
+  ctx.font = prms.fbSize;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
+  ctx.fillText(prms.fbTxt[dat.corrCode - 1], 0, 0);
+
+  ctx.font = '20px monospace';
+  if (dat.corrCode !== 1) {
+    if (dat.task === 'tone') {
+      ctx.fillText('Tonaufgabe: Zeigfinger', 0, 50);
+      ctx.font = 'bold 20px monospace';
+      ctx.fillText('Tiefer Ton', -150, 100);
+      ctx.fillText('Hoher Ton', 150, 100);
+      ctx.font = '20px monospace';
+      ctx.fillText('("O-Taste")', -150, 130);
+      ctx.fillText('("P-Taste")', 150, 130);
+    } else if (dat.task === 'arrow') {
+      ctx.fillText('Pfeilaufgabe: Mittelfinger', 0, 50);
+      ctx.font = 'bold 20px monospace';
+      ctx.fillText(prms.respArrows[0], -150, 100);
+      ctx.font = '20px monospace';
+      ctx.fillText('("Q-Taste")', -150, 130);
+      ctx.fillText('("W-Taste")', 150, 130);
+      ctx.font = 'bold 20px monospace';
+      ctx.fillText(prms.respArrows[1], 150, 100);
+      ctx.font = '20px monospace';
+    }
   }
 }
 
@@ -298,16 +329,16 @@ function codeTrialPRP() {
     (dat.key_press2 !== corrKeyNum2 && rt2 > prms.tooFast && rt2 < prms.tooSlow)
   ) {
     corrCode = 2; // choice error
-  } else if ((rt1 >= prms.tooSlow) | (rt2 >= prms.tooSlow)) {
+  } else if (rt2 >= prms.tooSlow) {
     corrCode = 3; // too slow
-  } else if ((rt1 <= prms.tooFast) | (rt2 <= prms.tooFast)) {
-    corrCode = 4; // too fast
+  } else if (rt1 <= prms.tooFast) {
+    corrCode = 4; // too false
+  } else if (rt2 <= prms.tooFast) {
+    corrCode = 4; // too false
   }
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    key1: dat.key_press1,
-    key2: dat.key_press2,
     rt1: rt1,
     rt2: rt2,
     corrCode: corrCode,
@@ -327,18 +358,16 @@ function codeTrialTS() {
 
   if (dat.key_press1 === corrKeyNum1 && rt1 > prms.tooFast && rt1 < prms.tooSlow) {
     corrCode = 1; // correct
-  } else if ((dat.key_press1 !== corrKeyNum1 && rt1 > prms.tooFast && rt1 < prms.tooSlow)) {
+  } else if (dat.key_press1 !== corrKeyNum1 && rt1 > prms.tooFast && rt1 < prms.tooSlow) {
     corrCode = 2; // choice error
   } else if (rt1 >= prms.tooSlow) {
     corrCode = 3; // too slow
   } else if (rt1 <= prms.tooFast) {
-    corrCode = 4; // too fast
+    corrCode = 4; // too false
   }
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    key1: dat.key_press1,
-    key2: null,
     rt1: rt1,
     rt2: null,
     corrCode: corrCode,
@@ -348,17 +377,28 @@ function codeTrialTS() {
   prms.cTrl += 1;
 }
 
-
-
-
-const trial_feedback = {
+const trial_feedback_prp = {
   type: 'static-canvas-keyboard-response',
   canvas_colour: cc,
   canvas_size: cs,
   canvas_border: cb,
   translate_origin: true,
   response_ends_trial: false,
-  func: drawFeedback,
+  func: drawFeedbackPRP,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
+  },
+};
+
+const trial_feedback_ts = {
+  type: 'static-canvas-keyboard-response',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  translate_origin: true,
+  response_ends_trial: false,
+  func: drawFeedbackTS,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = prms.fbDur[dat.corrCode - 1];
@@ -375,7 +415,7 @@ const iti = {
   func: function () {},
 };
 
-function blockStartText() {
+function blockStartTextPRP() {
   'use strict';
   let blockStartTxt =
     '<H1>Block: ' +
@@ -385,6 +425,29 @@ function blockStartText() {
     '</H1><br>' +
     "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelfinger</h3>" +
     "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
+    "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
+    prms.respArrows[0] +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    'Tiefer Ton' +
+    '&emsp;&emsp;&emsp;&emsp;Hoher Ton' +
+    '&emsp;&emsp;&emsp;&emsp;' +
+    prms.respArrows[1] +
+    "<h3 style='text-align: left;'>" +
+    '&emsp;&emsp;&emsp;&emsp;("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
+    '</h3><br>' +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
+  return blockStartTxt;
+}
+
+function blockStartTextTS() {
+  'use strict';
+  let blockStartTxt =
+    '<H1>Block: ' +
+    prms.cBlk +
+    ' von ' +
+    prms.nBlks +
+    '</H1><br>' +
+    "<h3 style='text-align: center;'>Pfeilaufgabe (Mittelfinger) ODER Tonaufgabe (Zeigfinger)</h3>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
@@ -409,7 +472,7 @@ function blockEndText() {
   return blockEndTxt;
 }
 
-const block_start = {
+const block_start_prp = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: cc,
   canvas_size: cs,
@@ -417,7 +480,19 @@ const block_start = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = blockStartText();
+    trial.stimulus = blockStartTextPRP();
+  },
+};
+
+const block_start_ts = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: cc,
+  canvas_size: cs,
+  canvas_border: cb,
+  stimulus: '',
+  response_ends_trial: true,
+  on_start: function (trial) {
+    trial.stimulus = blockStartTextTS();
   },
 };
 
@@ -464,14 +539,14 @@ const prp_stimulus = {
 
 // prettier-ignore
 const trial_timeline_prp = {
-  timeline: [fixation_cross, prp_stimulus, trial_feedback, iti],
+  timeline: [fixation_cross, prp_stimulus, trial_feedback_prp, iti],
   timeline_variables: [
     { task: "prp", arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
-    { task: "prp", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] }, 
+    { task: "prp", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
     { task: "prp", arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
     { task: "prp", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
     { task: "prp", arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
-    { task: "prp", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] }, 
+    { task: "prp", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
     { task: "prp", arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] },
     { task: "prp", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
   ],
@@ -483,11 +558,9 @@ const task_switch_stimulus = {
   canvas_size: cs,
   canvas_border: cb,
   sound_stimulus: jsPsych.timelineVariable('tone'),
-  // sound_onset: jsPsych.timelineVariable('soa'),
   sound_onset: 0,
   trial_duration: prms.trialDuration,
   translate_origin: true,
-  // stimulus_onset: 0,
   stimulus_onset: 0,
   stimulus_duration: prms.trialDuration,
   response_ends_trial: true,
@@ -505,13 +578,13 @@ const task_switch_stimulus = {
     corrResp2: jsPsych.timelineVariable('corrResp2'),
   },
   on_start: function (trial) {
-      if (trial.data.task === "arrow") {
-          trial.stimulus_onset = 0;
-          trial.sound_onset = 10000; 
-      } else if (trial.data.task === "tone") {
-          trial.stimulus_onset = 10000;
-          trial.sound_onset = 0; 
-      }
+    if (trial.data.task === 'arrow') {
+      trial.stimulus_onset = 0;
+      trial.sound_onset = null;
+    } else if (trial.data.task === 'tone') {
+      trial.stimulus_onset = null;
+      trial.sound_onset = 0;
+    }
   },
   on_finish: function () {
     codeTrialTS();
@@ -520,16 +593,16 @@ const task_switch_stimulus = {
 
 // prettier-ignore
 const trial_timeline_task_switch = {
-  timeline: [fixation_cross, task_switch_stimulus, trial_feedback, iti],
+  timeline: [fixation_cross, task_switch_stimulus, trial_feedback_ts, iti],
   timeline_variables: [
     { task: "arrow", arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: null, corrResp1: prms.respKeys1[0], corrResp2: null },
-    { task: "arrow", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: null, corrResp1: prms.respKeys1[1], corrResp2: null }, 
+    { task: "arrow", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: null, corrResp1: prms.respKeys1[1], corrResp2: null },
     { task: "arrow", arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: null, corrResp1: prms.respKeys1[0], corrResp2: null },
     { task: "arrow", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: null, corrResp1: prms.respKeys1[1], corrResp2: null },
-    { task: "tone",  arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: null, corrResp1: prms.respKeys1[0], corrResp2: null },
-    { task: "tone",  arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: null, corrResp1: prms.respKeys1[1], corrResp2: null }, 
-    { task: "tone",  arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: null, corrResp1: prms.respKeys1[0], corrResp2: null },
-    { task: "tone",  arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: null, corrResp1: prms.respKeys1[1], corrResp2: null },
+    { task: "tone",  arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: null, corrResp1: prms.respKeys2[0], corrResp2: null },
+    { task: "tone",  arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: null, corrResp1: prms.respKeys2[0], corrResp2: null },
+    { task: "tone",  arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: null, corrResp1: prms.respKeys2[1], corrResp2: null },
+    { task: "tone",  arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: null, corrResp1: prms.respKeys2[1], corrResp2: null },
   ],
 };
 
@@ -544,7 +617,7 @@ const alphaNum = {
   choices: [32],
   stimulus:
     "<h3 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h3>" +
-    "<h3 style='text-align:left;'>Wenn Sie Versuchspersonenstunden (0,5) benötigen, kopieren Sie den </h3>" +
+    "<h3 style='text-align:left;'>Wenn Sie Versuchspersonenstunden (1,0) benötigen, kopieren Sie den </h3>" +
     "<h3 style='text-align:left;'>folgenden zufällig generierten Code und senden Sie diesen zusammen mit </h3>" +
     "<h3 style='text-align:left;'>Ihrer Matrikelnummer per Email an:</h3><br>" +
     '<h2>hiwipibio@gmail.com</h2>' +
@@ -562,22 +635,19 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(welcome_de_du_click);
-  // exp.push(resize_de_du);
-  // // exp.push(vpInfoForm_de);
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions_prp2);
-  // exp.push(task_instructions_prp3);
-  // exp.push(task_instructions_prp4);
+  exp.push(welcome_de_du_click);
+  exp.push(resize_de_du);
+  // exp.push(vpInfoForm_de);
+  exp.push(task_instructions1);
 
-  // // Audio calibration routine
-  // exp.push(task_instructions5);
-  // for (let i = 0; i < audio_calibration.length; i++) {
-  //   exp.push(audio_calibration[i]);
-  // }
+  // Audio calibration routine
+  exp.push(task_instructions_calibration);
+  for (let i = 0; i < audio_calibration.length; i++) {
+    exp.push(audio_calibration[i]);
+  }
 
-  // exp.push(fullscreen_on);
-  // exp.push(hideMouseCursor);
+  exp.push(fullscreen_on);
+  exp.push(hideMouseCursor);
 
   let taskType;
   if (taskOrder === 1) {
@@ -585,19 +655,24 @@ function genExpSeq() {
   } else if (taskOrder === 2) {
     taskType = repeatArray(['taskSwitch', 'prp'], prms.nBlks / 2);
   }
-  console.log(taskType);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     if (taskType[blk] === 'prp') {
       let blk_timeline = { ...trial_timeline_prp };
       blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8 };
-      exp.push(block_start);
+      exp.push(task_instructions_prp2);
+      exp.push(task_instructions_prp3);
+      exp.push(task_instructions_prp4);
+      exp.push(block_start_prp);
       exp.push(blk_timeline); // trials within a block
       exp.push(block_end);
     } else if (taskType[blk] === 'taskSwitch') {
-      let blk_timeline = { ...trial_timeline_prp };
+      let blk_timeline = { ...trial_timeline_task_switch };
       blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8 };
-      exp.push(block_start);
+      exp.push(task_instructions_ts2);
+      exp.push(task_instructions_ts3);
+      exp.push(task_instructions_ts4);
+      exp.push(block_start_ts);
       exp.push(blk_timeline); // trials within a block
       exp.push(block_end); //
     }
@@ -617,6 +692,7 @@ const code_filename = dirName + 'code/' + expName;
 jsPsych.init({
   timeline: EXP,
   preload_audio: audio,
+  use_webaudio: true,
   exclusions: {
     min_width: cs[0],
     min_height: cs[1],
