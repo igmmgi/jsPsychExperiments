@@ -1,5 +1,5 @@
 // Basic version of a PRP Task:
-// Version 1: Arrow --> Tone
+// Version 2: Tone --> Arrow
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -14,9 +14,8 @@ const cb = '5px solid black';
 const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
-jsPsych.data.addProperties({ version: 1 });
+jsPsych.data.addProperties({ version: 2 });
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -41,9 +40,9 @@ const prms = {
   fixSize: 10,
   letterSize: '50px monospace',
   fbSize: '20px monospace',
-  respKeys1: ['Q', 'P'],
-  respKeys2: ['W', 'O'],
-  respKeys: ['Q', 'P', 'W', 'O'],
+  respKeys1: ['W', 'O'],
+  respKeys2: ['Q', 'P'],
+  respKeys: ['W', 'O', 'Q', 'P'],
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -75,10 +74,10 @@ const task_instructions2 = {
     "<h2 style='text-align: center;'>Experiment:</h2>" +
     "<h3 style='text-align: left;'>In diesem Experiment musst du in jedem Durchgang zwei Aufgaben bearbeiten.</h3>" +
     "<h3 style='text-align: left;'>Jede Aufgabe wird mit einer Hand bearbeitet. </h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 1 = Mittelfinger: Bitte platziere hierzu deine Mittelfinger </h3>" +
-    "<h3 style='text-align: left;'>auf die Tasten „Q“ und „P“.</h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 2 = Zeigefinger: Bitte platziere hierzu deine Zeigefinger </h3>" +
+    "<h3 style='text-align: left;'>Aufgabe 1 = Zeigefinger: Bitte platziere hierzu deine Zeigefinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „W“ und „O“.</h3><br>" +
+    "<h3 style='text-align: left;'>Aufgabe 2 = Mittelfinger: Bitte platziere hierzu deine Mittelfinger </h3>" +
+    "<h3 style='text-align: left;'>auf die Tasten „Q“ und „P“.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -88,11 +87,11 @@ const task_instructions3 = {
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Pfeil reagieren.</h3>" +
-    "<h3 style='text-align: left;'>Nachdem du auf den Pfeil reagiert hast, musst du auf die </h3>" +
-    "<h3 style='text-align: left;'>Höhe des Tones reagieren: Reagiere wie folgt:</h3><br>" +
-    "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelfinger</h3>" +
-    "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
+    "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Höhe des Tones reagieren.</h3>" +
+    "<h3 style='text-align: left;'>Nachdem du auf den Ton reagiert hast, musst du auf dem </h3>" +
+    "<h3 style='text-align: left;'>Pfeil reagieren: Reagiere wie folgt:</h3><br>" +
+    "<h3 style='text-align: center;'>Aufgabe 1 (Tonaufgabe): Zeigfinger</h3>" +
+    "<h3 style='text-align: center;'>Aufgabe 2 (Pfeilaufgabe): Mittelfinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
@@ -113,10 +112,10 @@ const task_instructions4 = {
   canvas_border: cb,
   stimulus:
     "<h3 style='text-align: center;'>Bitte beachte: </h3>" +
-    "<h3 style='text-align: left;'> Bitte reagiere immer erst so schnell wie möglich auf die 1. Aufgabe </h3>" +
-    "<h3 style='text-align: left;'> sobald der Pfeil erscheint und erst anschliessend so schnell wie </h3>" +
-    "<h3 style='text-align: left;'> möglich auf die 2. Aufgabe. Das heißt warte nicht mit der Bearbeitung der </h3>" +
-    "<h3 style='text-align: left;'> 1. Aufgabe bis der Ton präsentiert wirt. </h3>",
+    "<h3 style='text-align: left;'>Bitte reagiere immer erst so schnell wie möglich auf die 1. Aufgabe </h3>" +
+    "<h3 style='text-align: left;'>sobald der Tone erscheint und erst anschliessend so schnell wie </h3>" +
+    "<h3 style='text-align: left;'>möglich auf die 2. Aufgabe. Das heißt warte nicht mit der Bearbeitung der </h3>" +
+    "<h3 style='text-align: left;'>1. Aufgabe bis der Pfeil präsentiert wirt. </h3>",
 };
 
 const task_instructions5 = {
@@ -127,8 +126,8 @@ const task_instructions5 = {
   stimulus:
     "<h3 style='text-align: center;'>ACHTUNG-Soundkalibierung: </h3>" +
     "<h3 style='text-align: left;'>Im Folgenden werden dir eine Reihe von HOHEN und TIEFEN Tönen präsentiert.</h3>" +
-    "<h3 style='text-align: left;'>Bitte stelle in dieser Zeit die Lautstärke deines Soundsystems so ein, dass du </h3>" +
-    "<h3 style='text-align: left;'>deutlich zwischen den zwei Tönen differenzieren kannst.</h3>" +
+    "<h3 style='text-align: left;'> Bitte stelle in dieser Zeit die Lautstärke deines Soundsystems so ein, dass du </h3>" +
+    "<h3 style='text-align: left;'> deutlich zwischen den zwei Tönen differenzieren kannst.</h3>" +
     "<h3 style='text-align: left;'>Anmerkung: Es geht immer automatisch weiter (d.h. du musst keine Taste drucken!).</h3><br>" +
     "<h2 style='text-align: center;'>Bereit? Drücke eine beliebige Taste, um die Töne abzuspielen!</h2>",
 };
@@ -197,8 +196,8 @@ function drawFeedback() {
   // show response mapping if not correct
   ctx.font = '20px monospace';
   if (dat.corrCode !== 1) {
-    ctx.fillText('Aufgabe 1 (Pfeilaufgabe): Mittelfinger', 0, 50);
-    ctx.fillText('Aufgabe 2 (Tonaufgabe): Zeigfinger', 0, 80);
+    ctx.fillText('Aufgabe 1 (Tonaufgabe): Zeigfinger', 0, 50);
+    ctx.fillText('Aufgabe 2 (Pfeilaufgabe): Mittelfinger', 0, 80);
     ctx.font = 'bold 20px monospace';
     ctx.fillText(prms.respArrows[0], -300, 150);
     ctx.fillText('Tiefer Ton', -180, 150);
@@ -300,8 +299,8 @@ function blockStartText() {
     ' von ' +
     prms.nBlks +
     '</H1><br>' +
-    "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelfinger</h3>" +
-    "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
+    "<h3 style='text-align: center;'>Aufgabe 1 (Tonaufgabe): Zeigfinger</h3>" +
+    "<h3 style='text-align: center;'>Aufgabe 2 (Pfeilaufgabe): Mittelfinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
@@ -350,16 +349,22 @@ const block_end = {
   },
 };
 
+const click_to_enable_sound = {
+  type: 'html-button-response',
+  stimulus: 'Click',
+  choices: ['Continue'],
+};
+
 const prp_stimulus = {
   type: 'static-canvas-keyboard-multiple-response-visual-sound',
   canvas_colour: cc,
   canvas_size: cs,
   canvas_border: cb,
   sound_stimulus: jsPsych.timelineVariable('tone'),
-  sound_onset: jsPsych.timelineVariable('soa'),
+  sound_onset: 0,
   trial_duration: prms.trialDuration,
   translate_origin: true,
-  stimulus_onset: 0,
+  stimulus_onset: jsPsych.timelineVariable('soa'),
   stimulus_duration: prms.trialDuration,
   response_ends_trial: true,
   choices: prms.respKeys,
@@ -378,73 +383,18 @@ const prp_stimulus = {
   },
 };
 
+// prettier-ignore
 const trial_timeline = {
   timeline: [fixation_cross, prp_stimulus, trial_feedback, iti],
   timeline_variables: [
-    {
-      arrow: prms.respArrows[0],
-      arrowDirection: 'left',
-      tone: prms.respTones[0],
-      soa: prms.soa[0],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[0],
-    },
-    {
-      arrow: prms.respArrows[1],
-      arrowDirection: 'right',
-      tone: prms.respTones[0],
-      soa: prms.soa[0],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[0],
-    },
-    {
-      arrow: prms.respArrows[0],
-      arrowDirection: 'left',
-      tone: prms.respTones[1],
-      soa: prms.soa[0],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[1],
-    },
-    {
-      arrow: prms.respArrows[1],
-      arrowDirection: 'right',
-      tone: prms.respTones[1],
-      soa: prms.soa[0],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[1],
-    },
-    {
-      arrow: prms.respArrows[0],
-      arrowDirection: 'left',
-      tone: prms.respTones[0],
-      soa: prms.soa[1],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[0],
-    },
-    {
-      arrow: prms.respArrows[1],
-      arrowDirection: 'right',
-      tone: prms.respTones[0],
-      soa: prms.soa[1],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[0],
-    },
-    {
-      arrow: prms.respArrows[0],
-      arrowDirection: 'left',
-      tone: prms.respTones[1],
-      soa: prms.soa[1],
-      corrResp1: prms.respKeys1[0],
-      corrResp2: prms.respKeys2[1],
-    },
-    {
-      arrow: prms.respArrows[1],
-      arrowDirection: 'right',
-      tone: prms.respTones[1],
-      soa: prms.soa[1],
-      corrResp1: prms.respKeys1[1],
-      corrResp2: prms.respKeys2[1],
-    },
+    { arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
+    { arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: prms.soa[0], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] }, 
+    { arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
+    { arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: prms.soa[0], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] },
+    { arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[0], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[0] },
+    { arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[0], soa: prms.soa[1], corrResp1: prms.respKeys1[0], corrResp2: prms.respKeys2[1] }, 
+    { arrow: prms.respArrows[0], arrowDirection: 'left',  tone: prms.respTones[1], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[0] },
+    { arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: prms.soa[1], corrResp1: prms.respKeys1[1], corrResp2: prms.respKeys2[1] }, 
   ],
 };
 
@@ -479,17 +429,17 @@ function genExpSeq() {
 
   exp.push(welcome_de_du_click);
   exp.push(resize_de_du);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);
   exp.push(task_instructions4);
 
-  // // Audio calibration routine
-  // exp.push(task_instructions5);
-  // for (let i = 0; i < audio_calibration.length; i++) {
-  //   exp.push(audio_calibration[i]);
-  // }
+  // Audio calibration routine
+  exp.push(task_instructions5);
+  for (let i = 0; i < audio_calibration.length; i++) {
+    exp.push(audio_calibration[i]);
+  }
 
   exp.push(fullscreen_on);
   exp.push(hideMouseCursor);
@@ -516,6 +466,7 @@ const code_filename = dirName + 'code/' + expName;
 jsPsych.init({
   timeline: EXP,
   preload_audio: audio,
+  use_webaudio: true,
   exclusions: {
     min_width: cs[0],
     min_height: cs[1],
