@@ -1,3 +1,5 @@
+// 6.1.0 only?
+
 jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (function () {
   let plugin = {};
 
@@ -95,12 +97,19 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
         default: true,
         description: 'If true, then trial will end when user responds.',
       },
+      number_responses: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'NumberResponses',
+        default: 2,
+        description: 'Number of responses (1 vs. 2)',
+      },
     },
   };
 
   plugin.trial = function (display_element, trial) {
     // setup canvas
-    display_element.innerHTML =
+
+    let new_html =
       '<div>' +
       '<canvas id="canvas" width="' +
       trial.canvas_size[0] +
@@ -111,6 +120,7 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
       ';"></canvas>' +
       '</div>';
 
+    display_element.innerHTML = new_html;
     let canvas = document.getElementById('canvas');
     let ctx = document.getElementById('canvas').getContext('2d');
 
@@ -127,9 +137,9 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
       trial.stimulus_onset = [trial.stimulus_onset];
     }
 
-    if (trial.func.length !== trial.stimulus_onset.length) {
-      // TO DO
-    }
+    // if (trial.func.length !== trial.stimulus_onset.length) {
+    //   // TO DO
+    // }
 
     if (trial.translate_origin) {
       ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
@@ -183,14 +193,20 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
         response2 = info;
       }
       // only end trial following 2nd response
-      if (trial.response_ends_trial & (response2.rt !== null)) {
-        end_trial();
+      if (trial.number_responses === 2) {
+        if (trial.response_ends_trial & (response2.rt !== null)) {
+          end_trial();
+        }
+      } else if (trial.number_responses === 1) {
+        if (trial.response_ends_trial) {
+          end_trial();
+        }
       }
     };
 
     // start the response listener
     if (trial.choices !== jsPsych.NO_KEYS) {
-      let keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_response,
         valid_responses: trial.choices,
         rt_method: 'performance',
@@ -220,31 +236,35 @@ jsPsych.plugins['static-canvas-keyboard-multiple-response-visual-sound'] = (func
     }
 
     // draw stimulus/stimuli
-    for (let i = 0; i < trial.func.length; i++) {
-      jsPsych.pluginAPI.setTimeout(function () {
-        if (trial.clear_screen[i]) {
-          if (trial.translate_origin) {
-            ctx.fillStyle = trial.canvas_colour;
-            ctx.fillRect(-canvas.width / 2, -canvas.height / 2, ctx.canvas.width, ctx.canvas.height);
-          } else {
-            ctx.fillStyle = trial.canvas_colour;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (trial.stimulus_onset !== null) {
+      for (let i = 0; i < trial.func.length; i++) {
+        jsPsych.pluginAPI.setTimeout(function () {
+          if (trial.clear_screen[i]) {
+            if (trial.translate_origin) {
+              ctx.fillStyle = trial.canvas_colour;
+              ctx.fillRect(-canvas.width / 2, -canvas.height / 2, ctx.canvas.width, ctx.canvas.height);
+            } else {
+              ctx.fillStyle = trial.canvas_colour;
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
           }
-        }
-        trial.func[i](trial.func_args[i]);
-      }, trial.stimulus_onset[i]);
+          trial.func[i](trial.func_args[i]);
+        }, trial.stimulus_onset[i]);
+      }
     }
 
     // audio
-    let audio_context = jsPsych.pluginAPI.audioContext();
-    let source = audio_context.createBufferSource();
-    source.buffer = jsPsych.pluginAPI.getAudioBuffer(trial.sound_stimulus);
-    source.connect(audio_context.destination);
+    // console.log(trial
+    if (trial.sound_onset !== null) {
+      let audio_context = jsPsych.pluginAPI.audioContext();
+      let source = audio_context.createBufferSource();
+      source.buffer = jsPsych.pluginAPI.getAudioBuffer(trial.sound_stimulus);
+      source.connect(audio_context.destination);
 
-    // play audio
-    let startTime = audio_context.currentTime;
-    // source.start(startTime + (trial.sound_onset / 1000 - audio_context.outputLatency));
-    source.start(startTime + trial.sound_onset / 1000);
+      // play audio
+      let startTime = audio_context.currentTime;
+      source.start(startTime + trial.sound_onset / 1000);
+    }
   };
 
   return plugin;

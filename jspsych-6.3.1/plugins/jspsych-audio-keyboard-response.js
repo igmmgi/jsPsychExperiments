@@ -8,8 +8,7 @@
  *
  **/
 
-jsPsych.plugins["audio-keyboard-response"] = (function () {
-
+jsPsych.plugins['audio-keyboard-response'] = (function () {
   var plugin = {};
 
   jsPsych.pluginAPI.registerPreload('audio-keyboard-response', 'stimulus', 'audio');
@@ -22,51 +21,51 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
         type: jsPsych.plugins.parameterType.AUDIO,
         pretty_name: 'Stimulus',
         default: undefined,
-        description: 'The audio to be played.'
+        description: 'The audio to be played.',
       },
       choices: {
         type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Choices',
         array: true,
         default: jsPsych.ALL_KEYS,
-        description: 'The keys the subject is allowed to press to respond to the stimulus.'
+        description: 'The keys the subject is allowed to press to respond to the stimulus.',
       },
       prompt: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Prompt',
         default: null,
-        description: 'Any content here will be displayed below the stimulus.'
+        description: 'Any content here will be displayed below the stimulus.',
       },
       trial_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Trial duration',
         default: null,
-        description: 'The maximum duration to wait for a response.'
+        description: 'The maximum duration to wait for a response.',
       },
       response_ends_trial: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Response ends trial',
         default: true,
-        description: 'If true, the trial will end when user makes a response.'
+        description: 'If true, the trial will end when user makes a response.',
       },
       trial_ends_after_audio: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Trial ends after audio',
         default: false,
-        description: 'If true, then the trial will end as soon as the audio file finishes playing.'
+        description: 'If true, then the trial will end as soon as the audio file finishes playing.',
       },
       response_allowed_while_playing: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Response allowed while playing',
         default: true,
-        description: 'If true, then responses are allowed while the audio is playing. ' +
-          'If false, then the audio must finish playing before a response is accepted.'
-      }
-    }
-  }
+        description:
+          'If true, then responses are allowed while the audio is playing. ' +
+          'If false, then the audio must finish playing before a response is accepted.',
+      },
+    },
+  };
 
   plugin.trial = function (display_element, trial) {
-
     // setup stimulus
     var context = jsPsych.pluginAPI.audioContext();
     var audio;
@@ -74,14 +73,15 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
     // store response
     var response = {
       rt: null,
-      key: null
+      key: null,
     };
 
     // record webaudio context start time
     var startTime;
 
     // load audio file
-    jsPsych.pluginAPI.getAudioBuffer(trial.stimulus)
+    jsPsych.pluginAPI
+      .getAudioBuffer(trial.stimulus)
       .then(function (buffer) {
         if (context !== null) {
           audio = context.createBufferSource();
@@ -94,8 +94,10 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
         setupTrial();
       })
       .catch(function (err) {
-        console.error(`Failed to load audio file "${trial.stimulus}". Try checking the file path. We recommend using the preload plugin to load audio files.`)
-        console.error(err)
+        console.error(
+          `Failed to load audio file "${trial.stimulus}". Try checking the file path. We recommend using the preload plugin to load audio files.`,
+        );
+        console.error(err);
       });
 
     function setupTrial() {
@@ -132,10 +134,8 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
       }
     }
 
-
     // function to end trial when it is time
     function end_trial() {
-
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -150,7 +150,6 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
       audio.removeEventListener('ended', end_trial);
       audio.removeEventListener('ended', setup_keyboard_listener);
 
-
       // kill keyboard listeners
       jsPsych.pluginAPI.cancelAllKeyboardResponses();
 
@@ -158,7 +157,7 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
       var trial_data = {
         rt: response.rt,
         stimulus: trial.stimulus,
-        response: response.key
+        response: response.key,
       };
 
       // clear the display
@@ -170,7 +169,6 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
 
     // function to handle responses by the subject
     function after_response(info) {
-
       // only record the first response
       if (response.key == null) {
         response = info;
@@ -179,7 +177,7 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
       if (trial.response_ends_trial) {
         end_trial();
       }
-    };
+    }
 
     function setup_keyboard_listener() {
       // start the response listener
@@ -191,7 +189,7 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
           persist: false,
           allow_held_key: false,
           audio_context: context,
-          audio_context_start_time: startTime
+          audio_context_start_time: startTime,
         });
       } else {
         jsPsych.pluginAPI.getKeyboardResponse({
@@ -199,7 +197,7 @@ jsPsych.plugins["audio-keyboard-response"] = (function () {
           valid_responses: trial.choices,
           rt_method: 'performance',
           persist: false,
-          allow_held_key: false
+          allow_held_key: false,
         });
       }
     }

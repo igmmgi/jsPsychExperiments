@@ -8,7 +8,7 @@
  *
  **/
 
-jsPsych.plugins["audio-button-response"] = (function () {
+jsPsych.plugins['audio-button-response'] = (function () {
   var plugin = {};
 
   jsPsych.pluginAPI.registerPreload('audio-button-response', 'stimulus', 'audio');
@@ -21,70 +21,70 @@ jsPsych.plugins["audio-button-response"] = (function () {
         type: jsPsych.plugins.parameterType.AUDIO,
         pretty_name: 'Stimulus',
         default: undefined,
-        description: 'The audio to be played.'
+        description: 'The audio to be played.',
       },
       choices: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Choices',
         default: undefined,
         array: true,
-        description: 'The button labels.'
+        description: 'The button labels.',
       },
       button_html: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
         pretty_name: 'Button HTML',
         default: '<button class="jspsych-btn">%choice%</button>',
         array: true,
-        description: 'Custom button. Can make your own style.'
+        description: 'Custom button. Can make your own style.',
       },
       prompt: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Prompt',
         default: null,
-        description: 'Any content here will be displayed below the stimulus.'
+        description: 'Any content here will be displayed below the stimulus.',
       },
       trial_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Trial duration',
         default: null,
-        description: 'The maximum duration to wait for a response.'
+        description: 'The maximum duration to wait for a response.',
       },
       margin_vertical: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Margin vertical',
         default: '0px',
-        description: 'Vertical margin of button.'
+        description: 'Vertical margin of button.',
       },
       margin_horizontal: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Margin horizontal',
         default: '8px',
-        description: 'Horizontal margin of button.'
+        description: 'Horizontal margin of button.',
       },
       response_ends_trial: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Response ends trial',
         default: true,
-        description: 'If true, the trial will end when user makes a response.'
+        description: 'If true, the trial will end when user makes a response.',
       },
       trial_ends_after_audio: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Trial ends after audio',
         default: false,
-        description: 'If true, then the trial will end as soon as the audio file finishes playing.'
+        description: 'If true, then the trial will end as soon as the audio file finishes playing.',
       },
       response_allowed_while_playing: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Response allowed while playing',
         default: true,
-        description: 'If true, then responses are allowed while the audio is playing. ' +
-          'If false, then the audio must finish playing before a response is accepted.'
-      }
-    }
-  }
+        description:
+          'If true, then responses are allowed while the audio is playing. ' +
+          'If false, then the audio must finish playing before a response is accepted.',
+      },
+    },
+  };
 
   plugin.trial = function (display_element, trial) {
-
     // setup stimulus
     var context = jsPsych.pluginAPI.audioContext();
     var audio;
@@ -92,14 +92,15 @@ jsPsych.plugins["audio-button-response"] = (function () {
     // store response
     var response = {
       rt: null,
-      button: null
+      button: null,
     };
 
     // record webaudio context start time
     var startTime;
 
     // load audio file
-    jsPsych.pluginAPI.getAudioBuffer(trial.stimulus)
+    jsPsych.pluginAPI
+      .getAudioBuffer(trial.stimulus)
       .then(function (buffer) {
         if (context !== null) {
           audio = context.createBufferSource();
@@ -112,8 +113,10 @@ jsPsych.plugins["audio-button-response"] = (function () {
         setupTrial();
       })
       .catch(function (err) {
-        console.error(`Failed to load audio file "${trial.stimulus}". Try checking the file path. We recommend using the preload plugin to load audio files.`)
-        console.error(err)
+        console.error(
+          `Failed to load audio file "${trial.stimulus}". Try checking the file path. We recommend using the preload plugin to load audio files.`,
+        );
+        console.error(err);
       });
 
     function setupTrial() {
@@ -123,7 +126,7 @@ jsPsych.plugins["audio-button-response"] = (function () {
       }
 
       // enable buttons after audio ends if necessary
-      if ((!trial.response_allowed_while_playing) & (!trial.trial_ends_after_audio)) {
+      if (!trial.response_allowed_while_playing & !trial.trial_ends_after_audio) {
         audio.addEventListener('ended', enable_buttons);
       }
 
@@ -133,7 +136,9 @@ jsPsych.plugins["audio-button-response"] = (function () {
         if (trial.button_html.length == trial.choices.length) {
           buttons = trial.button_html;
         } else {
-          console.error('Error in audio-button-response plugin. The length of the button_html array does not equal the length of the choices array');
+          console.error(
+            'Error in audio-button-response plugin. The length of the button_html array does not equal the length of the choices array',
+          );
         }
       } else {
         for (var i = 0; i < trial.choices.length; i++) {
@@ -144,7 +149,18 @@ jsPsych.plugins["audio-button-response"] = (function () {
       var html = '<div id="jspsych-audio-button-response-btngroup">';
       for (var i = 0; i < trial.choices.length; i++) {
         var str = buttons[i].replace(/%choice%/g, trial.choices[i]);
-        html += '<div class="jspsych-audio-button-response-button" style="cursor: pointer; display: inline-block; margin:' + trial.margin_vertical + ' ' + trial.margin_horizontal + '" id="jspsych-audio-button-response-button-' + i + '" data-choice="' + i + '">' + str + '</div>';
+        html +=
+          '<div class="jspsych-audio-button-response-button" style="cursor: pointer; display: inline-block; margin:' +
+          trial.margin_vertical +
+          ' ' +
+          trial.margin_horizontal +
+          '" id="jspsych-audio-button-response-button-' +
+          i +
+          '" data-choice="' +
+          i +
+          '">' +
+          str +
+          '</div>';
       }
       html += '</div>';
 
@@ -180,11 +196,8 @@ jsPsych.plugins["audio-button-response"] = (function () {
       }
     }
 
-
-
     // function to handle responses by the subject
     function after_response(choice) {
-
       // measure rt
       var endTime = performance.now();
       var rt = endTime - startTime;
@@ -205,7 +218,6 @@ jsPsych.plugins["audio-button-response"] = (function () {
 
     // function to end trial when it is time
     function end_trial() {
-
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -224,7 +236,7 @@ jsPsych.plugins["audio-button-response"] = (function () {
       var trial_data = {
         rt: response.rt,
         stimulus: trial.stimulus,
-        response: response.button
+        response: response.button,
       };
 
       // clear the display
@@ -260,9 +272,6 @@ jsPsych.plugins["audio-button-response"] = (function () {
         btns[i].addEventListener('click', button_response);
       }
     }
-
-
-
   };
 
   return plugin;
