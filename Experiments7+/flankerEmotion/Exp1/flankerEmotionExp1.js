@@ -162,21 +162,29 @@ function generateStimulusCombinations(dataset_neutral, dataset_positive, dataset
     if (flanker_type[i] === 'neutral_comp') {
       tmp.target = dataset_neutral[image_numbers[i]];
       tmp.flanker = dataset_neutral[image_numbers[i]];
+      tmp.target_type = 'neutral';
+      tmp.flanker_type = 'neutral';
       tmp.comp = 'comp';
       tmp.key = prms.respKeys[prms.target.indexOf('neutrales')];
     } else if (flanker_type[i] === 'neutral_incomp') {
       tmp.target = dataset_neutral[image_numbers[i]];
       tmp.flanker = dataset_positive[image_numbers[i]];
+      tmp.target_type = 'neutral';
+      tmp.flanker_type = 'positive';
       tmp.comp = 'incomp';
       tmp.key = prms.respKeys[prms.target.indexOf('neutrales')];
     } else if (flanker_type[i] === 'positive_comp') {
       tmp.target = dataset_positive[image_numbers[i]];
       tmp.flanker = dataset_positive[image_numbers[i]];
+      tmp.target_type = 'positive';
+      tmp.flanker_type = 'positive';
       tmp.comp = 'comp';
       tmp.key = prms.respKeys[prms.target.indexOf('positives')];
     } else if (flanker_type[i] === 'positive_incomp') {
       tmp.target = dataset_positive[image_numbers[i]];
       tmp.flanker = dataset_neutral[image_numbers[i]];
+      tmp.flanker_type = 'neutral';
+      tmp.target_type = 'positive';
       tmp.comp = 'incomp';
       tmp.key = prms.respKeys[prms.target.indexOf('positives')];
     }
@@ -310,7 +318,9 @@ const flanker_stimulus = {
     stim: 'flanker',
     comp: jsPsych.timelineVariable('comp'),
     target: jsPsych.timelineVariable('target'),
+    target_type: jsPsych.timelineVariable('target_type'),
     flanker: jsPsych.timelineVariable('flanker'),
+    flanker_type: jsPsych.timelineVariable('flanker_type'),
     database: jsPsych.timelineVariable('database'),
     corrResp: jsPsych.timelineVariable('key'),
   },
@@ -430,7 +440,7 @@ const enter_password = {
   check_fn: function () {
     let password = document.getElementById('pass').value;
     let correct = getPassword('/Common7+/password.php', password);
-    if (correct !== "0") {
+    if (correct !== '0') {
       alert('Incorrect');
       return false;
     } else {

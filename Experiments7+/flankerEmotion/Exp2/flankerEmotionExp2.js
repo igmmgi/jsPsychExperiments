@@ -162,21 +162,29 @@ function generateStimulusCombinations(dataset_neutral, dataset_negative, dataset
     if (flanker_type[i] === 'neutral_comp') {
       tmp.target = dataset_neutral[image_numbers[i]];
       tmp.flanker = dataset_neutral[image_numbers[i]];
+      tmp.target_type = 'neutral';
+      tmp.flanker_type = 'neutral';
       tmp.comp = 'comp';
       tmp.key = prms.respKeys[prms.target.indexOf('neutrales')];
     } else if (flanker_type[i] === 'neutral_incomp') {
       tmp.target = dataset_neutral[image_numbers[i]];
       tmp.flanker = dataset_negative[image_numbers[i]];
+      tmp.target_type = 'neutral';
+      tmp.flanker_type = 'negative';
       tmp.comp = 'incomp';
       tmp.key = prms.respKeys[prms.target.indexOf('neutrales')];
     } else if (flanker_type[i] === 'negative_comp') {
       tmp.target = dataset_negative[image_numbers[i]];
       tmp.flanker = dataset_negative[image_numbers[i]];
+      tmp.target_type = 'negative';
+      tmp.flanker_type = 'negative';
       tmp.comp = 'comp';
       tmp.key = prms.respKeys[prms.target.indexOf('negatives')];
     } else if (flanker_type[i] === 'negative_incomp') {
       tmp.target = dataset_negative[image_numbers[i]];
       tmp.flanker = dataset_neutral[image_numbers[i]];
+      tmp.target_type = 'negative';
+      tmp.flanker_type = 'neutral';
       tmp.comp = 'incomp';
       tmp.key = prms.respKeys[prms.target.indexOf('negatives')];
     }
@@ -310,7 +318,9 @@ const flanker_stimulus = {
     stim: 'flanker',
     comp: jsPsych.timelineVariable('comp'),
     target: jsPsych.timelineVariable('target'),
+    target_type: jsPsych.timelineVariable('target_type'),
     flanker: jsPsych.timelineVariable('flanker'),
+    flanker_type: jsPsych.timelineVariable('flanker_type'),
     database: jsPsych.timelineVariable('database'),
     corrResp: jsPsych.timelineVariable('key'),
   },
