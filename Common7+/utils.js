@@ -41,20 +41,19 @@ function getTime() {
   return num.getTime();
 }
 
-function getPass(url) {
-  console.log('getPass');
-  let correct = false;
-  $.ajax({
-    url: url,
-    type: 'POST',
-    async: false,
-    data: {
-      password: password,
-    },
-  }).done(function () {
-    correct = password;
-  });
-  return correct;
+function getPassword(url, password) {
+    let correct = false;
+    $.ajax({
+        url: url,
+        type: 'POST',
+        async: false,
+        data: {
+            password: password,
+        },
+    }).done(function (data) {
+        correct = data;
+    });
+    return correct;
 }
 
 // Generate a random string with optional pre-fix

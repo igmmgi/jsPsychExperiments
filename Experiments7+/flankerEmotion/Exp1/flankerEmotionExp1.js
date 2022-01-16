@@ -421,14 +421,21 @@ const alphaNum = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                                Pass                                //
+//                            password                                //
 ////////////////////////////////////////////////////////////////////////
-const pass_data = {
+const enter_password = {
   type: jsPsychExternalHtml,
   url: '/Common7+/password.html',
   cont_btn: 'start',
   check_fn: function () {
-    password('ian');
+    let password = document.getElementById('pass').value;
+    let correct = getPassword('/Common7+/password.php', password);
+    if (correct !== "0") {
+      alert('Incorrect');
+      return false;
+    } else {
+      return true;
+    }
   },
   post_trial_gap: 1000,
 };
@@ -465,36 +472,36 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(pass_data);
+  // exp.push(enter_password);
 
-  // exp.push(fullscreen(true));
-  // exp.push(browser_check(prms.screenRes));
-  // exp.push(preload);
-  // exp.push(resize_browser());
-  // exp.push(welcome_message());
-  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de_copyright.html'));
-  // exp.push(mouseCursor(false));
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
+  exp.push(fullscreen(true));
+  exp.push(browser_check(prms.screenRes));
+  exp.push(preload);
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de_copyright.html'));
+  exp.push(mouseCursor(false));
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
-  // for (let blk = 0; blk < trial_timelines.length; blk += 1) {
-  //   exp.push(block_start);
-  //   let blk_timeline = trial_timelines[blk];
-  //   blk_timeline.sample = {
-  //     type: 'fixed-repetitions',
-  //     size: 1,
-  //   };
-  //   exp.push(blk_timeline); // trials within a block
-  //   exp.push(block_feedback); // show previous block performance
-  // }
+  for (let blk = 0; blk < trial_timelines.length; blk += 1) {
+    exp.push(block_start);
+    let blk_timeline = trial_timelines[blk];
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: 1,
+    };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback); // show previous block performance
+  }
 
-  // exp.push(save_data);
+  exp.push(save_data);
 
-  // // debrief
-  // exp.push(mouseCursor(true));
-  // exp.push(alphaNum);
-  // exp.push(end_message());
-  // exp.push(fullscreen(false));
+  // debrief
+  exp.push(mouseCursor(true));
+  exp.push(alphaNum);
+  exp.push(end_message());
+  exp.push(fullscreen(false));
 
   return exp;
 }

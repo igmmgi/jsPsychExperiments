@@ -276,7 +276,7 @@ function genExpSeq() {
   exp.push(preload);
   exp.push(resize_browser());
   exp.push(welcome_message());
-  exp.push(vpInfoForm());
+  // exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
