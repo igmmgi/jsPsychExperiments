@@ -18,7 +18,7 @@ const vpNum = genVpNum();
 // version 2: Tone --> Arrow
 // taskOrder 1: PRP --> TaskSwitch --> PRP --> TaskSwitch ...
 // taskOrder 2: TaskSwitch --> PRP --> TaskSwitch --> PRP ...
-const taskOrder = 2; // Number(jsPsych.data.urlVariables().taskOrder);
+const taskOrder = Number(jsPsych.data.urlVariables().taskOrder);
 jsPsych.data.addProperties({ version: 1, taskOrder: taskOrder });
 
 ////////////////////////////////////////////////////////////////////////
@@ -69,13 +69,13 @@ const task_instructions1 = {
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
-const task_instructions_prp2 = {
+const task_instructions2 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: cc,
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: left;'>In diesem Experiment teil musst du in jedem Durchgang ZWEI Aufgaben bearbeiten.</h3><br>" +
+    "<h3 style='text-align: left;'>In diesem Experiment gibt es zwei Aufgaben:</h3><br>" +
     "<h3 style='text-align: left;'>Aufgabe 1 = Zeigefinger: Bitte platziere hierzu deine Mittelfinger </h3>" +
     "<h3 style='text-align: left;'>auf die Tasten „W“ und „O“.</h3><br>" +
     "<h3 style='text-align: left;'>Aufgabe 2 = Mittelfinger: Bitte platziere hierzu deine Zeigefinger </h3>" +
@@ -83,12 +83,13 @@ const task_instructions_prp2 = {
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
-const task_instructions_prp3 = {
+const task_instructions_prp = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: cc,
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
+    "<h1 style='text-align: center;'>***DUAL-BLOCK***</h1>" +
     "<h3 style='text-align: left;'>In jedem Durchgang musst du erst auf den Höhe des Tones reagieren. Nachdem</h3>" +
     "<h3 style='text-align: left;'>du auf den Ton reagiert hast, musst du auf dem Pfeil reagieren.</h3>" +
     "<h3 style='text-align: left;'>Reagiere wie folgt:</h3><br>" +
@@ -104,43 +105,17 @@ const task_instructions_prp3 = {
     "<h3 style='text-align: left;'>" +
     '&emsp;&emsp;&emsp;&emsp;("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
     '</h3><br>' +
+    "<h3 style='text-align: left;'>Warte nicht mit der Bearbeitung der 1. Aufgabe bis der 2. Aufgabe präsentiert wird!</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
-const task_instructions_prp4 = {
+const task_instructions_ts = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: cc,
   canvas_size: cs,
   canvas_border: cb,
   stimulus:
-    "<h3 style='text-align: center;'>Bitte beachte: </h3>" +
-    "<h3 style='text-align: left;'>Bitte reagiere immer erst so schnell wie möglich auf die 1. Aufgabe </h3>" +
-    "<h3 style='text-align: left;'>sobald der Tone erscheint und erst anschliessend so schnell wie </h3>" +
-    "<h3 style='text-align: left;'>möglich auf die 2. Aufgabe. Das heißt warte nicht mit der Bearbeitung der </h3>" +
-    "<h3 style='text-align: left;'>1. Aufgabe bis der Pfeil präsentiert wirt. </h3>",
-};
-
-const task_instructions_ts2 = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: cc,
-  canvas_size: cs,
-  canvas_border: cb,
-  stimulus:
-    "<h3 style='text-align: left;'>In diesem Experiment teil musst du in jedem Durchgang NUR eins von zwei </h3>" +
-    "<h3 style='text-align: left;'>Aufgaben bearbeiten.</h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 1 = Zeigefinger: Bitte platziere hierzu deine Zeigefinger </h3>" +
-    "<h3 style='text-align: left;'>auf die Tasten „W“ und „O“.</h3><br>" +
-    "<h3 style='text-align: left;'>Aufgabe 2 = Mittelfinger: Bitte platziere hierzu deine Mittelfinger </h3>" +
-    "<h3 style='text-align: left;'>auf die Tasten „Q“ und „P“.</h3><br>" +
-    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
-};
-
-const task_instructions_ts3 = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: cc,
-  canvas_size: cs,
-  canvas_border: cb,
-  stimulus:
+    "<h1 style='text-align: center;'>***SINGLE-BLOCK***</h1>" +
     "<h3 style='text-align: left;'>In jedem Durchgang musst du auf den Pfeil ODER Höhe des Tones reagieren.</h3>" +
     "<h3 style='text-align: left;'>Reagiere wie folgt:.</h3>" +
     "<h3 style='text-align: center;'>Tonaufgabe: Zeigfinger</h3>" +
@@ -155,16 +130,6 @@ const task_instructions_ts3 = {
     "<h3 style='text-align: left;'>" +
     '&emsp;&emsp;&emsp;&emsp;("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
     '</h3><br>' +
-    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
-};
-
-const task_instructions_ts4 = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: cc,
-  canvas_size: cs,
-  canvas_border: cb,
-  stimulus:
-    "<h3 style='text-align: left;'> Bitte reagiere immer erst so schnell und genau wie möglich. </h3>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -418,11 +383,12 @@ const iti = {
 function blockStartTextPRP() {
   'use strict';
   let blockStartTxt =
-    '<H1>Block: ' +
+    '<h1>Block: ' +
     prms.cBlk +
     ' von ' +
     prms.nBlks +
-    '</H1><br>' +
+    '</h1><br>' +
+    "<h1 style='text-align: center;'>***DUAL-BLOCK***</h1>" +
     "<h3 style='text-align: center;'>Aufgabe 1 (Tonaufgabe): Zeigefinger</h3>" +
     "<h3 style='text-align: center;'>Aufgabe 2 (Pfeilaufgabe): Mittelfinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
@@ -442,12 +408,15 @@ function blockStartTextPRP() {
 function blockStartTextTS() {
   'use strict';
   let blockStartTxt =
-    '<H1>Block: ' +
+    '<h1>Block: ' +
     prms.cBlk +
     ' von ' +
     prms.nBlks +
-    '</H1><br>' +
-    "<h3 style='text-align: center;'>Pfeilaufgabe (Mittelfinger) ODER Tonaufgabe (Zeigfinger)</h3>" +
+    '</h1><br>' +
+    "<h1 style='text-align: center;'>***SINGLE-BLOCK***</h1><br>" +
+    "<h3 style='text-align: center;'>Pfeilaufgabe (Mittelfinger)</h3>" +
+    "<h3 style='text-align: center;'>ODER</h3>" +
+    "<h3 style='text-align: center;'>Tonaufgabe (Zeigfinger)</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
@@ -635,16 +604,16 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(welcome_de_du_click);
-  // exp.push(resize_de_du);
-  // // exp.push(vpInfoForm_de);
-  // exp.push(task_instructions1);
+  exp.push(welcome_de_du_click);
+  exp.push(resize_de_du);
+  exp.push(vpInfoForm_de);
+  exp.push(task_instructions1);
 
-  // // Audio calibration routine
-  // exp.push(task_instructions_calibration);
-  // for (let i = 0; i < audio_calibration.length; i++) {
-  //   exp.push(audio_calibration[i]);
-  // }
+  // Audio calibration routine
+  exp.push(task_instructions_calibration);
+  for (let i = 0; i < audio_calibration.length; i++) {
+    exp.push(audio_calibration[i]);
+  }
 
   exp.push(fullscreen_on);
   exp.push(hideMouseCursor);
@@ -656,25 +625,22 @@ function genExpSeq() {
     taskType = repeatArray(['taskSwitch', 'prp'], prms.nBlks / 2);
   }
 
+  exp.push(task_instructions2);
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     if (taskType[blk] === 'prp') {
       let blk_timeline = { ...trial_timeline_prp };
       blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8 };
-      exp.push(task_instructions_prp2);
-      exp.push(task_instructions_prp3);
-      exp.push(task_instructions_prp4);
+      exp.push(task_instructions_prp);
       exp.push(block_start_prp);
       exp.push(blk_timeline); // trials within a block
       exp.push(block_end);
     } else if (taskType[blk] === 'taskSwitch') {
       let blk_timeline = { ...trial_timeline_task_switch };
       blk_timeline.sample = { type: 'fixed-repetitions', size: blk === 0 ? prms.nTrlsP / 8 : prms.nTrlsE / 8 };
-      exp.push(task_instructions_ts2);
-      exp.push(task_instructions_ts3);
-      exp.push(task_instructions_ts4);
+      exp.push(task_instructions_ts);
       exp.push(block_start_ts);
       exp.push(blk_timeline); // trials within a block
-      exp.push(block_end); //
+      exp.push(block_end);
     }
   }
   exp.push(debrief_de);
@@ -692,7 +658,7 @@ const code_filename = dirName + 'code/' + expName;
 jsPsych.init({
   timeline: EXP,
   preload_audio: audio,
-  use_webaudio: true,
+  use_webaudio: false,
   exclusions: {
     min_width: cs[0],
     min_height: cs[1],
