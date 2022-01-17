@@ -362,7 +362,7 @@ const save_data = {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data_json.php', data_filename, { stim_type: 'cse_mouse_tracking' }, 'json');
     let data_filename_rating = dirName + 'data_rating/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim_type: 'cse_mouse_tracking_rating' }, 'json');
+    saveData('/Common/write_data_json.php', data_filename_rating, { stim_type: 'cse_mouse_tracking_rating' }, 'json');
   },
   timing_post_trial: 2000,
 };
