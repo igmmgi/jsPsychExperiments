@@ -652,7 +652,7 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-const data_filename = dirName + 'data/' + expName + '_' + vpNum;
+const data_filename = dirName + 'data/order' + taskOrder + '/' + expName + '_' + vpNum;
 const code_filename = dirName + 'code/' + expName;
 
 jsPsych.init({
