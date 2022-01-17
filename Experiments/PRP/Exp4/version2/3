@@ -1,1 +1,0 @@
-    { task: "arrow", arrow: prms.respArrows[1], arrowDirection: 'right', tone: prms.respTones[1], soa: null, corrResp1: prms.respKeys2[1], corrResp2: null },
