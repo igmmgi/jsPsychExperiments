@@ -11,8 +11,8 @@ const jsPsych = initJsPsych({});
 // for piloting
 // imageset1 = Material-neu
 // imageset2 = stimulus-material-resized
-const stimHeight = 500; //Number(jsPsych.data.urlVariables().stimHeight);
-const imageSet = 1; //Number(jsPsych.data.urlVariables().imageSet);
+const stimHeight = Number(jsPsych.data.urlVariables().stimHeight);
+const imageSet = Number(jsPsych.data.urlVariables().imageSet);
 jsPsych.data.addProperties({ stimHeight: stimHeight, imageSet: imageSet });
 
 ////////////////////////////////////////////////////////////////////////
@@ -276,7 +276,7 @@ function genExpSeq() {
   exp.push(preload);
   exp.push(resize_browser());
   exp.push(welcome_message());
-  // exp.push(vpInfoForm());
+  exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
   exp.push(task_instructions);
 
