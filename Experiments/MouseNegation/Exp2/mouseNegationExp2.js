@@ -24,7 +24,6 @@ const expName = getFileName();
 const dirName = getDirName();
 const vpNum = genVpNum();
 const pcInfo = getComputerInfo();
-const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -142,14 +141,14 @@ const trial_stimulus = {
 
 // prettier-ignore
 const stimuli = [
-  { word: 'jetzt links',  aff_neg: 'aff', resp_loc: 'left' },
+  { word: 'jetzt links',  aff_neg: 'aff', resp_loc: 'left'  },
   { word: 'jetzt rechts', aff_neg: 'aff', resp_loc: 'right' },
-  { word: 'nicht rechts', aff_neg: 'neg', resp_loc: 'left' },
+  { word: 'nicht rechts', aff_neg: 'neg', resp_loc: 'left'  },
   { word: 'nicht links',  aff_neg: 'neg', resp_loc: 'right' },
-  { word: 'jetzt oben',   aff_neg: 'aff', resp_loc: 'up' },
-  { word: 'jetzt unten',  aff_neg: 'aff', resp_loc: 'down' },
-  { word: 'nicht unten',  aff_neg: 'neg', resp_loc: 'up' },
-  { word: 'nicht oben',   aff_neg: 'neg', resp_loc: 'down' },
+  { word: 'jetzt oben',   aff_neg: 'aff', resp_loc: 'up'    },
+  { word: 'jetzt unten',  aff_neg: 'aff', resp_loc: 'down'  },
+  { word: 'nicht unten',  aff_neg: 'neg', resp_loc: 'up'    },
+  { word: 'nicht oben',   aff_neg: 'neg', resp_loc: 'down'  },
 ];
 
 const trial_feedback = {
@@ -223,7 +222,7 @@ const trial_timeline = {
 };
 
 // For VP Stunden
-const randomString = generateRandomString(16);
+const randomString = generateRandomStringWithExpName('mn3_', 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
