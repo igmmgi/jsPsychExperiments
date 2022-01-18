@@ -65,7 +65,7 @@ const task_instructions1 = {
     "<h3 style='text-align: left;'>WICHTIG: In diesem Experiment wirst du auf Töne reagieren müssen.</h3>" +
     "<h3 style='text-align: left;'>Bitte stelle sicher, dass dein Computer/Laptop Sounds abspielen kann.</h3>" +
     "<h3 style='text-align: left;'>Du kannst gerne Kopfhörer vervenden.</h3><br>" +
-    "<h3 style='text-align: center;'>Wir bitten dich die ca. 25 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich die ca. 35 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -658,7 +658,7 @@ const code_filename = dirName + 'code/' + expName;
 jsPsych.init({
   timeline: EXP,
   preload_audio: audio,
-  use_webaudio: false,
+  use_webaudio: true,
   exclusions: {
     min_width: cs[0],
     min_height: cs[1],
