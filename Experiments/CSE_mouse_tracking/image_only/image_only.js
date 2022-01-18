@@ -77,15 +77,25 @@ function drawFeedback() {
     xpos = dat.end_x;
     ypos = dat.end_y;
   }
-
-  ctx.fillText(prms.fbTxt[dat.corrCode], xpos, ypos);
+  if (dat.tooEarly === 0) {
+    ctx.fillText(prms.fbTxt[dat.corrCode], xpos, ypos);
+  } else {
+    ctx.fillText('Warte bis das Worte kompt!', canvas_size[0] / 2, canvas_size[1] / 2);
+  }
 }
 
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = dat.correct_side !== dat.end_loc ? 1 : 0;
-  jsPsych.data.addDataToLastTrial({ date: Date(), corrCode: corrCode, blockNum: prms.cBlk, trialNum: prms.cTrl });
+  let tooEarly = dat.time[0] < prms.fixDur ? 1 : 0;
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    corrCode: corrCode,
+    tooEarly: tooEarly,
+    blockNum: prms.cBlk,
+    trialNum: prms.cTrl,
+  });
   prms.cTrl += 1;
 }
 
@@ -150,7 +160,7 @@ function stimuli_factory(items_ambiguous, items_unambiguous) {
 
   let stimuli = [];
   let correct_side;
-  correct_side = shuffle(repeatArray(['left', 'right'], items_ambiguous.length / 2));
+  correct_side = shuffle(repeatArray(['left', 'right'], item_numbers_ambiguous.length / 2));
   for (let idx of item_numbers_ambiguous) {
     let stimulus = {};
     stimulus.probe_type = items_ambiguous[idx].type;
@@ -167,7 +177,7 @@ function stimuli_factory(items_ambiguous, items_unambiguous) {
     stimuli.push(stimulus);
   }
 
-  correct_side = shuffle(repeatArray(['left', 'right'], items_unambiguous.length / 2));
+  correct_side = shuffle(repeatArray(['left', 'right'], item_numbers_unambiguous.length / 2));
   for (let idx of item_numbers_unambiguous) {
     let stimulus = {};
     stimulus.probe_type = items_unambiguous[idx].type;
@@ -306,10 +316,27 @@ const exp_timeline = {
   randomize_order: true,
 };
 
+const mouse_trackpad_question = {
+  type: 'survey-multi-choice',
+  questions: [
+    {
+      prompt: 'Haben Sie eine Maus oder eine Trackpad benutzt?',
+      name: 'MouseTrackpad',
+      options: ['Maus', 'Trackpad'],
+      required: true,
+      horizontal: false,
+    },
+  ],
+  button_label: 'Weiter',
+  on_finish: function () {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    jsPsych.data.addProperties({ MausTrackpad: dat.response.MouseTrackpad });
+  },
+};
+
 // For VP Stunden
 const randomString = generateRandomStringWithExpName('csemi_', 16);
 
-// TODO: Change thanks
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
@@ -323,7 +350,7 @@ const alphaNum = {
         Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an:<br><br>sprachstudien@psycho.uni-tuebingen.de<br> Code: ` +
+        an:<br><br>m.zeller@student.uni-tuebingen.de<br> Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
@@ -388,6 +415,9 @@ function genExpSeq() {
   // Run real experiment
   exp.push(exp_start);
   exp.push(exp_timeline);
+
+  // mouse vs. trackpad question
+  exp.push(mouse_trackpad_question);
 
   // save data
   exp.push(save_data);

@@ -34,6 +34,21 @@ $nFiles_nw_v2 = numFilesInDir('Experiments/NarrowWide/V2/data/version2');
 $nFiles_nw_v3 = numFilesInDir('Experiments/NarrowWide/V2/data/version3');
 $nFiles_nw_v4 = numFilesInDir('Experiments/NarrowWide/V2/data/version4');
 
+// PRP Exp4
+$nFiles_prp4_v1 = numFilesInDir('Experiments/PRP/Exp4/version1/data/order1');
+$nFiles_prp4_v2 = numFilesInDir('Experiments/PRP/Exp4/version1/data/order2');
+$nFiles_prp4_v3 = numFilesInDir('Experiments/PRP/Exp4/version2/data/order1');
+$nFiles_prp4_v4 = numFilesInDir('Experiments/PRP/Exp4/version2/data/order2');
+
+
+// CSE Mouse
+$nFiles_csem_text = numFilesInDir('Experiments/CSE_mouse_tracking/text_only/data');
+$nFiles_csem_image = numFilesInDir('Experiments/CSE_mouse_tracking/image_only/data');
+
+// Mouse Negation
+$nFiles_mn2 = numFilesInDir('Experiments/MouseNegation/Exp2/data');
+$nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
+
 ?>
 
 <html lang="en">
@@ -94,7 +109,11 @@ $nFiles_nw_v4 = numFilesInDir('Experiments/NarrowWide/V2/data/version4');
             <p> Gains Exp1: hiwipibio@gmail.com </p>
             <p> Free Choice Race Exp1: sebastian.heins@student.uni-tuebingen.de</p>
             <p> Reward Exp2: hiwipibio@gmail.com </p>
-            <p> Zonk Exp1: hiwipibio@gmail.com </p><br>
+            <p> Zonk Exp1: hiwipibio@gmail.com </p>
+            <p> PRP Exp4: hiwipibio@gmail.com </p>
+            <p> CSE Exp1: m.zeller@student.uni-tuebigen.de </p><br>
+            <p> Mouse Negation Exp2: m.zeller@student.uni-tuebigen.de </p><br>
+            <p> Mouse Negation Exp3: m.zeller@student.uni-tuebigen.de </p><br>
 
         </div>
         <div class="sidenav">
@@ -186,7 +205,84 @@ $nFiles_nw_v4 = numFilesInDir('Experiments/NarrowWide/V2/data/version4');
                 <h3><a href="Experiments/NarrowWide/V2/index.html?version=<?php echo $nw1_version; ?>">Zonk Exp1 (n = <?= $nFiles_nw_v1 + $nFiles_nw_v2 + $nFiles_nw_v3 + $nFiles_nw_v4 ?>)</a></h3>
             <?php endif;  ?>
 
+            <?php
+            $prp4 = [];
+            if ($nFiles_prp4_v1 < 0) {
+                array_push($prp4, 1);
+            }
+            if ($nFiles_prp4_v2 < 0) {
+                array_push($prp4, 2);
+            }
+            if ($nFiles_prp4_v3 < 0) {
+                array_push($prp4, 3);
+            }
+            if ($nFiles_prp4_v4 < 0) {
+                array_push($prp4, 4);
+            }
+
+            $randIndex = array_rand($prp4);
+            $prp4_version = $prp4[$randIndex];
+            /* debug_to_console($nw1_version) */
+            ?>
+
+            <?php if (!empty($prp4_version)) : ?>
+                <?php if ($prp4_version == 1 || $prp4_version == 2) : ?>
+                    <h3><a href="Experiments/PRP/Exp4/version1/index.html?taskOrder=<?php echo $prp4_version; ?>">PRP Exp4 (n = <?= $nFiles_prp4_v1 + $nFiles_prp4_v2 + $nFiles_prp4_v3 + $nFiles_prp4_v4 ?>)</a></h3>
+                <?php endif;  ?>
+                <?php if ($prp4_version == 3 || $prp4_version == 4) : ?>
+                    <h3><a href="Experiments/PRP/Exp4/version2/index.html?taskOrder=<?php echo $prp4_version - 2; ?>">PRP Exp4 (n = <?= $nFiles_prp4_v1 + $nFiles_prp4_v2 + $nFiles_prp4_v3 + $nFiles_prp4_v4 ?>)</a></h3>
+                <?php endif;  ?>
+            <?php endif;  ?>
+
             <h2>0,5 VP-Stunden</h2>
+
+            <?php
+            $csem = [];
+            if ($nFiles_csem_text < 0) {
+                array_push($csem, 1);
+            }
+            if ($nFiles_csem_image < 0) {
+                array_push($csem, 2);
+            }
+
+            $randIndex = array_rand($csem);
+            $csem_version = $csem[$randIndex];
+            /* debug_to_console($nw1_version) */
+            ?>
+
+            <?php if (!empty($csem_version)) : ?>
+                <?php if ($csem_version == 1) : ?>
+                    <h3><a href="Experiments/CSE_mouse_tracking/text_only/index.html">CSE Maus Exp1 (n = <?= $nFiles_csem_text + $nFiles_csem_image ?>)</a></h3>
+                <?php endif;  ?>
+                <?php if ($csem_version == 2) : ?>
+                    <h3><a href="Experiments/CSE_mouse_tracking/image_only/index.html">CSE Maus Exp1 (n = <?= $nFiles_csem_text + $nFiles_csem_image ?>)</a></h3>
+                <?php endif;  ?>
+            <?php endif;  ?>
+
+
+            <?php
+            $mn = [];
+            if ($nFiles_mn2 < 0) {
+                array_push($mn, 1);
+            }
+            if ($nFiles_mn3 < 0) {
+                array_push($mn, 2);
+            }
+
+            $randIndex = array_rand($mn);
+            $mn_version = $mn[$randIndex];
+            /* debug_to_console($nw1_version) */
+            ?>
+
+            <?php if (!empty($mn_version)) : ?>
+                <?php if ($mn_version == 1) : ?>
+                    <h3><a href="Experiments/MouseNegation/Exp2/index.html">Mouse Negation Exp2/3 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
+                <?php endif;  ?>
+                <?php if ($mn_version == 2) : ?>
+                    <h3><a href="Experiments/MouseNegation/Exp3/index.html">Mouse Negation Exp2/3 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
+                <?php endif;  ?>
+            <?php endif;  ?>
+
 
         </div>
     </div>

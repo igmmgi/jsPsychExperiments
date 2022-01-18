@@ -27,7 +27,7 @@ jsPsych.data.addProperties({ version: 1, taskOrder: taskOrder });
 const prms = {
   nTrlsP: 32, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
-  nBlks: 8,
+  nBlks: 10,
   fixDur: 500,
   fbDur: [1000, 4000, 4000, 4000],
   soa: [50, 1000],
@@ -65,7 +65,7 @@ const task_instructions1 = {
     "<h3 style='text-align: left;'>WICHTIG: In diesem Experiment wirst du auf Töne reagieren müssen.</h3>" +
     "<h3 style='text-align: left;'>Bitte stelle sicher, dass dein Computer/Laptop Sounds abspielen kann.</h3>" +
     "<h3 style='text-align: left;'>Du kannst gerne Kopfhörer vervenden.</h3><br>" +
-    "<h3 style='text-align: center;'>Wir bitten dich die ca. 35 Minuten konzentriert zu arbeiten.</h3><br>" +
+    "<h3 style='text-align: center;'>Wir bitten dich die ca. 35-40 Minuten konzentriert zu arbeiten.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -94,7 +94,7 @@ const task_instructions_prp = {
     "<h3 style='text-align: left;'>den Pfeil reagiert hast, musst du auf die Höhe des Tones reagiere.</h3>" +
     "<h3 style='text-align: left;'>Reagiere wie folgt:</h3><br>" +
     "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelfinger</h3>" +
-    "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
+    "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigefinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
@@ -105,7 +105,7 @@ const task_instructions_prp = {
     "<h3 style='text-align: left;'>" +
     '&emsp;&emsp;&emsp;&emsp;("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
     '</h3><br>' +
-    "<h3 style='text-align: left;'>Warte nicht mit der Bearbeitung der 1. Aufgabe bis der 2. Aufgabe präsentiert wird!</h3><br>" +
+    "<h3 style='text-align: left;'>Warte nicht mit der Bearbeitung die 1. Aufgabe bis die 2. Aufgabe präsentiert wird!</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -119,7 +119,7 @@ const task_instructions_ts = {
     "<h3 style='text-align: left;'>In jedem Durchgang musst du auf den Pfeil ODER Höhe des Tones reagieren.</h3>" +
     "<h3 style='text-align: left;'>Reagiere wie folgt:.</h3>" +
     "<h3 style='text-align: center;'>Pfeilaufgabe: Mittelfinger</h3>" +
-    "<h3 style='text-align: center;'>Tonaufgabe: Zeigfinger</h3><br>" +
+    "<h3 style='text-align: center;'>Tonaufgabe: Zeigefinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
@@ -212,7 +212,7 @@ function drawFeedbackPRP() {
   ctx.font = '20px monospace';
   if (dat.corrCode !== 1) {
     ctx.fillText('Aufgabe 1 (Pfeilaufgabe): Mittelfinger', 0, 50);
-    ctx.fillText('Aufgabe 2 (Tonaufgabe): Zeigfinger', 0, 80);
+    ctx.fillText('Aufgabe 2 (Tonaufgabe): Zeigefinger', 0, 80);
     ctx.font = 'bold 20px monospace';
     ctx.fillText(prms.respArrows[0], -300, 150);
     ctx.fillText('Tiefer Ton', -180, 150);
@@ -241,7 +241,7 @@ function drawFeedbackTS() {
   ctx.font = '20px monospace';
   if (dat.corrCode !== 1) {
     if (dat.task === 'tone') {
-      ctx.fillText('Tonaufgabe: Zeigfinger', 0, 50);
+      ctx.fillText('Tonaufgabe: Zeigefinger', 0, 50);
       ctx.font = 'bold 20px monospace';
       ctx.fillText('Tiefer Ton', -150, 100);
       ctx.fillText('Hoher Ton', 150, 100);
@@ -390,7 +390,7 @@ function blockStartTextPRP() {
     '</h1><br>' +
     "<h1 style='text-align: center;'>***DUAL-BLOCK***</h1><br>" +
     "<h3 style='text-align: center;'>Aufgabe 1 (Pfeilaufgabe): Mittelfinger</h3>" +
-    "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigfinger</h3><br>" +
+    "<h3 style='text-align: center;'>Aufgabe 2 (Tonaufgabe): Zeigefinger</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +
@@ -416,7 +416,7 @@ function blockStartTextTS() {
     "<h1 style='text-align: center;'>***SINGLE-BLOCK***</h1><br>" +
     "<h3 style='text-align: center;'>Pfeilaufgabe (Mittelfinger)</h3>" +
     "<h3 style='text-align: center;'>ODER</h3>" +
-    "<h3 style='text-align: center;'>Tonaufgabe (Zeigfinger)</h3><br>" +
+    "<h3 style='text-align: center;'>Tonaufgabe (Zeigefinger)</h3><br>" +
     "<h2 style='text-align: left;'>&emsp;&emsp;&emsp;&emsp;&emsp;" +
     prms.respArrows[0] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;' +

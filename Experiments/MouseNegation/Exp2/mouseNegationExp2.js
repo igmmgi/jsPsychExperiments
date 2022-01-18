@@ -162,9 +162,15 @@ const trial_feedback = {
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     if (dat.blockNum === 1) {
+      // feedback for both correct and incorrect trials during first block
       trial.trial_duration = prms.fbDur[dat.corrCode];
     } else {
-      trial.trial_duration = 0;
+      // feedback only for incorrect trials during exp blocks
+      if (dat.corrCode === 0) {
+        trial.trial_duration = 0;
+      } else {
+        trial.trial_duration = prms.fbDur[dat.corrCode];
+      }
     }
   },
 };
@@ -191,7 +197,7 @@ function blockFeedbackTxt(filter_options) {
     ' %</H1>' +
     '<H2>Drücke eine beliebige Taste, um fortzufahren!</H2>';
   prms.cBlk += 1;
-  prms.cTrl = 0;
+  prms.cTrl = 1;
   return blockFbTxt;
 }
 
@@ -221,8 +227,26 @@ const trial_timeline = {
   timeline_variables: stimuli,
 };
 
+const mouse_trackpad_question = {
+  type: 'survey-multi-choice',
+  questions: [
+    {
+      prompt: 'Haben Sie eine Maus oder eine Trackpad benutzt?',
+      name: 'MouseTrackpad',
+      options: ['Maus', 'Trackpad'],
+      required: true,
+      horizontal: false,
+    },
+  ],
+  button_label: 'Weiter',
+  on_finish: function () {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    jsPsych.data.addProperties({ MausTrackpad: dat.response.MouseTrackpad });
+  },
+};
+
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('mn3_', 16);
+const randomString = generateRandomStringWithExpName('mn2_', 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -304,6 +328,9 @@ function genExpSeq() {
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback); // show previous block performance
   }
+
+  // mouse vs. trackpad question
+  exp.push(mouse_trackpad_question);
 
   // save data
   exp.push(save_data);
