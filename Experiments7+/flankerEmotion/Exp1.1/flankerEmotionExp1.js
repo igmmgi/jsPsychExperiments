@@ -92,8 +92,8 @@ Drücke eine beliebige Taste, um fortzufahren.`,
 // console.log(mpi_positive_old);
 // console.log(mpi_positive_middle);
 // console.log(mpi_positive_young);
-// console.log(kdef_neutral);
-// console.log(kdef_positive);
+console.log(kdef_neutral);
+console.log(kdef_positive);
 // console.log(radboud_neutral);
 // console.log(radboud_positive);
 // console.log(radiate_neutral);
