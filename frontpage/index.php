@@ -110,10 +110,9 @@ $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
             <p> Free Choice Race Exp1: sebastian.heins@student.uni-tuebingen.de</p>
             <p> Reward Exp2: hiwipibio@gmail.com </p>
             <p> Zonk Exp1: hiwipibio@gmail.com </p>
-            <p> PRP Exp4: hiwipibio@gmail.com </p>
-            <p> CSE Exp1: m.zeller@student.uni-tuebigen.de </p><br>
-            <p> Mouse Negation Exp2: m.zeller@student.uni-tuebigen.de </p><br>
-            <p> Mouse Negation Exp3: m.zeller@student.uni-tuebigen.de </p><br>
+            <p> DualTask Exp4: hiwipibio@gmail.com </p>
+            <p> CSE Exp1: m.zeller@student.uni-tuebigen.de </p>
+            <p> Mouse Negation: m.zeller@student.uni-tuebigen.de </p>
 
         </div>
         <div class="sidenav">
@@ -207,16 +206,16 @@ $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
 
             <?php
             $prp4 = [];
-            if ($nFiles_prp4_v1 < 0) {
+            if ($nFiles_prp4_v1 < 10) {
                 array_push($prp4, 1);
             }
-            if ($nFiles_prp4_v2 < 0) {
+            if ($nFiles_prp4_v2 < 10) {
                 array_push($prp4, 2);
             }
-            if ($nFiles_prp4_v3 < 0) {
+            if ($nFiles_prp4_v3 < 10) {
                 array_push($prp4, 3);
             }
-            if ($nFiles_prp4_v4 < 0) {
+            if ($nFiles_prp4_v4 < 10) {
                 array_push($prp4, 4);
             }
 
@@ -227,10 +226,10 @@ $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
 
             <?php if (!empty($prp4_version)) : ?>
                 <?php if ($prp4_version == 1 || $prp4_version == 2) : ?>
-                    <h3><a href="Experiments/PRP/Exp4/version1/index.html?taskOrder=<?php echo $prp4_version; ?>">PRP Exp4 (n = <?= $nFiles_prp4_v1 + $nFiles_prp4_v2 + $nFiles_prp4_v3 + $nFiles_prp4_v4 ?>)</a></h3>
+                    <h3><a href="Experiments/PRP/Exp4/version1/index.html?taskOrder=<?php echo $prp4_version; ?>">DualTask Exp4 (n = <?= $nFiles_prp4_v1 + $nFiles_prp4_v2 + $nFiles_prp4_v3 + $nFiles_prp4_v4 ?>)</a></h3>
                 <?php endif;  ?>
                 <?php if ($prp4_version == 3 || $prp4_version == 4) : ?>
-                    <h3><a href="Experiments/PRP/Exp4/version2/index.html?taskOrder=<?php echo $prp4_version - 2; ?>">PRP Exp4 (n = <?= $nFiles_prp4_v1 + $nFiles_prp4_v2 + $nFiles_prp4_v3 + $nFiles_prp4_v4 ?>)</a></h3>
+                    <h3><a href="Experiments/PRP/Exp4/version2/index.html?taskOrder=<?php echo $prp4_version - 2; ?>">DualTask Exp4 (n = <?= $nFiles_prp4_v1 + $nFiles_prp4_v2 + $nFiles_prp4_v3 + $nFiles_prp4_v4 ?>)</a></h3>
                 <?php endif;  ?>
             <?php endif;  ?>
 
