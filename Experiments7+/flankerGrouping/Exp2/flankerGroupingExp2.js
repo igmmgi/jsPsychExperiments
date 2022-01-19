@@ -8,21 +8,15 @@
 
 const jsPsych = initJsPsych({});
 
-// for piloting
-// imageset1 = stimulus-h-s
-// imageset2 = stimulus-h-s-far
-const stimHeight = Number(jsPsych.data.urlVariables().stimHeight);
-const imageSet = Number(jsPsych.data.urlVariables().imageSet);
-jsPsych.data.addProperties({ stimHeight: stimHeight, imageSet: imageSet });
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
+  imageSet: 1,
   screenRes: [960, 720],
-  nTrlsP: 32, // number of trials in first block (practice)
+  nTrlsP: 64, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
-  nBlks: 13, // number of blocks
+  nBlks: 16, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 50, // size of fixation cross
   fbDur: [0, 1500, 1500, 1500], // duration of feedback for each type
@@ -32,7 +26,7 @@ const prms = {
   tooSlow: 2000, // response slower than x ms -> too slow!
   respKeys: ['Q', 'P'],
   target: shuffle(['H', 'S']),
-  stimHeight: stimHeight,
+  stimHeight: 180,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
   fbTxtSizeBlock: 30,
@@ -76,25 +70,23 @@ const task_instructions = {
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 const flankers = [
-  `images${imageSet}/dash-dash-noObject-far.png`,
-  `images${imageSet}/dash-dash-noObject-near.png`,
-  `images${imageSet}/dash-dash-Object-far.png`,
-  `images${imageSet}/dash-dash-Object-near.png`,
-  `images${imageSet}/dash-dot-noObject-far.png`,
-  `images${imageSet}/dash-dot-noObject-near.png`,
-  `images${imageSet}/dash-dot-Object-far.png`,
-  `images${imageSet}/dash-dot-Object-near.png`,
-  `images${imageSet}/dot-dash-noObject-far.png`,
-  `images${imageSet}/dot-dash-noObject-near.png`,
-  `images${imageSet}/dot-dash-Object-far.png`,
-  `images${imageSet}/dot-dash-Object-near.png`,
-  `images${imageSet}/dot-dot-noObject-far.png`,
-  `images${imageSet}/dot-dot-noObject-near.png`,
-  `images${imageSet}/dot-dot-Object-far.png`,
-  `images${imageSet}/dot-dot-Object-near.png`,
+  `images${prms.imageSet}/dash-dash-noObject-far.png`,
+  `images${prms.imageSet}/dash-dash-noObject-near.png`,
+  `images${prms.imageSet}/dash-dash-Object-far.png`,
+  `images${prms.imageSet}/dash-dash-Object-near.png`,
+  `images${prms.imageSet}/dash-dot-noObject-far.png`,
+  `images${prms.imageSet}/dash-dot-noObject-near.png`,
+  `images${prms.imageSet}/dash-dot-Object-far.png`,
+  `images${prms.imageSet}/dash-dot-Object-near.png`,
+  `images${prms.imageSet}/dot-dash-noObject-far.png`,
+  `images${prms.imageSet}/dot-dash-noObject-near.png`,
+  `images${prms.imageSet}/dot-dash-Object-far.png`,
+  `images${prms.imageSet}/dot-dash-Object-near.png`,
+  `images${prms.imageSet}/dot-dot-noObject-far.png`,
+  `images${prms.imageSet}/dot-dot-noObject-near.png`,
+  `images${prms.imageSet}/dot-dot-Object-far.png`,
+  `images${prms.imageSet}/dot-dot-Object-near.png`,
 ];
-
-console.log(flankers);
 
 const preload = {
   type: jsPsychPreload,
@@ -220,9 +212,9 @@ const block_feedback = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                              VP Stun                               //
+//                             VP Stunden                             //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16, 'fg1_');
+const randomString = generateRandomString(16, 'fg2_');
 
 const alphaNum = {
   type: jsPsychHtmlKeyboardResponse,
@@ -234,7 +226,7 @@ const alphaNum = {
         Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an:<br><br>xxx@yyy<br><br> Code: ` +
+        an: <br><br>rundmc-gghk@outlook.de<br><br> Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,

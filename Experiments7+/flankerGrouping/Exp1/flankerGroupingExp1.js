@@ -8,34 +8,28 @@
 
 const jsPsych = initJsPsych({});
 
-// for piloting
-// imageset1 = Material-neu
-// imageset2 = stimulus-material-resized
-const stimHeight = Number(jsPsych.data.urlVariables().stimHeight);
-const imageSet = Number(jsPsych.data.urlVariables().imageSet);
-jsPsych.data.addProperties({ stimHeight: stimHeight, imageSet: imageSet });
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
+  imageSet: 1,
   screenRes: [960, 720],
-  nTrlsP: 32, // number of trials in first block (practice)
+  nTrlsP: 64, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
-  nBlks: 13, // number of blocks
+  nBlks: 16, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 50, // size of fixation cross
-  fbDur: [0, 1500, 1500, 1500], // duration of feedback for each type
+  fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
   waitDur: 1000, // duration following ...
   iti: 500, // duration of inter-trial-interval
   tooFast: 150, // responses faster than x ms -> too fast!
   tooSlow: 2000, // response slower than x ms -> too slow!
   respKeys: ['Q', 'P'],
-  target: shuffle(['Dashed', 'Dotted']),
-  stimHeight: stimHeight,
+  target: shuffle(['gestrichelt', 'gepunktet']),
+  stimHeight: 180,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
-  fbTxtSizeBlock: 30,
+  fbTxtSizeBlock: 26,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
@@ -43,55 +37,87 @@ const prms = {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const task_instructions = {
+const task_instructions1 = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: generate_formatted_html({
+    text: `Willkommen zu unserem Experiment:<br><br>
+Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 40 Minuten konzentriert zu arbeiten.<br><br>
+Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
+Bei Fragen oder Problemen wende dich bitte an:<br><br>
+rundmc-gghk@outlook.de<br><br>
+Drücke eine beliebige Taste, um fortzufahren`,
+    align: 'left',
+    colour: 'black',
+    fontsize: 30,
+  }),
+};
+
+const task_instructions2 = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus:
     generate_formatted_html({
-      text: 'Welcome:',
-      align: 'center',
-      color: 'black',
-      fontsize: 50,
-      xypos: [0, -30],
-      bold: true,
-    }) +
-    generate_formatted_html({
-      text: 'Respond to the line type (dashed/dotted) of the central vertical line.',
+      text: `In jedem Durchgang werden Dir Stimuli präsentiert, die aus
+    verschiedenen Linien bestehen. Deine Aufgabe besteht nun darin zu entscheiden,
+    ob die mittlere Linie gepunktet oder gestrichelt
+    ist. Es gilt:`,
       align: 'left',
-      color: 'black',
-      fontsize: 40,
-      xypos: [0, 0],
+      colour: 'black',
+      fontsize: 30,
     }) +
     generate_formatted_html({
-      text: `${prms.target[0]} = "${prms.respKeys[0]}" key &emsp; ${prms.target[1]} = "${prms.respKeys[1]}" key<br><br><br>
-        Press any key to continue!`,
-      align: 'center',
+      text: `${prms.target[0]} = "${prms.respKeys[0]}" Taste &emsp; ${prms.target[1]} = "${prms.respKeys[1]}" Taste<br><br><br>
+    Versuche bitte so schnell und fehlerfrei wie möglich zu antworten.<br><br>
+        Drücke eine beliebige Taste, um fortzufahren`,
+      align: 'left',
       colour: 'black',
-      fontsize: 40,
-      xypos: [0, 50],
+      fontsize: 30,
     }),
-  post_trial_gap: prms.waitDur,
+};
+
+const task_reminder = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>Es gilt:`,
+        align: 'left',
+        colour: 'black',
+        fontsize: 30,
+      }) +
+      generate_formatted_html({
+        text: `${prms.target[0]} = "${prms.respKeys[0]}" Taste &emsp; ${prms.target[1]} = "${prms.respKeys[1]}" Taste<br><br><br>
+    Versuche bitte so schnell und fehlerfrei wie möglich zu antworten.<br><br>
+        Drücke eine beliebige Taste, um fortzufahren`,
+        align: 'left',
+        colour: 'black',
+        fontsize: 30,
+      });
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 const flankers = [
-  `images${imageSet}/dash-dash-noObject-far.png`,
-  `images${imageSet}/dash-dash-noObject-near.png`,
-  `images${imageSet}/dash-dash-Object-far.png`,
-  `images${imageSet}/dash-dash-Object-near.png`,
-  `images${imageSet}/dash-dot-noObject-far.png`,
-  `images${imageSet}/dash-dot-noObject-near.png`,
-  `images${imageSet}/dash-dot-Object-far.png`,
-  `images${imageSet}/dash-dot-Object-near.png`,
-  `images${imageSet}/dot-dash-noObject-far.png`,
-  `images${imageSet}/dot-dash-noObject-near.png`,
-  `images${imageSet}/dot-dash-Object-far.png`,
-  `images${imageSet}/dot-dash-Object-near.png`,
-  `images${imageSet}/dot-dot-noObject-far.png`,
-  `images${imageSet}/dot-dot-noObject-near.png`,
-  `images${imageSet}/dot-dot-Object-far.png`,
-  `images${imageSet}/dot-dot-Object-near.png`,
+  `images${prms.imageSet}/dash-dash-noObject-far.png`,
+  `images${prms.imageSet}/dash-dash-noObject-near.png`,
+  `images${prms.imageSet}/dash-dash-Object-far.png`,
+  `images${prms.imageSet}/dash-dash-Object-near.png`,
+  `images${prms.imageSet}/dash-dot-noObject-far.png`,
+  `images${prms.imageSet}/dash-dot-noObject-near.png`,
+  `images${prms.imageSet}/dash-dot-Object-far.png`,
+  `images${prms.imageSet}/dash-dot-Object-near.png`,
+  `images${prms.imageSet}/dot-dash-noObject-far.png`,
+  `images${prms.imageSet}/dot-dash-noObject-near.png`,
+  `images${prms.imageSet}/dot-dash-Object-far.png`,
+  `images${prms.imageSet}/dot-dash-Object-near.png`,
+  `images${prms.imageSet}/dot-dot-noObject-far.png`,
+  `images${prms.imageSet}/dot-dot-noObject-near.png`,
+  `images${prms.imageSet}/dot-dot-Object-far.png`,
+  `images${prms.imageSet}/dot-dot-Object-near.png`,
 ];
 
 const preload = {
@@ -152,8 +178,6 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
-  console.log(dat.comp);
-  console.log(dat.distance);
 
   let corrCode = 0;
   let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
@@ -201,6 +225,24 @@ const trial_timeline = {
   timeline_variables: trials,
 };
 
+function blockFeedbackTextFG(cBlk, nBlks, meanRt, errorRate) {
+  let blockFbTxt =
+    '<h2>Block: ' +
+    cBlk +
+    ' von ' +
+    nBlks +
+    '</h2><br>' +
+    '<h2>Mittlere Reaktionszeit: ' +
+    meanRt +
+    ' ms </h2>' +
+    '<h2>Fehlerrate: ' +
+    errorRate +
+    ' %</h2><br>' +
+    '<h4>Versuche weiterhin so schnell und fehlerfrei wie möglich zu antworten</h4><br>' +
+    '<h4>Drücke eine beliebige Taste, um fortzufahren!</h4>';
+  return blockFbTxt;
+}
+
 const block_feedback = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '',
@@ -208,7 +250,7 @@ const block_feedback = {
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
     let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
-    let text = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
+    let text = blockFeedbackTextFG(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
     trial.stimulus = `<div style="font-size:${prms.fbTxtSizeBlock}px;">${text}</div>`;
   },
   on_finish: function () {
@@ -218,7 +260,7 @@ const block_feedback = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                              VP Stun                               //
+//                             VP Stunden                             //
 ////////////////////////////////////////////////////////////////////////
 const randomString = generateRandomString(16, 'fg1_');
 
@@ -232,7 +274,7 @@ const alphaNum = {
         Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an:<br><br>xxx@yyy<br><br> Code: ` +
+        an: <br><br>rundmc-gghk@outlook.de<br><br> Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
@@ -278,9 +320,11 @@ function genExpSeq() {
   exp.push(welcome_message());
   exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
-  exp.push(task_instructions);
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
 
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    exp.push(task_reminder);
     let blk_timeline = { ...trial_timeline };
     blk_timeline.sample = {
       type: 'fixed-repetitions',
