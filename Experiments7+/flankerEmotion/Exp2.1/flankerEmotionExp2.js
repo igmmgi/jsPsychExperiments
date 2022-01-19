@@ -4,8 +4,6 @@
 
 const jsPsych = initJsPsych({});
 
-const stimHeight = Number(jsPsych.data.urlVariables().stimHeight);
-
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
@@ -21,7 +19,7 @@ const prms = {
   tooSlow: 2000, // response slower than x ms -> too slow!
   respKeys: ['Q', 'P'],
   target: shuffle(['neutrales', 'negatives']),
-  stimHeight: stimHeight,
+  stimHeight: 175,
   stimSpacing: 0,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
@@ -39,10 +37,10 @@ const task_instructions1 = {
     text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.<br><br>
+um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 15 Minuten konzentriert zu arbeiten.<br><br>
 Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
 Bei Fragen oder Problemen wende dich bitte an:<br><br>
-matthias.viteritti@student.uni-tuebingen.de<br><br>
+gesichter-studie@web.de<br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     colour: 'black',
@@ -53,26 +51,12 @@ Drücke eine beliebige Taste, um fortzufahren`,
 const task_instructions2 = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: generate_formatted_html({
-    text: `In diesem Experiment werden dir immer drei Gesichter präsentiert. Deine Aufgabe ist es,
-    zu entscheiden, ob das mittlere Gesicht eine Emotion zeigt oder nicht.<br><br>
-WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit deinem rechten Zeigefinger.
-Zunächst hast du die Gelegenheit die Aufgabe zu üben.<br><br>
+    text: `In diesem Experiment siehst du Gesichter mit negativen oder neutralen Emotionen.
+    In jedem Durchgang werden dir immer drei Gesichter präsentiert.
+    Deine Aufgabe ist es zu entscheiden, ob das mittlere Gesicht eine neutrale oder negative Emotion zeigt.<br><br>
+WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit deinem rechten Zeigefinger.<br><br>
 "Q" = ${prms.target[0]} Gesicht &emsp; "P" = ${prms.target[1]} Gesicht<br><br>
 Bitte antworte so schnell und so korrekt wie möglich!<br><br>
-Drücke eine beliebige Taste, um fortzufahren.`,
-    align: 'left',
-    colour: 'black',
-    fontsize: 30,
-  }),
-};
-
-const task_instructions_key_mapping = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: generate_formatted_html({
-    text: `In diesem Experiment werden dir immer drei Gesichter präsentiert. Deine Aufgabe ist es,
-    zu entscheiden, ob das mittlere Gesicht eine Emotion zeigt oder nicht.
-WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit deinem rechten Zeigefinger.
-Zunächst hast du die Gelegenheit die Aufgabe zu üben.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
     align: 'left',
     colour: 'black',
@@ -406,7 +390,7 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 //                              VP Stunden                            //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16, 'fe1_');
+const randomString = generateRandomString(16, 'fe2_');
 
 const alphaNum = {
   type: jsPsychHtmlKeyboardResponse,
@@ -419,7 +403,7 @@ const alphaNum = {
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
         an:<br><br>
-        matthias.viteritti@student.uni-tuebingen.de<br><br>
+        gesichter-studie@web.de<br><br>
         Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
@@ -461,6 +445,8 @@ function genExpSeq() {
   'use strict';
 
   let exp = [];
+
+  exp.push(enter_password);
 
   exp.push(fullscreen(true));
   exp.push(browser_check(prms.screenRes));
