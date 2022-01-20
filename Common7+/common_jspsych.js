@@ -57,6 +57,15 @@ function saveDataLocal(
     .localSave(filetype, filename + '.' + filetype);
 }
 
+function saveRandomCode(url, filename, code) {
+  $.ajax({
+    type: 'post',
+    cache: false,
+    url: url,
+    data: { filename: filename, filedata: code },
+  });
+}
+
 const user_interaction_data = {
   event: null,
   trial: null,

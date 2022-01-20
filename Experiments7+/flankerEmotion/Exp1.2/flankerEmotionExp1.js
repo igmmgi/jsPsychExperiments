@@ -431,7 +431,7 @@ const alphaNum = {
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
     lineheight: 1.0,
-    bold: true,
+    bold: false,
     align: 'left',
   }),
 };
