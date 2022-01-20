@@ -24,7 +24,7 @@ const prms = {
   stimSpacing: 0,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
-  fbTxtSizeBlock: 30,
+  fbTxtSizeBlock: 24,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
@@ -71,7 +71,7 @@ const block_start = {
   on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
       text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>
-    Reagiere auf das mittlere Gesicht wie folgt:
+    Reagiere auf das mittlere Gesicht wie folgt:<br><br>
 "Q" = ${prms.target[0]} Gesicht &emsp; "P" = ${prms.target[1]} Gesicht<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
       align: 'left',
@@ -321,7 +321,7 @@ const flanker_stimulus = {
   choices: prms.respKeys,
   render_on_canvas: false,
   data: {
-    stim: 'prime',
+    stim: 'flanker',
     comp: jsPsych.timelineVariable('comp'),
     target: jsPsych.timelineVariable('target'),
     target_type: jsPsych.timelineVariable('target_type'),

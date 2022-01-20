@@ -24,7 +24,7 @@ const prms = {
   stimSpacing: 0,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
-  fbTxtSizeBlock: 30,
+  fbTxtSizeBlock: 24,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
@@ -52,9 +52,9 @@ Drücke eine beliebige Taste, um fortzufahren`,
 const task_instructions2 = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: generate_formatted_html({
-    text: `In diesem Experiment siehst du Gesichter mit positiven oder neutralen Emotionen.
+    text: `In diesem Experiment siehst du Gesichter mit negativen oder neutralen Emotionen.
     In jedem Durchgang werden dir immer drei Gesichter präsentiert.
-    Deine Aufgabe ist es zu entscheiden, ob das mittlere Gesicht eine neutrale oder positive Emotion zeigt.<br><br>
+    Deine Aufgabe ist es zu entscheiden, ob das mittlere Gesicht eine neutrale oder negative Emotion zeigt.<br><br>
 WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit deinem rechten Zeigefinger.<br><br>
 "Q" = ${prms.target[0]} Gesicht &emsp; "P" = ${prms.target[1]} Gesicht<br><br>
 Bitte antworte so schnell und so korrekt wie möglich!<br><br>
@@ -71,7 +71,7 @@ const block_start = {
   on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
       text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>
-    Zur Erinnerung:<br><br>
+    Reagiere auf das mittlere Gesicht wie folgt:<br><br>
 "Q" = ${prms.target[0]} Gesicht &emsp; "P" = ${prms.target[1]} Gesicht<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
       align: 'left',
