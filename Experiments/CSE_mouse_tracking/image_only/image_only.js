@@ -129,6 +129,7 @@ const example_start = {
   post_trial_gap: prms.waitDur,
   on_start: function () {
     prms.cBlk += 1;
+    prms.cTrl = 1;
   },
 };
 
@@ -146,6 +147,7 @@ const exp_start = {
   post_trial_gap: prms.waitDur,
   on_start: function () {
     prms.cBlk += 1;
+    prms.cTrl = 1;
   },
 };
 

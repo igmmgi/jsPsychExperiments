@@ -38,7 +38,7 @@ const task_instructions1 = {
     text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 15 Minuten konzentriert zu arbeiten.<br><br>
+um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 15 Minuten konzentriert zu arbeiten.<br><br>
 Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
 Bei Fragen oder Problemen wende dich bitte an:<br><br>
 gesichter-studie@web.de<br><br>
@@ -380,18 +380,20 @@ const trial_timeline_radiate2 = {
   timeline_variables: trials_radiate2,
 };
 
-const trial_timelines = [trial_timeline_nimstim].concat(
-  shuffle([
-    trial_timeline_kdef,
-    trial_timeline_mpi_young,
-    trial_timeline_mpi_middle,
-    trial_timeline_mpi_old,
-    trial_timeline_radboud,
-    trial_timeline_radiate1,
-    trial_timeline_radiate2,
-  ]),
-);
-// console.log(trial_timelines);
+// const trial_timelines = [trial_timeline_nimstim].concat(
+//   shuffle([
+//     trial_timeline_kdef,
+//     trial_timeline_mpi_young,
+//     trial_timeline_mpi_middle,
+//     trial_timeline_mpi_old,
+//     trial_timeline_radboud,
+//     trial_timeline_radiate1,
+//     trial_timeline_radiate2,
+//   ]),
+// );
+// // console.log(trial_timelines);
+
+const trial_timelines = [trial_timeline_kdef];
 
 const block_feedback = {
   type: jsPsychHtmlKeyboardResponse,
@@ -468,7 +470,6 @@ function save() {
 
   const data_fn = `${dirName}data/${expName}_${vpNum}`;
   saveData('/Common/write_data.php', data_fn, { stim: 'flanker' });
-  // saveDataLocal(data_fn, { stim: 'flanker' });
 
   const code_fn = `${dirName}code/${expName}`;
   saveRandomCode('/Common/write_code.php', code_fn, randomString);
@@ -488,14 +489,14 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(enter_password);
+  // exp.push(enter_password);
 
   exp.push(fullscreen(true));
   exp.push(browser_check(prms.screenRes));
   exp.push(preload);
   exp.push(resize_browser());
   exp.push(welcome_message());
-  exp.push(vpInfoForm('/Common7+/vpInfoForm_de_copyright.html'));
+  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de_copyright.html'));
   exp.push(mouseCursor(false));
   exp.push(task_instructions1);
   exp.push(task_instructions2);

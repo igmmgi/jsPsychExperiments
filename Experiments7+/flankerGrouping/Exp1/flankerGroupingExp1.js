@@ -16,9 +16,9 @@ const prms = {
   screenRes: [960, 720],
   nTrlsP: 64, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
-  nBlks: 16, // number of blocks
+  nBlks: 15, // number of blocks
   fixDur: 500, // duration of fixation cross
-  fixSize: 50, // size of fixation cross
+  fixSize: 40, // size of fixation cross
   fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
   waitDur: 1000, // duration following ...
   iti: 500, // duration of inter-trial-interval
@@ -28,7 +28,7 @@ const prms = {
   target: shuffle(['gestrichelt', 'gepunktet']),
   stimHeight: 180,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
-  fbTxtSizeTrial: 30,
+  fbTxtSizeTrial: 26,
   fbTxtSizeBlock: 26,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -43,7 +43,7 @@ const task_instructions1 = {
     text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 40 Minuten konzentriert zu arbeiten.<br><br>
+um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten.<br><br>
 Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
 Bei Fragen oder Problemen wende dich bitte an:<br><br>
 rundmc-gghk@outlook.de<br><br>
@@ -127,22 +127,22 @@ const preload = {
 
 // prettier-ignore
 const trials = [
-  { flanker: flankers[ 0], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 1], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 2], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 3], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 4], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 5], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 6], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 7], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dashed")] },
-  { flanker: flankers[ 8], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[ 9], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[10], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[11], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[12], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[13], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[14], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
-  { flanker: flankers[15], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("Dotted")] },
+  { flanker: flankers[ 0], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[ 1], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[ 2], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[ 3], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[ 4], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[ 5], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[ 6], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[ 7], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[ 8], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
+  { flanker: flankers[ 9], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
+  { flanker: flankers[10], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
+  { flanker: flankers[11], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
+  { flanker: flankers[12], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
+  { flanker: flankers[13], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
+  { flanker: flankers[14], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
+  { flanker: flankers[15], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
 ];
 
 ////////////////////////////////////////////////////////////////////////
@@ -170,7 +170,9 @@ const trial_feedback = {
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = prms.fbDur[dat.corrCode - 1];
-    trial.stimulus = `<div style="font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]}</div>`;
+    trial.stimulus = `<div style="text-align: center; font-size:${prms.fbTxtSizeTrial}px;">${
+      prms.fbTxt[dat.corrCode - 1]
+    }</div>`;
   },
 };
 
@@ -238,8 +240,8 @@ function blockFeedbackTextFG(cBlk, nBlks, meanRt, errorRate) {
     '<h2>Fehlerrate: ' +
     errorRate +
     ' %</h2><br>' +
-    '<h4>Versuche weiterhin so schnell und fehlerfrei wie möglich zu antworten</h4><br>' +
-    '<h4>Drücke eine beliebige Taste, um fortzufahren!</h4>';
+    '<h4>Versuche weiterhin so schnell und fehlerfrei wie möglich zu antworten!</h4><br>' +
+    '<h4>Drücke eine beliebige Taste, um fortzufahren.</h4>';
   return blockFbTxt;
 }
 
@@ -279,7 +281,7 @@ const alphaNum = {
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
     lineheight: 1.0,
-    bold: true,
+    bold: false,
     align: 'left',
   }),
 };
@@ -297,6 +299,9 @@ function save() {
   const fn = `${dirName}data/${expName}_${vpNum}`;
   saveData('/Common/write_data.php', fn, { stim: 'flanker' });
   // saveDataLocal(fn, { stim: 'flanker' });
+
+  const code_fn = `${dirName}code/${expName}`;
+  saveRandomCode('/Common/write_code.php', code_fn, randomString);
 }
 
 const save_data = {

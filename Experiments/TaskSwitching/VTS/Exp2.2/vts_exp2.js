@@ -1,5 +1,4 @@
-// PP_FreeChoice_Exp1
-// B.Sc. WS 2021 Sebastian
+// VTS Exp2
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -18,7 +17,11 @@ const check_screen = {
   },
 };
 
-// 2 counter-balanced order versions
+// 4 counter-balanced order versions
+// version 1: letter task = left hand,  number task = right hand, long first
+// version 2: letter task = left hand,  number task = right hand, short first
+// version 3: letter task = right hand, number task = left hand,  long first
+// version 4: letter task = right hand, number task = left hand,  short first
 const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
@@ -35,24 +38,23 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrls: 96, // number of trials within a block
-  nBlks: 8, // number of blocks
+  nTrlsP: 100, // number of trials within a practice block
+  nTrlsE: 200, // number of trials within an exp block
+  nBlks: 6, // number of blocks
   fixDur: 500,
   waitDur: 1000,
   tooSlow: 3000,
   iti: [500, 500],
   stimFont: '50px Arial',
   stimPos: [-30, 30],
-  numberNoGo: [148, 152, 154, 158],
-  numbersLeft: [125, 132, 139, 146],
-  numbersRight: [160, 167, 174, 181],
-  letterNoGo: ['J', 'M', 'N', 'Q'],
-  lettersLeft: ['B', 'D', 'F', 'H'],
-  lettersRight: ['S', 'U', 'W', 'Y'],
-  soas: [50, 300, Infinity],
+  numbersLeft: [1, 2, 3, 4],
+  numbersRight: [6, 7, 8, 9],
+  lettersLeft: ['A', 'B', 'C', 'D'],
+  lettersRight: ['W', 'X', 'W', 'Z'],
+  soas: [50, 300, 1000],
   respKeys: ['q', 'w', 'o', 'p'],
-  taskMapping: version === 1 ? ['number', 'letter'] : ['letter', 'number'],
-  taskInstructions: version === 1 ? ['< 147', '> 159', '< I', '> R'] : ['< I', '> R', '< 147', '> 159'],
+  taskMapping: [1, 2].includes(version) ? ['number', 'letter'] : ['letter', 'number'],
+  taskInstructions: [1, 2].includes(version) ? ['< 5', '> 5', '< M', '> M'] : ['< M', '> M', '< 5', '> 5'],
 
   // Fixation Cross
   fix_duration: 500,
@@ -62,8 +64,7 @@ const prms = {
   // Feedback
   fbFont: '28px Arial',
   fbText: ['Falsch!', '', 'Zu langsam!'],
-  fbDur: [3000, 0, 3000],
-  fbDurPrac: [4000, 0, 4000],
+  fbDur: [2500, 0, 2500],
 
   // trial/block count
   cBlk: 1,
@@ -83,7 +84,7 @@ const task_instructions1 = {
     Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit
     abbrechen. Bitte stelle sicher, dass du dich in einer ruhigen Umgebung
     befindest und genügend Zeit hast, um das Experiment durchzuführen. Wir
-    bitten dich für die Dauer des Experiments (ca. 45 Minuten) konzentriert zu
+    bitten dich für die Dauer des Experiments (ca. 40 Minuten) konzentriert zu
     arbeiten.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     fontsize: 26,
@@ -94,7 +95,7 @@ const task_instructions1 = {
 };
 
 let task_instructions2;
-if (version === 1) {
+if ([1, 2].includes(version)) {
   task_instructions2 = {
     type: 'html-keyboard-response-canvas',
     canvas_colour: canvas_colour,
@@ -109,7 +110,7 @@ if (version === 1) {
       "<h3 style='text-align: left;'>auf die Tasten „Q“ und „W“.</h3><br>" +
       "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
   };
-} else if (version === 2) {
+} else if ([3, 4].includes(version)) {
   task_instructions2 = {
     type: 'html-keyboard-response-canvas',
     canvas_colour: canvas_colour,
@@ -133,13 +134,13 @@ const task_instructions3 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus:
-    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe vor I oder nach R im Alphabet kommt.</h3>" +
-    "<h3 style='text-align: left;'>Für die Zahlenaufgabe musst du entscheiden ob die Zahl kleiner 147 oder grösser 159 ist.</h3>" +
+    "<h3 style='text-align: left;'>Für die Buchstabenaufgabe musst du entscheiden ob der Buchstabe vor oder nach M im Alphabet kommt.</h3>" +
+    "<h3 style='text-align: left;'>Für die Zahlenaufgabe musst du entscheiden ob die Zahl kleiner oder größer 5 ist.</h3>" +
     "<h3 style='text-align: center;'>Es gilt:</h3>" +
     "<h2 style='text-align: left;'>" +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[0] +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[1] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[2] +
@@ -149,26 +150,8 @@ const task_instructions3 = {
     "<h3 style='text-align: center;'>" +
     '("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
     '</h3><br>' +
-    "<h3 style='text-align: left;'>Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest wenn beide</h3>" +
-    "<h3 style='text-align: left;'>Aufgaben (Buchstabe und Zahl) eine Antwort erfordern.</h3>" +
-    "<h3 style='text-align: left;'>Wenn der Buchstabe zwischen I und R ist, dann musst du die Zahl bearbeiten.</h3>" +
-    "<h3 style='text-align: left;'>Wenn die Zahl zwischen 147 und 159 ist, dann musst du den Buchstaben bearbeiten.</h3>" +
-    "<h3 style='text-align: left;'>Wenn nur eine Aufgabe präsentiert wird, dann musst du diese bearbeiten. </h3><br>" +
-    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
-};
-
-const task_instructions4 = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  stimulus:
-    "<h3 style='text-align: left;'>In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.</h3><br>" +
-    "<h3 style='text-align: left;'>Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, wenn beide</h3>" +
-    "<h3 style='text-align: left;'>Aufgaben (Buchstabe und Zahl) eine Antwort erfordern.</h3><br>" +
-    "<h3 style='text-align: left;'>Wenn jedoch nur ein Aufgabe eine Antwort erfordert oder nur eine Aufgabe präsentiert wird,</h3>" +
-    "<h3 style='text-align: left;'>dann musst du diese Aufgabe bearbeiten.</h3><br>" +
-    "<h3 style='text-align: left;'>Die ersten zwei Blöcken hast du Gelegenheit zu üben.</h3><br>" +
+    "<h3 style='text-align: left;'>Die Aufgaben (Buchstabe und Zahl) erscheinen unterschiedlich schnell auf dem Bildschirm.</h3>" +
+    "<h3 style='text-align: left;'>Du darfst frei entscheiden welche der beiden Aufgaben (Buchstabe oder Zahl) du bearbeiten möchtest.</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
 };
 
@@ -180,12 +163,12 @@ function blockStartText() {
     ' von ' +
     prms.nBlks +
     '</H1><br>' +
-    "<h3 style='text-align: left;'>Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben eine Antwort erfordern.</h3>" +
+    "<h3 style='text-align: left;'>Entscheide selbst welche Aufgabe du bearbeiten willst.</h3>" +
     "<h3 style='text-align: center;'>Es gilt:</h3>" +
     "<h2 style='text-align: left;'>" +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    '&emsp;' +
     prms.taskInstructions[0] +
-    '&emsp;&emsp;&emsp;&emsp;&emsp;' +
+    '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[1] +
     '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' +
     prms.taskInstructions[2] +
@@ -195,8 +178,6 @@ function blockStartText() {
     "<h3 style='text-align: center;'>" +
     '("Q-Taste") &emsp;&emsp;&emsp;&emsp; ("W-Taste") &emsp;&emsp;&emsp;&emsp;&emsp; ("O-Taste") &emsp;&emsp;&emsp;&emsp; ("P-Taste")' +
     '</h3><br>' +
-    "<h3 style='text-align: left;'>Wenn der Buchstabe zwischen I und R oder die Zahl zwischen 147 und 159 ist, dann erfordert</h3>" +
-    "<h3 style='text-align: left;'>die Aufgabe keine Antwort!</h3><br>" +
     "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>";
   return blockStartTxt;
 }
@@ -216,9 +197,9 @@ const block_start = {
 function blockEndText() {
   'use strict';
   let blockEndTxt =
-    '<H1>Pause</H1><br>' +
-    '<H3>Bitte versuche weiterhin so schnell und so genau wie möglich zu sein! </H3><br>' +
-    '<H2>Drücke eine beliebige Taste um fortzufahren!</H2>';
+    '<h1>Pause</h1><br>' +
+    "<h3 style='text-align: left;'>Du hast nun die Gelegenheit dich zu erholen. Wenn du wieder bereit</h3>" +
+    "<h3 style='text-align: left;'>für den nächsten Block bist dann drücke eine beliebige Taste.</h3><br>";
   prms.cBlk += 1;
   return blockEndTxt;
 }
@@ -234,6 +215,19 @@ const block_end = {
     prms.cTrl = 1;
     trial.stimulus = blockEndText();
   },
+};
+
+const half_exp_text = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus:
+    '<H1>HALBZEIT</H1><br>' +
+    '<H3>Super. Die Hälfte ist geschafft. Es beginnt nun die zweite Hälfte des Experimentes.</H3>' +
+    '<H3>Bitte versuche weiterhin so konzentriert wie möglich zu arbeiten. Vielen Dank!</H3><br>' +
+    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren!</h2>",
+  response_ends_trial: true,
 };
 
 function draw_fixation_cross() {
@@ -289,24 +283,16 @@ const stimulus = {
   func: [drawStimulus, drawStimulus],
   func_args: null,
   data: {
-    stim_type: 'ppfc1',
+    stim_type: 'vts2',
     TrialType: jsPsych.timelineVariable('TrialType'),
-    FreeForced: jsPsych.timelineVariable('FreeForced'),
-    Forced: jsPsych.timelineVariable('Forced'),
     StimOrder: jsPsych.timelineVariable('StimOrder'),
     S1: jsPsych.timelineVariable('S1'),
     S2: jsPsych.timelineVariable('S2'),
-    GoNogoLetter: jsPsych.timelineVariable('LetterType'),
-    GoNogoNumber: jsPsych.timelineVariable('NumberType'),
     SOA: jsPsych.timelineVariable('SOA'),
   },
   on_start: function (trial) {
     // define trial duration
-    trial.trial_duration = prms.tooSlow;
-
-    if (trial.data.SOA !== Infinity) {
-      trial.trial_duration += trial.data.SOA;
-    }
+    trial.trial_duration = prms.tooSlow + trial.data.SOA;
 
     // deal with potential stimulus repetitions
     let previous_letter;
@@ -327,36 +313,24 @@ const stimulus = {
     let corrKey1;
     // prettier-ignore
     if (trial.data.S1 === 'Letter') {
-      if (trial.data.GoNogoLetter === 'Go') {
-        if (Math.random() < 0.5) {
-          s1 = shuffle( prms.lettersLeft.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
-        } else {
-          s1 = shuffle( prms.lettersRight.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
-        }
-      } else if (trial.data.GoNogoLetter === 'NoGo') {
-        s1 = shuffle( prms.letterNoGo.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
+      if (Math.random() < 0.5) {
+        s1 = shuffle( prms.lettersLeft.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
+      } else {
+        s1 = shuffle( prms.lettersRight.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
       }
       // Assign correct key for S1
-      if (prms.letterNoGo.includes(s1)) {
-        corrKey1 = null;
-      } else if (prms.taskMapping[0] === 'letter') {
+      if (prms.taskMapping[0] === 'letter') {
         corrKey1 = prms.lettersLeft.includes(s1) ? prms.respKeys[0] : prms.respKeys[1];
       } else if (prms.taskMapping[1] === 'letter') {
         corrKey1 = prms.lettersLeft.includes(s1) ? prms.respKeys[2] : prms.respKeys[3];
       }
     } else if (trial.data.S1 === 'Number') {
-      if (trial.data.GoNogoNumber === 'Go') {
-        if (Math.random() < 0.5) {
-          s1 = shuffle( prms.numbersLeft.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
-        } else {
-          s1 = shuffle( prms.numbersRight.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
-        }
-      } else if (trial.data.GoNogoNumber === 'NoGo') {
-          s1 = shuffle( prms.numberNoGo.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
+      if (Math.random() < 0.5) {
+        s1 = shuffle( prms.numbersLeft.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
+      } else {
+        s1 = shuffle( prms.numbersRight.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
       }
-      if (prms.numberNoGo.includes(s1)) {
-        corrKey1 = null;
-      } else if (prms.taskMapping[0] === 'number') {
+      if (prms.taskMapping[0] === 'number') {
         corrKey1 = prms.numbersLeft.includes(s1) ? prms.respKeys[0] : prms.respKeys[1];
       } else if (prms.taskMapping[1] === 'number') {
         corrKey1 = prms.numbersLeft.includes(s1) ? prms.respKeys[2] : prms.respKeys[3];
@@ -368,45 +342,28 @@ const stimulus = {
     // Stimulus 2
     // prettier-ignore
     if (trial.data.S2 === 'Letter') {
-      if (trial.data.GoNogoLetter === 'Go') {
-        if (Math.random() < 0.5) {
-          s2 = shuffle( prms.lettersLeft.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
-        } else {
-          s2 = shuffle( prms.lettersRight.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
-        }
-      } else if (trial.data.GoNogoLetter === 'NoGo') {
-        s2 = shuffle( prms.letterNoGo.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
+      if (Math.random() < 0.5) {
+        s2 = shuffle( prms.lettersLeft.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
+      } else {
+        s2 = shuffle( prms.lettersRight.filter(function (x) { return [previous_letter].indexOf(x) < 0; }),)[0];
       }
       // Assign correct key for S1
-      if (prms.letterNoGo.includes(s2)) {
-        corrKey2 = null;
-      } else if (prms.taskMapping[0] === 'letter') {
+      if (prms.taskMapping[0] === 'letter') {
         corrKey2 = prms.lettersLeft.includes(s2) ? prms.respKeys[0] : prms.respKeys[1];
       } else if (prms.taskMapping[1] === 'letter') {
         corrKey2 = prms.lettersLeft.includes(s2) ? prms.respKeys[2] : prms.respKeys[3];
       }
     } else if (trial.data.S2 === 'Number') {
-      if (trial.data.GoNogoNumber === 'Go') {
-        if (Math.random() < 0.5) {
-            s2 = shuffle( prms.numbersLeft.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
-        } else {
-            s2 = shuffle( prms.numbersRight.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
-        }
-      } else if (trial.data.GoNogoNumber === 'NoGo') {
-            s2 = shuffle( prms.numberNoGo.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
+      if (Math.random() < 0.5) {
+        s2 = shuffle( prms.numbersLeft.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0]; }
+      else {
+        s2 = shuffle( prms.numbersRight.filter(function (x) { return [previous_number].indexOf(x) < 0; }),)[0];
       }
-      if (prms.numberNoGo.includes(s2)) {
-        corrKey2 = null;
-      } else if (prms.taskMapping[0] === 'number') {
+      if (prms.taskMapping[0] === 'number') {
         corrKey2 = prms.numbersLeft.includes(s2) ? prms.respKeys[0] : prms.respKeys[1];
       } else if (prms.taskMapping[1] === 'number') {
         corrKey2 = prms.numbersLeft.includes(s2) ? prms.respKeys[2] : prms.respKeys[3];
       }
-    }
-
-    // deal with s2 = Infinity
-    if (trial.data.SOA === Infinity) {
-      s2 = '';
     }
     trial.data.s2 = s2;
 
@@ -414,13 +371,13 @@ const stimulus = {
     trial.data.corrKey2 = corrKey2;
 
     let pos;
-    if (version === 1) {
+    if ([1, 2].includes(version)) {
       if (trial.data.S1 === 'Number') {
         pos = [prms.stimPos[0], prms.stimPos[1]];
       } else {
         pos = [prms.stimPos[1], prms.stimPos[0]];
       }
-    } else if (version === 2) {
+    } else if ([3, 4].includes(version)) {
       if (trial.data.S1 === 'Number') {
         pos = [prms.stimPos[1], prms.stimPos[0]];
       } else {
@@ -468,10 +425,6 @@ function drawFeedback() {
     ctx.font = '20px monospace';
     ctx.fillText('("O-Taste")', 180, 120);
     ctx.fillText('("P-Taste")', 320, 120);
-
-    ctx.textAlign = 'center';
-    ctx.fillText('Wenn der Buchstabe zwischen I und R oder die Zahl zwischen 147', 0, 220);
-    ctx.fillText('und 159 ist, dann erfordert die Aufgabe keine Antwort!', 0, 250);
   }
 }
 
@@ -479,15 +432,15 @@ function codeTrial() {
   'use strict';
 
   let dat = jsPsych.data.get().last(1).values()[0];
-  let corrCode = 0;
+  let corrCode = 0; // error
 
   if ([dat.corrKey1, dat.corrKey2].includes(dat.key_press) & (dat.rt !== null)) {
-    corrCode = 1;
+    corrCode = 1; // correct
   }
 
   // Too Slow!
   if (dat.rt === null) {
-    corrCode = 2;
+    corrCode = 2; // too slow
     dat.rt = prms.tooSlow;
   }
 
@@ -500,7 +453,7 @@ function codeTrial() {
   }
 
   // correct for SOA
-  if ((responseTask !== dat.S1) & (dat.SOA !== Infinity)) {
+  if (responseTask !== dat.S1) {
     dat.rt = dat.rt - dat.SOA;
   }
 
@@ -514,9 +467,6 @@ function codeTrial() {
   });
 
   prms.cTrl += 1;
-  if (dat.key_press === 27) {
-    jsPsych.endExperiment();
-  }
 }
 
 const feedback = {
@@ -530,56 +480,47 @@ const feedback = {
   func: drawFeedback,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    if (dat.blockNum === 1) {
-      trial.trial_duration = prms.fbDurPrac[dat.corrCode];
-    } else {
-      trial.trial_duration = prms.fbDur[dat.corrCode];
-    }
+    trial.trial_duration = prms.fbDur[dat.corrCode];
   },
 };
 
 // prettier-ignore
-const trial_table = [
-    {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  1, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  2, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  3, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  4, "FreeForced":"Free",   "Forced":"NA",     "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  5, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[0]},
-    {"TrialType":  6, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[1]},
-    {"TrialType":  7, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType":  8, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType":  9, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[0]},
-    {"TrialType": 10, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[1]},
-    {"TrialType": 11, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[0]},
-    {"TrialType": 12, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[1]},
-    {"TrialType": 13, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[2]},
-    {"TrialType": 13, "FreeForced":"Forced", "Forced":"Letter", "StimOrder":"Letter-Number", "S1":"Letter", "S2":"Number", "LetterType":"Go",   "NumberType":"NoGo", "SOA":prms.soas[2]},
-    {"TrialType": 14, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[2]},
-    {"TrialType": 14, "FreeForced":"Forced", "Forced":"Number", "StimOrder":"Number-Letter", "S1":"Number", "S2":"Letter", "LetterType":"NoGo", "NumberType":"Go",   "SOA":prms.soas[2]},
-];
+const trial_table_long = [].concat(
+            Array( 9).fill({ TrialType: 1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0] })
+    .concat(Array( 9).fill({ TrialType: 2, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1] })
+    .concat(Array(32).fill({ TrialType: 3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2] })
+    .concat(Array( 9).fill({ TrialType: 4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0] })
+    .concat(Array( 9).fill({ TrialType: 5, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1] })
+    .concat(Array(32).fill({ TrialType: 6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2] }))))))
+);
+// console.log(trial_table_long);
 
-const trial_timeline = {
+// prettier-ignore
+const trial_table_short = [].concat(
+            Array(32).fill({ TrialType: 1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0] })
+    .concat(Array( 9).fill({ TrialType: 2, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1] })
+    .concat(Array( 9).fill({ TrialType: 3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2] })
+    .concat(Array(32).fill({ TrialType: 4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0] })
+    .concat(Array( 9).fill({ TrialType: 5, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1] })
+    .concat(Array( 9).fill({ TrialType: 6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2] }))))))
+);
+// console.log(trial_table_short);
+
+const trial_timeline_long = {
   timeline: [fixation_cross, stimulus, feedback],
-  timeline_variables: trial_table,
-  sample: {
-    type: 'fixed-repetitions',
-    size: prms.nTrls / trial_table.length,
-  },
+  timeline_variables: trial_table_long,
+};
+
+const trial_timeline_short = {
+  timeline: [fixation_cross, stimulus, feedback],
+  timeline_variables: trial_table_short,
 };
 
 ////////////////////////////////////////////////////////////////////////
 //                              De-brief                              //
 ////////////////////////////////////////////////////////////////////////
 // For VP Stunden
-const randomString = generateRandomStringWithExpName('ppfc', 16);
+const randomString = generateRandomStringWithExpName('vts2', 16);
 
 const alpha_num = {
   type: 'html-keyboard-response-canvas',
@@ -591,19 +532,22 @@ const alpha_num = {
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
       und deiner Universität (Tübingen) per Email an:<br><br>
-    sebastian.heins@student.uni-tuebingen.de<br>`,
+    hiwipibio@gmail.com<br>`,
       fontsize: 26,
       align: 'left',
+      bold: true,
     }) +
     generate_formatted_html({
       text: `Code: ${randomString}<br>`,
       fontsize: 26,
       align: 'left',
+      bold: true,
     }) +
     generate_formatted_html({
       text: `Drücke die Leertaste, um fortzufahren!`,
       fontsize: 26,
       align: 'left',
+      bold: true,
     }),
   choices: [' '],
 };
@@ -615,9 +559,9 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim_type: 'ppfc1' });
+    saveData('/Common/write_data.php', data_filename, { stim_type: 'vts2' });
   },
-  timing_post_trial: 2000,
+  timing_post_trial: 1000,
 };
 
 const save_interaction_data = {
@@ -656,18 +600,34 @@ function genExpSeq() {
   exp.push(task_instructions1);
   exp.push(task_instructions2);
   exp.push(task_instructions3);
-  exp.push(task_instructions4);
   exp.push(hideMouseCursor);
 
+  let block_type;
+  if ([1, 3].includes(version)) {
+    block_type = repeatArray(['long'], prms.nBlks / 2).concat(repeatArray(['short'], prms.nBlks / 2));
+  } else if ([2, 4].includes(version)) {
+    block_type = repeatArray(['short'], prms.nBlks / 2).concat(repeatArray(['long'], prms.nBlks / 2));
+  }
+  // console.log(block_type);
+
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline };
+    let blk_timeline;
+    if (block_type[blk] === 'long') {
+      blk_timeline = { ...trial_timeline_long };
+    } else if (block_type[blk] === 'short') {
+      blk_timeline = { ...trial_timeline_short };
+    }
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: blk === 0 ? prms.nTrls / 24 : prms.nTrls / 24,
+      size: [0, 3].includes(blk) ? prms.nTrlsP / 100 : prms.nTrlsE / 100,
     };
     exp.push(block_start);
     exp.push(blk_timeline); // trials within a block
     exp.push(block_end);
+
+    if (blk === 2) {
+      exp.push(half_exp_text);
+    }
   }
 
   // save data

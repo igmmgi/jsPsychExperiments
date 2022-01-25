@@ -38,7 +38,7 @@ const task_instructions1 = {
     text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 15 Minuten konzentriert zu arbeiten.<br><br>
+um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 15 Minuten konzentriert zu arbeiten.<br><br>
 Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
 Bei Fragen oder Problemen wende dich bitte an:<br><br>
 gesichter-studie@web.de<br><br>

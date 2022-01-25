@@ -40,7 +40,6 @@ $nFiles_prp4_v2 = numFilesInDir('Experiments/PRP/Exp4/version1/data/order2');
 $nFiles_prp4_v3 = numFilesInDir('Experiments/PRP/Exp4/version2/data/order1');
 $nFiles_prp4_v4 = numFilesInDir('Experiments/PRP/Exp4/version2/data/order2');
 
-
 // CSE Mouse
 $nFiles_csem_text = numFilesInDir('Experiments/CSE_mouse_tracking/text_only/data');
 $nFiles_csem_image = numFilesInDir('Experiments/CSE_mouse_tracking/image_only/data');
@@ -48,6 +47,19 @@ $nFiles_csem_image = numFilesInDir('Experiments/CSE_mouse_tracking/image_only/da
 // Mouse Negation
 $nFiles_mn2 = numFilesInDir('Experiments/MouseNegation/Exp2/data');
 $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
+
+// flanker emotion
+$nFiles_fe1 = numFilesInDir('Experiments7+/flankerEmotion/Exp1.2/data');
+$nFiles_fe2 = numFilesInDir('Experiments7+/flankerEmotion/Exp2.2/data');
+
+// flanker grouping
+$nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp1/data');
+
+// vts2
+$nFiles_vts2_v1 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/version1');
+$nFiles_vts2_v2 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/version2');
+$nFiles_vts2_v3 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/version3');
+$nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/version4');
 
 ?>
 
@@ -107,10 +119,11 @@ $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
             <p> Gains Exp1: hiwipibio@gmail.com </p>
-            <p> Free Choice Race Exp1: sebastian.heins@student.uni-tuebingen.de</p>
-            <p> Reward Exp2: hiwipibio@gmail.com </p>
             <p> Zonk Exp1: hiwipibio@gmail.com </p>
             <p> DualTask Exp4: hiwipibio@gmail.com </p>
+            <p> Fun with characters: hiwipibio@gmail.com</p>
+            <p> Dots and Dashes: rundmc-gghk@outlook.de</p>
+            <p> Emotion Exp: gesichter-studie@web.de</p>
             <p> CSE Exp1: m.zeller@student.uni-tuebigen.de </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebigen.de </p>
 
@@ -233,6 +246,41 @@ $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
                 <?php endif;  ?>
             <?php endif;  ?>
 
+            <?php
+            $vts2 = [];
+            if ($nFiles_vts2_v1 < 10) {
+                array_push($vts2, 1);
+            }
+            if ($nFiles_vts2_v2 < 10) {
+                array_push($vts2, 2);
+            }
+            if ($nFiles_vts2_v3 < 10) {
+                array_push($vts2, 3);
+            }
+            if ($nFiles_vts2_v4 < 10) {
+                array_push($vts2, 4);
+            }
+
+            $randIndex = array_rand($vts2);
+            $vts2_version = $vts2[$randIndex];
+            /* debug_to_console($nw1_version) */
+            ?>
+
+            <?php if (!empty($vts2_version)) : ?>
+                <h3><a href="Experiments/TaskSwitching/VTS/Exp2.2/index.html?version=<?php echo $vts2_version; ?>">Fun with characters Exp1 (n = <?= $nFiles_vts2_v1 + $nFiles_vts2_v2 + $nFiles_vts2_v3 + $nFiles_vts2_v4 ?>)</a></h3>
+            <?php endif;  ?>
+
+
+            <?php if ($nFiles_fg < 40) : ?>
+                <h3><a href="Experiments7+/flankerGrouping/Exp1/index.html">Dots and Dashes (n = <?= $nFiles_fg ?>)</a></h3>
+            <?php endif;  ?>
+
+
+
+
+
+
+
             <h2>0,5 VP-Stunden</h2>
 
             <?php
@@ -281,6 +329,35 @@ $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
                     <h3><a href="Experiments/MouseNegation/Exp3/index.html">Mouse Negation Exp2/3 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
                 <?php endif;  ?>
             <?php endif;  ?>
+
+
+            <?php
+            $fe = [];
+            if ($nFiles_fe1 < 30) {
+                array_push($fe, 1);
+            }
+            if ($nFiles_fe2 < 30) {
+                array_push($fe, 2);
+            }
+
+            $randIndex = array_rand($fe);
+            $fe_version = $fe[$randIndex];
+            /* debug_to_console($nw1_version) */
+            ?>
+
+            <?php if (!empty($fe_version)) : ?>
+                <?php if ($fe_version == 1) : ?>
+                    <h3><a href="Experiments7+/flankerEmotion/Exp1.2/index.html">Emotion Exp (n = <?= $nFiles_fe1 + $nFiles_fe2 ?>)</a></h3>
+                <?php endif;  ?>
+                <?php if ($fe_version == 2) : ?>
+                    <h3><a href="Experiments7+/flankerEmotion/Exp2.2/index.html">Emotion Exp (n = <?= $nFiles_fe1 + $nFiles_fe2 ?>)</a></h3>
+                <?php endif;  ?>
+            <?php endif;  ?>
+
+
+
+
+
 
 
         </div>
