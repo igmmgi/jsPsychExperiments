@@ -162,35 +162,36 @@ function stimuli_factory(items_ambiguous, items_unambiguous) {
 
   let stimuli = [];
   let correct_side;
+
   correct_side = shuffle(repeatArray(['left', 'right'], item_numbers_ambiguous.length / 2));
-  for (let idx of item_numbers_ambiguous) {
+  for (let [idx, item] of item_numbers_ambiguous.entries()) {
     let stimulus = {};
-    stimulus.probe_type = items_ambiguous[idx].type;
-    stimulus.probe = items_ambiguous[idx].probe;
+    stimulus.probe_type = items_ambiguous[item].type;
+    stimulus.probe = items_ambiguous[item].probe;
     if (correct_side[idx] === 'right') {
-      stimulus.right = items_ambiguous[idx].target_rel_img;
-      stimulus.left = items_ambiguous[idx].target_unrel_img;
+      stimulus.right = items_ambiguous[item].target_rel_img;
+      stimulus.left = items_ambiguous[item].target_unrel_img;
       stimulus.correct_side = 'right';
-    } else {
-      stimulus.right = items_ambiguous[idx].target_unrel_img;
-      stimulus.left = items_ambiguous[idx].target_rel_img;
+    } else if (correct_side[idx] === 'left') {
+      stimulus.right = items_ambiguous[item].target_unrel_img;
+      stimulus.left = items_ambiguous[item].target_rel_img;
       stimulus.correct_side = 'left';
     }
     stimuli.push(stimulus);
   }
 
   correct_side = shuffle(repeatArray(['left', 'right'], item_numbers_unambiguous.length / 2));
-  for (let idx of item_numbers_unambiguous) {
+  for (let [idx, item] of item_numbers_unambiguous.entries()) {
     let stimulus = {};
-    stimulus.probe_type = items_unambiguous[idx].type;
-    stimulus.probe = items_unambiguous[idx].probe;
+    stimulus.probe_type = items_unambiguous[item].type;
+    stimulus.probe = items_unambiguous[item].probe;
     if (correct_side[idx] === 'right') {
-      stimulus.right = items_unambiguous[idx].target_rel_img;
-      stimulus.left = items_unambiguous[idx].target_unrel_img;
+      stimulus.right = items_unambiguous[item].target_rel_img;
+      stimulus.left = items_unambiguous[item].target_unrel_img;
       stimulus.correct_side = 'right';
-    } else {
-      stimulus.right = items_unambiguous[idx].target_unrel_img;
-      stimulus.left = items_unambiguous[idx].target_rel_img;
+    } else if (correct_side[idx] === 'left') {
+      stimulus.right = items_unambiguous[item].target_unrel_img;
+      stimulus.left = items_unambiguous[item].target_rel_img;
       stimulus.correct_side = 'left';
     }
     stimuli.push(stimulus);
