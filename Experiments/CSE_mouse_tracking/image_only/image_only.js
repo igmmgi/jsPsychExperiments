@@ -27,7 +27,7 @@ getComputerInfo();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  fbDur: [500, 1000], // feedback duration for correct and incorrect trials, respectively
+  fbDur: [500, 1500, 3000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   iti: 500,
   fixPos: [canvas_size[0] / 2, canvas_size[1] * 0.75], // x,y position of stimulus
@@ -59,7 +59,7 @@ function drawFeedback() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
-  ctx.font = '50px Arial';
+  ctx.font = '40px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
@@ -77,22 +77,22 @@ function drawFeedback() {
     xpos = dat.end_x;
     ypos = dat.end_y;
   }
-  if (dat.tooEarly === 0) {
-    ctx.fillText(prms.fbTxt[dat.corrCode], xpos, ypos);
+  if (dat.errorCode === 2) {
+    ctx.fillText('Warte in dem Quadrat bis das Wort kommt!', canvas_size[0] / 2, canvas_size[1] / 2);
   } else {
-    ctx.fillText('Warte bis das Worte kompt!', canvas_size[0] / 2, canvas_size[1] / 2);
+    ctx.fillText(prms.fbTxt[dat.errorCode], xpos, ypos);
   }
 }
 
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  let corrCode = dat.correct_side !== dat.end_loc ? 1 : 0;
-  let tooEarly = dat.time[0] < prms.fixDur ? 1 : 0;
+  let errorCode;
+  errorCode = dat.correct_side !== dat.end_loc ? 1 : 0;
+  errorCode = dat.time[0] < prms.fixDur ? 2 : errorCode;
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    corrCode: corrCode,
-    tooEarly: tooEarly,
+    errorCode: errorCode,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
   });
@@ -284,7 +284,15 @@ const trial_feedback = {
   func: drawFeedback,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prms.fbDur[dat.corrCode];
+    if (prms.cBlk < 3) {
+      trial.trial_duration = prms.fbDur[dat.errorCode];
+    } else if (prms.cBlk === 3) {
+      if ([0, 1].includes(dat.errorCode)) {
+        trial.trial_duration = 0;
+      } else {
+        trial.trial_duration = prms.fbDur[dat.errorCode];
+      }
+    }
   },
 };
 
@@ -315,7 +323,7 @@ const example_timeline = {
 
 const exp_timeline = {
   timeline_variables: exp_stimuli,
-  timeline: [trial_stimulus, iti],
+  timeline: [trial_stimulus, trial_feedback, iti],
   randomize_order: true,
 };
 
