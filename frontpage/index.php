@@ -118,13 +118,9 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
-            <p> Gains Exp1: hiwipibio@gmail.com </p>
-            <p> Zonk Exp1: hiwipibio@gmail.com </p>
             <p> DualTask Exp4: hiwipibio@gmail.com </p>
             <p> Fun with characters: hiwipibio@gmail.com</p>
-            <p> Dots and Dashes: rundmc-gghk@outlook.de</p>
-            <p> Emotion Exp: gesichter-studie@web.de</p>
-            <p> CSE Exp1: m.zeller@student.uni-tuebigen.de </p>
+            <p> Ambig: m.zeller@student.uni-tuebigen.de </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebigen.de </p>
 
         </div>
@@ -285,10 +281,10 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
 
             <?php
             $csem = [];
-            if ($nFiles_csem_text < 0) {
+            if ($nFiles_csem_text < 50) {
                 array_push($csem, 1);
             }
-            if ($nFiles_csem_image < 0) {
+            if ($nFiles_csem_image < 50) {
                 array_push($csem, 2);
             }
 
@@ -299,10 +295,10 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
 
             <?php if (!empty($csem_version)) : ?>
                 <?php if ($csem_version == 1) : ?>
-                    <h3><a href="Experiments/CSE_mouse_tracking/text_only/index.html">CSE Maus Exp1 (n = <?= $nFiles_csem_text + $nFiles_csem_image ?>)</a></h3>
+                    <h3><a href="Experiments/CSE_mouse_tracking/text_only/index.html">Ambig Exp1 (n = <?= $nFiles_csem_text + $nFiles_csem_image ?>)</a></h3>
                 <?php endif;  ?>
                 <?php if ($csem_version == 2) : ?>
-                    <h3><a href="Experiments/CSE_mouse_tracking/image_only/index.html">CSE Maus Exp1 (n = <?= $nFiles_csem_text + $nFiles_csem_image ?>)</a></h3>
+                    <h3><a href="Experiments/CSE_mouse_tracking/image_only/index.html">Ambig Exp1 (n = <?= $nFiles_csem_text + $nFiles_csem_image ?>)</a></h3>
                 <?php endif;  ?>
             <?php endif;  ?>
 
