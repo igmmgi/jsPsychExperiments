@@ -150,16 +150,16 @@ const exp_start = {
   },
 };
 
-const rating_start = {
-  type: 'html-keyboard-response',
-  stimulus:
-    "<H1 style = 'text-align: left;'> Bitte nehmen Sie sich abschließend noch Zeit folgende Fragen zu beantworten </H1>",
-  post_trial_gap: prms.waitDur,
-  on_start: function () {
-    prms.cBlk += 1;
-    prms.cTrl = 1;
-  },
-};
+// const rating_start = {
+//   type: 'html-keyboard-response',
+//   stimulus:
+//     "<H1 style = 'text-align: left;'> Bitte nehmen Sie sich abschließend noch Zeit folgende Fragen zu beantworten </H1>",
+//   post_trial_gap: prms.waitDur,
+//   on_start: function () {
+//     prms.cBlk += 1;
+//     prms.cTrl = 1;
+//   },
+// };
 
 ////////////////////////////////////////////////////////////////////////
 //               Stimuli/Timelines                                    //
@@ -178,10 +178,10 @@ function stimuli_factory(items_ambiguous, items_unambiguous) {
     let stimulus = {};
     stimulus.probe_type = items_ambiguous[item].type;
     stimulus.probe = items_ambiguous[item].probe;
-    stimulus.probe_rating = items_unambiguous[item].probe;
-    stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + items_unambiguous[item].probe + '</H1>';
-    stimulus.probe_rating_word = items_unambiguous[item].probe;
-    stimulus.probe_rating_type = 'unambiguous';
+    // stimulus.probe_rating = items_unambiguous[item].probe;
+    // stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + items_unambiguous[item].probe + '</H1>';
+    // stimulus.probe_rating_word = items_unambiguous[item].probe;
+    // stimulus.probe_rating_type = 'unambiguous';
     if (correct_side[idx] === 'right') {
       stimulus.right = items_ambiguous[item].target_rel_text;
       stimulus.left = items_ambiguous[item].target_unrel_text;
@@ -199,10 +199,10 @@ function stimuli_factory(items_ambiguous, items_unambiguous) {
     let stimulus = {};
     stimulus.probe_type = items_unambiguous[item].type;
     stimulus.probe = items_unambiguous[item].probe;
-    stimulus.probe_rating = items_ambiguous[item].probe;
-    stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + items_ambiguous[item].probe + '</H1>';
-    stimulus.probe_rating_word = items_ambiguous[item].probe;
-    stimulus.probe_rating_type = 'ambiguous';
+    // stimulus.probe_rating = items_ambiguous[item].probe;
+    // stimulus.probe_rating_label = "<H1 style = 'text-align: center;'>" + items_ambiguous[item].probe + '</H1>';
+    // stimulus.probe_rating_word = items_ambiguous[item].probe;
+    // stimulus.probe_rating_type = 'ambiguous';
     if (correct_side[idx] === 'right') {
       stimulus.right = items_unambiguous[item].target_rel_text;
       stimulus.left = items_unambiguous[item].target_unrel_text;
@@ -268,28 +268,28 @@ const trial_stimulus = {
   },
 };
 
-const scale = [1, 2, 3, 4, 5];
-// prettier-ignore
-const questions = [
-  { name: 'q1', labels: scale, required: true, prompt: 'Wie konkret ist das obige Wort?<br> (1 = überhaupt nicht konkret, 5 = sehr konkret)' },
-  { name: 'q2', labels: scale, required: true, prompt: 'Wie vertraut sind Sie mit dem obigen Wort?<br>(1 = überhaupt nicht vertraut, 5 = sehr vertraut' },
-  { name: 'q3', labels: scale, required: true, prompt: 'Wie leicht können Sie sich dieses Wort bildlich vorstellen? <br>(1 = überhaupt nicht leicht, 5 = sehr leicht)' },
-];
+// const scale = [1, 2, 3, 4, 5];
+// // prettier-ignore
+// const questions = [
+//   { name: 'q1', labels: scale, required: true, prompt: 'Wie konkret ist das obige Wort?<br> (1 = überhaupt nicht konkret, 5 = sehr konkret)' },
+//   { name: 'q2', labels: scale, required: true, prompt: 'Wie vertraut sind Sie mit dem obigen Wort?<br>(1 = überhaupt nicht vertraut, 5 = sehr vertraut' },
+//   { name: 'q3', labels: scale, required: true, prompt: 'Wie leicht können Sie sich dieses Wort bildlich vorstellen? <br>(1 = überhaupt nicht leicht, 5 = sehr leicht)' },
+// ];
 
-const trial_rating = {
-  type: 'survey-likert',
-  preamble: jsPsych.timelineVariable('probe_rating_label'),
-  name: jsPsych.timelineVariable('probe_rating_word'),
-  questions: questions,
-  scale_width: 600,
-  button_label: 'Weiter',
-  post_trial_gap: 500,
-  data: {
-    stim_type: 'cse_mouse_tracking_rating',
-    word: jsPsych.timelineVariable('probe_rating_word'),
-    type: jsPsych.timelineVariable('probe_rating_type'),
-  },
-};
+// const trial_rating = {
+//   type: 'survey-likert',
+//   preamble: jsPsych.timelineVariable('probe_rating_label'),
+//   name: jsPsych.timelineVariable('probe_rating_word'),
+//   questions: questions,
+//   scale_width: 600,
+//   button_label: 'Weiter',
+//   post_trial_gap: 500,
+//   data: {
+//     stim_type: 'cse_mouse_tracking_rating',
+//     word: jsPsych.timelineVariable('probe_rating_word'),
+//     type: jsPsych.timelineVariable('probe_rating_type'),
+//   },
+// };
 
 const trial_feedback = {
   type: 'static-canvas-keyboard-response',
@@ -344,11 +344,11 @@ const exp_timeline = {
   randomize_order: true,
 };
 
-const rating_timeline = {
-  timeline_variables: exp_stimuli,
-  timeline: [trial_rating],
-  randomize_order: true,
-};
+// const rating_timeline = {
+//   timeline_variables: exp_stimuli,
+//   timeline: [trial_rating],
+//   randomize_order: true,
+// };
 
 const mouse_trackpad_question = {
   type: 'survey-multi-choice',
@@ -401,8 +401,8 @@ const save_data = {
   func: function () {
     let data_filename = dirName + 'data/' + expName + '_' + vpNum;
     saveData('/Common/write_data_json.php', data_filename, { stim_type: 'cse_mouse_tracking' }, 'json');
-    let data_filename_rating = dirName + 'data_rating/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename_rating, { stim_type: 'cse_mouse_tracking_rating' }, 'json');
+    // let data_filename_rating = dirName + 'data_rating/' + expName + '_' + vpNum;
+    // saveData('/Common/write_data_json.php', data_filename_rating, { stim_type: 'cse_mouse_tracking_rating' }, 'json');
   },
   timing_post_trial: 2000,
 };
@@ -451,9 +451,9 @@ function genExpSeq() {
   exp.push(exp_start);
   exp.push(exp_timeline);
 
-  // Run rating phase
-  exp.push(rating_start);
-  exp.push(rating_timeline);
+  // // Run rating phase
+  // exp.push(rating_start);
+  // exp.push(rating_timeline);
 
   // mouse vs. trackpad question
   exp.push(mouse_trackpad_question);
