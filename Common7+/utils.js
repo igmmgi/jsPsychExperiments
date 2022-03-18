@@ -42,18 +42,18 @@ function getTime() {
 }
 
 function getPassword(url, password) {
-    let correct = false;
-    $.ajax({
-        url: url,
-        type: 'POST',
-        async: false,
-        data: {
-            password: password,
-        },
-    }).done(function (data) {
-        correct = data;
-    });
-    return correct;
+  let correct = false;
+  $.ajax({
+    url: url,
+    type: 'POST',
+    async: false,
+    data: {
+      password: password,
+    },
+  }).done(function (data) {
+    correct = data;
+  });
+  return correct;
 }
 
 // Generate a random string with optional pre-fix

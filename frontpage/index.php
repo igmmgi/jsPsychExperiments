@@ -121,7 +121,7 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
             <p> DualTask Exp4: hiwipibio@gmail.com </p>
             <p> Fun with characters: hiwipibio@gmail.com</p>
             <p> Ambig: m.zeller@student.uni-tuebigen.de </p>
-            <p> Mouse Negation: m.zeller@student.uni-tuebigen.de </p>
+            <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
 
         </div>
         <div class="sidenav">
@@ -305,10 +305,10 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
 
             <?php
             $mn = [];
-            if ($nFiles_mn2 < 0) {
+            if ($nFiles_mn2 < 100) {
                 array_push($mn, 1);
             }
-            if ($nFiles_mn3 < 0) {
+            if ($nFiles_mn3 < 100) {
                 array_push($mn, 2);
             }
 
@@ -319,10 +319,10 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
 
             <?php if (!empty($mn_version)) : ?>
                 <?php if ($mn_version == 1) : ?>
-                    <h3><a href="Experiments/MouseNegation/Exp2/index.html">Mouse Negation Exp2/3 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
+                    <h3><a href="Experiments/MouseNegation/Exp2/index.html">Mouse Negation Exp2 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
                 <?php endif;  ?>
                 <?php if ($mn_version == 2) : ?>
-                    <h3><a href="Experiments/MouseNegation/Exp3/index.html">Mouse Negation Exp2/3 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
+                    <h3><a href="Experiments/MouseNegation/Exp3/index.html">Mouse Negation Exp2 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
                 <?php endif;  ?>
             <?php endif;  ?>
 
