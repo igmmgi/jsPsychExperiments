@@ -246,15 +246,15 @@ function drawFeedbackTS() {
       ctx.fillText('Tiefer Ton', -150, 100);
       ctx.fillText('Hoher Ton', 150, 100);
       ctx.font = '20px monospace';
-      ctx.fillText('("O-Taste")', -150, 130);
-      ctx.fillText('("P-Taste")', 150, 130);
+      ctx.fillText('("W-Taste")', -150, 130);
+      ctx.fillText('("O-Taste")', 150, 130);
     } else if (dat.task === 'arrow') {
       ctx.fillText('Pfeilaufgabe: Mittelfinger', 0, 50);
       ctx.font = 'bold 20px monospace';
       ctx.fillText(prms.respArrows[0], -150, 100);
       ctx.font = '20px monospace';
       ctx.fillText('("Q-Taste")', -150, 130);
-      ctx.fillText('("W-Taste")', 150, 130);
+      ctx.fillText('("P-Taste")', 150, 130);
       ctx.font = 'bold 20px monospace';
       ctx.fillText(prms.respArrows[1], 150, 100);
       ctx.font = '20px monospace';
