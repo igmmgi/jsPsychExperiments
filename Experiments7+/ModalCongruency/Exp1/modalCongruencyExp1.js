@@ -22,13 +22,13 @@ const prms = {
   nTrlsLowP: { comp: 4, incomp: 12, catch: 4 }, // number of trials practice low
   nTrlsHighE: { comp: 12, incomp: 4, catch: 4 }, // number of trials exp high
   nTrlsLowE: { comp: 4, incomp: 12, catch: 4 }, // number of trials exp low
-  fixDur: 1000, // duration of fixation cross
+  fixDur: 300, // duration of fixation cross
   fixSize: 50, // size of fixation cross
   fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
   dti: 250, // distractor to target interval
   waitDur: 500, // duration following ...
-  iti: 500, // duration of inter-trial-interval
-  tooSlow: 2250, // response slower than x ms -> too slow!
+  iti: 1000, // duration of inter-trial-interval
+  tooSlow: 1250, // response slower than x ms -> too slow!
   tooFast: 350, // response slower than x ms -> too fast!
   respKeys: ['Q', 'P'],
   respStim: shuffle(['H', 'S']).concat('X'), // stimuli
