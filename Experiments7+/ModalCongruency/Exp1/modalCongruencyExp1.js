@@ -17,7 +17,11 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   screenRes: [960, 720],
-  nBlks: 10, // number of blocks
+  nBlks: 4, // number of blocks (must be multiple of 2)
+  nTrlsHighP: { comp: 12, incomp: 4, catch: 4 }, // number of trials practice high (all must be multiples of 4 with min 4)
+  nTrlsLowP: { comp: 4, incomp: 12, catch: 4 }, // number of trials practice low
+  nTrlsHighE: { comp: 12, incomp: 4, catch: 4 }, // number of trials exp high
+  nTrlsLowE: { comp: 4, incomp: 12, catch: 4 }, // number of trials exp low
   fixDur: 1000, // duration of fixation cross
   fixSize: 50, // size of fixation cross
   fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
@@ -27,7 +31,7 @@ const prms = {
   tooSlow: 2250, // response slower than x ms -> too slow!
   tooFast: 350, // response slower than x ms -> too fast!
   respKeys: ['Q', 'P'],
-  respStim: shuffle(['H', 'S']),
+  respStim: shuffle(['H', 'S']).concat('X'), // stimuli
   stimSize: 75,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 30,
@@ -47,13 +51,13 @@ const task_instructions1 = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: generate_formatted_html({
     text: `Willkommen zu unserem Experiment:<br><br>
-Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 25 Minuten konzentriert zu arbeiten.<br><br>
-Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
-Bei Fragen oder Problemen wende dich bitte an:<br><br>
-XXX<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+           Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+           um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 25 Minuten konzentriert zu arbeiten.<br><br>
+           Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
+           Bei Fragen oder Problemen wende dich bitte an:<br><br>
+           hiwipibio@gmail.com <br><br>
+           Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     colour: 'black',
     fontsize: 30,
@@ -65,18 +69,30 @@ Drücke eine beliebige Taste, um fortzufahren`,
 
 const task_instructions2 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: generate_formatted_html({
-    text: `In diesem Experiment siehst und hörst du Buchstaben. Reagiere wie folgt:
-WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit deinem rechten Zeigefinger.<br><br>
-${prms.respStim[0]} = "Q Taste"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${prms.respStim[1]} = "P Taste"<br><br>
-Bitte antworte so schnell und so korrekt wie möglich!<br><br>
-Drücke eine beliebige Taste, um fortzufahren.`,
-    align: 'left',
-    colour: 'black',
-    fontsize: 30,
-    bold: true,
-    lineheight: 1.5,
-  }),
+  stimulus:
+    generate_formatted_html({
+      text: `In diesem Experiment siehst und hörst du Buchstaben. Reagiere wie folgt:<br>`,
+      align: 'left',
+      colour: 'black',
+      fontsize: 30,
+      bold: true,
+      lineheight: 1.5,
+    }) +
+    generate_formatted_html({
+      text: `${prms.respStim[0]} = "${prms.respKeys[0]} Taste" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${prms.respStim[1]} = "${prms.respKeys[1]} Taste"<br><br>`,
+      align: 'center',
+      colour: 'black',
+      fontsize: 36,
+      bold: true,
+    }) +
+    generate_formatted_html({
+      text: `Bitte antworte so schnell und so korrekt wie möglich!<br><br>
+             Drücke eine beliebige Taste, um fortzufahren.`,
+      align: 'center',
+      colour: 'black',
+      fontsize: 30,
+      bold: true,
+    }),
   post_trial_gap: prms.waitDur,
 };
 
@@ -104,11 +120,12 @@ const block_start = {
   on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
       text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>
-            Q = links, P = rechts <br><br>
+            ${prms.respStim[0]} = "${prms.respKeys[0]} Taste" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${prms.respStim[1]} = "${prms.respKeys[1]} Taste"<br><br>
             Drücke eine beliebige Taste, um fortzufahren.<br>`,
-      align: 'left',
+      align: 'center',
       colour: 'black',
       fontsize: 30,
+      bold: true,
     });
   },
   post_trial_gap: prms.waitDur,
@@ -117,9 +134,8 @@ const block_start = {
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
-
 const auditory_letters = ['../Sounds/H.wav', '../Sounds/S.wav', '../Sounds/silence.wav'];
-const visual_letters = ['H', 'S'];
+const visual_letters = [prms.respStim[0], prms.respStim[1]];
 
 const preload = {
   type: jsPsychPreload,
@@ -134,39 +150,60 @@ const trials_calibration = [
 
 // prettier-ignore
 const trials_congruent = [
-    { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav_file: auditory_letters[2], congruency: "Congruent", corrKey: prms.respKeys[0] },
-    { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav_file: auditory_letters[2], congruency: "Congruent", corrKey: prms.respKeys[1] },
-    { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav_file: auditory_letters[0], congruency: "Congruent", corrKey: prms.respKeys[0] },
-    { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav_file: auditory_letters[1], congruency: "Congruent", corrKey: prms.respKeys[1] }
+    { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", corrKey: prms.respKeys[0] },
+    { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", corrKey: prms.respKeys[1] },
+    { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Congruent", corrKey: prms.respKeys[0] },
+    { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Congruent", corrKey: prms.respKeys[1] }
 ];
 
 // prettier-ignore
 const trials_incongruent = [
-    { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav_file: auditory_letters[2], congruency: "Incongruent", corrKey: prms.respKeys[0] },
-    { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav_file: auditory_letters[2], congruency: "Incongruent", corrKey: prms.respKeys[1] },
-    { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory", wav_file: auditory_letters[1], congruency: "Incongruent", corrKey: prms.respKeys[0] },
-    { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory", wav_file: auditory_letters[0], congruency: "Incongruent", corrKey: prms.respKeys[1] }
+    { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", corrKey: prms.respKeys[0] },
+    { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", corrKey: prms.respKeys[1] },
+    { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Incongruent", corrKey: prms.respKeys[0] },
+    { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Incongruent", corrKey: prms.respKeys[1] }
 ];
 
 // prettier-ignore
 const trials_catch = [
-    { type: "Catch", target: "X", distractor: prms.respStim[0], modality: "Visual",   wav_file: auditory_letters[2], congruency: "NA", corrKey: prms.respKeys[0] },
-    { type: "Catch", target: "X", distractor: prms.respStim[1], modality: "Visual",   wav_file: auditory_letters[2], congruency: "NA", corrKey: prms.respKeys[1] },
-    { type: "Catch", target: "X", distractor: prms.respStim[0], modality: "Auditory", wav_file: auditory_letters[0], congruency: "NA", corrKey: prms.respKeys[0] },
-    { type: "Catch", target: "X", distractor: prms.respStim[1], modality: "Auditory", wav_file: auditory_letters[1], congruency: "NA", corrKey: prms.respKeys[1] },
+    { type: "Catch", target: prms.respStim[2], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "NA", corrKey: prms.respKeys[0] },
+    { type: "Catch", target: prms.respStim[2], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "NA", corrKey: prms.respKeys[1] },
+    { type: "Catch", target: prms.respStim[2], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "NA", corrKey: prms.respKeys[0] },
+    { type: "Catch", target: prms.respStim[2], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "NA", corrKey: prms.respKeys[1] },
 ];
 
-// prettier-ignore
-// const trials_high_pc = repeatArray(trials_congruent, 15).concat(repeatArray(trials_incongruent, 5)).concat(trials_catch);
-// const trials_low_pc = repeatArray(trials_congruent, 5).concat(repeatArray(trials_incongruent, 15)).concat(trials_catch);
-// console.log(trials_high_pc);
-// console.log(trials_low_pc);
+const trials_high_pc_practice = [
+  repeatArray(deepCopy(trials_congruent), prms.nTrlsHighP.comp / 4),
+  repeatArray(deepCopy(trials_incongruent), prms.nTrlsHighP.incomp / 4),
+  repeatArray(deepCopy(trials_catch), prms.nTrlsHighP.catch / 4),
+].flat();
+trials_high_pc_practice.forEach((i) => (i.block_congruency = 'High'));
 
-// prettier-ignore
-const trials_high_pc = repeatArray(trials_congruent, 1).concat(repeatArray(trials_incongruent, 1)).concat(trials_catch);
-const trials_low_pc = repeatArray(trials_congruent, 1).concat(repeatArray(trials_incongruent, 1)).concat(trials_catch);
-// console.log(trials_high_pc);
-// console.log(trials_low_pc);
+const trials_low_pc_practice = [
+  repeatArray(deepCopy(trials_congruent), prms.nTrlsLowP.comp / 4),
+  repeatArray(deepCopy(trials_incongruent), prms.nTrlsLowP.incomp / 4),
+  repeatArray(deepCopy(trials_catch), prms.nTrlsLowP.catch / 4),
+].flat();
+trials_low_pc_practice.forEach((i) => (i.block_congruency = 'Low'));
+
+const trials_high_pc_exp = [
+  repeatArray(deepCopy(trials_congruent), prms.nTrlsHighE.comp / 4),
+  repeatArray(deepCopy(trials_incongruent), prms.nTrlsHighE.incomp / 4),
+  repeatArray(deepCopy(trials_catch), prms.nTrlsHighE.catch / 4),
+].flat();
+trials_high_pc_exp.forEach((i) => (i.block_congruency = 'High'));
+
+const trials_low_pc_exp = [
+  repeatArray(deepCopy(trials_congruent), prms.nTrlsLowE.comp / 4),
+  repeatArray(deepCopy(trials_incongruent), prms.nTrlsLowE.incomp / 4),
+  repeatArray(deepCopy(trials_catch), prms.nTrlsLowE.catch / 4),
+].flat();
+trials_low_pc_exp.forEach((i) => (i.block_congruency = 'Low'));
+
+// console.log(trials_high_pc_practice);
+// console.log(trials_low_pc_practice);
+// console.log(trials_high_pc_exp);
+// console.log(trials_low_pc_exp);
 
 ////////////////////////////////////////////////////////////////////////
 //                              Exp Parts                             //
@@ -192,7 +229,6 @@ const trial_feedback = {
   trial_duration: null,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    console.log(dat.corrCode);
     trial.trial_duration = prms.fbDur[dat.corrCode - 1];
     trial.stimulus = `<div style="font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]}</div>`;
   },
@@ -240,7 +276,7 @@ const audio_calibration = {
 
 const flanker_modality_trial = {
   type: jsPsychAudioKeyboardResponse,
-  stimulus: jsPsych.timelineVariable('wav_file'),
+  stimulus: jsPsych.timelineVariable('wav'),
   prompt: '',
   prompt2: '',
   trial_duration: prms.tooSlow,
@@ -253,8 +289,9 @@ const flanker_modality_trial = {
     target: jsPsych.timelineVariable('target'),
     distractor: jsPsych.timelineVariable('distractor'),
     modality: jsPsych.timelineVariable('modality'),
-    wav_file: jsPsych.timelineVariable('wav_file'),
+    wav: jsPsych.timelineVariable('wav'),
     congruency: jsPsych.timelineVariable('congruency'),
+    block_congruency: jsPsych.timelineVariable('block_congruency'),
     corrKey: jsPsych.timelineVariable('corrKey'),
   },
   on_start: function (trial) {
@@ -282,14 +319,24 @@ const trial_timeline_calibration = {
   },
 };
 
-const trial_timeline_high_pc = {
+const trial_timeline_high_pc_practice = {
   timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-  timeline_variables: trials_high_pc,
+  timeline_variables: trials_high_pc_practice,
 };
 
-const trial_timeline_low_pc = {
+const trial_timeline_low_pc_practice = {
   timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-  timeline_variables: trials_low_pc,
+  timeline_variables: trials_low_pc_practice,
+};
+
+const trial_timeline_high_pc_exp = {
+  timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
+  timeline_variables: trials_high_pc_practice,
+};
+
+const trial_timeline_low_pc_exp = {
+  timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
+  timeline_variables: trials_low_pc_practice,
 };
 
 const block_feedback = {
@@ -298,7 +345,7 @@ const block_feedback = {
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
   on_start: function (trial) {
-    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'modal_negation', blockNum: prms.cBlk } });
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'modal_flanker', blockNum: prms.cBlk } });
     let text = blockFeedbackText(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
     trial.stimulus = `<div style="font-size:${prms.fbTxtSizeBlock}px;">${text}</div>`;
   },
@@ -324,7 +371,7 @@ const alphaNum = {
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
         an:<br><br>
-        xxx<br><br>
+        hiwipibio@gmail.com <br><br>
         Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
@@ -346,7 +393,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${dirName}data/${expName}_${vpNum}`;
-  saveData('/Common/write_data.php', data_fn, { stim: 'flanker' });
+  // saveData('/Common/write_data.php', data_fn, { stim: 'modal_flanker' });
+  saveDataLocal(data_fn, { stim: 'modal_flanker' });
 
   const code_fn = `${dirName}code/${expName}`;
   saveRandomCode('/Common/write_code.php', code_fn, randomString);
@@ -366,11 +414,11 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen(true));
-  // exp.push(browser_check(prms.screenRes));
-  // exp.push(preload);
-  // exp.push(resize_browser());
-  // exp.push(welcome_message());
+  exp.push(fullscreen(true));
+  exp.push(browser_check(prms.screenRes));
+  exp.push(preload);
+  exp.push(resize_browser());
+  exp.push(welcome_message());
   // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
   exp.push(task_instructions1);
@@ -380,35 +428,45 @@ function genExpSeq() {
   // exp.push(task_instructions_calibration);
   // exp.push(trial_timeline_calibration);
 
-  // Counter-balanced task order Flanker-Simon vs. Simon-Flanker
+  // Counter-balanced congruency proportion order: high --> low vs. low --> high
   let blk_prortion_congruency;
   if (version === 1) {
     blk_prortion_congruency = repeatArray(['high_pc'], prms.nBlks / 2).concat(repeatArray(['low_pc'], prms.nBlks / 2));
   } else if (version === 2) {
     blk_prortion_congruency = repeatArray(['low_pc'], prms.nBlks / 2).concat(repeatArray(['high_pc'], prms.nBlks / 2));
   }
+  console.log(blk_prortion_congruency);
 
   let blk_timeline;
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    if (blk_prortion_congruency[blk] === 'high_pc') {
-      blk_timeline = { ...trial_timeline_high_pc };
-    } else if (blk_prortion_congruency[blk] === 'low_pc') {
-      blk_timeline = { ...trial_timeline_low_pc };
+    exp.push(block_start);
+    if ((blk == 0) | (blk == prms.nBlks / 2)) {
+      // practice blocks
+      if (blk_prortion_congruency[blk] === 'high_pc') {
+        blk_timeline = { ...trial_timeline_high_pc_practice };
+      } else if (blk_prortion_congruency[blk] === 'low_pc') {
+        blk_timeline = { ...trial_timeline_low_pc_practice };
+      }
+    } else {
+      // experiment blocks
+      if (blk_prortion_congruency[blk] === 'high_pc') {
+        blk_timeline = { ...trial_timeline_high_pc_exp };
+      } else if (blk_prortion_congruency[blk] === 'low_pc') {
+        blk_timeline = { ...trial_timeline_low_pc_exp };
+      }
     }
-    blk_timeline.sample = {
-      type: 'fixed-repetitions',
-      size: 1,
-    };
+    blk_timeline.sample = { type: 'fixed-repetitions', size: 1 };
     exp.push(blk_timeline); // trials within a block
+    exp.push(block_feedback);
   }
 
-  // exp.push(save_data);
+  exp.push(save_data);
 
-  // // debrief
-  // exp.push(mouseCursor(true));
-  // exp.push(alphaNum);
-  // exp.push(end_message());
-  // exp.push(fullscreen(false));
+  // debrief
+  exp.push(mouseCursor(true));
+  exp.push(alphaNum);
+  exp.push(end_message());
+  exp.push(fullscreen(false));
 
   return exp;
 }
