@@ -41,7 +41,7 @@ const prms = {
 };
 
 // 2 counter balanced versions
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -134,8 +134,11 @@ const block_start = {
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
-const auditory_letters = ['../Sounds/H.wav', '../Sounds/S.wav', '../Sounds/silence.wav'];
 const visual_letters = [prms.respStim[0], prms.respStim[1]];
+const auditory_letters =
+  visual_letters[0] === 'H'
+    ? ['../Sounds/H.wav', '../Sounds/S.wav', '../Sounds/silence.wav']
+    : ['../Sounds/S.wav', '../Sounds/H.wav', '../Sounds/silence.wav'];
 
 const preload = {
   type: jsPsychPreload,
@@ -358,7 +361,7 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 //                              VP Stunden                            //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16, 'mn1_');
+const randomString = generateRandomString(16, 'mcf1_');
 
 const alphaNum = {
   type: jsPsychHtmlKeyboardResponse,
@@ -393,8 +396,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${dirName}data/${expName}_${vpNum}`;
-  // saveData('/Common/write_data.php', data_fn, { stim: 'modal_flanker' });
-  saveDataLocal(data_fn, { stim: 'modal_flanker' });
+  saveData('/Common/write_data.php', data_fn, { stim: 'modal_flanker' });
+  // saveDataLocal(data_fn, { stim: 'modal_flanker' });
 
   const code_fn = `${dirName}code/${expName}`;
   saveRandomCode('/Common/write_code.php', code_fn, randomString);
@@ -419,39 +422,43 @@ function genExpSeq() {
   exp.push(preload);
   exp.push(resize_browser());
   exp.push(welcome_message());
-  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
   exp.push(task_instructions1);
   exp.push(task_instructions2);
 
-  // // audio calibration
-  // exp.push(task_instructions_calibration);
-  // exp.push(trial_timeline_calibration);
+  // audio calibration
+  exp.push(task_instructions_calibration);
+  exp.push(trial_timeline_calibration);
 
   // Counter-balanced congruency proportion order: high --> low vs. low --> high
-  let blk_prortion_congruency;
+  let blk_proportion_congruency;
   if (version === 1) {
-    blk_prortion_congruency = repeatArray(['high_pc'], prms.nBlks / 2).concat(repeatArray(['low_pc'], prms.nBlks / 2));
+    blk_proportion_congruency = repeatArray(['high_pc'], prms.nBlks / 2).concat(
+      repeatArray(['low_pc'], prms.nBlks / 2),
+    );
   } else if (version === 2) {
-    blk_prortion_congruency = repeatArray(['low_pc'], prms.nBlks / 2).concat(repeatArray(['high_pc'], prms.nBlks / 2));
+    blk_proportion_congruency = repeatArray(['low_pc'], prms.nBlks / 2).concat(
+      repeatArray(['high_pc'], prms.nBlks / 2),
+    );
   }
-  console.log(blk_prortion_congruency);
+  // console.log(blk_proportion_congruency);
 
   let blk_timeline;
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     exp.push(block_start);
     if ((blk == 0) | (blk == prms.nBlks / 2)) {
       // practice blocks
-      if (blk_prortion_congruency[blk] === 'high_pc') {
+      if (blk_proportion_congruency[blk] === 'high_pc') {
         blk_timeline = { ...trial_timeline_high_pc_practice };
-      } else if (blk_prortion_congruency[blk] === 'low_pc') {
+      } else if (blk_proportion_congruency[blk] === 'low_pc') {
         blk_timeline = { ...trial_timeline_low_pc_practice };
       }
     } else {
       // experiment blocks
-      if (blk_prortion_congruency[blk] === 'high_pc') {
+      if (blk_proportion_congruency[blk] === 'high_pc') {
         blk_timeline = { ...trial_timeline_high_pc_exp };
-      } else if (blk_prortion_congruency[blk] === 'low_pc') {
+      } else if (blk_proportion_congruency[blk] === 'low_pc') {
         blk_timeline = { ...trial_timeline_low_pc_exp };
       }
     }
