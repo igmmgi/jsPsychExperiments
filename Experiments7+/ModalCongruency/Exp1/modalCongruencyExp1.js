@@ -16,7 +16,7 @@ const jsPsych = initJsPsych({});
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  screenRes: [960, 720],
+  screenRes: [960, 720], // minimum screen resolution requested
   nBlks: 4, // number of blocks (must be multiple of 2)
   nTrlsHighP: { comp: 12, incomp: 4, catch: 4 }, // number of trials practice high (all must be multiples of 4 with min 4)
   nTrlsLowP: { comp: 4, incomp: 12, catch: 4 }, // number of trials practice low
@@ -53,7 +53,7 @@ const task_instructions1 = {
     text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-           um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 25 Minuten konzentriert zu arbeiten.<br><br>
+           um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 35 Minuten konzentriert zu arbeiten.<br><br>
            Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            hiwipibio@gmail.com <br><br>
@@ -86,13 +86,28 @@ const task_instructions2 = {
       bold: true,
     }) +
     generate_formatted_html({
-      text: `Bitte antworte so schnell und so korrekt wie möglich!<br><br>
+      text: `Aufgabe ist es so schnell und so korrekt wie möglich auf den zentralen Stimulus zu reagieren.<br><br>
              Drücke eine beliebige Taste, um fortzufahren.`,
       align: 'center',
       colour: 'black',
       fontsize: 30,
       bold: true,
     }),
+  post_trial_gap: prms.waitDur,
+};
+
+const task_instructions3 = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: generate_formatted_html({
+    text: `Weiterhin gibt es Trials in denen der zentrale Stimulus ein „X“ ist. <br>
+           Reagiere in diesen Trials bitte auf die anderen (visuellen oder auditiven) Stimuli.<br><br>
+           Drücke eine beliebige Taste, um fortzufahren`,
+    align: 'left',
+    colour: 'black',
+    fontsize: 30,
+    bold: true,
+    lineheight: 1.5,
+  }),
   post_trial_gap: prms.waitDur,
 };
 
@@ -334,12 +349,12 @@ const trial_timeline_low_pc_practice = {
 
 const trial_timeline_high_pc_exp = {
   timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-  timeline_variables: trials_high_pc_practice,
+  timeline_variables: trials_high_pc_exp,
 };
 
 const trial_timeline_low_pc_exp = {
   timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-  timeline_variables: trials_low_pc_practice,
+  timeline_variables: trials_low_pc_exp,
 };
 
 const block_feedback = {
@@ -370,12 +385,12 @@ const alphaNum = {
   stimulus: generate_formatted_html({
     text:
       `Vielen Dank für Ihre Teilnahme.<br><br>
-        Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
-        zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
-        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an:<br><br>
-        hiwipibio@gmail.com <br><br>
-        Code: ` +
+       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
+       zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
+       Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
+       an:<br><br>
+       hiwipibio@gmail.com <br><br>
+       Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
@@ -426,6 +441,7 @@ function genExpSeq() {
   exp.push(mouseCursor(false));
   exp.push(task_instructions1);
   exp.push(task_instructions2);
+  exp.push(task_instructions3);
 
   // audio calibration
   exp.push(task_instructions_calibration);
