@@ -3,8 +3,7 @@
 //
 // Risky options are represented using 6 emoji features (3 win, 3 loss)
 // Three probabilities: 20, 50, & 80%
-// Safe options are represented using partially filled bars (3 green, 3 red)
-//   with green/red representing win or loss (counter-balanced)
+// Safe options are represented using partially filled bars (3 green = win, 3 red = loss)
 //
 // Payoff scheme gain (risky)
 // • Risky 20% = 20% chance of +40 or 80% chance of +20
@@ -28,7 +27,7 @@
 //
 // Procedure:
 // 10 blocks of 96 trials
-// 5 blocks (gain/loss) -> 5 blocks(loss/gain), counter-balanced across participants
+// 5 blocks gain -> 5 blocks loss (order counter-balanced across participants)
 // Blocks 1,2 and 6,7 (i.e., first two within each context) consist only safe or risky options
 // Blocks 3,4,5 and 8,9,10 contain trials with:
 //    i) two risky options
@@ -65,12 +64,12 @@ getComputerInfo();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  fixDur: 500,
+  fixDur: 400,
   fbDur: 500, // 500 ms feedback
-  iti: 200,
+  iti: 1000,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
-  cPoints: 1000, // count points
+  cPoints: 20000, // count points
   fixWidth: 3,
   fixSize: 15,
   fbSize: '50px monospace',
@@ -82,7 +81,7 @@ const prms = {
 // Version 2: Gain blocks -> Loss blocks with training (Risky -> Safe)
 // Version 3: Loss blocks -> Gain blocks with training (Safe  -> Risky)
 // Version 4: Loss blocks -> Gain blocks with training (Risky -> Safe)
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -101,7 +100,7 @@ const task_instructions1 = {
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
            Zusätzlich erhalten die 10% Teilnehmer mit der
            höchsten Gesamtpunktzahl einen 10€-Gutschein (wahlweise Deutsche Bahn oder Zalando oder REWE).<br><br>
-           Jede/r Teilnehmerin/Teilnehmer startet mit 0 Gesamtpunkten.<br><br>
+           Jede/r Teilnehmerin/Teilnehmer startet mit 20000 Gesamtpunkten.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
@@ -111,7 +110,7 @@ const task_instructions1 = {
   choices: [' '],
 };
 
-const task_instructions2 = {
+const task_instructions_gain = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
   canvas_size: canvas_size,
@@ -122,11 +121,10 @@ const task_instructions2 = {
       text: `*** Sie müssen nun soviele Punkte wie möglich sichern. *** <br><br>
     Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
     rechten Seite des Bildschirms. <br><br>
-    Wenn Sie das Bild mit Gewinn wählen bekommen Sie +1, +5 oder +9 Punkte. <br><br>
-    Wenn Sie das Bild ohne Gewinn wählen bekommen Sie 0 Punkte.<br><br>
+    Wenn Sie das Bild mit Gewinn wählen bekommen Sie +24, +30, +36, oder +36 Punkt. <br><br>
     Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
     die entsprechende Taste drücken: <br><br>
-    Linkes Bild: "Q" -Taste &ensp; &ensp; &ensp; Rechtes Bild: "P" -Taste <br><br>
+    Links: "Q" -Taste &ensp; &ensp; &ensp; Rechts: "P" -Taste <br><br>
     Drücken Sie eine beliebige Taste, um fortzufahren!`,
       fontsize: 26,
       bold: true,
@@ -135,6 +133,31 @@ const task_instructions2 = {
     });
   },
 };
+
+const task_instructions_loss = {
+  type: 'html-keyboard-response-canvas',
+  canvas_colour: canvas_colour,
+  canvas_size: canvas_size,
+  canvas_border: canvas_border,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus = generate_formatted_html({
+      text: `*** Sie müssen nun soviele Punkte wie möglich sichern. ***
+    Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
+    rechten Seite des Bildschirms.<br><br>
+    Wenn Sie das Bild mit Verlust wählen verlieren Sie -24, -30, -36, oder -36 Punkt. <br><br>
+    Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
+    die entsprechende Taste drücken: <br><br>
+    Links: "Q" -Taste &ensp; &ensp; &ensp; Rechts: "P" -Taste <br><br>
+    Drücken Sie eine beliebige Taste, um fortzufahren!`,
+      fontsize: 26,
+      bold: true,
+      lineheight: 1.25,
+      align: 'left',
+    });
+  },
+};
+
 
 const block_start = {
   type: 'html-keyboard-response-canvas',
@@ -204,13 +227,13 @@ function readImages(dir, n) {
 }
 
 // safe images
-const imagesSafeGain = readImages('DescriptionImages/DG_', 3);
-const imagesSafeLoss = readImages('DescriptionImages/DR_', 3);
+const imgsSafeGain = readImages('DescriptionImages/DG_', 3);
+const imgsSafeLoss = readImages('DescriptionImages/DR_', 3);
 
 // risky images
-let imagesExperience = shuffle(readImages('ExperienceImages/E_', 34));
-let imagesRiskyGain = imagesExperience.splice(0, 3);
-let imagesRiskyLoss = imagesExperience.splice(0, 3);
+let imgsExperience = shuffle(readImages('ExperienceImages/E_', 34));
+let imgsRiskyGain = imgsExperience.splice(0, 3);
+let imgsRiskyLoss = imgsExperience.splice(0, 3);
 
 // console.log(imagesSafeGain);
 // console.log(imagesSafeLoss);
@@ -323,10 +346,10 @@ function codeTrial() {
   let selectedImageType = responseSide === 'left' ? dat.imgLeftType : dat.imgRightType;
   let selectedImageProb = responseSide === 'left' ? dat.probLeft : dat.probRight;
 
-  console.log(responseSide);
-  console.log(highProbSelected);
-  console.log(selectedImageType);
-  console.log(selectedImageProb);
+  // console.log(responseSide);
+  // console.log(highProbSelected);
+  // console.log(selectedImageType);
+  // console.log(selectedImageProb);
 
   let rewardCode = 0;
   let rewardPoints = 0;
@@ -405,101 +428,101 @@ const pic_stim = {
 
 // prettier-ignore
 let training_block_gain_safe = [
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeGain[0], imgRight: imagesSafeGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeGain[0], imgRight: imagesSafeGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeGain[1], imgRight: imagesSafeGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeGain[1], imgRight: imagesSafeGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeGain[2], imgRight: imagesSafeGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeGain[2], imgRight: imagesSafeGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeGain[0], imgRight: imgsSafeGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeGain[0], imgRight: imgsSafeGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeGain[1], imgRight: imgsSafeGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeGain[1], imgRight: imgsSafeGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeGain[2], imgRight: imgsSafeGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeGain[2], imgRight: imgsSafeGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 ];
 
 // prettier-ignore
 let training_block_loss_safe = [
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeLoss[0], imgRight: imagesSafeLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeLoss[0], imgRight: imagesSafeLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeLoss[1], imgRight: imagesSafeLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeLoss[1], imgRight: imagesSafeLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeLoss[2], imgRight: imagesSafeLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imagesSafeLoss[2], imgRight: imagesSafeLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeLoss[0], imgRight: imgsSafeLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeLoss[0], imgRight: imgsSafeLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeLoss[1], imgRight: imgsSafeLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeLoss[1], imgRight: imgsSafeLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeLoss[2], imgRight: imgsSafeLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Safe', imgRightType: 'Safe', imgLeft: imgsSafeLoss[2], imgRight: imgsSafeLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 ];
 
 // prettier-ignore
 let training_block_gain_risky = [
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[0], imgRight: imagesRiskyGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[0], imgRight: imagesRiskyGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[1], imgRight: imagesRiskyGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[1], imgRight: imagesRiskyGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[2], imgRight: imagesRiskyGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[2], imgRight: imagesRiskyGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[0], imgRight: imgsRiskyGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[0], imgRight: imgsRiskyGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[1], imgRight: imgsRiskyGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[1], imgRight: imgsRiskyGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[2], imgRight: imgsRiskyGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[2], imgRight: imgsRiskyGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 ];
 
 // prettier-ignore
 let training_block_loss_risky = [
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[0], imgRight: imagesRiskyLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[0], imgRight: imagesRiskyLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[1], imgRight: imagesRiskyLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[1], imgRight: imagesRiskyLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[2], imgRight: imagesRiskyLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[2], imgRight: imagesRiskyLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[0], imgRight: imgsRiskyLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[0], imgRight: imgsRiskyLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[1], imgRight: imgsRiskyLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[1], imgRight: imgsRiskyLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[2], imgRight: imgsRiskyLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'training', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[2], imgRight: imgsRiskyLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 ];
 
 // prettier-ignore
 let exp_block_gain = [
   // pure safe
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[0],  imgRight: imagesSafeGain[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[0],  imgRight: imagesSafeGain[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[1],  imgRight: imagesSafeGain[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[1],  imgRight: imagesSafeGain[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[2],  imgRight: imagesSafeGain[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[2],  imgRight: imagesSafeGain[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[0],  imgRight: imagesSafeGain[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[0],  imgRight: imagesSafeGain[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[1],  imgRight: imagesSafeGain[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[1],  imgRight: imagesSafeGain[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[2],  imgRight: imagesSafeGain[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeGain[2],  imgRight: imagesSafeGain[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[0],  imgRight: imgsSafeGain[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[0],  imgRight: imgsSafeGain[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[1],  imgRight: imgsSafeGain[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[1],  imgRight: imgsSafeGain[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[2],  imgRight: imgsSafeGain[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[2],  imgRight: imgsSafeGain[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[0],  imgRight: imgsSafeGain[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[0],  imgRight: imgsSafeGain[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[1],  imgRight: imgsSafeGain[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[1],  imgRight: imgsSafeGain[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[2],  imgRight: imgsSafeGain[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeGain[2],  imgRight: imgsSafeGain[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 
   // pure risky
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[0], imgRight: imagesRiskyGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[0], imgRight: imagesRiskyGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[1], imgRight: imagesRiskyGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[1], imgRight: imagesRiskyGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[2], imgRight: imagesRiskyGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[2], imgRight: imagesRiskyGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[0], imgRight: imagesRiskyGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[0], imgRight: imagesRiskyGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[1], imgRight: imagesRiskyGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[1], imgRight: imagesRiskyGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[2], imgRight: imagesRiskyGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyGain[2], imgRight: imagesRiskyGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[0], imgRight: imgsRiskyGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[0], imgRight: imgsRiskyGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[1], imgRight: imgsRiskyGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[1], imgRight: imgsRiskyGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[2], imgRight: imgsRiskyGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[2], imgRight: imgsRiskyGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[0], imgRight: imgsRiskyGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[0], imgRight: imgsRiskyGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[1], imgRight: imgsRiskyGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[1], imgRight: imgsRiskyGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[2], imgRight: imgsRiskyGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyGain[2], imgRight: imgsRiskyGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 
   // mixed unequal
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[0], imgRight: imagesSafeGain[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[0], imgRight: imagesSafeGain[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[1], imgRight: imagesSafeGain[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[1], imgRight: imagesSafeGain[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[2], imgRight: imagesSafeGain[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[2], imgRight: imagesSafeGain[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[0],  imgRight: imagesRiskyGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[0],  imgRight: imagesRiskyGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[1],  imgRight: imagesRiskyGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[1],  imgRight: imagesRiskyGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[2],  imgRight: imagesRiskyGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[2],  imgRight: imagesRiskyGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[0], imgRight: imgsSafeGain[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[0], imgRight: imgsSafeGain[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[1], imgRight: imgsSafeGain[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[1], imgRight: imgsSafeGain[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[2], imgRight: imgsSafeGain[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[2], imgRight: imgsSafeGain[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[0],  imgRight: imgsRiskyGain[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[0],  imgRight: imgsRiskyGain[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[1],  imgRight: imgsRiskyGain[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[1],  imgRight: imgsRiskyGain[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[2],  imgRight: imgsRiskyGain[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[2],  imgRight: imgsRiskyGain[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 
   // mixed equal
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[0], imgRight: imagesSafeGain[0],  probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[1], imgRight: imagesSafeGain[1],  probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[2], imgRight: imagesSafeGain[2],  probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[0],  imgRight: imagesRiskyGain[0], probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[1],  imgRight: imagesRiskyGain[1], probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[2],  imgRight: imagesRiskyGain[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[0], imgRight: imagesSafeGain[0],  probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[1], imgRight: imagesSafeGain[1],  probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyGain[2], imgRight: imagesSafeGain[2],  probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[0],  imgRight: imagesRiskyGain[0], probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[1],  imgRight: imagesRiskyGain[1], probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeGain[2],  imgRight: imagesRiskyGain[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[0], imgRight: imgsSafeGain[0],  probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[1], imgRight: imgsSafeGain[1],  probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[2], imgRight: imgsSafeGain[2],  probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[0],  imgRight: imgsRiskyGain[0], probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[1],  imgRight: imgsRiskyGain[1], probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[2],  imgRight: imgsRiskyGain[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[0], imgRight: imgsSafeGain[0],  probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[1], imgRight: imgsSafeGain[1],  probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyGain[2], imgRight: imgsSafeGain[2],  probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[0],  imgRight: imgsRiskyGain[0], probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[1],  imgRight: imgsRiskyGain[1], probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[2],  imgRight: imgsRiskyGain[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
 
 ];
 // console.log(exp_block_gain);
@@ -507,60 +530,60 @@ let exp_block_gain = [
 // prettier-ignore
 let exp_block_loss = [
   // pure safe
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[0],  imgRight: imagesSafeLoss[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[0],  imgRight: imagesSafeLoss[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[1],  imgRight: imagesSafeLoss[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[1],  imgRight: imagesSafeLoss[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[2],  imgRight: imagesSafeLoss[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[2],  imgRight: imagesSafeLoss[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[0],  imgRight: imagesSafeLoss[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[0],  imgRight: imagesSafeLoss[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[1],  imgRight: imagesSafeLoss[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[1],  imgRight: imagesSafeLoss[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[2],  imgRight: imagesSafeLoss[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imagesSafeLoss[2],  imgRight: imagesSafeLoss[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[0],  imgRight: imgsSafeLoss[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[0],  imgRight: imgsSafeLoss[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[1],  imgRight: imgsSafeLoss[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[1],  imgRight: imgsSafeLoss[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[2],  imgRight: imgsSafeLoss[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[2],  imgRight: imgsSafeLoss[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[0],  imgRight: imgsSafeLoss[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[0],  imgRight: imgsSafeLoss[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[1],  imgRight: imgsSafeLoss[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[1],  imgRight: imgsSafeLoss[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[2],  imgRight: imgsSafeLoss[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Safe',  imgLeft: imgsSafeLoss[2],  imgRight: imgsSafeLoss[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 
   // pure risky
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[0], imgRight: imagesRiskyLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[0], imgRight: imagesRiskyLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[1], imgRight: imagesRiskyLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[1], imgRight: imagesRiskyLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[2], imgRight: imagesRiskyLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[2], imgRight: imagesRiskyLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[0], imgRight: imagesRiskyLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[0], imgRight: imagesRiskyLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[1], imgRight: imagesRiskyLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[1], imgRight: imagesRiskyLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[2], imgRight: imagesRiskyLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imagesRiskyLoss[2], imgRight: imagesRiskyLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[0], imgRight: imgsRiskyLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[0], imgRight: imgsRiskyLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[1], imgRight: imgsRiskyLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[1], imgRight: imgsRiskyLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[2], imgRight: imgsRiskyLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[2], imgRight: imgsRiskyLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[0], imgRight: imgsRiskyLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[0], imgRight: imgsRiskyLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[1], imgRight: imgsRiskyLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[1], imgRight: imgsRiskyLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[2], imgRight: imgsRiskyLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Risky', imgLeft: imgsRiskyLoss[2], imgRight: imgsRiskyLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 
   // mixed unequal
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[0], imgRight: imagesSafeLoss[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[0], imgRight: imagesSafeLoss[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[1], imgRight: imagesSafeLoss[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[1], imgRight: imagesSafeLoss[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[2], imgRight: imagesSafeLoss[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[2], imgRight: imagesSafeLoss[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[0],  imgRight: imagesRiskyLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[0],  imgRight: imagesRiskyLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[1],  imgRight: imagesRiskyLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[1],  imgRight: imagesRiskyLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[2],  imgRight: imagesRiskyLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[2],  imgRight: imagesRiskyLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[0], imgRight: imgsSafeLoss[1],  probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[0], imgRight: imgsSafeLoss[2],  probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[1], imgRight: imgsSafeLoss[2],  probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[1], imgRight: imgsSafeLoss[0],  probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[2], imgRight: imgsSafeLoss[0],  probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[2], imgRight: imgsSafeLoss[1],  probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[0],  imgRight: imgsRiskyLoss[1], probLeft: 0.2, probRight: 0.5, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[0],  imgRight: imgsRiskyLoss[2], probLeft: 0.2, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[1],  imgRight: imgsRiskyLoss[2], probLeft: 0.5, probRight: 0.8, highProbSide: 'right' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[1],  imgRight: imgsRiskyLoss[0], probLeft: 0.5, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[2],  imgRight: imgsRiskyLoss[0], probLeft: 0.8, probRight: 0.2, highProbSide: 'left' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[2],  imgRight: imgsRiskyLoss[1], probLeft: 0.8, probRight: 0.5, highProbSide: 'left' },
 
   // mixed equal
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[0], imgRight: imagesSafeLoss[0],  probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[1], imgRight: imagesSafeLoss[1],  probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[2], imgRight: imagesSafeLoss[2],  probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[0],  imgRight: imagesRiskyLoss[0], probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[1],  imgRight: imagesRiskyLoss[1], probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[2],  imgRight: imagesRiskyLoss[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[0], imgRight: imagesSafeLoss[0],  probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[1], imgRight: imagesSafeLoss[1],  probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imagesRiskyLoss[2], imgRight: imagesSafeLoss[2],  probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[0],  imgRight: imagesRiskyLoss[0], probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[1],  imgRight: imagesRiskyLoss[1], probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
-  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imagesSafeLoss[2],  imgRight: imagesRiskyLoss[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[0], imgRight: imgsSafeLoss[0],  probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[1], imgRight: imgsSafeLoss[1],  probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[2], imgRight: imgsSafeLoss[2],  probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[0],  imgRight: imgsRiskyLoss[0], probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[1],  imgRight: imgsRiskyLoss[1], probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[2],  imgRight: imgsRiskyLoss[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[0], imgRight: imgsSafeLoss[0],  probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[1], imgRight: imgsSafeLoss[1],  probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Risky', imgRightType: 'Safe',  imgLeft: imgsRiskyLoss[2], imgRight: imgsSafeLoss[2],  probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[0],  imgRight: imgsRiskyLoss[0], probLeft: 0.2, probRight: 0.2, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[1],  imgRight: imgsRiskyLoss[1], probLeft: 0.5, probRight: 0.5, highProbSide: 'na' },
+  { phase: 'exp', blkType: 'Loss', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeLoss[2],  imgRight: imgsRiskyLoss[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
 
 ];
 // console.log(exp_block_gain);
@@ -570,7 +593,7 @@ const trial_timeline_training_block_gain_safe = {
   timeline_variables: training_block_gain_safe,
   sample: {
     type: 'fixed-repetitions',
-    size: 1,
+    size: 16,
   },
 };
 // console.log(trial_timeline_training_block_gain_safe);
@@ -580,7 +603,7 @@ const trial_timeline_training_block_loss_safe = {
   timeline_variables: training_block_loss_safe,
   sample: {
     type: 'fixed-repetitions',
-    size: 1,
+    size: 16,
   },
 };
 // console.log(trial_timeline_training_block_loss_safe);
@@ -590,7 +613,7 @@ const trial_timeline_training_block_gain_risky = {
   timeline_variables: training_block_gain_risky,
   sample: {
     type: 'fixed-repetitions',
-    size: 1,
+    size: 16,
   },
 };
 // console.log(trial_timeline_training_block_gain_risky);
@@ -600,7 +623,7 @@ const trial_timeline_training_block_loss_risky = {
   timeline_variables: training_block_loss_risky,
   sample: {
     type: 'fixed-repetitions',
-    size: 1,
+    size: 16,
   },
 };
 // console.log(trial_timeline_training_block_loss_risky);
@@ -610,7 +633,7 @@ const trial_timeline_exp_block_gain = {
   timeline_variables: exp_block_gain,
   sample: {
     type: 'fixed-repetitions',
-    size: 1,
+    size: 2,
   },
 };
 // console.log(trial_timeline_exp_block_gain);
@@ -620,7 +643,7 @@ const trial_timeline_exp_block_loss = {
   timeline_variables: exp_block_loss,
   sample: {
     type: 'fixed-repetitions',
-    size: 1,
+    size: 2,
   },
 };
 // console.log(trial_timeline_exp_block_loss);
@@ -628,7 +651,7 @@ const trial_timeline_exp_block_loss = {
 ////////////////////////////////////////////////////////////////////////
 //                              Be-brief                              //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomStringWithExpName('nwv2', 16);
+const randomString = generateRandomStringWithExpName('rp1', 16);
 
 const alphaNum = {
   type: 'html-keyboard-response-canvas',
@@ -721,58 +744,124 @@ function genExpSeq() {
 
   let exp = [];
 
-  // // exp.push(fullscreen_on);
-  // // exp.push(check_screen);
-  // exp.push(welcome_de);
-  // exp.push(resize_de);
-  // // exp.push(vpInfoForm_de);
-  // exp.push(hideMouseCursor);
-  // exp.push(screenInfo);
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
+  exp.push(fullscreen_on);
+  exp.push(check_screen);
+  exp.push(welcome_de);
+  exp.push(resize_de);
+  // exp.push(vpInfoForm_de);
+  exp.push(hideMouseCursor);
+  exp.push(screenInfo);
+  exp.push(task_instructions1);
 
-  // 96 trials in each block
-  // first phase: learning block (safe vs. risky)
-  for (let blk = 0; blk < 1; blk++) {
-    if ((version === 1) | (version == 2)) {
-      exp.push(block_start);
-      exp.push(trial_timeline_training_block_gain_safe);
-      exp.push(short_break);
-      exp.push(block_start);
-      exp.push(trial_timeline_training_block_gain_risky);
-    } else if ((version === 3) | (version === 4)) {
-      exp.push(block_start);
-      exp.push(trial_timeline_training_block_gain_risky);
-      exp.push(short_break);
-      exp.push(block_start);
-      exp.push(trial_timeline_training_block_gain_safe);
+  // 1st half Gain vs. Loss counterbalanced
+  // Version 1 & 2: Gain 1st half/Loss 2nd half
+  // Version 3 & 4: Loss 1st half/Gain 2nd half
+  // Training phase
+  if (version === 1) {
+    exp.push(task_instructions_gain);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_gain_safe);
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_gain_risky);
+  } else if (version === 2) {
+    exp.push(task_instructions_gain);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_gain_risky);
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_gain_safe);
+  } else if (version === 3) {
+    exp.push(task_instructions_loss);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_loss_safe);
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_loss_risky);
+  } else if (version === 4) {
+    exp.push(task_instructions_loss);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_loss_risky);
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_loss_safe);
+  }
+
+  // Exp phase
+  for (let blk = 0; blk < 3; blk++) {
+     exp.push(short_break);
+     exp.push(block_start);
+    if ([1,2].includes(version)) {
+     exp.push(trial_timeline_exp_block_gain);
+    } else {
+     exp.push(trial_timeline_exp_block_loss);
     }
   }
 
-  // // second phase: 6 experiment block of 96 trials
-  // for (let blk = 0; blk < 6; blk++) {
-  //   exp.push(short_break);
-  //   exp.push(block_start);
-  //   exp.push(trial_timeline_experiment);
-  // }
+  exp.push(half_break);
 
-  // exp.push(short_break);
-  // exp.push(showMouseCursor);
+  // 2nd half Gain vs. Loss counterbalanced
+  // Version 1 & 2: Gain 1st half/Loss 2nd half
+  // Version 3 & 4: Loss 1st half/Gain 2nd half
+  // Training phase
+  if (version === 1) {
+    exp.push(task_instructions_loss);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_loss_safe);
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_loss_risky);
+  } else if (version === 2) {
+    exp.push(task_instructions_loss);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_loss_risky);
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_loss_safe);
+  } else if (version === 3) {
+    exp.push(task_instructions_gain);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_gain_safe);
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_gain_risky);
+  } else if (version === 4) {
+    exp.push(task_instructions_gain);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_gain_risky);
+    exp.push(short_break);
+    exp.push(block_start);
+    exp.push(trial_timeline_training_block_gain_safe);
+  }
 
-  // // email
-  // exp.push(showMouseCursor);
-  // exp.push(email_option_instructions);
-  // exp.push(email_option);
+  // Exp phase
+  for (let blk = 0; blk < 3; blk++) {
+     exp.push(short_break);
+     exp.push(block_start);
+    if ([1,2].includes(version)) {
+     exp.push(trial_timeline_exp_block_loss);
+    } else {
+     exp.push(trial_timeline_exp_block_gain);
+    }
+  }
 
-  // // save data
-  // exp.push(save_data);
-  // exp.push(save_interaction_data);
-  // exp.push(save_code);
+  exp.push(short_break);
+  exp.push(showMouseCursor);
 
-  // // de-brief
-  // exp.push(alphaNum);
-  // exp.push(debrief_de);
-  // exp.push(fullscreen_off);
+  // email
+  exp.push(showMouseCursor);
+  exp.push(email_option_instructions);
+  exp.push(email_option);
+
+  // save data
+  exp.push(save_data);
+  exp.push(save_interaction_data);
+  exp.push(save_code);
+
+  // de-brief
+  exp.push(alphaNum);
+  exp.push(debrief_de);
+  exp.push(fullscreen_off);
 
   return exp;
 }
@@ -784,3 +873,5 @@ jsPsych.init({
     update_user_interaction_data(data);
   },
 });
+
+
