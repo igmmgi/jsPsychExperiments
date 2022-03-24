@@ -81,7 +81,7 @@ const prms = {
 // Version 2: Gain blocks -> Loss blocks with training (Risky -> Safe)
 // Version 3: Loss blocks -> Gain blocks with training (Safe  -> Risky)
 // Version 4: Loss blocks -> Gain blocks with training (Risky -> Safe)
-const version = Number(jsPsych.data.urlVariables().version);
+const version = 1; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,6 @@ const task_instructions_loss = {
     });
   },
 };
-
 
 const block_start = {
   type: 'html-keyboard-response-canvas',
@@ -312,7 +311,16 @@ function drawFeedback() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText(dat.rewardPoints, 0, 0);
+
+  let fb;
+  if (dat.rewardPoints > 0) {
+    fb = String('+' + dat.rewardPoints);
+  } else {
+    fb = String(dat.rewardPoints);
+  }
+  console.log(fb);
+
+  ctx.fillText(fb, 0, 0);
 }
 
 function drawITI() {
@@ -789,12 +797,12 @@ function genExpSeq() {
 
   // Exp phase
   for (let blk = 0; blk < 3; blk++) {
-     exp.push(short_break);
-     exp.push(block_start);
-    if ([1,2].includes(version)) {
-     exp.push(trial_timeline_exp_block_gain);
+    exp.push(short_break);
+    exp.push(block_start);
+    if ([1, 2].includes(version)) {
+      exp.push(trial_timeline_exp_block_gain);
     } else {
-     exp.push(trial_timeline_exp_block_loss);
+      exp.push(trial_timeline_exp_block_loss);
     }
   }
 
@@ -836,12 +844,12 @@ function genExpSeq() {
 
   // Exp phase
   for (let blk = 0; blk < 3; blk++) {
-     exp.push(short_break);
-     exp.push(block_start);
-    if ([1,2].includes(version)) {
-     exp.push(trial_timeline_exp_block_loss);
+    exp.push(short_break);
+    exp.push(block_start);
+    if ([1, 2].includes(version)) {
+      exp.push(trial_timeline_exp_block_loss);
     } else {
-     exp.push(trial_timeline_exp_block_gain);
+      exp.push(trial_timeline_exp_block_gain);
     }
   }
 
@@ -873,5 +881,3 @@ jsPsych.init({
     update_user_interaction_data(data);
   },
 });
-
-
