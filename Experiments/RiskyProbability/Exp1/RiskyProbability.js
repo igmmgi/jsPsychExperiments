@@ -121,7 +121,7 @@ const task_instructions_gain = {
       text: `*** Sie müssen nun soviele Punkte wie möglich sichern. *** <br><br>
     Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
     rechten Seite des Bildschirms. <br><br>
-    Wenn Sie das Bild mit Gewinn wählen bekommen Sie +24, +30, +36, oder +36 Punkt. <br><br>
+    Wenn Sie das Bild mit Gewinn wählen bekommen Sie +24, +30, +36, oder +40 Punkt. <br><br>
     Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
     die entsprechende Taste drücken: <br><br>
     Links: "Q" -Taste &ensp; &ensp; &ensp; Rechts: "P" -Taste <br><br>
@@ -145,7 +145,7 @@ const task_instructions_loss = {
       text: `*** Sie müssen nun soviele Punkte wie möglich sichern. ***
     Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
     rechten Seite des Bildschirms.<br><br>
-    Wenn Sie das Bild mit Verlust wählen verlieren Sie -24, -30, -36, oder -36 Punkt. <br><br>
+    Wenn Sie das Bild mit Verlust wählen verlieren Sie -24, -30, -36, oder -40 Punkt. <br><br>
     Entscheiden Sie sich in jedem Durchgang für ein Bild indem Sie
     die entsprechende Taste drücken: <br><br>
     Links: "Q" -Taste &ensp; &ensp; &ensp; Rechts: "P" -Taste <br><br>
@@ -713,7 +713,7 @@ const save_data = {
   type: 'call-function',
   func: function () {
     let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
-    saveData('/Common/write_data.php', data_filename, { stim: 'NarrowWide' });
+    saveData('/Common/write_data.php', data_filename, { stim: 'RiskyProbability' });
   },
   post_trial_gap: 1000,
 };
@@ -748,7 +748,7 @@ function genExpSeq() {
   exp.push(check_screen);
   exp.push(welcome_de);
   exp.push(resize_de);
-  // exp.push(vpInfoForm_de);
+  exp.push(vpInfoForm_de);
   exp.push(hideMouseCursor);
   exp.push(screenInfo);
   exp.push(task_instructions1);
