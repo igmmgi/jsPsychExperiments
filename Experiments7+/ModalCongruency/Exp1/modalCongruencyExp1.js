@@ -17,11 +17,11 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nBlks: 4, // number of blocks (must be multiple of 2)
-  nTrlsHighP: { comp: 12, incomp: 4, catch: 4 }, // number of trials practice high (all must be multiples of 4 with min 4)
-  nTrlsLowP: { comp: 4, incomp: 12, catch: 4 }, // number of trials practice low
-  nTrlsHighE: { comp: 12, incomp: 4, catch: 4 }, // number of trials exp high
-  nTrlsLowE: { comp: 4, incomp: 12, catch: 4 }, // number of trials exp low
+  nBlks: 10, // number of blocks (must be multiple of 2)
+  nTrlsHighP: { comp: 64, incomp: 16, catch: 4 }, // number of trials practice high (all must be multiples of 4 with min 4)
+  nTrlsLowP: { comp: 16, incomp: 64, catch: 4 }, // number of trials practice low
+  nTrlsHighE: { comp: 64, incomp: 16, catch: 4 }, // number of trials exp high
+  nTrlsLowE: { comp: 16, incomp: 64, catch: 4 }, // number of trials exp low
   fixDur: 300, // duration of fixation cross
   fixSize: 50, // size of fixation cross
   fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
@@ -135,12 +135,15 @@ const block_start = {
   on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
       text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>
+            Reagiere immer auf das zentrale Target mit den Tasten: <br><br>
             ${prms.respStim[0]} = "${prms.respKeys[0]} Taste" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${prms.respStim[1]} = "${prms.respKeys[1]} Taste"<br><br>
+            Wenn ein "X" erscheint reagiere auf die anderen Buchstaben.<br><br>
             Drücke eine beliebige Taste, um fortzufahren.<br>`,
       align: 'center',
       colour: 'black',
       fontsize: 30,
       bold: true,
+      width: '920px',
     });
   },
   post_trial_gap: prms.waitDur,
@@ -240,16 +243,20 @@ const iti = {
   trial_duration: prms.iti,
 };
 
+// prettier-ignore
 const trial_feedback = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: '',
-  response_ends_trial: false,
-  trial_duration: null,
-  on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
-    trial.stimulus = `<div style="font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]}</div>`;
-  },
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: '',
+    response_ends_trial: false,
+    trial_duration: null,
+    on_start: function (trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = prms.fbDur[dat.corrCode - 1];
+        trial.stimulus = `<div style="font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]}</div>`;
+        if (dat.corrCode != 1) {
+            trial.stimulus += `<div style="font-size:${prms.fbTxtSizeTrial}px;"><br>${prms.respStim[0]} = "${prms.respKeys[0]} Taste" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${prms.respStim[1]} = "${prms.respKeys[1]} Taste"<br><br></div>`;
+        }
+    },
 };
 
 function codeTrial() {
