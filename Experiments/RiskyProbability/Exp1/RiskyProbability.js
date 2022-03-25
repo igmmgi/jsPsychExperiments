@@ -64,9 +64,9 @@ getComputerInfo();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  fixDur: 400,
+  fixDur: 500,
   fbDur: 500, // 500 ms feedback
-  iti: 1000,
+  iti: 750,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   cPoints: 20000, // count points
@@ -81,12 +81,18 @@ const prms = {
 // Version 2: Gain blocks -> Loss blocks with training (Risky -> Safe)
 // Version 3: Loss blocks -> Gain blocks with training (Safe  -> Risky)
 // Version 4: Loss blocks -> Gain blocks with training (Risky -> Safe)
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
+
+// from https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+}
+
 const task_instructions1 = {
   type: 'html-keyboard-response-canvas',
   canvas_colour: canvas_colour,
@@ -100,7 +106,7 @@ const task_instructions1 = {
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
            Zusätzlich erhalten die 10% Teilnehmer mit der
            höchsten Gesamtpunktzahl einen 10€-Gutschein (wahlweise Deutsche Bahn oder Zalando oder REWE).<br><br>
-           Jede/r Teilnehmerin/Teilnehmer startet mit 20000 Gesamtpunkten.<br><br>
+           Jede/r Teilnehmerin/Teilnehmer startet mit ${numberWithCommas(prms.cPoints)} Gesamtpunkten.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
@@ -118,7 +124,7 @@ const task_instructions_gain = {
   stimulus: '',
   on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
-      text: `*** Sie müssen nun soviele Punkte wie möglich sichern. *** <br><br>
+      text: `*** Sie müssen nun soviele Punkte wie möglich sammeln. *** <br><br>
     Sie sehen in jedem Durchgang ein Bild auf der linken und ein Bild auf der
     rechten Seite des Bildschirms. <br><br>
     Wenn Sie das Bild mit Gewinn wählen bekommen Sie +24, +30, +36, oder +40 Punkt. <br><br>
@@ -169,9 +175,10 @@ const block_start = {
       "<h2 style='text-align:left;'>Block Start: " +
       prms.cBlk +
       ' von 10</h2><br>' +
-      "<h2 style='text-align:left;'>Versuche soviele Punkte wie möglich zu sammeln!<br><br>" +
-      "<h2 style='text-align:left;'>Aktuelle Gesamtpunkte: " +
-      prms.cPoints +
+      "<h2 style='text-align:left;'>Versuche soviele Punkte wie möglich zu sammeln!<br><br></h2>" +
+      "<h1 style='text-align:left;'>Aktuelle Gesamtpunkte: " +
+      numberWithCommas(prms.cPoints) +
+      '</h1>' +
       '<h2><br>Zur Erinnerung: Linkes Bild: "Q"-Taste Rechtes Bild "P"-Taste</h2><br>' +
       "<h2 style='text-align:left;'>Drücken Sie eine beliebige Taste, um fortzufahren!</h2>";
   },
@@ -202,7 +209,7 @@ const half_break = {
     trial.stimulus = generate_formatted_html({
       text: `*********************************************<br><br>
       Die Hälfte ist geschafft.<br><br> Deine aktuelle Gesamtpunktzahl:
-      ${prms.cPoints} <br><br>
+      ${numberWithCommas(prms.cPoints)} <br><br>
       Bitte lese aufmerksam die neuen Instruktionen.<br><br>
         Weiter mit Taste G<br><br>
       ********************************************* `,
@@ -223,6 +230,10 @@ function readImages(dir, n) {
     images.push(dir + i + '.png');
   }
   return loadImages(images);
+}
+
+function basename(path) {
+  return path.split(/[\\/]/).pop();
 }
 
 // safe images
@@ -253,11 +264,11 @@ function drawFixation() {
   ctx.lineTo(0, prms.fixSize);
   ctx.stroke();
 
-  ctx.font = '30px monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
-  ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
+  // ctx.font = '30px monospace';
+  // ctx.textAlign = 'center';
+  // ctx.textBaseline = 'middle';
+  // ctx.fillStyle = 'black';
+  // ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
 }
 
 const fixation_cross = {
@@ -278,7 +289,7 @@ function showPicture(args) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
+  // ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
 
   // draw left/right images
   ctx.drawImage(args.imgLeft, -args.imgLeft.width / 2 - 150, -args.imgLeft.height / 2);
@@ -301,11 +312,11 @@ function drawFeedback() {
   let ctx = document.getElementById('canvas').getContext('2d');
   let dat = jsPsych.data.get().last(1).values()[0];
 
-  ctx.font = '30px monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
-  ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
+  // ctx.font = '30px monospace';
+  // ctx.textAlign = 'center';
+  // ctx.textBaseline = 'middle';
+  // ctx.fillStyle = 'black';
+  // ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
 
   ctx.font = prms.fbSize;
   ctx.textAlign = 'center';
@@ -318,7 +329,7 @@ function drawFeedback() {
   } else {
     fb = String(dat.rewardPoints);
   }
-  console.log(fb);
+  // console.log(fb);
 
   ctx.fillText(fb, 0, 0);
 }
@@ -327,11 +338,11 @@ function drawITI() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
 
-  ctx.font = '30px monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
-  ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
+  // ctx.font = '30px monospace';
+  // ctx.textAlign = 'center';
+  // ctx.textBaseline = 'middle';
+  // ctx.fillStyle = 'black';
+  // ctx.fillText('Gesamtpunkte: ' + prms.cPoints, 0, -300);
 }
 
 const iti = {
@@ -349,6 +360,7 @@ function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
 
+  console.log(dat);
   let responseSide = dat.key_press === prms.respKeys[0] ? 'left' : 'right';
   let highProbSelected = responseSide === dat.highProbSide ? true : false;
   let selectedImageType = responseSide === 'left' ? dat.imgLeftType : dat.imgRightType;
@@ -389,6 +401,7 @@ function codeTrial() {
     rt: dat.rt,
     rewardCode: rewardCode,
     rewardPoints: rewardPoints,
+    totalPoints: prms.cPoints,
     highProbSelected: highProbSelected,
     blockNum: prms.cBlk,
     trialNum: prms.cTrl,
@@ -422,12 +435,16 @@ const pic_stim = {
     phase: jsPsych.timelineVariable('phase'),
     blkType: jsPsych.timelineVariable('blkType'),
     imgLeftType: jsPsych.timelineVariable('imgLeftType'),
-    imgLeft: jsPsych.timelineVariable('imgLeft'),
     imgRightType: jsPsych.timelineVariable('imgRightType'),
-    imgRight: jsPsych.timelineVariable('imgRight'),
     probLeft: jsPsych.timelineVariable('probLeft'),
     probRight: jsPsych.timelineVariable('probRight'),
     highProbSide: jsPsych.timelineVariable('highProbSide'),
+  },
+  on_start: function (trial) {
+    let imgLeft = jsPsych.timelineVariable('imgLeft');
+    trial.data.imgLeft = basename(imgLeft.src);
+    let imgRight = jsPsych.timelineVariable('imgRight');
+    trial.data.imgRight = basename(imgRight.src);
   },
   on_finish: function () {
     codeTrial();
@@ -533,7 +550,7 @@ let exp_block_gain = [
   { phase: 'exp', blkType: 'Gain', imgLeftType: 'Safe',  imgRightType: 'Risky', imgLeft: imgsSafeGain[2],  imgRight: imgsRiskyGain[2], probLeft: 0.8, probRight: 0.8, highProbSide: 'na' },
 
 ];
-// console.log(exp_block_gain);
+console.log(exp_block_gain);
 
 // prettier-ignore
 let exp_block_loss = [
@@ -673,7 +690,7 @@ const alphaNum = {
     trial.stimulus =
       "<h2 style='text-align:left;'>Vielen Dank für Ihre Teilnahme.</h2>" +
       "<h3 style='text-align:left;'>Gesamtpunkte: " +
-      prms.cPoints +
+      numberWithCommas(prms.cPoints) +
       '</h3><br>' +
       "<h3 style='text-align:left;'>Wenn Sie eine Versuchspersonenstunde benötigen, kopieren Sie den </h3>" +
       "<h3 style='text-align:left;'>folgenden zufällig generierten Code und senden Sie diesen per Email. </h3>" +

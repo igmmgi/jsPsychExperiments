@@ -243,20 +243,19 @@ const iti = {
   trial_duration: prms.iti,
 };
 
-// prettier-ignore
 const trial_feedback = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: '',
-    response_ends_trial: false,
-    trial_duration: null,
-    on_start: function (trial) {
-        let dat = jsPsych.data.get().last(1).values()[0];
-        trial.trial_duration = prms.fbDur[dat.corrCode - 1];
-        trial.stimulus = `<div style="font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]}</div>`;
-        if (dat.corrCode != 1) {
-            trial.stimulus += `<div style="font-size:${prms.fbTxtSizeTrial}px;"><br>${prms.respStim[0]} = "${prms.respKeys[0]} Taste" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${prms.respStim[1]} = "${prms.respKeys[1]} Taste"<br><br></div>`;
-        }
-    },
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '',
+  response_ends_trial: false,
+  trial_duration: null,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
+    trial.stimulus = `<div style="font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]}</div>`;
+    if (dat.corrCode != 1) {
+      trial.stimulus += `<div style="font-size:${prms.fbTxtSizeTrial}px;"><br>${prms.respStim[0]} = "${prms.respKeys[0]} Taste" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${prms.respStim[1]} = "${prms.respKeys[1]} Taste"<br><br></div>`;
+    }
+  },
 };
 
 function codeTrial() {
@@ -417,7 +416,7 @@ function save() {
   const vpNum = getTime();
   jsPsych.data.addProperties({ vpNum: vpNum });
 
-  const data_fn = `${dirName}data/${expName}_${vpNum}`;
+  const data_fn = `${dirName}data/version${version}/${expName}_${vpNum}`;
   saveData('/Common/write_data.php', data_fn, { stim: 'modal_flanker' });
   // saveDataLocal(data_fn, { stim: 'modal_flanker' });
 
