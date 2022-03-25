@@ -77,6 +77,7 @@ var jsPsychImageKeyboardResponse = (function (jspsych) {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
     }
+
     trial(display_element, trial) {
       var height, width;
       // display stimulus as an image element
