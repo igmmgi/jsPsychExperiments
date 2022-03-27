@@ -42,12 +42,6 @@ var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
         default: false,
         description: 'Translate origin to center',
       },
-      prompt: {
-        type: jspsych.ParameterType.STRING,
-        pretty_name: 'Prompt',
-        default: null,
-        description: 'Any content here will be displayed below the stimulus.',
-      },
       stimulus_duration: {
         type: jspsych.ParameterType.INT,
         pretty_name: 'Stimulus duration',
@@ -88,6 +82,7 @@ var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
         trial.stimulus +
         '</div>';
 
+
       display_element.innerHTML = new_html;
 
       let canvas = document.querySelector('canvas');
@@ -98,11 +93,6 @@ var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
 
       if (trial.translate_origin) {
         ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
-      }
-
-      // add prompt
-      if (trial.prompt !== null) {
-        new_html += trial.prompt;
       }
 
       // store response
@@ -149,7 +139,7 @@ var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
 
       // start the response listener
       if (trial.choices !== 'NO_KEYS') {
-        let keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
+        var keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
           callback_function: after_response,
           valid_responses: trial.choices,
           rt_method: 'performance',
@@ -167,9 +157,7 @@ var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
 
       // end trial if trial_duration is set
       if (trial.trial_duration !== null) {
-        this.jsPsych.pluginAPI.setTimeout(function () {
-          end_trial();
-        }, trial.trial_duration);
+        this.jsPsych.pluginAPI.setTimeout(end_trial, trial.trial_duration);
       }
     }
   }

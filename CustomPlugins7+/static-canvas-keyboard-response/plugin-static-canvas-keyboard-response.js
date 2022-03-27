@@ -88,22 +88,26 @@ var jsPsychStaticCanvasKeyboardResponse = (function (jspsych) {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
     }
+
     trial(display_element, trial) {
       // setup canvas
-      var new_html =
-        '<div>' +
+      let new_html =
+        '<div style="position:relative;">' +
         '<canvas id="canvas" width="' +
         trial.canvas_size[0] +
         '" height="' +
         trial.canvas_size[1] +
         '" style="border: ' +
         trial.canvas_border +
-        ';"></canvas>' +
+        '; position: fixed; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%);"></canvas>' 
         '</div>';
 
       display_element.innerHTML = new_html;
-      let canvas = document.getElementById('canvas');
-      let ctx = document.getElementById('canvas').getContext('2d');
+
+      let canvas = document.querySelector('canvas');
+      let ctx = canvas.getContext('2d');
+      // let canvas = document.getElementById('canvas');
+      // let ctx = document.getElementById('canvas').getContext('2d');
 
       ctx.fillStyle = trial.canvas_colour;
       ctx.fillRect(0, 0, canvas.width, canvas.height);

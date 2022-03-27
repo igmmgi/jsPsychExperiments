@@ -1,15 +1,13 @@
 // Voluntary Task Switching
 // Illuminating the role of effector-specific task representations in voluntary task switching
-// Online adapted version of Experiment 1
+// Online version of Experiment 2
 //
 // Two stimuli (i.e., letter/coloured square) are presented in each trial and are
 //  associated with two-independent task sets (letter task vs. colour task)
 //  1st half: tasks assigned to same hand (task-to-hand)
 //  2nd half: tasks assigned to same finger (task-to-finger)
 //  Participants decide which task to perform
-// The onset of the task (letter/colour) performed in trial n-1 was delayed by increasing steps of 50 ms
-// The onset of the task (letter/colour) not performed in trial n-1 was presented without delay
-// Following a switch trial, the SOA delay wass reset
+// In 50% of trials (Free Choice), 50% of trials (Forced-Choice, only one stimulus presented)
 
 const jsPsych = initJsPsych({});
 
@@ -29,23 +27,21 @@ const PRMS = {
   nTrls: 10, // 100, // number of trials within a block
   nBlks: 4, // 14, // number of blocks
   fbDur: [400, 500], // feedback duration for correct and incorrect trials, respectively
-  fbText: ["Richtig", "Falsch!"],
+  fbText: ['Richtig', 'Falsch!'],
   rsi: 400,
-  waitDur: 5000,  // wait time at end of block if too many errors!
+  waitDur: 5000, // wait time at end of block if too many errors!
   stimFont: '50px Arial',
   fbFont: '28px Arial',
   colours1: [COLOURS[0], COLOURS[1]],
   letters1: [LETTERS[0], LETTERS[1]],
   colours2: [COLOURS[2], COLOURS[3]],
   letters2: [LETTERS[2], LETTERS[3]],
-  soaStart: 0,
-  soaStep: 50,
-  respKeys: ['F', 'V', 'J', 'N'],
-  leftHand: ['F', 'V'],
-  rightHand: ['J', 'N'],
-  indexFinger: ['V', 'N'],
-  middleFinger: ['F', 'J'],
-  deactivateKeys: true  // should keys be deactivate when task not available?
+  respKeys: ['Q', 'W', 'O', 'P'],
+  leftHand: ['Q', 'W'],
+  rightHand: ['O', 'P'],
+  indexFinger: ['W', 'O'],
+  middleFinger: ['Q', 'P'],
+  deactivateKeys: true, // should keys be deactivate when task not available?
 };
 
 const VTS_DATA = {
@@ -55,7 +51,6 @@ const VTS_DATA = {
   nLetter: 0,
   nColour: 0,
   previousTask: 'na',
-  soa: 0,
   repCounter: 0,
   poorPerformance: false,
 };
@@ -214,9 +209,9 @@ const TASK_INSTRUCTIONS1 = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
-    text: `Du siehst in jedem Durchgang einen Buchstaben und eine Farbiges Rechteck, aber eine Aufgabe erscheint später als die andere Aufgabe.<br><br>
-           Du darfst frei entscheiden, ob du die zuerst erscheinende Aufgabe bearbeiten willst oder auf die andere Aufgabe wartest, aber versuche so schnell und so genau wie möglich zu sein!<br><br>
-           Die Reaktionszeitmessung in jedem Durchgang beginnt, sobald die erste Aufgabe erscheint und endet sobald du eine der beiden Aufgaben bearbeitet hast!<br><br>
+    text: `You have to perform 100 trials in each block. When only on task stimulus is presented
+           (i.e., letter or colored square) you have to perform the corresponding task. However, if both
+           task stimuli are presented you can freely decide which task you want to perform in this tria
            Drücke eine beliebige Taste um fortzufahren.`,
     align: 'left',
     fontsize: 30,
@@ -235,7 +230,7 @@ const TASK_INSTRUCTIONS2 = {
   stimulus: generate_formatted_html({
     text: `In jedem Block gibt es insgesamt ${PRMS.nTrls} Aufgaben (${PRMS.nTrls / 2} Buchstaben und ${PRMS.nTrls / 2} Farbaufgaben).<br><br>
            Du hast freie Aufgabenwahl, wenn beide Aufgaben verfügbar sind.<br><br>
-           Wenn nur ein “#”-Zeichen statt der Buchstaben Aufgabe, oder Grau die Farbaufgabe, dann musst du der andere Aufgabe bearbeiten bis der Block zu Ende ist.<br><br>
+           Wenn nur ein Stimulus is present, dann musst du auf dieses Stimulus bearbeiten.<br><br>
            Drücke eine beliebige Taste um fortzufahren.`,
     align: 'left',
     fontsize: 30,
@@ -294,7 +289,7 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
         align: 'left',
         width: '1200px',
         bold: true,
-        lineheight: 1.5
+        lineheight: 1.5,
       }) +
       respText +
       generate_formatted_html({
@@ -305,6 +300,7 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
         bold: true,
         lineheight: 1.5,
       });
+    task = shuffle(task);
   },
 };
 
@@ -386,10 +382,6 @@ function codeTrial() {
   }
   VTS_DATA.repCounter = transition === 'repeat' ? VTS_DATA.repCounter + 1 : 0;
 
-  // Calculate RT: NB if responding to the repeat stimulus, subtract SOA
-  let rt1 = dat.rt;
-  let rt2 = transition !== 'repeat' ? dat.rt : dat.rt - VTS_DATA.soa;
-
   // Was response correct?
   let correctKeys = [
     STIM_RESP.hand.slr[dat.letter],
@@ -409,11 +401,8 @@ function codeTrial() {
   console.log('Mapping: ', mapping);
   console.log('Resp task: ', respTask);
   console.log('Transition: ', transition);
-  console.log('SOA: ', VTS_DATA.soa);
-  console.log('Transition: ', transition);
   console.log('Rep Counter: ', VTS_DATA.repCounter);
-  console.log('RT1: ', rt1);
-  console.log('RT2: ', rt2);
+  console.log('RT1: ', dat.rt);
   console.log('Error: ', error);
 
   jsPsych.data.addDataToLastTrial({
@@ -426,22 +415,19 @@ function codeTrial() {
     respTask: respTask,
     transition: transition,
     repCounter: VTS_DATA.repCounter,
-    soa: VTS_DATA.soa,
-    rt1: rt1,
-    rt2: rt2,
     error: error,
   });
 
   // Update vts_data for next trial
   VTS_DATA.cTrl++;
-  if (respTask === 'letter') VTS_DATA.nLetter++;
-  if (respTask === 'colour') VTS_DATA.nColour++;
   VTS_DATA.previousTask = respTask;
-  VTS_DATA.soa = transition === 'repeat' ? VTS_DATA.soa + PRMS.soaStep : 50;
-
-  // Reset soa if an error?
-  //if (error === 0) VTS_DATA.soa = 0;
 }
+
+function blockStimuli(n) {
+  return repeatArray('both', n / 2).concat(repeatArray(['letter', 'colour'], n / 4));
+}
+
+let task = blockStimuli(100);
 
 const VTS = {
   type: jsPsychStaticCanvasKeyboardResponse,
@@ -452,8 +438,8 @@ const VTS = {
   response_ends_trial: true,
   choices: PRMS.respKeys,
   trial_duration: PRMS.tooSlow,
-  func: [drawStimulus, drawStimulus],
-  stimulus_onset: null,
+  func: drawStimulus,
+  stimulus_onset: 0,
   letter: null,
   colour: null,
   func_args: null,
@@ -506,29 +492,23 @@ const VTS = {
       console.log(trial.choices);
     }
 
-    // SOA interval
-    trial.stimulus_onset = VTS_DATA.cTrl === 1 ? [0, 0] : [0, VTS_DATA.soa];
-
     // repeat vs. switch task
     let draw_colour;
     let draw_letter;
-    if (VTS_DATA.previousTask === 'na') {
-      draw_colour = [1, 1];
-      draw_letter = [1, 1];
-    } else if (VTS_DATA.previousTask === 'colour') {
-      draw_colour = [0, 1];
-      draw_letter = [1, 1];
-    } else if (VTS_DATA.previousTask === 'letter') {
-      draw_colour = [1, 1];
-      draw_letter = [0, 1];
+    if (task[VTS_DATA.cTrl] === 'both') {
+      draw_colour = 1;
+      draw_letter = 1;
+    } else if (task[VTS_DATA.cTrl] === 'letter') {
+      draw_colour = 0;
+      draw_letter = 1;
+    } else if (task[VTS_DATA.cTrl] === 'colour') {
+      draw_colour = 1;
+      draw_letter = 0;
     }
 
-    trial.func_args = [
-      { letter: letter, colour: colour, draw_colour: draw_colour[0], draw_letter: draw_letter[0] },
-      { letter: letter, colour: colour, draw_colour: draw_colour[1], draw_letter: draw_letter[1] },
-    ];
+    trial.func_args = [{ letter: letter, colour: colour, draw_colour: draw_colour, draw_letter: draw_letter }];
 
-    trial.data = { stim: 'vts', letter: letter, colour: colour };
+    trial.data = { stim: 'vts', letter: letter, colour: colour, task: task[VTS_DATA.cTrl] };
   },
   on_finish: function () {
     codeTrial();
@@ -590,7 +570,6 @@ function blockFeedbackTxt(filter_options) {
   VTS_DATA.nColour = 0;
   VTS_DATA.nLetter = 0;
   VTS_DATA.previousTask = 'na';
-  VTS_DATA.soa = 0;
   VTS_DATA.poorPerformance = nError >= PRMS.nPoor;
 
   if (VTS_DATA.cBlk > PRMS.nBlks / 2) {
@@ -735,7 +714,7 @@ function genExpSeq() {
       exp.push(VTS);
       exp.push(TRIAL_FEDBACK); // duration = RSI of 400, 900 for correct/incorrect trials
       if ((blk === 0) | (blk === PRMS.nBlks / 2)) {
-         exp.push(IF_ERROR_TASK_INSTRUCTIONS_MAPPING);
+        exp.push(IF_ERROR_TASK_INSTRUCTIONS_MAPPING);
       }
     }
 
