@@ -14,32 +14,6 @@ function debug_to_console($data)
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
-// Gains
-$nFiles_pr_v2 = numFilesInDir('Experiments/ProactiveReward/Exp1.2/data/version2');
-$nFiles_pr_v4 = numFilesInDir('Experiments/ProactiveReward/Exp1.2/data/version4');
-
-// PP_FreeChoice
-$nFiles_ppfc_v1 = numFilesInDir('Experiments/PP_FreeChoice/Exp1.3/data/version1');
-$nFiles_ppfc_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp1.3/data/version2');
-
-// ConflictReward
-$nFiles_cr2_v1 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version1');
-$nFiles_cr2_v2 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version2');
-$nFiles_cr2_v3 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version3');
-$nFiles_cr2_v4 = numFilesInDir('Experiments/ConflictReward/Exp2/data/version4');
-
-// NarrowWide (Zonk)
-$nFiles_nw_v1 = numFilesInDir('Experiments/NarrowWide/V2/data/version1');
-$nFiles_nw_v2 = numFilesInDir('Experiments/NarrowWide/V2/data/version2');
-$nFiles_nw_v3 = numFilesInDir('Experiments/NarrowWide/V2/data/version3');
-$nFiles_nw_v4 = numFilesInDir('Experiments/NarrowWide/V2/data/version4');
-
-// PRP Exp4
-$nFiles_prp4_v1 = numFilesInDir('Experiments/PRP/Exp4/version1/data/order1');
-$nFiles_prp4_v2 = numFilesInDir('Experiments/PRP/Exp4/version1/data/order2');
-$nFiles_prp4_v3 = numFilesInDir('Experiments/PRP/Exp4/version2/data/order1');
-$nFiles_prp4_v4 = numFilesInDir('Experiments/PRP/Exp4/version2/data/order2');
-
 // CSE Mouse
 $nFiles_csem_text = numFilesInDir('Experiments/CSE_mouse_tracking/text_only/data');
 $nFiles_csem_image = numFilesInDir('Experiments/CSE_mouse_tracking/image_only/data');
@@ -48,18 +22,15 @@ $nFiles_csem_image = numFilesInDir('Experiments/CSE_mouse_tracking/image_only/da
 $nFiles_mn2 = numFilesInDir('Experiments/MouseNegation/Exp2/data');
 $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
 
-// flanker emotion
-$nFiles_fe1 = numFilesInDir('Experiments7+/flankerEmotion/Exp1.2/data');
-$nFiles_fe2 = numFilesInDir('Experiments7+/flankerEmotion/Exp2.2/data');
+// Risky Probability
+$nFiles_rp1 = numFilesInDir('Experiments/RiskyProbability/Exp1/data/version1');
+$nFiles_rp2 = numFilesInDir('Experiments/RiskyProbability/Exp1/data/version2');
+$nFiles_rp3 = numFilesInDir('Experiments/RiskyProbability/Exp1/data/version3');
+$nFiles_rp4 = numFilesInDir('Experiments/RiskyProbability/Exp1/data/version4');
 
-// flanker grouping
-$nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp1/data');
-
-// vts2
-$nFiles_vts2_v1 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/version1');
-$nFiles_vts2_v2 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/version2');
-$nFiles_vts2_v3 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/version3');
-$nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/version4');
+// Modal Congruency
+$nFiles_mc1 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version1');
+$nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
 
 ?>
 
@@ -118,8 +89,7 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
-            <p> DualTask Exp4: hiwipibio@gmail.com </p>
-            <p> Fun with characters: hiwipibio@gmail.com</p>
+            <p> Fruity Choice Exp1: hiwipibio@gmail.com </p>
             <p> Ambig: m.zeller@student.uni-tuebigen.de </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
 
@@ -130,150 +100,47 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
             <h2>1,0 VP-Stunden</h2>
 
             <?php
-            $pr1 = [];
-            if ($nFiles_pr_v2 < 20) {
-                array_push($pr1, 2);
+            $rp = [];
+            if ($nFiles_rp1 < 10) {
+                array_push($rp, 1);
             }
-            if ($nFiles_pr_v4 < 20) {
-                array_push($pr1, 4);
+            if ($nFiles_rp2 < 10) {
+                array_push($rp, 2);
+            }
+            if ($nFiles_rp3 < 10) {
+                array_push($rp, 3);
+            }
+            if ($nFiles_rp4 < 10) {
+                array_push($rp, 4);
             }
 
-            $randIndex = array_rand($pr1);
-            $pr1_version = $pr1[$randIndex];
+            $randIndex = array_rand($rp);
+            $rp_version = $rp[$randIndex];
+            /* debug_to_console($rp_version) */
             ?>
 
-            <?php if (!empty($pr1_version)) : ?>
-                <h3><a href="Experiments/ProactiveReward/Exp1.2/index.html?orderVersion=<?php echo $pr1_version; ?>">Gains Exp1 (n = <?= $nFiles_pr_v2 + $nFiles_pr_v4 ?>)</a></h3>
-            <?php endif;  ?>
-
-            <?php
-            $pp_fc1 = [];
-            if ($nFiles_ppfc_v1 < 20) {
-                array_push($pp_fc1, 1);
-            }
-            if ($nFiles_ppfc_v2 < 20) {
-                array_push($pp_fc1, 2);
-            }
-
-            $randIndex = array_rand($pp_fc1);
-            $pp_fc1_version = $pp_fc1[$randIndex];
-            ?>
-
-            <?php if (!empty($pp_fc1_version)) : ?>
-                <h3><a href="Experiments/PP_FreeChoice/Exp1.3/index.html?version=<?php echo $pp_fc1_version; ?>">Free Choice Race Exp 1 (n = <?= $nFiles_ppfc_v1 + $nFiles_ppfc_v2 ?>)</a></h3>
+            <?php if (!empty($rp_version)) : ?>
+                <h3><a href="Experiments/RiskyProbability/Exp1/index.html?version=<?php echo $rp_version; ?>">Fruity Choice Exp1 (n = <?= $nFiles_rp1 + $nFiles_rp2 + $nFiles_rp3 + $nFiles_rp4 ?>)</a></h3>
             <?php endif;  ?>
 
 
             <?php
-            $cr2 = [];
-            if ($nFiles_cr2_v1 < 15) {
-                array_push($cr2, 1);
+            $mc = [];
+            if ($nFiles_mc1 < 25) {
+                array_push($rp, 1);
             }
-            if ($nFiles_cr2_v2 < 15) {
-                array_push($cr2, 2);
-            }
-            if ($nFiles_cr2_v3 < 15) {
-                array_push($cr2, 3);
-            }
-            if ($nFiles_cr2_v4 < 15) {
-                array_push($cr2, 4);
+            if ($nFiles_mc2 < 0) {
+                array_push($rp, 25);
             }
 
-            $randIndex = array_rand($cr2);
-            $cr2_version = $cr2[$randIndex];
-            /* debug_to_console($cr2_version) */
+            $randIndex = array_rand($mc);
+            $mc_version = $mc[$randIndex];
+            /* debug_to_console($rp_version) */
             ?>
 
-            <?php if (!empty($cr2_version)) : ?>
-                <h3><a href="Experiments/ConflictReward/Exp2/index.html?orderVersion=<?php echo $cr2_version; ?>">Reward Exp2 (n = <?= $nFiles_cr2_v1 + $nFiles_cr2_v2 + $nFiles_cr2_v3 + $nFiles_cr2_v4 ?>)</a></h3>
+            <?php if (!empty($mc_version)) : ?>
+                <h3><a href="Experiments7+/ModalCongruency/Exp1/index.html?version=<?php echo $mc_version; ?>">Modal Congruency Exp1 (n = <?= $nFiles_mc1 + $nFiles_mc2 ?>)</a></h3>
             <?php endif;  ?>
-
-
-            <?php
-            $nw1 = [];
-            if ($nFiles_nw_v1 < 8) {
-                array_push($nw1, 1);
-            }
-            if ($nFiles_nw_v2 < 8) {
-                array_push($nw1, 2);
-            }
-            if ($nFiles_nw_v3 < 8) {
-                array_push($nw1, 3);
-            }
-            if ($nFiles_nw_v4 < 8) {
-                array_push($nw1, 4);
-            }
-
-            $randIndex = array_rand($nw1);
-            $nw1_version = $nw1[$randIndex];
-            /* debug_to_console($nw1_version) */
-            ?>
-
-            <?php if (!empty($nw1_version)) : ?>
-                <h3><a href="Experiments/NarrowWide/V2/index.html?version=<?php echo $nw1_version; ?>">Zonk Exp1 (n = <?= $nFiles_nw_v1 + $nFiles_nw_v2 + $nFiles_nw_v3 + $nFiles_nw_v4 ?>)</a></h3>
-            <?php endif;  ?>
-
-            <?php
-            $prp4 = [];
-            if ($nFiles_prp4_v1 < 10) {
-                array_push($prp4, 1);
-            }
-            if ($nFiles_prp4_v2 < 10) {
-                array_push($prp4, 2);
-            }
-            if ($nFiles_prp4_v3 < 10) {
-                array_push($prp4, 3);
-            }
-            if ($nFiles_prp4_v4 < 10) {
-                array_push($prp4, 4);
-            }
-
-            $randIndex = array_rand($prp4);
-            $prp4_version = $prp4[$randIndex];
-            /* debug_to_console($nw1_version) */
-            ?>
-
-            <?php if (!empty($prp4_version)) : ?>
-                <?php if ($prp4_version == 1 || $prp4_version == 2) : ?>
-                    <h3><a href="Experiments/PRP/Exp4/version1/index.html?taskOrder=<?php echo $prp4_version; ?>">DualTask Exp4 (n = <?= $nFiles_prp4_v1 + $nFiles_prp4_v2 + $nFiles_prp4_v3 + $nFiles_prp4_v4 ?>)</a></h3>
-                <?php endif;  ?>
-                <?php if ($prp4_version == 3 || $prp4_version == 4) : ?>
-                    <h3><a href="Experiments/PRP/Exp4/version2/index.html?taskOrder=<?php echo $prp4_version - 2; ?>">DualTask Exp4 (n = <?= $nFiles_prp4_v1 + $nFiles_prp4_v2 + $nFiles_prp4_v3 + $nFiles_prp4_v4 ?>)</a></h3>
-                <?php endif;  ?>
-            <?php endif;  ?>
-
-            <?php
-            $vts2 = [];
-            if ($nFiles_vts2_v1 < 10) {
-                array_push($vts2, 1);
-            }
-            if ($nFiles_vts2_v2 < 10) {
-                array_push($vts2, 2);
-            }
-            if ($nFiles_vts2_v3 < 10) {
-                array_push($vts2, 3);
-            }
-            if ($nFiles_vts2_v4 < 10) {
-                array_push($vts2, 4);
-            }
-
-            $randIndex = array_rand($vts2);
-            $vts2_version = $vts2[$randIndex];
-            /* debug_to_console($nw1_version) */
-            ?>
-
-            <?php if (!empty($vts2_version)) : ?>
-                <h3><a href="Experiments/TaskSwitching/VTS/Exp2.2/index.html?version=<?php echo $vts2_version; ?>">Fun with characters Exp1 (n = <?= $nFiles_vts2_v1 + $nFiles_vts2_v2 + $nFiles_vts2_v3 + $nFiles_vts2_v4 ?>)</a></h3>
-            <?php endif;  ?>
-
-
-            <?php if ($nFiles_fg < 40) : ?>
-                <h3><a href="Experiments7+/flankerGrouping/Exp1/index.html">Dots and Dashes (n = <?= $nFiles_fg ?>)</a></h3>
-            <?php endif;  ?>
-
-
-
-
 
 
 
@@ -325,36 +192,6 @@ $nFiles_vts2_v4 = numFilesInDir('Experiments/TaskSwitching/VTS/Exp2.2/data/versi
                     <h3><a href="Experiments/MouseNegation/Exp3/index.html">Mouse Negation Exp2 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
                 <?php endif;  ?>
             <?php endif;  ?>
-
-
-            <?php
-            $fe = [];
-            if ($nFiles_fe1 < 30) {
-                array_push($fe, 1);
-            }
-            if ($nFiles_fe2 < 30) {
-                array_push($fe, 2);
-            }
-
-            $randIndex = array_rand($fe);
-            $fe_version = $fe[$randIndex];
-            /* debug_to_console($nw1_version) */
-            ?>
-
-            <?php if (!empty($fe_version)) : ?>
-                <?php if ($fe_version == 1) : ?>
-                    <h3><a href="Experiments7+/flankerEmotion/Exp1.2/index.html">Emotion Exp (n = <?= $nFiles_fe1 + $nFiles_fe2 ?>)</a></h3>
-                <?php endif;  ?>
-                <?php if ($fe_version == 2) : ?>
-                    <h3><a href="Experiments7+/flankerEmotion/Exp2.2/index.html">Emotion Exp (n = <?= $nFiles_fe1 + $nFiles_fe2 ?>)</a></h3>
-                <?php endif;  ?>
-            <?php endif;  ?>
-
-
-
-
-
-
 
         </div>
     </div>
