@@ -17,7 +17,7 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nBlks: 10, // number of blocks (must be multiple of 2)
+  nBlks: 12, // number of blocks (must be multiple of 2)
   nTrlsHighP: { comp: 64, incomp: 16, catch: 4 }, // number of trials practice high (all must be multiples of 4 with min 4)
   nTrlsLowP: { comp: 16, incomp: 64, catch: 4 }, // number of trials practice low
   nTrlsHighE: { comp: 64, incomp: 16, catch: 4 }, // number of trials exp high
@@ -41,7 +41,7 @@ const prms = {
 };
 
 // 2 counter balanced versions
-const version = Number(jsPsych.data.urlVariables().version);
+const version = 1; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ const task_instructions1 = {
   stimulus: generate_formatted_html({
     text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest, Chrome oder Fifefox nutzt und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 35 Minuten konzentriert zu arbeiten.<br><br>
            Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
