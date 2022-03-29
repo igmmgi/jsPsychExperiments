@@ -41,7 +41,7 @@ const prms = {
 };
 
 // 2 counter balanced versions
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
