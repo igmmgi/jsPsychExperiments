@@ -130,8 +130,8 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
             if ($nFiles_mc1 < 25) {
                 array_push($mc, 1);
             }
-            if ($nFiles_mc2 < 0) {
-                array_push($mc, 25);
+            if ($nFiles_mc2 < 25) {
+                array_push($mc, 2);
             }
 
             $randIndex = array_rand($mc);
