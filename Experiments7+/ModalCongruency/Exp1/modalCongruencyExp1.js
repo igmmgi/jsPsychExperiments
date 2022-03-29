@@ -53,7 +53,7 @@ const task_instructions1 = {
     text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-           um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 35 Minuten konzentriert zu arbeiten.<br><br>
+           um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 35 Minuten konzentriert zu arbeiten.<br><br>
            Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            hiwipibio@gmail.com <br><br>
@@ -115,10 +115,10 @@ const task_instructions_calibration = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: generate_formatted_html({
     text: `ACHTUNG! Soundkalibierung:<br><br>
-    Im Folgenden werden dir Buchstaben audativ und visuell präsentiert.
+    Im Folgenden werden dir Buchstaben auditiv und visuell präsentiert.
     Bitte stelle in dieser Zeit die Lautstärke deines Soundsystems so ein, dass du
     deutlich zwischen den zwei Tönen differenzieren kannst.<br><br>
-    Anmerkung: Es geht immer automatisch weiter (d.h. du musst keine Taste drucken!).<br><br>
+    Anmerkung: Es geht immer automatisch weiter (d.h. du musst keine Taste drücken!).<br><br>
     Bereit? Drücke eine beliebige Taste, um die Töne abzuspielen!`,
     align: 'left',
     colour: 'black',
@@ -135,9 +135,9 @@ const block_start = {
   on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
       text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>
-            Reagiere immer auf das zentrale Target mit den Tasten: <br><br>
+            Reagiere immer auf das zentralen visuellen Zielreiz mit den Tasten: <br><br>
             ${prms.respStim[0]} = "${prms.respKeys[0]} Taste" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${prms.respStim[1]} = "${prms.respKeys[1]} Taste"<br><br>
-            Wenn ein "X" erscheint reagiere auf die anderen Buchstaben.<br><br>
+            Wenn ein "X" erscheint, reagiere auf die anderen Buchstaben.<br><br>
             Drücke eine beliebige Taste, um fortzufahren.<br>`,
       align: 'center',
       colour: 'black',
