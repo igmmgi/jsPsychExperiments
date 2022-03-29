@@ -90,6 +90,7 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
             <p> Fruity Choice Exp1: hiwipibio@gmail.com </p>
+            <p> Modal Congruency Exp1: hiwipibio@gmail.com </p>
             <p> Ambig: m.zeller@student.uni-tuebigen.de </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
 
@@ -127,10 +128,10 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
             <?php
             $mc = [];
             if ($nFiles_mc1 < 25) {
-                array_push($rp, 1);
+                array_push($mc, 1);
             }
             if ($nFiles_mc2 < 0) {
-                array_push($rp, 25);
+                array_push($mc, 25);
             }
 
             $randIndex = array_rand($mc);
