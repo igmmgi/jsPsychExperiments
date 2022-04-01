@@ -56,7 +56,7 @@ const VTS_DATA = {
 };
 
 // 8 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 8 counter-balanced versions
@@ -667,7 +667,7 @@ function save() {
 
   const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
   saveData('/Common/write_data.php', data_fn, { stim: 'vts' });
-  // saveDataLocal(data_fn, { stim: 'modal_flanker' });
+  // saveDataLocal(data_fn, { stim: 'vts' });
 
   const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
   saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);

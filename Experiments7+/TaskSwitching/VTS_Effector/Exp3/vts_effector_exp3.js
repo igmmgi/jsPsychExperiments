@@ -24,7 +24,7 @@ const LETTERS = shuffle(['Q', 'K', 'G', 'L']);
 
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nTrls: 10, // 100, // number of trials within a block
+  nTrls: 20, // 100, // number of trials within a block
   nBlks: 4, // 14, // number of blocks
   fbDur: [400, 500], // feedback duration for correct and incorrect trials, respectively
   fbText: ['Richtig', 'Falsch!'],
@@ -56,7 +56,7 @@ const VTS_DATA = {
 };
 
 // 8 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 8 counter-balanced versions
@@ -159,6 +159,12 @@ if (STIM_RESP.finger.it === 'colour') {
     lineheight: 2,
   });
 }
+
+function blockStimuli(n) {
+  return repeatArray('both', n / 2).concat(repeatArray(['letter', 'colour'], n / 4));
+}
+
+let task = blockStimuli(PRMS.nTrls);
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -423,11 +429,6 @@ function codeTrial() {
   VTS_DATA.previousTask = respTask;
 }
 
-function blockStimuli(n) {
-  return repeatArray('both', n / 2).concat(repeatArray(['letter', 'colour'], n / 4));
-}
-
-
 const VTS = {
   type: jsPsychStaticCanvasKeyboardResponse,
   canvas_colour: CANVAS_COLOUR,
@@ -654,7 +655,7 @@ function save() {
 
   const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
   saveData('/Common/write_data.php', data_fn, { stim: 'vts' });
-  // saveDataLocal(data_fn, { stim: 'modal_flanker' });
+  // saveDataLocal(data_fn, { stim: 'vts' });
 
   const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
   saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);

@@ -29,9 +29,9 @@ const PRMS = {
   nTrls: 10, // 100, // number of trials within a block
   nBlks: 4, // 14, // number of blocks
   fbDur: [400, 500], // feedback duration for correct and incorrect trials, respectively
-  fbText: ["Richtig", "Falsch!"],
+  fbText: ['Richtig', 'Falsch!'],
   rsi: 400,
-  waitDur: 5000,  // wait time at end of block if too many errors!
+  waitDur: 5000, // wait time at end of block if too many errors!
   stimFont: '50px Arial',
   fbFont: '28px Arial',
   colours1: [COLOURS[0], COLOURS[1]],
@@ -45,7 +45,7 @@ const PRMS = {
   rightHand: ['J', 'N'],
   indexFinger: ['V', 'N'],
   middleFinger: ['F', 'J'],
-  deactivateKeys: true  // should keys be deactivate when task not available?
+  deactivateKeys: true, // should keys be deactivate when task not available?
 };
 
 const VTS_DATA = {
@@ -61,7 +61,7 @@ const VTS_DATA = {
 };
 
 // 8 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 8 counter-balanced versions
@@ -294,7 +294,7 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
         align: 'left',
         width: '1200px',
         bold: true,
-        lineheight: 1.5
+        lineheight: 1.5,
       }) +
       respText +
       generate_formatted_html({
@@ -688,7 +688,7 @@ function save() {
 
   const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
   saveData('/Common/write_data.php', data_fn, { stim: 'vts' });
-  // saveDataLocal(data_fn, { stim: 'modal_flanker' });
+  // saveDataLocal(data_fn, { stim: 'vts' });
 
   const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
   saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);
@@ -735,7 +735,7 @@ function genExpSeq() {
       exp.push(VTS);
       exp.push(TRIAL_FEDBACK); // duration = RSI of 400, 900 for correct/incorrect trials
       if ((blk === 0) | (blk === PRMS.nBlks / 2)) {
-         exp.push(IF_ERROR_TASK_INSTRUCTIONS_MAPPING);
+        exp.push(IF_ERROR_TASK_INSTRUCTIONS_MAPPING);
       }
     }
 
