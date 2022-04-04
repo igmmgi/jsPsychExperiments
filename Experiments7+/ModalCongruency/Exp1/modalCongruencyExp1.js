@@ -28,7 +28,7 @@ const prms = {
   dti: 250, // distractor to target interval
   waitDur: 500, // duration following ...
   iti: 1000, // duration of inter-trial-interval
-  tooSlow: 1250, // response slower than x ms -> too slow!
+  tooSlow: 1750, // response slower than x ms -> too slow!
   tooFast: 350, // response slower than x ms -> too fast!
   respKeys: ['Q', 'P'],
   respStim: shuffle(['H', 'S']).concat('X'), // stimuli
