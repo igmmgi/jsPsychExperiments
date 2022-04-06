@@ -14,6 +14,10 @@ function debug_to_console($data)
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
+// CSE Simon Flanker
+$nFiles_csesf_v1 = numFilesInDir('Experiments/CSE_SimonFlanker/Exp2/data/version1');
+$nFiles_csesf_v2 = numFilesInDir('Experiments/CSE_SimonFlanker/Exp2/data/version2');
+
 // CSE Mouse
 $nFiles_csem_text = numFilesInDir('Experiments/CSE_mouse_tracking/text_only/data');
 $nFiles_csem_image = numFilesInDir('Experiments/CSE_mouse_tracking/image_only/data');
@@ -91,6 +95,7 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
             <p> Fruity Choice Exp1: hiwipibio@gmail.com </p>
             <p> Modal Congruency Exp1: hiwipibio@gmail.com </p>
+            <p> CSE SF Exp2: hiwipibio@gmail.com </p>
             <p> Ambig: m.zeller@student.uni-tuebigen.de </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
 
@@ -142,6 +147,25 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
             <?php if (!empty($mc_version)) : ?>
                 <h3><a href="Experiments7+/ModalCongruency/Exp1/index.html?version=<?php echo $mc_version; ?>">Modal Congruency Exp1 (n = <?= $nFiles_mc1 + $nFiles_mc2 ?>)</a></h3>
             <?php endif;  ?>
+
+            <?php
+            $csesf = [];
+            if ($nFiles_csesf_v1 < 20) {
+                array_push($csesf, 1);
+            }
+            if ($nFiles_csesf_v2 < 20) {
+                array_push($csesf, 2);
+            }
+
+            $randIndex = array_rand($csesf);
+            $csesf_version = $mc[$randIndex];
+            ?>
+
+            <?php if (!empty($csesf_version)) : ?>
+                <h3><a href="Experiments/CSE_SimonFlanker/Exp2/index.html?version=<?php echo $csesf_version; ?>">CSE SF Exp2 (n = <?= $nFiles_csesf_v1 + $nFiles_csesf_v2 ?>)</a></h3>
+            <?php endif;  ?>
+
+
 
 
 

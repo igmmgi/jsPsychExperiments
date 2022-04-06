@@ -242,7 +242,6 @@ function codeTrial() {
   } else {
     comp = dat.stim1.includes(dat.stim2) | dat.stim2.includes(dat.stim1) ? 'comp' : 'incomp';
   }
-  console.log(comp);
 
   let correctKey;
   if (dat.response !== null) {
@@ -400,7 +399,7 @@ const alphaNum = {
   canvas_size: cs,
   canvas_border: cb,
   response_ends_trial: true,
-  choices: [32],
+  choices: [' '],
   stimulus:
     "<h3 style='text-align:left;'>Wenn du eine Versuchspersonenstunde benötigst, </h3>" +
     "<h3 style='text-align:left;'>kopiere den folgenden zufällig generierten Code</h3>" +
@@ -419,7 +418,7 @@ const alphaNum = {
 const save_data = {
   type: 'call-function',
   func: function () {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
+    let data_filename = dirName + 'data/version' + version + '/' + expName + '_' + vpNum;
     saveData('/Common/write_data.php', data_filename, { stim: 'cse_sf' });
   },
   timing_post_trial: 1000,
