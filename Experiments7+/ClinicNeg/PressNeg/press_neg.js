@@ -1,5 +1,5 @@
 // Negation Task:
-// Participants respond to the meaning of the presented combination of 
+// Participants respond to the meaning of the presented combination of
 // symbols (tick mark/cross) text using key responses ("Q" and "P").
 
 const jsPsych = initJsPsych({});
@@ -12,9 +12,9 @@ const CANVAS_BORDER = '5px solid black';
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-  nTrlsP: 8, // number of trials in first block (practice)
-  nTrlsE: 16, // number of trials in subsequent blocks
-  nBlks: 4,
+  nTrlsP: 4, //16, // number of trials in first block (practice)
+  nTrlsE: 48, // number of trials in subsequent blocks
+  nBlks: 2,
   fixDur: 1000,
   fbDur: [1000, 1000],
   fixSize: 50,
@@ -30,6 +30,10 @@ const PRMS = {
   cBlk: 1, // count blocks
 };
 
+// 2 counter balanced versions
+const version = 2; // Number(jsPsych.data.urlVariables().version);
+jsPsych.data.addProperties({ version: version });
+
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
@@ -42,10 +46,7 @@ const WELCOME_INSTRUCTIONS = {
     text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-           um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 35 Minuten konzentriert zu arbeiten.<br><br>
-           Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
-           Bei Fragen oder Problemen wende dich bitte an:<br><br>
-           hiwipibio@gmail.com <br><br>
+           um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 15 Minuten konzentriert zu arbeiten.<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     fontsize: 30,
@@ -55,16 +56,35 @@ const WELCOME_INSTRUCTIONS = {
   }),
 };
 
-const TASK_INSTRUCTIONS = {
+const TASK_INSTRUCTIONS_LANGUAGE = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
     text: `Respond to the meaning of the text!<br><br>
-LINKS = "${PRMS.respKeys[0]}" Taste &emsp;&emsp;&emsp; RECHTS = "${PRMS.respKeys[1]}" Taste<br><br>
+"jetzt links" &emsp;oder&emsp; "nicht rechts" &emsp;&emsp;&emsp; "jetzt rechts" &emsp;oder&emsp; "nicht links"<br>
+${PRMS.respKeys[0]} Taste &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${PRMS.respKeys[1]} Taste<br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
-    align: "center",
+    align: 'center',
+    fontsize: 30,
+    width: '1200px',
+    bold: true,
+    lineheight: 1.5,
+  }),
+};
+
+const TASK_INSTRUCTIONS_SYMBOLIC = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `Respond to the meaning of the text!<br><br>
+"<span style="color:green";">\u2714</span> links" &emsp;oder&emsp; "<span style="color:red";">\u2718</span> rechts" &emsp;&emsp;&emsp; "<span style="color:green";">\u2714</span> rechts" &emsp;oder&emsp; "<span style="color:red";">\u2718</span> links"<br>
+${PRMS.respKeys[0]} Taste &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${PRMS.respKeys[1]} Taste<br><br>
+Drücke eine beliebige Taste, um fortzufahren`,
+    align: 'center',
     fontsize: 30,
     width: '1200px',
     bold: true,
@@ -101,7 +121,6 @@ const FIXATION_CROSS = {
 //   `<div style="font-size:${PRMS.stimSize}px;"><span style="color: red">\u2717</span> rechts</h1>`,
 // ];
 
-
 // // pretier-ignore
 // const AFFNEGS = [
 //   `<div style="font-size:${PRMS.stimSize}px;">\u2713</span> links</h1>`,
@@ -110,16 +129,21 @@ const FIXATION_CROSS = {
 //   `<div style="font-size:${PRMS.stimSize}px;">\u274C</span> rechts</h1>`,
 // ];
 
-
 // pretier-ignore
-const AFFNEGS = [
+const AFFNEGS_SYMBOLS = [
   `<div style="font-size:${PRMS.stimSize}px;"><span style="color: green">\u2714</span> links</h1>`,
   `<div style="font-size:${PRMS.stimSize}px;"><span style="color: green">\u2714</span> rechts</h1>`,
   `<div style="font-size:${PRMS.stimSize}px;"><span style="color: red">\u2718</span> links</h1>`,
   `<div style="font-size:${PRMS.stimSize}px;"><span style="color: red">\u2718</span> rechts</h1>`,
 ];
 
-
+// pretier-ignore
+const AFFNEGS_LANGUAGE = [
+  `<div style="font-size:${PRMS.stimSize}px;">jetzt links</h1>`,
+  `<div style="font-size:${PRMS.stimSize}px;">jetzt rechts</h1>`,
+  `<div style="font-size:${PRMS.stimSize}px;">nicht links</h1>`,
+  `<div style="font-size:${PRMS.stimSize}px;">nicht rechts</h1>`,
+];
 
 const WAIT = {
   type: jsPsychHtmlKeyboardResponseCanvas,
@@ -176,13 +200,15 @@ const AFFNEG_STIMULUS = {
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
-  stimulus: jsPsych.timelineVariable('affneg'),
+  stimulus: jsPsych.timelineVariable('stimulus'),
   trial_duration: PRMS.tooSlow,
   response_ends_trial: true,
   choices: PRMS.respKeys,
   data: {
     stim: 'affneg',
     type: jsPsych.timelineVariable('type'),
+    affneg: jsPsych.timelineVariable('affneg'),
+    stimulus: jsPsych.timelineVariable('stimulus'),
     side: jsPsych.timelineVariable('side'),
     corrResp: jsPsych.timelineVariable('key'),
   },
@@ -215,13 +241,24 @@ const BLOCK_FEEDBACK = {
 };
 
 // prettier-ignore
-const trial_timeline = {
+const TRIAL_TIMELINE_SYMBOLIC = {
   timeline: [FIXATION_CROSS, AFFNEG_STIMULUS, TRIAL_FEEDBACK, ITI],
   timeline_variables: [
-    { affneg: AFFNEGS[0], type: 'aff', side: 'left',  key: PRMS.respKeys[0] },
-    { affneg: AFFNEGS[1], type: 'aff', side: 'right', key: PRMS.respKeys[1] },
-    { affneg: AFFNEGS[2], type: 'neg', side: 'left',  key: PRMS.respKeys[1] },
-    { affneg: AFFNEGS[3], type: 'neg', side: 'right', key: PRMS.respKeys[0] },
+    { type: "symbolic", affneg : "jetzt", stimulus: AFFNEGS_SYMBOLS[0], side: 'links',   key: PRMS.respKeys[0] },
+    { type: "symbolic", affneg : "jetzt", stimulus: AFFNEGS_SYMBOLS[1], side: 'rechts',  key: PRMS.respKeys[1] },
+    { type: "symbolic", affneg : "nicht", stimulus: AFFNEGS_SYMBOLS[2], side: 'links',   key: PRMS.respKeys[1] },
+    { type: "symbolic", affneg : "nicht", stimulus: AFFNEGS_SYMBOLS[3], side: 'wrechts', key: PRMS.respKeys[0] },
+  ],
+};
+
+// prettier-ignore
+const TRIAL_TIMELINE_LANGUAGE = {
+  timeline: [FIXATION_CROSS, AFFNEG_STIMULUS, TRIAL_FEEDBACK, ITI],
+  timeline_variables: [
+    { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[0], side: 'links',  key: PRMS.respKeys[0] },
+    { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[1], side: 'rechts', key: PRMS.respKeys[1] },
+    { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[2], side: 'links',  key: PRMS.respKeys[1] },
+    { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[3], side: 'rechts', key: PRMS.respKeys[0] },
   ],
 };
 
@@ -237,7 +274,6 @@ function save() {
 
   const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
   saveData('/Common/write_data.php', data_fn, { stim: 'affneg' });
-
 }
 
 const SAVE_DATA = {
@@ -262,15 +298,39 @@ function genExpSeq() {
   exp.push(mouseCursor(false));
   exp.push(WELCOME_INSTRUCTIONS);
   exp.push(WAIT);
-  exp.push(TASK_INSTRUCTIONS);
-  exp.push(WAIT);
+
+  let blk_type;
+  if (version === 1) {
+    blk_type = repeatArray(['Language'], PRMS.nBlks / 2).concat(repeatArray(['Symbolic'], PRMS.nBlks / 2));
+  } else if (version === 2) {
+    blk_type = repeatArray(['Symbolic'], PRMS.nBlks / 2).concat(repeatArray(['Language'], PRMS.nBlks / 2));
+  }
 
   for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
-    let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = {
-      type: 'fixed-repetitions',
-      size: blk === 0 ? PRMS.nTrlsP / AFFNEGS.length : PRMS.nTrlsE / AFFNEGS.length,
-    };
+    let blk_timeline;
+    if (blk_type[blk] === 'Language') {
+      exp.push(TASK_INSTRUCTIONS_LANGUAGE);
+      exp.push(WAIT);
+
+      blk_timeline = { ...TRIAL_TIMELINE_LANGUAGE };
+      blk_timeline.sample = {
+        type: 'fixed-repetitions',
+        size: [0, PRMS.nBlks / 2].includes(blk)
+          ? PRMS.nTrlsP / AFFNEGS_LANGUAGE.length
+          : PRMS.nTrlsE / AFFNEGS_LANGUAGE.length,
+      };
+    } else if (blk_type[blk] === 'Symbolic') {
+      exp.push(TASK_INSTRUCTIONS_SYMBOLIC);
+      exp.push(WAIT);
+
+      blk_timeline = { ...TRIAL_TIMELINE_SYMBOLIC };
+      blk_timeline.sample = {
+        type: 'fixed-repetitions',
+        size: [0, PRMS.nBlks / 2].includes(blk)
+          ? PRMS.nTrlsP / AFFNEGS_SYMBOLS.length
+          : PRMS.nTrlsE / AFFNEGS_SYMBOLS.length,
+      };
+    }
     exp.push(blk_timeline); // trials within a block
     exp.push(BLOCK_FEEDBACK); // show previous block performance
     exp.push(WAIT);

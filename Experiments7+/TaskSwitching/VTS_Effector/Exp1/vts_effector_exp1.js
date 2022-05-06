@@ -79,14 +79,14 @@ jsPsych.data.addProperties({ version: VERSION });
 // slr = stim left resp, srr = stim right resp
 // prettier-ignore
 const VERSIONS = [
-  {ver: 1, order: ["hand", "finger"], hand: {lt: "colour", slr: {[PRMS.colours1[0]]: PRMS.leftHand[0], [PRMS.colours1[1]]: PRMS.leftHand[1]}, rt: "letter", srr: {[PRMS.letters1[0]]: PRMS.rightHand[0], [PRMS.letters1[1]]: PRMS.rightHand[1]}}, finger: {it: "colour", sir: {[PRMS.colours2[0]]: PRMS.indexFinger[0], [PRMS.colours2[1]]: PRMS.indexFinger[1]}, mt: "letter", smr: {[PRMS.letters2[0]]: PRMS.middleFinger[0], [PRMS.letters2[1]]: PRMS.middleFinger[1]}}},
-  {ver: 2, order: ["hand", "finger"], hand: {lt: "letter", slr: {[PRMS.letters1[0]]: PRMS.leftHand[0], [PRMS.letters1[1]]: PRMS.leftHand[1]}, rt: "colour", srr: {[PRMS.colours1[0]]: PRMS.rightHand[0], [PRMS.colours1[1]]: PRMS.rightHand[1]}}, finger: {it: "colour", sir: {[PRMS.colours2[0]]: PRMS.indexFinger[0], [PRMS.colours2[1]]: PRMS.indexFinger[1]}, mt: "letter", smr: {[PRMS.letters2[0]]: PRMS.middleFinger[0], [PRMS.letters2[1]]: PRMS.middleFinger[1]}}},
-  {ver: 3, order: ["hand", "finger"], hand: {lt: "colour", slr: {[PRMS.colours1[0]]: PRMS.leftHand[0], [PRMS.colours1[1]]: PRMS.leftHand[1]}, rt: "letter", srr: {[PRMS.letters1[0]]: PRMS.rightHand[0], [PRMS.letters1[1]]: PRMS.rightHand[1]}}, finger: {it: "letter", sir: {[PRMS.letters2[0]]: PRMS.indexFinger[0], [PRMS.letters2[1]]: PRMS.indexFinger[1]}, mt: "colour", smr: {[PRMS.colours2[0]]: PRMS.middleFinger[0], [PRMS.colours2[1]]: PRMS.middleFinger[1]}}},
-  {ver: 4, order: ["hand", "finger"], hand: {lt: "letter", slr: {[PRMS.letters1[0]]: PRMS.leftHand[0], [PRMS.letters1[1]]: PRMS.leftHand[1]}, rt: "colour", srr: {[PRMS.colours1[0]]: PRMS.rightHand[0], [PRMS.colours1[1]]: PRMS.rightHand[1]}}, finger: {it: "letter", sir: {[PRMS.letters2[0]]: PRMS.indexFinger[0], [PRMS.letters2[1]]: PRMS.indexFinger[1]}, mt: "colour", smr: {[PRMS.colours2[0]]: PRMS.middleFinger[0], [PRMS.colours2[1]]: PRMS.middleFinger[1]}}},
-  {ver: 5, order: ["finger", "hand"], hand: {lt: "colour", slr: {[PRMS.colours2[0]]: PRMS.leftHand[0], [PRMS.colours2[1]]: PRMS.leftHand[1]}, rt: "letter", srr: {[PRMS.letters2[0]]: PRMS.rightHand[0], [PRMS.letters2[1]]: PRMS.rightHand[1]}}, finger: {it: "colour", sir: {[PRMS.colours1[0]]: PRMS.indexFinger[0], [PRMS.colours1[1]]: PRMS.indexFinger[1]}, mt: "letter", smr: {[PRMS.letters1[0]]: PRMS.middleFinger[0], [PRMS.letters1[1]]: PRMS.middleFinger[1]}}},
-  {ver: 6, order: ["finger", "hand"], hand: {lt: "letter", slr: {[PRMS.letters2[0]]: PRMS.leftHand[0], [PRMS.letters2[1]]: PRMS.leftHand[1]}, rt: "colour", srr: {[PRMS.colours2[0]]: PRMS.rightHand[0], [PRMS.colours2[1]]: PRMS.rightHand[1]}}, finger: {it: "colour", sir: {[PRMS.colours1[0]]: PRMS.indexFinger[0], [PRMS.colours1[1]]: PRMS.indexFinger[1]}, mt: "letter", smr: {[PRMS.letters1[0]]: PRMS.middleFinger[0], [PRMS.letters1[1]]: PRMS.middleFinger[1]}}},
-  {ver: 7, order: ["finger", "hand"], hand: {lt: "colour", slr: {[PRMS.colours2[0]]: PRMS.leftHand[0], [PRMS.colours2[1]]: PRMS.leftHand[1]}, rt: "letter", srr: {[PRMS.letters2[0]]: PRMS.rightHand[0], [PRMS.letters2[1]]: PRMS.rightHand[1]}}, finger: {it: "letter", sir: {[PRMS.letters1[0]]: PRMS.indexFinger[0], [PRMS.letters1[1]]: PRMS.indexFinger[1]}, mt: "colour", smr: {[PRMS.colours1[0]]: PRMS.middleFinger[0], [PRMS.colours1[1]]: PRMS.middleFinger[1]}}},
-  {ver: 8, order: ["finger", "hand"], hand: {lt: "letter", slr: {[PRMS.letters2[0]]: PRMS.leftHand[0], [PRMS.letters2[1]]: PRMS.leftHand[1]}, rt: "colour", srr: {[PRMS.colours2[0]]: PRMS.rightHand[0], [PRMS.colours2[1]]: PRMS.rightHand[1]}}, finger: {it: "letter", sir: {[PRMS.letters1[0]]: PRMS.indexFinger[0], [PRMS.letters1[1]]: PRMS.indexFinger[1]}, mt: "colour", smr: {[PRMS.colours1[0]]: PRMS.middleFinger[0], [PRMS.colours1[1]]: PRMS.middleFinger[1]}}},
+  { ver: 1, order: ["hand", "finger"], hand: { lt: "colour", slr: { [PRMS.colours1[0]]: PRMS.leftHand[0], [PRMS.colours1[1]]: PRMS.leftHand[1] }, rt: "letter", srr: { [PRMS.letters1[0]]: PRMS.rightHand[0], [PRMS.letters1[1]]: PRMS.rightHand[1] } }, finger: { it: "colour", sir: { [PRMS.colours2[0]]: PRMS.indexFinger[0], [PRMS.colours2[1]]: PRMS.indexFinger[1] }, mt: "letter", smr: { [PRMS.letters2[0]]: PRMS.middleFinger[0], [PRMS.letters2[1]]: PRMS.middleFinger[1] } } },
+  { ver: 2, order: ["hand", "finger"], hand: { lt: "letter", slr: { [PRMS.letters1[0]]: PRMS.leftHand[0], [PRMS.letters1[1]]: PRMS.leftHand[1] }, rt: "colour", srr: { [PRMS.colours1[0]]: PRMS.rightHand[0], [PRMS.colours1[1]]: PRMS.rightHand[1] } }, finger: { it: "colour", sir: { [PRMS.colours2[0]]: PRMS.indexFinger[0], [PRMS.colours2[1]]: PRMS.indexFinger[1] }, mt: "letter", smr: { [PRMS.letters2[0]]: PRMS.middleFinger[0], [PRMS.letters2[1]]: PRMS.middleFinger[1] } } },
+  { ver: 3, order: ["hand", "finger"], hand: { lt: "colour", slr: { [PRMS.colours1[0]]: PRMS.leftHand[0], [PRMS.colours1[1]]: PRMS.leftHand[1] }, rt: "letter", srr: { [PRMS.letters1[0]]: PRMS.rightHand[0], [PRMS.letters1[1]]: PRMS.rightHand[1] } }, finger: { it: "letter", sir: { [PRMS.letters2[0]]: PRMS.indexFinger[0], [PRMS.letters2[1]]: PRMS.indexFinger[1] }, mt: "colour", smr: { [PRMS.colours2[0]]: PRMS.middleFinger[0], [PRMS.colours2[1]]: PRMS.middleFinger[1] } } },
+  { ver: 4, order: ["hand", "finger"], hand: { lt: "letter", slr: { [PRMS.letters1[0]]: PRMS.leftHand[0], [PRMS.letters1[1]]: PRMS.leftHand[1] }, rt: "colour", srr: { [PRMS.colours1[0]]: PRMS.rightHand[0], [PRMS.colours1[1]]: PRMS.rightHand[1] } }, finger: { it: "letter", sir: { [PRMS.letters2[0]]: PRMS.indexFinger[0], [PRMS.letters2[1]]: PRMS.indexFinger[1] }, mt: "colour", smr: { [PRMS.colours2[0]]: PRMS.middleFinger[0], [PRMS.colours2[1]]: PRMS.middleFinger[1] } } },
+  { ver: 5, order: ["finger", "hand"], hand: { lt: "colour", slr: { [PRMS.colours2[0]]: PRMS.leftHand[0], [PRMS.colours2[1]]: PRMS.leftHand[1] }, rt: "letter", srr: { [PRMS.letters2[0]]: PRMS.rightHand[0], [PRMS.letters2[1]]: PRMS.rightHand[1] } }, finger: { it: "colour", sir: { [PRMS.colours1[0]]: PRMS.indexFinger[0], [PRMS.colours1[1]]: PRMS.indexFinger[1] }, mt: "letter", smr: { [PRMS.letters1[0]]: PRMS.middleFinger[0], [PRMS.letters1[1]]: PRMS.middleFinger[1] } } },
+  { ver: 6, order: ["finger", "hand"], hand: { lt: "letter", slr: { [PRMS.letters2[0]]: PRMS.leftHand[0], [PRMS.letters2[1]]: PRMS.leftHand[1] }, rt: "colour", srr: { [PRMS.colours2[0]]: PRMS.rightHand[0], [PRMS.colours2[1]]: PRMS.rightHand[1] } }, finger: { it: "colour", sir: { [PRMS.colours1[0]]: PRMS.indexFinger[0], [PRMS.colours1[1]]: PRMS.indexFinger[1] }, mt: "letter", smr: { [PRMS.letters1[0]]: PRMS.middleFinger[0], [PRMS.letters1[1]]: PRMS.middleFinger[1] } } },
+  { ver: 7, order: ["finger", "hand"], hand: { lt: "colour", slr: { [PRMS.colours2[0]]: PRMS.leftHand[0], [PRMS.colours2[1]]: PRMS.leftHand[1] }, rt: "letter", srr: { [PRMS.letters2[0]]: PRMS.rightHand[0], [PRMS.letters2[1]]: PRMS.rightHand[1] } }, finger: { it: "letter", sir: { [PRMS.letters1[0]]: PRMS.indexFinger[0], [PRMS.letters1[1]]: PRMS.indexFinger[1] }, mt: "colour", smr: { [PRMS.colours1[0]]: PRMS.middleFinger[0], [PRMS.colours1[1]]: PRMS.middleFinger[1] } } },
+  { ver: 8, order: ["finger", "hand"], hand: { lt: "letter", slr: { [PRMS.letters2[0]]: PRMS.leftHand[0], [PRMS.letters2[1]]: PRMS.leftHand[1] }, rt: "colour", srr: { [PRMS.colours2[0]]: PRMS.rightHand[0], [PRMS.colours2[1]]: PRMS.rightHand[1] } }, finger: { it: "letter", sir: { [PRMS.letters1[0]]: PRMS.indexFinger[0], [PRMS.letters1[1]]: PRMS.indexFinger[1] }, mt: "colour", smr: { [PRMS.colours1[0]]: PRMS.middleFinger[0], [PRMS.colours1[1]]: PRMS.middleFinger[1] } } },
 ];
 
 const STIM_RESP = VERSIONS[VERSION - 1];
@@ -251,7 +251,7 @@ const TASK_INSTRUCTIONS_MAPPING = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: '',
-  on_start: function (trial) {
+  on_start: function(trial) {
     let mapping = STIM_RESP.order[VTS_DATA.half - 1];
     let respText = mapping === 'hand' ? RESPMAPPING_HAND : RESPMAPPING_FINGER;
     trial.stimulus =
@@ -269,7 +269,7 @@ const TASK_INSTRUCTIONS_MAPPING = {
 
 const IF_ERROR_TASK_INSTRUCTIONS_MAPPING = {
   timeline: [TASK_INSTRUCTIONS_MAPPING],
-  conditional_function: function () {
+  conditional_function: function() {
     return jsPsych.data.get().last(2).values()[0].error === 1;
   },
 };
@@ -280,16 +280,15 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: '',
-  on_start: function (trial) {
+  on_start: function(trial) {
     let mapping = STIM_RESP.order[VTS_DATA.half - 1];
     let respText = mapping === 'hand' ? RESPMAPPING_HAND : RESPMAPPING_FINGER;
     trial.stimulus =
       generate_formatted_html({
         text: `Block ${VTS_DATA.cBlk} von ${PRMS.nBlks}<br><br>
                Du darfst in jedem frei Durchgang entscheiden, ob du die zuerst erscheinende Aufgabe bearbeitest oder auf die andere Aufgabe wartest (sofern beide Aufgaben noch verfügbar sind)!<br><br>
-               Versuche aber alle ${PRMS.nTrls} Aufgaben (${PRMS.nTrls / 2} Buchstaben und ${
-          PRMS.nTrls / 2
-        } Farbe) so schnell und so genau wie möglich zu bearbeiten!`,
+               Versuche aber alle ${PRMS.nTrls} Aufgaben (${PRMS.nTrls / 2} Buchstaben und ${PRMS.nTrls / 2
+          } Farbe) so schnell und so genau wie möglich zu bearbeiten!`,
         fontsize: 30,
         align: 'left',
         width: '1200px',
@@ -458,7 +457,7 @@ const VTS = {
   colour: null,
   func_args: null,
   data: {},
-  on_start: function (trial) {
+  on_start: function(trial) {
     'use strict';
 
     // Which letter/colour to show
@@ -530,7 +529,7 @@ const VTS = {
 
     trial.data = { stim: 'vts', letter: letter, colour: colour };
   },
-  on_finish: function () {
+  on_finish: function() {
     codeTrial();
   },
 };
@@ -543,7 +542,7 @@ const TRIAL_FEDBACK = {
   stimulus: '',
   trial_duration: null,
   response_ends_trial: false,
-  on_start: function (trial) {
+  on_start: function(trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.stimulus = generate_formatted_html({
       text: PRMS.fbText[dat.error],
@@ -560,7 +559,7 @@ function blockFeedbackTxt(filter_options) {
   'use strict';
   let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: VTS_DATA.cBlk });
   let meanTime = Math.round(dat.select('rt1').mean());
-  let nError = dat.select('error').values.filter(function (x) {
+  let nError = dat.select('error').values.filter(function(x) {
     return x === 1;
   }).length;
 
@@ -607,7 +606,7 @@ const BLOCK_FEEDBACK1 = {
   canvas_border: CANVAS_BORDER,
   stimulus: '',
   response_ends_trial: true,
-  on_start: function (trial) {
+  on_start: function(trial) {
     trial.stimulus = blockFeedbackTxt({ stim: 'vts' });
   },
 };
@@ -620,7 +619,7 @@ const BLOCK_FEEDBACK2 = {
   stimulus: '',
   response_ends_trial: false,
   trial_duration: 1000,
-  on_start: function (trial) {
+  on_start: function(trial) {
     let mapping = STIM_RESP.order[VTS_DATA.half - 1];
     let respText = mapping === 'hand' ? RESPMAPPING_HAND : RESPMAPPING_FINGER;
     trial.stimulus =
