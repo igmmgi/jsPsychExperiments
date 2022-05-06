@@ -4,7 +4,7 @@
 
 const jsPsych = initJsPsych({});
 
-const CANVAS_COLOUR = 'rgba(200, 200, 200, 1)';
+const CANVAS_COLOUR = 'rgba(255, 255, 255, 1)';
 const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = '5px solid black';
 
@@ -12,6 +12,9 @@ const CANVAS_BORDER = '5px solid black';
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
+  nTrlsP: 4, //16, // number of trials in first block (practice)
+  nTrlsE: 48, // number of trials in subsequent blocks
+  nBlks: 2,
   fbDur: [500, 1500, 3000], // feedback duration for correct and incorrect trials, respectively
   waitDur: 1000,
   iti: 500,
@@ -35,6 +38,110 @@ const PRMS = {
   fbFont: '40px Arial',
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
+};
+
+// 2 counter balanced versions
+const version = 2; // Number(jsPsych.data.urlVariables().version);
+jsPsych.data.addProperties({ version: version });
+
+////////////////////////////////////////////////////////////////////////
+//                      Experiment Instructions                       //
+////////////////////////////////////////////////////////////////////////
+const WELCOME_INSTRUCTIONS = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `Willkommen zu unserem Experiment:<br><br>
+           Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+           um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 15 Minuten konzentriert zu arbeiten.<br><br>
+           Drücke eine beliebige Taste, um fortzufahren`,
+    align: 'left',
+    fontsize: 30,
+    width: '1200px',
+    bold: true,
+    lineheight: 1.5,
+  }),
+};
+
+const MOUSE_INSTRUCTIONS = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html( {
+text: `BITTE NUR TEILNEHMEN, WENN EINE COMPUTERMAUS ZUR VERFÜGUNG STEHT! <br><br>
+    In diesem Experiment sehen Sie in jedem Durchgang drei Quadrate und zwei Bilder. 
+    Um den Durchgang zu starten, klicken Sie auf das Quadrat unten in der Mitte. 
+    Danach erscheint ein Wort auf dem Bildschirm.<br><br>
+    Ihre Aufgabe ist es, das Bild auszuwählen, das am besten zu dem Wort passt oder mit ihm in  
+    Zusammenhang steht, und den Mauszeiger in das zugehörige Quadrat zu bewegen.  
+    Bitte reagieren Sie so schnell und korrekt wie möglich.<br><br>
+    Drücken Sie eine beliebige Taste, um fortzufahren!`, 
+    align: 'left',
+    fontsize: 30,
+    width: '1200px',
+    bold: true,
+    lineheight: 1.5,
+  }),
+ post_trial_gap: PRMS.waitDur,
+};
+
+
+const exp_start = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus:
+    "<H1 style = 'text-align: center;'> Jetzt beginnt das eigentliche Experiment </H1>" +
+    "<H3 style = 'text-align: left;'> Sie erhalten ab sofort kein Feedback mehr. </H3>" +
+    "<H3 style = 'text-align: left;'> Ansonsten ist der Ablauf der gleiche wie in den Übungsdurchgängen gerade eben. </H3>" +
+    "<H3 style = 'text-align: left;'> Zur Erinnerung:   </H3>" +
+    "<H3 style = 'text-align: left;'> 1. Quadrat unten in der Mitte anklicken </H3>" +
+    "<H3 style = 'text-align: left;'> 2. Mauszeiger in das Quadrat bewegen, dessen Bild am besten zu dem Wort passt/mit ihm zusammenhängt  </H3>" +
+    "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich!  </H3>" +
+    "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
+  post_trial_gap: PRMS.waitDur,
+  on_start: function () {
+    PRMS.cBlk += 1;
+    PRMS.cTrl = 1;
+  },
+};
+
+
+
+const TASK_INSTRUCTIONS_LANGUAGE = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `Respond to the meaning of the text!<br><br>
+"jetzt spielzeug" &emsp;oder&emsp; "nicht tiere" &emsp;&emsp;&emsp; "jetzt tiere" &emsp;oder&emsp; "nicht spielzeug"<br>
+Drücke eine beliebige Taste, um fortzufahren`,
+    align: 'center',
+    fontsize: 30,
+    width: '1200px',
+    bold: true,
+    lineheight: 1.5,
+  }),
+};
+
+const TASK_INSTRUCTIONS_SYMBOLIC = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `Respond to the meaning of the text!<br><br>
+"<span style="color:green";">\u2714</span> spielzeug" &emsp;oder&emsp; "<span style="color:red";">\u2718</span> tiere" &emsp;&emsp;&emsp; "<span style="color:green";">\u2714</span> tiere" &emsp;oder&emsp; "<span style="color:red";">\u2718</span> spielzeug"<br>
+Drücke eine beliebige Taste, um fortzufahren`,
+    align: 'center',
+    fontsize: 30,
+    width: '1200px',
+    bold: true,
+    lineheight: 1.5,
+  }),
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -87,151 +194,97 @@ function codeTrial() {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const task_instructions = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    "<H1 style = 'text-align: left;'> BITTE NUR TEILNEHMEN, WENN EINE  </H1>" +
-    "<H1 style = 'text-align: left;'> COMPUTERMAUS ZUR VERFÜGUNG STEHT! </H1> <br>" +
-    "<H2 style = 'text-align: left;'> Lieber Teilnehmer/ Liebe Teilnehmerin,  </H2> <br>" +
-    "<H3 style = 'text-align: left;'> In diesem Experiment sehen Sie in jedem Durchgang drei Quadrate und zwei Bilder. </H3>" +
-    "<H3 style = 'text-align: left;'> Um den Durchgang zu starten, klicken Sie auf das Quadrat unten in der Mitte. </H3>" +
-    "<H3 style = 'text-align: left;'> Danach erscheint ein Wort auf dem Bildschirm </H3> <br>" +
-    "<H3 style = 'text-align: left;'> Ihre Aufgabe ist es, das Bild auszuwählen, das am besten zu dem Wort passt oder mit ihm in  </H3>" +
-    "<H3 style = 'text-align: left;'> Zusammenhang steht, und den Mauszeiger in das zugehörige Quadrat zu bewegen.  </H3>" +
-    "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich. </H3>" +
-    "<H3 style = 'text-align: left;'> Zuerst folgt ein Übungsblock, in dem Sie zusätzlich Feedback zu Ihren Antworten erhalten. </H3>" +
-    "<H3 style = 'text-align: left;'> Im ersten Teil Übungsblocks sind noch keine Bilder zu sehen.</H3>" +
-    "<H3 style = 'text-align: left;'> Reagieren Sie nur auf die Anweisung die nach klicken des Quadrats erscheint.</H3>" +
-    "<h3 style = 'text-align: center;'> Drücken Sie eine beliebige Taste, um fortzufahren! </h3>",
-  post_trial_gap: PRMS.waitDur,
-};
-
-const example_start = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    "<H2 style = 'text-align: center;'> Jetzt kommen Bilder dazu. So wird das eigentliche Experiment später aussehen.</H2>" +
-    "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
-  post_trial_gap: PRMS.waitDur,
-  on_start: function() {
-    PRMS.cBlk += 1;
-    PRMS.cTrl = 1;
-  },
-};
-
-const exp_start = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    "<H1 style = 'text-align: center;'> Jetzt beginnt das eigentliche Experiment </H1>" +
-    "<H3 style = 'text-align: left;'> Sie erhalten ab sofort kein Feedback mehr. </H3>" +
-    "<H3 style = 'text-align: left;'> Ansonsten ist der Ablauf der gleiche wie in den Übungsdurchgängen gerade eben. </H3>" +
-    "<H3 style = 'text-align: left;'> Zur Erinnerung:   </H3>" +
-    "<H3 style = 'text-align: left;'> 1. Quadrat unten in der Mitte anklicken </H3>" +
-    "<H3 style = 'text-align: left;'> 2. Mauszeiger in das Quadrat bewegen, dessen Bild am besten zu dem Wort passt/mit ihm zusammenhängt  </H3>" +
-    "<H3 style = 'text-align: left;'> Bitte reagieren Sie so schnell und korrekt wie möglich!  </H3>" +
-    "<H3 style = 'text-align: left;'> Drücken Sie eine beliebige Taste um fortzufahren!  </H3>",
-  post_trial_gap: PRMS.waitDur,
-  on_start: function() {
-    PRMS.cBlk += 1;
-    PRMS.cTrl = 1;
-  },
-};
 
 ////////////////////////////////////////////////////////////////////////
 //               Stimuli/Timelines                                    //
 ////////////////////////////////////////////////////////////////////////
 
-const preload = {
-  type: jsPsychPreload,
-  images: [
-    toys,
-    animals,
-  ],
-};
-
-
-function stimuli_factory(items_ambiguous, items_unambiguous) {
-  item_numbers_ambiguous = randomSelection(range(0, items_ambiguous.length), items_ambiguous.length / 2);
-  item_numbers_unambiguous = range(0, items_unambiguous.length).filter((x) => !item_numbers_ambiguous.includes(x));
-  // console.log(item_numbers_ambiguous);
-  // console.log(item_numbers_unambiguous);
-
+function stimuli_factory(items_toys, items_animals, type) {
   let stimuli = [];
-  let correct_side;
-
-  correct_side = shuffle(repeatArray(['left', 'right'], item_numbers_ambiguous.length / 2));
-  for (let [idx, item] of item_numbers_ambiguous.entries()) {
+  for (let i = 0; i < 48; i++) {
     let stimulus = {};
-    stimulus.probe_type = items_ambiguous[item].type;
-    stimulus.probe = items_ambiguous[item].probe;
-    if (correct_side[idx] === 'right') {
-      stimulus.right = items_ambiguous[item].target_rel_img;
-      stimulus.left = items_ambiguous[item].target_unrel_img;
-      stimulus.correct_side = 'right';
-    } else if (correct_side[idx] === 'left') {
-      stimulus.right = items_ambiguous[item].target_unrel_img;
-      stimulus.left = items_ambiguous[item].target_rel_img;
+    if (i < 6) {
+      // toy left, animal right, now toy
+      stimulus.left = items_toys.images[i];
+      stimulus.right = items_animals.images[i];
+      stimulus.probe = type == 'Language' ? 'jetzt Spielzeug' : 'jetzt Spielzeug';
       stimulus.correct_side = 'left';
+    } else if (i < 12) {
+      // toy left, animal right, now animal
+      stimulus.left = items_toys.images[i];
+      stimulus.right = items_animals.images[i];
+      stimulus.probe = type == 'Language' ? 'jetzt Tiere' : 'jetzt Tiere';
+      stimulus.correct_side = 'right';
+    } else if (i < 18) {
+      // toy left, animal right, not toy
+      stimulus.left = items_toys.images[i];
+      stimulus.right = items_animals.images[i];
+      stimulus.probe = type == 'Language' ? 'nicht Spielzeug' : 'nicht Spielzeug';
+      stimulus.correct_side = 'right';
+    } else if (i < 24) {
+      // toy left, animal right, now animal
+      stimulus.left = items_toys.images[i];
+      stimulus.right = items_animals.images[i];
+      stimulus.probe = type == 'Language' ? 'nicht Tiere' : 'nicht Tiere';
+      stimulus.correct_side = 'left';
+    } else if (i < 30) {
+      // animal left, toy right, now toy
+      stimulus.left = items_animals.images[i];
+      stimulus.right = items_toys.images[i];
+      stimulus.probe = type == 'Language' ? 'jetzt Spielzeug' : 'jetzt Spielzeug';
+      stimulus.correct_side = 'right';
+    } else if (i < 36) {
+      // animal left, toy right, now animal
+      stimulus.left = items_animals.images[i];
+      stimulus.right = items_toys.images[i];
+      stimulus.probe = type == 'Language' ? 'jetzt Tiere' : 'jetzt Tiere';
+      stimulus.correct_side = 'left';
+    } else if (i < 42) {
+      // animal left, toy right, not toy
+      stimulus.left = items_animals.images[i];
+      stimulus.right = items_toys.images[i];
+      stimulus.probe = type == 'Language' ? 'nicht Spielzeug' : 'nicht Spielzeug';
+      stimulus.correct_side = 'left';
+    } else if (i < 48) {
+      // animal left, toy right, now animal
+      stimulus.left = items_animals.images[i];
+      stimulus.right = items_toys.images[i];
+      stimulus.probe = type == 'Language' ? 'nicht Tiere' : 'nicht Tiere';
+      stimulus.correct_side = 'right';
     }
     stimuli.push(stimulus);
   }
-
-  correct_side = shuffle(repeatArray(['left', 'right'], item_numbers_unambiguous.length / 2));
-  for (let [idx, item] of item_numbers_unambiguous.entries()) {
-    let stimulus = {};
-    stimulus.probe_type = items_unambiguous[item].type;
-    stimulus.probe = items_unambiguous[item].probe;
-    if (correct_side[idx] === 'right') {
-      stimulus.right = items_unambiguous[item].target_rel_img;
-      stimulus.left = items_unambiguous[item].target_unrel_img;
-      stimulus.correct_side = 'right';
-    } else if (correct_side[idx] === 'left') {
-      stimulus.right = items_unambiguous[item].target_unrel_img;
-      stimulus.left = items_unambiguous[item].target_rel_img;
-      stimulus.correct_side = 'left';
-    }
-    stimuli.push(stimulus);
-  }
-
   stimuli = shuffle(stimuli);
-  // console.log(stimuli);
+
   return stimuli;
 }
-
-// prettier-ignore
-const training_stimuli = [
-  { probe: 'Nach links', target_rel_text: '', probe_type: null, correct_side: 'left' },
-  { probe: 'Nach rechts', target_rel_text: '', probe_type: null, correct_side: 'right' },
-];
-
-const example_stimuli = stimuli_factory(example_items_ambiguous, example_items_unambiguous);
-const exp_stimuli = stimuli_factory(items_ambiguous, items_unambiguous);
 
 // images
 function image_array(x) {
   'use strict';
   let images = [];
   for (let i = 0; i < x.length; i++) {
-    images.push(x[i].left);
-    images.push(x[i].right);
+    images.push(x[i].image_path);
   }
   return images;
 }
 
-const images_example = {
+const TOY_IMAGES = {
   type: 'preload',
   auto_preload: true,
-  images: image_array(example_stimuli),
+  images: image_array(shuffle(TOY_IMAGE_LIST)),
 };
 
-const images_exp = {
+const ANIMAL_IMAGES = {
   type: 'preload',
   auto_preload: true,
-  images: image_array(exp_stimuli),
+  images: image_array(shuffle(ANIMAL_IMAGE_LIST)),
 };
 
-const trial_stimulus = {
-  type: 'mouse-image-response-2-steps',
-  canvas_colour: canvas_colour,
+
+const TRIAL_STIMULUS = {
+  type: jsPsychMouseImageResponse2steps,
+  canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   fixation_duration: PRMS.fixDur,
@@ -264,136 +317,92 @@ const trial_stimulus = {
     right: jsPsych.timelineVariable('right'),
     correct_side: jsPsych.timelineVariable('correct_side'),
   },
-  on_finish: function() {
+  on_finish: function () {
     codeTrial();
   },
 };
 
-const trial_feedback = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: canvas_colour,
+const TRIAL_FEEDBACK = {
+  type: jsPsychStaticCanvasKeyboardResponse,
+  canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   trial_duration: null,
   translate_origin: false,
   func: drawFeedback,
-  on_start: function(trial) {
+  on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    if (PRMS.cBlk < 3) {
-      trial.trial_duration = PRMS.fbDur[dat.errorCode];
-    } else if (PRMS.cBlk === 3) {
-      if ([0, 1].includes(dat.errorCode)) {
-        trial.trial_duration = 0;
-      } else {
-        trial.trial_duration = PRMS.fbDur[dat.errorCode];
-      }
-    }
-  },
+    trial.trial_duration = PRMS.fbDur[dat.errorCode];
+  }
 };
 
-const iti = {
-  type: 'static-canvas-keyboard-response',
-  canvas_colour: canvas_colour,
+const BLOCK_FEEDBACK = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
-  trial_duration: PRMS.iti,
-  response_ends_trial: false,
-  func: function() { },
-};
-
-const training_timeline = {
-  timeline_variables: training_stimuli,
-  timeline: [trial_stimulus, trial_feedback, iti],
-  sample: {
-    type: 'fixed-repetitions',
-    size: 5,
-  },
-};
-
-const example_timeline = {
-  timeline_variables: example_stimuli,
-  timeline: [trial_stimulus, trial_feedback, iti],
-  randomize_order: true,
-};
-
-const exp_timeline = {
-  timeline_variables: exp_stimuli,
-  timeline: [trial_stimulus, trial_feedback, iti],
-  randomize_order: true,
-};
-
-const mouse_trackpad_question = {
-  type: 'survey-multi-choice',
-  questions: [
-    {
-      prompt: 'Haben Sie eine Maus oder eine Trackpad benutzt?',
-      name: 'MouseTrackpad',
-      options: ['Maus', 'Trackpad'],
-      required: true,
-      horizontal: false,
-    },
-  ],
-  button_label: 'Weiter',
-  on_finish: function() {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    jsPsych.data.addProperties({ MausTrackpad: dat.response.MouseTrackpad });
-  },
-};
-
-// For VP Stunden
-const randomString = generateRandomStringWithExpName('csemi_', 16);
-
-const alphaNum = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: canvas_colour,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
+  stimulus: '',
   response_ends_trial: true,
-  choices: [' '],
-  stimulus: generate_formatted_html({
-    text:
-      `Vielen Dank für Ihre Teilnahme.<br><br>
-        Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
-        zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
-        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an:<br><br>m.zeller@student.uni-tuebingen.de<br> Code: ` +
-      randomString +
-      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
-    fontsize: 28,
-    lineheight: 1.0,
-    align: 'left',
-  }),
+  on_start: function (trial) {
+    let block_dvs = calculateBlockPerformance({
+      filter_options: { stim: 'affneg', blockNum: PRMS.cBlk },
+      corrColumn: 'error',
+      corrValue: 0,
+    });
+    let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
+    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
+  },
+  on_finish: function () {
+    PRMS.cTrl = 1;
+    PRMS.cBlk += 1;
+  },
+};
+
+const WAIT = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: '',
+  response_ends_trial: false,
+  trial_duration: PRMS.waitDur,
+};
+
+const ITI = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: '',
+  response_ends_trial: false,
+  trial_duration: PRMS.iti,
+};
+
+const TRIAL_TIMELINE = {
+  timeline: [TRIAL_STIMULUS, TRIAL_FEEDBACK, ITI],
+  randomize_order: true,
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                                Save                                //
+//                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
-const save_data = {
-  type: 'call-function',
-  func: function() {
-    let data_filename = dirName + 'data/' + expName + '_' + vpNum;
-    saveData('/Common/write_data_json.php', data_filename, { stim_type: 'cse_mouse_tracking' }, 'json');
-  },
-  timing_post_trial: 2000,
+const DIR_NAME = getDirName();
+const EXP_NAME = getFileName();
+
+function save() {
+  const vpNum = getTime();
+  jsPsych.data.addProperties({ vpNum: vpNum });
+
+  const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
+  saveData('/Common/write_data.php', data_fn, { stim: 'affneg' });
+}
+
+const SAVE_DATA = {
+  type: jsPsychCallFunction,
+  func: save,
+  post_trial_gap: 1000,
 };
 
-const save_interaction_data = {
-  type: 'call-function',
-  func: function() {
-    let data_filename = dirName + 'interaction_data/' + expName + '_' + vpNum;
-    saveInteractionData('/Common/write_data.php', data_filename);
-  },
-  timing_post_trial: 200,
-};
-
-const save_code = {
-  type: 'call-function',
-  func: function() {
-    let code_filename = dirName + 'code/' + expName;
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
-  },
-  timing_post_trial: 200,
-};
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -402,38 +411,55 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen(true));
-  exp.push(browser_check(prms.screenRes));
-  exp.push(preload);
-  exp.push(resize_browser());
-  exp.push(welcome_message());
-  exp.push(vpInfoForm('/Common7+/vpInfoForm_de_copyright.html'));
-  exp.push(mouseCursor(false));
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
+  // exp.push(fullscreen(true));
+  // exp.push(browser_check(PRMS.screenRes));
+  // exp.push(resize_browser());
+  // exp.push(welcome_message());
+  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  // exp.push(mouseCursor(false));
+//  exp.push(WELCOME_INSTRUCTIONS);
+  exp.push(MOUSE_INSTRUCTIONS);
+  // exp.push(WAIT);
 
-  // Run training block
-  exp.push(training_timeline);
+  let blk_type;
+  if (version === 1) {
+    blk_type = repeatArray(['Language'], PRMS.nBlks / 2).concat(repeatArray(['Symbolic'], PRMS.nBlks / 2));
+  } else if (version === 2) {
+    blk_type = repeatArray(['Symbolic'], PRMS.nBlks / 2).concat(repeatArray(['Language'], PRMS.nBlks / 2));
+  }
 
-  // Run example trials
-  exp.push(example_start);
-  exp.push(example_timeline);
+  for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+    let blk_timeline;
+    if (blk_type[blk] === 'Language') {
+      exp.push(TASK_INSTRUCTIONS_LANGUAGE);
+      exp.push(WAIT);
 
-  // Run real experiment
-  exp.push(exp_start);
-  exp.push(exp_timeline);
+      blk_timeline = { ...TRIAL_TIMELINE };
+      blk_timeline.sample = {
+        type: 'fixed-repetitions',
+        size: [0, PRMS.nBlks / 2].includes(blk) ? PRMS.nTrlsP / 1 : PRMS.nTrlsE / 1,
+      };
+      blk_timeline.timeline_variables = stimuli_factory(TOY_IMAGES, ANIMAL_IMAGES, 'Language');
+    } else if (blk_type[blk] === 'Symbolic') {
+      exp.push(TASK_INSTRUCTIONS_SYMBOLIC);
+      exp.push(WAIT);
 
-  // mouse vs. trackpad question
-  exp.push(mouse_trackpad_question);
+      blk_timeline = { ...TRIAL_TIMELINE };
+      blk_timeline.sample = {
+        type: 'fixed-repetitions',
+        size: [0, PRMS.nBlks / 2].includes(blk) ? PRMS.nTrlsP / 1 : PRMS.nTrlsE / 1,
+      };
+      blk_timeline.timeline_variables = stimuli_factory(TOY_IMAGES, ANIMAL_IMAGES, 'Symbolic');
+    }
+    exp.push(blk_timeline); // trials within a block
+    exp.push(BLOCK_FEEDBACK); // show previous block performance
+    exp.push(WAIT);
+  }
 
-  // save data
-  exp.push(save_data);
-  exp.push(save_interaction_data);
-  exp.push(save_code);
+  exp.push(SAVE_DATA);
 
   // debrief
   exp.push(mouseCursor(true));
-  exp.push(alphaNum);
   exp.push(end_message());
   exp.push(fullscreen(false));
 
