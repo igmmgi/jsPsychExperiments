@@ -138,7 +138,7 @@ function end_message(language = 'de_du', text = '') {
     } else if (language === 'de_du') {
         message.stimulus =
             '<h2>Das Experiment ist beendet.</h2>' +
-            '<h2>Drücken Sie eine beliebige Taste, um das Experiment zu beenden!</h2>';
+            '<h2>Drücke eine beliebige Taste, um das Experiment zu beenden!</h2>';
     }
     return message;
 }
