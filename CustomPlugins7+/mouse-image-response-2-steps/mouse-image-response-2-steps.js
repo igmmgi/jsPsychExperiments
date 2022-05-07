@@ -358,7 +358,6 @@ var jsPsychMouseImageResponse2steps = (function(jspsych) {
                 }
 
 
-                // HACKED to get different colours for tick/cross and word!
                 // draw stimulus
                 if (draw_stimulus) {
                     ctx.fillStyle = trial.stimulus_colour;

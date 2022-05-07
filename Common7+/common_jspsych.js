@@ -255,14 +255,14 @@ function vpInfoForm(form = '/Common7+/vpInfoForm_de.html', alert_language = 'de'
     };
 }
 
-function calculateBlockPerformance({ filter_options = {}, corrColumn = 'corrCode', corrValue = 1 } = {}) {
+function calculateBlockPerformance({ filter_options = {}, rtColumn = 'rt', corrColumn = 'corrCode', corrValue = 1 } = {}) {
     let dat = jsPsych.data.get().filter(filter_options);
 
     let nTotal = dat.count();
     let nError = dat.select(corrColumn).values.filter(function(x) {
         return x !== corrValue;
     }).length;
-    let meanRt = Math.round(dat.select('rt').mean());
+    let meanRt = Math.round(dat.select(rtColumn).mean());
     let errorRate = Math.round((nError / nTotal) * 100);
 
     return { meanRt: meanRt, errorRate: errorRate };
