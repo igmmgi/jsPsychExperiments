@@ -454,7 +454,6 @@ function genExpSeq() {
   exp.push(SAVE_DATA);
 
   // debrief
-  exp.push(mouseCursor(true));
   exp.push(end_message());
   exp.push(fullscreen(false));
 

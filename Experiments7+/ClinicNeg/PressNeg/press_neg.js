@@ -224,9 +224,9 @@ const BLOCK_FEEDBACK = {
 const TRIAL_TIMELINE_SYMBOLIC = {
     timeline: [FIXATION_CROSS, AFFNEG_STIMULUS, TRIAL_FEEDBACK, ITI],
     timeline_variables: [
-        { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_SYMBOLS[0], side: 'links', key: PRMS.respKeys[0] },
-        { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_SYMBOLS[1], side: 'rechts', key: PRMS.respKeys[1] },
-        { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_SYMBOLS[2], side: 'links', key: PRMS.respKeys[1] },
+        { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_SYMBOLS[0], side: 'links',   key: PRMS.respKeys[0] },
+        { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_SYMBOLS[1], side: 'rechts',  key: PRMS.respKeys[1] },
+        { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_SYMBOLS[2], side: 'links',   key: PRMS.respKeys[1] },
         { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_SYMBOLS[3], side: 'wrechts', key: PRMS.respKeys[0] },
     ],
 };
@@ -235,9 +235,9 @@ const TRIAL_TIMELINE_SYMBOLIC = {
 const TRIAL_TIMELINE_LANGUAGE = {
     timeline: [FIXATION_CROSS, AFFNEG_STIMULUS, TRIAL_FEEDBACK, ITI],
     timeline_variables: [
-        { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[0], side: 'links', key: PRMS.respKeys[0] },
+        { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[0], side: 'links',  key: PRMS.respKeys[0] },
         { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[1], side: 'rechts', key: PRMS.respKeys[1] },
-        { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[2], side: 'links', key: PRMS.respKeys[1] },
+        { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[2], side: 'links',  key: PRMS.respKeys[1] },
         { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[3], side: 'rechts', key: PRMS.respKeys[0] },
     ],
 };
