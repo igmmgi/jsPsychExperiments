@@ -35,7 +35,7 @@ const PRMS = {
 };
 
 // 2 counter balanced versions
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -235,10 +235,10 @@ const TRIAL_TIMELINE_SYMBOLIC = {
 const TRIAL_TIMELINE_LANGUAGE = {
     timeline: [FIXATION_CROSS, AFFNEG_STIMULUS, TRIAL_FEEDBACK, ITI],
     timeline_variables: [
-        { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[0], side: 'links',  key: PRMS.respKeys[0] },
-        { type: "symbolic", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[1], side: 'rechts', key: PRMS.respKeys[1] },
-        { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[2], side: 'links',  key: PRMS.respKeys[1] },
-        { type: "symbolic", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[3], side: 'rechts', key: PRMS.respKeys[0] },
+        { type: "language", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[0], side: 'links',  key: PRMS.respKeys[0] },
+        { type: "language", affneg: "jetzt", stimulus: AFFNEGS_LANGUAGE[1], side: 'rechts', key: PRMS.respKeys[1] },
+        { type: "language", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[2], side: 'links',  key: PRMS.respKeys[1] },
+        { type: "language", affneg: "nicht", stimulus: AFFNEGS_LANGUAGE[3], side: 'rechts', key: PRMS.respKeys[0] },
     ],
 };
 
@@ -252,7 +252,7 @@ function save() {
     const vpNum = getTime();
     jsPsych.data.addProperties({ vpNum: vpNum });
 
-    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
+    const data_fn = `${DIR_NAME}data/version${version}/${EXP_NAME}_${vpNum}`;
     saveData('/Common/write_data.php', data_fn, { stim: 'affneg' });
 }
 
