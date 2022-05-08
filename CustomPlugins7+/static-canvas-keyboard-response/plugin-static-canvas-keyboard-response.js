@@ -99,8 +99,10 @@ var jsPsychStaticCanvasKeyboardResponse = (function (jspsych) {
         trial.canvas_size[1] +
         '" style="border: ' +
         trial.canvas_border +
-        '; position: fixed; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%);"></canvas>' 
+        ';"></canvas>' +
         '</div>';
+
+        // '; position: fixed; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%);"></canvas>' +
 
       display_element.innerHTML = new_html;
 

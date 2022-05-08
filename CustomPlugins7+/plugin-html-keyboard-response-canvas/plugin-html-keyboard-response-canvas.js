@@ -78,10 +78,9 @@ var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
         trial.canvas_size[1] +
         '" style="border: ' +
         trial.canvas_border +
-        '; position: fixed; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%);"></canvas>' +
+        '; position: absolute; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50.5%);"></canvas>' +
         trial.stimulus +
         '</div>';
-
 
       display_element.innerHTML = new_html;
 

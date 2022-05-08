@@ -46,7 +46,7 @@ const PRMS = {
 };
 
 // 2 counter balanced versions
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -384,8 +384,8 @@ function save() {
     const vpNum = getTime();
     jsPsych.data.addProperties({ vpNum: vpNum });
 
-    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-    saveData('/Common/write_data.php', data_fn, { stim: 'affneg' }, 'json');
+    const data_fn = `${DIR_NAME}data/version${version}/${EXP_NAME}_${vpNum}`;
+    saveData('/Common/write_data_json.php', data_fn, { stim_type: 'affneg' }, 'json');
 }
 
 const SAVE_DATA = {
@@ -408,7 +408,7 @@ function genExpSeq() {
     exp.push(ANIMAL_IMAGES);
     exp.push(resize_browser());
     exp.push(welcome_message());
-    // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(WAIT);
     exp.push(MOUSE_INSTRUCTIONS);
