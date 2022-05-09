@@ -182,6 +182,8 @@ function codeTrial() {
 ////////////////////////////////////////////////////////////////////////
 
 function stimuli_factory(items_toys, items_animals, type, n) {
+    shuffle(items_toys.images)
+    shuffle(items_animals.images)
     let stimuli = [];
     for (let i = 0; i < 48; i++) {
         let stimulus = {};
@@ -262,13 +264,14 @@ function image_array(x) {
 const TOY_IMAGES = {
     type: jsPsychPreload,
     auto_preload: true,
-    images: image_array(shuffle(TOY_IMAGE_LIST)),
+    images: image_array(TOY_IMAGE_LIST),
 };
+
 
 const ANIMAL_IMAGES = {
     type: jsPsychPreload,
     auto_preload: true,
-    images: image_array(shuffle(ANIMAL_IMAGE_LIST)),
+    images: image_array(ANIMAL_IMAGE_LIST),
 };
 
 const TRIAL_STIMULUS = {
