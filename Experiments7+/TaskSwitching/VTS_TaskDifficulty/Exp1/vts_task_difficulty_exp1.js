@@ -31,11 +31,11 @@ const CANVAS_BORDER = '5px solid black';
 
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nTrls: 1, // number of trials per block
+  nTrls: 8, // number of trials per block
   nBlks: 4, // number of blocks
   fixSize: 50, // duration of the fixation cross
   fixDur: 500, // duration of the fixation cross
-  fbDur: [1000, 1000], // feedback duration for correct and incorrect trials, respectively
+  fbDur: [500, 2000], // feedback duration for correct and incorrect trials, respectively
   fbText: ['Richtig', 'Falsch!'],
   iti: 500, // duration of the inter-trial-interval
   stimFont: '250px Arial',
@@ -48,7 +48,7 @@ const PRMS = {
   ratioHard: 60,
   respKeysLH: ['Q', 'W'],
   respKeysRH: ['O', 'P'],
-  deactivateKeys: true, // should keys be deactivated when task not available?
+  deactivateKeys: false, // should keys be deactivated when task not available?
   dotRadius: 15,
   dotEccentricity: 250,
   dotGaps: 50,
@@ -160,7 +160,7 @@ if (VERSION === 1) {
   // left hand = colour, right hand = lettera
   RESPMAPPING = generate_formatted_html({
     text: `Farbaufgabe = Linke Hand: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Buchstabeaufgabe = Rechte Hand:<br>
-           More red = ${PRMS.colourTaskKeys[0]}, More blue = ${PRMS.colourTaskKeys[1]} &emsp;&emsp;&emsp; Normal = ${PRMS.letterTaskKeys[0]}, Mirrored = ${PRMS.letterTaskKeys[1]}`,
+           More blue = ${PRMS.colourTaskKeys[0]}, More red = ${PRMS.colourTaskKeys[1]} &emsp;&emsp;&emsp; Normal = ${PRMS.letterTaskKeys[0]}, Mirrored = ${PRMS.letterTaskKeys[1]}`,
     align: 'center',
     fontsize: 30,
     width: '1200px',
@@ -171,7 +171,7 @@ if (VERSION === 1) {
   // left hand = letter, right hand = colour
   RESPMAPPING = generate_formatted_html({
     text: `Buchstabeaufgabe = Linke Hand: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Farbaufgabe = Rechte Hand:<br>
-           Normal = ${PRMS.letterTaskKeys[0]}, Mirrored = ${PRMS.letterTaskKeys[1]} &emsp;&emsp;&emsp; More red = ${PRMS.colourTaskKeys[0]}, More blue = ${PRMS.colourTaskKeys[1]}`,
+           Normal = ${PRMS.letterTaskKeys[0]}, Mirrored = ${PRMS.letterTaskKeys[1]} &emsp;&emsp;&emsp; More blue = ${PRMS.colourTaskKeys[0]}, More red = ${PRMS.colourTaskKeys[1]}`,
     align: 'center',
     fontsize: 30,
     width: '1200px',
@@ -370,12 +370,12 @@ const VTS = {
     // colour task
     trial.data.colour_more = 'na';
     trial.data.corr_resp_colour = 'na';
-    let colours = repeatArray('Yellow', Math.round(PRMS.nDots));
+    let dot_colours = repeatArray(CANVAS_COLOUR, Math.round(PRMS.nDots));
     if (trial.data.colour_diff !== 'na') {
       let ratio = trial.data.colour_diff === 'easy' ? PRMS.ratioEasy : PRMS.ratioHard;
       let colours = shuffle([0, 1]);
       trial.data.colour_more = PRMS.colours[colours[0]];
-      colours = shuffle(
+      dot_colours = shuffle(
         repeatArray([PRMS.colours[colours[0]]], Math.round(PRMS.nDots * (ratio / 100))).concat(
           repeatArray([PRMS.colours[colours[1]]], Math.round((PRMS.nDots * (100 - ratio)) / 100)),
         ),
@@ -411,7 +411,7 @@ const VTS = {
         letter_diff: trial.data.letter_diff,
         letter_angle: trial.data.letter_angle,
         colour_more: trial.data.colour_more,
-        colours: colours,
+        colours: dot_colours,
       },
     ];
   },
@@ -456,13 +456,62 @@ const BLOCK_FEEDBACK = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    let block_dvs = calculateBlockPerformance({
-      filter_options: { stim_type: 'vtstd', blockNum: PRMS.cBlk },
+    let block_dvs_forced_letter_easy = calculateBlockPerformance({
+      filter_options: {
+        stim_type: 'vtstd',
+        blockNum: PRMS.cBlk,
+        respondedLetter: true,
+        free_forced: 'forced',
+        letter_diff: 'easy',
+      },
       corrColumn: 'error',
       corrValue: 0,
     });
-    let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
-    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
+    console.log(block_dvs_forced_letter_easy)
+
+    let block_dvs_forced_letter_hard = calculateBlockPerformance({
+      filter_options: {
+        stim_type: 'vtstd',
+        blockNum: PRMS.cBlk,
+        respondedLetter: true,
+        free_forced: 'forced',
+        letter_diff: 'difficult',
+      },
+      corrColumn: 'error',
+      corrValue: 0,
+    });
+
+    let block_dvs_forced_colour_easy = calculateBlockPerformance({
+      filter_options: {
+        stim_type: 'vtstd',
+        blockNum: PRMS.cBlk,
+        respondedColour: true,
+        free_forced: 'forced',
+        colour_diff: 'easy',
+      },
+      corrColumn: 'error',
+      corrValue: 0,
+    });
+
+    let block_dvs_forced_colour_hard = calculateBlockPerformance({
+      filter_options: {
+        stim_type: 'vtstd',
+        blockNum: PRMS.cBlk,
+        respondedColour: true,
+        free_forced: 'forced',
+        colour_diff: 'difficult',
+      },
+      corrColumn: 'error',
+      corrValue: 0,
+    });
+
+    let fbText = `Block ${PRMS.cBlk}<br> 
+    Letter easy: ${block_dvs_forced_letter_easy.meanRt} ms / ${block_dvs_forced_letter_easy.errorRate} %<br>
+    Letter hard: ${block_dvs_forced_letter_hard.meanRt} ms / ${block_dvs_forced_letter_hard.errorRate} %<br>
+    Colour easy: ${block_dvs_forced_colour_easy.meanRt} ms / ${block_dvs_forced_colour_easy.errorRate} %<br>
+    Colour hard: ${block_dvs_forced_colour_hard.meanRt} ms / ${block_dvs_forced_colour_hard.errorRate} %<br>`;
+
+    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${fbText}</div>`;
   },
   on_finish: function () {
     PRMS.cTrl = 1;
@@ -472,22 +521,22 @@ const BLOCK_FEEDBACK = {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-  { trial_type:  1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'difficult', letter_diff: 'easy'},
-  { trial_type:  2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'difficult', letter_diff: 'easy'},
+  // { trial_type:  1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'difficult', letter_diff: 'easy'},
+  // { trial_type:  2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'difficult', letter_diff: 'easy'},
   // { trial_type:  3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy',      letter_diff: 'easy'},
   // { trial_type:  4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy',      letter_diff: 'easy'},
-  // { trial_type:  5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',        letter_diff: 'easy'},
-  // { trial_type:  6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',        letter_diff: 'easy'},
-  // { trial_type:  7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'difficult', letter_diff: 'na'},
-  // { trial_type:  8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'easy',      letter_diff: 'na'},
+  { trial_type:  5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',        letter_diff: 'easy'},
+  { trial_type:  6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',        letter_diff: 'easy'},
+  { trial_type:  7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'difficult', letter_diff: 'na'},
+  { trial_type:  8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'easy',      letter_diff: 'na'},
   // { trial_type:  9, free_forced: 'free',   forced_task: 'na',     colour_diff: 'difficult', letter_diff: 'difficult'},
   // { trial_type: 10, free_forced: 'free',   forced_task: 'na',     colour_diff: 'difficult', letter_diff: 'difficult'},
   // { trial_type: 11, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy',      letter_diff: 'difficult'},
   // { trial_type: 12, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy',      letter_diff: 'difficult'},
-  // { trial_type: 13, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',        letter_diff: 'difficult'},
-  // { trial_type: 14, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',        letter_diff: 'difficult'},
-  // { trial_type: 15, free_forced: 'forced', forced_task: 'colour', colour_diff: 'difficult', letter_diff: 'na'},
-  // { trial_type: 16, free_forced: 'forced', forced_task: 'colour', colour_diff: 'easy',      letter_diff: 'na'},
+  { trial_type: 13, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',        letter_diff: 'difficult'},
+  { trial_type: 14, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',        letter_diff: 'difficult'},
+  { trial_type: 15, free_forced: 'forced', forced_task: 'colour', colour_diff: 'difficult', letter_diff: 'na'},
+  { trial_type: 16, free_forced: 'forced', forced_task: 'colour', colour_diff: 'easy',      letter_diff: 'na'},
 ];
 
 // prettier-ignore
@@ -565,7 +614,7 @@ function genExpSeq() {
   // exp.push(WELCOME_INSTRUCTIONS);
   exp.push(COUNT_DOTS);
   // exp.push(VP_CODE_INSTRUCTIONS1);
-  // exp.push(TASK_INSTRUCTIONS1);
+  exp.push(TASK_INSTRUCTIONS1);
   // exp.push(TASK_INSTRUCTIONS2);
 
   for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
@@ -573,7 +622,7 @@ function genExpSeq() {
     blk_timeline = { ...TRIAL_TIMELINE };
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: 1, // PRMS.nTrls / TRIAL_TABLE.length,
+      size: PRMS.nTrls / TRIAL_TABLE.length,
     };
     //exp.push(BLOCK_START);
     exp.push(blk_timeline); // trials within a block
