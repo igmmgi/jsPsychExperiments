@@ -456,6 +456,7 @@ const BLOCK_FEEDBACK = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
+
     let block_dvs_forced_letter_easy = calculateBlockPerformance({
       filter_options: {
         stim_type: 'vtstd',
@@ -467,7 +468,6 @@ const BLOCK_FEEDBACK = {
       corrColumn: 'error',
       corrValue: 0,
     });
-    console.log(block_dvs_forced_letter_easy)
 
     let block_dvs_forced_letter_hard = calculateBlockPerformance({
       filter_options: {
@@ -583,8 +583,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
-  saveData('/Common/write_data.php', data_fn, { stim: 'vtstd' });
-  // saveDataLocal(data_fn, { stim: 'vts' });
+  // saveData('/Common/write_data.php', data_fn, { stim: 'vtstd' });
+  saveDataLocal(data_fn, { stim: 'vtstd' });
 
   const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
   saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);
