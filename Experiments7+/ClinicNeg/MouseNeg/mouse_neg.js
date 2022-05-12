@@ -45,6 +45,10 @@ const PRMS = {
     cBlk: 1, // count blocks
 };
 
+// symbol characters
+const TICK_MARK = "\u{2714}";
+const CROSS_MARK = "\u{2718}";
+
 // 2 counter balanced versions
 const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
@@ -117,7 +121,7 @@ const TASK_INSTRUCTIONS_SYMBOLIC = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Reagiere entsprechend der Bedeutung!<br><br>
-"<span style="color:green";">\u2714</span> Spielzeug" &emsp;oder&emsp; "<span style="color:red";">\u2718</span> Tier" &emsp;&emsp;&emsp; "<span style="color:green";">\u2714</span> Tier" &emsp;oder&emsp; "<span style="color:red";">\u2718</span> Spielzeug"<br><br>
+"${TICK_MARK} Spielzeug" &emsp;oder&emsp; "${CROSS_MARK} Tier" &emsp;&emsp;&emsp; "${TICK_MARK} Tier" &emsp;oder&emsp; ${CROSS_MARK} Spielzeug"<br><br>
 Drück eine beliebige Taste, um fortzufahren`,
         align: 'center',
         fontsize: 30,
@@ -182,8 +186,8 @@ function codeTrial() {
 ////////////////////////////////////////////////////////////////////////
 
 function stimuli_factory(items_toys, items_animals, type, n) {
-    shuffle(items_toys.images)
-    shuffle(items_animals.images)
+    shuffle(items_toys.images);
+    shuffle(items_animals.images);
     let stimuli = [];
     for (let i = 0; i < 48; i++) {
         let stimulus = {};
@@ -192,57 +196,57 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             // toy left, animal right, now toy
             stimulus.left = items_toys.images[i];
             stimulus.right = items_animals.images[i];
-            stimulus.probe = type == 'Language' ? 'jetzt Spielzeug' : '\u{2714} Spielzeug';
-            stimulus.probe_colour = 'green';
+            stimulus.probe = type == 'Language' ? 'jetzt Spielzeug' : `${TICK_MARK} Spielzeug`;
+            stimulus.probe_colour = 'black';
             stimulus.correct_side = 'left';
         } else if (i < 12) {
             // toy left, animal right, now animal
             stimulus.left = items_toys.images[i];
             stimulus.right = items_animals.images[i];
-            stimulus.probe = type == 'Language' ? 'jetzt Tier' : '\u{2714} Tier';
-            stimulus.probe_colour = 'green';
+            stimulus.probe = type == 'Language' ? 'jetzt Tier' : `${TICK_MARK} Tier`;
+            stimulus.probe_colour = 'black';
             stimulus.correct_side = 'right';
         } else if (i < 18) {
             // toy left, animal right, not toy
             stimulus.left = items_toys.images[i];
             stimulus.right = items_animals.images[i];
-            stimulus.probe = type == 'Language' ? 'nicht Spielzeug' : '\u{2718} Spielzeug';
-            stimulus.probe_colour = 'red';
+            stimulus.probe = type == 'Language' ? 'nicht Spielzeug' : `${CROSS_MARK} Spielzeug`;
+            stimulus.probe_colour = 'black';
             stimulus.correct_side = 'right';
         } else if (i < 24) {
             // toy left, animal right, not animal
             stimulus.left = items_toys.images[i];
             stimulus.right = items_animals.images[i];
-            stimulus.probe = type == 'Language' ? 'nicht Tier' : '\u{2718} Tier';
-            stimulus.probe_colour = 'red';
+            stimulus.probe = type == 'Language' ? 'nicht Tier' : `${CROSS_MARK} Tier`;
+            stimulus.probe_colour = 'black';
             stimulus.correct_side = 'left';
         } else if (i < 30) {
             // animal left, toy right, now toy
             stimulus.left = items_animals.images[i];
             stimulus.right = items_toys.images[i];
-            stimulus.probe = type == 'Language' ? 'jetzt Spielzeug' : '\u{2714} Spielzeug';
-            stimulus.probe_colour = 'green';
+            stimulus.probe = type == 'Language' ? 'jetzt Spielzeug' : `${TICK_MARK} Spielzeug`;
+            stimulus.probe_colour = 'black';
             stimulus.correct_side = 'right';
         } else if (i < 36) {
             // animal left, toy right, now animal
             stimulus.left = items_animals.images[i];
             stimulus.right = items_toys.images[i];
-            stimulus.probe = type == 'Language' ? 'jetzt Tier' : '\u{2714} Tier';
-            stimulus.probe_colour = 'green';
+            stimulus.probe = type == 'Language' ? 'jetzt Tier' : `${TICK_MARK} Tier`;
+            stimulus.probe_colour = 'black';
             stimulus.correct_side = 'left';
         } else if (i < 42) {
             // animal left, toy right, not toy
             stimulus.left = items_animals.images[i];
             stimulus.right = items_toys.images[i];
-            stimulus.probe = type == 'Language' ? 'nicht Spielzeug' : '\u{2718} Spielzeug';
-            stimulus.probe_colour = 'red';
+            stimulus.probe = type == 'Language' ? 'nicht Spielzeug' : `${CROSS_MARK} Spielzeug`;
+            stimulus.probe_colour = 'black';
             stimulus.correct_side = 'left';
         } else if (i < 48) {
             // animal left, toy right, not animal
             stimulus.left = items_animals.images[i];
             stimulus.right = items_toys.images[i];
-            stimulus.probe = type == 'Language' ? 'nicht Tier' : '\u{2718} Tier';
-            stimulus.probe_colour = 'red';
+            stimulus.probe = type == 'Language' ? 'nicht Tier' : `${CROSS_MARK} Tier`;
+            stimulus.probe_colour = 'black';
             stimulus.correct_side = 'right';
         }
         stimuli.push(stimulus);
@@ -405,18 +409,19 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
-    exp.push(TOY_IMAGES);
-    exp.push(ANIMAL_IMAGES);
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
-    exp.push(WELCOME_INSTRUCTIONS);
-    exp.push(WAIT);
-    exp.push(MOUSE_INSTRUCTIONS);
-    exp.push(WAIT);
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(PRMS.screenRes));
+    // exp.push(TOY_IMAGES);
+    // exp.push(ANIMAL_IMAGES);
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    // exp.push(WELCOME_INSTRUCTIONS);
+    // exp.push(WAIT);
+    // exp.push(MOUSE_INSTRUCTIONS);
+    // exp.push(WAIT);
 
+            exp.push(TASK_INSTRUCTIONS_SYMBOLIC);
     let blk_type;
     if (version === 1) {
         blk_type = repeatArray(['Language'], PRMS.nBlks / 2).concat(repeatArray(['Symbolic'], PRMS.nBlks / 2));

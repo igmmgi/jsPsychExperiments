@@ -364,32 +364,12 @@ var jsPsychMouseImageResponse = (function(jspsych) {
                     ctx.stroke();
                 }
 
-                // HACKED to get different colours for tick/cross and word!
-                // draw stimulus
-                if (draw_stimulus & trial.stimulus_type == "Symbolic") {
-                    ctx.fillStyle = trial.stimulus_colour;
-                    ctx.font = '75px arial';
-                    let tmp1 = ctx.measureText(trial.stimulus.substring(0, 1)).width;
-                    let tmp2 = ctx.measureText(trial.stimulus.substring(1)).width;
-                    ctx.textAlign = 'left';
-                    ctx.fillText(
-                        trial.stimulus.substring(0, 1),
-                        trial.stimulus_position[0] - (tmp1 + tmp2 * 0.5) / 1.5,
-                        trial.stimulus_position[1],
-                    );
-                    ctx.fillStyle = 'black';
-                    ctx.font = trial.stimulus_font;
-                    ctx.fillText(
-                        trial.stimulus.substring(1),
-                        trial.stimulus_position[0] - (tmp2 * 0.5) / 1.5 + 15,
-                        trial.stimulus_position[1],
-                    );
-
-                } else if (draw_stimulus & trial.stimulus_type == "Language") {
+                if (draw_stimulus) {
                     ctx.fillStyle = 'black';
                     ctx.font = trial.stimulus_font;
                     ctx.fillText(trial.stimulus, trial.stimulus_position[0], trial.stimulus_position[1]);
                 }
+
             };
 
             // initial draw
