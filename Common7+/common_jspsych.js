@@ -150,7 +150,7 @@ function resize_browser(language = 'de_du', message = '') {
         button_label: '',
         item_width: 3 + 3 / 8,
         item_height: 2 + 1 / 8,
-        pixels_per_unit: 100,
+        pixels_per_unit: 125,
         prompt: '',
     };
     if (message !== '') {
