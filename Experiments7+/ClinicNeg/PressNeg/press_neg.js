@@ -286,16 +286,15 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
-    // exp.push(mouseCursor(false));
-    // exp.push(WELCOME_INSTRUCTIONS);
-    // exp.push(WAIT);
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    exp.push(mouseCursor(false));
+    exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(WAIT);
 
-            exp.push(TASK_INSTRUCTIONS_SYMBOLIC);
     let blk_type;
     if (version === 1) {
         blk_type = repeatArray(['Language'], PRMS.nBlks / 2).concat(repeatArray(['Symbolic'], PRMS.nBlks / 2));
