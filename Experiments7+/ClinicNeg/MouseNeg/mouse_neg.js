@@ -199,6 +199,7 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             stimulus.probe = type == 'Language' ? 'jetzt Spielzeug' : `${TICK_MARK} Spielzeug`;
             stimulus.probe_colour = 'black';
             stimulus.correct_side = 'left';
+            stimulus.affneg = 'aff';
         } else if (i < 12) {
             // toy left, animal right, now animal
             stimulus.left = items_toys.images[i];
@@ -206,6 +207,7 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             stimulus.probe = type == 'Language' ? 'jetzt Tier' : `${TICK_MARK} Tier`;
             stimulus.probe_colour = 'black';
             stimulus.correct_side = 'right';
+            stimulus.affneg = 'aff';
         } else if (i < 18) {
             // toy left, animal right, not toy
             stimulus.left = items_toys.images[i];
@@ -213,6 +215,7 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             stimulus.probe = type == 'Language' ? 'nicht Spielzeug' : `${CROSS_MARK} Spielzeug`;
             stimulus.probe_colour = 'black';
             stimulus.correct_side = 'right';
+            stimulus.affneg = 'neg';
         } else if (i < 24) {
             // toy left, animal right, not animal
             stimulus.left = items_toys.images[i];
@@ -220,6 +223,7 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             stimulus.probe = type == 'Language' ? 'nicht Tier' : `${CROSS_MARK} Tier`;
             stimulus.probe_colour = 'black';
             stimulus.correct_side = 'left';
+            stimulus.affneg = 'neg';
         } else if (i < 30) {
             // animal left, toy right, now toy
             stimulus.left = items_animals.images[i];
@@ -227,6 +231,7 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             stimulus.probe = type == 'Language' ? 'jetzt Spielzeug' : `${TICK_MARK} Spielzeug`;
             stimulus.probe_colour = 'black';
             stimulus.correct_side = 'right';
+            stimulus.affneg = 'aff';
         } else if (i < 36) {
             // animal left, toy right, now animal
             stimulus.left = items_animals.images[i];
@@ -234,6 +239,7 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             stimulus.probe = type == 'Language' ? 'jetzt Tier' : `${TICK_MARK} Tier`;
             stimulus.probe_colour = 'black';
             stimulus.correct_side = 'left';
+            stimulus.affneg = 'aff';
         } else if (i < 42) {
             // animal left, toy right, not toy
             stimulus.left = items_animals.images[i];
@@ -241,6 +247,7 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             stimulus.probe = type == 'Language' ? 'nicht Spielzeug' : `${CROSS_MARK} Spielzeug`;
             stimulus.probe_colour = 'black';
             stimulus.correct_side = 'left';
+            stimulus.affneg = 'neg';
         } else if (i < 48) {
             // animal left, toy right, not animal
             stimulus.left = items_animals.images[i];
@@ -248,6 +255,7 @@ function stimuli_factory(items_toys, items_animals, type, n) {
             stimulus.probe = type == 'Language' ? 'nicht Tier' : `${CROSS_MARK} Tier`;
             stimulus.probe_colour = 'black';
             stimulus.correct_side = 'right';
+            stimulus.affneg = 'neg';
         }
         stimuli.push(stimulus);
     }
