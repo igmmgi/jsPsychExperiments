@@ -415,7 +415,7 @@ function genExpSeq() {
     exp.push(ANIMAL_IMAGES);
     exp.push(resize_browser());
     exp.push(welcome_message());
-    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    exp.push(vpInfoFormClinic('/Common7+/vpInfoFormClinic_de.html'));
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(WAIT);
     exp.push(MOUSE_INSTRUCTIONS);

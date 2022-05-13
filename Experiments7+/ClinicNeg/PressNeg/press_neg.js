@@ -22,7 +22,7 @@ const PRMS = {
     fixDur: 500,
     fbDur: [500, 500],
     fixSize: 50,
-    stimSize: 75,
+    stimSize: 50,
     fbTxtSizeTrial: 30,
     waitDur: 1000,
     iti: 1000,
@@ -74,7 +74,7 @@ const TASK_INSTRUCTIONS_LANGUAGE = {
     stimulus: generate_formatted_html({
         text: `Reagiere entsprechend der Bedeutung!<br><br>
 "jetzt links" &emsp;oder&emsp; "nicht rechts" &emsp;&emsp;&emsp; "jetzt rechts" &emsp;oder&emsp; "nicht links"<br>
-${PRMS.respKeys[0]} Taste &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${PRMS.respKeys[1]} Taste<br><br><br>
+Linke blaue Taste &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Rechte blaue Taste<br><br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
         align: 'center',
         fontsize: 30,
@@ -92,8 +92,8 @@ const TASK_INSTRUCTIONS_SYMBOLIC = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Reagiere entsprechend der Bedeutung!<br><br>
-"${TICK_MARK}${LEFT_ARROW}" &emsp;oder&emsp; "${CROSS_MARK}${RIGHT_ARROW}" &emsp;&emsp;&emsp; "${TICK_MARK}${RIGHT_ARROW}" &emsp;oder&emsp; "${CROSS_MARK}${LEFT_ARROW}"<br>
-${PRMS.respKeys[0]} Taste &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${PRMS.respKeys[1]} Taste<br><br>
+"${TICK_MARK}${LEFT_ARROW}" &emsp;oder&emsp; "${CROSS_MARK}${RIGHT_ARROW}" &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; "${TICK_MARK}${RIGHT_ARROW}" &emsp;oder&emsp; "${CROSS_MARK}${LEFT_ARROW}"<br>
+Linke blaue Taste &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Rechte blaue Taste<br><br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
         align: 'center',
         fontsize: 30,
@@ -290,7 +290,7 @@ function genExpSeq() {
     exp.push(browser_check(PRMS.screenRes));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    exp.push(vpInfoFormClinic('/Common7+/vpInfoFormClinic_de.html'));
     exp.push(mouseCursor(false));
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(WAIT);
