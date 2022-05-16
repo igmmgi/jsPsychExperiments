@@ -22,15 +22,20 @@ const CANVAS_BORDER = '5px solid black';
 const COLOURS = shuffle(['red', 'blue', 'green', 'yellow']);
 const LETTERS = shuffle(['Q', 'K', 'G', 'L']);
 
+const DE_EN = { red: 'rot', blue: 'blau', green: 'grün', yellow: 'gelb', Q: 'Q', K: 'K', G: 'G', L: 'L' };
+
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nTrls: 20, // 100, // number of trials within a block
+  nTrls: 4, // 100, // number of trials within a block
   nBlks: 4, // 14, // number of blocks
-  fbDur: [400, 500], // feedback duration for correct and incorrect trials, respectively
-  fbText: ['Richtig', 'Falsch!'],
-  rsi: 400,
-  waitDur: 5000, // wait time at end of block if too many errors!
-  stimFont: '50px Arial',
+  fbDur: [0, 2000], // feedback duration for correct and incorrect trials, respectively
+  fbText: ['', 'Falsch!'],
+  rsi: 500,
+  waitDur: 20000, // wait time at end of block if too many errors!
+  stimFont: '80px Arial',
+  rectLineWidth: 10,
+  rectHeight: 100,
+  rectWidth: 80,
   fbFont: '28px Arial',
   colours1: [COLOURS[0], COLOURS[1]],
   letters1: [LETTERS[0], LETTERS[1]],
@@ -56,7 +61,7 @@ const VTS_DATA = {
 };
 
 // 8 counter balanced versions
-const VERSION = Number(jsPsych.data.urlVariables().version);
+const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 8 counter-balanced versions
@@ -90,81 +95,49 @@ function get_keymapping_hand(obj) {
   'use strict';
   let s1_1 = Object.getOwnPropertyNames(obj.hand.slr)[0];
   let k1_1 = obj.hand.slr[s1_1];
+  s1_1 = DE_EN[s1_1];
   let s2_1 = Object.getOwnPropertyNames(obj.hand.slr)[1];
   let k2_1 = obj.hand.slr[s2_1];
+  s2_1 = DE_EN[s2_1];
   let s1_2 = Object.getOwnPropertyNames(obj.hand.srr)[0];
   let k1_2 = obj.hand.srr[s1_2];
+  s1_2 = DE_EN[s1_2];
   let s2_2 = Object.getOwnPropertyNames(obj.hand.srr)[1];
   let k2_2 = obj.hand.srr[s2_2];
-  return `${s1_1} = ${k1_1} Taste, ${s2_1} = ${k2_1} Taste &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${s1_2} = ${k1_2} Taste, ${s2_2} = ${k2_2} Taste`;
+  s2_2 = DE_EN[s2_2];
+  // TO DO: Must be a better way of text formatting!!!
+  if ([1, 3, 5, 7].includes(VERSION)) {
+    return `${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
+            (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
+  } else if ([2, 4, 6, 8].includes(VERSION)) {
+    return `${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
+            (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
+  }
 }
 
 function get_keymapping_finger(obj) {
   'use strict';
   let s1_1 = Object.getOwnPropertyNames(obj.finger.sir)[0];
   let k1_1 = obj.finger.sir[s1_1];
+  s1_1 = DE_EN[s1_1];
   let s2_1 = Object.getOwnPropertyNames(obj.finger.sir)[1];
   let k2_1 = obj.finger.sir[s2_1];
+  s2_1 = DE_EN[s2_1];
   let s1_2 = Object.getOwnPropertyNames(obj.finger.smr)[0];
   let k1_2 = obj.finger.smr[s1_2];
+  s1_2 = DE_EN[s1_2];
   let s2_2 = Object.getOwnPropertyNames(obj.finger.smr)[1];
   let k2_2 = obj.finger.smr[s2_2];
-  return `${s1_2} = ${k1_2} Taste, ${s1_1} = ${k1_1} Taste &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${s2_1} = ${k2_1} Taste, ${s2_2} = ${k2_2} Taste`;
+  s2_2 = DE_EN[s2_2];
+  // TO DO: Must be a better way of text formatting!!!
+  if ([1, 3, 5, 7].includes(VERSION)) {
+    return `${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
+          (${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
+  } else if ([2, 4, 6, 8].includes(VERSION)) {
+    return `${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
+          (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
+  }
 }
-
-// prettier-ignore
-let RESPMAPPING_HAND;
-if (STIM_RESP.hand.lt === 'colour') {
-  RESPMAPPING_HAND = generate_formatted_html({
-    text: `Farbaufgabe = Linke Hand &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Buchstabeaufgabe = Rechte Hand:<br>
-          ${get_keymapping_hand(STIM_RESP)}<br>`,
-    align: 'center',
-    fontsize: 30,
-    width: '1200px',
-    bold: true,
-    lineheight: 2,
-  });
-} else if (STIM_RESP.hand.lt === 'letter') {
-  RESPMAPPING_HAND = generate_formatted_html({
-    text: `Buchstabeaufgabe = Linke Hand &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Farbaufgabe = Rechte Hand:<br>
-          ${get_keymapping_hand(STIM_RESP)}<br>`,
-    align: 'center',
-    fontsize: 30,
-    width: '1200px',
-    bold: true,
-    lineheight: 2,
-  });
-}
-
-// prettier-ignore
-let RESPMAPPING_FINGER;
-if (STIM_RESP.finger.it === 'colour') {
-  RESPMAPPING_FINGER = generate_formatted_html({
-    text: `Colour task = Index Fingers &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Letter task = Middle Fingers:<br>
-          ${get_keymapping_finger(STIM_RESP)}<br>`,
-    align: 'center',
-    fontsize: 30,
-    width: '1200px',
-    bold: true,
-    lineheight: 2,
-  });
-} else if (STIM_RESP.finger.it === 'letter') {
-  RESPMAPPING_FINGER = generate_formatted_html({
-    text: `Letter task = Index Fingers &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Colour task = Middle Fingers:<br>
-          ${get_keymapping_finger(STIM_RESP)}<br>`,
-    align: 'center',
-    fontsize: 30,
-    width: '1200px',
-    bold: true,
-    lineheight: 2,
-  });
-}
-
-function blockStimuli(n) {
-  return repeatArray('both', n / 2).concat(repeatArray(['letter', 'colour'], n / 4));
-}
-
-let task = blockStimuli(PRMS.nTrls);
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -179,14 +152,13 @@ const WELCOME_INSTRUCTIONS = {
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 35 Minuten konzentriert zu arbeiten.<br><br>
-           Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
+           Du erhältst den Code für VP-Stunden/Geld und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            hiwipibio@gmail.com <br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     fontsize: 30,
     width: '1200px',
-    bold: true,
     lineheight: 1.5,
   }),
 };
@@ -197,53 +169,196 @@ const VP_CODE_INSTRUCTIONS1 = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
-    text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
+    text: `Du erhaelst den Code für VP-Stunden/Geld und weitere Anweisungen
     am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
     hiwipibio@gmail.com<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
     fontsize: 30,
     width: '1200px',
-    bold: true,
     lineheight: 1.5,
   }),
 };
+
+function hand_instructions() {
+  let task_instructions;
+  let resp_mapping1;
+  let resp_mapping2;
+  if (STIM_RESP.hand.lt === 'colour') {
+    task_instructions = generate_formatted_html({
+      text: `Es gibt zwei Aufgaben.<br><br>
+             Jede Aufgabe wird mit <span style="font-weight:bold">der linken oder rechten Hand</span> bearbeitet.<br><br>
+             Farbaufgabe = Linke Hand: <br>
+             Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „Q“ und „W“.<br><br>
+             Buchstabeaufgabe = Rechte Hand:<br> 
+             Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
+             Drücke eine beliebige Taste um fortzufahren.`,
+      align: 'left',
+      fontsize: 28,
+      width: '1200px',
+      lineheight: 1.5,
+    });
+    resp_mapping1 = generate_formatted_html({
+      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
+             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br>
+             <span style="font-weight:bold";>
+             Farbaufgabe = Linke Hand<br> 
+             Buchstabeaufgabe = Rechte Hand
+             </span><br>
+             ${get_keymapping_hand(STIM_RESP)}<br><br>
+             Drücke eine beliebige Taste um fortzufahren.`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 2,
+    });
+    resp_mapping2 = generate_formatted_html({
+      text: `<span style="font-weight:bold";>
+             Farbaufgabe = Linke Hand<br> 
+             Buchstabeaufgabe = Rechte Hand
+             </span><br>
+             ${get_keymapping_hand(STIM_RESP)}<br><br>`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 2,
+    });
+  } else if (STIM_RESP.hand.lt === 'letter') {
+    task_instructins = generate_formatted_html({
+      text: `Es gibt zwei Aufgaben.<br><br>
+           Jede Aufgabe wird mit <span style="font-weight:bold">der linken oder rechten Hand</span> bearbeitet.<br><br>
+           Buchstabeaufgabe = Linke Hand: <br>
+           Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die
+           Tasten „Q“ und „W“.<br><br>
+           Farbaufgabe = Rechte Hand:<br>
+           Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die
+           Tasten „O“ und „P“.<br><br>
+           Drücke eine beliebige Taste um fortzufahren.`,
+      align: 'left',
+      fontsize: 28,
+      width: '1200px',
+      lineheight: 1.5,
+    });
+    resp_mapping1 = generate_formatted_html({
+      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
+             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
+             <span style="font-weight:bold";>
+             Buchstabeaufgabe = Linke Hand<br>
+             Farbaufgabe = Rechte Hand</span>:<br>
+             ${get_keymapping_hand(STIM_RESP)}<br><br>
+             Drücke eine beliebige Taste um fortzufahren.`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 2,
+    });
+    resp_mapping2 = generate_formatted_html({
+      text: `<span style="font-weight:bold";>
+             Buchstabeaufgabe = Linke Hand<br>
+             Farbaufgabe = Rechte Hand</span>:<br>
+             ${get_keymapping_hand(STIM_RESP)}<br><br>`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 2,
+    });
+  }
+  return [task_instructions, resp_mapping1, resp_mapping2];
+}
+
+function finger_instructions() {
+  let task_instructions;
+  let resp_mapping1;
+  let resp_mapping2;
+  if (STIM_RESP.finger.it === 'colour') {
+    task_instructions = generate_formatted_html({
+      text: `Es gibt zwei Aufgaben.<br><br>
+             Jede Aufgabe wird mit <span style="font-weight:bold">den Zeige- oder Mittelfinger</span> bearbeitet.<br><br>
+             Farbaufgabe = Zeigefinger:<br>
+             Bitte platziere hierzu deinen linken und rechten Zeigefinger auf die Tasten „W“ und „O.<br><br>
+             Buchstabeaufgabe = Mittelfinger<br>
+             Bitte platziere hierzu deinen linken und rechten Mittelfinger auf die Tasten „Q“ und „P“.<br><br>
+             Drücke eine beliebige Taste um fortzufahren.`,
+      align: 'left',
+      fontsize: 28,
+      width: '1200px',
+      lineheight: 1.5,
+    });
+    resp_mapping1 = generate_formatted_html({
+      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
+             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br>
+             <span style="font-weight:bold";>
+             Farbaufgabe = Zeigefinger<br>
+             Buchstabeaufgabe = Mittelfinger</span>:<br>
+             ${get_keymapping_finger(STIM_RESP)}<br>`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 1.5,
+    });
+    resp_mapping2 = generate_formatted_html({
+      text: `<span style="font-weight:bold";>
+             Farbaufgabe = Zeigefinger<br>
+             Buchstabeaufgabe = Mittelfinger</span>:<br>
+             ${get_keymapping_finger(STIM_RESP)}<br>`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 1.5,
+    });
+  } else if (STIM_RESP.finger.it === 'letter') {
+    task_instructions = generate_formatted_html({
+      text: `Es gibt zwei Aufgaben.<br><br>
+             Jede Aufgabe wird mit <span style="font-weight:bold">den Zeige- oder Mittelfinger</span> bearbeitet.<br><br>
+             Buchstabeaufgabe = Zeigefinger:<br>
+             Bitte platziere hierzu deinen linken und rechten Zeigefinger auf die Tasten „W“ und „O.<br><br>
+             Farbaufgabe = Mittelfinger<br>
+             Bitte platziere hierzu deinen linken und rechten Mittelfinger auf die Tasten „Q“ und „P“.<br><br>
+             Drücke eine beliebige Taste um fortzufahren.`,
+      align: 'left',
+      fontsize: 28,
+      width: '1200px',
+      lineheight: 1.5,
+    });
+    resp_mapping1 = generate_formatted_html({
+      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
+             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br>
+             <span style="font-weight:bold";>
+             Buchstabeaufgabe = Zeigefinger<br>
+             Farbaufgabe = Mittelfinger</span>:<br>
+             ${get_keymapping_finger(STIM_RESP)}<br>`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 1.5,
+    });
+    resp_mapping2 = generate_formatted_html({
+      text: `<span style="font-weight:bold";>
+             Buchstabeaufgabe = Zeigefinger<br>
+             Farbaufgabe = Mittelfinger</span>:<br>
+             ${get_keymapping_finger(STIM_RESP)}<br>`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 1.5,
+    });
+  }
+  return [task_instructions, resp_mapping1, resp_mapping2];
+}
+
+const [TASK_INSTRUCTIONS_HAND1, RESPMAPPING_HAND1, RESPMAPPING_HAND2] = hand_instructions();
+const [TASK_INSTRUCTIONS_FINGER1, RESPMAPPING_FINGER1, RESPMAPPING_FINGER2] = finger_instructions();
 
 const TASK_INSTRUCTIONS1 = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
-  stimulus: generate_formatted_html({
-    text: `You have to perform 100 trials in each block. When only on task stimulus is presented
-           (i.e., letter or colored square) you have to perform the corresponding task. However, if both
-           task stimuli are presented you can freely decide which task you want to perform in this tria
-           Drücke eine beliebige Taste um fortzufahren.`,
-    align: 'left',
-    fontsize: 30,
-    width: '1200px',
-    bold: true,
-    lineheight: 1.5,
-  }),
-};
-
-// prettier-ignore
-const TASK_INSTRUCTIONS2 = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: generate_formatted_html({
-    text: `In jedem Block gibt es insgesamt ${PRMS.nTrls} Aufgaben (${PRMS.nTrls / 2} Buchstaben und ${PRMS.nTrls / 2} Farbaufgaben).<br><br>
-           Du hast freie Aufgabenwahl, wenn beide Aufgaben verfügbar sind.<br><br>
-           Wenn nur ein Stimulus is present, dann musst du auf dieses Stimulus bearbeiten.<br><br>
-           Drücke eine beliebige Taste um fortzufahren.`,
-    align: 'left',
-    fontsize: 30,
-    width: '1200px',
-    bold: true,
-    lineheight: 1.5,
-  }),
+  stimulus: '',
+  on_start: function (trial) {
+    let mapping = STIM_RESP.order[VTS_DATA.half - 1];
+    trial.stimulus = mapping === 'hand' ? TASK_INSTRUCTIONS_HAND1 : TASK_INSTRUCTIONS_FINGER1;
+  },
 };
 
 const TASK_INSTRUCTIONS_MAPPING = {
@@ -254,17 +369,7 @@ const TASK_INSTRUCTIONS_MAPPING = {
   stimulus: '',
   on_start: function (trial) {
     let mapping = STIM_RESP.order[VTS_DATA.half - 1];
-    let respText = mapping === 'hand' ? RESPMAPPING_HAND : RESPMAPPING_FINGER;
-    trial.stimulus =
-      respText +
-      generate_formatted_html({
-        text: `Drücke eine beliebige Taste, um fortzufahren.`,
-        align: 'center',
-        fontsize: 30,
-        width: '1200px',
-        bold: true,
-        lineheight: 1.5,
-      });
+    trial.stimulus = mapping === 'hand' ? RESPMAPPING_HAND1 : RESPMAPPING_FINGER1;
   },
 };
 
@@ -275,6 +380,28 @@ const IF_ERROR_TASK_INSTRUCTIONS_MAPPING = {
   },
 };
 
+const TASK_INSTRUCTIONS2 = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
+           Du darfst in jedem Durchgang entscheiden welche der beiden Aufgaben du bearbeiten möchtest,
+           aber versuche beide Aufgaben gleich häufig und in einer zufälligen Reihenfolge zu wählen.
+           Versuche somit die Aufgaben so zu wählen als ob ein zufälliger Münzwurf entscheidet welche
+           Aufgabe in einem Durchgang bearbeitet werden soll. Somit wirst du manchmal die Aufgabe
+           wiederholen und manchmal die Aufgabe wechseln. Du sollst aber nicht mitzählen wie häufig du jede
+           Aufgabe machst oder vorgeplante Wahlstrategien (z.B., immer abwechselnd die Aufgaben
+           bearbeiten) verwenden. Versuche einfach zufällig eine Aufgabe auszuwählen.<br><br>
+           Drücke eine beliebige Taste um fortzufahren.`,
+      align: 'left',
+      fontsize: 28,
+      width: '1200px',
+      lineheight: 1.5,
+  }),
+};
+
 const TASK_INSTRUCTIONS_BLOCK_START = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
@@ -283,27 +410,22 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
   stimulus: '',
   on_start: function (trial) {
     let mapping = STIM_RESP.order[VTS_DATA.half - 1];
-    let respText = mapping === 'hand' ? RESPMAPPING_HAND : RESPMAPPING_FINGER;
+    let respText = mapping === 'hand' ? RESPMAPPING_HAND2 : RESPMAPPING_FINGER2;
     trial.stimulus =
       generate_formatted_html({
         text: `Block ${VTS_DATA.cBlk} von ${PRMS.nBlks}<br><br>
-               Du darfst in jedem frei Durchgang entscheiden, ob du die zuerst erscheinende Aufgabe bearbeitest oder auf die andere Aufgabe wartest (sofern beide Aufgaben noch verfügbar sind)!<br><br>
-               Versuche aber alle ${PRMS.nTrls} Aufgaben (${PRMS.nTrls / 2} Buchstaben und ${
-          PRMS.nTrls / 2
-        } Farbe) so schnell und so genau wie möglich zu bearbeiten!`,
+               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind und bearbeite sonst die Aufgabe welche präsentiert ist. Es gilt:<br>`,
         fontsize: 30,
         align: 'left',
         width: '1200px',
-        bold: true,
         lineheight: 1.5,
       }) +
       respText +
       generate_formatted_html({
         text: `Drücke eine beliebige Taste, um fortzufahren.`,
-        align: 'left',
+        align: 'center',
         fontsize: 30,
         width: '1200px',
-        bold: true,
         lineheight: 1.5,
       });
     task = shuffle(task);
@@ -317,15 +439,18 @@ const TASK_INSTRUCTIONS_HALF = {
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
     text: `***** ACHTUNG *****<br><br>
-          Aufgaben zum Tasten Wechseln!<br><br>
+           NEUE INSTRUKTIONEN, BITTE AUFMERKSAM LESEN<br><br>
+           ***** ACHTUNG *****<br><br>
           Drücke eine beliebige Taste, um fortzufahren.`,
     fontsize: 38,
     lineheight: 1.5,
     align: 'center',
-    bold: true,
   }),
 };
 
+////////////////////////////////////////////////////////////////////////
+//                      Experiment                                    //
+////////////////////////////////////////////////////////////////////////
 function drawStimulus(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
@@ -354,13 +479,14 @@ function draw_rsi() {
 }
 
 const RSI = {
-  type: jsPsychStaticCanvasKeyboardResponse,
+  type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   translate_origin: true,
   trial_duration: PRMS.rsi,
   response_ends_trial: false,
+  stimulus: '',
   func: draw_rsi,
 };
 
@@ -401,15 +527,15 @@ function codeTrial() {
   ];
   let error = correctKeys.includes(dat.key_press.toUpperCase()) ? 0 : 1;
 
-  console.log('##########################');
-  console.log('Resp hand: ', respHand);
-  console.log('Resp finger: ', respFinger);
-  console.log('Mapping: ', mapping);
-  console.log('Resp task: ', respTask);
-  console.log('Transition: ', transition);
-  console.log('Rep Counter: ', VTS_DATA.repCounter);
-  console.log('RT1: ', dat.rt);
-  console.log('Error: ', error);
+  // console.log('##########################');
+  // console.log('Resp hand: ', respHand);
+  // console.log('Resp finger: ', respFinger);
+  // console.log('Mapping: ', mapping);
+  // console.log('Resp task: ', respTask);
+  // console.log('Transition: ', transition);
+  // console.log('Rep Counter: ', VTS_DATA.repCounter);
+  // console.log('RT1: ', dat.rt);
+  // console.log('Error: ', error);
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
@@ -428,6 +554,12 @@ function codeTrial() {
   VTS_DATA.cTrl++;
   VTS_DATA.previousTask = respTask;
 }
+
+function blockStimuli(n) {
+  return repeatArray('both', n / 2).concat(repeatArray(['letter', 'colour'], n / 4));
+}
+
+let task = blockStimuli(PRMS.nTrls);
 
 const VTS = {
   type: jsPsychStaticCanvasKeyboardResponse,
@@ -489,93 +621,72 @@ const VTS = {
           trial.choices = trial.choices.concat(PRMS.middleFinger);
         }
       }
-      // console.log(trial.choices);
     }
 
     let draw_colour = 1;
     let draw_letter = 1;
     trial.func_args = [{ letter: letter, colour: colour, draw_colour: draw_colour, draw_letter: draw_letter }];
 
-    trial.data = { stim: 'vts', letter: letter, colour: colour };
+    trial.data = { stim: 'vtse3', letter: letter, colour: colour };
   },
   on_finish: function () {
     codeTrial();
   },
 };
 
-const TRIAL_FEDBACK = {
+const TRIAL_FEEDBACK = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: '',
-  trial_duration: null,
+  trial_duration: PRMS.fbDur[0],
   response_ends_trial: false,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.stimulus = generate_formatted_html({
-      text: PRMS.fbText[dat.error],
-      align: 'center',
-      fontsize: 36,
-      width: '1200px',
-      bold: true,
-    });
-    trial.trial_duration = PRMS.fbDur[dat.error];
+    if (dat.error === 1) {
+      trial.stimulus = generate_formatted_html({
+        text: PRMS.fbText[dat.error],
+        align: 'center',
+        fontsize: 36,
+        width: '1200px',
+      });
+      trial.trial_duration = PRMS.fbDur[dat.error];
+    }
   },
 };
-
-function blockFeedbackTxt(filter_options) {
-  'use strict';
-  let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: VTS_DATA.cBlk });
-  let meanTime = Math.round(dat.select('rt1').mean());
-  let nError = dat.select('error').values.filter(function (x) {
-    return x === 1;
-  }).length;
-
-  let blockFbTxt =
-    generate_formatted_html({
-      text: `Kurze Pause.`,
-      align: 'center',
-      fontsize: 30,
-      width: '1200px',
-      bold: true,
-      lineheight: 1.5,
-    }) +
-    generate_formatted_html({
-      text: `Du hast im Durchschnitt ${meanTime} ms zur Bearbeitung aller ${PRMS.nTrls} Aufgaben gebraucht und dabei ${nError} Fehler gemacht.<br><br>
-             Versuche weiterhin so schnell und so genau wie möglich in jedem Durchgang zu sein. Die Reaktionszeitmessung in jedem Durchgang beginnt, sobald die erste Aufgabe (oder #-Zeichen) erscheint und endet, sobald du eine der beiden Aufgaben bearbeitet hast! <br><br>
-             Drücke eine beliebige Taste um fortzufahren.`,
-      align: 'left',
-      fontsize: 30,
-      width: '1200px',
-      bold: true,
-      lineheight: 1.5,
-    });
-
-  // reset vts_data for next block
-  VTS_DATA.cTrl = 1;
-  VTS_DATA.cBlk += 1;
-  VTS_DATA.nColour = 0;
-  VTS_DATA.nLetter = 0;
-  VTS_DATA.previousTask = 'na';
-  VTS_DATA.poorPerformance = nError >= PRMS.nPoor;
-
-  if (VTS_DATA.cBlk > PRMS.nBlks / 2) {
-    VTS_DATA.half = 2;
-  }
-
-  return blockFbTxt;
-}
 
 const BLOCK_FEEDBACK1 = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
-  stimulus: '',
+  stimulus: generate_formatted_html({
+    text: `Kurze pause.<br><br>
+           Drücke eine beliebige Taste um fortzufahren.`,
+    align: 'left',
+    fontsize: 30,
+    width: '1200px',
+    lineheight: 1.5,
+  }),
   response_ends_trial: true,
-  on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'vts' });
+  on_start: function () {
+    let dat = jsPsych.data.get().filter({ blockNum: VTS_DATA.cBlk });
+    let nError = dat.select('error').values.filter(function (x) {
+      return x === 1;
+    }).length;
+
+    // reset vts_data for next block
+    VTS_DATA.cTrl = 1;
+    VTS_DATA.cBlk += 1;
+    VTS_DATA.nColour = 0;
+    VTS_DATA.nLetter = 0;
+    VTS_DATA.previousTask = 'na';
+    VTS_DATA.poorPerformance = nError >= PRMS.nPoor;
+
+    if (VTS_DATA.cBlk > PRMS.nBlks / 2) {
+      VTS_DATA.half = 2;
+    }
   },
 };
 
@@ -586,31 +697,32 @@ const BLOCK_FEEDBACK2 = {
   canvas_border: CANVAS_BORDER,
   stimulus: '',
   response_ends_trial: false,
-  trial_duration: 1000,
+  trial_duration: null,
   on_start: function (trial) {
     let mapping = STIM_RESP.order[VTS_DATA.half - 1];
-    let respText = mapping === 'hand' ? RESPMAPPING_HAND : RESPMAPPING_FINGER;
-    trial.stimulus =
-      generate_formatted_html({
-        text: `ACHTUNG!`,
-        align: 'center',
-        fontsize: 30,
-        width: '1200px',
-        bold: true,
-        lineheight: 1.5,
-      }) +
-      generate_formatted_html({
-        text: `Du hast viele Fehler in diesem Block gemacht. Du sollst zwar so schnell wie möglich sein, aber dabei auch nicht zuviele Fehler Machen. Bitte schaue dir nochmal die Antworttasten genau an. Es geht in 30 s automatisch weiter.`,
-        align: 'left',
-        fontsize: 30,
-        width: '1200px',
-        bold: true,
-        lineheight: 1.5,
-      }) +
-      respText;
-    if (VTS_DATA.poorPerformance) {
+    let respText = mapping === 'hand' ? RESPMAPPING_HAND1 : RESPMAPPING_FINGER1;
+    if (VTS_DATA.poorPerformance == 1) {
+      trial.stimulus =
+        generate_formatted_html({
+          text: `ACHTUNG!`,
+          align: 'center',
+          fontsize: 30,
+          width: '1200px',
+          lineheight: 1.5,
+        }) +
+        generate_formatted_html({
+          text: `Du hast viele Fehler in diesem Block gemacht. Versuche möglichst schnell, aber bitte auch
+                 möglichst genau in jedem Durchgang zu antworten. Bitte schaue dir auch nochmal die
+                 Tastenzuordnung genau an. Du müss eine Pause von 20 Sekunden einlegen.`,
+          align: 'left',
+          fontsize: 30,
+          width: '1200px',
+          lineheight: 1.5,
+        }) +
+        respText;
       trial.trial_duration = PRMS.waitDur;
     } else {
+      trial.stimulus = '';
       trial.trial_duration = 0;
     }
   },
@@ -623,6 +735,9 @@ const RANDOM_STRING = generateRandomString(16, 'vtse1_');
 
 const VP_CODE_INSTRUCTIONS2 = {
   type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
   response_ends_trial: true,
   choices: [' '],
   stimulus: generate_formatted_html({
@@ -639,10 +754,10 @@ const VP_CODE_INSTRUCTIONS2 = {
     align: 'left',
     fontsize: 30,
     width: '1200px',
-    bold: true,
     lineheight: 1.5,
   }),
 };
+
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
@@ -654,8 +769,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
-  saveData('/Common/write_data.php', data_fn, { stim: 'vts' });
-  // saveDataLocal(data_fn, { stim: 'vts' });
+  saveData('/Common/write_data.php', data_fn, { stim: 'vtse3' });
+  // saveDataLocal(data_fn, { stim: 'vtse3' });
 
   const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
   saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);
@@ -679,7 +794,7 @@ function genExpSeq() {
   exp.push(browser_check(PRMS.screenRes));
   exp.push(resize_browser());
   exp.push(welcome_message());
-  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
 
   exp.push(WELCOME_INSTRUCTIONS);
@@ -688,6 +803,7 @@ function genExpSeq() {
   exp.push(TASK_INSTRUCTIONS2);
 
   for (let blk = 0; blk < PRMS.nBlks; blk++) {
+
     // instruction warning that task->key mapping changes
     if (blk === PRMS.nBlks / 2) {
       exp.push(TASK_INSTRUCTIONS_HALF);
@@ -695,12 +811,13 @@ function genExpSeq() {
 
     exp.push(TASK_INSTRUCTIONS_MAPPING);
     exp.push(TASK_INSTRUCTIONS_BLOCK_START);
-    exp.push(RSI); // blank before 1st trial start
+    exp.push(RSI);
 
     // trials within block
     for (let trl = 0; trl < PRMS.nTrls; trl++) {
       exp.push(VTS);
-      exp.push(TRIAL_FEDBACK); // duration = RSI of 400, 900 for correct/incorrect trials
+      exp.push(TRIAL_FEEDBACK); // duration = 0 (Correct), 2000 (Error)
+      exp.push(RSI); // duration = RSI of 500
       if ((blk === 0) | (blk === PRMS.nBlks / 2)) {
         exp.push(IF_ERROR_TASK_INSTRUCTIONS_MAPPING);
       }
