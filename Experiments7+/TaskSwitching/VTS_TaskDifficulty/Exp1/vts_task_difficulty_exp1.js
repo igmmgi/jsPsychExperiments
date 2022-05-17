@@ -41,6 +41,8 @@ const PRMS = {
   stimFont: '200px Arial',
   fbFont: '200px Arial',
   letters: ['F', 'G', 'L', 'P', 'R'],
+  colourTask: shuffle(['mehr Blau', 'mehr Rot']),
+  letterTask: shuffle(['Normal', 'Gespiegelt']),
   anglesEasy: [-10, 10],
   anglesNormal: [-10, 10],
   anglesHard: [-120, 120],
@@ -60,28 +62,17 @@ const PRMS = {
 };
 
 // 2 counter balanced versions
-const VERSION = 2; // Number(jsPsych.data.urlVariables().version);
+const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
-
-// // Version 1: Colour task = left hand,  Letter task = right hand
-// // Version 2: Colour task = right hand, Letter task = left hand
-// if ([1, 3].includes(VERSION)) {
-//   PRMS.colourTaskKeys = shuffle(PRMS.respKeysLH); // e.g., more red vs. more blue
-//   PRMS.letterTaskKeys = shuffle(PRMS.respKeysRH); // e.g., normal vs. mirrored
-// } else if ([2, 4].includes(VERSION)) {
-//   PRMS.colourTaskKeys = shuffle(PRMS.respKeysRH); // e.g., more red vs. more blue
-//   PRMS.letterTaskKeys = shuffle(PRMS.respKeysLH); // e.g., normal vs. mirrored
-// }
-
 
 // Version 1: Colour task = left hand,  Letter task = right hand
 // Version 2: Colour task = right hand, Letter task = left hand
 if ([1, 3].includes(VERSION)) {
-  PRMS.colourTaskKeys = shuffle(PRMS.respKeysLH); // e.g., more red vs. more blue
-  PRMS.letterTaskKeys = shuffle(PRMS.respKeysRH); // e.g., normal vs. mirrored
+  PRMS.colourTaskKeys = PRMS.respKeysLH; // e.g., more red vs. more blue
+  PRMS.letterTaskKeys = PRMS.respKeysRH; // e.g., normal vs. mirrored
 } else if ([2, 4].includes(VERSION)) {
-  PRMS.colourTaskKeys = shuffle(PRMS.respKeysRH); // e.g., more red vs. more blue
-  PRMS.letterTaskKeys = shuffle(PRMS.respKeysLH); // e.g., normal vs. mirrored
+  PRMS.colourTaskKeys = PRMS.respKeysRH; // e.g., more red vs. more blue
+  PRMS.letterTaskKeys = PRMS.respKeysLH; // e.g., normal vs. mirrored
 }
 
 function calculateNumberOfDots() {
@@ -138,9 +129,9 @@ const VP_CODE_INSTRUCTIONS1 = {
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
-    am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-    Experiment.TaskSwitching@gmail.com<br><br>
-    Drücke eine beliebige Taste, um fortzufahren!`,
+           am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
+           Experiment.TaskSwitching@gmail.com<br><br>
+           Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
     fontsize: 30,
     width: '1200px',
@@ -185,11 +176,13 @@ const TASK_INSTRUCTIONS1 = {
 };
 
 let RESPMAPPING;
+// prettier-ignore
 if (VERSION === 1) {
   // left hand = colour, right hand = lettera
   RESPMAPPING = generate_formatted_html({
-    text: `Farbaufgabe = Linke Hand &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Buchstabeaufgabe = Rechte Hand<br>
-           More blue = ${PRMS.colourTaskKeys[0]}, More red = ${PRMS.colourTaskKeys[1]} &emsp;&emsp;&emsp; Normal = ${PRMS.letterTaskKeys[0]}, Mirrored = ${PRMS.letterTaskKeys[1]}`,
+    text: `Farbaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Buchstabeaufgabe = Rechte Hand<br>
+           ${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}${'&emsp;'.repeat(12)}${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}<br>
+           (${PRMS.colourTaskKeys[0]}-Taste) ${'&emsp;'.repeat(3)}(${PRMS.colourTaskKeys[1]}-Taste)${'&emsp;'.repeat(11)}(${PRMS.letterTaskKeys[0]}-Taste)${'&emsp;'.repeat(3)}(${PRMS.letterTaskKeys[1]}-Taste)`,
     align: 'center',
     fontsize: 30,
     width: '1200px',
@@ -199,9 +192,9 @@ if (VERSION === 1) {
 } else if (VERSION === 2) {
   // left hand = letter, right hand = colour
   RESPMAPPING = generate_formatted_html({
-    text: `Buchstabeaufgabe = Linke Hand&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Farbaufgabe = Rechte Hand<br>
-           Normal &emsp;&emsp; Gespiegelt  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;    Mehr Blau &emsp;&emsp; Mehr Rot <br>
-           ${PRMS.letterTaskKeys[0]} &emsp;&emsp;&emsp;${PRMS.letterTaskKeys[1]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${PRMS.colourTaskKeys[0]}  &emsp;&emsp;&emsp;${PRMS.colourTaskKeys[1]}`,
+    text: `Buchstabeaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Farbaufgabe = Rechte Hand<br>
+           ${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}${'&emsp;'.repeat(12)}${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}<br>
+           (${PRMS.letterTaskKeys[0]}-Taste) ${'&emsp;'.repeat(3)}(${PRMS.letterTaskKeys[1]}-Taste)${'&emsp;'.repeat(11)}(${PRMS.colourTaskKeys[0]}-Taste)${'&emsp;'.repeat(3)}(${PRMS.colourTaskKeys[1]}-Taste)`,
     align: 'center',
     fontsize: 30,
     width: '1200px',
@@ -218,13 +211,20 @@ const TASK_INSTRUCTIONS2 = {
   stimulus:
     generate_formatted_html({
       text: `Für die Buchstaben Aufgabe musst du entscheiden, ob der Buchstabe normal ist oder gespiegelt (Beispiel: R wäre normal und Я gespiegelt).<br><br>
-           Für die Farben Aufgabe musst du entscheiden, ob die Mehrheit der Kreise Blau oder Rot ist. Es gilt:`,
+             Für die Farben Aufgabe musst du entscheiden, ob die Mehrheit der Kreise Blau oder Rot ist. Es gilt:`,
       align: 'left',
       fontsize: 30,
       width: '1200px',
-      bold: false,
       lineheight: 1.5,
-    }) + RESPMAPPING,
+    }) +
+    RESPMAPPING +
+    generate_formatted_html({
+      text: `Um den Block zu starten, drücke eine beliebige Taste.`,
+      align: 'center',
+      fontsize: 30,
+      width: '1200px',
+      lineheight: 1.5,
+    }),
 };
 
 const TASK_INSTRUCTIONS3 = {
@@ -240,7 +240,6 @@ const TASK_INSTRUCTIONS3 = {
     align: 'left',
     fontsize: 30,
     width: '1200px',
-    bold: false,
     lineheight: 1.5,
   }),
 };
@@ -255,11 +254,10 @@ const BLOCK_START = {
     trial.stimulus =
       generate_formatted_html({
         text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-             Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind und bearbeite sonst die Aufgabe welche präsentiert ist. Es gilt:`,
+               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind und bearbeite sonst die Aufgabe welche präsentiert ist. Es gilt:`,
         align: 'left',
         fontsize: 30,
         width: '1200px',
-        bold: false,
         lineheight: 1.5,
       }) +
       RESPMAPPING +
@@ -268,7 +266,6 @@ const BLOCK_START = {
         align: 'center',
         fontsize: 30,
         width: '1200px',
-        bold: false,
         lineheight: 1.5,
       });
   },
@@ -288,10 +285,13 @@ const BLOCK_END = {
       align: 'left',
       fontsize: 30,
       width: '1200px',
-      bold: false,
       lineheight: 1.5,
     });
   },
+  on_finish: function() {
+    PRMS.cBlk += 1;
+    PRMS.cTrl = 1;
+  }
 };
 
 const TASK_INSTRUCTIONS_RESPMAPPING = {
@@ -324,14 +324,12 @@ const TRIAL_FEEDBACK = {
     let dat = jsPsych.data.get().last(1).values()[0];
     if (dat.error === 1) {
       trial.trial_duration = PRMS.fbDur[dat.error];
-
       trial.stimulus =
         generate_formatted_html({
           text: `${PRMS.fbText[dat.error]}`,
           align: 'center',
           fontsize: 30,
           width: '1200px',
-          bold: false,
           lineheight: 1.5,
         }) + RESPMAPPING;
     }
@@ -381,10 +379,10 @@ function drawStimulus(args) {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
   ctx.save();
-  if (args.letter_orientation === 'normal') {
+  if (args.letter_orientation === 'Normal') {
     ctx.scale(1, 1);
     ctx.rotate((args.letter_angle * Math.PI) / 180);
-  } else if (args.letter_orientation === 'mirrored') {
+  } else if (args.letter_orientation === 'Gespiegelt') {
     ctx.scale(1, -1);
     ctx.rotate(((180 - args.letter_angle) * Math.PI) / 180);
   }
@@ -422,21 +420,17 @@ const VTS = {
 
     if (trial.data.letter_diff != 'na') {
       trial.data.letter = shuffle(PRMS.letters)[0];
-      trial.data.letter_orientation = shuffle(['normal', 'mirrored'])[0];
+      trial.data.letter_orientation = shuffle(['Normal', 'Gespiegelt'])[0];
       if (trial.data.letter_diff === 'easy') {
         trial.data.letter_angle = shuffle(PRMS.anglesEasy)[0];
       } else if (trial.data.letter_diff === 'normal') {
         trial.data.letter_angle = shuffle(PRMS.anglesNormal)[0];
-      } else if (trial.data.letter_diff === 'difficult') {
+      } else if (trial.data.letter_diff === 'hard') {
         trial.data.letter_angle = shuffle(PRMS.anglesHard)[0];
       }
 
       // code correct letter response key
-      if (trial.data.letter_orientation === 'normal') {
-        trial.data.corr_resp_letter = PRMS.letterTaskKeys[0];
-      } else if (trial.data.letter_orientation === 'mirrored') {
-        trial.data.corr_resp_letter = PRMS.letterTaskKeys[1];
-      }
+      trial.data.corr_resp_letter = PRMS.letterTaskKeys[PRMS.letterTask.indexOf(trial.data.letter_orientation)];
     }
 
     // colour task
@@ -444,30 +438,31 @@ const VTS = {
     trial.data.corr_resp_colour = 'na';
     let dot_colours = repeatArray(CANVAS_COLOUR, Math.round(PRMS.nDots));
     if (trial.data.colour_diff !== 'na') {
-      // let ratio = trial.data.colour_diff === 'easy' ? PRMS.ratioEasy : PRMS.ratioHard;
       let ratio;
       if (trial.data.colour_diff === 'easy') {
         ratio = PRMS.ratioEasy;
       } else if (trial.data.colour_diff === 'normal') {
         ratio = PRMS.ratioNormal;
-      } else if (trial.data.colour_diff === 'difficult') {
-        ratio = PRMS.ratioDifficult;
+      } else if (trial.data.colour_diff === 'hard') {
+        ratio = PRMS.ratioHard;
       }
 
-      let colours = shuffle([0, 1]);
-      trial.data.colour_more = PRMS.colours[colours[0]];
+      trial.data.colour_more = shuffle(['mehr Blau', 'mehr Rot'])[0];
+      let colour_order;
+      if (trial.data.colour_more === 'mehr Blau') {
+        colour_order = [0, 1];
+      } else if (trial.data.colour_more === 'mehr Rot') {
+        colour_order = [1, 0];
+      }
+
       dot_colours = shuffle(
-        repeatArray([PRMS.colours[colours[0]]], Math.round(PRMS.nDots * (ratio / 100))).concat(
-          repeatArray([PRMS.colours[colours[1]]], Math.round((PRMS.nDots * (100 - ratio)) / 100)),
+        repeatArray(PRMS.colours[colour_order[0]], Math.round(PRMS.nDots * (ratio / 100))).concat(
+          repeatArray(PRMS.colours[colour_order[1]], Math.round((PRMS.nDots * (100 - ratio)) / 100)),
         ),
       );
 
       // code letter response
-      if (trial.data.colour_more === PRMS.colours[0]) {
-        trial.data.corr_resp_colour = PRMS.colourTaskKeys[0];
-      } else if (trial.data.colour_more === PRMS.colours[1]) {
-        trial.data.corr_resp_colour = PRMS.colourTaskKeys[1];
-      }
+      trial.data.corr_resp_colour = PRMS.colourTaskKeys[PRMS.colourTask.indexOf(trial.data.colour_more)];
     }
 
     // activate response keys
@@ -555,7 +550,7 @@ function codeTrial() {
 //         blockNum: PRMS.cBlk,
 //         respondedLetter: true,
 //         free_forced: 'forced',
-//         letter_diff: 'difficult',
+//         letter_diff: 'hard',
 //       },
 //       corrColumn: 'error',
 //       corrValue: 0,
@@ -579,7 +574,7 @@ function codeTrial() {
 //         blockNum: PRMS.cBlk,
 //         respondedColour: true,
 //         free_forced: 'forced',
-//         colour_diff: 'difficult',
+//         colour_diff: 'hard',
 //       },
 //       corrColumn: 'error',
 //       corrValue: 0,
@@ -599,28 +594,29 @@ function codeTrial() {
 //   },
 // };
 
+// prettier-ignore
 function trial_table() {
   if ([1, 3].includes(VERSION)) {
     return [
-      { trial_type: 1, free_forced: 'free', forced_task: 'na', colour_diff: 'difficult', letter_diff: 'normal' },
-      { trial_type: 2, free_forced: 'free', forced_task: 'na', colour_diff: 'difficult', letter_diff: 'normal' },
-      { trial_type: 3, free_forced: 'free', forced_task: 'na', colour_diff: 'easy', letter_diff: 'normal' },
-      { trial_type: 4, free_forced: 'free', forced_task: 'na', colour_diff: 'easy', letter_diff: 'normal' },
-      { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na', letter_diff: 'normal' },
-      { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na', letter_diff: 'normal' },
-      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'difficult', letter_diff: 'na' },
+      { trial_type: 1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'hard', letter_diff: 'normal' },
+      { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'hard', letter_diff: 'normal' },
+      { trial_type: 3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'normal' },
+      { trial_type: 4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'normal' },
+      { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',   letter_diff: 'normal' },
+      { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',   letter_diff: 'normal' },
+      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'hard', letter_diff: 'na' },
       { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'easy', letter_diff: 'na' },
     ];
   } else if ([2, 4].includes(VERSION)) {
     return [
-      { trial_type: 1, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'difficult' },
-      { trial_type: 2, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'difficult' },
-      { trial_type: 3, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'easy' },
-      { trial_type: 4, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'easy' },
+      { trial_type: 1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
+      { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
+      { trial_type: 3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'easy' },
+      { trial_type: 4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'easy' },
       { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'normal', letter_diff: 'na' },
       { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'normal', letter_diff: 'na' },
-      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na', letter_diff: 'difficult' },
-      { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na', letter_diff: 'easy' },
+      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',     letter_diff: 'hard' },
+      { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',     letter_diff: 'easy' },
     ];
   }
 }
@@ -632,13 +628,13 @@ const TRIAL_TABLE = trial_table();
 
 // // prettier-ignore
 // const TRIAL_TABLE_LETTER_MANIPULATION = [
-//   { trial_type:  1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'difficult'},
-//   { trial_type:  2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'difficult'},
+//   { trial_type:  1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'hard'},
+//   { trial_type:  2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'hard'},
 //   { trial_type:  3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'easy'},
 //   { trial_type:  4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'easy'},
 //   { trial_type:  5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'easy', letter_diff: 'na'},
 //   { trial_type:  6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'easy', letter_diff: 'na'},
-//   { trial_type:  7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',   letter_diff: 'difficult'},
+//   { trial_type:  7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',   letter_diff: 'hard'},
 //   { trial_type:  8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',   letter_diff: 'easy'},
 // ];
 
@@ -675,7 +671,6 @@ const VP_CODE_INSTRUCTIONS2 = {
     align: 'left',
     fontsize: 30,
     width: '1200px',
-    bold: false,
     lineheight: 1.5,
   }),
 };
@@ -690,8 +685,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
-  saveData('/Common/write_data.php', data_fn, { stim: 'vtstd' });
-  // saveDataLocal(data_fn, { stim: 'vtstd' });
+  saveData('/Common/write_data.php', data_fn, { stim_type: 'vtstd' });
+  // saveDataLocal(data_fn, { stim_type: 'vtstd' });
 
   const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
   saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);
@@ -711,20 +706,20 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen(true));
-  // exp.push(browser_check(PRMS.screenRes));
-  // exp.push(resize_browser());
-  // exp.push(welcome_message());
-  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
-  // exp.push(mouseCursor(false));
+  exp.push(fullscreen(true));
+  exp.push(browser_check(PRMS.screenRes));
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  exp.push(mouseCursor(false));
 
-  // exp.push(WELCOME_INSTRUCTIONS);
+  exp.push(WELCOME_INSTRUCTIONS);
   exp.push(COUNT_DOTS);
-  // exp.push(VP_CODE_INSTRUCTIONS1);
-  // exp.push(TASK_INSTRUCTIONS1);
+  exp.push(VP_CODE_INSTRUCTIONS1);
+  exp.push(TASK_INSTRUCTIONS1);
   exp.push(TASK_INSTRUCTIONS2);
   exp.push(TASK_INSTRUCTIONS3);
-  // exp.push(TASK_INSTRUCTIONS2);
+  exp.push(TASK_INSTRUCTIONS2);
 
   for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
     exp.push(BLOCK_START);
