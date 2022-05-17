@@ -61,8 +61,8 @@ const PRMS = {
   cTrl: 1,
 };
 
-// 2 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+// 4 counter balanced versions
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // Version 1: Colour task = left hand,  Letter task = right hand
@@ -140,7 +140,7 @@ const VP_CODE_INSTRUCTIONS1 = {
 };
 
 function task_instructions1() {
-  if (VERSION === 1) {
+  if ([1,3].includes(VERSION)) {
     return generate_formatted_html({
       text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
              Farben Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „Q“ und „W“.<br><br>
@@ -151,7 +151,7 @@ function task_instructions1() {
       width: '1200px',
       lineheight: 1.5,
     });
-  } else if (VERSION === 2) {
+  } else if ([2,4].includes(VERSION)) {
     return generate_formatted_html({
       text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
              Buchstaben Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „Q“ und „W“.<br><br>
@@ -177,8 +177,8 @@ const TASK_INSTRUCTIONS1 = {
 
 let RESPMAPPING;
 // prettier-ignore
-if (VERSION === 1) {
-  // left hand = colour, right hand = lettera
+if ([1,3].includes(VERSION)) {
+  // left hand = colour, right hand = letter
   RESPMAPPING = generate_formatted_html({
     text: `Farbaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Buchstabeaufgabe = Rechte Hand<br>
            ${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}${'&emsp;'.repeat(12)}${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}<br>
@@ -189,7 +189,7 @@ if (VERSION === 1) {
     bold: true,
     lineheight: 1.5,
   });
-} else if (VERSION === 2) {
+} else if ([2,4].includes(VERSION)) {
   // left hand = letter, right hand = colour
   RESPMAPPING = generate_formatted_html({
     text: `Buchstabeaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Farbaufgabe = Rechte Hand<br>
@@ -596,7 +596,7 @@ function codeTrial() {
 
 // prettier-ignore
 function trial_table() {
-  if ([1, 3].includes(VERSION)) {
+  if ([1, 2].includes(VERSION)) {
     return [
       { trial_type: 1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'hard', letter_diff: 'normal' },
       { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'hard', letter_diff: 'normal' },
@@ -607,7 +607,7 @@ function trial_table() {
       { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'hard', letter_diff: 'na' },
       { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'easy', letter_diff: 'na' },
     ];
-  } else if ([2, 4].includes(VERSION)) {
+  } else if ([3, 4].includes(VERSION)) {
     return [
       { trial_type: 1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
       { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
@@ -622,21 +622,6 @@ function trial_table() {
 }
 
 const TRIAL_TABLE = trial_table();
-
-// prettier-ignore
-// const TRIAL_TABLE_COLOUR_MANIPULATION =
-
-// // prettier-ignore
-// const TRIAL_TABLE_LETTER_MANIPULATION = [
-//   { trial_type:  1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'hard'},
-//   { trial_type:  2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'hard'},
-//   { trial_type:  3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'easy'},
-//   { trial_type:  4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'easy'},
-//   { trial_type:  5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'easy', letter_diff: 'na'},
-//   { trial_type:  6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'easy', letter_diff: 'na'},
-//   { trial_type:  7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',   letter_diff: 'hard'},
-//   { trial_type:  8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',   letter_diff: 'easy'},
-// ];
 
 // prettier-ignore
 const TRIAL_TIMELINE = {
