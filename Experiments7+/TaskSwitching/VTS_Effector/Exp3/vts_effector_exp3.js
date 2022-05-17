@@ -26,7 +26,7 @@ const DE_EN = { red: 'rot', blue: 'blau', green: 'grün', yellow: 'gelb', Q: 'Q'
 
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nTrls: 4, // 100, // number of trials within a block
+  nTrls: 8, // 100, // number of trials within a block
   nBlks: 4, // 14, // number of blocks
   fbDur: [0, 2000], // feedback duration for correct and incorrect trials, respectively
   fbText: ['', 'Falsch!'],
@@ -61,7 +61,7 @@ const VTS_DATA = {
 };
 
 // 8 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 8 counter-balanced versions
@@ -91,52 +91,65 @@ const VERSIONS = [
 
 const STIM_RESP = VERSIONS[VERSION - 1];
 
+function pad_me(str, padleft, padright) {
+  let len = str.length;
+  str = str.padStart(padleft + len, ' ').padEnd(padleft + padright + len, ' ');
+  return str
+    .split('')
+    .map(function (c) {
+      return c === ' ' ? '&nbsp;' : c;
+    })
+    .join('');
+}
+
 function get_keymapping_hand(obj) {
   'use strict';
+  let s = 16;
+  let k = 10;
   let s1_1 = Object.getOwnPropertyNames(obj.hand.slr)[0];
   let k1_1 = obj.hand.slr[s1_1];
-  s1_1 = DE_EN[s1_1];
+  s1_1 = pad_me(DE_EN[s1_1], s, s);
+  k1_1 = pad_me('(' + k1_1 + '-Taste)', k, k);
   let s2_1 = Object.getOwnPropertyNames(obj.hand.slr)[1];
   let k2_1 = obj.hand.slr[s2_1];
-  s2_1 = DE_EN[s2_1];
+  s2_1 = pad_me(DE_EN[s2_1], s, s);
+  k2_1 = pad_me('(' + k2_1 + '-Taste)', k, k);
   let s1_2 = Object.getOwnPropertyNames(obj.hand.srr)[0];
   let k1_2 = obj.hand.srr[s1_2];
-  s1_2 = DE_EN[s1_2];
+  s1_2 = pad_me(DE_EN[s1_2], s, s);
+  k1_2 = pad_me('(' + k1_2 + '-Taste)', k, k);
   let s2_2 = Object.getOwnPropertyNames(obj.hand.srr)[1];
   let k2_2 = obj.hand.srr[s2_2];
-  s2_2 = DE_EN[s2_2];
-  // TO DO: Must be a better way of text formatting!!!
-  if ([1, 3, 5, 7].includes(VERSION)) {
-    return `${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
-            (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
-  } else if ([2, 4, 6, 8].includes(VERSION)) {
-    return `${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
-            (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
-  }
+  s2_2 = pad_me(DE_EN[s2_2], s, s);
+  k2_2 = pad_me('(' + k2_2 + '-Taste)', k, k);
+
+  return `${s1_1} ${s2_1} ${s1_2} ${s2_2}<br>
+          ${k1_1} ${k2_1} ${k1_2} ${k2_2}`;
 }
 
 function get_keymapping_finger(obj) {
   'use strict';
+  let s = 16;
+  let k = 10;
   let s1_1 = Object.getOwnPropertyNames(obj.finger.sir)[0];
   let k1_1 = obj.finger.sir[s1_1];
-  s1_1 = DE_EN[s1_1];
+  s1_1 = pad_me(DE_EN[s1_1], s, s);
+  k1_1 = pad_me('(' + k1_1 + '-Taste)', k, k);
   let s2_1 = Object.getOwnPropertyNames(obj.finger.sir)[1];
   let k2_1 = obj.finger.sir[s2_1];
-  s2_1 = DE_EN[s2_1];
+  s2_1 = pad_me(DE_EN[s2_1], s, s);
+  k2_1 = pad_me('(' + k2_1 + '-Taste)', k, k);
   let s1_2 = Object.getOwnPropertyNames(obj.finger.smr)[0];
   let k1_2 = obj.finger.smr[s1_2];
-  s1_2 = DE_EN[s1_2];
+  s1_2 = pad_me(DE_EN[s1_2], s, s);
+  k1_2 = pad_me('(' + k1_2 + '-Taste)', k, k);
   let s2_2 = Object.getOwnPropertyNames(obj.finger.smr)[1];
   let k2_2 = obj.finger.smr[s2_2];
-  s2_2 = DE_EN[s2_2];
-  // TO DO: Must be a better way of text formatting!!!
-  if ([1, 3, 5, 7].includes(VERSION)) {
-    return `${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
-          (${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
-  } else if ([2, 4, 6, 8].includes(VERSION)) {
-    return `${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
-          (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
-  }
+  s2_2 = pad_me(DE_EN[s2_2], s, s);
+  k2_2 = pad_me('(' + k2_2 + '-Taste)', k, k);
+
+  return `${s1_2} ${s1_1} ${s2_1} ${s2_2}<br>
+          ${k1_2} ${k1_1} ${k2_1} ${k2_2}`;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -395,10 +408,10 @@ const TASK_INSTRUCTIONS2 = {
            Aufgabe machst oder vorgeplante Wahlstrategien (z.B., immer abwechselnd die Aufgaben
            bearbeiten) verwenden. Versuche einfach zufällig eine Aufgabe auszuwählen.<br><br>
            Drücke eine beliebige Taste um fortzufahren.`,
-      align: 'left',
-      fontsize: 28,
-      width: '1200px',
-      lineheight: 1.5,
+    align: 'left',
+    fontsize: 28,
+    width: '1200px',
+    lineheight: 1.5,
   }),
 };
 
@@ -454,21 +467,21 @@ const TASK_INSTRUCTIONS_HALF = {
 function drawStimulus(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
-  ctx.font = PRMS.stimFont;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
 
   // draw surrounding rectangle
   if (args.draw_colour === 1) {
     ctx.strokeStyle = args.colour;
-    ctx.lineWidth = 5;
+    ctx.lineWidth = PRMS.rectLineWidth;
     ctx.beginPath();
-    ctx.rect(-40, -50, 80, 100);
+    ctx.rect(-PRMS.rectWidth / 2, -PRMS.rectHeight / 2, PRMS.rectWidth, PRMS.rectHeight);
     ctx.stroke();
   }
 
   // letter task
+  ctx.font = PRMS.stimFont;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
   if (args.draw_letter === 1) {
     ctx.fillText(args.letter, 0, 0);
   }
@@ -742,9 +755,10 @@ const VP_CODE_INSTRUCTIONS2 = {
   choices: [' '],
   stimulus: generate_formatted_html({
     text:
-      `Vielen Dank für Ihre Teilnahme.<br><br>
-       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
-       zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
+      `Super, du bist am Ende des Experiments!
+       Vielen Dank für deine Teilnahme :)<br><br>
+       Wenn du Versuchspersonenstunden benötigst, kopiere den folgenden
+       zufällig generierten Code und sende diesen zusammen mit deiner
        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
        an:<br><br>
        hiwipibio@gmail.com <br><br>
@@ -803,7 +817,6 @@ function genExpSeq() {
   exp.push(TASK_INSTRUCTIONS2);
 
   for (let blk = 0; blk < PRMS.nBlks; blk++) {
-
     // instruction warning that task->key mapping changes
     if (blk === PRMS.nBlks / 2) {
       exp.push(TASK_INSTRUCTIONS_HALF);

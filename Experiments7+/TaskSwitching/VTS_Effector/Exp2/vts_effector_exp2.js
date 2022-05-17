@@ -26,7 +26,7 @@ const DE_EN = { red: 'rot', blue: 'blau', green: 'grün', yellow: 'gelb', Q: 'Q'
 
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nTrls: 4, // 100, // number of trials within a block
+  nTrls: 8, // 100, // number of trials within a block
   nBlks: 4, // 14, // number of blocks
   fbDur: [0, 2000], // feedback duration for correct and incorrect trials, respectively
   fbText: ['', 'Falsch!'],
@@ -61,7 +61,7 @@ const VTS_DATA = {
 };
 
 // 8 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 8 counter-balanced versions
@@ -91,52 +91,65 @@ const VERSIONS = [
 
 const STIM_RESP = VERSIONS[VERSION - 1];
 
+function pad_me(str, padleft, padright) {
+  let len = str.length;
+  str = str.padStart(padleft + len, ' ').padEnd(padleft + padright + len, ' ');
+  return str
+    .split('')
+    .map(function (c) {
+      return c === ' ' ? '&nbsp;' : c;
+    })
+    .join('');
+}
+
 function get_keymapping_hand(obj) {
   'use strict';
+  let s = 16;
+  let k = 10;
   let s1_1 = Object.getOwnPropertyNames(obj.hand.slr)[0];
   let k1_1 = obj.hand.slr[s1_1];
-  s1_1 = DE_EN[s1_1];
+  s1_1 = pad_me(DE_EN[s1_1], s, s);
+  k1_1 = pad_me('(' + k1_1 + '-Taste)', k, k);
   let s2_1 = Object.getOwnPropertyNames(obj.hand.slr)[1];
   let k2_1 = obj.hand.slr[s2_1];
-  s2_1 = DE_EN[s2_1];
+  s2_1 = pad_me(DE_EN[s2_1], s, s);
+  k2_1 = pad_me('(' + k2_1 + '-Taste)', k, k);
   let s1_2 = Object.getOwnPropertyNames(obj.hand.srr)[0];
   let k1_2 = obj.hand.srr[s1_2];
-  s1_2 = DE_EN[s1_2];
+  s1_2 = pad_me(DE_EN[s1_2], s, s);
+  k1_2 = pad_me('(' + k1_2 + '-Taste)', k, k);
   let s2_2 = Object.getOwnPropertyNames(obj.hand.srr)[1];
   let k2_2 = obj.hand.srr[s2_2];
-  s2_2 = DE_EN[s2_2];
-  // TO DO: Must be a better way of text formatting!!!
-  if ([1, 3, 5, 7].includes(VERSION)) {
-    return `${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
-            (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
-  } else if ([2, 4, 6, 8].includes(VERSION)) {
-    return `${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
-            (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
-  }
+  s2_2 = pad_me(DE_EN[s2_2], s, s);
+  k2_2 = pad_me('(' + k2_2 + '-Taste)', k, k);
+
+  return `${s1_1} ${s2_1} ${s1_2} ${s2_2}<br>
+          ${k1_1} ${k2_1} ${k1_2} ${k2_2}`;
 }
 
 function get_keymapping_finger(obj) {
   'use strict';
+  let s = 16;
+  let k = 10;
   let s1_1 = Object.getOwnPropertyNames(obj.finger.sir)[0];
   let k1_1 = obj.finger.sir[s1_1];
-  s1_1 = DE_EN[s1_1];
+  s1_1 = pad_me(DE_EN[s1_1], s, s);
+  k1_1 = pad_me('(' + k1_1 + '-Taste)', k, k);
   let s2_1 = Object.getOwnPropertyNames(obj.finger.sir)[1];
   let k2_1 = obj.finger.sir[s2_1];
-  s2_1 = DE_EN[s2_1];
+  s2_1 = pad_me(DE_EN[s2_1], s, s);
+  k2_1 = pad_me('(' + k2_1 + '-Taste)', k, k);
   let s1_2 = Object.getOwnPropertyNames(obj.finger.smr)[0];
   let k1_2 = obj.finger.smr[s1_2];
-  s1_2 = DE_EN[s1_2];
+  s1_2 = pad_me(DE_EN[s1_2], s, s);
+  k1_2 = pad_me('(' + k1_2 + '-Taste)', k, k);
   let s2_2 = Object.getOwnPropertyNames(obj.finger.smr)[1];
   let k2_2 = obj.finger.smr[s2_2];
-  s2_2 = DE_EN[s2_2];
-  // TO DO: Must be a better way of text formatting!!!
-  if ([1, 3, 5, 7].includes(VERSION)) {
-    return `${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
-          (${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;(${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
-  } else if ([2, 4, 6, 8].includes(VERSION)) {
-    return `${s1_2}&emsp;&emsp;&emsp;&emsp;&emsp;${s1_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_1}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${s2_2}<br>
-          (${k1_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k1_2}-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(${k2_1}-Taste)&emsp;&emsp;&emsp;&emsp;(${k2_2}-Taste)`;
-  }
+  s2_2 = pad_me(DE_EN[s2_2], s, s);
+  k2_2 = pad_me('(' + k2_2 + '-Taste)', k, k);
+
+  return `${s1_2} ${s1_1} ${s2_1} ${s2_2}<br>
+          ${k1_2} ${k1_1} ${k2_1} ${k2_2}`;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -200,11 +213,11 @@ function hand_instructions() {
     });
     resp_mapping1 = generate_formatted_html({
       text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
-             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br>
+             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
              <span style="font-weight:bold";>
              Farbaufgabe = Linke Hand<br> 
              Buchstabeaufgabe = Rechte Hand
-             </span><br>
+             </span><br><br>
              ${get_keymapping_hand(STIM_RESP)}<br><br>
              Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
@@ -216,7 +229,7 @@ function hand_instructions() {
       text: `<span style="font-weight:bold";>
              Farbaufgabe = Linke Hand<br> 
              Buchstabeaufgabe = Rechte Hand
-             </span><br>
+             </span><br><br>
              ${get_keymapping_hand(STIM_RESP)}<br><br>`,
       align: 'center',
       fontsize: 30,
@@ -244,7 +257,7 @@ function hand_instructions() {
              Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
              <span style="font-weight:bold";>
              Buchstabeaufgabe = Linke Hand<br>
-             Farbaufgabe = Rechte Hand</span>:<br>
+             Farbaufgabe = Rechte Hand</span>:<br><br>
              ${get_keymapping_hand(STIM_RESP)}<br><br>
              Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
@@ -286,10 +299,10 @@ function finger_instructions() {
     });
     resp_mapping1 = generate_formatted_html({
       text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
-             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br>
+             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
              <span style="font-weight:bold";>
              Farbaufgabe = Zeigefinger<br>
-             Buchstabeaufgabe = Mittelfinger</span>:<br>
+             Buchstabeaufgabe = Mittelfinger</span>:<br><br>
              ${get_keymapping_finger(STIM_RESP)}<br>`,
       align: 'center',
       fontsize: 30,
@@ -299,7 +312,7 @@ function finger_instructions() {
     resp_mapping2 = generate_formatted_html({
       text: `<span style="font-weight:bold";>
              Farbaufgabe = Zeigefinger<br>
-             Buchstabeaufgabe = Mittelfinger</span>:<br>
+             Buchstabeaufgabe = Mittelfinger</span>:<br><br>
              ${get_keymapping_finger(STIM_RESP)}<br>`,
       align: 'center',
       fontsize: 30,
@@ -322,10 +335,10 @@ function finger_instructions() {
     });
     resp_mapping1 = generate_formatted_html({
       text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
-             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br>
+             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
              <span style="font-weight:bold";>
              Buchstabeaufgabe = Zeigefinger<br>
-             Farbaufgabe = Mittelfinger</span>:<br>
+             Farbaufgabe = Mittelfinger</span>:<br><br>
              ${get_keymapping_finger(STIM_RESP)}<br>`,
       align: 'center',
       fontsize: 30,
@@ -335,7 +348,7 @@ function finger_instructions() {
     resp_mapping2 = generate_formatted_html({
       text: `<span style="font-weight:bold";>
              Buchstabeaufgabe = Zeigefinger<br>
-             Farbaufgabe = Mittelfinger</span>:<br>
+             Farbaufgabe = Mittelfinger</span>:<br><br>
              ${get_keymapping_finger(STIM_RESP)}<br>`,
       align: 'center',
       fontsize: 30,
@@ -732,9 +745,10 @@ const VP_CODE_INSTRUCTIONS2 = {
   choices: [' '],
   stimulus: generate_formatted_html({
     text:
-      `Vielen Dank für Ihre Teilnahme.<br><br>
-       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
-       zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
+      `Super, du bist am Ende des Experiments!
+       Vielen Dank für deine Teilnahme :)<br><br>
+       Wenn du Versuchspersonenstunden benötigst, kopiere den folgenden
+       zufällig generierten Code und sende diesen zusammen mit deiner
        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
        an:<br><br>
        hiwipibio@gmail.com <br><br>
@@ -759,8 +773,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
-  // saveData('/Common/write_data.php', data_fn, { stim: 'vtse2' });
-  saveDataLocal(data_fn, { stim: 'vtse2' });
+  saveData('/Common/write_data.php', data_fn, { stim: 'vtse2' });
+  // saveDataLocal(data_fn, { stim: 'vtse2' });
 
   const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
   saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);
@@ -792,7 +806,6 @@ function genExpSeq() {
   exp.push(TASK_INSTRUCTIONS);
 
   for (let blk = 0; blk < PRMS.nBlks; blk++) {
-
     // instruction warning that task->key mapping changes
     if (blk === PRMS.nBlks / 2) {
       exp.push(TASK_INSTRUCTIONS_HALF);
