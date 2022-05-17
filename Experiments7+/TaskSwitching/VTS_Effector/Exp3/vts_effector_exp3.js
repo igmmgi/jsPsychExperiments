@@ -90,9 +90,9 @@ const VERSIONS = [
 
 const STIM_RESP = VERSIONS[VERSION - 1];
 
-function pad_me(str, padleft, padright) {
-  let len = str.length;
-  str = str.padStart(padleft + len, ' ').padEnd(padleft + padright + len, ' ');
+function pad_me(str, npad) {
+  let len = Math.floor((npad - str.length) / 2);
+  str = " ".repeat(len) + str + " ".repeat(len);
   return str
     .split('')
     .map(function (c) {
@@ -103,24 +103,24 @@ function pad_me(str, padleft, padright) {
 
 function get_keymapping_hand(obj) {
   'use strict';
-  let s = 16;
-  let k = 10;
+  let s = 24;
+  let k = 20;
   let s1_1 = Object.getOwnPropertyNames(obj.hand.slr)[0];
   let k1_1 = obj.hand.slr[s1_1];
-  s1_1 = pad_me(DE_EN[s1_1], s, s);
-  k1_1 = pad_me('(' + k1_1 + '-Taste)', k, k);
+  s1_1 = pad_me(DE_EN[s1_1], s);
+  k1_1 = pad_me('(' + k1_1 + '-Taste)', k);
   let s2_1 = Object.getOwnPropertyNames(obj.hand.slr)[1];
   let k2_1 = obj.hand.slr[s2_1];
-  s2_1 = pad_me(DE_EN[s2_1], s, s);
-  k2_1 = pad_me('(' + k2_1 + '-Taste)', k, k);
+  s2_1 = pad_me(DE_EN[s2_1], s);
+  k2_1 = pad_me('(' + k2_1 + '-Taste)', k);
   let s1_2 = Object.getOwnPropertyNames(obj.hand.srr)[0];
   let k1_2 = obj.hand.srr[s1_2];
-  s1_2 = pad_me(DE_EN[s1_2], s, s);
-  k1_2 = pad_me('(' + k1_2 + '-Taste)', k, k);
+  s1_2 = pad_me(DE_EN[s1_2], s);
+  k1_2 = pad_me('(' + k1_2 + '-Taste)', k);
   let s2_2 = Object.getOwnPropertyNames(obj.hand.srr)[1];
   let k2_2 = obj.hand.srr[s2_2];
-  s2_2 = pad_me(DE_EN[s2_2], s, s);
-  k2_2 = pad_me('(' + k2_2 + '-Taste)', k, k);
+  s2_2 = pad_me(DE_EN[s2_2], s);
+  k2_2 = pad_me('(' + k2_2 + '-Taste)', k);
 
   return `${s1_1} ${s2_1} ${s1_2} ${s2_2}<br>
           ${k1_1} ${k2_1} ${k1_2} ${k2_2}`;
@@ -128,24 +128,24 @@ function get_keymapping_hand(obj) {
 
 function get_keymapping_finger(obj) {
   'use strict';
-  let s = 16;
-  let k = 10;
+  let s = 24;
+  let k = 20;
   let s1_1 = Object.getOwnPropertyNames(obj.finger.sir)[0];
   let k1_1 = obj.finger.sir[s1_1];
-  s1_1 = pad_me(DE_EN[s1_1], s, s);
-  k1_1 = pad_me('(' + k1_1 + '-Taste)', k, k);
+  s1_1 = pad_me(DE_EN[s1_1], s);
+  k1_1 = pad_me('(' + k1_1 + '-Taste)', k);
   let s2_1 = Object.getOwnPropertyNames(obj.finger.sir)[1];
   let k2_1 = obj.finger.sir[s2_1];
-  s2_1 = pad_me(DE_EN[s2_1], s, s);
-  k2_1 = pad_me('(' + k2_1 + '-Taste)', k, k);
+  s2_1 = pad_me(DE_EN[s2_1], s);
+  k2_1 = pad_me('(' + k2_1 + '-Taste)', k);
   let s1_2 = Object.getOwnPropertyNames(obj.finger.smr)[0];
   let k1_2 = obj.finger.smr[s1_2];
-  s1_2 = pad_me(DE_EN[s1_2], s, s);
-  k1_2 = pad_me('(' + k1_2 + '-Taste)', k, k);
+  s1_2 = pad_me(DE_EN[s1_2], s);
+  k1_2 = pad_me('(' + k1_2 + '-Taste)', k);
   let s2_2 = Object.getOwnPropertyNames(obj.finger.smr)[1];
   let k2_2 = obj.finger.smr[s2_2];
-  s2_2 = pad_me(DE_EN[s2_2], s, s);
-  k2_2 = pad_me('(' + k2_2 + '-Taste)', k, k);
+  s2_2 = pad_me(DE_EN[s2_2], s);
+  k2_2 = pad_me('(' + k2_2 + '-Taste)', k);
 
   return `${s1_2} ${s1_1} ${s2_1} ${s2_2}<br>
           ${k1_2} ${k1_1} ${k2_1} ${k2_2}`;
@@ -229,7 +229,8 @@ function hand_instructions() {
              Farbaufgabe = Linke Hand<br> 
              Buchstabeaufgabe = Rechte Hand
              </span><br>
-             ${get_keymapping_hand(STIM_RESP)}<br><br>`,
+             ${get_keymapping_hand(STIM_RESP)}<br><br>,
+             Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
       width: '1200px',
@@ -268,7 +269,8 @@ function hand_instructions() {
       text: `<span style="font-weight:bold";>
              Buchstabeaufgabe = Linke Hand<br>
              Farbaufgabe = Rechte Hand</span>:<br>
-             ${get_keymapping_hand(STIM_RESP)}<br><br>`,
+             ${get_keymapping_hand(STIM_RESP)}<br><br>,
+             Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
       width: '1200px',
@@ -302,7 +304,8 @@ function finger_instructions() {
              <span style="font-weight:bold";>
              Farbaufgabe = Zeigefinger<br>
              Buchstabeaufgabe = Mittelfinger</span>:<br>
-             ${get_keymapping_finger(STIM_RESP)}<br>`,
+             ${get_keymapping_finger(STIM_RESP)}<br><br>,
+             Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
       width: '1200px',
@@ -312,7 +315,8 @@ function finger_instructions() {
       text: `<span style="font-weight:bold";>
              Farbaufgabe = Zeigefinger<br>
              Buchstabeaufgabe = Mittelfinger</span>:<br>
-             ${get_keymapping_finger(STIM_RESP)}<br>`,
+             ${get_keymapping_finger(STIM_RESP)}<br><br>,
+             Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
       width: '1200px',
@@ -338,7 +342,8 @@ function finger_instructions() {
              <span style="font-weight:bold";>
              Buchstabeaufgabe = Zeigefinger<br>
              Farbaufgabe = Mittelfinger</span>:<br>
-             ${get_keymapping_finger(STIM_RESP)}<br>`,
+             ${get_keymapping_finger(STIM_RESP)}<br><br>,
+             Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
       width: '1200px',
@@ -348,7 +353,8 @@ function finger_instructions() {
       text: `<span style="font-weight:bold";>
              Buchstabeaufgabe = Zeigefinger<br>
              Farbaufgabe = Mittelfinger</span>:<br>
-             ${get_keymapping_finger(STIM_RESP)}<br>`,
+             ${get_keymapping_finger(STIM_RESP)}<br><br>,
+             Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
       width: '1200px',
@@ -426,7 +432,7 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
     trial.stimulus =
       generate_formatted_html({
         text: `Block ${VTS_DATA.cBlk} von ${PRMS.nBlks}<br><br>
-               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind und bearbeite sonst die Aufgabe welche präsentiert ist. Es gilt:<br>`,
+               Entscheide selbst welche Aufgabe du bearbeiten willst. Es gilt:<br>`,
         fontsize: 30,
         align: 'left',
         width: '1200px',
@@ -542,7 +548,7 @@ function codeTrial() {
   // console.log('Resp task: ', respTask);
   // console.log('Transition: ', transition);
   // console.log('Rep Counter: ', VTS_DATA.repCounter);
-  // console.log('RT1: ', dat.rt);
+  // console.log('RT: ', dat.rt);
   // console.log('Error: ', error);
 
   jsPsych.data.addDataToLastTrial({
@@ -562,12 +568,6 @@ function codeTrial() {
   VTS_DATA.cTrl++;
   VTS_DATA.previousTask = respTask;
 }
-
-// function blockStimuli(n) {
-//   return repeatArray('both', n / 2).concat(repeatArray(['letter', 'colour'], n / 4));
-// }
-
-// let task = blockStimuli(PRMS.nTrls);
 
 const VTS = {
   type: jsPsychStaticCanvasKeyboardResponse,
@@ -768,7 +768,7 @@ function genExpSeq() {
   exp.push(browser_check(PRMS.screenRes));
   exp.push(resize_browser());
   exp.push(welcome_message());
-  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
 
   exp.push(WELCOME_INSTRUCTIONS);
