@@ -45,8 +45,7 @@ const PRMS = {
   leftHand: ['Q', 'W'],
   rightHand: ['O', 'P'],
   indexFinger: ['W', 'O'],
-  middleFinger: ['Q', 'P'],
-  deactivateKeys: true, // should keys be deactivate when task not available?
+  middleFinger: ['Q', 'P']
 };
 
 const VTS_DATA = {
@@ -441,7 +440,6 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
         width: '1200px',
         lineheight: 1.5,
       });
-    task = shuffle(task);
   },
 };
 
@@ -469,22 +467,19 @@ function drawStimulus(args) {
   let ctx = document.getElementById('canvas').getContext('2d');
 
   // draw surrounding rectangle
-  if (args.draw_colour === 1) {
-    ctx.strokeStyle = args.colour;
-    ctx.lineWidth = PRMS.rectLineWidth;
-    ctx.beginPath();
-    ctx.rect(-PRMS.rectWidth / 2, -PRMS.rectHeight / 2, PRMS.rectWidth, PRMS.rectHeight);
-    ctx.stroke();
-  }
+  ctx.strokeStyle = args.colour;
+  ctx.lineWidth = PRMS.rectLineWidth;
+  ctx.beginPath();
+  ctx.rect(-PRMS.rectWidth / 2, -PRMS.rectHeight / 2, PRMS.rectWidth, PRMS.rectHeight);
+  ctx.stroke();
 
   // letter task
   ctx.font = PRMS.stimFont;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
-  if (args.draw_letter === 1) {
-    ctx.fillText(args.letter, 0, 0);
-  }
+  ctx.fillText(args.letter, 0, 0);
+
 }
 
 function draw_rsi() {
@@ -568,11 +563,11 @@ function codeTrial() {
   VTS_DATA.previousTask = respTask;
 }
 
-function blockStimuli(n) {
-  return repeatArray('both', n / 2).concat(repeatArray(['letter', 'colour'], n / 4));
-}
+// function blockStimuli(n) {
+//   return repeatArray('both', n / 2).concat(repeatArray(['letter', 'colour'], n / 4));
+// }
 
-let task = blockStimuli(PRMS.nTrls);
+// let task = blockStimuli(PRMS.nTrls);
 
 const VTS = {
   type: jsPsychStaticCanvasKeyboardResponse,
@@ -596,49 +591,14 @@ const VTS = {
     let letter;
     let colour;
     if (VTS_DATA.half === 1) {
-      letter = VTS_DATA.nLetter < PRMS.nTrls / 2 ? PRMS.letters1[getRandomInt(0, PRMS.letters1.length - 1)] : '#';
-      colour = VTS_DATA.nColour < PRMS.nTrls / 2 ? PRMS.colours1[getRandomInt(0, PRMS.colours1.length - 1)] : 'grey';
+      letter = PRMS.letters1[getRandomInt(0, PRMS.letters1.length - 1)];
+      colour = PRMS.colours1[getRandomInt(0, PRMS.colours1.length - 1)];
     } else if (VTS_DATA.half === 2) {
-      letter = VTS_DATA.nLetter < PRMS.nTrls / 2 ? PRMS.letters2[getRandomInt(0, PRMS.letters2.length - 1)] : '#';
-      colour = VTS_DATA.nColour < PRMS.nTrls / 2 ? PRMS.colours2[getRandomInt(0, PRMS.colours2.length - 1)] : 'grey';
+      letter = PRMS.letters2[getRandomInt(0, PRMS.letters2.length - 1)];
+      colour = PRMS.colours2[getRandomInt(0, PRMS.colours2.length - 1)];
     }
 
-    // activate only response keys for available task?
-    if (PRMS.deactivateKeys) {
-      trial.choices = [];
-      let mapping = STIM_RESP.order[VTS_DATA.half - 1];
-      if (mapping === 'hand') {
-        if ((letter !== '#') & (STIM_RESP.hand.lt === 'letter')) {
-          trial.choices = trial.choices.concat(PRMS.leftHand);
-        }
-        if ((letter !== '#') & (STIM_RESP.hand.rt === 'letter')) {
-          trial.choices = trial.choices.concat(PRMS.rightHand);
-        }
-        if ((colour !== 'grey') & (STIM_RESP.hand.lt === 'colour')) {
-          trial.choices = trial.choices.concat(PRMS.leftHand);
-        }
-        if ((colour !== 'grey') & (STIM_RESP.hand.rt === 'colour')) {
-          trial.choices = trial.choices.concat(PRMS.rightHand);
-        }
-      } else if (mapping === 'finger') {
-        if ((letter !== '#') & (STIM_RESP.finger.it === 'letter')) {
-          trial.choices = trial.choices.concat(PRMS.indexFinger);
-        }
-        if ((letter !== '#') & (STIM_RESP.finger.mt === 'letter')) {
-          trial.choices = trial.choices.concat(PRMS.middleFinger);
-        }
-        if ((colour !== 'grey') & (STIM_RESP.finger.it === 'colour')) {
-          trial.choices = trial.choices.concat(PRMS.indexFinger);
-        }
-        if ((colour !== 'grey') & (STIM_RESP.finger.mt === 'colour')) {
-          trial.choices = trial.choices.concat(PRMS.middleFinger);
-        }
-      }
-    }
-
-    let draw_colour = 1;
-    let draw_letter = 1;
-    trial.func_args = [{ letter: letter, colour: colour, draw_colour: draw_colour, draw_letter: draw_letter }];
+    trial.func_args = [{ letter: letter, colour: colour }];
 
     trial.data = { stim: 'vtse3', letter: letter, colour: colour };
   },
@@ -808,7 +768,7 @@ function genExpSeq() {
   exp.push(browser_check(PRMS.screenRes));
   exp.push(resize_browser());
   exp.push(welcome_message());
-  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
 
   exp.push(WELCOME_INSTRUCTIONS);

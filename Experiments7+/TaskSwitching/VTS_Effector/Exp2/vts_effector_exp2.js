@@ -46,7 +46,7 @@ const PRMS = {
   rightHand: ['O', 'P'],
   indexFinger: ['W', 'O'],
   middleFinger: ['Q', 'P'],
-  deactivateKeys: true, // should keys be deactivate when task not available?
+  deactivateKeys: false, // should keys be deactivate when task not available?
 };
 
 const VTS_DATA = {
@@ -570,49 +570,6 @@ const VTS = {
   on_start: function (trial) {
     'use strict';
 
-    // Which letter/colour to show
-    let letter;
-    let colour;
-    if (VTS_DATA.half === 1) {
-      letter = VTS_DATA.nLetter < PRMS.nTrls / 2 ? PRMS.letters1[getRandomInt(0, PRMS.letters1.length - 1)] : '#';
-      colour = VTS_DATA.nColour < PRMS.nTrls / 2 ? PRMS.colours1[getRandomInt(0, PRMS.colours1.length - 1)] : 'grey';
-    } else if (VTS_DATA.half === 2) {
-      letter = VTS_DATA.nLetter < PRMS.nTrls / 2 ? PRMS.letters2[getRandomInt(0, PRMS.letters2.length - 1)] : '#';
-      colour = VTS_DATA.nColour < PRMS.nTrls / 2 ? PRMS.colours2[getRandomInt(0, PRMS.colours2.length - 1)] : 'grey';
-    }
-
-    // activate only response keys for available task?
-    if (PRMS.deactivateKeys) {
-      trial.choices = [];
-      let mapping = STIM_RESP.order[VTS_DATA.half - 1];
-      if (mapping === 'hand') {
-        if ((letter !== '#') & (STIM_RESP.hand.lt === 'letter')) {
-          trial.choices = trial.choices.concat(PRMS.leftHand);
-        }
-        if ((letter !== '#') & (STIM_RESP.hand.rt === 'letter')) {
-          trial.choices = trial.choices.concat(PRMS.rightHand);
-        }
-        if ((colour !== 'grey') & (STIM_RESP.hand.lt === 'colour')) {
-          trial.choices = trial.choices.concat(PRMS.leftHand);
-        }
-        if ((colour !== 'grey') & (STIM_RESP.hand.rt === 'colour')) {
-          trial.choices = trial.choices.concat(PRMS.rightHand);
-        }
-      } else if (mapping === 'finger') {
-        if ((letter !== '#') & (STIM_RESP.finger.it === 'letter')) {
-          trial.choices = trial.choices.concat(PRMS.indexFinger);
-        }
-        if ((letter !== '#') & (STIM_RESP.finger.mt === 'letter')) {
-          trial.choices = trial.choices.concat(PRMS.middleFinger);
-        }
-        if ((colour !== 'grey') & (STIM_RESP.finger.it === 'colour')) {
-          trial.choices = trial.choices.concat(PRMS.indexFinger);
-        }
-        if ((colour !== 'grey') & (STIM_RESP.finger.mt === 'colour')) {
-          trial.choices = trial.choices.concat(PRMS.middleFinger);
-        }
-      }
-    }
 
     // repeat vs. switch task
     let draw_colour;
@@ -626,6 +583,50 @@ const VTS = {
     } else if (task[VTS_DATA.cTrl - 1] === 'colour') {
       draw_colour = 1;
       draw_letter = 0;
+    }
+
+    // Which letter/colour to show
+    let letter;
+    let colour;
+    if (VTS_DATA.half === 1) {
+      letter = draw_letter === 1 ? PRMS.letters1[getRandomInt(0, PRMS.letters1.length - 1)] : '#';
+      colour = draw_colour === 1 ? PRMS.colours1[getRandomInt(0, PRMS.colours1.length - 1)] : 'grey';
+    } else if (VTS_DATA.half === 2) {
+      letter = draw_letter === 1 ? PRMS.letters2[getRandomInt(0, PRMS.letters2.length - 1)] : '#'
+      colour = draw_colour === 1 ? PRMS.colours2[getRandomInt(0, PRMS.colours2.length - 1)] : 'grey';
+    }
+
+    // activate only response keys for available task?
+    if (PRMS.deactivateKeys) {
+      trial.choices = [];
+      let mapping = STIM_RESP.order[VTS_DATA.half - 1];
+      if (mapping === 'hand') {
+        if ((draw_letter === 1) & (STIM_RESP.hand.lt === 'letter')) {
+          trial.choices = trial.choices.concat(PRMS.leftHand);
+        }
+        if ((draw_letter === 1) & (STIM_RESP.hand.rt === 'letter')) {
+          trial.choices = trial.choices.concat(PRMS.rightHand);
+        }
+        if ((draw_colour === 1) & (STIM_RESP.hand.lt === 'colour')) {
+          trial.choices = trial.choices.concat(PRMS.leftHand);
+        }
+        if ((draw_colour === 1) & (STIM_RESP.hand.rt === 'colour')) {
+          trial.choices = trial.choices.concat(PRMS.rightHand);
+        }
+      } else if (mapping === 'finger') {
+        if ((draw_letter === 1) & (STIM_RESP.finger.it === 'letter')) {
+          trial.choices = trial.choices.concat(PRMS.indexFinger);
+        }
+        if ((draw_letter === 1) & (STIM_RESP.finger.mt === 'letter')) {
+          trial.choices = trial.choices.concat(PRMS.middleFinger);
+        }
+        if ((draw_colour === 1) & (STIM_RESP.finger.it === 'colour')) {
+          trial.choices = trial.choices.concat(PRMS.indexFinger);
+        }
+        if ((draw_colour === 1) & (STIM_RESP.finger.mt === 'colour')) {
+          trial.choices = trial.choices.concat(PRMS.middleFinger);
+        }
+      }
     }
 
     trial.func_args = [{ letter: letter, colour: colour, draw_colour: draw_colour, draw_letter: draw_letter }];
