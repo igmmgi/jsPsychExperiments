@@ -28,6 +28,7 @@ const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
   nTrls: 8, // 100, // number of trials within a block
   nBlks: 4, // 14, // number of blocks
+  nPoor: 4, // number of errors allowed in block before extended message during break
   fbDur: [0, 2000], // feedback duration for correct and incorrect trials, respectively
   fbText: ['', 'Falsch!'],
   rsi: 500,
@@ -724,7 +725,7 @@ const VP_CODE_INSTRUCTIONS2 = {
        hiwipibio@gmail.com <br><br>
        Code: ` +
       RANDOM_STRING +
-      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
+      `<br><br>Drücke die Leertaste, um fortzufahren!`,
     align: 'left',
     fontsize: 30,
     width: '1200px',
