@@ -150,15 +150,15 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
 
             <?php
             $csesf = [];
-            if ($nFiles_csesf_v1 < 20) {
+            if ($nFiles_csesf_v1 < 25) {
                 array_push($csesf, 1);
             }
-            if ($nFiles_csesf_v2 < 20) {
+            if ($nFiles_csesf_v2 < 25) {
                 array_push($csesf, 2);
             }
 
             $randIndex = array_rand($csesf);
-            $csesf_version = $mc[$randIndex];
+            $csesf_version = $csesf[$randIndex];
             ?>
 
             <?php if (!empty($csesf_version)) : ?>
