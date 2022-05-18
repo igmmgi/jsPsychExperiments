@@ -16,9 +16,9 @@ const CANVAS_BORDER = '5px solid black';
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    nTrlsP: 8, // number of trials in practice block
-    nTrlsE: 48, // number of trials in subsequent blocks
-    nBlks: 6,
+    nTrlsP: 4, //8, // number of trials in practice block
+    nTrlsE: 8, // 48, // number of trials in subsequent blocks
+    nBlks: 1, //6,
     fixDur: 500,
     fbDur: [500, 500],
     fixSize: 50,
@@ -268,8 +268,10 @@ function save() {
     const vpNum = getTime();
     jsPsych.data.addProperties({ vpNum: vpNum });
 
-    const data_fn = `${DIR_NAME}data/version${version}/${EXP_NAME}_${vpNum}`;
-    saveData('/Common/write_data.php', data_fn, { stim: 'affneg' });
+    // const data_fn = `${DIR_NAME}data/version${version}/${EXP_NAME}_${vpNum}`;
+    // saveData('/Common/write_data.php', data_fn, { stim: 'affneg' });
+    const data_fn = `/home/ian/Downloads/${EXP_NAME}_${vpNum}`;
+    saveDataLocal(data_fn, { stim: 'affneg' });
 }
 
 const SAVE_DATA = {
@@ -286,18 +288,19 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoFormClinic('/Common7+/vpInfoFormClinic_de.html'));
-    exp.push(mouseCursor(false));
-    exp.push(WELCOME_INSTRUCTIONS);
-    exp.push(WAIT);
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(PRMS.screenRes));
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // // exp.push(vpInfoFormClinic('/Common7+/vpInfoFormClinic_de.html'));
+    // exp.push(mouseCursor(false));
+    // exp.push(WELCOME_INSTRUCTIONS);
+    // exp.push(WAIT);
 
     let blk_type;
     if (version === 1) {
-        blk_type = repeatArray(['Language'], PRMS.nBlks / 2).concat(repeatArray(['Symbolic'], PRMS.nBlks / 2));
+        // blk_type = repeatArray(['Language'], PRMS.nBlks / 2).concat(repeatArray(['Symbolic'], PRMS.nBlks / 2));
+        blk_type = repeatArray(['Language'], 1)
     } else if (version === 2) {
         blk_type = repeatArray(['Symbolic'], PRMS.nBlks / 2).concat(repeatArray(['Language'], PRMS.nBlks / 2));
     }
