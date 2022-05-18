@@ -47,9 +47,9 @@ const PRMS = {
   anglesNormal: [-10, 10],
   anglesHard: [-120, 120],
   colours: ['rgba(0, 0, 255, 0.65)', 'rgba(255, 0, 0, 0.65)'],
-  ratioEasy: 80,
-  ratioNormal: 70,
-  ratioHard: 60,
+  ratioEasy: 85,
+  ratioNormal: 75,
+  ratioHard: 65,
   respKeysLH: ['Q', 'W'],
   respKeysRH: ['O', 'P'],
   deactivateKeys: false, // should keys be deactivated when task not available?
@@ -113,7 +113,7 @@ const WELCOME_INSTRUCTIONS = {
            um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
            Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
-           hiwipibio@gmail.com <br><br>
+           Experiment.TaskSwitching@gmail.com<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     fontsize: 30,
@@ -210,8 +210,9 @@ const TASK_INSTRUCTIONS2 = {
   canvas_border: CANVAS_BORDER,
   stimulus:
     generate_formatted_html({
-      text: `Für die Buchstaben Aufgabe musst du entscheiden, ob der Buchstabe normal ist oder gespiegelt (Beispiel: R wäre normal und Я gespiegelt).<br><br>
-             Für die Farben Aufgabe musst du entscheiden, ob die Mehrheit der Kreise Blau oder Rot ist. Es gilt:`,
+      text: `Für die Buchstaben Aufgabe musst du entscheiden, ob der Buchstabe normal ist oder gespiegelt (Beispiel: R wäre normal und Я gespiegelt).<br>
+             Für die Farben Aufgabe musst du entscheiden, ob die Mehrheit der Kreise Blau oder Rot ist.<br>
+             Es gilt:`,
       align: 'left',
       fontsize: 30,
       width: '1200px',
@@ -704,7 +705,6 @@ function genExpSeq() {
   exp.push(TASK_INSTRUCTIONS1);
   exp.push(TASK_INSTRUCTIONS2);
   exp.push(TASK_INSTRUCTIONS3);
-  exp.push(TASK_INSTRUCTIONS2);
 
   for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
     exp.push(BLOCK_START);
