@@ -18,7 +18,7 @@ const CANVAS_BORDER = '5px solid black';
 const PRMS = {
     nTrlsP: 4, //8, // number of trials in practice block
     nTrlsE: 8, // 48, // number of trials in subsequent blocks
-    nBlks: 1, //6,
+    nBlks: 2, //6,
     fixDur: 500,
     fbDur: [500, 500],
     fixSize: 50,
@@ -37,8 +37,10 @@ const PRMS = {
 // symbol characters
 const TICK_MARK = "&#10004;";
 const CROSS_MARK = "&#10008;";
-const LEFT_ARROW = "&#x2B05;";
-const RIGHT_ARROW = "&#x27A1;";
+
+const LEFT_ARROW = "&#129144;"
+const RIGHT_ARROW = "&#129146;";
+
 
 // 2 counter balanced versions
 const version = Number(jsPsych.data.urlVariables().version);
@@ -299,8 +301,7 @@ function genExpSeq() {
 
     let blk_type;
     if (version === 1) {
-        // blk_type = repeatArray(['Language'], PRMS.nBlks / 2).concat(repeatArray(['Symbolic'], PRMS.nBlks / 2));
-        blk_type = repeatArray(['Language'], 1)
+        blk_type = repeatArray(['Language'], PRMS.nBlks / 2).concat(repeatArray(['Symbolic'], PRMS.nBlks / 2));
     } else if (version === 2) {
         blk_type = repeatArray(['Symbolic'], PRMS.nBlks / 2).concat(repeatArray(['Language'], PRMS.nBlks / 2));
     }
