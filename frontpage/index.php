@@ -27,10 +27,10 @@ $nFiles_mn2 = numFilesInDir('Experiments/MouseNegation/Exp2/data');
 $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
 
 // Risky Probability
-$nFiles_rp1 = numFilesInDir('Experiments/RiskyProbability/Exp1/data/version1');
-$nFiles_rp2 = numFilesInDir('Experiments/RiskyProbability/Exp1/data/version2');
-$nFiles_rp3 = numFilesInDir('Experiments/RiskyProbability/Exp1/data/version3');
-$nFiles_rp4 = numFilesInDir('Experiments/RiskyProbability/Exp1/data/version4');
+$nFiles_rp1 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version1');
+$nFiles_rp2 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version2');
+$nFiles_rp3 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version3');
+$nFiles_rp4 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version4');
 
 // Modal Congruency
 $nFiles_mc1 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version1');
@@ -93,10 +93,8 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
-            <p> Fruity Choice Exp1: hiwipibio@gmail.com </p>
-            <p> Modal Congruency Exp1: hiwipibio@gmail.com </p>
+            <p> Fruity Choice Exp2: hiwipibio@gmail.com </p>
             <p> CSE SF Exp2: hiwipibio@gmail.com </p>
-            <p> Ambig: m.zeller@student.uni-tuebigen.de </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
 
         </div>
@@ -126,7 +124,7 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
             ?>
 
             <?php if (!empty($rp_version)) : ?>
-                <h3><a href="Experiments/RiskyProbability/Exp1/index.html?version=<?php echo $rp_version; ?>">Fruity Choice Exp1 (n = <?= $nFiles_rp1 + $nFiles_rp2 + $nFiles_rp3 + $nFiles_rp4 ?>)</a></h3>
+                <h3><a href="Experiments/RiskyProbability/Exp2/index.html?version=<?php echo $rp_version; ?>">Fruity Choice Exp2 (n = <?= $nFiles_rp1 + $nFiles_rp2 + $nFiles_rp3 + $nFiles_rp4 ?>)</a></h3>
             <?php endif;  ?>
 
 

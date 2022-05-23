@@ -105,7 +105,7 @@ const task_instructions1 = {
            Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
            deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
            Zusätzlich erhalten die 10% Teilnehmer mit der
-           höchsten Gesamtpunktzahl einen 10€-Gutschein (wahlweise Deutsche Bahn oder Zalando oder REWE).<br><br>
+           höchsten Gesamtpunktzahl einen 10€-Gutschein (wahlweise Deutsche Bahn oder Zalando).<br><br>
            Jede/r Teilnehmerin/Teilnehmer startet mit ${numberWithCommas(prms.cPoints)} Gesamtpunkten.<br><br>
            Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
