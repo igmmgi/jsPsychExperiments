@@ -38,7 +38,7 @@ const PRMS = {
 const TICK_MARK = "&#10004;";
 const CROSS_MARK = "&#10008;";
 
-const LEFT_ARROW = "&#129144;"
+const LEFT_ARROW = "&#129144;";
 const RIGHT_ARROW = "&#129146;";
 
 
