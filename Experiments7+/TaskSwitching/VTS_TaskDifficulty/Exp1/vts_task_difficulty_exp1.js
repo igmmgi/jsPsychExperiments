@@ -682,7 +682,6 @@ function genExpSeq() {
   exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
 
-  exp.push(VP_CODE_INSTRUCTIONS);
   exp.push(WELCOME_INSTRUCTIONS);
   exp.push(COUNT_DOTS);
   exp.push(TASK_INSTRUCTIONS1);
