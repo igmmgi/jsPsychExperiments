@@ -122,23 +122,6 @@ const WELCOME_INSTRUCTIONS = {
   }),
 };
 
-const VP_CODE_INSTRUCTIONS1 = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: generate_formatted_html({
-    text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
-           am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-           Experiment.TaskSwitching@gmail.com<br><br>
-           Drücke eine beliebige Taste, um fortzufahren!`,
-    align: 'left',
-    fontsize: 30,
-    width: '1200px',
-    lineheight: 1.5,
-  }),
-};
-
 function task_instructions1() {
   if ([1, 3].includes(VERSION)) {
     return generate_formatted_html({
@@ -177,7 +160,7 @@ const TASK_INSTRUCTIONS1 = {
 
 let RESPMAPPING;
 // prettier-ignore
-if ([1, 3].includes(VERSION)) {
+if ([1,3].includes(VERSION)) {
   // left hand = colour, right hand = letter
   RESPMAPPING = generate_formatted_html({
     text: `Farbaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Buchstabeaufgabe = Rechte Hand<br>
@@ -189,7 +172,7 @@ if ([1, 3].includes(VERSION)) {
     bold: true,
     lineheight: 1.5,
   });
-} else if ([2, 4].includes(VERSION)) {
+} else if ([2,4].includes(VERSION)) {
   // left hand = letter, right hand = colour
   RESPMAPPING = generate_formatted_html({
     text: `Buchstabeaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Farbaufgabe = Rechte Hand<br>
@@ -210,7 +193,7 @@ const TASK_INSTRUCTIONS2 = {
   canvas_border: CANVAS_BORDER,
   stimulus:
     generate_formatted_html({
-      text: `Für die Buchstaben Aufgabe musst du entscheiden, ob der Buchstabe normal ist oder gespiegelt (Beispiel: R wäre normal und Я gespiegelt).<br>
+      text: `Für die Buchstaben Aufgabe musst du entscheiden, ob der Buchstabe normal ist oder gespiegelt (Beispiel: R wäre normal und Я gespiegelt).<br><br>
              Für die Farben Aufgabe musst du entscheiden, ob die Mehrheit der Kreise Blau oder Rot ist.<br>
              Es gilt:`,
       align: 'left',
@@ -220,7 +203,7 @@ const TASK_INSTRUCTIONS2 = {
     }) +
     RESPMAPPING +
     generate_formatted_html({
-      text: `Um den Block zu starten, drücke eine beliebige Taste.`,
+      text: `Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
       width: '1200px',
@@ -235,7 +218,7 @@ const TASK_INSTRUCTIONS3 = {
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
     text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
-           Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, wenn beide Aufgaben (Buchstabe und farbige Punkte) präsentiert werden.<br><br>
+           Wenn beide Aufgaben (Buchstabe und farbige Punkte) präsentiert werden, darfst du frei entscheiden, welche der beiden Aufgaben du bearbeiten möchtest.<br><br>
            Wenn jedoch nur ein Aufgabe präsentiert wird, dann musst du diese Aufgabe bearbeiten.<br><br> 
            Drücke eine beliebige Taste um fortzufahren.`,
     align: 'left',
@@ -251,7 +234,7 @@ const BLOCK_START = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: '',
-  on_start: function(trial) {
+  on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
         text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
@@ -278,7 +261,7 @@ const BLOCK_END = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: '',
-  on_start: function(trial) {
+  on_start: function (trial) {
     trial.stimulus = generate_formatted_html({
       text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
              Kurze Pause.<br><br>
@@ -289,10 +272,10 @@ const BLOCK_END = {
       lineheight: 1.5,
     });
   },
-  on_finish: function() {
+  on_finish: function () {
     PRMS.cBlk += 1;
     PRMS.cTrl = 1;
-  }
+  },
 };
 
 const TASK_INSTRUCTIONS_RESPMAPPING = {
@@ -321,7 +304,7 @@ const TRIAL_FEEDBACK = {
   stimulus: '',
   response_ends_trial: false,
   trial_duration: 0,
-  on_start: function(trial) {
+  on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     if (dat.error === 1) {
       trial.trial_duration = PRMS.fbDur[dat.error];
@@ -398,7 +381,7 @@ const VTS = {
   canvas_border: CANVAS_BORDER,
   translate_origin: true,
   response_ends_trial: true,
-  choices: null, // PRMS.respKeysLH.concat(PRMS.respKeysRH),
+  choices: null, 
   trial_duration: PRMS.tooSlow,
   func: drawStimulus,
   func_args: null,
@@ -410,7 +393,7 @@ const VTS = {
     colour_diff: jsPsych.timelineVariable('colour_diff'),
     letter_diff: jsPsych.timelineVariable('letter_diff'),
   },
-  on_start: function(trial) {
+  on_start: function (trial) {
     'use strict';
 
     // letter task
@@ -492,7 +475,7 @@ const VTS = {
       },
     ];
   },
-  on_finish: function() {
+  on_finish: function () {
     codeTrial();
   },
 };
@@ -614,10 +597,10 @@ function trial_table() {
       { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
       { trial_type: 3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'easy' },
       { trial_type: 4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'easy' },
-      { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'normal', letter_diff: 'na' },
-      { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'normal', letter_diff: 'na' },
-      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',     letter_diff: 'hard' },
-      { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',     letter_diff: 'easy' },
+      { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',     letter_diff: 'hard' },
+      { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',     letter_diff: 'easy' },
+      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'normal', letter_diff: 'na' },
+      { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'normal', letter_diff: 'na' },
     ];
   }
 }
@@ -626,8 +609,8 @@ const TRIAL_TABLE = trial_table();
 
 // prettier-ignore
 const TRIAL_TIMELINE = {
-  timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK, ITI],
-  timeline_variables: TRIAL_TABLE
+    timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK, ITI],
+    timeline_variables: TRIAL_TABLE
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -635,7 +618,7 @@ const TRIAL_TIMELINE = {
 ////////////////////////////////////////////////////////////////////////
 const RANDOM_STRING = generateRandomString(16, 'vtstd1_');
 
-const VP_CODE_INSTRUCTIONS2 = {
+const VP_CODE_INSTRUCTIONS = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
@@ -651,8 +634,8 @@ const VP_CODE_INSTRUCTIONS2 = {
        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
        an:<br><br>
        Experiment.TaskSwitching@gmail.com<br><br>
-       Code: ` +
-      RANDOM_STRING +
+       Code:
+      <span style="font-weight:bold;">` + RANDOM_STRING + `</span>` +
       `<br><br>Drücke die Leertaste, um fortzufahren!`,
     align: 'left',
     fontsize: 30,
@@ -699,9 +682,9 @@ function genExpSeq() {
   exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
 
+  exp.push(VP_CODE_INSTRUCTIONS);
   exp.push(WELCOME_INSTRUCTIONS);
   exp.push(COUNT_DOTS);
-  exp.push(VP_CODE_INSTRUCTIONS1);
   exp.push(TASK_INSTRUCTIONS1);
   exp.push(TASK_INSTRUCTIONS2);
   exp.push(TASK_INSTRUCTIONS3);
@@ -715,7 +698,9 @@ function genExpSeq() {
       size: PRMS.nTrls / TRIAL_TABLE.length,
     };
     exp.push(blk_timeline); // trials within a block
-    exp.push(BLOCK_END);
+    if (blk < PRMS.nBlks - 1) {
+      exp.push(BLOCK_END);
+    }
   }
 
   // save data
@@ -723,7 +708,7 @@ function genExpSeq() {
 
   // debrief
   exp.push(mouseCursor(true));
-  exp.push(VP_CODE_INSTRUCTIONS2);
+  exp.push(VP_CODE_INSTRUCTIONS);
   exp.push(end_message());
   exp.push(fullscreen(false));
 
