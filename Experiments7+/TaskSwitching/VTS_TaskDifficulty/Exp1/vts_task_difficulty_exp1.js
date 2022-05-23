@@ -599,25 +599,25 @@ function codeTrial() {
 function trial_table() {
   if ([1, 2].includes(VERSION)) {
     return [
-      { trial_type: 1, free_forced: 'free', forced_task: 'na', colour_diff: 'hard', letter_diff: 'normal' },
-      { trial_type: 2, free_forced: 'free', forced_task: 'na', colour_diff: 'hard', letter_diff: 'normal' },
-      { trial_type: 3, free_forced: 'free', forced_task: 'na', colour_diff: 'easy', letter_diff: 'normal' },
-      { trial_type: 4, free_forced: 'free', forced_task: 'na', colour_diff: 'easy', letter_diff: 'normal' },
-      { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na', letter_diff: 'normal' },
-      { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na', letter_diff: 'normal' },
+      { trial_type: 1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'hard', letter_diff: 'normal' },
+      { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'hard', letter_diff: 'normal' },
+      { trial_type: 3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'normal' },
+      { trial_type: 4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'normal' },
+      { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',   letter_diff: 'normal' },
+      { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',   letter_diff: 'normal' },
       { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'hard', letter_diff: 'na' },
       { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'easy', letter_diff: 'na' },
     ];
   } else if ([3, 4].includes(VERSION)) {
     return [
-      { trial_type: 1, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'hard' },
-      { trial_type: 2, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'hard' },
-      { trial_type: 3, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'easy' },
-      { trial_type: 4, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'easy' },
+      { trial_type: 1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
+      { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
+      { trial_type: 3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'easy' },
+      { trial_type: 4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'easy' },
       { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'normal', letter_diff: 'na' },
       { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'normal', letter_diff: 'na' },
-      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na', letter_diff: 'hard' },
-      { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na', letter_diff: 'easy' },
+      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',     letter_diff: 'hard' },
+      { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',     letter_diff: 'easy' },
     ];
   }
 }

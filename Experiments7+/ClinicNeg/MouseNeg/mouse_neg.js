@@ -16,9 +16,9 @@ const CANVAS_BORDER = '5px solid black';
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    nTrlsP: 8, // number of trials in practice blocks
+    nTrlsP: 2, //8, // number of trials in practice blocks
     nTrlsE: 48, // number of trials in subsequent blocks
-    nBlks: 6,
+    nBlks: 2, //6,
     fbDur: [500, 500, 3000], // feedback duration for correct and incorrect trials, respectively
     waitDur: 1000,
     iti: 1000,
@@ -400,7 +400,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const data_fn = `${DIR_NAME}data/version${version}/${EXP_NAME}_${vpNum}`;
-    saveData('/Common/write_data_json.php', data_fn, { stim_type: 'affneg' }, 'json');
+    // saveData('/Common/write_data_json.php', data_fn, { stim_type: 'affneg' }, 'json');
+    saveDataLocal(data_fn, { stim_type: 'affneg' }, 'json');
 }
 
 const SAVE_DATA = {

@@ -11,7 +11,6 @@ function filterDataPavlovia(
 }
 
 function password(psw) {
-    console.log(psw);
     let correct = false;
     $.ajax({
         url: '/Common7+/password.php',
@@ -21,7 +20,6 @@ function password(psw) {
     }).done(function(data) {
         correct = data;
     });
-    console.log(correct);
     return correct;
 }
 
