@@ -198,7 +198,7 @@ const trial_feedback = {
   translate_origin: true,
   response_ends_trial: false,
   func: drawFeedback,
-  on_start: function (trial) {
+  on_start: function(trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = prms.fbDur[dat.corrCode - 1];
   },
@@ -211,7 +211,7 @@ const iti = {
   canvas_border: cb,
   trial_duration: prms.iti,
   response_ends_trial: false,
-  func: function () {},
+  func: function() { },
 };
 
 const block_feedback = {
@@ -221,7 +221,7 @@ const block_feedback = {
   canvas_border: cb,
   stimulus: '',
   response_ends_trial: true,
-  on_start: function (trial) {
+  on_start: function(trial) {
     trial.stimulus = blockFeedbackTxt_de_du({ stim: 'flanker' });
   },
 };
@@ -249,14 +249,14 @@ const flanker_stimulus = {
     order: jsPsych.timelineVariable('order'),
     corrResp: jsPsych.timelineVariable('corrResp'),
   },
-  on_start: function (trial) {
+  on_start: function(trial) {
     if (trial.data.order === 'RI') {
       trial.trial_duration = prms.tooSlow;
     } else {
       trial.trial_duration = prms.tooSlow + prms.flankDur;
     }
   },
-  on_finish: function () {
+  on_finish: function() {
     codeTrial();
   },
 };
@@ -412,7 +412,7 @@ jsPsych.init({
     min_width: cs[0],
     min_height: cs[1],
   },
-  on_finish: function () {
+  on_finish: function() {
     saveData('/Common/write_data.php', data_filename, { stim: 'flanker' });
     saveRandomCode('/Common/write_code.php', code_filename, randomString);
   },

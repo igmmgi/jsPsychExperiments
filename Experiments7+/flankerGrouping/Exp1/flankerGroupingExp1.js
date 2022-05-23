@@ -79,7 +79,7 @@ const task_instructions2 = {
 const task_reminder = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '',
-  on_start: function (trial) {
+  on_start: function(trial) {
     trial.stimulus =
       generate_formatted_html({
         text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>Es gilt:`,
@@ -127,22 +127,22 @@ const preload = {
 
 // prettier-ignore
 const trials = [
-  { flanker: flankers[ 0], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[ 1], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[ 2], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[ 3], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[ 4], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[ 5], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[ 6], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[ 7], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[ 8], distance: "far",  type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
-  { flanker: flankers[ 9], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
-  { flanker: flankers[10], distance: "far",  type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
-  { flanker: flankers[11], distance: "near", type: "object",   comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
-  { flanker: flankers[12], distance: "far",  type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
-  { flanker: flankers[13], distance: "near", type: "noObject", comp: "comp",   key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
-  { flanker: flankers[14], distance: "far",  type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
-  { flanker: flankers[15], distance: "near", type: "object",   comp: "comp",   key: prms.respKeys[prms.target.indexOf("gepunktet")]   },
+  { flanker: flankers[0], distance: "far", type: "noObject", comp: "comp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[1], distance: "near", type: "noObject", comp: "comp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[2], distance: "far", type: "object", comp: "comp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[3], distance: "near", type: "object", comp: "comp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[4], distance: "far", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[5], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[6], distance: "far", type: "object", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[7], distance: "near", type: "object", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
+  { flanker: flankers[8], distance: "far", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
+  { flanker: flankers[9], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
+  { flanker: flankers[10], distance: "far", type: "object", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
+  { flanker: flankers[11], distance: "near", type: "object", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
+  { flanker: flankers[12], distance: "far", type: "noObject", comp: "comp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
+  { flanker: flankers[13], distance: "near", type: "noObject", comp: "comp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
+  { flanker: flankers[14], distance: "far", type: "object", comp: "comp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
+  { flanker: flankers[15], distance: "near", type: "object", comp: "comp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
 ];
 
 ////////////////////////////////////////////////////////////////////////
@@ -167,12 +167,11 @@ const trial_feedback = {
   stimulus: '',
   response_ends_trial: false,
   trial_duration: null,
-  on_start: function (trial) {
+  on_start: function(trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = prms.fbDur[dat.corrCode - 1];
-    trial.stimulus = `<div style="text-align: center; font-size:${prms.fbTxtSizeTrial}px;">${
-      prms.fbTxt[dat.corrCode - 1]
-    }</div>`;
+    trial.stimulus = `<div style="text-align: center; font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]
+      }</div>`;
   },
 };
 
@@ -216,7 +215,7 @@ const flanker_stimulus = {
     comp: jsPsych.timelineVariable('comp'),
     corrResp: jsPsych.timelineVariable('key'),
   },
-  on_finish: function () {
+  on_finish: function() {
     codeTrial();
     prms.cTrl += 1;
   },
@@ -250,12 +249,12 @@ const block_feedback = {
   stimulus: '',
   response_ends_trial: true,
   post_trial_gap: prms.waitDur,
-  on_start: function (trial) {
+  on_start: function(trial) {
     let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
     let text = blockFeedbackTextFG(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
     trial.stimulus = `<div style="font-size:${prms.fbTxtSizeBlock}px;">${text}</div>`;
   },
-  on_finish: function () {
+  on_finish: function() {
     prms.cTrl = 1;
     prms.cBlk += 1;
   },

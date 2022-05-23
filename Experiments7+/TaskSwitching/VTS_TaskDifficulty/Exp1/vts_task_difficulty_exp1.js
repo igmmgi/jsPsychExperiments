@@ -140,7 +140,7 @@ const VP_CODE_INSTRUCTIONS1 = {
 };
 
 function task_instructions1() {
-  if ([1,3].includes(VERSION)) {
+  if ([1, 3].includes(VERSION)) {
     return generate_formatted_html({
       text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
              Farben Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „Q“ und „W“.<br><br>
@@ -151,7 +151,7 @@ function task_instructions1() {
       width: '1200px',
       lineheight: 1.5,
     });
-  } else if ([2,4].includes(VERSION)) {
+  } else if ([2, 4].includes(VERSION)) {
     return generate_formatted_html({
       text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
              Buchstaben Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „Q“ und „W“.<br><br>
@@ -177,7 +177,7 @@ const TASK_INSTRUCTIONS1 = {
 
 let RESPMAPPING;
 // prettier-ignore
-if ([1,3].includes(VERSION)) {
+if ([1, 3].includes(VERSION)) {
   // left hand = colour, right hand = letter
   RESPMAPPING = generate_formatted_html({
     text: `Farbaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Buchstabeaufgabe = Rechte Hand<br>
@@ -189,7 +189,7 @@ if ([1,3].includes(VERSION)) {
     bold: true,
     lineheight: 1.5,
   });
-} else if ([2,4].includes(VERSION)) {
+} else if ([2, 4].includes(VERSION)) {
   // left hand = letter, right hand = colour
   RESPMAPPING = generate_formatted_html({
     text: `Buchstabeaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Farbaufgabe = Rechte Hand<br>
@@ -251,7 +251,7 @@ const BLOCK_START = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: '',
-  on_start: function (trial) {
+  on_start: function(trial) {
     trial.stimulus =
       generate_formatted_html({
         text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
@@ -278,7 +278,7 @@ const BLOCK_END = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: '',
-  on_start: function (trial) {
+  on_start: function(trial) {
     trial.stimulus = generate_formatted_html({
       text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
              Kurze Pause.<br><br>
@@ -321,7 +321,7 @@ const TRIAL_FEEDBACK = {
   stimulus: '',
   response_ends_trial: false,
   trial_duration: 0,
-  on_start: function (trial) {
+  on_start: function(trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     if (dat.error === 1) {
       trial.trial_duration = PRMS.fbDur[dat.error];
@@ -410,7 +410,7 @@ const VTS = {
     colour_diff: jsPsych.timelineVariable('colour_diff'),
     letter_diff: jsPsych.timelineVariable('letter_diff'),
   },
-  on_start: function (trial) {
+  on_start: function(trial) {
     'use strict';
 
     // letter task
@@ -492,7 +492,7 @@ const VTS = {
       },
     ];
   },
-  on_finish: function () {
+  on_finish: function() {
     codeTrial();
   },
 };
@@ -599,25 +599,25 @@ function codeTrial() {
 function trial_table() {
   if ([1, 2].includes(VERSION)) {
     return [
-      { trial_type: 1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'hard', letter_diff: 'normal' },
-      { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'hard', letter_diff: 'normal' },
-      { trial_type: 3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'normal' },
-      { trial_type: 4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'easy', letter_diff: 'normal' },
-      { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',   letter_diff: 'normal' },
-      { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na',   letter_diff: 'normal' },
+      { trial_type: 1, free_forced: 'free', forced_task: 'na', colour_diff: 'hard', letter_diff: 'normal' },
+      { trial_type: 2, free_forced: 'free', forced_task: 'na', colour_diff: 'hard', letter_diff: 'normal' },
+      { trial_type: 3, free_forced: 'free', forced_task: 'na', colour_diff: 'easy', letter_diff: 'normal' },
+      { trial_type: 4, free_forced: 'free', forced_task: 'na', colour_diff: 'easy', letter_diff: 'normal' },
+      { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na', letter_diff: 'normal' },
+      { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'na', letter_diff: 'normal' },
       { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'hard', letter_diff: 'na' },
       { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'easy', letter_diff: 'na' },
     ];
   } else if ([3, 4].includes(VERSION)) {
     return [
-      { trial_type: 1, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
-      { trial_type: 2, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'hard' },
-      { trial_type: 3, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'easy' },
-      { trial_type: 4, free_forced: 'free',   forced_task: 'na',     colour_diff: 'normal', letter_diff: 'easy' },
+      { trial_type: 1, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'hard' },
+      { trial_type: 2, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'hard' },
+      { trial_type: 3, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'easy' },
+      { trial_type: 4, free_forced: 'free', forced_task: 'na', colour_diff: 'normal', letter_diff: 'easy' },
       { trial_type: 5, free_forced: 'forced', forced_task: 'letter', colour_diff: 'normal', letter_diff: 'na' },
       { trial_type: 6, free_forced: 'forced', forced_task: 'letter', colour_diff: 'normal', letter_diff: 'na' },
-      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',     letter_diff: 'hard' },
-      { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na',     letter_diff: 'easy' },
+      { trial_type: 7, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na', letter_diff: 'hard' },
+      { trial_type: 8, free_forced: 'forced', forced_task: 'colour', colour_diff: 'na', letter_diff: 'easy' },
     ];
   }
 }
@@ -626,8 +626,8 @@ const TRIAL_TABLE = trial_table();
 
 // prettier-ignore
 const TRIAL_TIMELINE = {
-    timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK, ITI],
-    timeline_variables: TRIAL_TABLE
+  timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK, ITI],
+  timeline_variables: TRIAL_TABLE
 };
 
 ////////////////////////////////////////////////////////////////////////
