@@ -1,7 +1,7 @@
 // Simon Task:
 // Participants respond to a laterally presented letter (H/S) with
 //  left and right key-press responses.
-// Blockwise manipulation: 
+// Blockwise manipulation:
 // Classic Simon Task (CS) vs. Accessory Simon Task (AS)
 // Trialwise manipulation:
 // Short (150 ms) vs. Long (Until response, or 1500ms) stimulus duration
@@ -9,25 +9,33 @@
 const jsPsych = initJsPsych({});
 
 ////////////////////////////////////////////////////////////////////////
+//                         Canvas Properties                          //
+////////////////////////////////////////////////////////////////////////
+const CANVAS_COLOUR = 'rgba(200, 200, 200, 1)';
+const CANVAS_SIZE = [1280, 720];
+const CANVAS_BORDER = '5px solid black';
+
+////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
-const prms = {
-  imageSet: 1,
+const PRMS = {
   screenRes: [960, 720],
-  nTrlsP: 64, // number of trials in first block (practice)
+  nTrlsP: 8, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
-  nBlks: 15, // number of blocks
+  nBlks: 12, // number of blocks
   fixDur: 500, // duration of fixation cross
-  fixSize: 40, // size of fixation cross
+  fixSize: 10, // size of fixation cross
+  fixWidth: 4, // size of fixation cross
   fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
   waitDur: 1000, // duration following ...
   iti: 500, // duration of inter-trial-interval
   tooFast: 150, // responses faster than x ms -> too fast!
   tooSlow: 1500, // response slower than x ms -> too slow!
-  stimDuration: [150, 1500],
+  targetDuration: [150, 1500],
   respKeys: ['Q', 'P'],
   target: shuffle(['H', 'S']),
-  stimHeight: 180,
+  stimFont: '100px Monopsace',
+  stimEccentricity: 200,
   fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fbTxtSizeTrial: 26,
   fbTxtSizeBlock: 26,
@@ -35,79 +43,126 @@ const prms = {
   cBlk: 1, // count blocks
 };
 
+// 2 counter balanced versions
+const VERSION = Number(jsPsych.data.urlVariables().version);
+jsPsych.data.addProperties({ version: VERSION });
+
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const task_instructions1 = {
-  type: jsPsychHtmlKeyboardResponse,
+const TASK_INSTRUCTIONS1 = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
     text: `Willkommen zu unserem Experiment:<br><br>
-Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten.<br><br>
-Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
-Bei Fragen oder Problemen wende dich bitte an:<br><br>
-rundmc-gghk@outlook.de<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+           Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+           um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten.<br><br>
+           Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
+           Bei Fragen oder Problemen wende dich bitte an:<br><br>
+           xxx@xxx<br><br>
+           Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     colour: 'black',
     fontsize: 30,
   }),
 };
 
+function pad_me(str, npad) {
+  let len = Math.floor((npad - str.length) / 2);
+  str = ' '.repeat(len) + str + ' '.repeat(len);
+  return str
+    .split('')
+    .map(function (c) {
+      return c === ' ' ? '&nbsp;' : c;
+    })
+    .join('');
+}
 
-const task_instructions_base = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: cc,
-  canvas_size: cs,
-  canvas_border: cb,
-  stimulus:
-    "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: left;'>In diesem Experiment musst du auf verschiedene Buchstaben</h3>" +
-    "<h3 style='text-align: left;'>so schnell und so genau wie möglich reagieren, die rechts</h3>" +
-    "<h3 style='text-align: left;'>oder links auf dem Bildschirm erscheinen.</h3>" +
-    "<h3 style='text-align: left;'>Reagiere immer wie folgt:</h3><br>" +
-    respText_base +
-    "<h2 style='text-align: center;'>Drücke eine beliebige Taste, um fortzufahren.</h2>",
-};
+// response keys
+const RESP_TEXT = generate_formatted_html({
+  text: `${
+    pad_me(PRMS.target[0], 25) +
+    pad_me(PRMS.target[1], 25) +
+    '<br>' +
+    pad_me('(Taste-' + PRMS.respKeys[0] + ')', 20) +
+    pad_me('(Taste-' + PRMS.respKeys[1] + ')', 20)
+  }`,
+  align: 'center',
+  fontsize: 30,
+  bold: true,
+  lineheight: 1.5,
+});
 
-const task_instructions2 = {
-  type: jsPsychHtmlKeyboardResponse,
+const TASK_INSTRUCTIONS_CS = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
   stimulus:
     generate_formatted_html({
-      text: `In diesem Experiment musst du auf verschiedene Buchstaben</h3>" +
-    so schnell und so genau wie möglich reagieren, die rechts</h3>" +
-    oder links auf dem Bildschirm erscheinen.</h3>" +
-    Reagiere immer wie folgt:`,
+      text: `Aufgabe:<br><br>
+             In diesem Experiment Teil musst du auf verschiedene Buchstaben so schnell
+             und so genau wie möglich reagieren, die rechts oder links auf dem Bildschirm
+             erscheinen.<br><br>
+             Reagiere immer wie folgt:<br>`,
       align: 'left',
       colour: 'black',
       fontsize: 30,
     }) +
+    RESP_TEXT +
     generate_formatted_html({
-      text: `${prms.target[0]} = "${prms.respKeys[0]}" Taste &emsp; ${prms.target[1]} = "${prms.respKeys[1]}" Taste<br><br><br>
-    Versuche bitte so schnell und fehlerfrei wie möglich zu antworten.<br><br>
-        Drücke eine beliebige Taste, um fortzufahren`,
+      text: `Drücke eine beliebige Taste, um fortzufahren.`,
       align: 'left',
       colour: 'black',
       fontsize: 30,
     }),
 };
 
-const task_reminder = {
-  type: jsPsychHtmlKeyboardResponse,
+const TASK_INSTRUCTIONS_AS = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus:
+    generate_formatted_html({
+      text: `Aufgabe:<br><br>
+             In diesem Experiment Teil musst du auf verschiedene Buchstaben so schnell
+             und so genau wie möglich reagieren, die rechts oder links auf dem Bildschirm
+             erscheinen.<br><br>
+             Reagiere immer wie folgt:<br>`,
+      align: 'left',
+      colour: 'black',
+      fontsize: 30,
+    }) +
+    RESP_TEXT +
+    generate_formatted_html({
+      text: `Drücke eine beliebige Taste, um fortzufahren.`,
+      align: 'left',
+      colour: 'black',
+      fontsize: 30,
+    }),
+};
+
+const TASK_REMINDER = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
   stimulus: '',
-  on_start: function(trial) {
+  on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `Block ${prms.cBlk} von ${prms.nBlks}<br><br>Es gilt:`,
+        text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>Es gilt:`,
         align: 'left',
         colour: 'black',
         fontsize: 30,
       }) +
+      RESP_TEXT +
       generate_formatted_html({
-        text: `${prms.target[0]} = "${prms.respKeys[0]}" Taste &emsp; ${prms.target[1]} = "${prms.respKeys[1]}" Taste<br><br><br>
-    Versuche bitte so schnell und fehlerfrei wie möglich zu antworten.<br><br>
-        Drücke eine beliebige Taste, um fortzufahren`,
+        text: `<br>Drücke eine beliebige Taste, um fortzufahren.`,
         align: 'left',
         colour: 'black',
         fontsize: 30,
@@ -118,171 +173,211 @@ const task_reminder = {
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
-const flankers = [
-  `images${prms.imageSet}/dash-dash-noObject-far.png`,
-  `images${prms.imageSet}/dash-dash-noObject-near.png`,
-  `images${prms.imageSet}/dash-dash-Object-far.png`,
-  `images${prms.imageSet}/dash-dash-Object-near.png`,
-  `images${prms.imageSet}/dash-dot-noObject-far.png`,
-  `images${prms.imageSet}/dash-dot-noObject-near.png`,
-  `images${prms.imageSet}/dash-dot-Object-far.png`,
-  `images${prms.imageSet}/dash-dot-Object-near.png`,
-  `images${prms.imageSet}/dot-dash-noObject-far.png`,
-  `images${prms.imageSet}/dot-dash-noObject-near.png`,
-  `images${prms.imageSet}/dot-dash-Object-far.png`,
-  `images${prms.imageSet}/dot-dash-Object-near.png`,
-  `images${prms.imageSet}/dot-dot-noObject-far.png`,
-  `images${prms.imageSet}/dot-dot-noObject-near.png`,
-  `images${prms.imageSet}/dot-dot-Object-far.png`,
-  `images${prms.imageSet}/dot-dot-Object-near.png`,
-];
-
-const preload = {
-  type: jsPsychPreload,
-  images: flankers,
-};
 
 // prettier-ignore
-const trials = [
-  { flanker: flankers[0], distance: "far", type: "noObject", comp: "comp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[1], distance: "near", type: "noObject", comp: "comp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[2], distance: "far", type: "object", comp: "comp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[3], distance: "near", type: "object", comp: "comp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[4], distance: "far", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[5], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[6], distance: "far", type: "object", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[7], distance: "near", type: "object", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gestrichelt")] },
-  { flanker: flankers[8], distance: "far", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
-  { flanker: flankers[9], distance: "near", type: "noObject", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
-  { flanker: flankers[10], distance: "far", type: "object", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
-  { flanker: flankers[11], distance: "near", type: "object", comp: "incomp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
-  { flanker: flankers[12], distance: "far", type: "noObject", comp: "comp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
-  { flanker: flankers[13], distance: "near", type: "noObject", comp: "comp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
-  { flanker: flankers[14], distance: "far", type: "object", comp: "comp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
-  { flanker: flankers[15], distance: "near", type: "object", comp: "comp", key: prms.respKeys[prms.target.indexOf("gepunktet")] },
+const TRIALS_CS = [
+    { type: "CS", letter: PRMS.target[0], position: "left",  duration: PRMS.targetDuration[0], compatibility: "comp",   key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { type: "CS", letter: PRMS.target[1], position: "right", duration: PRMS.targetDuration[0], compatibility: "comp",   key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { type: "CS", letter: PRMS.target[0], position: "right", duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { type: "CS", letter: PRMS.target[1], position: "left",  duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { type: "CS", letter: PRMS.target[0], position: "left",  duration: PRMS.targetDuration[1], compatibility: "comp",   key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { type: "CS", letter: PRMS.target[1], position: "right", duration: PRMS.targetDuration[1], compatibility: "comp",   key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { type: "CS", letter: PRMS.target[0], position: "right", duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { type: "CS", letter: PRMS.target[1], position: "left",  duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+];
+
+// prettier-ignore
+const TRIALS_AS = [
+    { type: "AS", letter: PRMS.target[0], position: "left",  duration: PRMS.targetDuration[0], compatibility: "comp",   key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { type: "AS", letter: PRMS.target[1], position: "right", duration: PRMS.targetDuration[0], compatibility: "comp",   key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { type: "AS", letter: PRMS.target[0], position: "right", duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { type: "AS", letter: PRMS.target[1], position: "left",  duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { type: "AS", letter: PRMS.target[0], position: "left",  duration: PRMS.targetDuration[1], compatibility: "comp",   key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { type: "AS", letter: PRMS.target[1], position: "right", duration: PRMS.targetDuration[1], compatibility: "comp",   key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { type: "AS", letter: PRMS.target[0], position: "right", duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { type: "AS", letter: PRMS.target[1], position: "left",  duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
 ////////////////////////////////////////////////////////////////////////
 //                              Exp Parts                             //
 ////////////////////////////////////////////////////////////////////////
-const fixation_cross = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: `<div style="font-size:${prms.fixSize}px;">+</div>`,
+function drawFixation() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = PRMS.fixWidth;
+  ctx.moveTo(-PRMS.fixSize, 0);
+  ctx.lineTo(PRMS.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -PRMS.fixSize);
+  ctx.lineTo(0, PRMS.fixSize);
+  ctx.stroke();
+}
+
+const FIXATION_CROSS = {
+  type: jsPsychStaticCanvasKeyboardResponse,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  translate_origin: true,
   response_ends_trial: false,
-  trial_duration: prms.fixDur,
+  trial_duration: PRMS.fixDur,
+  func: drawFixation,
 };
 
-const iti = {
-  type: jsPsychHtmlKeyboardResponse,
+const ITI = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
   stimulus: '',
   response_ends_trial: false,
-  trial_duration: prms.iti,
+  trial_duration: PRMS.iti,
 };
 
-const trial_feedback = {
-  type: jsPsychHtmlKeyboardResponse,
+const TRIAL_FEEDBACK = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
   stimulus: '',
   response_ends_trial: false,
-  trial_duration: null,
-  on_start: function(trial) {
+  trial_duration: 0,
+  on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = prms.fbDur[dat.corrCode - 1];
-    trial.stimulus = `<div style="text-align: center; font-size:${prms.fbTxtSizeTrial}px;">${prms.fbTxt[dat.corrCode - 1]
-      }</div>`;
+    if (dat.corrCode !== 1) {
+      trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
+      trial.stimulus = generate_formatted_html({
+        text: `${PRMS.fbTxt[dat.corrCode - 1]}`,
+        align: 'center',
+        fontsize: 30,
+        lineheight: 1.5,
+      });
+    }
   },
 };
 
 function codeTrial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
-  dat.rt = dat.rt !== null ? dat.rt : prms.tooSlow;
+  dat.rt = dat.rt !== null ? dat.rt : PRMS.tooSlow;
 
   let corrCode = 0;
-  let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
 
-  if (correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+  if (correctKey && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
     corrCode = 1; // correct
-  } else if (!correctKey && dat.rt > prms.tooFast && dat.rt < prms.tooSlow) {
+  } else if (!correctKey && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
     corrCode = 2; // choice error
-  } else if (dat.rt >= prms.tooSlow) {
+  } else if (dat.rt >= PRMS.tooSlow) {
     corrCode = 3; // too slow
-  } else if (dat.rt <= prms.tooFast) {
+  } else if (dat.rt <= PRMS.tooFast) {
     corrCode = 4; // too fast
   }
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    blockNum: prms.cBlk,
-    trialNum: prms.cTrl,
+    blockNum: PRMS.cBlk,
+    trialNum: PRMS.cTrl,
     corrCode: corrCode,
   });
 }
 
-const flanker_stimulus = {
-  type: jsPsychImageKeyboardResponse,
-  stimulus: jsPsych.timelineVariable('flanker'),
-  trial_duration: prms.tooSlow,
-  response_ends_trial: true,
-  stimulus_height: prms.stimHeight,
-  choices: prms.respKeys,
-  render_on_canvas: false,
-  data: {
-    stim: 'flanker',
-    distance: jsPsych.timelineVariable('distance'),
-    type: jsPsych.timelineVariable('type'),
-    comp: jsPsych.timelineVariable('comp'),
-    corrResp: jsPsych.timelineVariable('key'),
-  },
-  on_finish: function() {
-    codeTrial();
-    prms.cTrl += 1;
-  },
-};
+function drawStimulus(args) {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font = PRMS.stimFont;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'black';
 
-const trial_timeline = {
-  timeline: [fixation_cross, flanker_stimulus, trial_feedback, iti],
-  timeline_variables: trials,
-};
-
-function blockFeedbackTextFG(cBlk, nBlks, meanRt, errorRate) {
-  let blockFbTxt =
-    '<h2>Block: ' +
-    cBlk +
-    ' von ' +
-    nBlks +
-    '</h2><br>' +
-    '<h2>Mittlere Reaktionszeit: ' +
-    meanRt +
-    ' ms </h2>' +
-    '<h2>Fehlerrate: ' +
-    errorRate +
-    ' %</h2><br>' +
-    '<h4>Versuche weiterhin so schnell und fehlerfrei wie möglich zu antworten!</h4><br>' +
-    '<h4>Drücke eine beliebige Taste, um fortzufahren.</h4>';
-  return blockFbTxt;
+  if (args.type === 'CS') {
+    if (args.position === 'left') {
+      ctx.fillText(args.letter, -PRMS.stimEccentricity, 0);
+    } else if (args.position === 'right') {
+      ctx.fillText(args.letter, PRMS.stimEccentricity, 0);
+    }
+  } else if (args.type === 'AS') {
+    if (args.position === 'left') {
+      ctx.fillText(args.letter, 0, 0);
+      ctx.fillText(args.letter, -PRMS.stimEccentricity, 0);
+    } else if (args.position === 'right') {
+      ctx.fillText(args.letter, 0, 0);
+      ctx.fillText(args.letter, PRMS.stimEccentricity, 0);
+    }
+  }
 }
 
-const block_feedback = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: '',
+const STIMULUS = {
+  type: jsPsychStaticCanvasKeyboardResponse,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  translate_origin: true,
   response_ends_trial: true,
-  post_trial_gap: prms.waitDur,
-  on_start: function(trial) {
-    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
-    let text = blockFeedbackTextFG(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
-    trial.stimulus = `<div style="font-size:${prms.fbTxtSizeBlock}px;">${text}</div>`;
+  trial_duration: PRMS.tooSlow,
+  choices: PRMS.respKeys,
+  stimulus_duration: jsPsych.timelineVariable('duration'),
+  trial_duration: PRMS.tooSlow,
+  func: drawStimulus,
+  func_args: null,
+  data: {
+    stim: 'simon',
+    type: jsPsych.timelineVariable('type'),
+    letter: jsPsych.timelineVariable('letter'),
+    position: jsPsych.timelineVariable('position'),
+    duration: jsPsych.timelineVariable('duration'),
+    compatibility: jsPsych.timelineVariable('compatibility'),
+    corrResp: jsPsych.timelineVariable('key'),
   },
-  on_finish: function() {
-    prms.cTrl = 1;
-    prms.cBlk += 1;
+  on_start: function (trial) {
+    trial.func_args = [
+      {
+        type: jsPsych.timelineVariable('type'),
+        letter: jsPsych.timelineVariable('letter'),
+        position: jsPsych.timelineVariable('position'),
+        duration: jsPsych.timelineVariable('duration'),
+        compatibility: jsPsych.timelineVariable('compatibility'),
+      },
+    ];
+  },
+  on_finish: function () {
+    codeTrial();
+    PRMS.cTrl += 1;
+  },
+};
+
+const TRIAL_TIMELINE_CS = {
+  timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, ITI],
+  timeline_variables: TRIALS_CS,
+};
+
+const TRIAL_TIMELINE_AS = {
+  timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, ITI],
+  timeline_variables: TRIALS_AS,
+};
+
+const BLOCK_FEEDBACK = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  response_ends_trial: true,
+  on_start: function (trial) {
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'simon', blockNum: PRMS.cBlk } });
+    let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
+    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
+  },
+  on_finish: function () {
+    PRMS.cTrl = 1;
+    PRMS.cBlk += 1;
   },
 };
 
 ////////////////////////////////////////////////////////////////////////
 //                             VP Stunden                             //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16, 'fg1_');
+const RANDOM_STRING = generateRandomString(16, 'sd1_');
 
-const alphaNum = {
+const ALPHA_NUM = {
   type: jsPsychHtmlKeyboardResponse,
   response_ends_trial: true,
   choices: [' '],
@@ -292,8 +387,10 @@ const alphaNum = {
         Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an: <br><br>rundmc-gghk@outlook.de<br><br> Code: ` +
-      randomString +
+        an: <br><br>
+        XXX@XXX<br><br> 
+        Code: ` +
+      RANDOM_STRING +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,
     lineheight: 1.0,
@@ -305,22 +402,22 @@ const alphaNum = {
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
-const dirName = getDirName();
-const expName = getFileName();
+const DIR_NAME = getDirName();
+const EXP_NAME = getFileName();
 
 function save() {
   const vpNum = getTime();
   jsPsych.data.addProperties({ vpNum: vpNum });
 
-  const fn = `${dirName}data/${expName}_${vpNum}`;
-  saveData('/Common/write_data.php', fn, { stim: 'flanker' });
-  // saveDataLocal(fn, { stim: 'flanker' });
+  const fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
+  saveData('/Common/write_data.php', fn, { stim: 'simon' });
+  // saveDataLocal(fn, { stim: 'simon' });
 
-  const code_fn = `${dirName}code/${expName}`;
+  const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
   saveRandomCode('/Common/write_code.php', code_fn, randomString);
 }
 
-const save_data = {
+const SAVE_DATA = {
   type: jsPsychCallFunction,
   func: save,
   post_trial_gap: 1000,
@@ -335,31 +432,42 @@ function genExpSeq() {
   let exp = [];
 
   exp.push(fullscreen(true));
-  exp.push(browser_check(prms.screenRes));
-  exp.push(preload);
+  exp.push(browser_check(PRMS.screenRes));
   exp.push(resize_browser());
   exp.push(welcome_message());
   exp.push(vpInfoForm());
   exp.push(mouseCursor(false));
-  exp.push(task_instructions1);
-  exp.push(task_instructions2);
+  exp.push(TASK_INSTRUCTIONS1);
 
-  for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    exp.push(task_reminder);
-    let blk_timeline = { ...trial_timeline };
-    blk_timeline.sample = {
-      type: 'fixed-repetitions',
-      size: blk === 0 ? prms.nTrlsP / trials.length : prms.nTrlsE / trials.length,
-    };
-    exp.push(blk_timeline); // trials within a block
-    exp.push(block_feedback); // show previous block performance
+  let blk_type;
+  if (VERSION === 1) {
+    blk_type = repeatArray(['CS', 'AS'], PRMS.nBlks / 2);
+  } else if (VERSION === 2) {
+    blk_type = repeatArray(['AS', 'CS'], PRMS.nBlks / 2);
   }
 
-  exp.push(save_data);
+  for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+    let blk_timeline;
+    if (blk_type[blk] === 'CS') {
+      exp.push(TASK_INSTRUCTIONS_CS);
+      blk_timeline = { ...TRIAL_TIMELINE_CS };
+    } else if (blk_type[blk] === 'AS') {
+      exp.push(TASK_INSTRUCTIONS_AS);
+      blk_timeline = { ...TRIAL_TIMELINE_AS };
+    }
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: [0, 1].includes(blk) ? PRMS.nTrlsP / TRIALS_CS.length : PRMS.nTrlsE / TRIALS_CS.length,
+    };
+    exp.push(blk_timeline); // trials within a block
+    exp.push(BLOCK_FEEDBACK); // show previous block performance
+  }
+
+  exp.push(SAVE_DATA);
 
   // debrief
   exp.push(mouseCursor(true));
-  exp.push(alphaNum);
+  exp.push(ALPHA_NUM);
   exp.push(end_message());
   exp.push(fullscreen(false));
 

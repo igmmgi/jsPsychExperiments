@@ -89,7 +89,6 @@ var jsPsychStaticCanvasKeyboardResponse = (function (jspsych) {
       this.jsPsych = jsPsych;
     }
 
-
     trial(display_element, trial) {
       // setup canvas
       let new_html =
@@ -121,8 +120,6 @@ var jsPsychStaticCanvasKeyboardResponse = (function (jspsych) {
 
       let canvas = document.querySelector('canvas');
       let ctx = canvas.getContext('2d');
-      // let canvas = document.getElementById('canvas');
-      // let ctx = document.getElementById('canvas').getContext('2d');
 
       ctx.fillStyle = trial.canvas_colour;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -135,10 +132,6 @@ var jsPsychStaticCanvasKeyboardResponse = (function (jspsych) {
       }
       if (typeof trial.stimulus_onset === 'number') {
         trial.stimulus_onset = [trial.stimulus_onset];
-      }
-
-      if (trial.func.length !== trial.stimulus_onset.length) {
-        // TO DO
       }
 
       if (trial.translate_origin) {
