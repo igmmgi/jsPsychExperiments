@@ -675,21 +675,21 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen(true));
-  exp.push(browser_check(PRMS.screenRes));
-  exp.push(resize_browser());
-  exp.push(welcome_message());
-  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
-  exp.push(mouseCursor(false));
+  // exp.push(fullscreen(true));
+  // exp.push(browser_check(PRMS.screenRes));
+  // exp.push(resize_browser());
+  // exp.push(welcome_message());
+  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  // exp.push(mouseCursor(false));
 
-  exp.push(WELCOME_INSTRUCTIONS);
+  // exp.push(WELCOME_INSTRUCTIONS);
   exp.push(COUNT_DOTS);
-  exp.push(TASK_INSTRUCTIONS1);
-  exp.push(TASK_INSTRUCTIONS2);
-  exp.push(TASK_INSTRUCTIONS3);
+  // exp.push(TASK_INSTRUCTIONS1);
+  // exp.push(TASK_INSTRUCTIONS2);
+  // exp.push(TASK_INSTRUCTIONS3);
 
   for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
-    exp.push(BLOCK_START);
+    // exp.push(BLOCK_START);
     let blk_timeline;
     blk_timeline = { ...TRIAL_TIMELINE };
     blk_timeline.sample = {
