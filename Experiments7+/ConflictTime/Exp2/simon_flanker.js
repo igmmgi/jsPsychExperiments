@@ -290,8 +290,6 @@ function drawStimulus(args) {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
 
-  console.log("here")
-
   if (args.type === 'simon') {
     if (args.distractor === 'left') {
       ctx.fillText(args.target, -PRMS.stimEccentricity, 0);
@@ -408,7 +406,7 @@ function save() {
   const vpNum = getTime();
   jsPsych.data.addProperties({ vpNum: vpNum });
 
-  const fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
+  const fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
   saveData('/Common/write_data.php', fn, { stim: 'simon_flanker' });
   // saveDataLocal(fn, { stim: 'simon' });
 
@@ -430,13 +428,13 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen(true));
-  // exp.push(browser_check(PRMS.screenRes));
-  // exp.push(resize_browser());
-  // exp.push(welcome_message());
-  // exp.push(vpInfoForm());
-  // exp.push(mouseCursor(false));
-  // exp.push(TASK_INSTRUCTIONS1);
+  exp.push(fullscreen(true));
+  exp.push(browser_check(PRMS.screenRes));
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vpInfoForm());
+  exp.push(mouseCursor(false));
+  exp.push(TASK_INSTRUCTIONS1);
 
   let blk_type;
   if (VERSION === 1) {

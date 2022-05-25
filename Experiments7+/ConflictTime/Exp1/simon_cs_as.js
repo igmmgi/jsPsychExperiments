@@ -409,7 +409,7 @@ function save() {
   const vpNum = getTime();
   jsPsych.data.addProperties({ vpNum: vpNum });
 
-  const fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
+  const fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
   saveData('/Common/write_data.php', fn, { stim: 'simon' });
   // saveDataLocal(fn, { stim: 'simon' });
 
