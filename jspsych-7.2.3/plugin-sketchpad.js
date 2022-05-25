@@ -282,7 +282,7 @@ var jsPsychSketchpad = (function (jspsych) {
           canvas_html += sketchpad_controls;
           let finish_button_html = "";
           if (this.params.show_finished_button) {
-              finish_button_html = `<p id="finish-btn"><button class="jspsych-btn" id="sketchpad-end">Finished</button></p>`;
+              finish_button_html = `<p id="finish-btn"><button class="jspsych-btn" id="sketchpad-end">${this.params.finished_button_label}</button></p>`;
           }
           let timer_html = "";
           if (this.params.show_countdown_trial_duration && this.params.trial_duration) {
@@ -484,7 +484,9 @@ var jsPsychSketchpad = (function (jspsych) {
       render_drawing() {
           this.ctx.clearRect(0, 0, this.sketchpad.width, this.sketchpad.height);
           this.add_background_color();
-          this.ctx.drawImage(this.background_image, 0, 0);
+          if (this.background_image) {
+              this.ctx.drawImage(this.background_image, 0, 0);
+          }
           for (const stroke of this.strokes) {
               for (const m of stroke) {
                   if (m.action == "start") {
@@ -531,12 +533,12 @@ var jsPsychSketchpad = (function (jspsych) {
           }
       }
       set_redo_btn_state(enabled) {
-          if (this.params.show_redo_button) {
+          if (this.params.show_undo_button && this.params.show_redo_button) {
               this.display.querySelector("#sketchpad-redo").disabled = !enabled;
           }
       }
       set_clear_btn_state(enabled) {
-          if (this.params.show_redo_button) {
+          if (this.params.show_clear_button) {
               this.display.querySelector("#sketchpad-clear").disabled = !enabled;
           }
       }

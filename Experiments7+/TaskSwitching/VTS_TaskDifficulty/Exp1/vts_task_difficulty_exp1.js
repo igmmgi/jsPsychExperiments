@@ -31,35 +31,36 @@ const CANVAS_BORDER = '5px solid black';
 
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nTrls: 96, // number of trials per block
+  nTrls: 104, // number of trials per block
   nBlks: 8, // number of blocks
   fixSize: 50, // duration of the fixation cross
   fixDur: 500, // duration of the fixation cross
   fbDur: [0, 3000], // feedback duration for correct and incorrect trials, respectively
   fbText: ['', 'Falsch!'],
-  iti: 500, // duration of the inter-trial-interval
-  stimFont: '200px Arial',
+  iti: 750, // duration of the inter-trial-interval
+  stimFont: '110px Arial',
   fbFont: '200px Arial',
   letters: ['F', 'G', 'L', 'P', 'R'],
   colourTask: shuffle(['mehr Blau', 'mehr Rot']),
   letterTask: shuffle(['Normal', 'Gespiegelt']),
-  anglesEasy: [-10, 10],
-  anglesNormal: [-10, 10],
-  anglesHard: [-120, 120],
-  colours: ['rgba(0, 0, 255, 0.65)', 'rgba(255, 0, 0, 0.65)'],
-  ratioEasy: 85,
+  anglesEasy: [-5, 5],
+  anglesNormal: [-5, 5],
+  anglesHard: [-100, 100],
+  colours: ['rgba(0, 0, 255, 0.9)', 'rgba(255, 0, 0, 0.9)'],
+  ratioEasy: 90,
   ratioNormal: 75,
-  ratioHard: 65,
+  ratioHard: 60,
   respKeysLH: ['Q', 'W'],
   respKeysRH: ['O', 'P'],
   deactivateKeys: false, // should keys be deactivated when task not available?
-  dotRadius: 10,
-  dotEccentricity: 200,
-  dotGaps: 30,
-  dotBlank: 4,
+  dotRadius: 1.5,
+  dotEccentricity: 115,
+  dotGaps: 4,
+  dotBlank: 15,
   cBlk: 1,
   cTrl: 1,
 };
+
 
 // 4 counter balanced versions
 const VERSION = Number(jsPsych.data.urlVariables().version);
