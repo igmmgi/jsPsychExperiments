@@ -33,7 +33,8 @@ const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
   nTrls: 104, // number of trials per block
   nBlks: 8, // number of blocks
-  fixSize: 50, // duration of the fixation cross
+  fixSize: 15, // duration of the fixation cross
+  fixWidth: 5, // size of fixation cross
   fixDur: 500, // duration of the fixation cross
   fbDur: [0, 3000], // feedback duration for correct and incorrect trials, respectively
   fbText: ['', 'Falsch!'],
@@ -287,15 +288,29 @@ const TASK_INSTRUCTIONS_RESPMAPPING = {
   stimulus: RESPMAPPING,
 };
 
+function drawFixation() {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.lineWidth = PRMS.fixWidth;
+  ctx.moveTo(-PRMS.fixSize, 0);
+  ctx.lineTo(PRMS.fixSize, 0);
+  ctx.stroke();
+  ctx.moveTo(0, -PRMS.fixSize);
+  ctx.lineTo(0, PRMS.fixSize);
+  ctx.stroke();
+}
+
 const FIXATION_CROSS = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
+  type: jsPsychStaticCanvasKeyboardResponse,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
-  stimulus: `<div style="font-size:${PRMS.fixSize}px;">+</div>`,
+  translate_origin: true,
   response_ends_trial: false,
   trial_duration: PRMS.fixDur,
+  func: drawFixation,
 };
+
 
 const TRIAL_FEEDBACK = {
   type: jsPsychHtmlKeyboardResponseCanvas,
