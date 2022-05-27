@@ -60,7 +60,7 @@ const TASK_INSTRUCTIONS1 = {
         text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-           um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten.<br><br>
+           um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30 Minuten konzentriert zu arbeiten.<br><br>
            Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            xxx@xxx<br><br>
@@ -97,53 +97,57 @@ const RESP_TEXT = generate_formatted_html({
 });
 
 const TASK_INSTRUCTIONS_SIMON = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    stimulus:
-        generate_formatted_html({
-            text: `Aufgabe:<br><br>
-             In diesem Experiment Teil musst du auf verschiedene Buchstaben so schnell
-             und so genau wie möglich reagieren, die rechts oder links auf dem Bildschirm
-             erscheinen.<br><br>
-             Reagiere immer wie folgt:<br>`,
-            align: 'left',
-            colour: 'black',
-            fontsize: 30,
-        }) +
-        RESP_TEXT +
-        generate_formatted_html({
-            text: `Drücke eine beliebige Taste, um fortzufahren.`,
-            align: 'left',
-            colour: 'black',
-            fontsize: 30,
-        }),
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
+               In diesem Block musst du auf in jedem Durchgang auf den
+               Buchstaben reagieren welcher <span style="font-weight:bold;">rechts oder links</span> auf dem Bildschirm erscheint.
+               Reagiere wie folgt:<br>`,
+        align: 'left',
+        colour: 'black',
+        fontsize: 30,
+      }) +
+      RESP_TEXT +
+      generate_formatted_html({
+        text: `Drücke eine beliebige Taste, um fortzufahren.`,
+        align: 'left',
+        colour: 'black',
+        fontsize: 30,
+      });
+  },
 };
 
 const TASK_INSTRUCTIONS_FLANKER = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    stimulus:
-        generate_formatted_html({
-            text: `Aufgabe:<br><br>
-             In diesem Experiment Teil musst du auf verschiedene Buchstaben so schnell
-             und so genau wie möglich reagieren, die rechts oder links auf dem Bildschirm
-             erscheinen.<br><br>
-             Reagiere immer wie folgt:<br>`,
-            align: 'left',
-            colour: 'black',
-            fontsize: 30,
-        }) +
-        RESP_TEXT +
-        generate_formatted_html({
-            text: `Drücke eine beliebige Taste, um fortzufahren.`,
-            align: 'left',
-            colour: 'black',
-            fontsize: 30,
-        }),
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
+               In diesem Block musst du auf in jedem Durchgang auf den
+               Buchstaben reagieren welcher <span style="font-weight:bold;">zentral</span> auf dem Bildschirm erscheint.
+               Reagiere wie folgt:<br>`,
+        align: 'left',
+        colour: 'black',
+        fontsize: 30,
+      }) +
+      RESP_TEXT +
+      generate_formatted_html({
+        text: `Drücke eine beliebige Taste, um fortzufahren.`,
+        align: 'left',
+        colour: 'black',
+        fontsize: 30,
+      });
+  },
 };
 
 const TASK_REMINDER = {
