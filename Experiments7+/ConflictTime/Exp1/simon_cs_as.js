@@ -20,9 +20,9 @@ const CANVAS_BORDER = '5px solid black';
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screenRes: [960, 720],
-    nTrlsP: 8, // number of trials in first block (practice)
-    nTrlsE: 16, // number of trials in subsequent blocks
-    nBlks: 4, // number of blocks
+    nTrlsP: 56, // number of trials in first block (practice)
+    nTrlsE: 56, // number of trials in subsequent blocks
+    nBlks: 14, // number of blocks
     fixDur: 500, // duration of fixation cross
     fixSize: 10, // size of fixation cross
     fixWidth: 4, // size of fixation cross
