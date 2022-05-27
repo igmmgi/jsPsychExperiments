@@ -27,7 +27,7 @@ const PRMS = {
     fixDur: 500, // duration of fixation cross
     fixSize: 10, // size of fixation cross
     fixWidth: 4, // size of fixation cross
-    fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
+    fbDur: [0, 1500, 1500, 1500], // duration of feedback for each type
     waitDur: 1000, // duration following ...
     iti: 500, // duration of inter-trial-interval
     tooFast: 150, // responses faster than x ms -> too fast!
