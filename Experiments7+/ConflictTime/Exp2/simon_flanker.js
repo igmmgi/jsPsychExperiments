@@ -97,57 +97,57 @@ const RESP_TEXT = generate_formatted_html({
 });
 
 const TASK_INSTRUCTIONS_SIMON = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: '',
-  on_start: function (trial) {
-    trial.stimulus =
-      generate_formatted_html({
-        text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: '',
+    on_start: function(trial) {
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
                In diesem Block musst du auf in jedem Durchgang auf den
                Buchstaben reagieren welcher <span style="font-weight:bold;">rechts oder links</span> auf dem Bildschirm erscheint.
                Reagiere wie folgt:<br>`,
-        align: 'left',
-        colour: 'black',
-        fontsize: 30,
-      }) +
-      RESP_TEXT +
-      generate_formatted_html({
-        text: `Drücke eine beliebige Taste, um fortzufahren.`,
-        align: 'left',
-        colour: 'black',
-        fontsize: 30,
-      });
-  },
+                align: 'left',
+                colour: 'black',
+                fontsize: 30,
+            }) +
+            RESP_TEXT +
+            generate_formatted_html({
+                text: `Drücke eine beliebige Taste, um fortzufahren.`,
+                align: 'left',
+                colour: 'black',
+                fontsize: 30,
+            });
+    },
 };
 
 const TASK_INSTRUCTIONS_FLANKER = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: '',
-  on_start: function (trial) {
-    trial.stimulus =
-      generate_formatted_html({
-        text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: '',
+    on_start: function(trial) {
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
                In diesem Block musst du auf in jedem Durchgang auf den
                Buchstaben reagieren welcher <span style="font-weight:bold;">zentral</span> auf dem Bildschirm erscheint.
                Reagiere wie folgt:<br>`,
-        align: 'left',
-        colour: 'black',
-        fontsize: 30,
-      }) +
-      RESP_TEXT +
-      generate_formatted_html({
-        text: `Drücke eine beliebige Taste, um fortzufahren.`,
-        align: 'left',
-        colour: 'black',
-        fontsize: 30,
-      });
-  },
+                align: 'left',
+                colour: 'black',
+                fontsize: 30,
+            }) +
+            RESP_TEXT +
+            generate_formatted_html({
+                text: `Drücke eine beliebige Taste, um fortzufahren.`,
+                align: 'left',
+                colour: 'black',
+                fontsize: 30,
+            });
+    },
 };
 
 const TASK_REMINDER = {
