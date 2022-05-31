@@ -474,7 +474,7 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(PASSWORD);
+    exp.push(PASSWORD);
 
     exp.push(fullscreen(true));
     exp.push(browser_check(PRMS.screenRes));
