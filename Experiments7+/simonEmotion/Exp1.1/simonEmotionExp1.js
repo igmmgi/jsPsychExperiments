@@ -65,7 +65,7 @@ const TASK_INSTRUCTIONS2 = {
     stimulus: generate_formatted_html({
         text: `In diesem Experiment siehst du glückliche und traurige Gesichter.
            In jedem Durchgang siehst du ein Gesicht links oder rechts auf dem Bildschirm.
-           Deine Aufgabe ist es zu entscheiden, ob das Gesicht eine glücklice oder traurige Emotion zeigt.<br><br>
+           Deine Aufgabe ist es zu entscheiden, ob das Gesicht eine glückliche oder traurige Emotion zeigt.<br><br>
            WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit deinem rechten Zeigefinger.<br><br>
            "Q" = ${PRMS.target[0]} Gesicht &emsp; "P" = ${PRMS.target[1]} Gesicht<br><br>
            Bitte antworte so schnell und so korrekt wie möglich!<br><br>
@@ -236,10 +236,12 @@ const TRIAL_FEEDBACK = {
     },
 };
 
+
 function codeTrial() {
     'use strict';
     let dat = jsPsych.data.get().last(1).values()[0];
     dat.rt = dat.rt !== null ? dat.rt - PRMS.fixDur : PRMS.tooSlow;
+    dat.target = baseFileName(dat.target);
 
     let corrCode = 0;
     let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);

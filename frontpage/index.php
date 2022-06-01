@@ -18,10 +18,6 @@ function debug_to_console($data)
 $nFiles_csesf_v1 = numFilesInDir('Experiments/CSE_SimonFlanker/Exp2/data/version1');
 $nFiles_csesf_v2 = numFilesInDir('Experiments/CSE_SimonFlanker/Exp2/data/version2');
 
-// CSE Mouse
-$nFiles_csem_text = numFilesInDir('Experiments/CSE_mouse_tracking/text_only/data');
-$nFiles_csem_image = numFilesInDir('Experiments/CSE_mouse_tracking/image_only/data');
-
 // Mouse Negation
 $nFiles_mn2 = numFilesInDir('Experiments/MouseNegation/Exp2/data');
 $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
@@ -32,9 +28,11 @@ $nFiles_rp2 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version2');
 $nFiles_rp3 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version3');
 $nFiles_rp4 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version4');
 
-// Modal Congruency
-$nFiles_mc1 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version1');
-$nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
+// Task Switching (Task-Difficulty) 
+$nFiles_ts1 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version1');
+$nFiles_ts2 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version2');
+$nFiles_ts3 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version3');
+$nFiles_ts4 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version4');
 
 ?>
 
@@ -93,6 +91,7 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
+            <p> This or That Exp1: Experiment.TaskSwitching@gmail.com </p>
             <p> Fruity Choice Exp2: hiwipibio@gmail.com </p>
             <p> CSE SF Exp2: hiwipibio@gmail.com </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
@@ -102,6 +101,30 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
 
             <h1>Experiments</h1>
             <h2>1,0 VP-Stunden</h2>
+
+            <?php
+            $ts = [];
+            if ($nFiles_ts1 < 25) {
+                array_push($ts, 1);
+            }
+            if ($nFiles_ts2 < 25) {
+                array_push($ts, 2);
+            }
+            if ($nFiles_ts3 < 0) {
+                array_push($ts, 3);
+            }
+            if ($nFiles_ts4 < 0) {
+                array_push($ts, 4);
+            }
+
+            $randIndex = array_rand($ts);
+            $ts_version = $ts[$randIndex];
+            ?>
+
+            <?php if (!empty($ts_version)) : ?>
+                <h3><a href="Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/index.html?version=<?php echo $ts_version; ?>">This or That Exp1 (n = <?= $nFiles_ts1 + $nFiles_ts2 + $nFiles_ts3 + $nFiles_ts4 ?>)</a></h3>
+            <?php endif;  ?>
+
 
             <?php
             $rp = [];
@@ -129,24 +152,6 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
 
 
             <?php
-            $mc = [];
-            if ($nFiles_mc1 < 25) {
-                array_push($mc, 1);
-            }
-            if ($nFiles_mc2 < 25) {
-                array_push($mc, 2);
-            }
-
-            $randIndex = array_rand($mc);
-            $mc_version = $mc[$randIndex];
-            /* debug_to_console($rp_version) */
-            ?>
-
-            <?php if (!empty($mc_version)) : ?>
-                <h3><a href="Experiments7+/ModalCongruency/Exp1/index.html?version=<?php echo $mc_version; ?>">Modal Congruency Exp1 (n = <?= $nFiles_mc1 + $nFiles_mc2 ?>)</a></h3>
-            <?php endif;  ?>
-
-            <?php
             $csesf = [];
             if ($nFiles_csesf_v1 < 25) {
                 array_push($csesf, 1);
@@ -164,34 +169,7 @@ $nFiles_mc2 = numFilesInDir('Experiments7+/ModalCongruency/Exp1/data/version2');
             <?php endif;  ?>
 
 
-
-
-
             <h2>0,5 VP-Stunden</h2>
-
-            <?php
-            $csem = [];
-            if ($nFiles_csem_text < 50) {
-                array_push($csem, 1);
-            }
-            if ($nFiles_csem_image < 50) {
-                array_push($csem, 2);
-            }
-
-            $randIndex = array_rand($csem);
-            $csem_version = $csem[$randIndex];
-            /* debug_to_console($nw1_version) */
-            ?>
-
-            <?php if (!empty($csem_version)) : ?>
-                <?php if ($csem_version == 1) : ?>
-                    <h3><a href="Experiments/CSE_mouse_tracking/text_only/index.html">Ambig Exp1 (n = <?= $nFiles_csem_text + $nFiles_csem_image ?>)</a></h3>
-                <?php endif;  ?>
-                <?php if ($csem_version == 2) : ?>
-                    <h3><a href="Experiments/CSE_mouse_tracking/image_only/index.html">Ambig Exp1 (n = <?= $nFiles_csem_text + $nFiles_csem_image ?>)</a></h3>
-                <?php endif;  ?>
-            <?php endif;  ?>
-
 
             <?php
             $mn = [];
