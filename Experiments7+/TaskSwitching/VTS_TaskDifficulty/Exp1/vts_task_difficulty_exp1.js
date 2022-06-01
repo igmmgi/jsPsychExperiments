@@ -45,12 +45,12 @@ const PRMS = {
     colourTask: shuffle(['mehr Blau', 'mehr Rot']),
     letterTask: shuffle(['Normal', 'Gespiegelt']),
     anglesEasy: [-5, 5],
-    anglesNormal: [-5, 5],
-    anglesHard: [-100, 100],
+    anglesNormal: [-15, 15],
+    anglesHard: [-95, 95],
     colours: ['rgba(0, 0, 255, 0.9)', 'rgba(255, 0, 0, 0.9)'],
     ratioEasy: 90,
-    ratioNormal: 75,
-    ratioHard: 60,
+    ratioNormal: 72.5,
+    ratioHard: 62.5,
     respKeysLH: ['Q', 'W'],
     respKeysRH: ['O', 'P'],
     deactivateKeys: false, // should keys be deactivated when task not available?
@@ -220,8 +220,8 @@ const TASK_INSTRUCTIONS3 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
-           Wenn beide Aufgaben (Buchstabe und farbige Punkte) präsentiert werden, darfst du frei entscheiden, welche der beiden Aufgaben du bearbeiten möchtest.<br><br>
-           Wenn jedoch nur ein Aufgabe präsentiert wird, dann musst du diese Aufgabe bearbeiten.<br><br> 
+           Wenn nur eine Aufgabe präsentiert wird, dann bearbeite bitte diese <br><br>
+           Wenn beide Aufgaben präsentiert werden, kannst du dir frei aussuchen, welche du bearbeitest.<br><br>
            Drücke eine beliebige Taste um fortzufahren.`,
         align: 'left',
         fontsize: 30,
@@ -323,7 +323,7 @@ const TRIAL_FEEDBACK = {
     on_start: function(trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (dat.error === 1) {
-            trial.trial_duration = PRMS.fbDur[dat.error];
+            trial.trial_duration = PRMS.cBlk === 1 ? PRMS.fbDur[dat.error] + 1 : PRMS.fbDur[dat.error];
             trial.stimulus =
                 generate_formatted_html({
                     text: `${PRMS.fbText[dat.error]}`,
@@ -647,7 +647,7 @@ const VP_CODE_INSTRUCTIONS = {
        Vielen Dank für deine Teilnahme :)<br><br>
        Wenn du Versuchspersonenstunden benötigst, kopiere den folgenden
        zufällig generierten Code und sende diesen zusammen mit deiner
-       Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
+       Matrikelnummer per Email mit dem Betreff 'Versuchspersonenstunde'
        an:<br><br>
        Experiment.TaskSwitching@gmail.com<br><br>
        Code:
