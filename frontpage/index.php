@@ -35,7 +35,7 @@ $nFiles_ts3 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1
 $nFiles_ts4 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version4');
 
 // Simon Emotion 
-$nFiles_se = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data');
+$nFiles_se = numFilesInDir('Experiments7+/SimonEmotion/Exp1.1/data')
 
 
 ?>
@@ -99,6 +99,7 @@ $nFiles_se = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/
             <p> Fruity Choice Exp2: hiwipibio@gmail.com </p>
             <p> CSE SF Exp2: hiwipibio@gmail.com </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
+            <p>Faces Exp1: charlotte.kost@student.uni-tuebingen.de</p>
 
         </div>
         <div class="sidenav">
@@ -147,7 +148,6 @@ $nFiles_se = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/
 
             $randIndex = array_rand($rp);
             $rp_version = $rp[$randIndex];
-            /* debug_to_console($rp_version) */
             ?>
 
             <?php if (!empty($rp_version)) : ?>
@@ -192,15 +192,19 @@ $nFiles_se = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/
             <?php if (!empty($mn_version)) : ?>
                 <?php if ($mn_version == 1) : ?>
                     <h3><a href="Experiments/MouseNegation/Exp2/index.html">Mouse Negation Exp2 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
-                <?php endif; ?>
+                <?php endif;  ?>
                 <?php if ($mn_version == 2) : ?>
                     <h3><a href="Experiments/MouseNegation/Exp3/index.html">Mouse Negation Exp2 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
-                <?php endif; ?>
-            <?php endif; ?>
-
-            <?php if ($nFiles_se < 0) : ?>
-                <h3><a href="Experiments7+/simonEmotion/Exp1.1/index.html">Simon Emotion Exp1 (n = <?= $nFiles_se ?>)</a></h3>
+                <?php endif;  ?>
             <?php endif;  ?>
+
+
+                <?php if ($nFiles_se < 50) : ?>
+                    <h3><a href="Experiments7+/simonEmotion/Exp1.1/index.html">Faces Exp1 (n = <?= $nFiles_se ?>)</a></h3>
+                <?php endif;  ?>
+
+
+
 
         </div>
     </div>
