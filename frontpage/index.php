@@ -35,7 +35,7 @@ $nFiles_ts3 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1
 $nFiles_ts4 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version4');
 
 // Simon Emotion 
-$nFiles_se = numFilesInDir('Experiments7+/SimonEmotion/Exp1.1/data')
+$nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
 
 
 ?>

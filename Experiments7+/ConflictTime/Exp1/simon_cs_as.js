@@ -408,8 +408,6 @@ function save() {
     saveData('/Common/write_data.php', fn, { stim: 'simon' });
     // saveDataLocal(fn, { stim: 'simon' });
 
-    const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
-    saveRandomCode('/Common/write_code.php', code_fn, randomString);
 }
 
 const SAVE_DATA = {

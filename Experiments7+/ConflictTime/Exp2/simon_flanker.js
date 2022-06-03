@@ -405,8 +405,6 @@ function save() {
     saveData('/Common/write_data.php', fn, { stim: 'simon_flanker' });
     // saveDataLocal(fn, { stim: 'simon' });
 
-    const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
-    saveRandomCode('/Common/write_code.php', code_fn, randomString);
 }
 
 const SAVE_DATA = {
@@ -427,7 +425,7 @@ function genExpSeq() {
     exp.push(browser_check(PRMS.screenRes));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    exp.push(vpInfoForm(form = "../vpInfoForm_de.html"));
+    exp.push(vpInfoForm("vpInfoForm_de.html"));
     exp.push(mouseCursor(false));
     exp.push(TASK_INSTRUCTIONS1);
 
