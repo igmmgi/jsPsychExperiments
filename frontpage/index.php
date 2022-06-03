@@ -14,6 +14,11 @@ function debug_to_console($data)
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
+
+// PP Free Choice Exp2 
+$nFiles_ppfc2_v1 = numFilesInDir('Experiments/PP_FreeChoice/Exp2/data/version1');
+$nFiles_ppfc2_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp2/data/version2');
+
 // CSE Simon Flanker
 $nFiles_csesf_v1 = numFilesInDir('Experiments/CSE_SimonFlanker/Exp2/data/version1');
 $nFiles_csesf_v2 = numFilesInDir('Experiments/CSE_SimonFlanker/Exp2/data/version2');
@@ -96,6 +101,7 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
             <p> This or That Exp1: Experiment.TaskSwitching@gmail.com </p>
+            <p> Free Choice Race Exp2: hiwipibio@gmail.com </p>
             <p> Fruity Choice Exp2: hiwipibio@gmail.com </p>
             <p> CSE SF Exp2: hiwipibio@gmail.com </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
@@ -128,6 +134,24 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
 
             <?php if (!empty($ts_version)) : ?>
                 <h3><a href="Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/index.html?version=<?php echo $ts_version; ?>">This or That Exp1 (n = <?= $nFiles_ts1 + $nFiles_ts2 + $nFiles_ts3 + $nFiles_ts4 ?>)</a></h3>
+            <?php endif;  ?>
+
+
+            <?php
+            $ppfc2 = [];
+            if ($nFiles_ppfc2_v1 < 20) {
+                array_push($ppfc2, 1);
+            }
+            if ($nFiles_ppfc2_v1 < 20) {
+                array_push($ppfc2, 2);
+            }
+
+            $randIndex = array_rand($ppfc2);
+            $ppfc2_version = $ppfc2[$randIndex];
+            ?>
+
+            <?php if (!empty($ppfc2_version)) : ?>
+                <h3><a href="Experiments/PP_FreeChoice/Exp2/index.html?version=<?php echo $ppfc2_version; ?>">Free Choice Race Exp2 (n = <?= $nFiles_ppfc2_v1 + $nFiles_ppfc2_v2 ?>)</a></h3>
             <?php endif;  ?>
 
 
