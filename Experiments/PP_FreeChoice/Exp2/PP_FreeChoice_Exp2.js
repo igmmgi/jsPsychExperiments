@@ -583,7 +583,7 @@ const alpha_num = {
             text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
       zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
       und deiner Universität (Tübingen) per Email an:<br><br>
-	hiwipibio@gmail.coms<br>`,
+	hiwipibio@gmail.com<br>`,
             fontsize: 26,
             align: 'left',
         }) +

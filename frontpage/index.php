@@ -142,7 +142,7 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
             if ($nFiles_ppfc2_v1 < 20) {
                 array_push($ppfc2, 1);
             }
-            if ($nFiles_ppfc2_v1 < 20) {
+            if ($nFiles_ppfc2_v2 < 20) {
                 array_push($ppfc2, 2);
             }
 
