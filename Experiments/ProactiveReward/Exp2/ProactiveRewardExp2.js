@@ -259,18 +259,18 @@ function drawCue(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
 
-  if (args.reward === 'no_reward') {
+  if (args.cue === 'no_reward') {
     ctx.font = prms.cueSize;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
     ctx.fillText("X", 0, 0); // always central
-  } else if (args.reward === 'reward') {
+  } else if (args.cue === 'reward') {
     // draw treasure chest
     const size = 4;
-    const width = images[imgnum].width;
-    const height = images[imgnum].height;
-    ctx.drawImage(images[imgnum], -width / size / 2, -height / size / 2 + 20, width / size, height / size);
+    const width = images[0].width;
+    const height = images[0].height;
+    ctx.drawImage(images[0], -width / size / 2, -height / size / 2 + 0, width / size, height / size);
   }
 }
 
