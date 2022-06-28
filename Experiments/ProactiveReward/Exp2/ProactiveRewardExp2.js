@@ -34,11 +34,11 @@ getComputerInfo();
 const prms = {
   nTrlsE: 48, // number of trials in each block
   nBlks: 16, // number of blocks
-  cueDur: 500,
-  fixDur: 400,
+  cueDur: 750,
+  fixDur: 500,
   // fbDur: [1250, 2500, 2500],
-  fbDur: [750, 2000, 2000],
-  iti: 500,
+  fbDur: [750, 1500, 1500],
+  iti: 300,
   tooSlow: 3000,
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -527,7 +527,7 @@ if (keyVersion === 0) {
         { task: 'stroop', item: 'GRÜN', position: 'centre', colour: green, comp: 'kongruent',   reward: "no_reward", corrResp: prms.respKeys[1] },
         { task: 'stroop', item: 'ROT',  position: 'centre', colour: green, comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[1] },
         { task: 'stroop', item: 'GRÜN', position: 'centre', colour: red,   comp: 'inkongruent', reward: "no_reward", corrResp: prms.respKeys[0] },
-        { task: 'stroop', item: 'ROT',  position: 'centre', colour: red,   comp: 'kongruent',   reward: "reward",    corrResp: prms.respKeys[1] },
+        { task: 'stroop', item: 'ROT',  position: 'centre', colour: red,   comp: 'kongruent',   reward: "reward",    corrResp: prms.respKeys[0] },
         { task: 'stroop', item: 'GRÜN', position: 'centre', colour: green, comp: 'kongruent',   reward: "reward",    corrResp: prms.respKeys[1] },
         { task: 'stroop', item: 'ROT',  position: 'centre', colour: green, comp: 'inkongruent', reward: "reward",    corrResp: prms.respKeys[1] },
         { task: 'stroop', item: 'GRÜN', position: 'centre', colour: red,   comp: 'inkongruent', reward: "reward",    corrResp: prms.respKeys[0] },
@@ -569,12 +569,12 @@ if (keyVersion === 0) {
 }
 
 const trial_timeline_stroop = {
-  timeline: [cue, fixation_cross, stroop_stimulus, trial_feedback],
+  timeline: [cue, fixation_cross, stroop_stimulus, trial_feedback, iti],
   timeline_variables: stroops,
 };
 
 const trial_timeline_simon = {
-  timeline: [cue, fixation_cross, simon_stimulus, trial_feedback],
+  timeline: [cue, fixation_cross, simon_stimulus, trial_feedback, iti],
   timeline_variables: simons,
 };
 
