@@ -16,7 +16,7 @@ const prms = {
   screenRes: [960, 720],
   nTrlsP: 64, // number of trials in first block (practice)
   nTrlsE: 64, // number of trials in subsequent blocks
-  nBlks: 15, // number of blocks
+  nBlks: 8, // number of blocks
   fixDur: 500, // duration of fixation cross
   fixSize: 40, // size of fixation cross
   fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
@@ -46,7 +46,7 @@ Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genüg
 um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten.<br><br>
 Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
 Bei Fragen oder Problemen wende dich bitte an:<br><br>
-rundmc-gghk@outlook.de<br><br>
+hiwipibio@gmail.com <br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     colour: 'black',
@@ -248,7 +248,7 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 //                             VP Stunden                             //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16, 'fg1_');
+const randomString = generateRandomString(16, 'fg2_');
 
 const alphaNum = {
   type: jsPsychHtmlKeyboardResponse,
@@ -260,7 +260,7 @@ const alphaNum = {
         Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
         zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
         Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-        an: <br><br>rundmc-gghk@outlook.de<br><br> Code: ` +
+        an: <br><br>hiwipibio@gmail.com<br><br> Code: ` +
       randomString +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
     fontsize: 28,

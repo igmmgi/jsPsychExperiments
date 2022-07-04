@@ -85,7 +85,7 @@ $nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp2/data');
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
             <p> This or That Exp2: Experiment.TaskSwitching@gmail.com </p>
-            <p> Dots and Dashes: rundmc-gghk@outlook.de</p>
+            <p> Dots and Dashes: hiwipibio@gmail.com </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
 
         </div>
@@ -117,9 +117,6 @@ $nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp2/data');
                 <h3><a href="Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/index.html?version=<?php echo $ts_version; ?>">This or That Exp2 (n = <?= $nFiles_ts1 + $nFiles_ts2 + $nFiles_ts3 + $nFiles_ts4 ?>)</a></h3>
             <?php endif;  ?>
 
-   <?php if ($nFiles_fg < 40) : ?>
-                <h3><a href="Experiments7+/flankerGrouping/Exp2/index.html">Dots and Dashes Exp2 (n = <?= $nFiles_fg ?>)</a></h3>
-            <?php endif;  ?>
 
             <h2>0,5 VP-Stunden</h2>
 
@@ -144,6 +141,11 @@ $nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp2/data');
                 <?php if ($mn_version == 2) : ?>
                     <h3><a href="Experiments/MouseNegation/Exp3/index.html">Mouse Negation Exp2 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
                 <?php endif;  ?>
+            <?php endif;  ?>
+
+
+   <?php if ($nFiles_fg < 40) : ?>
+                <h3><a href="Experiments7+/flankerGrouping/Exp2/index.html">Dots and Dashes Exp2 (n = <?= $nFiles_fg ?>)</a></h3>
             <?php endif;  ?>
 
         </div>
