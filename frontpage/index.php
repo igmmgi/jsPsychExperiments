@@ -14,34 +14,18 @@ function debug_to_console($data)
     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 
-
-// PP Free Choice Exp2 
-$nFiles_ppfc2_v1 = numFilesInDir('Experiments/PP_FreeChoice/Exp2/data/version1');
-$nFiles_ppfc2_v2 = numFilesInDir('Experiments/PP_FreeChoice/Exp2/data/version2');
-
-// CSE Simon Flanker
-$nFiles_csesf_v1 = numFilesInDir('Experiments/CSE_SimonFlanker/Exp2/data/version1');
-$nFiles_csesf_v2 = numFilesInDir('Experiments/CSE_SimonFlanker/Exp2/data/version2');
-
 // Mouse Negation
 $nFiles_mn2 = numFilesInDir('Experiments/MouseNegation/Exp2/data');
 $nFiles_mn3 = numFilesInDir('Experiments/MouseNegation/Exp3/data');
 
-// Risky Probability
-$nFiles_rp1 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version1');
-$nFiles_rp2 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version2');
-$nFiles_rp3 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version3');
-$nFiles_rp4 = numFilesInDir('Experiments/RiskyProbability/Exp2/data/version4');
-
 // Task Switching (Task-Difficulty) 
-$nFiles_ts1 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version1');
-$nFiles_ts2 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version2');
+$nFiles_ts1 = 0; //numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version1');
+$nFiles_ts2 = 0; //numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version2');
 $nFiles_ts3 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version3');
 $nFiles_ts4 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/data/version4');
 
-// Simon Emotion 
-$nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
-
+// flanker grouping
+$nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp2/data');
 
 ?>
 
@@ -100,12 +84,9 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
 
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
-            <p> This or That Exp1: Experiment.TaskSwitching@gmail.com </p>
-            <p> Free Choice Race Exp2: hiwipibio@gmail.com </p>
-            <p> Fruity Choice Exp2: hiwipibio@gmail.com </p>
-            <p> CSE SF Exp2: hiwipibio@gmail.com </p>
+            <p> This or That Exp2: Experiment.TaskSwitching@gmail.com </p>
+            <p> Dots and Dashes: rundmc-gghk@outlook.de</p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
-            <p>Faces Exp1: charlotte.kost@student.uni-tuebingen.de</p>
 
         </div>
         <div class="sidenav">
@@ -115,16 +96,16 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
 
             <?php
             $ts = [];
-            if ($nFiles_ts1 < 25) {
+            if ($nFiles_ts1 < 0) {
                 array_push($ts, 1);
             }
-            if ($nFiles_ts2 < 25) {
+            if ($nFiles_ts2 < 0) {
                 array_push($ts, 2);
             }
-            if ($nFiles_ts3 < 0) {
+            if ($nFiles_ts3 < 25) {
                 array_push($ts, 3);
             }
-            if ($nFiles_ts4 < 0) {
+            if ($nFiles_ts4 < 25) {
                 array_push($ts, 4);
             }
 
@@ -133,69 +114,12 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
             ?>
 
             <?php if (!empty($ts_version)) : ?>
-                <h3><a href="Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/index.html?version=<?php echo $ts_version; ?>">This or That Exp1 (n = <?= $nFiles_ts1 + $nFiles_ts2 + $nFiles_ts3 + $nFiles_ts4 ?>)</a></h3>
+                <h3><a href="Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/index.html?version=<?php echo $ts_version; ?>">This or That Exp2 (n = <?= $nFiles_ts1 + $nFiles_ts2 + $nFiles_ts3 + $nFiles_ts4 ?>)</a></h3>
             <?php endif;  ?>
 
-
-            <?php
-            $ppfc2 = [];
-            if ($nFiles_ppfc2_v1 < 20) {
-                array_push($ppfc2, 1);
-            }
-            if ($nFiles_ppfc2_v2 < 20) {
-                array_push($ppfc2, 2);
-            }
-
-            $randIndex = array_rand($ppfc2);
-            $ppfc2_version = $ppfc2[$randIndex];
-            ?>
-
-            <?php if (!empty($ppfc2_version)) : ?>
-                <h3><a href="Experiments/PP_FreeChoice/Exp2/index.html?version=<?php echo $ppfc2_version; ?>">Free Choice Race Exp2 (n = <?= $nFiles_ppfc2_v1 + $nFiles_ppfc2_v2 ?>)</a></h3>
+   <?php if ($nFiles_fg < 40) : ?>
+                <h3><a href="Experiments7+/flankerGrouping/Exp2/index.html">Dots and Dashes Exp2 (n = <?= $nFiles_fg ?>)</a></h3>
             <?php endif;  ?>
-
-
-            <?php
-            $rp = [];
-            if ($nFiles_rp1 < 10) {
-                array_push($rp, 1);
-            }
-            if ($nFiles_rp2 < 10) {
-                array_push($rp, 2);
-            }
-            if ($nFiles_rp3 < 10) {
-                array_push($rp, 3);
-            }
-            if ($nFiles_rp4 < 10) {
-                array_push($rp, 4);
-            }
-
-            $randIndex = array_rand($rp);
-            $rp_version = $rp[$randIndex];
-            ?>
-
-            <?php if (!empty($rp_version)) : ?>
-                <h3><a href="Experiments/RiskyProbability/Exp2/index.html?version=<?php echo $rp_version; ?>">Fruity Choice Exp2 (n = <?= $nFiles_rp1 + $nFiles_rp2 + $nFiles_rp3 + $nFiles_rp4 ?>)</a></h3>
-            <?php endif;  ?>
-
-
-            <?php
-            $csesf = [];
-            if ($nFiles_csesf_v1 < 25) {
-                array_push($csesf, 1);
-            }
-            if ($nFiles_csesf_v2 < 25) {
-                array_push($csesf, 2);
-            }
-
-            $randIndex = array_rand($csesf);
-            $csesf_version = $csesf[$randIndex];
-            ?>
-
-            <?php if (!empty($csesf_version)) : ?>
-                <h3><a href="Experiments/CSE_SimonFlanker/Exp2/index.html?version=<?php echo $csesf_version; ?>">CSE SF Exp2 (n = <?= $nFiles_csesf_v1 + $nFiles_csesf_v2 ?>)</a></h3>
-            <?php endif;  ?>
-
 
             <h2>0,5 VP-Stunden</h2>
 
@@ -221,14 +145,6 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.1/data')
                     <h3><a href="Experiments/MouseNegation/Exp3/index.html">Mouse Negation Exp2 (n = <?= $nFiles_mn2 + $nFiles_mn3 ?>)</a></h3>
                 <?php endif;  ?>
             <?php endif;  ?>
-
-
-                <?php if ($nFiles_se < 50) : ?>
-                    <h3><a href="Experiments7+/simonEmotion/Exp1.1/index.html">Faces Exp1 (n = <?= $nFiles_se ?>)</a></h3>
-                <?php endif;  ?>
-
-
-
 
         </div>
     </div>
