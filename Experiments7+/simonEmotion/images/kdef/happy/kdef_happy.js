@@ -34,7 +34,6 @@ const kdef_happy = [
     '../images/kdef/happy/AF35HAS.png',
     '../images/kdef/happy/AM01HAS.png',
     '../images/kdef/happy/AM02HAS.png',
-    '../images/kdef/happy/AM03HAS.png',
     '../images/kdef/happy/AM04HAS.png',
     '../images/kdef/happy/AM05HAS.png',
     '../images/kdef/happy/AM06HAS.png',

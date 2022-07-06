@@ -32,6 +32,7 @@ nimstim_happy = [
     '../images/nimstim/happy/32M_HA_O.png',
     '../images/nimstim/happy/33M_HA_O.png',
     '../images/nimstim/happy/34M_HA_O.png',
+    '../images/nimstim/happy/35M_HA_O.png',
     '../images/nimstim/happy/36M_HA_O.png',
     '../images/nimstim/happy/37M_HA_O.png',
     '../images/nimstim/happy/38M_HA_O.png',

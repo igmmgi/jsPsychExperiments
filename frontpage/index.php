@@ -27,6 +27,9 @@ $nFiles_ts4 = numFilesInDir('Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1
 // flanker grouping
 $nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp2/data');
 
+// Simon Emotion 
+$nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.2/data');
+
 ?>
 
 <html lang="en">
@@ -87,6 +90,7 @@ $nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp2/data');
             <p> This or That Exp2: Experiment.TaskSwitching@gmail.com </p>
             <p> Dots and Dashes: hiwipibio@gmail.com </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
+            <p>Faces Exp2: charlotte.kost@student.uni-tuebingen.de</p>
 
         </div>
         <div class="sidenav">
@@ -147,6 +151,11 @@ $nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp2/data');
    <?php if ($nFiles_fg < 40) : ?>
                 <h3><a href="Experiments7+/flankerGrouping/Exp2/index.html">Dots and Dashes Exp2 (n = <?= $nFiles_fg ?>)</a></h3>
             <?php endif;  ?>
+
+ <?php if ($nFiles_se < 0) : ?>
+                <h3><a href="Experiments7+/simonEmotion/Exp1.2/index.html">Faces Exp2 (n = <?= $nFiles_se ?>)</a></h3>
+            <?php endif;  ?>
+
 
         </div>
     </div>
