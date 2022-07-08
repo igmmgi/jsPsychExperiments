@@ -243,12 +243,13 @@ trials_low_pc_exp.forEach((i) => (i.block_congruency = 'Low'));
 // console.table(trials_low_pc_exp);
 
 function pseudo_shuffle(x) {
+  x = shuffle(x);
   while (true) {
-    let item = 0;
     x = shuffle(x);
+    let item = 0;
     for (let idx = 0; idx < x.length; idx++) {
       // 1st trial must be inducer
-      if (idx === 0 && x[idx].trialtype !== 'inducer') {
+      if ((idx === 0) & (x[idx].trialtype !== 'inducer')) {
         break;
       }
       // diagnostic trial cannot follow a catch trial
@@ -261,6 +262,7 @@ function pseudo_shuffle(x) {
       break;
     }
   }
+  return x;
 }
 
 // pseudo_shuffle(trials_high_pc_practice);
@@ -391,26 +393,6 @@ const trial_timeline_calibration = {
   },
 };
 
-const trial_timeline_high_pc_practice = {
-  timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-  timeline_variables: trials_high_pc_practice,
-};
-
-const trial_timeline_low_pc_practice = {
-  timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-  timeline_variables: trials_low_pc_practice,
-};
-
-const trial_timeline_high_pc_exp = {
-  timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-  timeline_variables: trials_high_pc_exp,
-};
-
-const trial_timeline_low_pc_exp = {
-  timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-  timeline_variables: trials_low_pc_exp,
-};
-
 const block_feedback = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '',
@@ -430,7 +412,7 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 //                              VP Stunden                            //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16, 'mcf1_');
+const randomString = generateRandomString(16, 'mcf2_');
 
 const alphaNum = {
   type: jsPsychHtmlKeyboardResponse,
@@ -512,32 +494,40 @@ function genExpSeq() {
       repeatArray(['high_pc'], prms.nBlks / 2),
     );
   }
-  // console.log(blk_proportion_congruency);
 
   let blk_timeline;
   for (let blk = 0; blk < prms.nBlks; blk += 1) {
     exp.push(block_start);
     if ((blk == 0) | (blk == prms.nBlks / 2)) {
       // practice blocks
-        console.log("here")
       if (blk_proportion_congruency[blk] === 'high_pc') {
-        blk_timeline = { ...trial_timeline_high_pc_practice };
+        blk_timeline = {
+          timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
+          timeline_variables: pseudo_shuffle(trials_high_pc_practice),
+        };
       } else if (blk_proportion_congruency[blk] === 'low_pc') {
-        blk_timeline = { ...trial_timeline_low_pc_practice };
+        blk_timeline = {
+          timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
+          timeline_variables: pseudo_shuffle(trials_low_pc_practice),
+        };
       }
     } else {
       // experiment blocks
       if (blk_proportion_congruency[blk] === 'high_pc') {
-         blk_timeline = { ...trial_timeline_high_pc_exp};
+        blk_timeline = {
+          timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
+          timeline_variables: pseudo_shuffle(trials_high_pc_exp),
+        };
       } else if (blk_proportion_congruency[blk] === 'low_pc') {
-         blk_timeline = { ...trial_timeline_low_pc_exp };
+        blk_timeline = {
+          timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
+          timeline_variables: pseudo_shuffle(trials_low_pc_exp),
+        };
       }
     }
-    blk_timeline.sample = { size: 1 };
     exp.push(blk_timeline); // trials within a block
     exp.push(block_feedback);
   }
-  console.log(exp);
 
   exp.push(save_data);
 

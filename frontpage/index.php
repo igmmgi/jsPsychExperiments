@@ -152,7 +152,7 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.2/data');
                 <h3><a href="Experiments7+/flankerGrouping/Exp2/index.html">Dots and Dashes Exp2 (n = <?= $nFiles_fg ?>)</a></h3>
             <?php endif;  ?>
 
- <?php if ($nFiles_se < 0) : ?>
+ <?php if ($nFiles_se < 50) : ?>
                 <h3><a href="Experiments7+/simonEmotion/Exp1.2/index.html">Faces Exp2 (n = <?= $nFiles_se ?>)</a></h3>
             <?php endif;  ?>
 
