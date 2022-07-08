@@ -503,12 +503,12 @@ function genExpSeq() {
       if (blk_proportion_congruency[blk] === 'high_pc') {
         blk_timeline = {
           timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-          timeline_variables: pseudo_shuffle(trials_high_pc_practice),
+          timeline_variables: deepCopy(pseudo_shuffle(trials_high_pc_practice)),
         };
       } else if (blk_proportion_congruency[blk] === 'low_pc') {
         blk_timeline = {
           timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-          timeline_variables: pseudo_shuffle(trials_low_pc_practice),
+          timeline_variables: deepCopy(pseudo_shuffle(trials_low_pc_practice)),
         };
       }
     } else {
@@ -516,12 +516,12 @@ function genExpSeq() {
       if (blk_proportion_congruency[blk] === 'high_pc') {
         blk_timeline = {
           timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-          timeline_variables: pseudo_shuffle(trials_high_pc_exp),
+          timeline_variables: deepCopy(pseudo_shuffle(trials_high_pc_exp)),
         };
       } else if (blk_proportion_congruency[blk] === 'low_pc') {
         blk_timeline = {
           timeline: [fixation_cross, flanker_modality_trial, trial_feedback, iti],
-          timeline_variables: pseudo_shuffle(trials_low_pc_exp),
+          timeline_variables: deepCopy(pseudo_shuffle(trials_low_pc_exp)),
         };
       }
     }
