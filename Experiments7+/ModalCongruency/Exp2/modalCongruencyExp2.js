@@ -52,7 +52,7 @@ const task_instructions1 = {
   stimulus: generate_formatted_html({
     text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest, Chrome oder Fifefox nutzt und genügend Zeit hast,
+           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest, Chrome oder Firefox nutzt und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 35 Minuten konzentriert zu arbeiten.<br><br>
            Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
