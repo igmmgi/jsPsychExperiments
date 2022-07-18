@@ -1,4 +1,4 @@
-// Modal Congruency Exp1:
+// Modal Congruency Exp2:
 // Participants respond to a centrally presented letter (H or S) with randomly
 //  assigned key responses (e.g., Key "Q" = H, Key "P" = S). This target stimulus
 //  is combined with a distractor stimulus that is presented either in the visual
@@ -40,8 +40,8 @@ const prms = {
   cBlk: 1, // count blocks
 };
 
-// 2 counter balanced versions
-const version = 1; // Number(jsPsych.data.urlVariables().version);
+// 4 counter balanced versions
+const version = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: version });
 
 ////////////////////////////////////////////////////////////////////////
@@ -170,43 +170,83 @@ const trials_calibration = [
 ];
 
 // prettier-ignore
-const trials_congruent = [
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Congruent", trialtype: "diagnostic", corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Congruent", trialtype: "diagnostic", corrKey: prms.respKeys[1] }
-];
+function set_trials_congruent(version) {
+    if ([1, 2].includes(version)) {
+        return [
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Congruent", trialtype: "diagnostic", corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Congruent", trialtype: "diagnostic", corrKey: prms.respKeys[1] }
+        ];
+    } else if ([3, 4].includes(version)) {
+        return [
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Congruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "diagnostic", corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Congruent", trialtype: "diagnostic", corrKey: prms.respKeys[1] }
+        ];
+    }
+}
+const trials_congruent = set_trials_congruent(version);
 
 // prettier-ignore
-const trials_incongruent = [
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
-  { type: "Flanker", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Incongruent", trialtype: "diagnostic", corrKey: prms.respKeys[0] },
-  { type: "Flanker", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Incongruent", trialtype: "diagnostic", corrKey: prms.respKeys[1] }
-];
+function set_trials_incongruent(version) {
+    if ([1, 2].includes(version)) {
+        return [
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "Incongruent", trialtype: "diagnostic", corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "visual", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "Incongruent", trialtype: "diagnostic", corrKey: prms.respKeys[1] }
+        ];
+    } else if ([3, 4].includes(version)) {
+        return [
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory",  wav: auditory_letters[1], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory",  wav: auditory_letters[0], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory",  wav: auditory_letters[1], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory",  wav: auditory_letters[0], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory",  wav: auditory_letters[1], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory",  wav: auditory_letters[0], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory",  wav: auditory_letters[1], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory",  wav: auditory_letters[0], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Auditory",  wav: auditory_letters[1], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Auditory",  wav: auditory_letters[0], congruency: "Incongruent", trialtype: "inducer",    corrKey: prms.respKeys[1] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[0], distractor: prms.respStim[1], modality: "Visual",    wav: auditory_letters[2], congruency: "Incongruent", trialtype: "diagnostic", corrKey: prms.respKeys[0] },
+            { type: "Flanker", inducer_modality: "auditory", target: prms.respStim[1], distractor: prms.respStim[0], modality: "Visual",    wav: auditory_letters[2], congruency: "Incongruent", trialtype: "diagnostic", corrKey: prms.respKeys[1] }
+        ];
+    }
+}
+const trials_incongruent = set_trials_incongruent(version);
 
 // prettier-ignore
 const trials_catch = [
-  { type: "Catch", target: prms.respStim[2], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "NA", trialtype: "catch", corrKey: prms.respKeys[0] },
-  { type: "Catch", target: prms.respStim[2], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "NA", trialtype: "catch", corrKey: prms.respKeys[1] },
-  { type: "Catch", target: prms.respStim[2], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "NA", trialtype: "catch", corrKey: prms.respKeys[0] },
-  { type: "Catch", target: prms.respStim[2], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "NA", trialtype: "catch", corrKey: prms.respKeys[1] },
+  { type: "Catch", inducer_modality: "visual", target: prms.respStim[2], distractor: prms.respStim[0], modality: "Visual",   wav: auditory_letters[2], congruency: "NA", trialtype: "catch", corrKey: prms.respKeys[0] },
+  { type: "Catch", inducer_modality: "visual", target: prms.respStim[2], distractor: prms.respStim[1], modality: "Visual",   wav: auditory_letters[2], congruency: "NA", trialtype: "catch", corrKey: prms.respKeys[1] },
+  { type: "Catch", inducer_modality: "visual", target: prms.respStim[2], distractor: prms.respStim[0], modality: "Auditory", wav: auditory_letters[0], congruency: "NA", trialtype: "catch", corrKey: prms.respKeys[0] },
+  { type: "Catch", inducer_modality: "visual", target: prms.respStim[2], distractor: prms.respStim[1], modality: "Auditory", wav: auditory_letters[1], congruency: "NA", trialtype: "catch", corrKey: prms.respKeys[1] },
 ];
 
 const trials_high_pc_practice = [
@@ -468,28 +508,28 @@ function genExpSeq() {
 
   let exp = [];
 
-  // exp.push(fullscreen(true));
-  // exp.push(browser_check(prms.screenRes));
-  // exp.push(preload);
-  // exp.push(resize_browser());
-  // exp.push(welcome_message());
-  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
-  // exp.push(mouseCursor(false));
-  // exp.push(task_instructions1);
-  // exp.push(task_instructions2);
-  // exp.push(task_instructions3);
+  exp.push(fullscreen(true));
+  exp.push(browser_check(prms.screenRes));
+  exp.push(preload);
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  exp.push(mouseCursor(false));
+  exp.push(task_instructions1);
+  exp.push(task_instructions2);
+  exp.push(task_instructions3);
 
-  // // audio calibration
-  // exp.push(task_instructions_calibration);
-  // exp.push(trial_timeline_calibration);
+  // audio calibration
+  exp.push(task_instructions_calibration);
+  exp.push(trial_timeline_calibration);
 
   // Counter-balanced congruency proportion order: high --> low vs. low --> high
   let blk_proportion_congruency;
-  if (version === 1) {
+  if ([1, 3].includes(version)) {
     blk_proportion_congruency = repeatArray(['high_pc'], prms.nBlks / 2).concat(
       repeatArray(['low_pc'], prms.nBlks / 2),
     );
-  } else if (version === 2) {
+  } else if ([2, 4].includes(version)) {
     blk_proportion_congruency = repeatArray(['low_pc'], prms.nBlks / 2).concat(
       repeatArray(['high_pc'], prms.nBlks / 2),
     );
