@@ -30,6 +30,12 @@ $nFiles_fg = numFilesInDir('Experiments7+/flankerGrouping/Exp2/data');
 // Simon Emotion 
 $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.2/data');
 
+// Beats Exp1 
+$nFiles_beats_v1 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/version1');
+$nFiles_beats_v2 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/version2');
+$nFiles_beats_v3 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/version3');
+$nFiles_beats_v4 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/version4');
+
 ?>
 
 <html lang="en">
@@ -69,6 +75,9 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.2/data');
             <h1> Herzlich Willkommen zu unserem Experiment!</h1>
             <p>In der linken Spalte können Sie zwischen verschiedenen Experimenten wählen. Eine Teilnahme is ab 18 Jahren möglich. Bitte bearbeiten Sie das ausgewählte Experiment an einem ruhigen Ort und an einem Computer/Laptop (nicht am Handy/Tablet). Bitte bearbeiten Sie ein ausgewähltes Experiment nur einmal!</b>
             <p>Versuchspersonenstunden: Bei einigen Experimenten ist es möglich VP-Stunden zu erhalten. Sie erhalten Ihren VP-Code und weitere Anweisungen am Ende eines Experimentes. </p>
+
+            <p style="color:red;">***ACHTUNG: Für das Experiment "Beats Exp1" benötigen Sie Lautsprecher oder Kopfhörer.***</p>
+            
             <p>Die Teilnahme ist freiwillig. Die Daten werden anonym gespeichert und können nicht mit Ihnen in Verbindung gebracht werden. Basierend auf den Richtlinien guter ethischer Forschung sowie der Datenschutzgrundverordnung sollen sich Teilnehmende explizit und nachvollziehbar mit der Teilnahme an einem Experiment und der Verarbeitung ihrer Daten einverstanden erklären. Aus diesem Grund möchten wir Sie bitten, die "Allgemeinen Informationen für TeilnehmerInnen" aufmerksam zu lesen before Sie an einem Experiment teilnehmen.</p>
 
             <h2> Vielen Dank für Ihre Teilnahme!</h2><br>
@@ -88,9 +97,10 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.2/data');
             <h1> Verantwortliche Ansprechpartner während der Studie </h1>
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
             <p> This or That Exp2: Experiment.TaskSwitching@gmail.com </p>
+            <p> Beats Exp1: hiwipibio@gmail.com </p>
             <p> Dots and Dashes: hiwipibio@gmail.com </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
-            <p>Faces Exp2: charlotte.kost@student.uni-tuebingen.de</p>
+            <p> Faces Exp2: charlotte.kost@student.uni-tuebingen.de</p>
 
         </div>
         <div class="sidenav">
@@ -120,6 +130,31 @@ $nFiles_se = numFilesInDir('Experiments7+/simonEmotion/Exp1.2/data');
             <?php if (!empty($ts_version)) : ?>
                 <h3><a href="Experiments7+/TaskSwitching/VTS_TaskDifficulty/Exp1/index.html?version=<?php echo $ts_version; ?>">This or That Exp2 (n = <?= $nFiles_ts1 + $nFiles_ts2 + $nFiles_ts3 + $nFiles_ts4 ?>)</a></h3>
             <?php endif;  ?>
+
+
+            <?php
+            $beats = [];
+            if ($nFiles_beats_v1 < 10) {
+                array_push($beats, 1);
+            }
+            if ($nFiles_beats_v2 < 10) {
+                array_push($beats, 2);
+            }
+            if ($nFiles_beats_v3 < 10) {
+                array_push($beats, 3);
+            }
+            if ($nFiles_beats_v4 < 10) {
+                array_push($beats, 4);
+            }
+
+            $randIndex = array_rand($beats);
+            $beats_version = $beats[$randIndex];
+            ?>
+
+            <?php if (!empty($beats_version)) : ?>
+                <h3><a href="Experiments7+/ModalCongruency/Exp2/index.html?version=<?php echo $beats_version; ?>">Beats Exp2 (n = <?= $nFiles_beats_v1 + $nFiles_beats_v2 + $nFiles_beats_v3 + $nFiles_beats_v4 ?>)</a></h3>
+            <?php endif;  ?>
+
 
 
             <h2>0,5 VP-Stunden</h2>
