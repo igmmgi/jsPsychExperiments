@@ -33,7 +33,7 @@ getComputerInfo();
 ////////////////////////////////////////////////////////////////////////
 const prms = {
   nTrlsE: 48, // number of trials in each block
-  nBlks: 16, // number of blocks
+  nBlks: 14, // number of blocks
   cueDur: 800,
   fixDur: 400,
   fbDur: [750, 1250, 1250],
@@ -92,16 +92,13 @@ const task_instructions1 = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
     text: `Herzlich Willkommen zu unserem Experiment:<br><br>
-           Die Teilnahme ist selbstverständlich freiwillig und kann jederzeit durch
-           drücken der Escape- Taste abgebrochen werden.<br><br>
-           Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für
-           deine Teilnahme kannst du 1 VP-Stunde erhalten. <br><br>
-           Während des Experiments ist es in manchen Versuchsdurchgängen möglich,
-           Belohnungen in Form von Punkten zu sammeln. Die 20% Versuchspersonen mit
-           den meisten Punkten bekommen einen 10 € Gutschein. Dieser kann nach Wahl
-           entweder vom Osiander oder der Deutschen Bahn sein. Insgesamt gibt
-           es maximal 40 Teilnehmer.<br><br>
-           Weiter geht es durch Drücken der Leertaste...`,
+Die Teilnahme ist selbstverständlich freiwillig und kann jederzeit durch
+das Drücken der Escape- Taste abgebrochen werden.<br><br>
+Wir bitten dich die nächsten ca. 35-40 Minuten konzentriert zu arbeiten: Für deine Teilnahme kannst du 1 VP-Stunde erhalten und zusätzlich abhängig von deiner Leistung einen Gutschein erhalten.<br><br>
+Während des Experiments ist es in manchen Durchgängen möglich Punkte zu sammeln. <br><br>
+Die 20% der Versuchspersonen mit den meisten Punkten erhalten einen 10 € Gutschein.
+Dieser kann nach Wahl entweder vom Osiander oder der Deutschen Bahn sein. <br><br>
+Weiter geht es durch Drücken der Leertaste...`,
     fontsize: 26,
     lineheight: 1.5,
     align: 'left',
@@ -115,7 +112,7 @@ const task_instructions2 = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
+    text: `Du erhälst den Code für die Versuchspersonenstunden und weitere Anweisungen
     zur Gutscheinvergabe am Ende des Experimentes.<br><br>
     Bei Fragen oder Problemen wende dich bitte an:<br>
     hiwipibio@gmail.com <br><br><br>
@@ -181,14 +178,10 @@ const reward_instructions = {
   canvas_size: canvas_size,
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
-    text: `Das Experiment besteht aus mehreren Versuchstypen.<br><br>
-           In manchen Versuchstypen hast du die Möglichkeit in Durchgängen mit besonders schnellen
-           (und korrekten) Antworten Belohnung (+10 Punkte) zu erhalten.<br><br>
-           In den anderen Versuchstypen kannst du keine Belohnung/Punkte erhalten.<br><br>
-           Versuche in Durchgängen mit Belohnung durch besonders schnelle (und korrekte) Antworten
-           so viele Punkte wie möglich zu sammeln um einen Gutschein zu bekommen!<br><br>
-           Beachte: Die Antwort muss richtig und schnell sein, um Punkte zu bekommen.<br><br>
-           Weiter geht es mit der Leertaste ...`,
+      text: ` Um +10 Punkte zu erhalten, musst du in <span style="font-weight:bold">belohnten</span> Durchgängen besonders <span style="font-weight:bold">schnell</span> und <span style="font-weight:bold">fehlerfrei</span> reagieren.<br><br> Beachte: Nicht jeder Durchgang ist belohnt. <br><br>
+Das ein Durchgang belohnt ist, sieht du an einer <span style="font-weight:bold">Schatztruhe</span> zu Beginn des Durchgangs. <br><br>
+Sammle durch <span style="font-weight:bold">schnelle</span> und <span style="font-weight:bold">richtige</span> Antworten in Durchgängen mit <span style="font-weight:bold">Schatztruhe</span> möglichst viele Punkte, um den Gutschein zu bekommen! <br><br>
+Weiter geht es mit der Leertaste ...`,
     fontsize: 22,
     lineheight: 1.25,
     align: 'left',
@@ -609,9 +602,9 @@ const alpha_num = {
   stimulus:
     generate_formatted_html({
       text: `Wenn du eine Versuchspersonenstunde benötigst, kopiere den folgenden
-      zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
-      per Email an:<br><br>
-    hiwipibio@gmail.com<br>`,
+             zufällig generierten Code und sende diesen zusammen mit deiner Matrikelnummer
+             per Email an:<br><br>
+             hiwipibio@gmail.com<br>`,
       fontsize: 26,
       align: 'left',
     }) +
@@ -629,21 +622,21 @@ const alpha_num = {
 };
 
 const email_option_instructions = {
-  type: 'html-keyboard-response-canvas',
-  canvas_colour: canvas_colour,
-  canvas_size: canvas_size,
-  canvas_border: canvas_border,
-  stimulus: generate_formatted_html({
-    text: `Das Experiment ist jetzt beendet.<br><br>
-      Vielen Dank für Deine Teilnahme!<br><br>
-      Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
-Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
-Falls Du Fragen zu unserem Experiment hast, kannst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
-    hiwipibio@gmail.com<br><br>
-Drücke die Leertaste, um fortzufahren!`,
-    fontsize: 26,
-    align: 'left',
-  }),
+    type: 'html-keyboard-response-canvas',
+    canvas_colour: canvas_colour,
+    canvas_size: canvas_size,
+    canvas_border: canvas_border,
+    stimulus: generate_formatted_html({
+        text: `Das Experiment ist jetzt beendet.<br><br>
+               Vielen Dank für Deine Teilnahme!<br><br>
+               Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
+               Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
+               Falls Du Fragen zu unserem Experiment hast, kannst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
+               hiwipibio@gmail.com<br><br>
+               Drücke die Leertaste, um fortzufahren!`,
+        fontsize: 26,
+        align: 'left',
+    }),
 };
 
 const email_option = {
@@ -693,7 +686,7 @@ function genExpSeq() {
   'use strict';
 
   let exp = [];
-
+  
   // experiment intro stuff
   exp.push(fullscreen_on_de);
   exp.push(check_screen);
@@ -735,7 +728,9 @@ function genExpSeq() {
       size: prms.nTrlsE / 8,
     };
     exp.push(blk_timeline);
-    exp.push(end_of_block_text);
+    if (blk < prms.nBlks - 1) {
+      exp.push(end_of_block_text);
+    }
   }
 
   // end of experiment stuff
