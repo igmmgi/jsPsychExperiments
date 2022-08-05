@@ -464,35 +464,9 @@ const block_feedback = {
 ////////////////////////////////////////////////////////////////////////
 //                              VP Stunden                            //
 ////////////////////////////////////////////////////////////////////////
-const randomString = generateRandomString(16, 'mcf2_');
-
-const alphaNum = {
-  type: jsPsychHtmlKeyboardResponse,
-  response_ends_trial: true,
-  choices: [' '],
-  stimulus: generate_formatted_html({
-    text:
-      `Vielen Dank für Ihre Teilnahme.<br><br>
-       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
-       zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
-       Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-       an:<br><br>
-       hiwipibio@gmail.com <br><br>
-       Code: ` +
-      randomString +
-      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
-    fontsize: 28,
-    lineheight: 1.0,
-    bold: true,
-    align: 'left',
-  }),
-};
 
 const PROLIFIC = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
+  type: jsPsychHtmlKeyboardResponse,
   response_ends_trial: true,
   choices: [' '],
   stimulus: generate_formatted_html({
@@ -525,8 +499,6 @@ function save() {
   saveData('/Common/write_data.php', data_fn, { stim: 'modal_flanker' });
   // saveDataLocal(data_fn, { stim: 'modal_flanker' });
 
-  const code_fn = `${dirName}code/${expName}`;
-  saveRandomCode('/Common/write_code.php', code_fn, randomString);
 }
 
 const save_data = {
