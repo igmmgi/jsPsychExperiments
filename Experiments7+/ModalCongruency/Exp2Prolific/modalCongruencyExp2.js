@@ -19,9 +19,9 @@ const prms = {
   screenRes: [960, 720], // minimum screen resolution requested
   nBlks: 12, // number of blocks (must be multiple of 2)
   nTrlsHighP: { comp_inducer: 60, incomp_inducer: 12, comp_diagnostic: 12, incomp_diagnostic: 12, catch: 4 }, // number of trials practice high (all must be multiples of 4 with min 4)
-  nTrlsLowP: { comp_inducer: 12, incomp_inducer: 60, comp_diagnostic:12, incomp_diagnostic:12, catch: 4 }, // number of trials practice low
+  nTrlsLowP: { comp_inducer: 12, incomp_inducer: 60, comp_diagnostic: 12, incomp_diagnostic: 12, catch: 4 }, // number of trials practice low
   nTrlsHighE: { comp_inducer: 60, incomp_inducer: 12, comp_diagnostic: 12, incomp_diagnostic: 12, catch: 4 }, // number of trials exp high (all must be multiples of 4 with min 4)
-  nTrlsLowE: { comp_inducer: 12, incomp_inducer: 60, comp_diagnostic:12, incomp_diagnostic:12, catch: 4 }, // number of trials exp low
+  nTrlsLowE: { comp_inducer: 12, incomp_inducer: 60, comp_diagnostic: 12, incomp_diagnostic: 12, catch: 4 }, // number of trials exp low
   fixDur: 300, // duration of fixation cross
   fixSize: 50, // size of fixation cross
   fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
@@ -217,7 +217,6 @@ function set_trials_incongruent_inducer(version) {
 }
 const trials_incongruent_inducer = set_trials_incongruent_inducer(version);
 
-
 // prettier-ignore
 function set_trials_incongruent_diagnostic(version) {
     if ([1, 2].includes(version)) {
@@ -253,7 +252,6 @@ function set_trials_catch(version) {
     }
 }
 const trials_catch = set_trials_catch(version);
-
 
 const trials_high_pc_practice = [
   repeatArray(deepCopy(trials_congruent_inducer), prms.nTrlsHighP.comp_inducer / 2),
@@ -490,27 +488,26 @@ const alphaNum = {
   }),
 };
 
-
 const PROLIFIC = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    response_ends_trial: true,
-    choices: [' '],
-    stimulus: generate_formatted_html({
-        text: `Super, du bist am Ende des Experiments!
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  response_ends_trial: true,
+  choices: [' '],
+  stimulus: generate_formatted_html({
+    text: `Super, du bist am Ende des Experiments!
                Vielen Dank für deine Teilnahme :)<br><br>
                Über folgenden Link geht es zurück zu Prolific:<br><br>
-               https://app.prolific.co/submissions/complete?cc=29C0142A<br><br>
+               https://app.prolific.co/submissions/complete?cc=CXBEBDM6<br><br>
                Drücke die Leertaste, um das Experiment abzuschließen!`,
-        align: 'left',
-        fontsize: 30,
-        width: '1200px',
-        lineheight: 1.5,
-    }),
+    align: 'left',
+    fontsize: 30,
+    width: '1200px',
+    lineheight: 1.5,
+  }),
   on_finish: function () {
-    window.location.replace('https://app.prolific.co/submissions/complete?cc=29C0142A');
+    window.location.replace('https://app.prolific.co/submissions/complete?cc=CXBEBDM6');
   },
 };
 
