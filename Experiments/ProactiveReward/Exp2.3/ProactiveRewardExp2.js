@@ -39,7 +39,7 @@ const prms = {
   fbDur: [750, 1250, 1250],
   iti: 300,
   tooSlow: 3000,
-  deadline: 3000,
+  deadline: 1000, // initial deadline (updated after every block)
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
   cueSize: '40px monospace',
