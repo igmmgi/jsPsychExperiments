@@ -152,7 +152,7 @@ $nFiles_beats_v4 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/versio
             ?>
 
             <?php if (!empty($beats_version)) : ?>
-                <h3><a href="Experiments7+/ModalCongruency/Exp2/index.html?version=<?php echo $beats_version; ?>">Beats Exp2 (n = <?= $nFiles_beats_v1 + $nFiles_beats_v2 + $nFiles_beats_v3 + $nFiles_beats_v4 ?>)</a></h3>
+                <h3><a href="Experiments7+/ModalCongruency/Exp2/index.html?version=<?php echo $beats_version; ?>">Beats Exp1 (n = <?= $nFiles_beats_v1 + $nFiles_beats_v2 + $nFiles_beats_v3 + $nFiles_beats_v4 ?>)</a></h3>
             <?php endif;  ?>
 
 

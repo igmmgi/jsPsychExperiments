@@ -53,7 +53,7 @@ const prms = {
 };
 
 // counter-balanced order versions
-const orderVersion = 1; //Number(jsPsych.data.urlVariables().orderVersion);
+const orderVersion = Number(jsPsych.data.urlVariables().orderVersion);
 jsPsych.data.addProperties({ orderVersion: orderVersion });
 
 // 2 random key assignments
