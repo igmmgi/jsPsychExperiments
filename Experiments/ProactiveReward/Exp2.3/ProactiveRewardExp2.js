@@ -179,7 +179,7 @@ const reward_instructions = {
   canvas_border: canvas_border,
   stimulus: generate_formatted_html({
       text: ` Um +10 Punkte zu erhalten, musst du in <span style="font-weight:bold">belohnten</span> Durchgängen besonders <span style="font-weight:bold">schnell</span> und <span style="font-weight:bold">fehlerfrei</span> reagieren.<br><br> Beachte: Nicht jeder Durchgang ist belohnt. <br><br>
-Das ein Durchgang belohnt ist, sieht du an einer <span style="font-weight:bold">Schatztruhe</span> zu Beginn des Durchgangs. <br><br>
+Dass ein Durchgang belohnt ist, siehst du an einer <span style="font-weight:bold">Schatztruhe</span> zu Beginn des Durchgangs. <br><br>
 Sammle durch <span style="font-weight:bold">schnelle</span> und <span style="font-weight:bold">richtige</span> Antworten in Durchgängen mit <span style="font-weight:bold">Schatztruhe</span> möglichst viele Punkte, um den Gutschein zu bekommen! <br><br>
 Weiter geht es mit der Leertaste ...`,
     fontsize: 22,

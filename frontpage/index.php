@@ -36,6 +36,11 @@ $nFiles_beats_v2 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/versio
 $nFiles_beats_v3 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/version3');
 $nFiles_beats_v4 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/version4');
 
+// Treasure Hunt 
+$nFiles_th_v1 = numFilesInDir('Experiments/ProactiveReward/Exp2.3/data/version1');
+$nFiles_th_v2 = numFilesInDir('Experiments/ProactiveReward/Exp2.3/data/version2');
+
+
 ?>
 
 <html lang="en">
@@ -98,6 +103,7 @@ $nFiles_beats_v4 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/versio
             <h2> Bei Fragen oder Problemen sprechen Sie bitte den verantwortlichen Ansprechpartner des Experimentes an.</h2>
             <p> This or That Exp2: Experiment.TaskSwitching@gmail.com </p>
             <p> Beats Exp1: hiwipibio@gmail.com </p>
+            <p> Treasure Hunt: hiwipibio@gmail.com </p>
             <p> Dots and Dashes: hiwipibio@gmail.com </p>
             <p> Mouse Negation: m.zeller@student.uni-tuebingen.de </p>
             <p> Faces Exp2: charlotte.kost@student.uni-tuebingen.de</p>
@@ -153,6 +159,23 @@ $nFiles_beats_v4 = numFilesInDir('Experiments7+/ModalCongruency/Exp2/data/versio
 
             <?php if (!empty($beats_version)) : ?>
                 <h3><a href="Experiments7+/ModalCongruency/Exp2/index.html?version=<?php echo $beats_version; ?>">Beats Exp1 (n = <?= $nFiles_beats_v1 + $nFiles_beats_v2 + $nFiles_beats_v3 + $nFiles_beats_v4 ?>)</a></h3>
+            <?php endif;  ?>
+
+            <?php
+            $th = [];
+            if ($nFiles_th_v1 < 20) {
+                array_push($th, 1);
+            }
+            if ($nFiles_th_v2 < 20) {
+                array_push($th, 2);
+            }
+
+            $randIndex = array_rand($th);
+            $th_version = $th[$randIndex];
+            ?>
+
+            <?php if (!empty($th_version)) : ?>
+                <h3><a href="Experiments/ProactiveReward/Exp2.3/index.html?orderVersion=<?php echo $th_version; ?>">Treasure Hunt (n = <?= $nFiles_th_v1 + $nFiles_th_v2 ?>)</a></h3>
             <?php endif;  ?>
 
 
