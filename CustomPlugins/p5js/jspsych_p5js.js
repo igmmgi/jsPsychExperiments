@@ -1,17 +1,34 @@
 // jsPsych with p5js canvas
 // Examples taken from https://p5js.org/examples/
 
-const s = (p5js) => {
-  p5js.setup = function () {};
-};
-let p5js = new p5(s); // invoke p5
+const p5js = new p5((sketch) => {
+    sketch.setup = () => { };
+});
 
 // Pre-load?
 let font = p5js.loadFont('https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf');
 let img = p5js.loadImage('jspsych-logo.jpeg');
 
+p5js.mouseClicked = function () {
+  if (p5js.isLooping()) {
+    p5js.noLoop();
+  } else {
+    p5js.loop();
+  }
+};
+
+p5js.keyPressed = function () {
+  console.log(p5js.keyCode);
+};
+
 function draw_example1() {
   p5js.background(255);
+
+  // frame counter
+  p5js.textFont(font);
+  p5js.textSize(30);
+  p5js.fill(0, 0, 20);
+  p5js.text(p5js.frameCount, -p5js.width / 2, -p5js.height / 2 + 30);
 
   p5js.push();
   p5js.translate(-200, -100, 0);
@@ -69,8 +86,16 @@ function draw_example1() {
 }
 
 function draw_example2() {
-  p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
+
   p5js.background(255, 255, 255);
+  p5js.translate(-p5js.width / 2, -p5js.height / 2 + 30); // origin at top left
+  
+  // frame counter
+  p5js.textFont(font);
+  p5js.textSize(30);
+  p5js.fill(0, 0, 20);
+  p5js.text(p5js.frameCount, 0, 0);
+
 
   p5js.textFont(font);
   p5js.textSize(30);
@@ -109,7 +134,6 @@ const example2 = {
 };
 exp.push(example2);
 
-console.log(exp)
 jsPsych.init({
   timeline: exp,
 });

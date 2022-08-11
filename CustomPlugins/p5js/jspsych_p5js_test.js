@@ -1,14 +1,26 @@
 // jsPsych with p5js canvas
 // Examples taken from https://p5js.org/examples/
 
-const s = (p5js) => {
-  p5js.setup = function () {};
-};
-let p5js = new p5(s); // invoke p5
+const p5js = new p5((sketch) => {
+    sketch.setup = () => { };
+});
 
 // Pre-load?
 let font = p5js.loadFont('https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf');
 let img = p5js.loadImage('jspsych-logo.jpeg');
+
+p5js.mouseClicked = function () {
+  if (p5js.isLooping()) {
+    p5js.noLoop();
+  } else {
+    p5js.loop();
+  }
+};
+
+p5js.keyPressed = function () {
+  console.log(p5js.keyCode);
+};
+
 
 function draw1() {
   p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
@@ -25,7 +37,6 @@ function draw1() {
 function draw2() {
   p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
   p5js.fill(p5js.random(0, 255), p5js.random(0, 255), p5js.random(0, 255));
-  console.log(performance.now())
   p5js.ellipse(p5js.mouseX, p5js.mouseY, 25, 25);
   if (p5js.mouseIsPressed) {
     p5js.clear();
@@ -125,22 +136,7 @@ function draw6() {
   p5js.pop();
 }
 
-
 const draw_calls = [draw1, draw2, draw3, draw4, draw5, draw6];
-
-function setup1() {
-  'use strict';
-  let offsetTop = document.getElementById('p5js_container').offsetTop;
-  let offsetLeft = document.getElementById('p5js_container').offsetLeft;
-
-  // create sliders
-  rSlider = p5js.createSlider(0, 255, 100);
-  rSlider.position(offsetLeft + 20, offsetTop + 20);
-  gSlider = p5js.createSlider(0, 255, 0);
-  gSlider.position(offsetLeft + 20, offsetTop + 50);
-  bSlider = p5js.createSlider(0, 255, 255);
-  bSlider.position(offsetLeft + 20, offsetTop + 80);
-}
 
 let exp = [];
 for (let i = 0; i < draw_calls.length; i++) {
@@ -152,11 +148,6 @@ for (let i = 0; i < draw_calls.length; i++) {
     },
     response_ends_trial: true,
   };
-  if (i === 6) {
-    tmp.setup = function () {
-      return setup1;
-    };
-  }
   exp.push(tmp);
 }
 
