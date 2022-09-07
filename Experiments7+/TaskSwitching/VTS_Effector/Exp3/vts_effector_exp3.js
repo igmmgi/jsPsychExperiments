@@ -61,7 +61,7 @@ const VTS_DATA = {
 };
 
 // 8 counter balanced versions
-const VERSION = Number(jsPsych.data.urlVariables().version);
+const VERSION = 2; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 8 counter-balanced versions
@@ -238,7 +238,7 @@ function hand_instructions() {
       lineheight: 2,
     });
   } else if (STIM_RESP.hand.lt === 'letter') {
-    task_instructins = generate_formatted_html({
+    task_instructions = generate_formatted_html({
       text: `Es gibt zwei Aufgaben.<br><br>
            Jede Aufgabe wird mit <span style="font-weight:bold">der linken oder rechten Hand</span> bearbeitet.<br><br>
            Buchstabeaufgabe = Linke Hand: <br>
