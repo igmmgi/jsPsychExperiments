@@ -386,9 +386,7 @@ function finger_instructions() {
       lineheight: 1.5,
     });
     resp_mapping2 = generate_formatted_html({
-      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
-             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
-             <span style="font-weight:bold";>
+      text: `<span style="font-weight:bold";>
              Farbaufgabe = Zeigefinger<br>
              Buchstabeaufgabe = Mittelfinger</span>:<br><br>
              ${get_keymapping_finger(STIM_RESP)}<br><br>
@@ -426,9 +424,7 @@ function finger_instructions() {
       lineheight: 1.5,
     });
     resp_mapping2 = generate_formatted_html({
-      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
-             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
-             <span style="font-weight:bold";>
+      text: `<span style="font-weight:bold";>
              Buchstabeaufgabe = Zeigefinger<br>
              Farbaufgabe = Mittelfinger</span>:<br><br>
              ${get_keymapping_finger(STIM_RESP)}<br><br>
