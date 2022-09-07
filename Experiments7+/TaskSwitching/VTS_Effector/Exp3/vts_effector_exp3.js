@@ -525,7 +525,7 @@ const TASK_INSTRUCTIONS2 = {
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
     text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
-           <span style="font-weight": bold";> Du darfst in jedem Durchgang entscheiden welche der beiden Aufgaben du bearbeiten möchtest,
+           <span style="font-weight: bold";> Du darfst in jedem Durchgang entscheiden welche der beiden Aufgaben du bearbeiten möchtest,
            aber versuche beide Aufgaben gleich häufig und in einer zufälligen Reihenfolge zu wählen.</span><br><br>
            Versuche somit die Aufgaben so zu wählen als ob ein zufälliger Münzwurf entscheidet welche
            Aufgabe in einem Durchgang bearbeitet werden soll. Somit wirst du manchmal die Aufgabe
