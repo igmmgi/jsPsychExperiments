@@ -61,7 +61,7 @@ const VTS_DATA = {
 };
 
 // 8 counter balanced versions
-const VERSION = 2; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 8 counter-balanced versions
