@@ -226,13 +226,11 @@ function hand_instructions() {
       lineheight: 2,
     });
     resp_mapping2 = generate_formatted_html({
-      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
-             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br>
-             <span style="font-weight:bold";>
+      text: `<span style="font-weight:bold";>
              Farbaufgabe = Linke Hand<br> 
              Buchstabeaufgabe = Rechte Hand
              </span><br>
-             ${get_keymapping_hand(STIM_RESP)}<br><br>,
+             ${get_keymapping_hand(STIM_RESP)}<br><br>
              Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
@@ -272,7 +270,7 @@ function hand_instructions() {
       text: `<span style="font-weight:bold";>
              Buchstabeaufgabe = Linke Hand<br>
              Farbaufgabe = Rechte Hand</span>:<br>
-             ${get_keymapping_hand(STIM_RESP)}<br><br>,
+             ${get_keymapping_hand(STIM_RESP)}<br><br>
              Drücke eine beliebige Taste um fortzufahren.`,
       align: 'center',
       fontsize: 30,
@@ -332,7 +330,7 @@ function hand_feedback() {
       lineheight: 2,
     });
   }
-  return [task_instructions, resp_mapping1, resp_mapping2];
+  return [resp_mapping1, resp_mapping2];
 }
 
 function finger_instructions() {
@@ -486,6 +484,8 @@ function finger_feedback() {
 
 const [TASK_INSTRUCTIONS_HAND1, RESPMAPPING_HAND1, RESPMAPPING_HAND2] = hand_instructions();
 const [TASK_INSTRUCTIONS_FINGER1, RESPMAPPING_FINGER1, RESPMAPPING_FINGER2] = finger_instructions();
+const [RESPMAPPING_HAND1_TF, RESPMAPPING_HAND2_TF] = hand_feedback();
+const [RESPMAPPING_FINGER1_TF, RESPMAPPING_FINGER2_TF] = finger_feedback();
 
 const TASK_INSTRUCTIONS1 = {
   type: jsPsychHtmlKeyboardResponseCanvas,
@@ -526,7 +526,7 @@ const TASK_INSTRUCTIONS2 = {
   stimulus: generate_formatted_html({
     text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
            <span style="font-weight": bold";> Du darfst in jedem Durchgang entscheiden welche der beiden Aufgaben du bearbeiten möchtest,
-           aber versuche beide Aufgaben gleich häufig und in einer zufälligen Reihenfolge zu wählen.</span><br>
+           aber versuche beide Aufgaben gleich häufig und in einer zufälligen Reihenfolge zu wählen.</span><br><br>
            Versuche somit die Aufgaben so zu wählen als ob ein zufälliger Münzwurf entscheidet welche
            Aufgabe in einem Durchgang bearbeitet werden soll. Somit wirst du manchmal die Aufgabe
            wiederholen und manchmal die Aufgabe wechseln. Du sollst aber nicht mitzählen wie häufig du jede
