@@ -166,7 +166,7 @@ const WELCOME_INSTRUCTIONS = {
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 45 Minuten konzentriert zu arbeiten.<br><br>
-           Du erhältst den Code für VP-Stunden/Geld und weitere Anweisungen am Ende des Experiments.
+           Du erhälst den Code für 1 VP-Stunde oder Geld (10€) und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            hiwipibio@gmail.com <br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
@@ -244,9 +244,7 @@ function hand_instructions() {
       lineheight: 1.5,
     });
     resp_mapping2 = generate_formatted_html({
-      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
-             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
-             <span style="font-weight:bold";>
+      text: `<span style="font-weight:bold";>
              Farbaufgabe = Linke Hand<br> 
              Buchstabeaufgabe = Rechte Hand
              </span><br><br>
@@ -287,9 +285,7 @@ function hand_instructions() {
       lineheight: 1.5,
     });
     resp_mapping2 = generate_formatted_html({
-      text: `Für die Buchstabenaufgabe musst du entscheiden welcher Buchstabe präsentiert ist.
-             Für die Farbaufgabe musst du entscheiden welche Farbe ein Quadrat hat. Es gilt:<br><br>
-             <span style="font-weight:bold";>
+      text: `<span style="font-weight:bold";>
              Buchstabeaufgabe = Linke Hand<br>
              Farbaufgabe = Rechte Hand</span>:<br>
              ${get_keymapping_hand(STIM_RESP)}<br><br>
@@ -305,20 +301,8 @@ function hand_instructions() {
 
 function hand_feedback() {
   let resp_mapping1;
-  let resp_mapping2;
   if (STIM_RESP.hand.lt === 'colour') {
     resp_mapping1 = generate_formatted_html({
-      text: `<span style="font-weight:bold";>
-             Farbaufgabe = Linke Hand<br> 
-             Buchstabeaufgabe = Rechte Hand
-             </span><br><br>
-             ${get_keymapping_hand(STIM_RESP)}`,
-      align: 'center',
-      fontsize: 30,
-      width: '1200px',
-      lineheight: 1.5,
-    });
-    resp_mapping2 = generate_formatted_html({
       text: `<span style="font-weight:bold";>
              Farbaufgabe = Linke Hand<br> 
              Buchstabeaufgabe = Rechte Hand
@@ -340,18 +324,8 @@ function hand_feedback() {
       width: '1200px',
       lineheight: 1.5,
     });
-    resp_mapping2 = generate_formatted_html({
-      text: `<span style="font-weight:bold";>
-             Buchstabeaufgabe = Linke Hand<br>
-             Farbaufgabe = Rechte Hand</span>:<br>
-             ${get_keymapping_hand(STIM_RESP)}`,
-      align: 'center',
-      fontsize: 30,
-      width: '1200px',
-      lineheight: 1.5,
-    });
   }
-  return [resp_mapping1, resp_mapping2];
+  return resp_mapping1;
 }
 
 function finger_instructions() {
@@ -440,19 +414,8 @@ function finger_instructions() {
 
 function finger_feedback() {
   let resp_mapping1;
-  let resp_mapping2;
   if (STIM_RESP.finger.it === 'colour') {
     resp_mapping1 = generate_formatted_html({
-      text: `<span style="font-weight:bold";>
-             Farbaufgabe = Zeigefinger<br>
-             Buchstabeaufgabe = Mittelfinger</span>:<br><br>
-             ${get_keymapping_finger(STIM_RESP)}`,
-      align: 'center',
-      fontsize: 30,
-      width: '1200px',
-      lineheight: 1.5,
-    });
-    resp_mapping2 = generate_formatted_html({
       text: `<span style="font-weight:bold";>
              Farbaufgabe = Zeigefinger<br>
              Buchstabeaufgabe = Mittelfinger</span>:<br><br>
@@ -473,24 +436,14 @@ function finger_feedback() {
       width: '1200px',
       lineheight: 1.5,
     });
-    resp_mapping2 = generate_formatted_html({
-      text: `<span style="font-weight:bold";>
-             Buchstabeaufgabe = Zeigefinger<br>
-             Farbaufgabe = Mittelfinger</span>:<br><br>
-             ${get_keymapping_finger(STIM_RESP)}`,
-      align: 'center',
-      fontsize: 30,
-      width: '1200px',
-      lineheight: 1.5,
-    });
   }
-  return [resp_mapping1, resp_mapping2];
+  return resp_mapping1;
 }
 
 const [TASK_INSTRUCTIONS_HAND1, RESPMAPPING_HAND1, RESPMAPPING_HAND2] = hand_instructions();
 const [TASK_INSTRUCTIONS_FINGER1, RESPMAPPING_FINGER1, RESPMAPPING_FINGER2] = finger_instructions();
-const [RESPMAPPING_HAND1_TF, RESPMAPPING_HAND2_TF] = hand_feedback();
-const [RESPMAPPING_FINGER1_TF, RESPMAPPING_FINGER2_TF] = finger_feedback();
+const RESPMAPPING_HAND1_TF = hand_feedback();
+const RESPMAPPING_FINGER1_TF = finger_feedback();
 
 const TASK_INSTRUCTIONS = {
   type: jsPsychHtmlKeyboardResponseCanvas,
@@ -722,29 +675,29 @@ const VTS = {
       trial.choices = [];
       let mapping = STIM_RESP.order[VTS_DATA.half - 1];
       if (mapping === 'hand') {
-        if ((draw_letter === 1) && (STIM_RESP.hand.lt === 'letter')) {
+        if (draw_letter === 1 && STIM_RESP.hand.lt === 'letter') {
           trial.choices = trial.choices.concat(PRMS.leftHand);
         }
-        if ((draw_letter === 1) && (STIM_RESP.hand.rt === 'letter')) {
+        if (draw_letter === 1 && STIM_RESP.hand.rt === 'letter') {
           trial.choices = trial.choices.concat(PRMS.rightHand);
         }
-        if ((draw_colour === 1) && (STIM_RESP.hand.lt === 'colour')) {
+        if (draw_colour === 1 && STIM_RESP.hand.lt === 'colour') {
           trial.choices = trial.choices.concat(PRMS.leftHand);
         }
-        if ((draw_colour === 1) && (STIM_RESP.hand.rt === 'colour')) {
+        if (draw_colour === 1 && STIM_RESP.hand.rt === 'colour') {
           trial.choices = trial.choices.concat(PRMS.rightHand);
         }
       } else if (mapping === 'finger') {
-        if ((draw_letter === 1) && (STIM_RESP.finger.it === 'letter')) {
+        if (draw_letter === 1 && STIM_RESP.finger.it === 'letter') {
           trial.choices = trial.choices.concat(PRMS.indexFinger);
         }
-        if ((draw_letter === 1) && (STIM_RESP.finger.mt === 'letter')) {
+        if (draw_letter === 1 && STIM_RESP.finger.mt === 'letter') {
           trial.choices = trial.choices.concat(PRMS.middleFinger);
         }
-        if ((draw_colour === 1) && (STIM_RESP.finger.it === 'colour')) {
+        if (draw_colour === 1 && STIM_RESP.finger.it === 'colour') {
           trial.choices = trial.choices.concat(PRMS.indexFinger);
         }
-        if ((draw_colour === 1) && (STIM_RESP.finger.mt === 'colour')) {
+        if (draw_colour === 1 && STIM_RESP.finger.mt === 'colour') {
           trial.choices = trial.choices.concat(PRMS.middleFinger);
         }
       }
@@ -875,7 +828,7 @@ const VP_CODE_INSTRUCTIONS2 = {
        hiwipibio@gmail.com <br><br>
        Code: ` +
       RANDOM_STRING +
-      `Wenn du statt deiner Versuchspersonenstunde lieber Geld möchtest, dann sende den Code mit
+      `<br><br>Wenn du statt deiner VP-Stunde lieber Geld möchtest, dann sende den Code mit
        deinem Namen und Bankverbindung mit dem Betreff 'Versuchspersonengeld' an die obige E-
        Mailadresse.<br><br>
       Drücke die Leertaste, um fortzufahren!`,
@@ -945,7 +898,7 @@ function genExpSeq() {
       exp.push(VTS);
       exp.push(TRIAL_FEEDBACK); // duration = 0 (Correct), 2000 (Error)
       exp.push(RSI); // duration = RSI of 500
-      if ((blk === 0) || (blk === PRMS.nBlks / 2)) {
+      if (blk === 0 || blk === PRMS.nBlks / 2) {
         exp.push(IF_ERROR_TASK_INSTRUCTIONS_MAPPING);
       }
     }
