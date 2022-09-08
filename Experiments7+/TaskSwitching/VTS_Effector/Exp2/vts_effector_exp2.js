@@ -26,13 +26,13 @@ const DE_EN = { red: 'rot', blue: 'blau', green: 'grün', yellow: 'gelb', Q: 'Q'
 
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nTrls: 100, // number of trials within a block
+  nTrls: 84, // number of trials within a block
   nBlks: 14, // number of blocks
   nPoor: 10, // number of errors allowed in block before extended message during break
-  fbDur: [0, 2500], // feedback duration for correct and incorrect trials, respectively
+  fbDur: [0, 2250], // feedback duration for correct and incorrect trials, respectively
   fbText: ['', 'Falsch!'],
   rsi: 500,
-  waitDur: 30000, // wait time at end of block if too many errors!
+  waitDur: 25000, // wait time at end of block if too many errors!
   stimFont: '80px Arial',
   rectLineWidth: 10,
   rectHeight: 100,
