@@ -818,7 +818,7 @@ const PROLIFIC = {
       `Super, du bist am Ende des Experiments!
        Vielen Dank für deine Teilnahme :)<br><br>
        Du wirst nun zu Prolific zurückgeleitet:<br><br>
-       https://app.prolific.co/submissions/complete?cc=C19XBROC<br><br>
+       https://app.prolific.co/submissions/complete?cc=CBWN98C6<br><br>
       Drücke die Leertaste, um fortzufahren!`,
     align: 'left',
     fontsize: 30,
@@ -826,7 +826,7 @@ const PROLIFIC = {
     lineheight: 1.5,
   }),
   on_finish: function () {
-    window.location.replace('https://app.prolific.co/submissions/complete?cc=C19XBROC');
+    window.location.replace('https://app.prolific.co/submissions/complete?cc=CBWN98C6');
   },
 };
 
