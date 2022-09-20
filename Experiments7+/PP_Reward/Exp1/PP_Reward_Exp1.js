@@ -13,23 +13,24 @@ const CANVAS_BORDER = '5px solid black';
 // Letter task = primary
 // Colour task = background
 
-const LETTERS = shuffle(['K', 'G', 'L']);
+const LETTERS = shuffle(['K', 'G', 'T']);
 const COLOURS = shuffle(['red', 'blue', 'green']);
 
 const EN_DE = { red: 'rot', blue: 'blau', green: 'grün' };
 
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nTrls: 80, // number of trials per block
-  nBlks: 8, // number of blocks
-  fbDur: [500, 2000, 2000, 2000], // feedback duration for correct and incorrect trials, respectively
+  nTrls: 72, // number of trials per block
+  nBlks: 10, // number of blocks
+  fbDur: [1000, 2000, 2000, 2000], // feedback duration for correct and incorrect trials, respectively
   tooSlow: 2000,
+  tooSlowP: 3000,
   tooFast: 150,
-  fbText: ['Richtig', 'Falsch!', 'Zu langsam!', 'Zu schnell!'],
+  rsi: 500,
+  fbText: ['', 'Falsch!', 'Zu langsam!', 'Zu schnell!'],
   fixSize: 10, // size of fixation cross
   fixWidth: 4, // size of fixation cross
   fixDur: 500, // duration of fixation cross
-  rsi: 500,
   stimFont: 'bold 70px Arial',
   lineWidth: 12,
   colours1: [COLOURS[0], COLOURS[1]],
@@ -57,13 +58,15 @@ const WELCOME_INSTRUCTIONS = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
-    text: `Willkommen zu unserem Experiment:<br><br>
-           Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+    text: `Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 35 Minuten konzentriert zu arbeiten.<br><br>
            Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
-           Bei Fragen oder Problemen wende dich bitte an:<br><br>
-           hiwipibio@gmail.com <br><br>
+           Während des Experiments ist es möglich Punkte zu sammeln. Die 10% Versuchspersonen mit
+           den meisten Punkten bekommen einen 10 € Gutschein. Dieser kann nach Wahl
+           entweder von Amazon, Osiander oder der Deutschen Bahn sein.<br><br>
+           Bei Fragen oder Problemen wende dich bitte an:<br>
+           roy.chandrakant-mehta@student.uni-tuebingen.de<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     fontsize: 30,
@@ -81,7 +84,7 @@ const VP_CODE_INSTRUCTIONS1 = {
   stimulus: generate_formatted_html({
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
     am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-    hiwipibio@gmail.com<br><br>
+    roy.chandrakant-mehta@student.uni-tuebingen.de<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
     fontsize: 30,
@@ -111,6 +114,44 @@ const TASK_INSTRUCTIONS1 = {
   }),
 };
 
+const TASK_INSTRUCTIONS_MANIPULATION1 = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `Nach korrekten Durchgängen kannst du +2 Punkte oder +10 Punkte erhalten.<br>
+           Wenn die Farbaufgabe korrekt war: +10 mit 50% Wahrscheinlichkeit + 2 mit 50% Wahrscheinlichkeit<br>
+           Wenn die Buchstabenaufgabe korrekt war: +10 mit 50% Wahrscheinlichkeit + 2 mit 50% Wahrscheinlichkeit<br>
+           Versuche soviele Punkte wie möglich zu sammeln!<br><br>
+           Drücke eine beliebige Taste, um fortzufahren!`,
+    align: 'left',
+    fontsize: 30,
+    width: '1200px',
+    bold: true,
+    lineheight: 1.5,
+  }),
+};
+
+const TASK_INSTRUCTIONS_MANIPULATION2 = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `****DIE HÄLFTE IST GESCHAFFT****<br><br>
+           Es gilt weiterhin: Wenn die Farbaufgabe korrekt war: +10 mit 50% Wahrscheinlichkeit + 2 mit 50% Wahrscheinlichkeit<br>
+           Wenn die Buchstabenaufgabe korrekt war: +10 mit 50% Wahrscheinlichkeit + 2 mit 50% Wahrscheinlichkeit<br>
+           Versuche soviele Punkte wie möglich zu sammeln!<br><br>
+           Drücke eine beliebige Taste, um fortzufahren!`,
+    align: 'left',
+    fontsize: 30,
+    width: '1200px',
+    bold: true,
+    lineheight: 1.5,
+  }),
+};
+
 const RESP_TEXT = `1. Priorität: Farbaufge<br><span style="color: ${COLOURS[0]}">${
   EN_DE[COLOURS[0]]
 }</span> &emsp;&emsp; <span style="color: ${COLOURS[1]}">${
@@ -123,6 +164,16 @@ const RESP_TEXT = `1. Priorität: Farbaufge<br><span style="color: ${COLOURS[0]}
   LETTERS[1]
 }<br> (Q-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (P-Taste)<br><br> 
            Drücke eine beliebige Taste, um fortzufahren!`;
+
+const RESP_TEXT_TRIAL = `<span style="color: ${COLOURS[0]}">${
+  EN_DE[COLOURS[0]]
+}</span> &emsp;&emsp; <span style="color: ${COLOURS[1]}">${
+  EN_DE[COLOURS[1]]
+}</span><br> (Q-Taste) &emsp;&emsp; (P-Taste) <br><br>Wenn Farbe <span style="color: ${COLOURS[2]}">${
+  EN_DE[COLOURS[2]]
+}, </span>dann<br><br>${LETTERS[0]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ${
+  LETTERS[1]
+}<br> (Q-Taste)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (P-Taste)<br><br>`;
 
 const TASK_INSTRUCTIONS2 = {
   type: jsPsychHtmlKeyboardResponseCanvas,
@@ -286,16 +337,16 @@ function codeTrial() {
   let reward;
   if (corrCode === 1) {
     if (dat.blk_type === 'HiPri_LowBack' && dat.response_task === 'primary') {
-      reward = Math.random() < 0.8 ? 10 : 1;
+      reward = Math.random() < 0.8 ? 10 : 2;
     }
     if (dat.blk_type === 'HiPri_LowBack' && dat.response_task === 'background') {
-      reward = Math.random() < 0.2 ? 10 : 1;
+      reward = Math.random() < 0.2 ? 10 : 2;
     }
     if (dat.blk_type === 'LowPri_HighBack' && dat.response_task === 'primary') {
-      reward = Math.random() < 0.2 ? 10 : 1;
+      reward = Math.random() < 0.2 ? 10 : 2;
     }
     if (dat.blk_type === 'LowPri_HighBack' && dat.response_task === 'background') {
-      reward = Math.random() < 0.8 ? 10 : 1;
+      reward = Math.random() < 0.8 ? 10 : 2;
     }
   } else {
     reward = 0;
@@ -304,7 +355,7 @@ function codeTrial() {
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
-    blockNum: PRMS.cBLK,
+    blockNum: PRMS.cBlk,
     trialNum: PRMS.cTrl,
     corrCode: corrCode,
     reward: reward,
@@ -320,7 +371,7 @@ const PP_TRIAL = {
   translate_origin: true,
   response_ends_trial: true,
   choices: PRMS.respKeys,
-  trial_duration: PRMS.tooSlow,
+  trial_duration: null,
   func: drawStimulus,
   letter: null,
   colour: null,
@@ -333,6 +384,13 @@ const PP_TRIAL = {
     letter: jsPsych.timelineVariable('letter'),
     compatibility: jsPsych.timelineVariable('compatibility'),
     correct_key: jsPsych.timelineVariable('key'),
+  },
+  on_start: function (trial) {
+    if ((PRMS.cBlk === 1) | (PRMS.cBlk === PRMS.nBlks / 2 + 1)) {
+      trial.trial_duration === PRMS.tooSlowP;
+    } else {
+      trial.trial_duration === PRMS.tooSlow;
+    }
   },
   on_finish: function () {
     codeTrial();
@@ -350,22 +408,40 @@ const TRIAL_FEEDBACK = {
   response_ends_trial: false,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.stimulus =
-      generate_formatted_html({
-        text: PRMS.fbText[dat.corrCode - 1],
-        align: 'center',
-        fontsize: 36,
-        width: '1200px',
-        bold: true,
-      }) +
-      generate_formatted_html({
-        text: `${dat.reward} Punkte`,
-        align: 'center',
-        fontsize: 36,
-        width: '1200px',
-        bold: true,
-      });
     trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
+    if (dat.corrCode === 1) {
+      trial.stimulus =
+        generate_formatted_html({
+          text: PRMS.fbText[dat.corrCode - 1],
+          align: 'center',
+          fontsize: 36,
+          width: '1200px',
+          bold: true,
+        }) +
+        generate_formatted_html({
+          text: `+ ${dat.reward} Punkte`,
+          align: 'center',
+          fontsize: 36,
+          width: '1200px',
+          bold: true,
+        });
+    } else {
+      trial.stimulus =
+        generate_formatted_html({
+          text: `Falsch---keine Punkte!<br>`,
+          align: 'center',
+          fontsize: 36,
+          width: '1200px',
+          bold: true,
+        }) +
+        generate_formatted_html({
+          text: RESP_TEXT_TRIAL,
+          align: 'center',
+          fontsize: 36,
+          width: '1200px',
+          bold: true,
+        });
+    }
   },
 };
 
@@ -410,18 +486,18 @@ const BLOCK_FEEDBACK = {
     trial.stimulus = blockFeedbackTxt({ stim: 'ppr1' });
   },
   on_finish: function () {
-    PRMS.cBLK += 1;
+    PRMS.cBlk += 1;
     PRMS.cTrl = 1;
   },
 };
 
 const TRIAL_TIMELINE_HIGHPRI_LOWBACK = {
-  timeline: [FIXATION_CROSS, PP_TRIAL, TRIAL_FEEDBACK, RSI],
+  timeline: [FIXATION_CROSS, PP_TRIAL, TRIAL_FEEDBACK],
   timeline_variables: TRIALS_HIPRI_LOWBACK,
 };
 
 const TRIAL_TIMELINE_LOWPRI_HIGHBACK = {
-  timeline: [FIXATION_CROSS, PP_TRIAL, TRIAL_FEEDBACK, RSI],
+  timeline: [FIXATION_CROSS, PP_TRIAL, TRIAL_FEEDBACK],
   timeline_variables: TRIALS_LOWPRI_HIGHBACK,
 };
 
@@ -441,7 +517,7 @@ const VP_CODE_INSTRUCTIONS2 = {
        zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
        an:<br><br>
-       hiwipibio@gmail.com <br><br>
+       roy.chandrakant-mehta@student.uni-tuebingen.de<br><br>
        Code: ` +
       RANDOM_STRING +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
@@ -451,6 +527,36 @@ const VP_CODE_INSTRUCTIONS2 = {
     bold: true,
     lineheight: 1.5,
   }),
+};
+
+const EMAIL_OPTION_INSTRUCTIONS = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  response_ends_trial: true,
+  choices: [' '],
+  stimulus: generate_formatted_html({
+    text: `Das Experiment ist jetzt beendet.<br><br>
+      Vielen Dank für Deine Teilnahme!<br><br>
+      Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
+      Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
+      Falls Du Fragen zu unserem Experiment hast, kannst Du uns gerne unter folgender E-Mail-Adresse kontaktieren:<br><br>
+      roy.chandrakant-mehta@student.uni-tuebingen.de<br><br>
+      Drücke die Leertaste, um fortzufahren!`,
+    fontsize: 26,
+    align: 'left',
+  }),
+};
+
+const EMAIL_OPTION = {
+  type: jsPsychSurveyText,
+  questions: [{ prompt: 'E-Mail-Addresse?', placeholder: 'email@email', columns: 50, required: false, name: 'email' }],
+  button_label: 'Weiter',
+  on_finish: function () {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    jsPsych.data.addProperties({ email: dat.response.email });
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -505,6 +611,13 @@ function genExpSeq() {
   }
 
   for (let blk = 0; blk < PRMS.nBlks; blk++) {
+    // manipulation instructions at very start or half way
+    if (blk === 0) {
+      exp.push(TASK_INSTRUCTIONS_MANIPULATION1);
+    } else if (blk === PRMS.cBlk / 2) {
+      exp.push(TASK_INSTRUCTIONS_MANIPULATION2);
+    }
+
     exp.push(TASK_INSTRUCTIONS_BLOCK_START);
     exp.push(RSI); // blank before 1st trial start
 
@@ -524,6 +637,12 @@ function genExpSeq() {
     // between block feedback
     exp.push(BLOCK_FEEDBACK);
   }
+
+  // end of experiment stuff
+  // email
+  exp.push(mouseCursor(true));
+  exp.push(EMAIL_OPTION_INSTRUCTIONS);
+  exp.push(EMAIL_OPTION);
 
   // save data
   exp.push(SAVE_DATA);
