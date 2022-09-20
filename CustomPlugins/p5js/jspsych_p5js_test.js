@@ -5,6 +5,7 @@ const p5js = new p5((sketch) => {
     sketch.setup = () => { };
 });
 
+
 // Pre-load?
 let font = p5js.loadFont('https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf');
 let img = p5js.loadImage('jspsych-logo.jpeg');
@@ -27,8 +28,8 @@ function draw1() {
   let gridSize = 100;
   for (let x = gridSize; x <= p5js.width - gridSize; x += gridSize) {
     for (let y = gridSize; y <= p5js.height - gridSize; y += gridSize) {
-      p5js.rect(x - 1, y - 1, 2, 2);
-      p5js.stroke(p5js.random(0, 255), p5js.random(0, 255), p5js.random(0, 255));
+      p5js.rect(x - 1, y - 1, 10, 10);
+      // p5js.stroke(p5js.random(0, 255), p5js.random(0, 255), p5js.random(0, 255));
       p5js.line(x, y, p5js.width / 2, p5js.height / 2);
     }
   }
@@ -72,13 +73,6 @@ function draw4() {
 }
 
 function draw5() {
-  p5js.background(255);
-  p5js.rotateX(p5js.frameCount * 0.05);
-  p5js.rotateY(p5js.frameCount * 0.1);
-  p5js.torus(100, 20);
-}
-
-function draw6() {
   p5js.background(255);
 
   p5js.push();
@@ -136,19 +130,28 @@ function draw6() {
   p5js.pop();
 }
 
-const draw_calls = [draw1, draw2, draw3, draw4, draw5, draw6];
+const draw_calls = [draw1, draw2, draw3, draw4, draw5];
 
 let exp = [];
 for (let i = 0; i < draw_calls.length; i++) {
-  const tmp = {
-    type: 'p5js-canvas-keyboard-response',
-    canvas_size: [1280, 960],
-    draw: function () {
-      return draw_calls[i];
-    },
-    response_ends_trial: true,
-  };
-  exp.push(tmp);
+    const tmp = {
+        type: 'p5js-canvas-keyboard-response',
+        canvas_size: [1280, 960],
+        draw: function () {
+            return draw_calls[i];
+        },
+        response_ends_trial: true,
+        // on_start: function() {
+        //     const display_element = document.getElementById('jspsych-content');
+        //     display_element.innerHTML = "<div id='p5js_container''></div>";
+        //     let p5js_canvas;
+        //     p5js_canvas = p5js.createCanvas(900, 600, p5js.WEBGL);
+        //     p5js_canvas.canvas.style.border = '10px solid black';
+        //     p5js_canvas.parent(p5js_container);
+        //     p5js.draw = draw_calls[i];
+        // }
+    };
+    exp.push(tmp);
 }
 
 jsPsych.init({

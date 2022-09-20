@@ -56,12 +56,10 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
   plugin.trial = function (display_element, trial) {
     // setup canvas
     display_element.innerHTML = "<div id='p5js_container''></div>";
-
     let p5js_canvas;
     p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.WEBGL);
     p5js_canvas.canvas.style.border = trial.canvas_border;
     p5js_canvas.parent(p5js_container);
-
     p5js.draw = trial.draw();
 
     // store response
@@ -93,7 +91,6 @@ jsPsych.plugins['p5js-canvas-keyboard-response'] = (function () {
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
-
     };
 
     // function to handle responses by the subject
