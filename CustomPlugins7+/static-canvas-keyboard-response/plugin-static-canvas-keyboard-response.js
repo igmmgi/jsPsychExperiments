@@ -14,7 +14,7 @@ var jsPsychStaticCanvasKeyboardResponse = (function(jspsych) {
                 type: jspsych.ParameterType.FUNCTION,
                 array: true,
                 pretty_name: 'Function',
-                default: undefined,
+                default: {},
                 description: 'Function to call',
             },
             clear_screen: {
