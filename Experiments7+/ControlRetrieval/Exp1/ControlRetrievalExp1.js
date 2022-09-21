@@ -43,6 +43,12 @@
 // 2(Context transition: repetition vs. alternation)
 // with DVs being RT and ER
 
+// TO DO:
+// Instructions
+// Error feedback should include response mapping 
+// Check block
+
+
 const jsPsych = initJsPsych({});
 
 const CANVAS_COLOUR = 'rgba(0, 0, 0, 1)';
@@ -51,7 +57,7 @@ const CANVAS_BORDER = '0px solid black';
 
 // auditory and visual contexts
 const AUD_CTXS = ['../tones/silence.wav', '../tones/low.wav', '../tones/high.wav'];
-const VIS_CTXS = ['rgba(0, 0, 0, 1)', 'rgba(100, 100, 100, 1)', 'rgba(255, 255, 255, 1)'];
+const VIS_CTXS = ['rgba(0, 0, 0, 1)', 'rgba(125, 125, 125, 1)', 'rgba(255, 255, 255, 1)'];
 
 // index positions 0,1=visual context; 1,2=auditory context
 const STIM_COLS = shuffle(['Red', 'Green', 'Blue', 'Yellow']);
@@ -70,7 +76,7 @@ const RESP_KEYS_SHUFFLED = shuffle([
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nBlks: 15, // number of blocks
+  nBlks: 10, // number of blocks
   nTrls: 64, // number of trials per block
   fixDur: 200, // duration of fixation cross
   fixWidth: 5, // width fixation cross
@@ -82,7 +88,7 @@ const PRMS = {
   targetDur: 150, // duration of target stimulus
   circleRadius: 100, // size of the prime/target circles
   tooFast: 0, // response limit min
-  tooSlow: 2000, // response interval timeout
+  tooSlow: 2250, // response interval timeout
   fbDur: [0, 1000, 1000, 1000], // duration of feedback for each type (correct, error, too slow, too fast)
   fbTxt: ['', 'Falsch!', 'Zu langsam!', 'Zu schnell!'],
   fbTxtSizeTrial: 30,
@@ -223,7 +229,7 @@ const TRIAL_TIMELINE_CALIBRATION = {
   timeline_variables: TRIALS_CALIBRATION,
   sample: {
     type: 'fixed-repetitions',
-    size: 5, // repeat each tone X times
+    size: 8, // repeat each tone X times
   },
 };
 
