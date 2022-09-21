@@ -49,12 +49,12 @@ const CANVAS_COLOUR = 'rgba(0, 0, 0, 1)';
 const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = '0px solid black';
 
-const AUDITORY_CONTEXTS = ['../tones/silence.wav', '../tones/low.wav', '../tones/high.wav'];
-const VISUAL_CONTEXTS = ['rgba(0, 0, 0, 1)', 'rgba(100, 100, 100, 1)', 'rgba(200, 200, 200, 1)'];
+const AUD_CTXS = ['../tones/silence.wav', '../tones/low.wav', '../tones/high.wav'];
+const VIS_CTXS = ['rgba(0, 0, 0, 1)', 'rgba(100, 100, 100, 1)', 'rgba(200, 200, 200, 1)'];
 
 // index positions 0,1=visual context; 1,2=auditory context
-const STIMULI_COLOURS = shuffle(['Red', 'Green', 'Blue', 'Yellow']);
-// console.log(STIMULI_COLOURS);
+const STIM_COLS = shuffle(['Red', 'Green', 'Blue', 'Yellow']);
+// console.log(STIM_COLS);
 
 // index positions 0=visual context; 1=auditory context
 const RESP_KEYS = ['S', 'D', 'K', 'L'];
@@ -84,7 +84,7 @@ const PRMS = {
   tooSlow: 2000, // response interval timeout
   fbDur: [0, 1000, 1000, 1000], // duration of feedback for each type (correct, error, too slow, too fast)
   fbTxt: ['', 'Falsch!', 'Zu langsam!', 'Zu schnell!'],
-  fbTxtSizeTrial: 26,
+  fbTxtSizeTrial: 30,
   fbTxtSizeBlock: 26,
   waitBlankDur: 500, // interval between screens (e.g. instructions)
   iti: 1500, // duration of inter-trial-interval
@@ -95,7 +95,6 @@ const PRMS = {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-
 const TASK_INSTRUCTIONS1 = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
@@ -111,7 +110,7 @@ const TASK_INSTRUCTIONS1 = {
            hiwipibio@gmail.com <br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
-    color: 'white',
+    color: 'White',
     fontsize: 28,
     bold: true,
     lineheight: 1.5,
@@ -131,7 +130,7 @@ const TASK_INSTRUCTIONS_CALIBRATION = {
     Anmerkung: Es geht immer automatisch weiter (d.h. du musst keine Taste drücken!).<br><br>
     Bereit? Drücke eine beliebige Taste, um die Töne abzuspielen!`,
     align: 'left',
-    color: 'white',
+    color: 'White',
     fontsize: 28,
     bold: true,
     lineheight: 1.5,
@@ -139,14 +138,14 @@ const TASK_INSTRUCTIONS_CALIBRATION = {
 };
 
 const RESP_TEXT = generate_formatted_html({
-  text: `<span style="color: ${STIMULI_COLOURS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[0])]}">${
+  text: `<span style="color: ${STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[0])]}">${
     RESP_KEYS[0]
-  } Taste</span>&emsp;&emsp;<span style="color: ${STIMULI_COLOURS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[1])]}">${
+  } Taste</span>&emsp;&emsp;<span style="color: ${STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[1])]}">${
     RESP_KEYS[1]
   } Taste</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color: ${
-    STIMULI_COLOURS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[2])]
+    STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[2])]
   }">${RESP_KEYS[2]} Taste</span>&emsp;&emsp;<span style="color: ${
-    STIMULI_COLOURS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[3])]
+    STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[3])]
   }">${RESP_KEYS[3]} Taste</span>`,
   align: 'center',
   color: 'white',
@@ -168,17 +167,17 @@ const TASK_INSTRUCTIONS_RESP_MAPPING = {
 ////////////////////////////////////////////////////////////////////////
 const PRELOAD = {
   type: jsPsychPreload,
-  audio: AUDITORY_CONTEXTS,
+  audio: AUD_CTXS,
 };
 
-const TRIALS_CALIBRATION = [{ audio: AUDITORY_CONTEXTS[1] }, { audio: AUDITORY_CONTEXTS[2] }];
+const TRIALS_CALIBRATION = [{ audio: AUD_CTXS[1] }, { audio: AUD_CTXS[2] }];
 
 function draw_note() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
   ctx.textBaseline = 'middle';
   ctx.font = '100px monospace';
-  ctx.strokeText('\u{1F3A7}', -50, 0);
+  ctx.strokeText('\u{1F3A7}', -50, 0); // unicode symbol for headphones + sound
 }
 
 const AUDIO_CALIBRATION = {
@@ -209,28 +208,27 @@ const TRIAL_TIMELINE_CALIBRATION = {
   },
 };
 
-
 ////////////////////////////////////////////////////////////////////////
 //                         Timeline Variables                         //
 ////////////////////////////////////////////////////////////////////////
 // prettier-ignore
 const TRIALS = [
-    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[0], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[0])] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[1], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[1])] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[0], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[0])] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[1], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[1])] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[0], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[0])] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[1], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[1])] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[0], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[0])] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[1], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[1])] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[2], target_col: STIMULI_COLOURS[2], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[2])] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[3], target_col: STIMULI_COLOURS[3], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[3])] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[3], target_col: STIMULI_COLOURS[2], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[2])] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[2], target_col: STIMULI_COLOURS[3], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[3])] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[2], target_col: STIMULI_COLOURS[2], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[2])] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[3], target_col: STIMULI_COLOURS[3], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[3])] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[3], target_col: STIMULI_COLOURS[2], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[2])] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[2], target_col: STIMULI_COLOURS[3], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[3])] }
+    { ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[0], target_col: STIM_COLS[0], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
+    { ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[1], target_col: STIM_COLS[1], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
+    { ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[1], target_col: STIM_COLS[0], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
+    { ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[0], target_col: STIM_COLS[1], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
+    { ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[0], target_col: STIM_COLS[0], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
+    { ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[1], target_col: STIM_COLS[1], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
+    { ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[1], target_col: STIM_COLS[0], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
+    { ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[0], target_col: STIM_COLS[1], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
+    { ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], probe_col: STIM_COLS[2], target_col: STIM_COLS[2], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
+    { ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], probe_col: STIM_COLS[3], target_col: STIM_COLS[3], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
+    { ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], probe_col: STIM_COLS[3], target_col: STIM_COLS[2], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
+    { ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], probe_col: STIM_COLS[2], target_col: STIM_COLS[3], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
+    { ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], probe_col: STIM_COLS[2], target_col: STIM_COLS[2], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
+    { ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], probe_col: STIM_COLS[3], target_col: STIM_COLS[3], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
+    { ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], probe_col: STIM_COLS[3], target_col: STIM_COLS[2], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
+    { ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], probe_col: STIM_COLS[2], target_col: STIM_COLS[3], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] }
 ];
 
 ////////////////////////////////////////////////////////////////////////
@@ -367,7 +365,7 @@ const TARGET = {
     ctx_sound: jsPsych.timelineVariable('ctx_sound'),
     probe_col: jsPsych.timelineVariable('probe_col'),
     target_col: jsPsych.timelineVariable('target_col'),
-    compatibility: jsPsych.timelineVariable('compatibility'),
+    comp: jsPsych.timelineVariable('comp'),
     correct_key: jsPsych.timelineVariable('correct_key'),
   },
   on_finish: function () {
@@ -387,14 +385,9 @@ const TRIAL_FEEDBACK = {
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
-    trial.stimulus = generate_formatted_html({
-      text: PRMS.fbTxt[dat.corrCode - 1],
-      color: 'white',
-      align: 'center',
-      fontsize: PRMS.fbTxtSizeTrial,
-      width: '1200px',
-      bold: true,
-    });
+    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeTrial}px; color:White;">${
+      PRMS.fbTxt[dat.corrCode - 1]
+    }</div>`;
   },
 };
 
@@ -419,7 +412,7 @@ const BLOCK_FEEDBACK = {
   on_start: function (trial) {
     let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'cr1', blockNum: PRMS.cBlk } });
     let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
-    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px; color:white;">${text}</div>`;
+    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px; color:White;">${text}</div>`;
   },
   on_finish: function () {
     PRMS.cTrl = 1;
@@ -450,8 +443,9 @@ function genExpSeq() {
   /* exp.push(welcome_message()); */
   /* exp.push(vpInfoForm'/Common7+/vpInfoForm_de.html')); */
   /* exp.push(mouseCursor(false)); */
-  exp.push(TASK_INSTRUCTIONS1);
-  exp.push(WAIT_BLANK);
+
+  /*  exp.push(TASK_INSTRUCTIONS1); */
+  /* exp.push(WAIT_BLANK); */
 
   // audio calibration
   // exp.push(TASK_INSTRUCTIONS_CALIBRATION);
@@ -465,19 +459,19 @@ function genExpSeq() {
     exp.push(WAIT_BLANK); // blank before 1st trial start
 
     let blk_timeline = { ...TRIAL_TIMELINE };
-
     blk_timeline.sample = {
-      type: 'fixed-repetitions',
-      size: 1, // PRMS.nTrls / TRIALS.length,
+      type: 'alternate-groups',
+      groups: [
+        repeatArray([0, 1, 2, 3, 4, 5, 6, 7], PRMS.nTrls / TRIALS.length),
+        repeatArray([8, 9, 10, 11, 12, 13, 14, 15], PRMS.nTrls / TRIALS.length),
+      ],
+      randomize_group_order: true,
     };
     exp.push(blk_timeline);
 
     // between block feedback
     exp.push(BLOCK_FEEDBACK);
   }
-
-  exp.push(TASK_INSTRUCTIONS_RESP_MAPPING);
-  exp.push(TRIAL_TIMELINE);
 
   return exp;
 }
