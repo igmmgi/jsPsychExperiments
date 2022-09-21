@@ -95,7 +95,7 @@ const PRMS = {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const TASK_INSTRUCTIONS1 = {
+const WELCOME_INSTRUCTIONS = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
@@ -109,6 +109,24 @@ const TASK_INSTRUCTIONS1 = {
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            hiwipibio@gmail.com <br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
+    align: 'left',
+    color: 'White',
+    fontsize: 28,
+    bold: true,
+    lineheight: 1.5,
+  }),
+};
+
+const VP_CODE_INSTRUCTIONS1 = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
+    am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
+    roy.chandrakant-mehta@student.uni-tuebingen.de<br><br>
+    Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
     color: 'White',
     fontsize: 28,
@@ -148,7 +166,7 @@ const RESP_TEXT = generate_formatted_html({
     STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[3])]
   }">${RESP_KEYS[3]} Taste</span>`,
   align: 'center',
-  color: 'white',
+  color: 'White',
   fontsize: 28,
   bold: true,
   lineheight: 1.5,
@@ -429,6 +447,60 @@ const TRIAL_TIMELINE = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                              VP Stunden                            //
+////////////////////////////////////////////////////////////////////////
+const RANDOM_STRING = generateRandomString(16, 'cr1_');
+
+const VP_CODE_INSTRUCTIONS2 = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  response_ends_trial: true,
+  choices: [' '],
+  stimulus: generate_formatted_html({
+    text:
+      `Vielen Dank für Ihre Teilnahme.<br><br>
+       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
+       zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
+       Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
+       an:<br><br>
+       roy.chandrakant-mehta@student.uni-tuebingen.de<br><br>
+       Code: ` +
+      RANDOM_STRING +
+      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
+    align: 'left',
+    color: 'White',
+    fontsize: 28,
+    bold: true,
+    lineheight: 1.5,
+  }),
+};
+
+
+////////////////////////////////////////////////////////////////////////
+//                              Save                                  //
+////////////////////////////////////////////////////////////////////////
+const DIR_NAME = getDirName();
+const EXP_NAME = getFileName();
+
+function save() {
+  const vpNum = getTime();
+  jsPsych.data.addProperties({ vpNum: vpNum });
+
+  const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
+  saveData('/Common/write_data.php', data_fn, { stim: 'cr1' });
+  // saveDataLocal(data_fn, { stim: 'cr1' });
+
+  const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
+  saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);
+}
+
+const SAVE_DATA = {
+  type: jsPsychCallFunction,
+  func: save,
+  post_trial_gap: 1000,
+};
+
+
+////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
@@ -436,21 +508,23 @@ function genExpSeq() {
 
   let exp = [];
 
-  /* exp.push(fullscreen(true)); */
-  /* exp.push(browser_check(PRMS.screenRes)); */
-  /* exp.push(PRELOAD); */
-  /* exp.push(resize_browser()); */
-  /* exp.push(welcome_message()); */
-  /* exp.push(vpInfoForm'/Common7+/vpInfoForm_de.html')); */
-  /* exp.push(mouseCursor(false)); */
+  exp.push(fullscreen(true));
+  exp.push(browser_check(PRMS.screenRes));
+  exp.push(PRELOAD);
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  // exp.push(vpInfoForm'/Common7+/vpInfoForm_de.html'));
+  exp.push(mouseCursor(false));
 
-  /*  exp.push(TASK_INSTRUCTIONS1); */
-  /* exp.push(WAIT_BLANK); */
+  exp.push(WELCOME_INSTRUCTIONS);
+  exp.push(WAIT_BLANK);
+  exp.push(VP_CODE_INSTRUCTIONS1);
+  exp.push(WAIT_BLANK);
 
   // audio calibration
-  // exp.push(TASK_INSTRUCTIONS_CALIBRATION);
-  // exp.push(WAIT_BLANK);
-  // exp.push(TRIAL_TIMELINE_CALIBRATION);
+  exp.push(TASK_INSTRUCTIONS_CALIBRATION);
+  exp.push(WAIT_BLANK);
+  exp.push(TRIAL_TIMELINE_CALIBRATION);
 
   for (let blk = 0; blk < PRMS.nBlks; blk++) {
     // manipulation instructions at very start or half way
@@ -471,7 +545,18 @@ function genExpSeq() {
 
     // between block feedback
     exp.push(BLOCK_FEEDBACK);
+    exp.push(WAIT_BLANK); 
+
   }
+
+  // save data
+  exp.push(SAVE_DATA);
+
+  // debrief
+  exp.push(mouseCursor(true));
+  exp.push(VP_CODE_INSTRUCTIONS2);
+  exp.push(end_message());
+  exp.push(fullscreen(false));
 
   return exp;
 }
