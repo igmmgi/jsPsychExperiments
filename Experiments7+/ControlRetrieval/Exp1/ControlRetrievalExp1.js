@@ -51,7 +51,7 @@ const CANVAS_BORDER = '0px solid black';
 
 // auditory and visual contexts
 const AUD_CTXS = ['../tones/silence.wav', '../tones/low.wav', '../tones/high.wav'];
-const VIS_CTXS = ['rgba(0, 0, 0, 1)', 'rgba(100, 100, 100, 1)', 'rgba(200, 200, 200, 1)'];
+const VIS_CTXS = ['rgba(0, 0, 0, 1)', 'rgba(100, 100, 100, 1)', 'rgba(255, 255, 255, 1)'];
 
 // index positions 0,1=visual context; 1,2=auditory context
 const STIM_COLS = shuffle(['Red', 'Green', 'Blue', 'Yellow']);
@@ -81,14 +81,14 @@ const PRMS = {
   primeTargetISI: 150, // duration of interval between prime and target
   targetDur: 150, // duration of target stimulus
   circleRadius: 100, // size of the prime/target circles
-  tooFast: 150, // response limit min
+  tooFast: 0, // response limit min
   tooSlow: 2000, // response interval timeout
   fbDur: [0, 1000, 1000, 1000], // duration of feedback for each type (correct, error, too slow, too fast)
   fbTxt: ['', 'Falsch!', 'Zu langsam!', 'Zu schnell!'],
   fbTxtSizeTrial: 30,
   fbTxtSizeBlock: 26,
   waitBlankDur: 500, // interval between screens (e.g. instructions)
-  iti: 1500, // duration of inter-trial-interval
+  iti: 1000, // duration of inter-trial-interval
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
@@ -116,9 +116,6 @@ const WELCOME_INSTRUCTIONS = {
     bold: true,
     lineheight: 1.5,
   }),
-  on_finish: function () {
-    WAIT_BLANK;
-  },
 };
 
 const VP_CODE_INSTRUCTIONS1 = {
@@ -226,7 +223,7 @@ const TRIAL_TIMELINE_CALIBRATION = {
   timeline_variables: TRIALS_CALIBRATION,
   sample: {
     type: 'fixed-repetitions',
-    size: 1, // repeat each tone X times
+    size: 5, // repeat each tone X times
   },
 };
 
