@@ -50,17 +50,19 @@ const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = '0px solid black';
 
 const AUDITORY_CONTEXTS = ['../tones/silence.wav', '../tones/low.wav', '../tones/high.wav'];
-const VISUAL_CONTEXTS = ['rgba(0, 0, 0, 1)', 'rgba(100, 100, 100, 1)', 'rgba(255, 255, 255, 1)'];
+const VISUAL_CONTEXTS = ['rgba(0, 0, 0, 1)', 'rgba(100, 100, 100, 1)', 'rgba(200, 200, 200, 1)'];
 
 // index positions 0,1=visual context; 1,2=auditory context
 const STIMULI_COLOURS = shuffle(['Red', 'Green', 'Blue', 'Yellow']);
+// console.log(STIMULI_COLOURS);
 
 // index positions 0=visual context; 1=auditory context
-const RESP_KEYS = shuffle([
-  ['S', 'D'],
-  ['K', 'L'],
-]);
-
+const RESP_KEYS = ['S', 'D', 'K', 'L'];
+const RESP_KEYS_SHUFFLED = shuffle([
+  [RESP_KEYS[0], RESP_KEYS[1]],
+  [RESP_KEYS[2], RESP_KEYS[3]],
+]).flat();
+// console.log(RESP_KEYS_SHUFFLED);
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -78,12 +80,14 @@ const PRMS = {
   primeTargetISI: 150, // duration of interval between prime and target
   targetDur: 150, // duration of target stimulus
   circleRadius: 100, // size of the prime/target circles
+  tooFast: 150, // response limit min
   tooSlow: 2000, // response interval timeout
   fbDur: [0, 1000, 1000, 1000], // duration of feedback for each type (correct, error, too slow, too fast)
-  fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
+  fbTxt: ['', 'Falsch!', 'Zu langsam!', 'Zu schnell!'],
+  fbTxtSizeTrial: 26,
+  fbTxtSizeBlock: 26,
   waitBlankDur: 500, // interval between screens (e.g. instructions)
   iti: 1500, // duration of inter-trial-interval
-  respKeys: ['Q', 'P'],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
@@ -91,14 +95,6 @@ const PRMS = {
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
-const WAIT_BLANK = {
-  type: jsPsychStaticCanvasKeyboardResponse,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  trial_duration: PRMS.iti,
-  response_ends_trial: false,
-};
 
 const TASK_INSTRUCTIONS1 = {
   type: jsPsychHtmlKeyboardResponseCanvas,
@@ -120,7 +116,6 @@ const TASK_INSTRUCTIONS1 = {
     bold: true,
     lineheight: 1.5,
   }),
-  post_trial_gap: PRMS.waitDur,
 };
 
 const TASK_INSTRUCTIONS_CALIBRATION = {
@@ -141,6 +136,31 @@ const TASK_INSTRUCTIONS_CALIBRATION = {
     bold: true,
     lineheight: 1.5,
   }),
+};
+
+const RESP_TEXT = generate_formatted_html({
+  text: `<span style="color: ${STIMULI_COLOURS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[0])]}">${
+    RESP_KEYS[0]
+  } Taste</span>&emsp;&emsp;<span style="color: ${STIMULI_COLOURS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[1])]}">${
+    RESP_KEYS[1]
+  } Taste</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color: ${
+    STIMULI_COLOURS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[2])]
+  }">${RESP_KEYS[2]} Taste</span>&emsp;&emsp;<span style="color: ${
+    STIMULI_COLOURS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[3])]
+  }">${RESP_KEYS[3]} Taste</span>`,
+  align: 'center',
+  color: 'white',
+  fontsize: 28,
+  bold: true,
+  lineheight: 1.5,
+});
+
+const TASK_INSTRUCTIONS_RESP_MAPPING = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: RESP_TEXT,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -171,6 +191,15 @@ const AUDIO_CALIBRATION = {
   func: draw_note, // some visual feedback
 };
 
+const WAIT_BLANK = {
+  type: jsPsychStaticCanvasKeyboardResponse,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  trial_duration: PRMS.iti,
+  response_ends_trial: false,
+};
+
 const TRIAL_TIMELINE_CALIBRATION = {
   timeline: [AUDIO_CALIBRATION, WAIT_BLANK],
   timeline_variables: TRIALS_CALIBRATION,
@@ -180,32 +209,34 @@ const TRIAL_TIMELINE_CALIBRATION = {
   },
 };
 
+
 ////////////////////////////////////////////////////////////////////////
 //                         Timeline Variables                         //
 ////////////////////////////////////////////////////////////////////////
 // prettier-ignore
 const TRIALS = [
-    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[0], compatibility: "comp",   correct_key: RESP_KEYS[0][0] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[1], compatibility: "comp",   correct_key: RESP_KEYS[0][1] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[0], compatibility: "incomp", correct_key: RESP_KEYS[0][0] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[1], compatibility: "incomp", correct_key: RESP_KEYS[0][1] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[0], compatibility: "comp",   correct_key: RESP_KEYS[0][0] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[1], compatibility: "comp",   correct_key: RESP_KEYS[0][1] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[0], compatibility: "incomp", correct_key: RESP_KEYS[0][0] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[1], compatibility: "incomp", correct_key: RESP_KEYS[0][1] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[0], compatibility: "comp",   correct_key: RESP_KEYS[1][0] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[1], compatibility: "comp",   correct_key: RESP_KEYS[1][1] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[0], compatibility: "incomp", correct_key: RESP_KEYS[1][0] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[1], compatibility: "incomp", correct_key: RESP_KEYS[1][1] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[0], compatibility: "comp",   correct_key: RESP_KEYS[1][0] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[1], compatibility: "comp",   correct_key: RESP_KEYS[1][1] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[0], compatibility: "incomp", correct_key: RESP_KEYS[1][0] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[1], compatibility: "incomp", correct_key: RESP_KEYS[1][1] },
+    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[0], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[0])] },
+    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[1], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[1])] },
+    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[0], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[0])] },
+    { ctx_mod: "vis", intensity: "l", ctx_col: VISUAL_CONTEXTS[1], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[1], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[1])] },
+    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[0], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[0])] },
+    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[1], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[1])] },
+    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[1], target_col: STIMULI_COLOURS[0], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[0])] },
+    { ctx_mod: "vis", intensity: "h", ctx_col: VISUAL_CONTEXTS[2], ctx_sound: AUDITORY_CONTEXTS[0], probe_col: STIMULI_COLOURS[0], target_col: STIMULI_COLOURS[1], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[1])] },
+    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[2], target_col: STIMULI_COLOURS[2], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[2])] },
+    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[3], target_col: STIMULI_COLOURS[3], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[3])] },
+    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[3], target_col: STIMULI_COLOURS[2], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[2])] },
+    { ctx_mod: "aud", intensity: "l", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[1], probe_col: STIMULI_COLOURS[2], target_col: STIMULI_COLOURS[3], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[3])] },
+    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[2], target_col: STIMULI_COLOURS[2], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[2])] },
+    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[3], target_col: STIMULI_COLOURS[3], compatibility: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[3])] },
+    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[3], target_col: STIMULI_COLOURS[2], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[2])] },
+    { ctx_mod: "aud", intensity: "h", ctx_col: VISUAL_CONTEXTS[0], ctx_sound: AUDITORY_CONTEXTS[2], probe_col: STIMULI_COLOURS[2], target_col: STIMULI_COLOURS[3], compatibility: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIMULI_COLOURS.indexOf(STIMULI_COLOURS[3])] }
 ];
 
 ////////////////////////////////////////////////////////////////////////
 //                         Trial Parts                                //
 ////////////////////////////////////////////////////////////////////////
+
 function draw_fixation() {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
@@ -290,6 +321,33 @@ function draw_target(args) {
   ctx.fill();
 }
 
+function codeTrial() {
+  'use strict';
+
+  let dat = jsPsych.data.get().last(1).values()[0];
+  dat.rt = dat.rt !== null ? dat.rt : PRMS.tooSlow;
+
+  let corrCode = 0;
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_key);
+
+  if (correctKey && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
+    corrCode = 1; // correct
+  } else if (!correctKey && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
+    corrCode = 2; // choice error
+  } else if (dat.rt >= PRMS.tooSlow) {
+    corrCode = 3; // too slow
+  } else if (dat.rt <= PRMS.tooFast) {
+    corrCode = 4; // too fast
+  }
+
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    blockNum: PRMS.cBlk,
+    trialNum: PRMS.cTrl,
+    corrCode: corrCode,
+  });
+}
+
 const TARGET = {
   type: jsPsychStaticCanvasKeyboardResponse,
   canvas_colour: CANVAS_COLOUR,
@@ -297,7 +355,8 @@ const TARGET = {
   canvas_border: CANVAS_BORDER,
   translate_origin: true,
   response_ends_trial: true,
-  trial_duration: PRMS.targetDur,
+  stimulus_duration: PRMS.targetDur,
+  trial_duration: PRMS.tooSlow,
   func: draw_target,
   func_args: [{ colour: jsPsych.timelineVariable('target_col') }],
   data: {
@@ -311,6 +370,32 @@ const TARGET = {
     compatibility: jsPsych.timelineVariable('compatibility'),
     correct_key: jsPsych.timelineVariable('correct_key'),
   },
+  on_finish: function () {
+    codeTrial();
+    PRMS.cTrl += 1;
+  },
+};
+
+const TRIAL_FEEDBACK = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: '',
+  trial_duration: null,
+  response_ends_trial: false,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
+    trial.stimulus = generate_formatted_html({
+      text: PRMS.fbTxt[dat.corrCode - 1],
+      color: 'white',
+      align: 'center',
+      fontsize: fbTxtSizeTrial,
+      width: '1200px',
+      bold: true,
+    });
+  },
 };
 
 const ITI = {
@@ -323,11 +408,30 @@ const ITI = {
   response_ends_trial: false,
 };
 
+const BLOCK_FEEDBACK = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: '',
+  trial_duration: null,
+  response_ends_trial: true,
+  on_start: function (trial) {
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'cr1', blockNum: PRMS.cBlk } });
+    let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
+    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px; color:white;">${text}</div>`;
+  },
+  on_finish: function () {
+    PRMS.cTrl = 1;
+    PRMS.cBlk += 1;
+  },
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                         Trial Timeline                             //
 ////////////////////////////////////////////////////////////////////////
 const TRIAL_TIMELINE = {
-  timeline: [FIXATION_CROSS, CONTEXT, CONTEXT_PRIME_ISI, PRIME, PRIME_TARGET_ISI, TARGET, ITI],
+  timeline: [FIXATION_CROSS, CONTEXT, CONTEXT_PRIME_ISI, PRIME, PRIME_TARGET_ISI, TARGET, TRIAL_FEEDBACK, ITI],
   timeline_variables: TRIALS,
 };
 
@@ -344,15 +448,35 @@ function genExpSeq() {
   /* exp.push(PRELOAD); */
   /* exp.push(resize_browser()); */
   /* exp.push(welcome_message()); */
-  /* exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html')); */
+  /* exp.push(vpInfoForm'/Common7+/vpInfoForm_de.html')); */
   /* exp.push(mouseCursor(false)); */
   exp.push(TASK_INSTRUCTIONS1);
+  exp.push(WAIT_BLANK);
 
   // audio calibration
-  exp.push(TASK_INSTRUCTIONS_CALIBRATION);
-  exp.push(WAIT_BLANK);
-  exp.push(TRIAL_TIMELINE_CALIBRATION);
+  // exp.push(TASK_INSTRUCTIONS_CALIBRATION);
+  // exp.push(WAIT_BLANK);
+  // exp.push(TRIAL_TIMELINE_CALIBRATION);
 
+  for (let blk = 0; blk < PRMS.nBlks; blk++) {
+    // manipulation instructions at very start or half way
+
+    exp.push(TASK_INSTRUCTIONS_RESP_MAPPING);
+    exp.push(WAIT_BLANK); // blank before 1st trial start
+
+    let blk_timeline = { ...TRIAL_TIMELINE };
+
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: 1, // PRMS.nTrls / TRIALS.length,
+    };
+    // exp.push(blk_timeline);
+
+    // between block feedback
+    exp.push(BLOCK_FEEDBACK);
+  }
+
+  exp.push(TASK_INSTRUCTIONS_RESP_MAPPING);
   exp.push(TRIAL_TIMELINE);
 
   return exp;
