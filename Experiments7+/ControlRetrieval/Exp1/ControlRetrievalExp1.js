@@ -49,6 +49,7 @@ const CANVAS_COLOUR = 'rgba(0, 0, 0, 1)';
 const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = '0px solid black';
 
+// auditory and visual contexts
 const AUD_CTXS = ['../tones/silence.wav', '../tones/low.wav', '../tones/high.wav'];
 const VIS_CTXS = ['rgba(0, 0, 0, 1)', 'rgba(100, 100, 100, 1)', 'rgba(200, 200, 200, 1)'];
 
@@ -115,9 +116,9 @@ const WELCOME_INSTRUCTIONS = {
     bold: true,
     lineheight: 1.5,
   }),
-    on_finish: function() {
-        WAIT_BLANK;
-    }
+  on_finish: function () {
+    WAIT_BLANK;
+  },
 };
 
 const VP_CODE_INSTRUCTIONS1 = {
@@ -477,7 +478,6 @@ const VP_CODE_INSTRUCTIONS2 = {
   }),
 };
 
-
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
@@ -488,7 +488,7 @@ function save() {
   const vpNum = getTime();
   jsPsych.data.addProperties({ vpNum: vpNum });
 
-  const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
+  const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
   saveData('/Common/write_data.php', data_fn, { stim: 'cr1' });
   // saveDataLocal(data_fn, { stim: 'cr1' });
 
@@ -501,7 +501,6 @@ const SAVE_DATA = {
   func: save,
   post_trial_gap: 1000,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
@@ -548,8 +547,7 @@ function genExpSeq() {
 
     // between block feedback
     exp.push(BLOCK_FEEDBACK);
-    exp.push(WAIT_BLANK); 
-
+    exp.push(WAIT_BLANK);
   }
 
   // save data
