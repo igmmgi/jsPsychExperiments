@@ -391,7 +391,7 @@ const TRIAL_FEEDBACK = {
       text: PRMS.fbTxt[dat.corrCode - 1],
       color: 'white',
       align: 'center',
-      fontsize: fbTxtSizeTrial,
+      fontsize: PRMS.fbTxtSizeTrial,
       width: '1200px',
       bold: true,
     });
@@ -470,7 +470,7 @@ function genExpSeq() {
       type: 'fixed-repetitions',
       size: 1, // PRMS.nTrls / TRIALS.length,
     };
-    // exp.push(blk_timeline);
+    exp.push(blk_timeline);
 
     // between block feedback
     exp.push(BLOCK_FEEDBACK);
