@@ -107,7 +107,7 @@ const WELCOME_INSTRUCTIONS = {
            um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 35 Minuten konzentriert zu arbeiten.<br><br>
            Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
-           hiwipibio@gmail.com <br><br>
+           paul.kelber@student.uni-tuebingen.de<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
     align: 'left',
     color: 'White',
@@ -115,6 +115,9 @@ const WELCOME_INSTRUCTIONS = {
     bold: true,
     lineheight: 1.5,
   }),
+    on_finish: function() {
+        WAIT_BLANK;
+    }
 };
 
 const VP_CODE_INSTRUCTIONS1 = {
@@ -125,7 +128,7 @@ const VP_CODE_INSTRUCTIONS1 = {
   stimulus: generate_formatted_html({
     text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
     am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-    roy.chandrakant-mehta@student.uni-tuebingen.de<br><br>
+    paul.kelber@student.uni-tuebingen.de<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
     color: 'White',
@@ -462,7 +465,7 @@ const VP_CODE_INSTRUCTIONS2 = {
        zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
        Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
        an:<br><br>
-       roy.chandrakant-mehta@student.uni-tuebingen.de<br><br>
+       paul.kelber@student.uni-tuebingen.de<br><br>
        Code: ` +
       RANDOM_STRING +
       `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
