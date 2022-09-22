@@ -172,23 +172,6 @@ const WELCOME_INSTRUCTIONS = {
   }),
 };
 
-const VP_CODE_INSTRUCTIONS1 = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: generate_formatted_html({
-    text: `Du erhaelst den Code für VP-Stunden/Geld und weitere Anweisungen
-    am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-    hiwipibio@gmail.com<br><br>
-    Drücke eine beliebige Taste, um fortzufahren!`,
-    align: 'left',
-    fontsize: 30,
-    width: '1200px',
-    lineheight: 1.5,
-  }),
-};
-
 function hand_instructions() {
   let task_instructions;
   let resp_mapping1;
@@ -466,10 +449,9 @@ const TASK_INSTRUCTIONS2 = {
            <span style="font-weight: bold";> Du darfst in jedem Durchgang entscheiden welche der beiden Aufgaben du bearbeiten möchtest,
            aber versuche beide Aufgaben gleich häufig und in einer zufälligen Reihenfolge zu wählen.</span><br><br>
            Versuche somit die Aufgaben so zu wählen als ob ein zufälliger Münzwurf entscheidet welche
-           Aufgabe in einem Durchgang bearbeitet werden soll. Somit wirst du manchmal die Aufgabe
-           wiederholen und manchmal die Aufgabe wechseln. Du sollst aber nicht mitzählen wie häufig du jede
-           Aufgabe machst oder vorgeplante Wahlstrategien (z.B., immer abwechselnd die Aufgaben
-           bearbeiten) verwenden. Versuche einfach zufällig eine Aufgabe auszuwählen.<br><br>
+           Aufgabe in einem Durchgang bearbeitet werden soll. <span style="font-weight: bold";>Somit wirst du manchmal die Aufgabe
+           wiederholen und manchmal die Aufgabe wechseln</span>. Du sollst aber nicht mitzählen wie häufig du jede
+           Aufgabe machst oder vorgeplante Wahlstrategien verwenden. Versuche einfach zufällig eine Aufgabe auszuwählen.<br><br>
            Drücke eine beliebige Taste um fortzufahren.`,
     align: 'left',
     fontsize: 28,
@@ -490,7 +472,8 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
     trial.stimulus =
       generate_formatted_html({
         text: `Block ${VTS_DATA.cBlk} von ${PRMS.nBlks}<br><br>
-        Entscheide selbst welche Aufgabe du bearbeiten willst, aber versuche die Aufgaben zufällig auszuwählen. Es gilt:<br>`,
+         <span style="font-weight: bold";>Wichtig:</span> Versuche in jedem Durchgang zufällig eine der beiden Aufgaben auszuwählen.<br>
+          Somit wirst du manchmal die Aufgaben <span style="font-weight: bold";>wechseln</span> (z.B., Farbe und dann Buchstabe, oder Buchstabe und dann Farbe) und manchmal die Aufgaben <span style="font-weight: bold";>wiederholen</span> (z.B., Farbe und wieder Farbe, oder Buchstabe und wieder Buchstabe). Es gilt:<br>`,
         fontsize: 30,
         align: 'left',
         width: '1200px',
@@ -820,7 +803,6 @@ function genExpSeq() {
   exp.push(mouseCursor(false));
 
   exp.push(WELCOME_INSTRUCTIONS);
-  exp.push(VP_CODE_INSTRUCTIONS1);
   exp.push(TASK_INSTRUCTIONS1);
   exp.push(TASK_INSTRUCTIONS2);
 

@@ -27,7 +27,7 @@
 // Blank screen for 50 ms
 // Distractor (prime) for 150 ms
 // Blank screen for 150 ms
-// Target (probe) for 150 ms
+// Target for 150 ms
 // Blank screen until response (or 2000 ms)
 // Visual feedback for 1000 ms following
 //  incorrect ("Falsch")
@@ -43,13 +43,18 @@
 // 2(Context transition: repetition vs. alternation)
 // with DVs being RT and ER
 
-// TO DO:
-// Instructions
-// Error feedback should include response mapping 
-// Check block
-
+// const SONA_ID = jsPsych.data.urlVariables().sona_id;
 
 const jsPsych = initJsPsych({});
+
+/* const jsPsych = initJsPsych({ */
+/*   on_finish: function (data) { */
+/*     window.location.assign( */
+/*       'https://yourschool.sona-systems.com/webstudy_credit.aspx?experiment_id=123&credit_token=4e48f9b638a&survey_code=' + */
+/*         SONA_ID, */
+/*     ); */
+/*   }, */
+/* }); */
 
 const CANVAS_COLOUR = 'rgba(0, 0, 0, 1)';
 const CANVAS_SIZE = [1280, 720];
@@ -59,25 +64,27 @@ const CANVAS_BORDER = '0px solid black';
 const AUD_CTXS = ['../tones/silence.wav', '../tones/low.wav', '../tones/high.wav'];
 const VIS_CTXS = ['rgba(0, 0, 0, 1)', 'rgba(125, 125, 125, 1)', 'rgba(255, 255, 255, 1)'];
 
+const AUD_CTX_LABELS = shuffle(['Leise', 'Laut']);
+const VIS_CTX_LABELS = shuffle(['Dunkel', 'Hell']);
+const RESP_KEYS_CTX = ['D', 'K'];
+
 // index positions 0,1=visual context; 1,2=auditory context
 const STIM_COLS = shuffle(['Red', 'Green', 'Blue', 'Yellow']);
-// console.log(STIM_COLS);
 
 // index positions 0=visual context; 1=auditory context
-const RESP_KEYS = ['S', 'D', 'K', 'L'];
+const RESP_KEYS = ['Q', 'W', 'O', 'P'];
 const RESP_KEYS_SHUFFLED = shuffle([
   [RESP_KEYS[0], RESP_KEYS[1]],
   [RESP_KEYS[2], RESP_KEYS[3]],
 ]).flat();
-// console.log(RESP_KEYS_SHUFFLED);
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nBlks: 10, // number of blocks
-  nTrls: 64, // number of trials per block
+  nBlksExp: 1, //10, // number of blocks
+  nTrlsExp: 16, //64, // number of trials per block
   fixDur: 200, // duration of fixation cross
   fixWidth: 5, // width fixation cross
   fixSize: 20, // size of fixation
@@ -112,28 +119,9 @@ const WELCOME_INSTRUCTIONS = {
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest, Chrome oder Fifefox nutzt und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 35 Minuten konzentriert zu arbeiten.<br><br>
-           Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            paul.kelber@student.uni-tuebingen.de<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
-    align: 'left',
-    color: 'White',
-    fontsize: 28,
-    bold: true,
-    lineheight: 1.5,
-  }),
-};
-
-const VP_CODE_INSTRUCTIONS1 = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: generate_formatted_html({
-    text: `Du erhaelst den Code für die Versuchspersonenstunden und weitere Anweisungen
-    am Ende des Experimentes. Bei Fragen oder Problemen wende dich bitte an:<br><br>
-    paul.kelber@student.uni-tuebingen.de<br><br>
-    Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
     color: 'White',
     fontsize: 28,
@@ -162,7 +150,65 @@ const TASK_INSTRUCTIONS_CALIBRATION = {
   }),
 };
 
+const TASK_INSTRUCTIONS_CHECK = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: generate_formatted_html({
+    text: `Bitte stelle sicher, dass du die Töne und den Bildschirm während dem Experiment immer gut wahrnehmen kannst.<br>Im Laufe des Experimentes kann es zufällige Wahrnehmungschecks geben.<br><br>
+    Bei diesen Checks musst du entscheiden ob der Ton leise vs. laut oder der Bildschirm dunkel vs. hell ist.<br><br>
+    Drücke eine beliebige Taste, um fortzufahren!`,
+    align: 'left',
+    color: 'White',
+    fontsize: 28,
+    bold: true,
+    lineheight: 1.5,
+  }),
+};
+
 const RESP_TEXT = generate_formatted_html({
+  text: `In jedem Durchgang werden zwei farbige Kreise hintereinander dargeboten. 
+  Deine Aufgabe ist es, so schnell und akkurat wie möglich auf die Farbe des <i>zweiten</i> Kreises zu reagieren. 
+  Welche Taste Du bei welcher Farbe drücken sollst, ist unten dargestellt:<br><br>
+  <span style="color: ${STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[0])]}">${
+    RESP_KEYS[0]
+  } Taste</span>&emsp;&emsp;<span style="color: ${STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[1])]}">${
+    RESP_KEYS[1]
+  } Taste</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color: ${
+    STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[2])]
+  }">${RESP_KEYS[2]} Taste</span>&emsp;&emsp;<span style="color: ${
+    STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[3])]
+  }">${RESP_KEYS[3]} Taste</span><br><br>
+  Wenn du dir die Zuordnungen gut eingeprägt hast, kannst du eine beliebige Taste drücken.`,
+  align: 'center',
+  color: 'White',
+  fontsize: 28,
+  bold: true,
+  lineheight: 1.5,
+});
+
+const RESP_TEXT_BLOCK = generate_formatted_html({
+  text: `
+  Deine Aufgabe ist es, so schnell und akkurat wie möglich auf die Farbe des <i>zweiten</i> Kreises zu reagieren. Es gilt: <br/><br/>
+  <span style="color: ${STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[0])]}">${
+    RESP_KEYS[0]
+  } Taste</span>&emsp;&emsp;<span style="color: ${STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[1])]}">${
+    RESP_KEYS[1]
+  } Taste</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span style="color: ${
+    STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[2])]
+  }">${RESP_KEYS[2]} Taste</span>&emsp;&emsp;<span style="color: ${
+    STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[3])]
+  }">${RESP_KEYS[3]} Taste</span><br><br>
+    Drücke eine beliebige Taste, um fortzufahren!`,
+  align: 'center',
+  color: 'White',
+  fontsize: 28,
+  bold: true,
+  lineheight: 1.5,
+});
+
+const RESP_TEXT_TRIAL = generate_formatted_html({
   text: `<span style="color: ${STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[0])]}">${
     RESP_KEYS[0]
   } Taste</span>&emsp;&emsp;<span style="color: ${STIM_COLS[RESP_KEYS_SHUFFLED.indexOf(RESP_KEYS[1])]}">${
@@ -195,7 +241,45 @@ const PRELOAD = {
   audio: AUD_CTXS,
 };
 
+////////////////////////////////////////////////////////////////////////
+//                         Timeline Variables                         //
+////////////////////////////////////////////////////////////////////////
+// audio calibration
 const TRIALS_CALIBRATION = [{ audio: AUD_CTXS[1] }, { audio: AUD_CTXS[2] }];
+
+// context check
+// prettier-ignore
+const TRIALS_CONTEXT_CHECK = [
+    { blk: "check", ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], prime_col: "na", target_col: "na", comp: "na" },
+    { blk: "check", ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], prime_col: "na", target_col: "na", comp: "na" },
+    { blk: "check", ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], prime_col: "na", target_col: "na", comp: "na" },
+    { blk: "check", ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], prime_col: "na", target_col: "na", comp: "na" },
+];
+
+// Experiment trials
+// prettier-ignore
+const TRIALS_EXP = [
+    { blk: "exp", ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], prime_col: STIM_COLS[0], target_col: STIM_COLS[0], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
+    { blk: "exp", ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], prime_col: STIM_COLS[1], target_col: STIM_COLS[1], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
+    { blk: "exp", ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], prime_col: STIM_COLS[1], target_col: STIM_COLS[0], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
+    { blk: "exp", ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], prime_col: STIM_COLS[0], target_col: STIM_COLS[1], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
+    { blk: "exp", ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], prime_col: STIM_COLS[0], target_col: STIM_COLS[0], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
+    { blk: "exp", ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], prime_col: STIM_COLS[1], target_col: STIM_COLS[1], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
+    { blk: "exp", ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], prime_col: STIM_COLS[1], target_col: STIM_COLS[0], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
+    { blk: "exp", ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], prime_col: STIM_COLS[0], target_col: STIM_COLS[1], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
+    { blk: "exp", ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], prime_col: STIM_COLS[2], target_col: STIM_COLS[2], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
+    { blk: "exp", ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], prime_col: STIM_COLS[3], target_col: STIM_COLS[3], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
+    { blk: "exp", ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], prime_col: STIM_COLS[3], target_col: STIM_COLS[2], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
+    { blk: "exp", ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], prime_col: STIM_COLS[2], target_col: STIM_COLS[3], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
+    { blk: "exp", ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], prime_col: STIM_COLS[2], target_col: STIM_COLS[2], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
+    { blk: "exp", ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], prime_col: STIM_COLS[3], target_col: STIM_COLS[3], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
+    { blk: "exp", ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], prime_col: STIM_COLS[3], target_col: STIM_COLS[2], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
+    { blk: "exp", ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], prime_col: STIM_COLS[2], target_col: STIM_COLS[3], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] }
+];
+
+////////////////////////////////////////////////////////////////////////
+//                         Trial Parts                                //
+////////////////////////////////////////////////////////////////////////
 
 function draw_note() {
   'use strict';
@@ -223,42 +307,6 @@ const WAIT_BLANK = {
   trial_duration: PRMS.iti,
   response_ends_trial: false,
 };
-
-const TRIAL_TIMELINE_CALIBRATION = {
-  timeline: [AUDIO_CALIBRATION, WAIT_BLANK],
-  timeline_variables: TRIALS_CALIBRATION,
-  sample: {
-    type: 'fixed-repetitions',
-    size: 8, // repeat each tone X times
-  },
-};
-
-////////////////////////////////////////////////////////////////////////
-//                         Timeline Variables                         //
-////////////////////////////////////////////////////////////////////////
-// prettier-ignore
-const TRIALS = [
-    { ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[0], target_col: STIM_COLS[0], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[1], target_col: STIM_COLS[1], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[1], target_col: STIM_COLS[0], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
-    { ctx_mod: "vis", intensity: "l", ctx_col: VIS_CTXS[1], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[0], target_col: STIM_COLS[1], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[0], target_col: STIM_COLS[0], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[1], target_col: STIM_COLS[1], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[1], target_col: STIM_COLS[0], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[0])] },
-    { ctx_mod: "vis", intensity: "h", ctx_col: VIS_CTXS[2], ctx_sound: AUD_CTXS[0], probe_col: STIM_COLS[0], target_col: STIM_COLS[1], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[1])] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], probe_col: STIM_COLS[2], target_col: STIM_COLS[2], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], probe_col: STIM_COLS[3], target_col: STIM_COLS[3], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], probe_col: STIM_COLS[3], target_col: STIM_COLS[2], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
-    { ctx_mod: "aud", intensity: "l", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[1], probe_col: STIM_COLS[2], target_col: STIM_COLS[3], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], probe_col: STIM_COLS[2], target_col: STIM_COLS[2], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], probe_col: STIM_COLS[3], target_col: STIM_COLS[3], comp: "comp",   correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], probe_col: STIM_COLS[3], target_col: STIM_COLS[2], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[2])] },
-    { ctx_mod: "aud", intensity: "h", ctx_col: VIS_CTXS[0], ctx_sound: AUD_CTXS[2], probe_col: STIM_COLS[2], target_col: STIM_COLS[3], comp: "incomp", correct_key: RESP_KEYS_SHUFFLED[STIM_COLS.indexOf(STIM_COLS[3])] }
-];
-
-////////////////////////////////////////////////////////////////////////
-//                         Trial Parts                                //
-////////////////////////////////////////////////////////////////////////
 
 function draw_fixation() {
   'use strict';
@@ -294,6 +342,111 @@ const CONTEXT = {
   response_ends_trial: false,
 };
 
+function draw_check_question(args) {
+  'use strict';
+  let ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font = '50px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'white';
+  let question;
+  let answers;
+  if (args.ctx_mod == 'aud') {
+    question = 'Leise oder Laut?';
+    answers = `${args.labels[0]}: ${RESP_KEYS_CTX[0]}-Taste      ${args.labels[1]}: ${RESP_KEYS_CTX[1]}-Taste`;
+  } else if ((args.ctx_mod = 'vis')) {
+    question = 'Dunkel oder Hell?';
+    answers = `${args.labels[0]}: ${RESP_KEYS_CTX[0]}-Taste      ${args.labels[1]}: ${RESP_KEYS_CTX[1]}-Taste`;
+  }
+  ctx.fillText(question, 0, 0);
+  ctx.fillText(answers, 0, 100);
+}
+
+function code_trial_check() {
+  'use strict';
+
+  let dat = jsPsych.data.get().last(1).values()[0];
+
+  let corrCode = 0;
+  let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_key);
+
+  if (correctKey) {
+    corrCode = 1; // correct
+  } else if (!correctKey) {
+    corrCode = 2; // choice error
+  }
+
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    blockNum: PRMS.cBlk,
+    trialNum: PRMS.cTrl,
+    corrCode: corrCode,
+  });
+}
+
+const CONTEXT_CHECK = {
+  type: jsPsychStaticCanvasKeyboardResponse,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  translate_origin: true,
+  trial_duration: null,
+  func: draw_check_question,
+  func_args: null,
+  response_ends_trial: true,
+  data: {
+    stim: 'cr1_check',
+    blk: jsPsych.timelineVariable('blk'),
+    ctx_mod: jsPsych.timelineVariable('ctx_mod'),
+    intensity: jsPsych.timelineVariable('intensity'),
+    ctx_col: jsPsych.timelineVariable('ctx_col'),
+    ctx_sound: jsPsych.timelineVariable('ctx_sound'),
+    prime_col: jsPsych.timelineVariable('prime_col'),
+    target_col: jsPsych.timelineVariable('target_col'),
+    comp: jsPsych.timelineVariable('comp'),
+    correct_key: null,
+  },
+  on_start: function (trial) {
+    let labels;
+    if (trial.data.ctx_mod === 'vis') {
+      labels = shuffle(VIS_CTX_LABELS);
+      if (trial.data.intensity === 'h') {
+        trial.data.correct_key = RESP_KEYS_CTX[VIS_CTX_LABELS.indexOf('Hell')];
+      } else if (trial.data.intensity === 'l') {
+        trial.data.correct_key = RESP_KEYS_CTX[VIS_CTX_LABELS.indexOf('Dunkel')];
+      }
+    } else if (trial.data.ctx_mod === 'aud') {
+      labels = shuffle(AUD_CTX_LABELS);
+      if (trial.data.intensity === 'h') {
+        trial.data.correct_key = RESP_KEYS_CTX[AUD_CTX_LABELS.indexOf('Laut')];
+      } else if (trial.data.intensity === 'l') {
+        trial.data.correct_key = RESP_KEYS_CTX[AUD_CTX_LABELS.indexOf('Leise')];
+      }
+    }
+    trial.func_args = [{ ctx_mod: jsPsych.timelineVariable('ctx_mod'), labels: labels }];
+  },
+  on_finish: function () {
+    code_trial_check();
+  },
+};
+
+const TRIAL_FEEDBACK_CHECK = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: '',
+  trial_duration: null,
+  response_ends_trial: false,
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
+    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeTrial}px; color:White;">${
+      PRMS.fbTxt[dat.corrCode - 1]
+    }</div>`;
+  },
+};
+
 const CONTEXT_PRIME_ISI = {
   type: jsPsychStaticCanvasKeyboardResponse,
   canvas_colour: CANVAS_COLOUR,
@@ -322,7 +475,7 @@ const PRIME = {
   response_ends_trial: true,
   trial_duration: PRMS.primeDur,
   func: draw_prime,
-  func_args: [{ colour: jsPsych.timelineVariable('probe_col') }],
+  func_args: [{ colour: jsPsych.timelineVariable('prime_col') }],
 };
 
 const PRIME_TARGET_ISI = {
@@ -344,7 +497,7 @@ function draw_target(args) {
   ctx.fill();
 }
 
-function codeTrial() {
+function code_trial_exp() {
   'use strict';
 
   let dat = jsPsych.data.get().last(1).values()[0];
@@ -384,35 +537,38 @@ const TARGET = {
   func_args: [{ colour: jsPsych.timelineVariable('target_col') }],
   data: {
     stim: 'cr1',
+    blk: jsPsych.timelineVariable('blk'),
     ctx_mod: jsPsych.timelineVariable('ctx_mod'),
     intensity: jsPsych.timelineVariable('intensity'),
     ctx_col: jsPsych.timelineVariable('ctx_col'),
     ctx_sound: jsPsych.timelineVariable('ctx_sound'),
-    probe_col: jsPsych.timelineVariable('probe_col'),
+    prime_col: jsPsych.timelineVariable('prime_col'),
     target_col: jsPsych.timelineVariable('target_col'),
     comp: jsPsych.timelineVariable('comp'),
     correct_key: jsPsych.timelineVariable('correct_key'),
   },
   on_finish: function () {
-    codeTrial();
+    code_trial_exp();
     PRMS.cTrl += 1;
   },
 };
 
-const TRIAL_FEEDBACK = {
+const TRIAL_FEEDBACK_EXP = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: '',
-  trial_duration: null,
+  trial_duration: 0,
   response_ends_trial: false,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
-    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeTrial}px; color:White;">${
-      PRMS.fbTxt[dat.corrCode - 1]
-    }</div>`;
+    if (dat.corrCode !== 1) {
+      trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
+      trial.stimulus =
+        `<div style="font-size:${PRMS.fbTxtSizeTrial}px; color:White;">${PRMS.fbTxt[dat.corrCode - 1]}</div>` +
+        RESP_TEXT_TRIAL;
+    }
   },
 };
 
@@ -426,6 +582,34 @@ const ITI = {
   response_ends_trial: false,
 };
 
+const TASK_INSTRUCTIONS_BLOCK_START = {
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  stimulus: '',
+  on_start: function (trial) {
+    trial.stimulus =
+      generate_formatted_html({
+        text: `Block ${PRMS.cBlk} von ${PRMS.nBlksExp}`,
+        fontsize: 30,
+        color: 'white',
+        align: 'left',
+        width: '1200px',
+        bold: true,
+        lineheight: 1.5,
+      }) +
+      generate_formatted_html({
+        text: RESP_TEXT_BLOCK,
+        align: 'center',
+        fontsize: 30,
+        width: '1200px',
+        bold: true,
+        lineheight: 1.5,
+      });
+  },
+};
+
 const BLOCK_FEEDBACK = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
@@ -436,7 +620,7 @@ const BLOCK_FEEDBACK = {
   response_ends_trial: true,
   on_start: function (trial) {
     let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'cr1', blockNum: PRMS.cBlk } });
-    let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
+    let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlksExp, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
     trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px; color:White;">${text}</div>`;
   },
   on_finish: function () {
@@ -446,39 +630,34 @@ const BLOCK_FEEDBACK = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                         Trial Timeline                             //
+//                         Trial Timelines                            //
 ////////////////////////////////////////////////////////////////////////
-const TRIAL_TIMELINE = {
-  timeline: [FIXATION_CROSS, CONTEXT, CONTEXT_PRIME_ISI, PRIME, PRIME_TARGET_ISI, TARGET, TRIAL_FEEDBACK, ITI],
-  timeline_variables: TRIALS,
+
+const TRIAL_TIMELINE_CALIBRATION = {
+  timeline: [AUDIO_CALIBRATION, WAIT_BLANK],
+  timeline_variables: TRIALS_CALIBRATION,
+  sample: {
+    type: 'alternate-groups',
+    groups: [[0], [1]],
+  },
+};
+const TRIALS_TIMELINE_CALIBRATION = {
+  timeline: [TRIAL_TIMELINE_CALIBRATION],
+  repetitions: 5,
 };
 
-////////////////////////////////////////////////////////////////////////
-//                              VP Stunden                            //
-////////////////////////////////////////////////////////////////////////
-const RANDOM_STRING = generateRandomString(16, 'cr1_');
+const TRIAL_TIMELINE_CHECK = {
+  timeline: [FIXATION_CROSS, CONTEXT, CONTEXT_CHECK, TRIAL_FEEDBACK_CHECK, ITI],
+  timeline_variables: TRIALS_CONTEXT_CHECK,
+  sample: {
+    type: 'fixed-repetitions',
+    size: 3, // repeat each combination X times
+  },
+};
 
-const VP_CODE_INSTRUCTIONS2 = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  response_ends_trial: true,
-  choices: [' '],
-  stimulus: generate_formatted_html({
-    text:
-      `Vielen Dank für Ihre Teilnahme.<br><br>
-       Wenn Sie Versuchspersonenstunden benötigen, kopieren Sie den folgenden
-       zufällig generierten Code und senden Sie diesen zusammen mit Ihrer
-       Matrikelnummer per Email mit dem Betreff 'Versuchpersonenstunde'
-       an:<br><br>
-       paul.kelber@student.uni-tuebingen.de<br><br>
-       Code: ` +
-      RANDOM_STRING +
-      `<br><br>Drücken Sie die Leertaste, um fortzufahren!`,
-    align: 'left',
-    color: 'White',
-    fontsize: 28,
-    bold: true,
-    lineheight: 1.5,
-  }),
+const TRIAL_TIMELINE_EXP = {
+  timeline: [FIXATION_CROSS, CONTEXT, CONTEXT_PRIME_ISI, PRIME, PRIME_TARGET_ISI, TARGET, TRIAL_FEEDBACK_EXP, ITI],
+  timeline_variables: TRIALS_EXP,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -492,11 +671,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-  saveData('/Common/write_data.php', data_fn, { stim: 'cr1' });
-  // saveDataLocal(data_fn, { stim: 'cr1' });
-
-  const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
-  saveRandomCode('/Common/write_code.php', code_fn, RANDOM_STRING);
+  saveData('/Common/write_data.php', data_fn, { stim: ['cr1', 'cr1_check'] });
+  // saveDataLocal(data_fn, [{ stim: 'cr1'}, {stim:'cr1_check' }]);
 }
 
 const SAVE_DATA = {
@@ -513,40 +689,48 @@ function genExpSeq() {
 
   let exp = [];
 
-  exp.push(fullscreen(true));
-  exp.push(browser_check(PRMS.screenRes));
-  exp.push(PRELOAD);
-  exp.push(resize_browser());
-  exp.push(welcome_message());
-  // exp.push(vpInfoForm'/Common7+/vpInfoForm_de.html'));
-  exp.push(mouseCursor(false));
+  //exp.push(fullscreen(true));
+  // exp.push(browser_check(PRMS.screenRes));
+  // exp.push(PRELOAD);
+  // exp.push(resize_browser());
+  // exp.push(welcome_message());
+  // // exp.push(vpInfoForm'/Common7+/vpInfoForm_de.html'));
+  // exp.push(mouseCursor(false));
 
-  exp.push(WELCOME_INSTRUCTIONS);
-  exp.push(WAIT_BLANK);
-  exp.push(VP_CODE_INSTRUCTIONS1);
-  exp.push(WAIT_BLANK);
+  /* exp.push(WELCOME_INSTRUCTIONS); */
+  /* exp.push(WAIT_BLANK); */
 
-  // audio calibration
-  exp.push(TASK_INSTRUCTIONS_CALIBRATION);
-  exp.push(WAIT_BLANK);
-  exp.push(TRIAL_TIMELINE_CALIBRATION);
+  /* // audio calibration */
+  /* exp.push(TASK_INSTRUCTIONS_CALIBRATION); */
+  /* exp.push(WAIT_BLANK); */
+  /* exp.push(TRIALS_TIMELINE_CALIBRATION); */
 
-  for (let blk = 0; blk < PRMS.nBlks; blk++) {
+  // check block
+  exp.push(TASK_INSTRUCTIONS_CHECK);
+  exp.push(WAIT_BLANK);
+  exp.push(TRIAL_TIMELINE_CHECK);
+
+  exp.push(TASK_INSTRUCTIONS_RESP_MAPPING);
+  for (let blk = 0; blk < PRMS.nBlksExp; blk++) {
     // manipulation instructions at very start or half way
-
-    exp.push(TASK_INSTRUCTIONS_RESP_MAPPING);
+    exp.push(TASK_INSTRUCTIONS_BLOCK_START);
     exp.push(WAIT_BLANK); // blank before 1st trial start
 
-    let blk_timeline = { ...TRIAL_TIMELINE };
+    let blk_timeline = { ...TRIAL_TIMELINE_EXP };
     blk_timeline.sample = {
       type: 'alternate-groups',
       groups: [
-        repeatArray([0, 1, 2, 3, 4, 5, 6, 7], PRMS.nTrls / TRIALS.length),
-        repeatArray([8, 9, 10, 11, 12, 13, 14, 15], PRMS.nTrls / TRIALS.length),
+        repeatArray([0, 1, 2, 3, 4, 5, 6, 7], PRMS.nTrlsExp / TRIALS_EXP.length),
+        repeatArray([8, 9, 10, 11, 12, 13, 14, 15], PRMS.nTrlsExp / TRIALS_EXP.length),
       ],
       randomize_group_order: true,
     };
     exp.push(blk_timeline);
+
+    // After the break of block 5
+    if (blk === 4) {
+      exp.push(TRIAL_TIMELINE_CHECK);
+    }
 
     // between block feedback
     exp.push(BLOCK_FEEDBACK);
@@ -558,7 +742,6 @@ function genExpSeq() {
 
   // debrief
   exp.push(mouseCursor(true));
-  exp.push(VP_CODE_INSTRUCTIONS2);
   exp.push(end_message());
   exp.push(fullscreen(false));
 
