@@ -43,18 +43,14 @@
 // 2(Context transition: repetition vs. alternation)
 // with DVs being RT and ER
 
-// const SONA_ID = jsPsych.data.urlVariables().sona_id;
-
-const jsPsych = initJsPsych({});
-
-/* const jsPsych = initJsPsych({ */
-/*   on_finish: function (data) { */
-/*     window.location.assign( */
-/*       'https://yourschool.sona-systems.com/webstudy_credit.aspx?experiment_id=123&credit_token=4e48f9b638a&survey_code=' + */
-/*         SONA_ID, */
-/*     ); */
-/*   }, */
-/* }); */
+const jsPsych = initJsPsych({
+  on_finish: function (data) {
+    window.location.assign(
+      'https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=121&credit_token=a911377a8b704c02bdc19f555540e139&survey_code=' +
+        jsPsych.data.urlVariables().sona_id,
+    );
+  },
+});
 
 const CANVAS_COLOUR = 'rgba(0, 0, 0, 1)';
 const CANVAS_SIZE = [1280, 720];
@@ -83,8 +79,8 @@ const RESP_KEYS_SHUFFLED = shuffle([
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nBlksExp: 1, //10, // number of blocks
-  nTrlsExp: 16, //64, // number of trials per block
+  nBlksExp: 10, // number of blocks
+  nTrlsExp: 64, // number of trials per block
   fixDur: 200, // duration of fixation cross
   fixWidth: 5, // width fixation cross
   fixSize: 20, // size of fixation
@@ -688,18 +684,18 @@ function genExpSeq() {
 
   let exp = [];
 
-  //exp.push(fullscreen(true));
-  // exp.push(browser_check(PRMS.screenRes));
-  // exp.push(PRELOAD);
-  // exp.push(resize_browser());
-  // exp.push(welcome_message());
-  // // exp.push(vpInfoForm'/Common7+/vpInfoForm_de.html'));
-  // exp.push(mouseCursor(false));
+  exp.push(fullscreen(true));
+  exp.push(browser_check(PRMS.screenRes));
+  exp.push(PRELOAD);
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  exp.push(mouseCursor(false));
 
-  /* exp.push(WELCOME_INSTRUCTIONS); */
-  /* exp.push(WAIT_BLANK); */
+  exp.push(WELCOME_INSTRUCTIONS);
+  exp.push(WAIT_BLANK);
 
-  /* // audio calibration */
+  // audio calibration 
   exp.push(TASK_INSTRUCTIONS_CALIBRATION);
   exp.push(WAIT_BLANK);
   exp.push(TRIAL_TIMELINE_CALIBRATION);
