@@ -33,7 +33,7 @@
 //  incorrect ("Falsch")
 //  too fast (<150 ms; "Zu schnell")
 //  too slow ("Zu langsam")
-// Blank ITI for 1500 ms
+// Blank ITI for 1000 ms
 //
 // Block feedback provided regarding previous block mean RT/ER
 //
@@ -638,12 +638,11 @@ const TRIAL_TIMELINE_CALIBRATION = {
   timeline_variables: TRIALS_CALIBRATION,
   sample: {
     type: 'alternate-groups',
-    groups: [[0], [1]],
+    groups: [
+      [0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1],
+    ], // each 5 times
   },
-};
-const TRIALS_TIMELINE_CALIBRATION = {
-  timeline: [TRIAL_TIMELINE_CALIBRATION],
-  repetitions: 5,
 };
 
 const TRIAL_TIMELINE_CHECK = {
@@ -651,7 +650,7 @@ const TRIAL_TIMELINE_CHECK = {
   timeline_variables: TRIALS_CONTEXT_CHECK,
   sample: {
     type: 'fixed-repetitions',
-    size: 3, // repeat each combination X times
+    size: 3, // repeat each combination 3 times
   },
 };
 
@@ -701,16 +700,19 @@ function genExpSeq() {
   /* exp.push(WAIT_BLANK); */
 
   /* // audio calibration */
-  /* exp.push(TASK_INSTRUCTIONS_CALIBRATION); */
-  /* exp.push(WAIT_BLANK); */
-  /* exp.push(TRIALS_TIMELINE_CALIBRATION); */
+  exp.push(TASK_INSTRUCTIONS_CALIBRATION);
+  exp.push(WAIT_BLANK);
+  exp.push(TRIAL_TIMELINE_CALIBRATION);
 
   // check block
   exp.push(TASK_INSTRUCTIONS_CHECK);
   exp.push(WAIT_BLANK);
   exp.push(TRIAL_TIMELINE_CHECK);
 
+  // start of experiment blocks
   exp.push(TASK_INSTRUCTIONS_RESP_MAPPING);
+  exp.push(WAIT_BLANK);
+
   for (let blk = 0; blk < PRMS.nBlksExp; blk++) {
     // manipulation instructions at very start or half way
     exp.push(TASK_INSTRUCTIONS_BLOCK_START);
