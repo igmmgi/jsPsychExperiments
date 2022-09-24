@@ -666,7 +666,7 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-  saveData('/Common/write_data.php', data_fn, { stim: ['cr1', 'cr1_check'] });
+  saveData('/Common/write_data.php', data_fn, [{ stim: 'cr1'}, {stim: 'cr1_check'}]);
   // saveDataLocal(data_fn, [{ stim: 'cr1'}, {stim:'cr1_check' }]);
 }
 
