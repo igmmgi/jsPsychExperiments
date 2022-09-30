@@ -1,5 +1,5 @@
 // NoGo Flanker Task Exp2
-// Two manipulations across blocks:
+// Two manipulations across implemented across blocks:
 // 1: Proportion of NoGo trials (0 % vs. 40%)
 // 2: Speed vs. Accuracy focus (via instructions)
 //
@@ -25,8 +25,9 @@ const CANVAS_BORDER = '5px solid black';
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-  nTrls: 40, // number of trials in each block
-  nBlks: 24,
+  nTrls: 20, // 40, // number of trials in each block
+  nBlks: 4, // 24, // number of blocks
+  nErrors: 15, // number of errors per speed block before warning
   fixDur: 500,
   fbDur: [1000, 2500],
   tooSlowPractice: 1500,
@@ -38,6 +39,7 @@ const PRMS = {
   fixSize: 10,
   stimSize: '40px monospace',
   fbTxtSizeTrial: 30,
+  fbTxtSizeBlock: 26,
   colours: ['green', 'red'], // go/nogo colours (although fixed within instruction text!)
   respKeys: [],
   cTrl: 1, // count trials
@@ -124,7 +126,7 @@ const TASK_INSTRUCTIONS2 = {
     Der Ziel-Buchstabe H oder S erscheint manchmal in <span style="color:green";>grün</span> und manchmal in
     <span style="color:red";>roter</span> Farbe. Reagiere nur so schnell und so genau wie möglich, wenn der
     Buchstabe <span style="color:green";>grün</span> ist! Somit sollst du keine Taste drücken, wenn der Buchstabe
-    in <span style="color:red";>rot</span> erscheint. Es folgen insgesamt 24 Blöcke.<br><br>
+    in <span style="color:red";>rot</span> erscheint. Es folgen insgesamt ${PRMS.nBlks} Blöcke.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
     fontsize: 28,
@@ -142,7 +144,7 @@ const TASK_INSTRUCTIONS_FLANKER1 = {
   on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `Block ${PRMS.cBlk} von 24:<br><br>
+        text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
                    Wenn du bereit für den Block bist, dann positioniere deine Hände auf die Tastatur.<br><br>
                    Ziel - Buchstabe erscheint in der Mitte des Bildschirms. Es gilt:<br><br>`,
         align: 'left',
@@ -226,9 +228,6 @@ const TASK_INSTRUCTIONS_BREAK = {
     bold: true,
     lineheight: 1.5,
   }),
-  on_finish: function () {
-    PRMS.cBlk += 1;
-  },
 };
 
 function generate_flanker_combinations(nGo, nNoGo) {
@@ -253,8 +252,8 @@ function generate_flanker_combinations(nGo, nNoGo) {
   return flanker_go.concat(flanker_nogo);
 }
 
-const FLANKER_TRIALS_LOW_NOGO = generate_flanker_combinations(10, 0); // 0% NoGo
-const FLANKER_TRIALS_HIGH_NOGO = generate_flanker_combinations(6, 4); // 40% NoGo
+const FLANKER_TRIALS_LOW_NOGO = generate_flanker_combinations(PRMS.nTrls / 4, 0); // 0% NoGo
+const FLANKER_TRIALS_HIGH_NOGO = generate_flanker_combinations((PRMS.nTrls / 4) * 0.6, (PRMS.nTrls / 4) * 0.4); // 40% NoGo
 // console.log(FLANKER_TRIALS_LOW_NOGO);
 // console.log(FLANKER_TRIALS_HI_NOGO);
 
@@ -373,45 +372,23 @@ const TRIAL_FEEDBACK = {
   },
 };
 
-function blockFeedbackTextAccuracy(cBlk, nBlks, errorRate) {
-  let blockFbTxt =
-    '<h2>Block: ' +
-    cBlk +
-    ' von ' +
-    nBlks +
-    '</h2><br>' +
-    '<h2>Accuracy Rate: ' +
-    accuracyRate +
-    ' %</h2><br>' +
-    '<h4>Drücke eine beliebige Taste, um fortzufahren.</h4>';
-  return blockFbTxt;
+function blockFeedbackTextAccuracy(accuracyRate) {
+  return `Block: ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
+        Accuracy Rate: ${accuracyRate} %<br><br>
+        Drücke eine beliebige Taste, um fortzufahren.`;
 }
 
-function blockFeedbackTextSpeed(cBlk, nBlks, meanRt, nErrors) {
+function blockFeedbackTextSpeed(meanRt, nErrors) {
   let blockFbTxt;
   if (nErrors <= 15) {
-    blockFbTxt =
-      '<h2>Block: ' +
-      cBlk +
-      ' von ' +
-      nBlks +
-      '</h2><br>' +
-      '<h2>Mittlere Reaktionszeit: ' +
-      meanRt +
-      ' ms </h2>' +
-      '<h4>Drücke eine beliebige Taste, um fortzufahren.</h4>';
+    blockFbTxt = `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
+      Mittlere Reaktionszeit: ${meanRt} ms<br><br>
+      Drücke eine beliebige Taste, um fortzufahren.`;
   } else {
-    blockFbTxt =
-      '<h2>Block: ' +
-      cBlk +
-      ' von ' +
-      nBlks +
-      '</h2><br>' +
-      '<h2>Mittlere Reaktionszeit: ' +
-      meanRt +
-      ' ms </h2><br>' +
-      'You made many errors – you should be fast but without guessing!<br>' +
-      '<h4>Drücke eine beliebige Taste, um fortzufahren.</h4>';
+    blockFbTxt = `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
+      Mittlere Reaktionszeit: ${meanRt} ms<br><br>
+      You made many errors – you should be fast but without guessing!<br><br>'
+      Drücke eine beliebige Taste, um fortzufahren.`;
   }
   return blockFbTxt;
 }
@@ -424,6 +401,7 @@ function calculateBlockPerformance({
   errorValue = 2,
 } = {}) {
   let dat = jsPsych.data.get().filter(filter_options);
+  let blockType = dat.trials[0].sat;
   let nTotal = dat.count();
   let nCorrect = dat.select(corrColumn).values.filter(function (x) {
     return x === corrValue;
@@ -434,7 +412,7 @@ function calculateBlockPerformance({
   let meanRt = Math.round(dat.select(rtColumn).mean());
   let accuracyRate = Math.round((nCorrect / nTotal) * 100);
 
-  return { meanRt: meanRt, acccuracyRate: acccuracyRate, nError: nError };
+  return { blockType: blockType, meanRt: meanRt, accuracyRate: accuracyRate, nError: nError };
 }
 
 const BLOCK_FEEDBACK = {
@@ -446,16 +424,14 @@ const BLOCK_FEEDBACK = {
   trial_duration: null,
   response_ends_trial: true,
   on_start: function (trial) {
-    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: prms.cBlk } });
-    let dat = jsPsych.data.get().last(1).values()[0];
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'flanker', blockNum: PRMS.cBlk } });
     let text;
-    if (dat.sat === 'Accuracy') {
-      text = blockFeedbackTextAccuracy(prms.cBlk, prms.nBlks, block_dvs.accuracyRate);
-    } else if (dat.sat === 'Speed') {
-      text = blockFeedbackTextSpeed(prms.cBlk, prms.nBlks, block_dvs.meanRt, block_dvs.nError);
+    if (block_dvs.blockType === 'Accuracy') {
+      text = blockFeedbackTextAccuracy(block_dvs.accuracyRate);
+    } else if (block_dvs.blockType === 'Speed') {
+      text = blockFeedbackTextSpeed(block_dvs.meanRt, block_dvs.nError);
     }
-
-    trial.stimulus = `<div style="font-size:${prms.fbTxtSizeBlock}px;">${text}</div>`;
+    trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px; font-weight: bold;">${text}</div>`;
   },
   on_finish: function () {
     PRMS.cTrl = 1;
@@ -523,8 +499,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-  saveData('/Common/write_data.php', data_fn, { stim: 'flanker' });
-  // saveDataLocal('/Common/write_data.php', data_fn, {stim: 'flanker'});
+  // saveData('/Common/write_data.php', data_fn, { stim: 'flanker' });
+  saveDataLocal('/Common/write_data.php', { stim: 'flanker' });
 }
 
 const SAVE_DATA = {
@@ -548,14 +524,14 @@ function genExpSeq() {
   /* exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html')); */
   /* exp.push(mouseCursor(false)); */
 
-  /* exp.push(WELCOME_INSTRUCTIONS); */
-  /* exp.push(WAIT_BLANK); */
+  exp.push(WELCOME_INSTRUCTIONS);
+  exp.push(WAIT_BLANK);
 
-  /* exp.push(TASK_INSTRUCTIONS1); */
-  /* exp.push(WAIT_BLANK); */
+  exp.push(TASK_INSTRUCTIONS1);
+  exp.push(WAIT_BLANK);
 
-  /* exp.push(TASK_INSTRUCTIONS2); */
-  /* exp.push(WAIT_BLANK); */
+  exp.push(TASK_INSTRUCTIONS2);
+  exp.push(WAIT_BLANK);
 
   exp.push(TASK_INSTRUCTIONS_FLANKER1);
   exp.push(WAIT_BLANK);
@@ -587,9 +563,9 @@ function genExpSeq() {
     // select appropriate blk_timeline
     let blk_timeline;
     if (nogo_proportion[blk] === 'Low') {
-      blk_timeline = { ...TRIAL_TIMELINE_LOW_NOGO };
+      blk_timeline = TRIAL_TIMELINE_LOW_NOGO;
     } else if (nogo_proportion[blk] === 'High') {
-      blk_timeline = { ...TRIAL_TIMELINE_HIGH_NOGO };
+      blk_timeline = TRIAL_TIMELINE_HIGH_NOGO;
     }
 
     // add low vs. high to block timeline variables
@@ -602,20 +578,21 @@ function genExpSeq() {
       type: 'fixed-repetitions',
       size: 1,
     };
-    exp.push(blk_timeline); // trials within a block
+    exp.push(deepCopy(blk_timeline)); // trials within a block
 
     if (blk < PRMS.nBlks) {
-      exp.push(TASK_INSTRUCTIONS_BREAK); // show PAUSE
+      exp.push(BLOCK_FEEDBACK); // show blockfeedback
+      // exp.push(TASK_INSTRUCTIONS_BREAK); // show PAUSE
     }
   }
 
   // save data
-  // exp.push(SAVE_DATA);
+  exp.push(SAVE_DATA);
 
   // debrief
-  // exp.push(mouseCursor(true));
-  // exp.push(end_message());
-  // exp.push(fullscreen(false));
+  exp.push(mouseCursor(true));
+  exp.push(end_message());
+  exp.push(fullscreen(false));
 
   return exp;
 }
