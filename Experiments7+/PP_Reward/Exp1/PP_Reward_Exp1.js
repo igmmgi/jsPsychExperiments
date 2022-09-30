@@ -152,7 +152,7 @@ const TASK_INSTRUCTIONS_MANIPULATION2 = {
   }),
 };
 
-const RESP_TEXT = `1. Priorität: Farbaufge<br><span style="color: ${COLOURS[0]}">${
+const RESP_TEXT = `1. Priorität: Farbaufgabe<br><span style="color: ${COLOURS[0]}">${
   EN_DE[COLOURS[0]]
 }</span> &emsp;&emsp; <span style="color: ${COLOURS[1]}">${
   EN_DE[COLOURS[1]]
