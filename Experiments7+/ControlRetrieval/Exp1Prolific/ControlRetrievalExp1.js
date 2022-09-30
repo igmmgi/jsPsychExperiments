@@ -43,14 +43,7 @@
 // 2(Context transition: repetition vs. alternation)
 // with DVs being RT and ER
 
-const jsPsych = initJsPsych({
-  on_finish: function (data) {
-    window.location.assign(
-      'https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=121&credit_token=a911377a8b704c02bdc19f555540e139&survey_code=' +
-        jsPsych.data.urlVariables().sona_id,
-    );
-  },
-});
+const jsPsych = initJsPsych({ });
 
 const CANVAS_COLOUR = 'rgba(0, 0, 0, 1)';
 const CANVAS_SIZE = [1280, 720];
@@ -114,7 +107,7 @@ const WELCOME_INSTRUCTIONS = {
     text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest, Chrome oder Fifefox nutzt und genügend Zeit hast,
-           um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 40 Minuten konzentriert zu arbeiten.<br><br>
+           um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 35-40 Minuten konzentriert zu arbeiten.<br><br>
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            paul.kelber@student.uni-tuebingen.de<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
@@ -655,6 +648,31 @@ const TRIAL_TIMELINE_EXP = {
   timeline_variables: TRIALS_EXP,
 };
 
+
+////////////////////////////////////////////////////////////////////////
+//                              VP Stunden                            //
+////////////////////////////////////////////////////////////////////////
+
+const PROLIFIC = {
+  type: jsPsychHtmlKeyboardResponse,
+  response_ends_trial: true,
+  choices: [' '],
+  stimulus: generate_formatted_html({
+    text: `Super, du bist am Ende des Experiments!
+               Vielen Dank für deine Teilnahme :)<br><br>
+               Über folgenden Link geht es zurück zu Prolific:<br><br>
+               https://app.prolific.co/submissions/complete?cc=CM9XC6KL<br><br>
+               Drücke die Leertaste, um das Experiment abzuschließen!`,
+    align: 'left',
+    fontsize: 30,
+    width: '1200px',
+    lineheight: 1.5,
+  }),
+  on_finish: function () {
+    window.location.replace('https://app.prolific.co/submissions/complete?cc=CM9XC6KL');
+  },
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
@@ -742,6 +760,7 @@ function genExpSeq() {
   exp.push(mouseCursor(true));
   exp.push(end_message());
   exp.push(fullscreen(false));
+  exp.push(PROLIFIC);
 
   return exp;
 }
