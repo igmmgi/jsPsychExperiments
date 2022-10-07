@@ -1,19 +1,19 @@
 // NoGo Flanker Task Exp2
 // Two manipulations across implemented across blocks:
-// 1: Proportion of NoGo trials (0 % vs. 40%)
+// 1: Proportion of NoGo trials (10 % vs. 50%)
 // 2: Speed vs. Accuracy focus (via instructions)
 //
 // 24 blocks of 40 trials
 //
 // Counterbalancing
-// Version 1: H = left, S = right, First half (0% nogo),  second half (40% nogo), and Accuracy, Speed, Accuracy, Speed ...
-// Version 2: S = left, H = right, First half (0% nogo),  second half (40% nogo), and Accuracy, Speed, Accuracy, Speed ...
-// Version 3: H = left, S = right, First half (0% nogo),  second half (40% nogo), and Speed, Accuracy, Speed, Accuracy ...
-// Version 4: S = left, H = right, First half (0% nogo),  second half (40% nogo), and Speed, Accuracy, Speed, Accuracy ...
-// Version 5: H = left, S = right, First half (40% nogo), second half ( 0% nogo), and Accuracy, Speed, Accuracy, Speed ...
-// Version 6: S = left, H = right, First half (40% nogo), second half ( 0% nogo), and Accuracy, Speed, Accuracy, Speed ...
-// Version 7: H = left, S = right, First half (40% nogo), second half ( 0% nogo), and Speed, Accuracy, Speed, Accuracy ...
-// Version 8: S = left, H = right, First half (40% nogo), second half ( 0% nogo), and Speed, Accuracy, Speed, Accuracy ...
+// Version 1: H = left, S = right, First half (10% nogo), second half (50% nogo), and Accuracy, Speed, Accuracy, Speed ...
+// Version 2: S = left, H = right, First half (10% nogo), second half (50% nogo), and Accuracy, Speed, Accuracy, Speed ...
+// Version 3: H = left, S = right, First half (10% nogo), second half (50% nogo), and Speed, Accuracy, Speed, Accuracy ...
+// Version 4: S = left, H = right, First half (10% nogo), second half (50% nogo), and Speed, Accuracy, Speed, Accuracy ...
+// Version 5: H = left, S = right, First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
+// Version 6: S = left, H = right, First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
+// Version 7: H = left, S = right, First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
+// Version 8: S = left, H = right, First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
 
 const jsPsych = initJsPsych({});
 
@@ -25,8 +25,8 @@ const CANVAS_BORDER = '5px solid black';
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-  nTrls: 20, // 40, // number of trials in each block
-  nBlks: 4, // 24, // number of blocks
+  nTrls: 40, // number of trials in each block
+  nBlks: 24, // number of blocks
   nErrors: 15, // number of errors per speed block before warning
   fixDur: 500,
   fbDur: [1000, 2500],
@@ -47,7 +47,7 @@ const PRMS = {
 };
 
 // 2 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = 2; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 function define_response_mapping(version) {
@@ -78,7 +78,7 @@ const WELCOME_INSTRUCTIONS = {
   stimulus: generate_formatted_html({
     text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest, Chrome oder Fifefox nutzt und genügend Zeit hast,
+           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest, und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 40 Minuten konzentriert zu arbeiten.<br><br>
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            hiwipibio@gmail.com<br><br>
@@ -98,9 +98,10 @@ const TASK_INSTRUCTIONS1 = {
   stimulus:
     generate_formatted_html({
       text: `Aufgabe:<br><br>
-    In diesem Experiment musst du auf verschiedene Buchstaben reagieren. Der Ziel-Buchstabe erscheint in manchen Blöcken 
-    in der Mitte des Bildschirms und in anderen Blöcken rechts oder links auf dem Bildschirm.<br>
-    Es gilt die folgende Zuordnung:<br><br>`,
+      In diesem Experiment musst du auf den Ziel-Buchstaben H oder S in der Mitte des Bildschirms
+      reagieren. Der Ziel-Buchstabe erscheint manchmal in <span style="color:green";>grüner</span> und manchmal in <span style="color:red";>roter</span> Farbe. Reagiere
+      nur, wenn der Buchstabe <span style="color:green";>grün</span> ist! Somit sollst du keine Taste drücken, wenn der Buchstabe <span style="color:red";>rot</span> ist.<br><br>
+      Reagiere bei <span style="color:green";>grün</span> wie folgt:<br><br>`,
       align: 'left',
       fontsize: 28,
       bold: true,
@@ -126,7 +127,7 @@ const TASK_INSTRUCTIONS2 = {
     Der Ziel-Buchstabe H oder S erscheint manchmal in <span style="color:green";>grün</span> und manchmal in
     <span style="color:red";>roter</span> Farbe. Reagiere nur so schnell und so genau wie möglich, wenn der
     Buchstabe <span style="color:green";>grün</span> ist! Somit sollst du keine Taste drücken, wenn der Buchstabe
-    in <span style="color:red";>rot</span> erscheint. Es folgen insgesamt ${PRMS.nBlks} Blöcke.<br><br>
+    in <span style="color:red";>rot</span> erscheint.<br><br>
     Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
     fontsize: 28,
@@ -135,33 +136,26 @@ const TASK_INSTRUCTIONS2 = {
   }),
 };
 
-const TASK_INSTRUCTIONS_FLANKER1 = {
+const SPEED_ACCURACY_INSTRUCTIONS = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
-  stimulus: '',
-  on_start: function (trial) {
-    trial.stimulus =
-      generate_formatted_html({
-        text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
-                   Wenn du bereit für den Block bist, dann positioniere deine Hände auf die Tastatur.<br><br>
-                   Ziel - Buchstabe erscheint in der Mitte des Bildschirms. Es gilt:<br><br>`,
-        align: 'left',
-        fontsize: 28,
-        bold: true,
-        lineheight: 1.5,
-      }) +
-      respText +
-      generate_formatted_html({
-        text: `Reagiere nur, wenn der Buchstabe in <span style="color:green";>grün</span> erscheint und drücke keine Taste, wenn der Buchstabe in <span style="color:red";>rot</span> erscheint!<br><br>
-      Drücke eine beliebige Taste, um fortzufahren!`,
-        align: 'left',
-        fontsize: 28,
-        bold: true,
-        lineheight: 1.5,
-      });
-  },
+  stimulus: generate_formatted_html({
+    text: `Es folgen insgesamt ${PRMS.nBlks} Blöcke.<br><br>
+    Wichtig: Zu Beginn eines jeden Blockes erfährt du ob der Fokus darauf liegt in diesem Block
+    besonders schnell zu sein (SPEED-Block) oder ob der Fokus darauf liegt möglichst genau zu sein
+    (ACCURACY-Block).<br><br>
+    In SPEED-Blöcken sollst du versuchen besonders schnell zu reagieren und du musst weniger besorgt
+    sein, wenn du in diesen Blöcken Fehler machst (aber nicht raten!)<br><br>
+    In ACCURACY-Blöcken sollst du versuchen keine Fehler zu machen und du musst weniger besorgt
+    sein, wenn du in diesen Blöcken langsamer bist.<br><br>
+    Drücke eine beliebige Taste, um fortzufahren.`,
+    align: 'left',
+    fontsize: 28,
+    bold: true,
+    lineheight: 1.5,
+  }),
 };
 
 const TASK_INSTRUCTIONS_SPEED = {
@@ -173,7 +167,9 @@ const TASK_INSTRUCTIONS_SPEED = {
   on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `SPEED`,
+        text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br><br>
+          ACHTUNG: <br>
+          *** SPEED BLOCK ***<br><br>`,
         align: 'center',
         fontsize: 28,
         bold: true,
@@ -199,7 +195,8 @@ const TASK_INSTRUCTIONS_ACCURACY = {
   on_start: function (trial) {
     trial.stimulus =
       generate_formatted_html({
-        text: `ACCURACY`,
+        text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br><br>
+        *** ACCURACY BLOCK ***<br><br>`,
         align: 'center',
         fontsize: 28,
         bold: true,
@@ -252,10 +249,10 @@ function generate_flanker_combinations(nGo, nNoGo) {
   return flanker_go.concat(flanker_nogo);
 }
 
-const FLANKER_TRIALS_LOW_NOGO = generate_flanker_combinations(PRMS.nTrls / 4, 0); // 0% NoGo
-const FLANKER_TRIALS_HIGH_NOGO = generate_flanker_combinations((PRMS.nTrls / 4) * 0.6, (PRMS.nTrls / 4) * 0.4); // 40% NoGo
-// console.log(FLANKER_TRIALS_LOW_NOGO);
-// console.log(FLANKER_TRIALS_HI_NOGO);
+const FLANKER_TRIALS_LOW_NOGO = generate_flanker_combinations((PRMS.nTrls / 4) * 0.9, (PRMS.nTrls / 4) * 0.1); // 50% NoGo
+const FLANKER_TRIALS_HIGH_NOGO = generate_flanker_combinations((PRMS.nTrls / 4) * 0.5, (PRMS.nTrls / 4) * 0.5); // 50% NoGo
+// console.table(FLANKER_TRIALS_LOW_NOGO);
+// console.table(FLANKER_TRIALS_HIGH_NOGO);
 
 ////////////////////////////////////////////////////////////////////////
 //                         Trial Parts                                //
@@ -517,12 +514,12 @@ function genExpSeq() {
 
   let exp = [];
 
-  /* exp.push(fullscreen(true)); */
-  /* exp.push(browser_check(PRMS.screenRes)); */
-  /* exp.push(resize_browser()); */
-  /* exp.push(welcome_message()); */
-  /* exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html')); */
-  /* exp.push(mouseCursor(false)); */
+  exp.push(fullscreen(true));
+  exp.push(browser_check(PRMS.screenRes));
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  exp.push(mouseCursor(false));
 
   exp.push(WELCOME_INSTRUCTIONS);
   exp.push(WAIT_BLANK);
@@ -533,10 +530,10 @@ function genExpSeq() {
   exp.push(TASK_INSTRUCTIONS2);
   exp.push(WAIT_BLANK);
 
-  exp.push(TASK_INSTRUCTIONS_FLANKER1);
+  exp.push(SPEED_ACCURACY_INSTRUCTIONS);
   exp.push(WAIT_BLANK);
 
-  // Counter-balanced NoGo proportion order (0 vs. 40 %)
+  // Counter-balanced NoGo proportion order (10 vs. 50 %)
   let nogo_proportion = [];
   if ([1, 2, 3, 4].includes(VERSION)) {
     nogo_proportion = repeatArray(['Low'], PRMS.nBlks / 2).concat(repeatArray(['High'], PRMS.nBlks / 2));
