@@ -11,7 +11,14 @@
 // Version 3: First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
 // Version 4: First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+  on_finish: function (data) {
+    window.location.assign(
+      'https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=123&credit_token=b30b281cd737494bb86d5e6a4f114ab0&survey_code=' +
+        jsPsych.data.urlVariables().sona_id,
+    );
+  },
+});
 
 const CANVAS_COLOUR = 'rgba(200, 200, 200, 1)';
 const CANVAS_SIZE = [960, 720];
@@ -491,9 +498,9 @@ function save() {
   const vpNum = getTime();
   jsPsych.data.addProperties({ vpNum: vpNum });
 
-  const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-  // saveData('/Common/write_data.php', data_fn, { stim: 'flanker' });
-  saveDataLocal('/Common/write_data.php', { stim: 'flanker' });
+  const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
+  saveData('/Common/write_data.php', data_fn, { stim: 'flanker' });
+  // saveDataLocal('/Common/write_data.php', { stim: 'flanker' });
 }
 
 const SAVE_DATA = {
