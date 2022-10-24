@@ -116,6 +116,9 @@ const TEXT_1_HUMAN = {
   labels: ['0%', '25%', '50%', '75%', '100%'],
   button_label: 'Weiter',
   post_trial_gap: PRMS.postTrialGap,
+  data: {
+    stim: 'tc',
+  },
 };
 
 const TEXT_1_CLIMATE = {
@@ -124,6 +127,9 @@ const TEXT_1_CLIMATE = {
   labels: ['0%', '25%', '50%', '75%', '100%'],
   button_label: 'Weiter',
   post_trial_gap: PRMS.postTrialGap,
+  data: {
+    stim: 'tc',
+  },
 };
 
 const TEXT_2_HUMAN = {
@@ -132,6 +138,9 @@ const TEXT_2_HUMAN = {
   labels: ['0%', '25%', '50%', '75%', '100%'],
   button_label: 'Weiter',
   post_trial_gap: PRMS.postTrialGap,
+  data: {
+    stim: 'tc',
+  },
 };
 
 const TEXT_2_CLIMATE = {
@@ -140,6 +149,9 @@ const TEXT_2_CLIMATE = {
   labels: ['0%', '25%', '50%', '75%', '100%'],
   button_label: 'Weiter',
   post_trial_gap: PRMS.postTrialGap,
+  data: {
+    stim: 'tc',
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -212,7 +224,6 @@ function genExpSeq() {
     exp.push(TEXT_2_CLIMATE);
     exp.push(TEXT_1_CLIMATE);
   }
-
 
   exp.push(save_data);
 
