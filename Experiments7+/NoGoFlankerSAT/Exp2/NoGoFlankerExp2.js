@@ -6,14 +6,10 @@
 // 24 blocks of 40 trials
 //
 // Counterbalancing
-// Version 1: H = left, S = right, First half (10% nogo), second half (50% nogo), and Accuracy, Speed, Accuracy, Speed ...
-// Version 2: S = left, H = right, First half (10% nogo), second half (50% nogo), and Accuracy, Speed, Accuracy, Speed ...
-// Version 3: H = left, S = right, First half (10% nogo), second half (50% nogo), and Speed, Accuracy, Speed, Accuracy ...
-// Version 4: S = left, H = right, First half (10% nogo), second half (50% nogo), and Speed, Accuracy, Speed, Accuracy ...
-// Version 5: H = left, S = right, First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
-// Version 6: S = left, H = right, First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
-// Version 7: H = left, S = right, First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
-// Version 8: S = left, H = right, First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
+// Version 1: First half (10% nogo), second half (50% nogo), and Accuracy, Speed, Accuracy, Speed ...
+// Version 2: First half (10% nogo), second half (50% nogo), and Speed, Accuracy, Speed, Accuracy ...
+// Version 3: First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
+// Version 4: First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
 
 const jsPsych = initJsPsych({});
 
@@ -46,12 +42,12 @@ const PRMS = {
   cBlk: 1, // count blocks
 };
 
-// 2 counter balanced versions
-const VERSION = 2; // Number(jsPsych.data.urlVariables().version);
+// 4 counter balanced versions
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
-function define_response_mapping(version) {
-  if (version % 2 === 1) {
+function define_response_mapping() {
+  if (Math.random() < 0.5) {
     PRMS.respKeys = ['Q', 'P'];
     respText =
       "<h2 style='text-align:center;'><b>H = linker Zeigefinger (Taste 'Q')</b></h2>" +
@@ -65,7 +61,7 @@ function define_response_mapping(version) {
   return respText;
 }
 
-const RESP_TEXT = define_response_mapping(VERSION);
+const RESP_TEXT = define_response_mapping();
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
