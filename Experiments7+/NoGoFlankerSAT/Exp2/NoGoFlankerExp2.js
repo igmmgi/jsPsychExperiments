@@ -33,8 +33,8 @@ const PRMS = {
   nErrors: 15, // number of errors per speed block before warning
   fixDur: 500,
   fbDur: [1000, 2500],
-  tooSlowPractice: 1500,
-  tooSlow: 1000,
+  tooSlowAccuracy: 5000,
+  tooSlowSpeed: 700,
   wait: 1000,
   fbTxtGo: ['Richtig', 'Falsch: Falsche Taste gedrückt!', 'Zu langsam: Reagiere wenn der Buchstabe grün ist!'],
   fbTxtNoGo: ['Richtig', 'Falsch: Reagiere nicht, wenn der Buchstabe rot ist!'],
@@ -310,10 +310,10 @@ function code_trial() {
   let corrCode = 0;
 
   let rt;
-  let rt_deadline = dat.sat === 'Accuracy' ? PRMS.tooSlow : PRMS.tooSlow / 2;
+  let rt_deadline = dat.sat === 'Accuracy' ? PRMS.tooSlowAccuracy : PRMS.tooSlowSpeed;
   if (dat.type === 'go') {
     let is_correct = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_key);
-    rt = dat.rt !== null ? dat.rt : PRMS.tooSlow;
+    rt = dat.rt !== null ? dat.rt : PRMS.tooSlowAccuracy;
     if (is_correct && rt < rt_deadline) {
       corrCode = 1; // correct
     } else if (!is_correct && rt < rt_deadline) {
@@ -447,7 +447,7 @@ const FLANKER_STIMULUS = {
   translate_origin: true,
   response_ends_trial: true,
   choices: PRMS.respKeys,
-  trial_duration: PRMS.tooSlow,
+  trial_duration: PRMS.tooSlowAccuracy,
   func: draw_flanker,
   func_args: [{ stimulus: jsPsych.timelineVariable('stimulus'), colour: jsPsych.timelineVariable('colour') }],
   data: {
@@ -460,14 +460,6 @@ const FLANKER_STIMULUS = {
     colour: jsPsych.timelineVariable('colour'),
     sat: jsPsych.timelineVariable('sat'),
     correct_key: jsPsych.timelineVariable('correct_key'),
-  },
-  on_start: function (trial) {
-    trial.trial_duration = [1, 2, 11, 12].includes(PRMS.cBlk) ? PRMS.tooSlowPractice : PRMS.tooSlow;
-    /* if (trial.data.sat === 'Accuracy') { */
-    /*   trial.trial_duration = [1, 2, 11, 12].includes(PRMS.cBlk) ? PRMS.tooSlowPractice : PRMS.tooSlow; */
-    /* } else if (trial.data.saT === 'Speed') { */
-    /*   trial.trial_duration = [1, 2, 11, 12].includes(PRMS.cBlk) ? PRMS.tooSlowPractice / 2 : PRMS.tooSlow / 2; */
-    /* } */
   },
   on_finish: function () {
     code_trial();
