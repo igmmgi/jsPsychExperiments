@@ -45,7 +45,7 @@
 const jsPsych = initJsPsych({
   on_finish: function (data) {
     window.location.assign(
-      'https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=121&credit_token=a911377a8b704c02bdc19f555540e139&survey_code=' +
+      'https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=126&credit_token=1799712d828f4e6da707bc45f70f780a&survey_code=' +
         jsPsych.data.urlVariables().sona_id,
     );
   },
@@ -78,7 +78,7 @@ const RESP_KEYS_SHUFFLED = shuffle([
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
   screenRes: [960, 720], // minimum screen resolution requested
-  nBlksExp: 10, // number of blocks
+  nBlksExp: 12, // number of blocks
   nTrlsExp: 64, // number of trials per block
   fixDur: 200, // duration of fixation cross
   fixWidth: 5, // width fixation cross
@@ -354,6 +354,17 @@ const CONTEXT = {
   response_ends_trial: false,
 };
 
+
+const CONTEXT_450 = {
+  type: jsPsychStaticCanvasSoundKeyboardResponse,
+  canvas_colour: jsPsych.timelineVariable('ctx_col'),
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  sound: jsPsych.timelineVariable('ctx_sound'),
+  trial_duration: 450,
+  response_ends_trial: false,
+};
+
 function draw_check_question(args) {
   'use strict';
   let ctx = document.getElementById('canvas').getContext('2d');
@@ -407,7 +418,7 @@ const CONTEXT_CHECK = {
   func_args: null,
   response_ends_trial: true,
   data: {
-    stim: 'cr1_check',
+    stim: 'cr2_check',
     blk: jsPsych.timelineVariable('blk'),
     ctx_mod: jsPsych.timelineVariable('ctx_mod'),
     intensity: jsPsych.timelineVariable('intensity'),
@@ -549,7 +560,7 @@ const TARGET = {
   func: draw_target,
   func_args: [{ colour: jsPsych.timelineVariable('target_col') }],
   data: {
-    stim: 'cr1',
+    stim: 'cr2',
     blk: jsPsych.timelineVariable('blk'),
     ctx_mod: jsPsych.timelineVariable('ctx_mod'),
     intensity: jsPsych.timelineVariable('intensity'),
@@ -632,7 +643,7 @@ const BLOCK_FEEDBACK = {
   trial_duration: null,
   response_ends_trial: true,
   on_start: function (trial) {
-    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'cr1', blockNum: PRMS.cBlk } });
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'cr2', blockNum: PRMS.cBlk } });
     let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlksExp, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
     trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px; color:White;">${text}</div>`;
   },
@@ -659,7 +670,7 @@ const TRIAL_TIMELINE_CALIBRATION = {
 };
 
 const TRIAL_TIMELINE_CHECK = {
-  timeline: [FIXATION_CROSS, CONTEXT, CONTEXT_CHECK, TRIAL_FEEDBACK_CHECK, ITI],
+  timeline: [FIXATION_CROSS, CONTEXT_450, CONTEXT_CHECK, TRIAL_FEEDBACK_CHECK, ITI],
   timeline_variables: TRIALS_CONTEXT_CHECK,
   sample: {
     type: 'fixed-repetitions',
@@ -683,8 +694,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-  saveData('/Common/write_data.php', data_fn, [{ stim: 'cr1'}, {stim: 'cr1_check'}]);
-  // saveDataLocal(data_fn, [{ stim: 'cr1'}, {stim:'cr1_check' }]);
+  saveData('/Common/write_data.php', data_fn, [{ stim: 'cr2'}, {stim: 'cr2_check'}]);
+  // saveDataLocal(data_fn, [{ stim: 'cr2'}, {stim:'cr2_check' }]);
 }
 
 const SAVE_DATA = {
@@ -708,7 +719,7 @@ function genExpSeq() {
   exp.push(welcome_message());
   exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
-
+  
   exp.push(WELCOME_INSTRUCTIONS);
   exp.push(WAIT_BLANK);
 
