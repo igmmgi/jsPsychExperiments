@@ -11,7 +11,6 @@
 //
 // Block structure
 // 12 blocks of 56 trials
-// Alternating blocks of easy/hard discriminability (counterbalanced across participants)
 
 const jsPsych = initJsPsych({});
 
@@ -54,10 +53,6 @@ const PRMS = {
 };
 
 const EN_DE = { blue: 'blau', red: 'rot' };
-
-// 2 counter balanced versions
-const VERSION = Number(jsPsych.data.urlVariables().version);
-jsPsych.data.addProperties({ version: VERSION });
 
 function calculateNumberOfDots() {
   // Required for ratio manipulation in VTS
@@ -322,31 +317,21 @@ const BLOCK_FEEDBACK = {
 };
 
 // prettier-ignore
-const TRIAL_TABLE_EASY = [
+const TRIAL_TABLE = [
     { ratio: "easy", position: "left",  target: PRMS.target[0], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
     { ratio: "easy", position: "left",  target: PRMS.target[1], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
     { ratio: "easy", position: "right", target: PRMS.target[0], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
     { ratio: "easy", position: "right", target: PRMS.target[1], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { ratio: 'hard', position: 'left',  target: PRMS.target[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: 'hard', position: 'left',  target: PRMS.target[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { ratio: 'hard', position: 'right', target: PRMS.target[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: 'hard', position: 'right', target: PRMS.target[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
 // prettier-ignore
-const TRIAL_TABLE_HARD = [
-  { ratio: 'hard', position: 'left',  target: PRMS.target[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { ratio: 'hard', position: 'left',  target: PRMS.target[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { ratio: 'hard', position: 'right', target: PRMS.target[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { ratio: 'hard', position: 'right', target: PRMS.target[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-];
-
-// prettier-ignore
-const TRIAL_TIMELINE_EASY = {
+const TRIAL_TIMELINE = {
     timeline: [FIXATION_CROSS, SIMON, TRIAL_FEEDBACK, ITI],
-    timeline_variables: TRIAL_TABLE_EASY
-};
-
-// prettier-ignore
-const TRIAL_TIMELINE_HARD = {
-    timeline: [FIXATION_CROSS, SIMON, TRIAL_FEEDBACK, ITI],
-    timeline_variables: TRIAL_TABLE_HARD
+    timeline_variables: TRIAL_TABLE
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -392,7 +377,7 @@ function save() {
   const vpNum = getTime();
   jsPsych.data.addProperties({ vpNum: vpNum });
 
-  const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
+  const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
   saveData('/Common/write_data.php', data_fn, { stim_type: 'sd' });
   // saveDataLocal(data_fn, { stim_type: 'sd' });
 
@@ -423,26 +408,14 @@ function genExpSeq() {
 
   // exp.push(WELCOME_INSTRUCTIONS);
   exp.push(COUNT_DOTS);
-
-  exp.push(TASK_INSTRUCTIONS);
-
-  let blk_type;
-  if (VERSION === 1) {
-    blk_type = repeatArray(['easy', 'hard'], PRMS.nBlks / 2);
-  } else if (VERSION === 2) {
-    blk_type = repeatArray(['hard', 'easy'], PRMS.nBlks / 2);
-  }
+  // exp.push(TASK_INSTRUCTIONS);
 
   for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
     let blk_timeline;
-    if (blk_type[blk] === 'easy') {
-      blk_timeline = { ...TRIAL_TIMELINE_EASY };
-    } else if (blk_type[blk] === 'hard') {
-      blk_timeline = { ...TRIAL_TIMELINE_HARD };
-    }
+    blk_timeline = { ...TRIAL_TIMELINE };
     blk_timeline.sample = {
       type: 'fixed-repetitions',
-      size: PRMS.nTrls / TRIAL_TABLE_EASY.length,
+      size: PRMS.nTrls / TRIAL_TABLE.length,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(BLOCK_FEEDBACK); // show previous block performance
