@@ -34,9 +34,9 @@ const PRMS = {
   fixDur: 500,
   fbDur: [1000, 2500],
   tooSlowAccuracy: 5000,
-  tooSlowSpeed: 700,
+  tooSlowSpeed: 500,
   wait: 1000,
-  fbTxtGo: ['Richtig', 'Falsch: Falsche Taste gedrückt!', 'Zu langsam: Reagiere wenn der Buchstabe grün ist!'],
+  fbTxtGo: ['Richtig', 'Fehler!', 'Zu langsam!'],
   fbTxtNoGo: ['Richtig', 'Falsch: Reagiere nicht, wenn der Buchstabe rot ist!'],
   fixWidth: 2,
   fixSize: 10,
@@ -120,25 +120,6 @@ const TASK_INSTRUCTIONS1 = {
     }),
 };
 
-const TASK_INSTRUCTIONS2 = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: generate_formatted_html({
-    text: `WICHTIG:<br><br>
-    Der Ziel-Buchstabe H oder S erscheint manchmal in <span style="color:green";>grün</span> und manchmal in
-    <span style="color:red";>roter</span> Farbe. Reagiere nur so schnell und so genau wie möglich, wenn der
-    Buchstabe <span style="color:green";>grün</span> ist! Somit sollst du keine Taste drücken, wenn der Buchstabe
-    in <span style="color:red";>rot</span> erscheint.<br><br>
-    Drücke eine beliebige Taste, um fortzufahren!`,
-    align: 'left',
-    fontsize: 28,
-    bold: true,
-    lineheight: 1.5,
-  }),
-};
-
 const SPEED_ACCURACY_INSTRUCTIONS = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
@@ -172,7 +153,8 @@ const TASK_INSTRUCTIONS_SPEED = {
       generate_formatted_html({
         text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br><br>
           ACHTUNG: <br>
-          *** SPEED BLOCK ***<br><br>`,
+          *** SPEED BLOCK ***<br> 
+          Reagiere besonders SCHNELL auf den grünen Buchstaben in der Mitte!<br><br>`,
         align: 'center',
         fontsize: 28,
         bold: true,
@@ -199,7 +181,9 @@ const TASK_INSTRUCTIONS_ACCURACY = {
     trial.stimulus =
       generate_formatted_html({
         text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br><br>
-        *** ACCURACY BLOCK ***<br><br>`,
+          ACHTUNG: <br>
+        *** ACCURACY BLOCK ***<br>
+        Reagiere besonders GENAU auf den grünen Buchstaben in der Mitte!<br><br>`,
         align: 'center',
         fontsize: 28,
         bold: true,
@@ -348,24 +332,30 @@ const TRIAL_FEEDBACK = {
   response_ends_trial: false,
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
+    let fontsize = PRMS.fbTxtSizeTrial;
+    let fontweight = "normal";
     trial.trial_duration = PRMS.fbDur[0];
     if (dat.sat === 'Accuracy') {
       // shown for longer when error made
       if (dat.corrCode === 2) {
         trial.trial_duration = PRMS.fbDur[1];
+        fontsize = fontsize * 1.1;
+        fontweight = "bold";
       }
     } else if (dat.sat === 'Speed') {
       // shown for longer when too slow
       if (dat.corrCode === 3) {
         trial.trial_duration = PRMS.fbDur[1];
+        fontsize = fontsize * 1.1;
+        fontweight = "bold";
       }
     }
     if (dat.type === 'go') {
-      trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeTrial}px; color:Black; font-weight: normal;">${
+      trial.stimulus = `<div style="font-size:${fontsize}px; color:Black; font-weight: ${fontweight};">${
         PRMS.fbTxtGo[dat.corrCode - 1]
       }</div>`;
     } else if (dat.type === 'nogo') {
-      trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeTrial}px; color:Black;font-weight: normal;">${
+      trial.stimulus = `<div style="font-size:${fontsize}px; color:Black;font-weight: ${fontweight};">${
         PRMS.fbTxtNoGo[dat.corrCode - 1]
       }</div>`;
     }
@@ -373,7 +363,7 @@ const TRIAL_FEEDBACK = {
 };
 
 function blockFeedbackTextAccuracy(accuracyRate) {
-  return `Block: ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
+  return `ACCURACY-Block: ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
         Accuracy Rate: ${accuracyRate} %<br><br>
         Drücke eine beliebige Taste, um fortzufahren.`;
 }
@@ -381,13 +371,13 @@ function blockFeedbackTextAccuracy(accuracyRate) {
 function blockFeedbackTextSpeed(meanRt, nErrors) {
   let blockFbTxt;
   if (nErrors <= 15) {
-    blockFbTxt = `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
+    blockFbTxt = `SPEED-Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
       Mittlere Reaktionszeit: ${meanRt} ms<br><br>
       Drücke eine beliebige Taste, um fortzufahren.`;
   } else {
-    blockFbTxt = `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
+    blockFbTxt = `SPEED-Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
       Mittlere Reaktionszeit: ${meanRt} ms<br><br>
-      You made many errors – you should be fast but without guessing!<br><br>'
+      Du hast sehr viele Fehler gemacht– du sollst zwar schnell sein aber nicht raten!<br><br>'
       Drücke eine beliebige Taste, um fortzufahren.`;
   }
   return blockFbTxt;
@@ -522,25 +512,22 @@ function genExpSeq() {
   exp.push(TASK_INSTRUCTIONS1);
   exp.push(WAIT_BLANK);
 
-  exp.push(TASK_INSTRUCTIONS2);
-  exp.push(WAIT_BLANK);
-
   exp.push(SPEED_ACCURACY_INSTRUCTIONS);
   exp.push(WAIT_BLANK);
 
   // Counter-balanced NoGo proportion order (10 vs. 50 %)
   let nogo_proportion = [];
-  if ([1, 2, 3, 4].includes(VERSION)) {
+  if ([1, 2].includes(VERSION)) {
     nogo_proportion = repeatArray(['Low'], PRMS.nBlks / 2).concat(repeatArray(['High'], PRMS.nBlks / 2));
-  } else if ([5, 6, 7, 8].includes(VERSION)) {
+  } else if ([3, 4].includes(VERSION)) {
     nogo_proportion = repeatArray(['High'], PRMS.nBlks / 2).concat(repeatArray(['Low'], PRMS.nBlks / 2));
   }
 
   // Counter-balanced SAT order (Accuracy vs. Speed)
   let sat_condition = [];
-  if ([1, 2, 5, 6].includes(VERSION)) {
+  if ([1, 3].includes(VERSION)) {
     sat_condition = repeatArray(['Accuracy', 'Speed'], PRMS.nBlks / 2);
-  } else if ([3, 4, 7, 8].includes(VERSION)) {
+  } else if ([2, 4].includes(VERSION)) {
     sat_condition = repeatArray(['Speed', 'Accuracy'], PRMS.nBlks / 2);
   }
 
