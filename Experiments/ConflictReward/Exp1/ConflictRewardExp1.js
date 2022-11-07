@@ -393,7 +393,6 @@ const end_of_block_text = {
   },
 };
 
-const images = loadImages(['../images/treasure_box.jpg', '../images/treasure_box_with_cross.jpg']);
 
 // need to store performance data to use to guide reward/no reward
 const performanceData = {
