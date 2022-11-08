@@ -29,10 +29,10 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     nTrls: 40, // number of trials in each block
-    nBlks: 24, // number of blocks
+    nBlks: 20, // number of blocks
     nErrors: 15, // number of errors per speed block before warning
     fixDur: 500,
-    fbDur: [1000, 2500],
+    fbDur: [750, 2000],
     tooSlowAccuracy: 5000,
     tooSlowSpeed: 500,
     wait: 1000,
