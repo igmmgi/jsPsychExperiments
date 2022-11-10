@@ -30,7 +30,7 @@ const CANVAS_BORDER = "5px solid black";
 const PRMS = {
     screenRes: [960, 720], // minimum screen resolution requested
     nTrls: 100, // number of trials per block
-    nBlks: 2, // number of blocks
+    nBlks: 8, // number of blocks
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
