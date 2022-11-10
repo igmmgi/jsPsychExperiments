@@ -696,13 +696,13 @@ function genExpSeq() {
 
     let exp = [];
 
-    /* // setup */
-    /* exp.push(fullscreen(true)); */
-    /* exp.push(browser_check(PRMS.screenRes)); */
-    /* exp.push(resize_browser()); */
-    /* exp.push(welcome_message()); */
-    /* exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html")); */
-    /* exp.push(mouseCursor(false)); */
+    // setup
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     exp.push(COUNT_DOTS);
     exp.push(PRELOAD);
