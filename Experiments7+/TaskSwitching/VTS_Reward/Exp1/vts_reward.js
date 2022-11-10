@@ -30,7 +30,7 @@ const CANVAS_BORDER = "5px solid black";
 const PRMS = {
     screenRes: [960, 720], // minimum screen resolution requested
     nTrls: 100, // number of trials per block
-    nBlks: 3, // number of blocks
+    nBlks: 2, // number of blocks
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
@@ -59,10 +59,6 @@ const PRMS = {
     cBlk: 1,
     cTrl: 1,
 };
-
-const RATIO = Number(jsPsych.data.urlVariables().ratio);
-PRMS.ratioNormal = RATIO;
-jsPsych.data.addProperties({ ratio: RATIO });
 
 // 2 counter balanced versions
 const VERSION = Number(jsPsych.data.urlVariables().version);
@@ -111,8 +107,8 @@ const WELCOME_INSTRUCTIONS = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Willkommen zu unserem Experiment:<br><br>
-           Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-           Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+           Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
+           Bitte stelle sicher, dass Du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
            Bei Fragen oder Problemen wende dich bitte an:<br><br> ba.biopsych@gmail.com <br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
@@ -127,8 +123,8 @@ function task_instructions1() {
     if (VERSION === 1) {
         return generate_formatted_html({
             text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
-             Farben Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „Q“ und „W“.<br><br>
-             Buchstaben Aufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
+             Farbeaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
+             Buchstabenaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
              Drücke eine beliebige Taste, um fortzufahren!`,
             align: "left",
             fontsize: 30,
@@ -138,8 +134,8 @@ function task_instructions1() {
     } else if (VERSION === 2) {
         return generate_formatted_html({
             text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
-             Buchstaben Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „Q“ und „W“.<br><br>
-             Farben Aufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
+             Buchstabenaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
+             Farbeaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
              Drücke eine beliebige Taste, um fortzufahren!`,
             align: "left",
             fontsize: 30,
@@ -164,7 +160,7 @@ let RESPMAPPING;
 if (VERSION === 1) {
     // left hand = colour, right hand = letter
     RESPMAPPING = generate_formatted_html({
-        text: `Farbaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Buchstabeaufgabe = Rechte Hand<br>
+        text: `Farbaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Buchstabenaufgabe = Rechte Hand<br>
            ${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}${'&emsp;'.repeat(12)}${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}<br>
            (${PRMS.colourTaskKeys[0]}-Taste) ${'&emsp;'.repeat(3)}(${PRMS.colourTaskKeys[1]}-Taste)${'&emsp;'.repeat(11)}(${PRMS.letterTaskKeys[0]}-Taste)${'&emsp;'.repeat(3)}(${PRMS.letterTaskKeys[1]}-Taste)`,
         align: 'center',
@@ -176,7 +172,7 @@ if (VERSION === 1) {
 } else if (VERSION === 2) {
     // left hand = letter, right hand = colour
     RESPMAPPING = generate_formatted_html({
-        text: `Buchstabeaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Farbaufgabe = Rechte Hand<br>
+        text: `Buchstabenaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Farbaufgabe = Rechte Hand<br>
            ${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}${'&emsp;'.repeat(12)}${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}<br>
            (${PRMS.letterTaskKeys[0]}-Taste) ${'&emsp;'.repeat(3)}(${PRMS.letterTaskKeys[1]}-Taste)${'&emsp;'.repeat(11)}(${PRMS.colourTaskKeys[0]}-Taste)${'&emsp;'.repeat(3)}(${PRMS.colourTaskKeys[1]}-Taste)`,
         align: 'center',
@@ -194,8 +190,8 @@ const TASK_INSTRUCTIONS2 = {
     canvas_border: CANVAS_BORDER,
     stimulus:
         generate_formatted_html({
-            text: `Für die Buchstaben Aufgabe musst du entscheiden, ob der Buchstabe ein Vokal oder Konsonant ist.<br><br>
-             Für die Farben Aufgabe musst du entscheiden, ob die Mehrheit der Kreise Blau oder Rot ist.<br><br>
+            text: `Für die Buchstabenaufgabe musst Du entscheiden, ob der Buchstabe ein Vokal oder Konsonant ist.<br><br>
+             Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte Blau oder Rot ist.<br><br>
              Es gilt:`,
             align: "left",
             fontsize: 30,
@@ -220,7 +216,7 @@ const TASK_INSTRUCTIONS3 = {
     stimulus: generate_formatted_html({
         text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
            Wenn nur eine Aufgabe präsentiert wird, dann bearbeite bitte diese. <br><br>
-           Wenn beide Aufgaben präsentiert werden, kannst du dir frei aussuchen, welche du bearbeitest.<br><br>
+           Wenn beide Aufgaben präsentiert werden, kannst Du dir frei aussuchen, welche Du bearbeitest.<br><br>
            Drücke eine beliebige Taste um fortzufahren.`,
         align: "left",
         fontsize: 30,
@@ -235,12 +231,12 @@ const TASK_INSTRUCTIONS4 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `In manchen Durchgängen erhälst du +10 Punkte, wenn die Aufgabe richtig bearbeitest wurde.<br><br>
-           Je mehr Punkte du sammelst, desto kürzer wird das Experiment! Du erfährst nach dem
-            ${PRMS.nBlks + 3}. Block, um wieviel die Blöcke gekürzt werden. <br><br>  
-            Des Weiteren werden die 10% Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
-            von Osiander oder der deutschen Bahn erhalten.<br><br>
-           Drücke eine beliebige Taste um fortzufahren.`,
+        text: `In manchen Durchgängen erhälst Du +10 Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
+               Je mehr Punkte Du sammelst, desto kürzer wird das Experiment! Du erfährst nach dem
+               ${PRMS.nBlks + 3}. Block, wieviele der restlichen Blöcke wegfallen.<br><br> 
+               Des Weiteren werden die 10% aller Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
+               von Osiander oder der deutschen Bahn erhalten.<br><br>
+               Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
         width: "1200px",
@@ -258,7 +254,7 @@ const BLOCK_START = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
-               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind und bearbeite sonst die Aufgabe welche präsentiert ist. Es gilt:`,
+               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`,
                 align: "left",
                 fontsize: 30,
                 width: "1200px",
@@ -286,7 +282,7 @@ const BLOCK_END = {
             text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
              Dein aktueller Punktestand beträgt: ${"POINTS: TO DO!"} <br><br>
              Kurze Pause.<br><br>
-             Wenn du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
+             Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
             fontsize: 30,
             width: "1200px",
@@ -640,12 +636,11 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist jetzt vorbei.<br>
-               Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe
-               anzugeben. Falls du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst kannst du nach
-               Abschluss der Erhebung wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander
-               Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
-               Drücke die Leertaste, um das Experiment abzuschließen!`,
+        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br>
+        Im nächsten Fenster wirst Du zunächst aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
+        Falls Du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
+        wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander erhalten.<br><br>
+        Drücke die Leertaste, um fortzufahren`,
         align: "left",
         fontsize: 30,
         width: "1200px",
@@ -655,7 +650,16 @@ const END_SCREEN = {
 
 const EMAIL_OPTION = {
     type: jsPsychSurveyText,
-    questions: [{ prompt: "E-mail addres?", placeholder: "email@email", columns: 50, required: false, name: "email" }],
+    questions: [
+        {
+            prompt: `Bitte gebe deine E-Mail Adresse ein wenn Du am Gewinnspiel teilnehmen willst.<br>
+            Ansonsten lasse das Feld einfach frei und klicke ''Weiter''`,
+            placeholder: "email@email",
+            columns: 50,
+            required: false,
+            name: "email",
+        },
+    ],
     button_label: "Weiter",
     on_finish: function() {
         let dat = jsPsych.data.get().last(1).values()[0];
@@ -692,13 +696,13 @@ function genExpSeq() {
 
     let exp = [];
 
-    // setup
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    exp.push(mouseCursor(false));
+    /* // setup */
+    /* exp.push(fullscreen(true)); */
+    /* exp.push(browser_check(PRMS.screenRes)); */
+    /* exp.push(resize_browser()); */
+    /* exp.push(welcome_message()); */
+    /* exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html")); */
+    /* exp.push(mouseCursor(false)); */
 
     exp.push(COUNT_DOTS);
     exp.push(PRELOAD);
