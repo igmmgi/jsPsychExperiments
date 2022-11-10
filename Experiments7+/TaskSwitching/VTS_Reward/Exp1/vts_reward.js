@@ -34,10 +34,9 @@ const PRMS = {
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
-    fbDur: [0, 3000], // feedback duration for correct and incorrect trials, respectively
     fbText: ["Richtig! + 10 Punkte!", "Richtig, aber keine Punkte!", "Falsch! Keine Punkte!"],
     iti: 300, // duration of the inter-trial-interval
-    feedbackDur: [0, 0, 1500], // duration of the reward screen
+    feedbackDur: [0, 0, 3000], // duration of the reward screen
     rewardDur: 1000, // duration of the reward screen
     stimFont: "110px Arial",
     fbFont: "30px Arial",
@@ -500,40 +499,67 @@ function codeTrial() {
     PRMS.cTrl += 1;
 }
 
-function drawFeedback() {
-    "use strict";
-    let ctx = document.getElementById("canvas").getContext("2d");
-    let dat = jsPsych.data.get().last(1).values()[0];
-
-    // draw text
-    ctx.font = PRMS.fbFont;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "black";
-
-    ctx.fillText(PRMS.fbText[dat.corrCode - 1], 0, 0);
-}
-
 const TRIAL_FEEDBACK = {
-    type: jsPsychStaticCanvasKeyboardResponse,
+    type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    translate_origin: true,
-    response_ends_trial: false,
-    trial_duration: null,
-    func: drawFeedback,
-    func_args: null,
+    stimulus: "",
+    trial_duration: 0,
     on_start: function(trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
-        trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
+        if (dat.corrCode === 3) {
+            trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
+            trial.stimulus =
+                generate_formatted_html({
+                    text: PRMS.fbText[dat.corrCode - 1],
+                    align: "center",
+                    fontsize: 30,
+                    width: "1200px",
+                    lineheight: 1.5,
+                    bold: true,
+                }) + RESPMAPPING;
+        }
     },
 };
 
-function drawReward() {
+// function drawFeedback() {
+//     "use strict";
+//     let ctx = document.getElementById("canvas").getContext("2d");
+//     let dat = jsPsych.data.get().last(1).values()[0];
+//
+//     // draw text
+//     ctx.font = PRMS.fbFont;
+//     ctx.textAlign = "center";
+//     ctx.textBaseline = "middle";
+//     ctx.fillStyle = "black";
+//
+//     ctx.fillText(PRMS.fbText[dat.corrCode - 1], 0, 0);
+//     ctx.fillText(RESPMAPPING, 0, 0);
+// }
+//
+// const TRIAL_FEEDBACK = {
+//     type: jsPsychStaticCanvasKeyboardResponse,
+//     canvas_colour: CANVAS_COLOUR,
+//     canvas_size: CANVAS_SIZE,
+//     canvas_border: CANVAS_BORDER,
+//     translate_origin: true,
+//     response_ends_trial: false,
+//     trial_duration: null,
+//     func: drawFeedback,
+//     func_args: null,
+//     on_start: function(trial) {
+//         let dat = jsPsych.data.get().last(1).values()[0];
+//         trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
+//     },
+// };
+
+function drawReward(args) {
     "use strict";
+    if (args.corrCode === 3) {
+        return;
+    }
     let ctx = document.getElementById("canvas").getContext("2d");
-    let dat = jsPsych.data.get().last(2).values()[0];
 
     // draw text
     ctx.font = PRMS.fbFont;
@@ -541,19 +567,19 @@ function drawReward() {
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
 
-    ctx.fillText(PRMS.fbText[dat.corrCode - 1], 0, -35);
+    ctx.fillText(PRMS.fbText[args.corrCode - 1], 0, -105);
 
     // draw image
     let img = new Image();
 
-    if (dat.corrCode === 1) {
+    if (args.corrCode === 1) {
         img.src = REWARD_IMAGES[0];
     } else {
         img.src = REWARD_IMAGES[1];
     }
 
     // draw image
-    const size = 20;
+    const size = 8;
     const width = img.width;
     const height = img.height;
     ctx.drawImage(img, -width / size / 2, -height / size / 2 + 35, width / size, height / size);
@@ -569,6 +595,13 @@ const TRIAL_REWARD = {
     trial_duration: PRMS.rewardDur,
     func: drawReward,
     func_args: null,
+    on_start: function(trial) {
+        let dat = jsPsych.data.get().last(2).values()[0];
+        trial.func_args = [{ corrCode: dat.corrCode }];
+        if (dat.corrCode === 3) {
+            trial_duration = 0;
+        }
+    },
 };
 
 const ITI = {
@@ -607,8 +640,8 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist jetzt
-               vorbei. Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe
+        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist jetzt vorbei.<br>
+               Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe
                anzugeben. Falls du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst kannst du nach
                Abschluss der Erhebung wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander
                Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
@@ -648,7 +681,7 @@ function save() {
 const SAVE_DATA = {
     type: jsPsychCallFunction,
     func: save,
-    post_trial_gap: 1000,
+    post_trial_gap: 3000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -675,6 +708,7 @@ function genExpSeq() {
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
     exp.push(TASK_INSTRUCTIONS3);
+    exp.push(TASK_INSTRUCTIONS4);
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
         exp.push(BLOCK_START);
@@ -691,13 +725,14 @@ function genExpSeq() {
     }
 
     // debrief
+    exp.push(mouseCursor(true));
     exp.push(END_SCREEN);
     exp.push(EMAIL_OPTION);
-    
+
     // save data
     exp.push(SAVE_DATA);
-    
-    exp.push(mouseCursor(true));
+
+    exp.push(end_message());
     exp.push(fullscreen(false));
 
     return exp;
