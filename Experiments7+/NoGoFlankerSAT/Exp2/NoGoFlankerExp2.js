@@ -11,6 +11,7 @@
 // Version 3: First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
 // Version 4: First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
 
+
 const jsPsych = initJsPsych({
     on_finish: function(data) {
         window.location.assign(
@@ -487,7 +488,7 @@ function save() {
 const SAVE_DATA = {
     type: jsPsychCallFunction,
     func: save,
-    post_trial_gap: 1000,
+    post_trial_gap: 3000,
 };
 
 ////////////////////////////////////////////////////////////////////////
