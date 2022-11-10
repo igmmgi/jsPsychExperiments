@@ -110,7 +110,8 @@ const WELCOME_INSTRUCTIONS = {
            Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass Du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
-           Bei Fragen oder Problemen wende dich bitte an:<br><br> ba.biopsych@gmail.com <br><br>
+           Bei Fragen oder Problemen wende dich bitte an:<br><br> 
+           ba.biopsych@gmail.com <br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         fontsize: 30,
