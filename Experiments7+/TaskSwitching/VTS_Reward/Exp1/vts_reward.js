@@ -63,9 +63,10 @@ const PRMS = {
 
 const RATIO = Number(jsPsych.data.urlVariables().ratio);
 PRMS.ratioNormal = RATIO;
+jsPsych.data.addProperties({ ratio: RATIO });
 
 // 2 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // Version 1: Colour task = left hand,  Letter task = right hand
@@ -195,7 +196,7 @@ const TASK_INSTRUCTIONS2 = {
     stimulus:
         generate_formatted_html({
             text: `Für die Buchstaben Aufgabe musst du entscheiden, ob der Buchstabe ein Vokal oder Konsonant ist.<br><br>
-             Für die Farben Aufgabe musst du entscheiden, ob die Mehrheit der Kreise Blau oder Rot ist.<br>
+             Für die Farben Aufgabe musst du entscheiden, ob die Mehrheit der Kreise Blau oder Rot ist.<br><br>
              Es gilt:`,
             align: "left",
             fontsize: 30,
@@ -221,8 +222,25 @@ const TASK_INSTRUCTIONS3 = {
         text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
            Wenn nur eine Aufgabe präsentiert wird, dann bearbeite bitte diese. <br><br>
            Wenn beide Aufgaben präsentiert werden, kannst du dir frei aussuchen, welche du bearbeitest.<br><br>
-           In manchen Durchgängen erhälst du Punkte, wenn du die Aufgabe richtig bearbeitest.<br><br>
-           Je mehr Punkte du sammelst, desto kürzer wird das Experiment!<br><br>  
+           Drücke eine beliebige Taste um fortzufahren.`,
+        align: "left",
+        fontsize: 30,
+        width: "1200px",
+        lineheight: 1.5,
+    }),
+};
+
+const TASK_INSTRUCTIONS4 = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: generate_formatted_html({
+        text: `In manchen Durchgängen erhälst du +10 Punkte, wenn die Aufgabe richtig bearbeitest wurde.<br><br>
+           Je mehr Punkte du sammelst, desto kürzer wird das Experiment! Du erfährst nach dem
+            ${PRMS.nBlks + 3}. Block, um wieviel die Blöcke gekürzt werden. <br><br>  
+            Des Weiteren werden die 10% Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
+            von Osiander oder der deutschen Bahn erhalten.<br><br>
            Drücke eine beliebige Taste um fortzufahren.`,
         align: "left",
         fontsize: 30,
@@ -240,7 +258,7 @@ const BLOCK_START = {
     on_start: function(trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
+                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
                Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind und bearbeite sonst die Aufgabe welche präsentiert ist. Es gilt:`,
                 align: "left",
                 fontsize: 30,
@@ -290,7 +308,7 @@ const TASK_INSTRUCTIONS_RESPMAPPING = {
     stimulus: RESPMAPPING,
 };
 
-const REWARD_IMAGES = [`images/treasure_box.jpg`, `images/treasure_box_with_cross.jpg`];
+const REWARD_IMAGES = [`images/treasure_box.png`, `images/blank.png`];
 
 const PRELOAD = {
     type: jsPsychPreload,
@@ -494,7 +512,6 @@ function drawFeedback() {
     ctx.fillStyle = "black";
 
     ctx.fillText(PRMS.fbText[dat.corrCode - 1], 0, 0);
-
 }
 
 const TRIAL_FEEDBACK = {
@@ -509,7 +526,7 @@ const TRIAL_FEEDBACK = {
     func_args: null,
     on_start: function(trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
-        trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1]
+        trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
     },
 };
 
@@ -536,7 +553,7 @@ function drawReward() {
     }
 
     // draw image
-    const size = 4;
+    const size = 20;
     const width = img.width;
     const height = img.height;
     ctx.drawImage(img, -width / size / 2, -height / size / 2 + 35, width / size, height / size);
@@ -590,13 +607,27 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Glückwunsch! Durch deinen Punktestand hat sich der letzte Block verkürzt und das Experiment ist jetzt vorbei. <br><br> 
+        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist jetzt
+               vorbei. Im nächsten Fenster wirst Du aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe
+               anzugeben. Falls du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst kannst du nach
+               Abschluss der Erhebung wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander
+               Wenn Du das nicht möchtest, lasse das Feld einfach leer.<br><br>
                Drücke die Leertaste, um das Experiment abzuschließen!`,
         align: "left",
         fontsize: 30,
         width: "1200px",
         lineheight: 1.5,
     }),
+};
+
+const EMAIL_OPTION = {
+    type: jsPsychSurveyText,
+    questions: [{ prompt: "E-mail addres?", placeholder: "email@email", columns: 50, required: false, name: "email" }],
+    button_label: "Weiter",
+    on_finish: function() {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        jsPsych.data.addProperties({ email: dat.response.email });
+    },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -641,9 +672,9 @@ function genExpSeq() {
 
     // instructions
     exp.push(WELCOME_INSTRUCTIONS);
-    exp.push(TASK_INSTRUCTIONS1); 
+    exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
-    exp.push(TASK_INSTRUCTIONS3); 
+    exp.push(TASK_INSTRUCTIONS3);
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
         exp.push(BLOCK_START);
@@ -659,11 +690,13 @@ function genExpSeq() {
         }
     }
 
-    // save data
-    exp.push(SAVE_DATA);
-
     // debrief
     exp.push(END_SCREEN);
+    exp.push(EMAIL_OPTION);
+    
+    // save data
+    exp.push(SAVE_DATA);
+    
     exp.push(mouseCursor(true));
     exp.push(fullscreen(false));
 
