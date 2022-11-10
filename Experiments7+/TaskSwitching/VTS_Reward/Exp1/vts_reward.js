@@ -19,7 +19,7 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
+const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
 const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = "5px solid black";
 
@@ -29,8 +29,8 @@ const CANVAS_BORDER = "5px solid black";
 
 const PRMS = {
     screenRes: [960, 720], // minimum screen resolution requested
-    nTrls: 8, // number of trials per block
-    nBlks: 2, // number of blocks
+    nTrls: 100, // number of trials per block
+    nBlks: 3, // number of blocks
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
@@ -60,6 +60,9 @@ const PRMS = {
     cBlk: 1,
     cTrl: 1,
 };
+
+const RATIO = Number(jsPsych.data.urlVariables().ratio);
+PRMS.ratioNormal = RATIO;
 
 // 2 counter balanced versions
 const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
