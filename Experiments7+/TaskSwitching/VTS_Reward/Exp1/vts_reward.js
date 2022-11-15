@@ -126,7 +126,7 @@ function task_instructions1() {
             text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
              Farbeaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
              Buchstabenaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
-             Drücke eine beliebige Taste, um fortzufahren!`,
+             Drücke die „G“-Taste, um fortzufahren!`,
             align: "left",
             fontsize: 30,
             width: "1200px",
@@ -137,7 +137,7 @@ function task_instructions1() {
             text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
              Buchstabenaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
              Farbeaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
-             Drücke eine beliebige Taste, um fortzufahren!`,
+             Drücke die „G“-Taste, um fortzufahren!`,
             align: "left",
             fontsize: 30,
             width: "1200px",
@@ -154,6 +154,7 @@ const TASK_INSTRUCTIONS1 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: TASK_INSTRUCTIONS_TEXT,
+    choices: ["G"],
 };
 
 let RESPMAPPING;
@@ -201,12 +202,13 @@ const TASK_INSTRUCTIONS2 = {
         }) +
         RESPMAPPING +
         generate_formatted_html({
-            text: `Drücke eine beliebige Taste um fortzufahren.`,
+            text: `Drücke die „X“- Taste, um fortzufahren.`,
             align: "center",
             fontsize: 30,
             width: "1200px",
             lineheight: 1.5,
         }),
+    choices: ["X"],
 };
 
 const TASK_INSTRUCTIONS3 = {
@@ -218,12 +220,13 @@ const TASK_INSTRUCTIONS3 = {
         text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
            Wenn nur eine Aufgabe präsentiert wird, dann bearbeite bitte diese. <br><br>
            Wenn beide Aufgaben präsentiert werden, kannst Du dir frei aussuchen, welche Du bearbeitest.<br><br>
-           Drücke eine beliebige Taste um fortzufahren.`,
+           Drücke die „T“- Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
         width: "1200px",
         lineheight: 1.5,
     }),
+    choices: ["T"],
 };
 
 const TASK_INSTRUCTIONS4 = {
@@ -233,16 +236,17 @@ const TASK_INSTRUCTIONS4 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `In manchen Durchgängen erhälst Du +10 Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
-               Je mehr Punkte Du sammelst, desto kürzer wird das Experiment! Du erfährst nach dem
-               ${PRMS.nBlks + 3}. Block, wieviele der restlichen Blöcke wegfallen.<br><br> 
+               Je mehr Punkte Du sammelst, desto kürzer wird das Experiment! 
+               Du erfährst nach dem ${PRMS.nBlks} Block, wieviele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>.
                Des Weiteren werden die 10% aller Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
                von Osiander oder der deutschen Bahn erhalten.<br><br>
-               Drücke eine beliebige Taste, um fortzufahren.`,
+               Drücke die „K“- Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
         width: "1200px",
         lineheight: 1.5,
     }),
+    choices: ["K"],
 };
 
 const BLOCK_START = {
@@ -279,9 +283,13 @@ const BLOCK_END = {
     canvas_border: CANVAS_BORDER,
     stimulus: "",
     on_start: function(trial) {
+        let dat = jsPsych.data.get();
+        let nReward = dat.select("reward").values.filter(function(x) {
+            return x === true;
+        }).length;
         trial.stimulus = generate_formatted_html({
-            text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-             Dein aktueller Punktestand beträgt: ${"POINTS: TO DO!"} <br><br>
+            text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
+             Dein aktueller Punktestand beträgt: POINTS: ${nReward * 10}! <br><br>
              Kurze Pause.<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
@@ -501,6 +509,7 @@ const TRIAL_FEEDBACK = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
+    response_ends_trial: false,
     stimulus: "",
     trial_duration: 0,
     on_start: function(trial) {
