@@ -237,7 +237,7 @@ const TASK_INSTRUCTIONS4 = {
     stimulus: generate_formatted_html({
         text: `In manchen Durchgängen erhälst Du +10 Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
                Je mehr Punkte Du sammelst, desto kürzer wird das Experiment! 
-               Du erfährst nach dem ${PRMS.nBlks} Block, wieviele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>.
+               Du erfährst nach dem ${PRMS.nBlks} Block, wieviele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>
                Des Weiteren werden die 10% aller Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
                von Osiander oder der deutschen Bahn erhalten.<br><br>
                Drücke die „K“- Taste, um fortzufahren.`,
