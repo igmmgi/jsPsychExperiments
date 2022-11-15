@@ -259,7 +259,7 @@ const BLOCK_START = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
-               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind und bearbeite sonst die Aufgabe welche präsentiert ist. Es gilt:`,
+               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`,
                 align: "left",
                 fontsize: 30,
                 width: "1200px",
@@ -291,7 +291,7 @@ const BLOCK_END = {
             text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
              Dein aktueller Punktestand beträgt: POINTS: ${nReward * 10}! <br><br>
              Kurze Pause.<br><br>
-             Wenn du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
+             Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
             fontsize: 30,
             width: "1200px",
