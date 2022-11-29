@@ -27,10 +27,11 @@ const PRMS = {
   tooSlowP: 3000,
   tooFast: 150,
   rsi: 500,
-  fbText: ['', 'Falsch!', 'Zu langsam!', 'Zu schnell!'],
+  fbText: ['Correct', 'Falsch!', 'Zu langsam!', 'Zu schnell!'],
   fixSize: 10, // size of fixation cross
   fixWidth: 4, // size of fixation cross
   fixDur: 500, // duration of fixation cross
+  fbFont: "bold 50px Arial",
   stimFont: 'bold 70px Arial',
   lineWidth: 12,
   colours1: [COLOURS[0], COLOURS[1]],
@@ -42,7 +43,7 @@ const PRMS = {
 };
 
 // 2 counter balanced versions
-const VERSION = Number(jsPsych.data.urlVariables().version);
+const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 2 counter-balanced versions
@@ -120,9 +121,9 @@ const TASK_INSTRUCTIONS_MANIPULATION1 = {
   canvas_size: CANVAS_SIZE,
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
-    text: `Nach korrekten Durchgängen kannst du +2 Punkte oder +10 Punkte erhalten.<br>
-           Wenn die Farbaufgabe korrekt war: +10 mit 50% Wahrscheinlichkeit + 2 mit 50% Wahrscheinlichkeit<br>
-           Wenn die Buchstabenaufgabe korrekt war: +10 mit 50% Wahrscheinlichkeit + 2 mit 50% Wahrscheinlichkeit<br>
+    text: `Nach korrekten Durchgängen kannst du +2 Punkte oder +10 Punkte erhalten.<br><br>
+           Wenn die Farbaufgabe korrekt war: +10 mit 50% Wahrscheinlichkeit + 2 mit 50% Wahrscheinlichkeit.<br><br>
+           Wenn die Buchstabenaufgabe korrekt war: +10 mit 50% Wahrscheinlichkeit + 2 mit 50% Wahrscheinlichkeit.<br><br>
            Versuche soviele Punkte wie möglich zu sammeln!<br><br>
            Drücke eine beliebige Taste, um fortzufahren!`,
     align: 'left',
@@ -151,6 +152,15 @@ const TASK_INSTRUCTIONS_MANIPULATION2 = {
     lineheight: 1.5,
   }),
 };
+
+
+const REWARD_IMAGES = [`images/HighReward.png`, `images/LowReward.png`];
+
+const PRELOAD = {
+    type: jsPsychPreload,
+    images: REWARD_IMAGES,
+};
+
 
 const RESP_TEXT = `1. Priorität: Farbaufgabe<br><span style="color: ${COLOURS[0]}">${
   EN_DE[COLOURS[0]]
@@ -296,7 +306,7 @@ function drawStimulus(args) {
   ctx.stroke();
 
   // letter task
-  ctx.fillText(args.letter, 0, 0);
+  ctx.fillText(args.letter, 0, 5);
 }
 
 function draw_rsi() {
@@ -398,60 +408,106 @@ const PP_TRIAL = {
   },
 };
 
-const TRIAL_FEEDBACK = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: '',
-  trial_duration: null,
-  response_ends_trial: false,
-  on_start: function (trial) {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
-    if (dat.corrCode === 1) {
-      trial.stimulus =
-        generate_formatted_html({
-          text: PRMS.fbText[dat.corrCode - 1],
-          align: 'center',
-          fontsize: 36,
-          width: '1200px',
-          bold: true,
-        }) +
-        generate_formatted_html({
-          text: `+ ${dat.reward} Punkte`,
-          align: 'center',
-          fontsize: 36,
-          width: '1200px',
-          bold: true,
-        });
-    } else {
-      trial.stimulus =
-        generate_formatted_html({
-          text: `Falsch---keine Punkte!<br>`,
-          align: 'center',
-          fontsize: 36,
-          width: '1200px',
-          bold: true,
-        }) +
-        generate_formatted_html({
-          text: RESP_TEXT_TRIAL,
-          align: 'center',
-          fontsize: 36,
-          width: '1200px',
-          bold: true,
-        });
-    }
-  },
+
+const TRIAL_FEEDBACK_ERROR = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: '',
+    trial_duration: null,
+    response_ends_trial: false,
+    on_start: function (trial) {
+        console.log("here")
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Falsch---keine Punkte!<br>`,
+                align: 'center',
+                fontsize: 36,
+                width: '1200px',
+                bold: true,
+            }) +
+            generate_formatted_html({
+                text: RESP_TEXT_TRIAL,
+                align: 'center',
+                fontsize: 36,
+                width: '1200px',
+                bold: true,
+            });
+    },
 };
 
-function blockFeedbackTxt(filter_options) {
+function drawReward(args) {
+    "use strict";
+    console.log(args)
+    let ctx = document.getElementById("canvas").getContext("2d");
+
+    if (args.corrCode != 1) {
+
+        // draw text
+        ctx.font = PRMS.fbFont;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "black";
+        ctx.fillText(PRMS.fbText[args.corrCode - 1], 0, 0);
+
+    } else if (args.corrCode === 1) {
+
+        // draw image
+        let img = new Image();
+
+        if (args.reward === 10) {
+            img.src = REWARD_IMAGES[0]; // high reward
+        } else if (args.reward === 2){
+            img.src = REWARD_IMAGES[1]; // low reward
+        }
+
+        // draw image
+        const size = 8;
+        const width = img.width;
+        const height = img.height;
+        ctx.drawImage(img, -width / size / 2, -height / size / 2 + 35, width / size, height / size);
+    }
+}
+
+const TRIAL_FEEDBACK_CORRECT = {
+    type: jsPsychStaticCanvasKeyboardResponse,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    translate_origin: true,
+    response_ends_trial: false,
+    trial_duration: null,
+    func: drawReward,
+    func_args: null,
+    on_start: function(trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
+        trial.func_args = [{ corrCode: dat.corrCode, reward: dat.reward }];
+    },
+};
+
+const IF_TRIAL_CORRECT = {
+    timeline: [TRIAL_FEEDBACK_CORRECT],
+    conditional_function: function() {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        return dat.corrCode === 1;
+    }
+}
+
+const IF_TRIAL_ERROR = {
+    timeline: [TRIAL_FEEDBACK_ERROR],
+    conditional_function: function() {
+        let dat = jsPsych.data.get().last(2).values()[0];
+        return dat.corrCode !== 1;
+    }
+}
+
+
+function blockFeedbackTxt() {
   'use strict';
-  let dat = jsPsych.data.get().filter({ ...filter_options, blockNum: PRMS.cBlk });
-  let meanTime = Math.round(dat.select('rt').mean());
-  let nError = dat.select('error').values.filter(function (x) {
-    return x === 1;
-  }).length;
 
   let blockFbTxt =
     generate_formatted_html({
@@ -483,7 +539,7 @@ const BLOCK_FEEDBACK = {
   stimulus: '',
   response_ends_trial: true,
   on_start: function (trial) {
-    trial.stimulus = blockFeedbackTxt({ stim: 'ppr1' });
+    trial.stimulus = blockFeedbackTxt();
   },
   on_finish: function () {
     PRMS.cBlk += 1;
@@ -492,12 +548,12 @@ const BLOCK_FEEDBACK = {
 };
 
 const TRIAL_TIMELINE_HIGHPRI_LOWBACK = {
-  timeline: [FIXATION_CROSS, PP_TRIAL, TRIAL_FEEDBACK],
+  timeline: [FIXATION_CROSS, PP_TRIAL, IF_TRIAL_CORRECT, IF_TRIAL_ERROR],
   timeline_variables: TRIALS_HIPRI_LOWBACK,
 };
 
 const TRIAL_TIMELINE_LOWPRI_HIGHBACK = {
-  timeline: [FIXATION_CROSS, PP_TRIAL, TRIAL_FEEDBACK],
+  timeline: [FIXATION_CROSS, PP_TRIAL, IF_TRIAL_CORRECT, IF_TRIAL_ERROR],
   timeline_variables: TRIALS_LOWPRI_HIGHBACK,
 };
 
@@ -597,6 +653,7 @@ function genExpSeq() {
   exp.push(welcome_message());
   exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
+  exp.push(PRELOAD);
 
   exp.push(WELCOME_INSTRUCTIONS);
   exp.push(VP_CODE_INSTRUCTIONS1);
