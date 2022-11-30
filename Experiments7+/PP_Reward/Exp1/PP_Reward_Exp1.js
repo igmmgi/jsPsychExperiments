@@ -2,7 +2,7 @@
 
 const jsPsych = initJsPsych({});
 
-const CANVAS_COLOUR = 'rgba(200, 200, 200, 1)';
+const CANVAS_COLOUR =   'rgba(190, 190, 190, 1)';
 const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = '5px solid black';
 
@@ -43,7 +43,7 @@ const PRMS = {
 };
 
 // 2 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = 1; //Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // 2 counter-balanced versions
@@ -154,7 +154,7 @@ const TASK_INSTRUCTIONS_MANIPULATION2 = {
 };
 
 
-const REWARD_IMAGES = [`images/HighReward.png`, `images/LowReward.png`];
+const REWARD_IMAGES = [`images/HighReward_grey.png`, `images/LowReward_grey.png`];
 
 const PRELOAD = {
     type: jsPsychPreload,
@@ -418,7 +418,6 @@ const TRIAL_FEEDBACK_ERROR = {
     trial_duration: null,
     response_ends_trial: false,
     on_start: function (trial) {
-        console.log("here")
         let dat = jsPsych.data.get().last(1).values()[0];
         trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
         trial.stimulus =
@@ -441,7 +440,6 @@ const TRIAL_FEEDBACK_ERROR = {
 
 function drawReward(args) {
     "use strict";
-    console.log(args)
     let ctx = document.getElementById("canvas").getContext("2d");
 
     if (args.corrCode != 1) {
