@@ -38,32 +38,32 @@ const PRMS = {
     feedbackDur: [0, 1500], // duration of the reward screen
     rewardDur: 1000, // duration of the reward screen
     fbFont: "30px Arial",
-    colourTask: shuffle(["mehr Blau", "mehr Rot"]),
+    colourTask: shuffle(["mehr Blau", "mehr Grün"]),
     genderTask: shuffle(["MANN", "FRAU"]),
-    colours: ["rgba(0, 0, 255, 0.9)", "rgba(255, 0, 0, 0.9)"],
+    colours: ["rgba(0, 0, 255, 0.9)", "rgba(0, 255, 0, 0.9)"],
     colourTaskKeys: null, // randomly assigned below
     genderTaskKeys: null, // randomly assigned below
-    ratioNormal: 80,
+    ratioNormal: 75,
     respKeysLH: ["Q", "W"],
     respKeysRH: ["O", "P"],
     deactivateKeys: false, // should keys be deactivated when task not available?
     dotRadius: 1.5,
     dotEccentricity: 200,
     dotGaps: 4,
-    dotBlank: 38,
-    picSize: 12, // bigger number = smaller picture
+    dotBlank: 30,
+    picSize: 16, // bigger number = smaller picture
     textFont: "50px Arial",
-    textColor: "White",
+    textColor: "Red",
     cBlk: 1,
     cTrl: 1,
 };
 
 // 2 counter balanced versions
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
-// Version 1: Colour task = left hand,  Letter task = right hand
-// Version 2: Colour task = right hand, Letter task = left hand
+// Version 1: Colour task = left hand,  Gender task = right hand
+// Version 2: Colour task = right hand, Gender task = left hand
 if (VERSION === 1) {
     PRMS.colourTaskKeys = PRMS.respKeysLH; // e.g., more red vs. more blue
     PRMS.genderTaskKeys = PRMS.respKeysRH; // e.g., vowel vs. consonant
@@ -191,7 +191,7 @@ const TASK_INSTRUCTIONS2 = {
     stimulus:
         generate_formatted_html({
             text: `Für die Geschlechtaufgabe musst Du entscheiden, ob der Gesicht ein Mann oder eine Frau ist.<br><br>
-             Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte Blau oder Rot ist.<br><br>
+             Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte Blau oder Grün ist.<br><br>
              Es gilt:`,
             align: "left",
             fontsize: 30,
@@ -591,11 +591,11 @@ const VTS = {
         let dot_colours = repeatArray(CANVAS_COLOUR, Math.round(PRMS.nDots));
         if ((trial.data.forced_task === "na") | (trial.data.forced_task === "colour")) {
             let ratio = PRMS.ratioNormal;
-            trial.data.colour_more = shuffle(["mehr Blau", "mehr Rot"])[0];
+            trial.data.colour_more = shuffle(["mehr Blau", "mehr Grün"])[0];
             let colour_order;
             if (trial.data.colour_more === "mehr Blau") {
                 colour_order = [0, 1];
-            } else if (trial.data.colour_more === "mehr Rot") {
+            } else if (trial.data.colour_more === "mehr Grün") {
                 colour_order = [1, 0];
             }
 
@@ -789,22 +789,22 @@ function genExpSeq() {
 
     let exp = [];
 
-    // // setup
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    // setup
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     exp.push(COUNT_DOTS);
     exp.push(PRELOAD);
 
-    // // instructions
-    // exp.push(WELCOME_INSTRUCTIONS);
-    // exp.push(TASK_INSTRUCTIONS1);
-    // exp.push(TASK_INSTRUCTIONS2);
-    // exp.push(TASK_INSTRUCTIONS3);
+    // instructions
+    exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(TASK_INSTRUCTIONS1);
+    exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
         exp.push(BLOCK_START);
