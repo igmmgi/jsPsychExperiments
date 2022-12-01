@@ -233,7 +233,7 @@ const BLOCK_START = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function(trial) {
+    on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
@@ -252,7 +252,7 @@ const BLOCK_START = {
                 lineheight: 1.5,
             });
     },
-    on_finish: function() {
+    on_finish: function () {
         FACE_IMAGES = shuffle_images(FACE_IMAGES_MALE, FACE_IMAGES_FEMALE);
     },
 };
@@ -263,7 +263,7 @@ const BLOCK_END = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function(trial) {
+    on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
              Kurze Pause.<br><br>
@@ -274,7 +274,7 @@ const BLOCK_END = {
             lineheight: 1.5,
         });
     },
-    on_finish: function() {
+    on_finish: function () {
         PRMS.cBlk += 1;
         PRMS.cTrl = 1;
     },
@@ -564,7 +564,7 @@ const VTS = {
         free_forced: jsPsych.timelineVariable("free_forced"),
         forced_task: jsPsych.timelineVariable("forced_task"),
     },
-    on_start: function(trial) {
+    on_start: function (trial) {
         "use strict";
 
         // gender task
@@ -633,7 +633,7 @@ const VTS = {
             },
         ];
     },
-    on_finish: function() {
+    on_finish: function () {
         codeTrial();
     },
 };
@@ -676,7 +676,7 @@ const TRIAL_FEEDBACK = {
     response_ends_trial: false,
     stimulus: "",
     trial_duration: 0,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (dat.corrCode === 2) {
             trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
@@ -705,8 +705,8 @@ const ITI = {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-    { trial_type: 1, free_forced: 'free',   forced_task: 'na' },
-    { trial_type: 2, free_forced: 'free',   forced_task: 'na' },
+    { trial_type: 1, free_forced: 'free', forced_task: 'na' },
+    { trial_type: 2, free_forced: 'free', forced_task: 'na' },
     { trial_type: 3, free_forced: 'forced', forced_task: 'gender' },
     { trial_type: 4, free_forced: 'forced', forced_task: 'colour' },
 ];
@@ -754,7 +754,7 @@ const EMAIL_OPTION = {
         },
     ],
     button_label: "Weiter",
-    on_finish: function() {
+    on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
         jsPsych.data.addProperties({ email: dat.response.email });
     },
