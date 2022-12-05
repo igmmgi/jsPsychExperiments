@@ -35,8 +35,8 @@ const PRMS = {
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
     fbText: ["Richtig! + 10 Punkte!", "Richtig, aber keine Punkte!", "Falsch! Keine Punkte!"],
-    iti: 300, // duration of the inter-trial-interval
-    feedbackDur: [0, 0, 3000], // duration of the reward screen
+    iti: 500, // duration of the inter-trial-interval
+    feedbackDur: [0, 0, 1000], // duration of the reward screen
     rewardDur: 1000, // duration of the reward screen
     stimFont: "110px Arial",
     fbFont: "30px Arial",
