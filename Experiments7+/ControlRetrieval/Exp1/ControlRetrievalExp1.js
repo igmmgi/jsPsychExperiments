@@ -689,7 +689,7 @@ function genExpSeq() {
   exp.push(PRELOAD);
   exp.push(resize_browser());
   exp.push(welcome_message());
-  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  //exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
 
   exp.push(WELCOME_INSTRUCTIONS);
