@@ -469,8 +469,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-  // saveData('/Common/write_data.php', data_fn, [{ stim: 'cr1'}, {stim: 'cr1_check'}]);
-  saveDataLocal(data_fn, [{ stim: 'cr1'}, {stim: 'cr1_check'}]);
+  saveData('/Common/write_data.php', data_fn, [{ stim: 'cr1'}, {stim: 'cr1_check'}]);
+  // saveDataLocal(data_fn, [{ stim: 'cr1'}, {stim: 'cr1_check'}]);
 }
 
 const SAVE_DATA = {
@@ -492,7 +492,7 @@ function genExpSeq() {
   exp.push(PRELOAD);
   exp.push(resize_browser());
   exp.push(welcome_message());
-  // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+  exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
   exp.push(mouseCursor(false));
 
   exp.push(WELCOME_INSTRUCTIONS);
