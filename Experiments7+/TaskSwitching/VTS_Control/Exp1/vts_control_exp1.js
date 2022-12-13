@@ -51,7 +51,7 @@ const PRMS = {
     dotEccentricity: 125,
     dotGaps: 4,
     dotBlank: 0,
-    picSize: 20, // bigger number = smaller picture
+    picSize: 5, // bigger number = smaller picture
     textFont: "bold 28px Arial",
     textColor: "White",
     cBlk: 1,
