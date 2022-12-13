@@ -14,7 +14,14 @@
 // Reward screen (with/without reward picture)
 // ITI
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function() {
+        window.location.assign(
+            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=138&credit_token=bc4d282bd626463f8acd249ceb8f145f&survey_code=" +
+            jsPsych.data.urlVariables().sona_id,
+        );
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -26,7 +33,6 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
-
 const PRMS = {
     screenRes: [960, 720], // minimum screen resolution requested
     nTrls: 100, // number of trials per block
@@ -622,8 +628,8 @@ const ITI = {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-    { trial_type: 1, free_forced: 'free', forced_task: 'na' },
-    { trial_type: 2, free_forced: 'free', forced_task: 'na' },
+    { trial_type: 1, free_forced: 'free',   forced_task: 'na' },
+    { trial_type: 2, free_forced: 'free',   forced_task: 'na' },
     { trial_type: 3, free_forced: 'forced', forced_task: 'letter' },
     { trial_type: 4, free_forced: 'forced', forced_task: 'colour' },
 ];
@@ -682,13 +688,13 @@ const EMAIL_OPTION = {
 ////////////////////////////////////////////////////////////////////////
 const DIR_NAME = getDirName();
 const EXP_NAME = getFileName();
+const VP_NUM = getTime();
 
 function save() {
-    const vpNum = getTime();
-    jsPsych.data.addProperties({ vpNum: vpNum });
-
-    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
-    saveData("/Common/write_data.php", data_fn, { stim_type: "vtsr" });
+    jsPsych.data.addProperties({ vpNum: VP_NUM });
+    saveData("/Common/write_data.php", `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`, {
+        stim_type: "vtsr",
+    });
     // saveDataLocal(data_fn, { stim_type: "vtsr" });
 }
 
@@ -696,6 +702,19 @@ const SAVE_DATA = {
     type: jsPsychCallFunction,
     func: save,
     post_trial_gap: 3000,
+};
+
+function save_blockwise() {
+    jsPsych.data.addProperties({ vpNum: VP_NUM });
+    saveData("/Common/write_data.php", `${DIR_NAME}data/version${VERSION}/blockwise/${EXP_NAME}_${VP_NUM}`, {
+        stim_type: "vtsr",
+    });
+}
+
+const SAVE_DATA_BLOCKWISE = {
+    type: jsPsychCallFunction,
+    func: save_blockwise,
+    post_trial_gap: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -736,6 +755,7 @@ function genExpSeq() {
         if (blk < PRMS.nBlks - 1) {
             exp.push(BLOCK_END);
         }
+        exp.push(SAVE_DATA_BLOCKWISE);
     }
 
     // debrief

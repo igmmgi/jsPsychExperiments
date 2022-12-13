@@ -48,12 +48,12 @@ const PRMS = {
     respKeysRH: ["O", "P"],
     deactivateKeys: false, // should keys be deactivated when task not available?
     dotRadius: 1.5,
-    dotEccentricity: 200,
+    dotEccentricity: 125,
     dotGaps: 4,
-    dotBlank: 30,
-    picSize: 16, // bigger number = smaller picture
-    textFont: "40px Arial",
-    textColor: "Red",
+    dotBlank: 0,
+    picSize: 20, // bigger number = smaller picture
+    textFont: "bold 28px Arial",
+    textColor: "White",
     cBlk: 1,
     cTrl: 1,
 };
@@ -109,7 +109,7 @@ const WELCOME_INSTRUCTIONS = {
            Bitte stelle sicher, dass Du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
            Bei Fragen oder Problemen wende dich bitte an:<br><br> 
-           ba.biopsych@gmail.com <br><br>
+           tina.lorenz@student.uni-tuebingen.de<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         fontsize: 30,
@@ -122,8 +122,8 @@ function task_instructions1() {
     if (VERSION === 1) {
         return generate_formatted_html({
             text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
-             Farbeaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
-             Geschlechtaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
+             Farbaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
+             Geschlechteraufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
              Drücke die „G“-Taste, um fortzufahren!`,
             align: "left",
             fontsize: 30,
@@ -133,8 +133,8 @@ function task_instructions1() {
     } else if (VERSION === 2) {
         return generate_formatted_html({
             text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
-             Geschlechtaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
-             Farbeaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
+             Geschlechertaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
+             Farbaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
              Drücke die „G“-Taste, um fortzufahren!`,
             align: "left",
             fontsize: 30,
@@ -160,7 +160,7 @@ let RESPMAPPING;
 if (VERSION === 1) {
     // left hand = colour, right hand = letter
     RESPMAPPING = generate_formatted_html({
-        text: `Farbaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Geschlechtaufgabe = Rechte Hand<br>
+        text: `Farbaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Geschlechteraufgabe = Rechte Hand<br>
            ${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}${'&emsp;'.repeat(12)}${PRMS.genderTask[0]} vs. ${PRMS.genderTask[1]}<br>
            (${PRMS.colourTaskKeys[0]}-Taste) ${'&emsp;'.repeat(3)}(${PRMS.colourTaskKeys[1]}-Taste)${'&emsp;'.repeat(11)}(${PRMS.genderTaskKeys[0]}-Taste)${'&emsp;'.repeat(3)}(${PRMS.genderTaskKeys[1]}-Taste)`,
         align: 'center',
@@ -172,7 +172,7 @@ if (VERSION === 1) {
 } else if (VERSION === 2) {
     // left hand = letter, right hand = colour
     RESPMAPPING = generate_formatted_html({
-        text: `Geschlechtaufgabe = Linke Hand ${'&emsp;'.repeat(6)} Farbaufgabe = Rechte Hand<br>
+        text: `Geschlechteraufgabe = Linke Hand ${'&emsp;'.repeat(6)} Farbaufgabe = Rechte Hand<br>
            ${PRMS.genderTask[0]} vs. ${PRMS.genderTask[1]}${'&emsp;'.repeat(12)}${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}<br>
            (${PRMS.genderTaskKeys[0]}-Taste) ${'&emsp;'.repeat(3)}(${PRMS.genderTaskKeys[1]}-Taste)${'&emsp;'.repeat(11)}(${PRMS.colourTaskKeys[0]}-Taste)${'&emsp;'.repeat(3)}(${PRMS.colourTaskKeys[1]}-Taste)`,
         align: 'center',
@@ -190,9 +190,10 @@ const TASK_INSTRUCTIONS2 = {
     canvas_border: CANVAS_BORDER,
     stimulus:
         generate_formatted_html({
-            text: `Für die Geschlechtaufgabe musst Du entscheiden, ob der Gesicht ein Mann oder eine Frau ist.<br><br>
-             Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte Blau oder Grün ist.<br><br>
-             Es gilt:`,
+            text: `Für die Geschlechteraufgabe musst Du entscheiden, ob die Person auf dem Foto ein Mann oder eine Frau ist.
+            Auf jedem Foto ist zusätzlich entweder das Wort „MANN“ oder „FRAU“ abgebildet. Ignoriere das Wort für Deine Entscheidung.<br><br>
+            Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte Blau oder Grün ist.<br><br>
+            Es gilt:`,
             align: "left",
             fontsize: 30,
             width: "1200px",
@@ -517,7 +518,7 @@ function drawStimulus(args) {
                 continue;
             }
             let centerX = rows;
-            let centerY = cols;
+            let centerY = cols - 10;
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
             ctx.fillStyle = args.colours[idx];
@@ -534,7 +535,7 @@ function drawStimulus(args) {
     ctx.drawImage(
         img,
         -width / PRMS.picSize / 2,
-        -height / PRMS.picSize / 2,
+        (-height / PRMS.picSize / 2) - 10,
         width / PRMS.picSize,
         height / PRMS.picSize,
     );
@@ -717,48 +718,6 @@ const TRIAL_TIMELINE = {
     timeline_variables: TRIAL_TABLE
 };
 
-////////////////////////////////////////////////////////////////////////
-//                              VP Stunden                            //
-////////////////////////////////////////////////////////////////////////
-
-const END_SCREEN = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    response_ends_trial: true,
-    choices: [" "],
-    stimulus: generate_formatted_html({
-        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br>
-        Im nächsten Fenster wirst Du zunächst aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
-        Falls Du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
-        wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander erhalten.<br><br>
-        Drücke die Leertaste, um fortzufahren`,
-        align: "left",
-        fontsize: 30,
-        width: "1200px",
-        lineheight: 1.5,
-    }),
-};
-
-const EMAIL_OPTION = {
-    type: jsPsychSurveyText,
-    questions: [
-        {
-            prompt: `Bitte gebe deine E-Mail Adresse ein wenn Du am Gewinnspiel teilnehmen willst.<br>
-            Ansonsten lasse das Feld einfach frei und klicke ''Weiter''`,
-            placeholder: "email@email",
-            columns: 50,
-            required: false,
-            name: "email",
-        },
-    ],
-    button_label: "Weiter",
-    on_finish: function () {
-        let dat = jsPsych.data.get().last(1).values()[0];
-        jsPsych.data.addProperties({ email: dat.response.email });
-    },
-};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
@@ -789,13 +748,13 @@ function genExpSeq() {
 
     let exp = [];
 
-    // // setup
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    // setup
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     exp.push(COUNT_DOTS);
     exp.push(PRELOAD);
@@ -822,8 +781,6 @@ function genExpSeq() {
 
     // debrief
     exp.push(mouseCursor(true));
-    exp.push(END_SCREEN);
-    exp.push(EMAIL_OPTION);
 
     // save data
     exp.push(SAVE_DATA);
