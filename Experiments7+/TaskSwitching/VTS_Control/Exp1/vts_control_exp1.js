@@ -5,15 +5,21 @@
 // Block structure:
 // 50% of trials are free choice with both task stimuli presented
 // 50% of trials are forced choice (single stimulus) with 50% colour, 50% letter
-// In correct trials, 50% get reward, 50% no reward
 //
 // Trial structure:
 // Fixation cross for 500 ms
 // Stimulus (until response or ?)
 // Feedback screen (if error for 1500 ms)
-// ITI of 750 ms
+// ITI of 1000 ms
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function() {
+        window.location.assign(
+            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=149&credit_token=2b3e628a3b974e1c9794cc5168ac66b8&survey_code=" +
+            jsPsych.data.urlVariables().sona_id,
+        );
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -34,23 +40,22 @@ const PRMS = {
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
     fbText: ["", "Falsch!"],
-    iti: 750, // duration of the inter-trial-interval
-    feedbackDur: [0, 1500], // duration of the reward screen
-    rewardDur: 1000, // duration of the reward screen
+    iti: 1000, // duration of the inter-trial-interval
+    feedbackDur: [0, 1500], // feedback duration
     fbFont: "30px Arial",
     colourTask: shuffle(["mehr Blau", "mehr Grün"]),
     genderTask: shuffle(["MANN", "FRAU"]),
-    colours: ["rgba(0, 0, 255, 0.9)", "rgba(0, 255, 0, 0.9)"],
+    colours: ["rgba(0, 0, 255, 0.9)", "rgba(0, 200, 0, 0.9)"],
     colourTaskKeys: null, // randomly assigned below
     genderTaskKeys: null, // randomly assigned below
-    ratioNormal: 75,
+    ratioNormal: 66,
     respKeysLH: ["Q", "W"],
     respKeysRH: ["O", "P"],
     deactivateKeys: false, // should keys be deactivated when task not available?
     dotRadius: 1.5,
-    dotEccentricity: 125,
+    dotEccentricity: 150,
     dotGaps: 4,
-    dotBlank: 0,
+    dotBlank: 22,
     picSize: 5, // bigger number = smaller picture
     textFont: "bold 28px Arial",
     textColor: "White",
@@ -106,11 +111,11 @@ const WELCOME_INSTRUCTIONS = {
     stimulus: generate_formatted_html({
         text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
-           Bitte stelle sicher, dass Du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-           um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
-           Bei Fragen oder Problemen wende dich bitte an:<br><br> 
+           Bitte stelle sicher, dass Du Dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+           um das Experiment durchzuführen. Wir bitten Dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
+           Bei Fragen oder Problemen wende Dich bitte an:<br><br> 
            tina.lorenz@student.uni-tuebingen.de<br><br>
-           Drücke eine beliebige Taste, um fortzufahren`,
+           Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
         width: "1200px",
@@ -124,7 +129,7 @@ function task_instructions1() {
             text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
              Farbaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
              Geschlechteraufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
-             Drücke die „G“-Taste, um fortzufahren!`,
+             Drücke die „G“-Taste, um fortzufahren.`,
             align: "left",
             fontsize: 30,
             width: "1200px",
@@ -135,7 +140,7 @@ function task_instructions1() {
             text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
              Geschlechertaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
              Farbaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
-             Drücke die „G“-Taste, um fortzufahren!`,
+             Drücke die „G“-Taste, um fortzufahren.`,
             align: "left",
             fontsize: 30,
             width: "1200px",
@@ -218,7 +223,7 @@ const TASK_INSTRUCTIONS3 = {
     stimulus: generate_formatted_html({
         text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
            Wenn nur eine Aufgabe präsentiert wird, dann bearbeite bitte diese. <br><br>
-           Wenn beide Aufgaben präsentiert werden, kannst Du dir frei aussuchen, welche Du bearbeitest.<br><br>
+           Wenn beide Aufgaben präsentiert werden, kannst Du Dir frei aussuchen, welche Du bearbeitest.<br><br>
            Drücke die „T“- Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
@@ -234,11 +239,11 @@ const BLOCK_START = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function (trial) {
+    on_start: function(trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`,
+               Entscheide selbst, welche Aufgabe Du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`,
                 align: "left",
                 fontsize: 30,
                 width: "1200px",
@@ -253,7 +258,7 @@ const BLOCK_START = {
                 lineheight: 1.5,
             });
     },
-    on_finish: function () {
+    on_finish: function() {
         FACE_IMAGES = shuffle_images(FACE_IMAGES_MALE, FACE_IMAGES_FEMALE);
     },
 };
@@ -264,7 +269,7 @@ const BLOCK_END = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function (trial) {
+    on_start: function(trial) {
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
              Kurze Pause.<br><br>
@@ -275,7 +280,7 @@ const BLOCK_END = {
             lineheight: 1.5,
         });
     },
-    on_finish: function () {
+    on_finish: function() {
         PRMS.cBlk += 1;
         PRMS.cTrl = 1;
     },
@@ -332,7 +337,6 @@ const FACE_IMAGES_MALE = [
     "../images/male/083_o_m_n_a.jpg",
     "../images/male/087_m_m_n_a.jpg",
     "../images/male/089_y_m_n_a.jpg",
-    "../images/male/091_o_m_n_a.jpg",
     "../images/male/092_m_m_n_a.jpg",
     "../images/male/094_m_m_n_a.jpg",
     "../images/male/099_y_m_n_a.jpg",
@@ -535,7 +539,7 @@ function drawStimulus(args) {
     ctx.drawImage(
         img,
         -width / PRMS.picSize / 2,
-        (-height / PRMS.picSize / 2) - 10,
+        -height / PRMS.picSize / 2 - 10,
         width / PRMS.picSize,
         height / PRMS.picSize,
     );
@@ -565,7 +569,7 @@ const VTS = {
         free_forced: jsPsych.timelineVariable("free_forced"),
         forced_task: jsPsych.timelineVariable("forced_task"),
     },
-    on_start: function (trial) {
+    on_start: function(trial) {
         "use strict";
 
         // gender task
@@ -634,7 +638,7 @@ const VTS = {
             },
         ];
     },
-    on_finish: function () {
+    on_finish: function() {
         codeTrial();
     },
 };
@@ -677,7 +681,7 @@ const TRIAL_FEEDBACK = {
     response_ends_trial: false,
     stimulus: "",
     trial_duration: 0,
-    on_start: function (trial) {
+    on_start: function(trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (dat.corrCode === 2) {
             trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
@@ -717,7 +721,6 @@ const TRIAL_TIMELINE = {
     timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK, ITI],
     timeline_variables: TRIAL_TABLE
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
