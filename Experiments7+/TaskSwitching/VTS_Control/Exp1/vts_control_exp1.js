@@ -48,7 +48,7 @@ const PRMS = {
     colours: ["rgba(0, 0, 255, 0.9)", "rgba(0, 200, 0, 0.9)"],
     colourTaskKeys: null, // randomly assigned below
     genderTaskKeys: null, // randomly assigned below
-    ratioNormal: 66,
+    ratioNormal: 63,
     respKeysLH: ["Q", "W"],
     respKeysRH: ["O", "P"],
     deactivateKeys: false, // should keys be deactivated when task not available?
