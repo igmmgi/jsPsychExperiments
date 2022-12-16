@@ -42,7 +42,7 @@
 // with DVs being RT and ER
 
 const jsPsych = initJsPsych({
-    on_finish: function(data) {
+    on_finish: function() {
         window.location.assign(
             "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=121&credit_token=a911377a8b704c02bdc19f555540e139&survey_code=" +
             jsPsych.data.urlVariables().sona_id,
