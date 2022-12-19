@@ -631,7 +631,7 @@ jsPsych.init({
     },
     on_finish: function() {
         window.location.assign(
-            "https://uni-tuebingen.sona-systems.com/services/SonaAPI.svc/WebstudyCredit?experiment_id=132&credit_token=d2346cfa782143b58e864d503389e7a9&survey_code=" +
+            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=150&credit_token=16a4b56bd675476d9b90bf48878a4af5&survey_code=" + 
             jsPsych.data.urlVariables().sona_id,
         );
     },
