@@ -42,7 +42,6 @@ const prms = {
   nTrlsE: 240, // number of trials within an exp block
   nBlks: 6, // number of blocks
   tooSlow: 3000,
-  iti: [100, 900],
   stimFont: '50px Arial',
   stimPos: [-30, 30],
   numbersLeft: [1, 2, 3, 4],
@@ -55,7 +54,7 @@ const prms = {
   taskInstructions: [1, 2].includes(version) ? ['< 5', '> 5', '< M', '> M'] : ['< M', '> M', '< 5', '> 5'],
 
   // Fixation Cross
-  fix_duration: 500,
+  fix_duration: [400, 1200],
   fix_size: 15,
   fix_linewidth: 4,
 
@@ -244,12 +243,12 @@ const fixation_cross = {
     canvas_colour: canvas_colour,
     canvas_size: canvas_size,
     canvas_border: canvas_border,
-    trial_duration: null,
+    trial_duration: prms.fix_duration,
     translate_origin: true,
     response_ends_trial: false,
     func: draw_fixation_cross,
     on_start: function (trial) {
-        trial.trial_duration = jsPsych.timelineVariable('ITI');
+        trial.trial_duration = jsPsych.timelineVariable('FIX');
     },
 };
 
@@ -286,7 +285,7 @@ const stimulus = {
     StimOrder: jsPsych.timelineVariable('StimOrder'),
     S1: jsPsych.timelineVariable('S1'),
     S2: jsPsych.timelineVariable('S2'),
-    ITI: jsPsych.timelineVariable('ITI'),
+    FIX: jsPsych.timelineVariable('FIX'),
     SOA: jsPsych.timelineVariable('SOA'),
   },
   on_start: function (trial) {
@@ -490,35 +489,35 @@ const feedback = {
 
 // prettier-ignore
 const trial_table_long = [].concat(
-            Array( 5).fill({ TrialType:  1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], ITI: prms.iti[0] })
-    .concat(Array( 5).fill({ TrialType:  2, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], ITI: prms.iti[0] })
-    .concat(Array(20).fill({ TrialType:  3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], ITI: prms.iti[0] })
-    .concat(Array( 5).fill({ TrialType:  4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], ITI: prms.iti[0] })
-    .concat(Array( 5).fill({ TrialType:  5, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], ITI: prms.iti[0] })
-    .concat(Array(20).fill({ TrialType:  6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], ITI: prms.iti[0] })
-    .concat(Array( 5).fill({ TrialType:  7, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], ITI: prms.iti[1] })
-    .concat(Array( 5).fill({ TrialType:  8, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], ITI: prms.iti[1] })
-    .concat(Array(20).fill({ TrialType:  9, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], ITI: prms.iti[1] })
-    .concat(Array( 5).fill({ TrialType: 10, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], ITI: prms.iti[1] })
-    .concat(Array( 5).fill({ TrialType: 11, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], ITI: prms.iti[1] })
-    .concat(Array(20).fill({ TrialType: 12, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], ITI: prms.iti[1] }))))))))))))
+            Array( 5).fill({ TrialType:  1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
+    .concat(Array( 5).fill({ TrialType:  2, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], FIX: prms.fix_duration[0] })
+    .concat(Array(20).fill({ TrialType:  3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
+    .concat(Array( 5).fill({ TrialType:  4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
+    .concat(Array( 5).fill({ TrialType:  5, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], FIX: prms.fix_duration[0] })
+    .concat(Array(20).fill({ TrialType:  6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
+    .concat(Array( 5).fill({ TrialType:  7, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
+    .concat(Array( 5).fill({ TrialType:  8, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], FIX: prms.fix_duration[1] })
+    .concat(Array(20).fill({ TrialType:  9, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[1] })
+    .concat(Array( 5).fill({ TrialType: 10, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
+    .concat(Array( 5).fill({ TrialType: 11, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], FIX: prms.fix_duration[1] })
+    .concat(Array(20).fill({ TrialType: 12, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[1] }))))))))))))
 );
 // console.log(trial_table_long);
 
 // prettier-ignore
 const trial_table_short = [].concat(
-            Array(20).fill({ TrialType:  1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], ITI: prms.iti[0] })
-    .concat(Array( 5).fill({ TrialType:  2, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], ITI: prms.iti[0] })
-    .concat(Array( 5).fill({ TrialType:  3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], ITI: prms.iti[0] })
-    .concat(Array(20).fill({ TrialType:  4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], ITI: prms.iti[0] })
-    .concat(Array( 5).fill({ TrialType:  5, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], ITI: prms.iti[0] })
-    .concat(Array( 5).fill({ TrialType:  6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], ITI: prms.iti[0] })
-    .concat(Array(20).fill({ TrialType:  7, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], ITI: prms.iti[1] })
-    .concat(Array( 5).fill({ TrialType:  8, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], ITI: prms.iti[1] })
-    .concat(Array( 5).fill({ TrialType:  9, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], ITI: prms.iti[1] })
-    .concat(Array(20).fill({ TrialType: 10, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], ITI: prms.iti[1] })
-    .concat(Array( 5).fill({ TrialType: 11, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], ITI: prms.iti[1] })
-    .concat(Array( 5).fill({ TrialType: 12, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], ITI: prms.iti[1] }))))))))))))
+            Array(20).fill({ TrialType:  1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
+    .concat(Array( 5).fill({ TrialType:  2, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], FIX: prms.fix_duration[0] })
+    .concat(Array( 5).fill({ TrialType:  3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
+    .concat(Array(20).fill({ TrialType:  4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
+    .concat(Array( 5).fill({ TrialType:  5, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], FIX: prms.fix_duration[0] })
+    .concat(Array( 5).fill({ TrialType:  6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
+    .concat(Array(20).fill({ TrialType:  7, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
+    .concat(Array( 5).fill({ TrialType:  8, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], FIX: prms.fix_duration[1] })
+    .concat(Array( 5).fill({ TrialType:  9, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[1] })
+    .concat(Array(20).fill({ TrialType: 10, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
+    .concat(Array( 5).fill({ TrialType: 11, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], FIX: prms.fix_duration[1] })
+    .concat(Array( 5).fill({ TrialType: 12, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[1] }))))))))))))
 );
 // console.log(trial_table_short);
 
