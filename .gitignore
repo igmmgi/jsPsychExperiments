@@ -5,6 +5,7 @@
 *.BMP
 *.png
 *.PNG
+*.mp4
 *.csv
 .idea
 .directory
