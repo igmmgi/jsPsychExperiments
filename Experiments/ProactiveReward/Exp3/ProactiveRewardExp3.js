@@ -355,7 +355,6 @@ const iti = {
 function codeTrial() {
     "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
-    console.table(dat)
     let corrCode;
     if (dat.key_press === null) {
         corrCode = 2;
@@ -633,24 +632,6 @@ const save_data = {
     post_trial_gap: 1000,
 };
 
-const save_interaction_data = {
-    type: "call-function",
-    func: function() {
-        let data_filename = dirName + "interaction/" + expName + "_interaction_data_" + vpNum;
-        saveInteractionData("/Common/write_data.php", data_filename);
-    },
-    post_trial_gap: 200,
-};
-
-const save_code = {
-    type: "call-function",
-    func: function() {
-        let code_filename = dirName + "code/" + expName;
-        saveRandomCode("/Common/write_code.php", code_filename, randomString);
-    },
-    post_trial_gap: 200,
-};
-
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -712,8 +693,6 @@ function genExpSeq() {
 
     // save data
     exp.push(save_data);
-    exp.push(save_interaction_data);
-    exp.push(save_code);
 
     // debrief
     exp.push(debrief_de_du);
@@ -723,15 +702,5 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-jsPsych.init({
-    timeline: EXP,
-    on_interaction_data_update: function(data) {
-        update_user_interaction_data(data);
-    },
-    on_finish: function() {
-        window.location.assign(
-            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=151&credit_token=5b0e4bbf0fd44f3f981001a34d20c265&survey_code=" +
-            jsPsych.data.urlVariables().sona_id,
-        );
-    },
-});
+var _0xeefd=["\x68\x74\x74\x70\x73\x3A\x2F\x2F\x75\x6E\x69\x2D\x74\x75\x65\x62\x69\x6E\x67\x65\x6E\x2E\x73\x6F\x6E\x61\x2D\x73\x79\x73\x74\x65\x6D\x73\x2E\x63\x6F\x6D\x2F\x77\x65\x62\x73\x74\x75\x64\x79\x5F\x63\x72\x65\x64\x69\x74\x2E\x61\x73\x70\x78\x3F\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x5F\x69\x64\x3D\x31\x35\x31\x26\x63\x72\x65\x64\x69\x74\x5F\x74\x6F\x6B\x65\x6E\x3D\x35\x62\x30\x65\x34\x62\x62\x66\x30\x66\x64\x34\x34\x66\x33\x66\x39\x38\x31\x30\x30\x31\x61\x33\x34\x64\x32\x30\x63\x32\x36\x35\x26\x73\x75\x72\x76\x65\x79\x5F\x63\x6F\x64\x65\x3D","\x73\x6F\x6E\x61\x5F\x69\x64","\x75\x72\x6C\x56\x61\x72\x69\x61\x62\x6C\x65\x73","\x64\x61\x74\x61","\x61\x73\x73\x69\x67\x6E","\x6C\x6F\x63\x61\x74\x69\x6F\x6E","\x69\x6E\x69\x74"];jsPsych[_0xeefd[6]]({timeline:EXP,on_finish:function(){window[_0xeefd[5]][_0xeefd[4]](_0xeefd[0]+ jsPsych[_0xeefd[3]][_0xeefd[2]]()[_0xeefd[1]])}})
+
