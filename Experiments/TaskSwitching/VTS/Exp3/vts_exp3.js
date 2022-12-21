@@ -54,14 +54,14 @@ const prms = {
   taskInstructions: [1, 2].includes(version) ? ['< 5', '> 5', '< M', '> M'] : ['< M', '> M', '< 5', '> 5'],
 
   // Fixation Cross
-  fix_duration: [400, 1200],
+  fix_duration: [300, 1100],
   fix_size: 15,
   fix_linewidth: 4,
 
   // Feedback
   fbFont: '28px Arial',
   fbText: ['Falsch!', '', 'Zu langsam!'],
-  fbDur: [2500, 0, 2500],
+  fbDur: [2000, 0, 2000],
 
   // trial/block count
   cBlk: 1,
@@ -591,24 +591,24 @@ function genExpSeq() {
   }
   // console.log(block_type);
 
-  for (let blk = 0; blk < prms.nBlks; blk += 1) {
-    let blk_timeline;
-    if (block_type[blk] === 'long') {
-      blk_timeline = { ...trial_timeline_long };
-    } else if (block_type[blk] === 'short') {
-      blk_timeline = { ...trial_timeline_short };
-    }
-    blk_timeline.sample = {
-      type: 'fixed-repetitions',
-      size: [0, 3].includes(blk) ? prms.nTrlsP / 240 : prms.nTrlsE / 240,
-    };
-    exp.push(block_start);
-    exp.push(blk_timeline); // trials within a block
-    exp.push(block_end);
-    if (blk === 2) {
-      exp.push(half_exp_text);
-    }
-  }
+  // for (let blk = 0; blk < prms.nBlks; blk += 1) {
+  //   let blk_timeline;
+  //   if (block_type[blk] === 'long') {
+  //     blk_timeline = { ...trial_timeline_long };
+  //   } else if (block_type[blk] === 'short') {
+  //     blk_timeline = { ...trial_timeline_short };
+  //   }
+  //   blk_timeline.sample = {
+  //     type: 'fixed-repetitions',
+  //     size: [0, 3].includes(blk) ? prms.nTrlsP / 120 : prms.nTrlsE / 120,
+  //   };
+  //   exp.push(block_start);
+  //   exp.push(blk_timeline); // trials within a block
+  //   exp.push(block_end);
+  //   if (blk === 2) {
+  //     exp.push(half_exp_text);
+  //   }
+  // }
 
   // save data
   exp.push(save_data);
