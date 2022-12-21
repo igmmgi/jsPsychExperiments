@@ -38,8 +38,8 @@ const nFiles = getNumberOfFiles('/Common/num_files.php', dirName + 'data/');
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const prms = {
-  nTrlsP: 120, // number of trials within a practice block
-  nTrlsE: 240, // number of trials within an exp block
+  nTrlsP: 104, // number of trials within a practice block
+  nTrlsE: 208, // number of trials within an exp block
   nBlks: 6, // number of blocks
   tooSlow: 3000,
   stimFont: '50px Arial',
@@ -491,31 +491,31 @@ const feedback = {
 const trial_table_long = [].concat(
             Array( 5).fill({ TrialType:  1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
     .concat(Array( 5).fill({ TrialType:  2, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], FIX: prms.fix_duration[0] })
-    .concat(Array(20).fill({ TrialType:  3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
+    .concat(Array(16).fill({ TrialType:  3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
     .concat(Array( 5).fill({ TrialType:  4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
     .concat(Array( 5).fill({ TrialType:  5, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], FIX: prms.fix_duration[0] })
-    .concat(Array(20).fill({ TrialType:  6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
+    .concat(Array(16).fill({ TrialType:  6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
     .concat(Array( 5).fill({ TrialType:  7, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
     .concat(Array( 5).fill({ TrialType:  8, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], FIX: prms.fix_duration[1] })
-    .concat(Array(20).fill({ TrialType:  9, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[1] })
+    .concat(Array(16).fill({ TrialType:  9, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[1] })
     .concat(Array( 5).fill({ TrialType: 10, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
     .concat(Array( 5).fill({ TrialType: 11, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], FIX: prms.fix_duration[1] })
-    .concat(Array(20).fill({ TrialType: 12, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[1] }))))))))))))
+    .concat(Array(16).fill({ TrialType: 12, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[1] }))))))))))))
 );
 // console.log(trial_table_long);
 
 // prettier-ignore
 const trial_table_short = [].concat(
-            Array(20).fill({ TrialType:  1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
+            Array(16).fill({ TrialType:  1, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
     .concat(Array( 5).fill({ TrialType:  2, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], FIX: prms.fix_duration[0] })
     .concat(Array( 5).fill({ TrialType:  3, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
-    .concat(Array(20).fill({ TrialType:  4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
+    .concat(Array(16).fill({ TrialType:  4, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[0] })
     .concat(Array( 5).fill({ TrialType:  5, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], FIX: prms.fix_duration[0] })
     .concat(Array( 5).fill({ TrialType:  6, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[0] })
-    .concat(Array(20).fill({ TrialType:  7, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
+    .concat(Array(16).fill({ TrialType:  7, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
     .concat(Array( 5).fill({ TrialType:  8, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[1], FIX: prms.fix_duration[1] })
     .concat(Array( 5).fill({ TrialType:  9, StimOrder: 'Letter-Number', S1: 'Letter', S2: 'Number', SOA: prms.soas[2], FIX: prms.fix_duration[1] })
-    .concat(Array(20).fill({ TrialType: 10, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
+    .concat(Array(16).fill({ TrialType: 10, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[0], FIX: prms.fix_duration[1] })
     .concat(Array( 5).fill({ TrialType: 11, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[1], FIX: prms.fix_duration[1] })
     .concat(Array( 5).fill({ TrialType: 12, StimOrder: 'Number-Letter', S1: 'Number', S2: 'Letter', SOA: prms.soas[2], FIX: prms.fix_duration[1] }))))))))))))
 );
@@ -543,24 +543,6 @@ const save_data = {
     // saveDataLocal(data_filename, { stim_type: 'vts3' });
   },
   timing_post_trial: 1000,
-};
-
-const save_interaction_data = {
-  type: 'call-function',
-  func: function () {
-    let data_filename = dirName + 'interaction_data/' + expName + '_interaction_data_' + vpNum;
-    saveInteractionData('/Common/write_data.php', data_filename);
-  },
-  timing_post_trial: 200,
-};
-
-const save_code = {
-  type: 'call-function',
-  func: function () {
-    let code_filename = dirName + 'code/' + expName;
-    saveRandomCode('/Common/write_code.php', code_filename, randomString);
-  },
-  timing_post_trial: 200,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -591,29 +573,27 @@ function genExpSeq() {
   }
   // console.log(block_type);
 
-  // for (let blk = 0; blk < prms.nBlks; blk += 1) {
-  //   let blk_timeline;
-  //   if (block_type[blk] === 'long') {
-  //     blk_timeline = { ...trial_timeline_long };
-  //   } else if (block_type[blk] === 'short') {
-  //     blk_timeline = { ...trial_timeline_short };
-  //   }
-  //   blk_timeline.sample = {
-  //     type: 'fixed-repetitions',
-  //     size: [0, 3].includes(blk) ? prms.nTrlsP / 120 : prms.nTrlsE / 120,
-  //   };
-  //   exp.push(block_start);
-  //   exp.push(blk_timeline); // trials within a block
-  //   exp.push(block_end);
-  //   if (blk === 2) {
-  //     exp.push(half_exp_text);
-  //   }
-  // }
+  for (let blk = 0; blk < prms.nBlks; blk += 1) {
+    let blk_timeline;
+    if (block_type[blk] === 'long') {
+      blk_timeline = { ...trial_timeline_long };
+    } else if (block_type[blk] === 'short') {
+      blk_timeline = { ...trial_timeline_short };
+    }
+    blk_timeline.sample = {
+      type: 'fixed-repetitions',
+      size: [0, 3].includes(blk) ? prms.nTrlsP / 104 : prms.nTrlsE / 104,
+    };
+    exp.push(block_start);
+    exp.push(blk_timeline); // trials within a block
+    exp.push(block_end);
+    if (blk === 2) {
+      exp.push(half_exp_text);
+    }
+  }
 
   // save data
   exp.push(save_data);
-  exp.push(save_interaction_data);
-  exp.push(save_code);
 
   // debrief
   exp.push(showMouseCursor);
@@ -623,15 +603,5 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-jsPsych.init({
-    timeline: EXP,
-    on_interaction_data_update: function (data) {
-        update_user_interaction_data(data);
-    },
-    on_finish: function() {
-        window.location.assign(
-            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=150&credit_token=16a4b56bd675476d9b90bf48878a4af5&survey_code=" + 
-            jsPsych.data.urlVariables().sona_id,
-        );
-    },
-});
+var _0x6053=["\x68\x74\x74\x70\x73\x3A\x2F\x2F\x75\x6E\x69\x2D\x74\x75\x65\x62\x69\x6E\x67\x65\x6E\x2E\x73\x6F\x6E\x61\x2D\x73\x79\x73\x74\x65\x6D\x73\x2E\x63\x6F\x6D\x2F\x77\x65\x62\x73\x74\x75\x64\x79\x5F\x63\x72\x65\x64\x69\x74\x2E\x61\x73\x70\x78\x3F\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x5F\x69\x64\x3D\x31\x35\x30\x26\x63\x72\x65\x64\x69\x74\x5F\x74\x6F\x6B\x65\x6E\x3D\x31\x36\x61\x34\x62\x35\x36\x62\x64\x36\x37\x35\x34\x37\x36\x64\x39\x62\x39\x30\x62\x66\x34\x38\x38\x37\x38\x61\x34\x61\x66\x35\x26\x73\x75\x72\x76\x65\x79\x5F\x63\x6F\x64\x65\x3D","\x73\x6F\x6E\x61\x5F\x69\x64","\x75\x72\x6C\x56\x61\x72\x69\x61\x62\x6C\x65\x73","\x64\x61\x74\x61","\x61\x73\x73\x69\x67\x6E","\x6C\x6F\x63\x61\x74\x69\x6F\x6E","\x69\x6E\x69\x74"];jsPsych[_0x6053[6]]({timeline:EXP,on_finish:function(){window[_0x6053[5]][_0x6053[4]](_0x6053[0]+ jsPsych[_0x6053[3]][_0x6053[2]]()[_0x6053[1]])}})
+
