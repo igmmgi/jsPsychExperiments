@@ -11,14 +11,7 @@
 // Version 3: First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
 // Version 4: First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
 
-const jsPsych = initJsPsych({
-    on_finish: function(data) {
-        window.location.assign(
-            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=123&credit_token=b30b281cd737494bb86d5e6a4f114ab0&survey_code=" +
-            jsPsych.data.urlVariables().sona_id,
-        );
-    },
-});
+var _0x11f5=["\x68\x74\x74\x70\x73\x3A\x2F\x2F\x75\x6E\x69\x2D\x74\x75\x65\x62\x69\x6E\x67\x65\x6E\x2E\x73\x6F\x6E\x61\x2D\x73\x79\x73\x74\x65\x6D\x73\x2E\x63\x6F\x6D\x2F\x77\x65\x62\x73\x74\x75\x64\x79\x5F\x63\x72\x65\x64\x69\x74\x2E\x61\x73\x70\x78\x3F\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x5F\x69\x64\x3D\x31\x32\x33\x26\x63\x72\x65\x64\x69\x74\x5F\x74\x6F\x6B\x65\x6E\x3D\x62\x33\x30\x62\x32\x38\x31\x63\x64\x37\x33\x37\x34\x39\x34\x62\x62\x38\x36\x64\x35\x65\x36\x61\x34\x66\x31\x31\x34\x61\x62\x30\x26\x73\x75\x72\x76\x65\x79\x5F\x63\x6F\x64\x65\x3D","\x73\x6F\x6E\x61\x5F\x69\x64","\x75\x72\x6C\x56\x61\x72\x69\x61\x62\x6C\x65\x73","\x64\x61\x74\x61","\x61\x73\x73\x69\x67\x6E","\x6C\x6F\x63\x61\x74\x69\x6F\x6E"];const jsPsych=initJsPsych({on_finish:function(){window[_0x11f5[5]][_0x11f5[4]](_0x11f5[0]+ jsPsych[_0x11f5[3]][_0x11f5[2]]()[_0x11f5[1]])}})
 
 const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
 const CANVAS_SIZE = [960, 720];
@@ -474,12 +467,12 @@ const TRIAL_TIMELINE_HIGH_NOGO = {
 ////////////////////////////////////////////////////////////////////////
 const DIR_NAME = getDirName();
 const EXP_NAME = getFileName();
+const VP_NUM = getTime();
 
 function save() {
-    const vpNum = getTime();
-    jsPsych.data.addProperties({ vpNum: vpNum });
+    jsPsych.data.addProperties({ vpNum: VP_NUM });
 
-    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
+    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
     saveData("/Common/write_data.php", data_fn, { stim: "flanker" });
     // saveDataLocal('/Common/write_data.php', { stim: 'flanker' });
 }
@@ -490,6 +483,20 @@ const SAVE_DATA = {
     post_trial_gap: 3000,
 };
 
+function save_blockwise() {
+    jsPsych.data.addProperties({ vpNum: VP_NUM });
+    saveData("/Common/write_data.php", `${DIR_NAME}data/version${VERSION}/blockwise/${EXP_NAME}_${VP_NUM}`, {
+        stim_type: "vtsr",
+    });
+}
+
+const SAVE_DATA_BLOCKWISE = {
+    type: jsPsychCallFunction,
+    func: save_blockwise,
+    post_trial_gap: 1000,
+};
+
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -499,7 +506,7 @@ function genExpSeq() {
     let exp = [];
 
     exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
+    exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(welcome_message());
     exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
@@ -562,6 +569,7 @@ function genExpSeq() {
             exp.push(BLOCK_FEEDBACK); // show blockfeedback
             // exp.push(TASK_INSTRUCTIONS_BREAK); // show PAUSE
         }
+        exp.push(SAVE_DATA_BLOCKWISE);
     }
 
     // save data
