@@ -12,14 +12,7 @@
 // Feedback screen (if error for 1500 ms)
 // ITI of 1000 ms
 
-const jsPsych = initJsPsych({
-    on_finish: function() {
-        window.location.assign(
-            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=149&credit_token=2b3e628a3b974e1c9794cc5168ac66b8&survey_code=" +
-            jsPsych.data.urlVariables().sona_id,
-        );
-    },
-});
+var _0x1db1=["\x68\x74\x74\x70\x73\x3A\x2F\x2F\x75\x6E\x69\x2D\x74\x75\x65\x62\x69\x6E\x67\x65\x6E\x2E\x73\x6F\x6E\x61\x2D\x73\x79\x73\x74\x65\x6D\x73\x2E\x63\x6F\x6D\x2F\x77\x65\x62\x73\x74\x75\x64\x79\x5F\x63\x72\x65\x64\x69\x74\x2E\x61\x73\x70\x78\x3F\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x5F\x69\x64\x3D\x31\x34\x39\x26\x63\x72\x65\x64\x69\x74\x5F\x74\x6F\x6B\x65\x6E\x3D\x32\x62\x33\x65\x36\x32\x38\x61\x33\x62\x39\x37\x34\x65\x31\x63\x39\x37\x39\x34\x63\x63\x35\x31\x36\x38\x61\x63\x36\x36\x62\x38\x26\x73\x75\x72\x76\x65\x79\x5F\x63\x6F\x64\x65\x3D","\x73\x6F\x6E\x61\x5F\x69\x64","\x75\x72\x6C\x56\x61\x72\x69\x61\x62\x6C\x65\x73","\x64\x61\x74\x61","\x61\x73\x73\x69\x67\x6E","\x6C\x6F\x63\x61\x74\x69\x6F\x6E"];const jsPsych=initJsPsych({on_finish:function(){window[_0x1db1[5]][_0x1db1[4]](_0x1db1[0]+ jsPsych[_0x1db1[3]][_0x1db1[2]]()[_0x1db1[1]])}})
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -76,7 +69,6 @@ if (VERSION === 1) {
     PRMS.colourTaskKeys = PRMS.respKeysRH; // e.g., more red vs. more blue
     PRMS.genderTaskKeys = PRMS.respKeysLH; // e.g., vowel vs. consonant
 }
-
 
 function calculateNumberOfDots() {
     // Required for ratio manipulation in VTS
@@ -752,13 +744,13 @@ function genExpSeq() {
 
     let exp = [];
 
-    // // setup
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    // setup
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     exp.push(COUNT_DOTS);
     exp.push(PRELOAD);

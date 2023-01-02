@@ -115,8 +115,49 @@ var jsPsychVideoKeyboardResponse = (function(jspsych) {
                 pretty_name: "Response allowed while playing",
                 default: true,
             },
+            answer_font: {
+                type: jspsych.ParameterType.STRING,
+                pretty_name: "Font",
+                default: "bold 50px Arial"
+            },
+            answer_colour: {
+                type: jspsych.ParameterType.STRING,
+                pretty_name: "Colour",
+                default: "Black"
+            },
+            answer_text: {
+                type: jspsych.ParameterType.STRING,
+                pretty_name: "Text",
+                default: "Antwort?"
+            },
+            answer_position: {
+                type: jspsych.ParameterType.Array,
+                pretty_name: "Position",
+                default: [0, -175]
+            },
+            box_colour_left: {
+                type: jspsych.ParameterType.STRING,
+                pretty_name: "Box colour left",
+                default: "Black"
+            },
+            box_colour_right: {
+                type: jspsych.ParameterType.STRING,
+                pretty_name: "Box colour right",
+                default: "Black"
+            },
+            box_position: {
+                type: jspsych.ParameterType.Array,
+                pretty_name: "Box position",
+                default: [100, 100]
+            },
+            box_size: {
+                type: jspsych.ParameterType.INT,
+                pretty_name: "Box position",
+                default: 100
+            }
         },
     };
+
     /**
      * **video-keyboard-response**
      *
@@ -191,11 +232,9 @@ var jsPsychVideoKeyboardResponse = (function(jspsych) {
             video_html += "</div>";
             // add prompt if there is one
             if (trial.prompt !== null) {
-                video_html += "Test"; //trial.prompt;
+                video_html += trial.prompt;
             }
             display_element.innerHTML = video_html;
-
-
 
             var video_element = display_element.querySelector("#jspsych-video-keyboard-response-stimulus");
             if (video_preload_blob) {
@@ -265,6 +304,7 @@ var jsPsychVideoKeyboardResponse = (function(jspsych) {
                 });
             }
 
+            // Custom hacks to draw text above video and boxes below!
             let canvas = document.querySelector("canvas");
             let ctx = canvas.getContext("2d");
             ctx.fillStyle = trial.canvas_colour;
@@ -274,17 +314,32 @@ var jsPsychVideoKeyboardResponse = (function(jspsych) {
                 ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
             }
 
-  ctx.font = 'bold 70px Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
-  ctx.fillText("Answer?", 0, -200);
+            // question
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.font = trial.answer_font;
+            ctx.fillStyle = trial.answer_colour;
+            ctx.fillText(trial.answer_text, trial.answer_position[0], trial.answer_position[1]);
+    
+            // boxes colour
+            ctx.fillStyle = trial.box_colour_left;
+            ctx.fillRect(-trial.box_position[0]*2, trial.box_position[1], trial.box_size, trial.box_size);
+            ctx.fillStyle = trial.box_colour_right;
+            ctx.fillRect(trial.box_position[0], trial.box_position[1], trial.box_size, trial.box_size);
 
-  ctx.fillRect(-200, 150, 100, 100);
-  ctx.fillRect(100,  150, 100, 100);
-
-
-
+            // boxes border
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "Black";
+            ctx.rect(-trial.box_position[0]*2, trial.box_position[1], trial.box_size, trial.box_size);
+            ctx.stroke();
+    
+            // boxes border
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "Black";
+            ctx.rect(trial.box_position[0], trial.box_position[1], trial.box_size, trial.box_size);
+            ctx.stroke();
 
             // store response
             var response = {

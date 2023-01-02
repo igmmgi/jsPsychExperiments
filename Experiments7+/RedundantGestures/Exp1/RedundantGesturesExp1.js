@@ -1,12 +1,11 @@
-// RedundantGestures 
+// RedundantGestures
 // VPs respond to the auditory/visual presentation of the following stimuli:
 
 const jsPsych = initJsPsych({});
 
-const CANVAS_COLOUR = 'rgba(255, 255, 255, 1)';
+const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
 const CANVAS_SIZE = [1280, 720];
-const CANVAS_BORDER = '0px solid black';
-
+const CANVAS_BORDER = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -14,19 +13,25 @@ const CANVAS_BORDER = '0px solid black';
 const PRMS = {
     screenRes: [960, 720],
     nBlks: 1, // number of blocks
-    nTrlsP: 16, // number of blocks
-    nTrlsE: 64, // number of blocks
-    fixDur: 1000, // duration of fixation cross
+    nTrlsP: 48, // number of blocks
+    nTrlsE: 48, // number of blocks
+    fixDur: 200, //1000, // duration of fixation cross
     fixSize: 50, // size of fixation cross
-    fbDur: [500, 1500, 1500, 1500], // duration of feedback for each type
-    waitDur: 1000, // duration following ...
+    fbDur: [500, 500], // duration of feedback for each type
+    fbTxt: ['Richtig!', 'Falsch!'],
     iti: 500, // duration of inter-trial-interval
-    tooFast: 150, // responses faster than x ms -> too fast!
-    tooSlow: 2000, // response slower than x ms -> too slow!
-    respKeys: ["Q", "P"],
-    fbTxt: ["Richtig", "Falsch", "Zu langsam", "Zu schnell"],
-    fbTxtSizeTrial: 30,
-    fbTxtSizeBlock: 30,
+    respKeys: ["F", "J"],
+    box_position: [100, 150],
+    box_size: 100,
+    box_frame: 5,
+    question_duration: 500,
+    question_font: "bold 40px Arial",
+    question_colour: "Black",
+    question_position: [0, -160],
+    answer_text: "Antwort?",
+    answer_font: "bold 40px Arial",
+    answer_position: [0, -160],
+    video_width: 500,
     cTrl: 1, // count trials
     cBlk: 1, // count blocks
 };
@@ -51,27 +56,41 @@ const TASK_INSTRUCTIONS1 = {
     }),
 };
 
+const TASK_INSTRUCTIONS_BLOCK_START = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: "",
+    on_start: function(trial) {
+        trial.stimulus = generate_formatted_html({
+            text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}.<br><br>
+            Wenn du wieder bereit bist, dann drücke eine beliebige Taste.`,
+            align: "left",
+            fontsize: 28,
+            bold: false,
+            lineheight: 1.5,
+        })
+    }
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 
 const VIDEOS = [
-    "../videos/f_0_1.mp4",
-    "../videos/f_0_2.mp4",
-    "../videos/f_1_1_0.mp4",
-    "../videos/f_1_1_1.mp4",
-    "../videos/f_1_1_2.mp4",
-    "../videos/f_1_2_0.mp4",
-    "../videos/f_1_2_1.mp4",
-    "../videos/f_2_1_0.mp4",
-    "../videos/f_2_2_1.mp4",
-    "../videos/f_2_2_1.mp4",
-    "../videos/f_3_1_0.mp4",
-    "../videos/f_3_1_1.mp4",
-    "../videos/f_3_1_2.mp4",
-    "../videos/f_3_2_0.mp4",
-    "../videos/f_3_2_1.mp4",
-    "../videos/f_3_2_2.mp4",
+    "../videos/Exp1/f_thumb_ja.mp4",
+    "../videos/Exp1/f_thumb_no.mp4",
+    "../videos/Exp1/f_thumb_verbal_ja.mp4",
+    "../videos/Exp1/f_thumb_verbal_no.mp4",
+    "../videos/Exp1/f_verbal_ja.mp4",
+    "../videos/Exp1/f_verbal_no.mp4",
+    "../videos/Exp1/m_thumb_ja.mp4",
+    "../videos/Exp1/m_thumb_no.mp4",
+    "../videos/Exp1/m_thumb_verbal_ja.mp4",
+    "../videos/Exp1/m_thumb_verbal_no.mp4",
+    "../videos/Exp1/m_verbal_ja.mp4",
+    "../videos/Exp1/m_verbal_no.mp4",
 ];
 
 const PRELOAD = {
@@ -79,6 +98,9 @@ const PRELOAD = {
     video: VIDEOS,
 };
 
+const QUESTIONS = ["Ist der Ball in der grünen Box?", "Ist der Ball in der blauen Box?"];
+
+const COLOURS = ["Green", "Blue"];
 
 ////////////////////////////////////////////////////////////////////////
 //                              Exp Parts                             //
@@ -90,30 +112,53 @@ const FIXATION_CROSS = {
     trial_duration: PRMS.fixDur,
 };
 
-function drawQuestion() {
-  'use strict';
-  let ctx = document.getElementById('canvas').getContext('2d');
-  ctx.font = 'bold 70px Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'black';
-  ctx.fillText("Is the ball in the blue box?", 0, -200);
+function drawQuestion(args) {
+    "use strict";
+    let ctx = document.getElementById("canvas").getContext("2d");
 
-  ctx.fillRect(-200, 150, 100, 100);
-  ctx.fillRect(100,  150, 100, 100);
+    // question
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = PRMS.question_font;
+    ctx.fillStyle = PRMS.question_colour;
+    ctx.fillText(args.question, PRMS.question_position[0], PRMS.question_position[1]);
+    
+    // boxes colour
+    ctx.fillStyle = args.box_colour_left;
+    ctx.fillRect(-PRMS.box_position[0]*2, PRMS.box_position[1], PRMS.box_size, PRMS.box_size);
+    ctx.fillStyle = args.box_colour_right;
+    ctx.fillRect(PRMS.box_position[0], PRMS.box_position[1], PRMS.box_size, PRMS.box_size);
+
+    // boxes border
+    ctx.beginPath();
+    ctx.lineWidth = PRMS.box_frame;
+    ctx.strokeStyle = "Black";
+    ctx.rect(-PRMS.box_position[0]*2, PRMS.box_position[1], PRMS.box_size, PRMS.box_size);
+    ctx.stroke();
+    
+    // boxes border
+    ctx.beginPath();
+    ctx.lineWidth = PRMS.box_frame;
+    ctx.strokeStyle = "Black";
+    ctx.rect(PRMS.box_position[0], PRMS.box_position[1], PRMS.box_size, PRMS.box_size);
+    ctx.stroke();
+
 }
 
-
 const QUESTION = {
-  type: jsPsychStaticCanvasKeyboardResponse,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  translate_origin: true,
-  response_ends_trial: true,
-  choices: PRMS.respKeys,
-  trial_duration: 1000,
-  func: drawQuestion,
+    type: jsPsychStaticCanvasKeyboardResponse,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    translate_origin: true,
+    response_ends_trial: false,
+    trial_duration: PRMS.question_duration,
+    func: drawQuestion,
+    on_start: function(trial) {
+        trial.func_args = [{"question": jsPsych.timelineVariable("question"),
+                            "box_colour_left": jsPsych.timelineVariable("box_colour_left"),
+                            "box_colour_right": jsPsych.timelineVariable("box_colour_right")}];
+    }
 };
 
 const ITI = {
@@ -123,33 +168,125 @@ const ITI = {
     trial_duration: PRMS.iti,
 };
 
+function code_trial() {
+  'use strict';
+  let dat = jsPsych.data.get().last(1).values()[0];
+
+  let is_correct = jsPsych.pluginAPI.compareKeys(dat.response, dat.correct_key);
+  let error = is_correct ? 0 : 1;
+
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    blockNum: PRMS.cBlk,
+    trialNum: PRMS.cTrl,
+    error: error,
+  });
+}
+
 const VIDEO_TRIAL = {
     type: jsPsychVideoKeyboardResponse,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: [jsPsych.timelineVariable("video")],
-    width: 500,
+    width: PRMS.video_width,
     choices: PRMS.respKeys,
     trial_ends_after_video: false,
     translate_origin: true,
     response_ends_trial: true,
+    box_colour_left: jsPsych.timelineVariable("box_colour_left"),
+    box_colour_right: jsPsych.timelineVariable("box_colour_right"),
+    answer_text: PRMS.answer_text,
+    answer_font: PRMS.answer_font,
+    answer_position: PRMS.answer_position,
+    box_position: PRMS.box_position,
+    box_size: PRMS.box_size,
+    data: {
+        stim: "rg1",
+        video: jsPsych.timelineVariable("video"),
+        question: jsPsych.timelineVariable("question"),
+        box_colour_left: jsPsych.timelineVariable("box_colour_left"),
+        box_colour_right: jsPsych.timelineVariable("box_colour_right"),
+        correct_key: jsPsych.timelineVariable("correct_key"),
+    },
+    on_finish: function() {
+        code_trial();
+        PRMS.cTrl += 1;
+    },
 };
 
-// prettier-ignore
-const TRIAL_TABLE = [
-    { video: VIDEOS[0], corrKey: PRMS.respKeys[0] },
-    { video: VIDEOS[1], corrKey: PRMS.respKeys[1] },
-    { video: VIDEOS[2], corrKey: PRMS.respKeys[1] },
-    { video: VIDEOS[3], corrKey: PRMS.respKeys[0] },
-    { video: VIDEOS[4], corrKey: PRMS.respKeys[0] },
-    { video: VIDEOS[4], corrKey: PRMS.respKeys[1] },
-    { video: VIDEOS[4], corrKey: PRMS.respKeys[1] },
-    { video: VIDEOS[4], corrKey: PRMS.respKeys[0] },
-];
+const TRIAL_FEEDBACK = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: '',
+    response_ends_trial: false,
+    trial_duration: 0,
+    on_start: function (trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = PRMS.fbDur[dat.error];
+        trial.stimulus = generate_formatted_html({
+            text: `${PRMS.fbTxt[dat.error]}`,
+            align: 'center',
+            fontsize: 30,
+        });
+    },
+};
+
+const BLOCK_FEEDBACK = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    response_ends_trial: true,
+    stimulus: "",
+    on_start: function (trial) {
+        let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'rg1', blockNum: PRMS.cBlk }, corrColumn: "error", corrValue: 0 });
+        trial.stimulus = generate_formatted_html({
+            text: `Block: ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
+            Mittlere Reaktionzeit: ${block_dvs.meanRt} ms<br>
+            Fehlerrate: ${block_dvs.errorRate} %<br><br>
+            Wenn du wieder bereit bist, dann drücke eine beliebige Taste.`,
+            align: 'center',
+            fontsize: 30,
+        });
+    },
+    on_finish: function () {
+        PRMS.cTrl = 1;
+        PRMS.cBlk += 1;
+    },
+};
+
+
+function create_trial_table() {
+    // prettier-ignore
+    let trial_table = [];
+    // for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 1; i++) {
+        if (i % 2 == 0) {
+            trial_table = trial_table.concat([
+                { video: VIDEOS[i], question: QUESTIONS[0], box_colour_left: COLOURS[0], box_colour_right: COLOURS[1], correct_key: PRMS.respKeys[0] },
+                { video: VIDEOS[i], question: QUESTIONS[1], box_colour_left: COLOURS[0], box_colour_right: COLOURS[1], correct_key: PRMS.respKeys[1] },
+                { video: VIDEOS[i], question: QUESTIONS[0], box_colour_left: COLOURS[1], box_colour_right: COLOURS[0], correct_key: PRMS.respKeys[1] },
+                { video: VIDEOS[i], question: QUESTIONS[1], box_colour_left: COLOURS[1], box_colour_right: COLOURS[0], correct_key: PRMS.respKeys[0] }
+            ])
+        } else {
+            trial_table = trial_table.concat([
+                { video: VIDEOS[i], question: QUESTIONS[0], box_colour_left: COLOURS[0], box_colour_right: COLOURS[1], correct_key: PRMS.respKeys[1] },
+                { video: VIDEOS[i], question: QUESTIONS[1], box_colour_left: COLOURS[0], box_colour_right: COLOURS[1], correct_key: PRMS.respKeys[0] },
+                { video: VIDEOS[i], question: QUESTIONS[0], box_colour_left: COLOURS[1], box_colour_right: COLOURS[0], correct_key: PRMS.respKeys[0] },
+                { video: VIDEOS[i], question: QUESTIONS[1], box_colour_left: COLOURS[1], box_colour_right: COLOURS[0], correct_key: PRMS.respKeys[1] }
+            ])
+        }
+    }
+    return trial_table;
+}
+
+const TRIAL_TABLE = create_trial_table();
 
 const TRIAL_TIMELINE = {
-    timeline: [FIXATION_CROSS, QUESTION, VIDEO_TRIAL, ITI],
+    timeline: [FIXATION_CROSS, QUESTION, VIDEO_TRIAL, TRIAL_FEEDBACK, ITI],
     timeline_variables: TRIAL_TABLE,
 };
 
@@ -164,8 +301,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-    saveData("/Common/write_data.php", data_fn, { stim: "cmn1" });
-
+    saveData("/Common/write_data.php", data_fn, { stim: "rg1" });
+    // saveDataLocal(data_fn, { stim: "rg1" });
 }
 
 const SAVE_DATA = {
@@ -182,18 +319,25 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
+    // exp.push(fullscreen(true));
     // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(PRELOAD);
     // exp.push(resize_browser());
+    exp.push(PRELOAD);
     // exp.push(welcome_message());
     // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
     // exp.push(mouseCursor(false));
     // exp.push(TASK_INSTRUCTIONS1);
 
-    exp.push(TRIAL_TIMELINE);
-
-    for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+    for (let blk = 0; blk < PRMS.nBlks; blk += 1) { 
+        exp.push(TASK_INSTRUCTIONS_BLOCK_START);
+        let blk_timeline;
+        blk_timeline = {... TRIAL_TIMELINE};
+        blk_timeline.sample = {
+            type: 'fixed-repetitions',
+            size: 1,
+        };
+        exp.push(blk_timeline); // trials within a block
+        exp.push(BLOCK_FEEDBACK);
     }
 
     exp.push(SAVE_DATA);
