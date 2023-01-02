@@ -118,43 +118,48 @@ var jsPsychVideoKeyboardResponse = (function(jspsych) {
             answer_font: {
                 type: jspsych.ParameterType.STRING,
                 pretty_name: "Font",
-                default: "bold 50px Arial"
+                default: "bold 50px Arial",
             },
             answer_colour: {
                 type: jspsych.ParameterType.STRING,
                 pretty_name: "Colour",
-                default: "Black"
+                default: "Black",
             },
             answer_text: {
                 type: jspsych.ParameterType.STRING,
                 pretty_name: "Text",
-                default: "Antwort?"
+                default: "Antwort?",
             },
             answer_position: {
                 type: jspsych.ParameterType.Array,
                 pretty_name: "Position",
-                default: [0, -175]
+                default: [0, -175],
             },
             box_colour_left: {
                 type: jspsych.ParameterType.STRING,
                 pretty_name: "Box colour left",
-                default: "Black"
+                default: "Black",
             },
             box_colour_right: {
                 type: jspsych.ParameterType.STRING,
                 pretty_name: "Box colour right",
-                default: "Black"
+                default: "Black",
             },
             box_position: {
                 type: jspsych.ParameterType.Array,
                 pretty_name: "Box position",
-                default: [100, 100]
+                default: [100, 100],
             },
             box_size: {
                 type: jspsych.ParameterType.INT,
                 pretty_name: "Box position",
-                default: 100
-            }
+                default: 100,
+            },
+            box_frame: {
+                type: jspsych.ParameterType.INT,
+                pretty_name: "Box frame",
+                default: 5,
+            },
         },
     };
 
@@ -320,23 +325,23 @@ var jsPsychVideoKeyboardResponse = (function(jspsych) {
             ctx.font = trial.answer_font;
             ctx.fillStyle = trial.answer_colour;
             ctx.fillText(trial.answer_text, trial.answer_position[0], trial.answer_position[1]);
-    
+
             // boxes colour
             ctx.fillStyle = trial.box_colour_left;
-            ctx.fillRect(-trial.box_position[0]*2, trial.box_position[1], trial.box_size, trial.box_size);
+            ctx.fillRect(-trial.box_position[0] * 2, trial.box_position[1], trial.box_size, trial.box_size);
             ctx.fillStyle = trial.box_colour_right;
             ctx.fillRect(trial.box_position[0], trial.box_position[1], trial.box_size, trial.box_size);
 
             // boxes border
             ctx.beginPath();
-            ctx.lineWidth = 5;
+            ctx.lineWidth = trial.box_frame;
             ctx.strokeStyle = "Black";
-            ctx.rect(-trial.box_position[0]*2, trial.box_position[1], trial.box_size, trial.box_size);
+            ctx.rect(-trial.box_position[0] * 2, trial.box_position[1], trial.box_size, trial.box_size);
             ctx.stroke();
-    
+
             // boxes border
             ctx.beginPath();
-            ctx.lineWidth = 5;
+            ctx.lineWidth = trial.box_frame;
             ctx.strokeStyle = "Black";
             ctx.rect(trial.box_position[0], trial.box_position[1], trial.box_size, trial.box_size);
             ctx.stroke();
