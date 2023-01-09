@@ -48,10 +48,10 @@ const TASK_INSTRUCTIONS1 = {
         text: `Willkommen zu unserem Experiment:<br><br>
                Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
                Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-               um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 25 Minuten konzentriert zu arbeiten.<br><br>
-               Du erhältst den Code für Versuchspersonenstunden und weitere Anweisungen am Ende des Experiments.
+               um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 30 Minuten konzentriert zu arbeiten.<br><br>
+               Du erhältst die Versuchspersonenstunden automatisch am Ende des Experiments.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               XXX<br><br>
+               lisa2.fischer@student.uni-tuebingen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "Black",
@@ -65,13 +65,22 @@ const TASK_INSTRUCTIONS2 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `In jedem Durchgang siehst du eine Frage, einen kurzen Video-Clip und zwei farbige Boxen auf dem Bildschirm.
-        Deine Aufgabe ist es, die Frage durch einen Tastendruck (Taste „F“ (links) oder Taste „J“ (rechts)) richtig zu beantworten.<br><br>
-        Hier ein Beispiel:<br><br>
-              Frage: „Ist der Ball in der blauen Box?“<br><br>
-              Video: „Ja“ vs. „Nein“ -> kann durch Geste (Mimik), verbal oder durch beides ausgedrückt werden.<br><br>
-              Reaktion: Jetzt drückst du entweder die Taste „F“ oder die Taste „J“, ist die blaue Box auf der linken Seite und das Video beantwortete die Frage mit „JA“ -> du drückst die Taste „F“ (links)<br><br>
-        Drücke eine beliebige Taste, um fortzufahren`,
+        text: `In jedem Durchgang siehst du zwei farbige Boxen sowie eine 
+               Fragestellung (“Ist der Ball in der blauen Box?” oder “Ist der Ball in
+               der grünen Box?”). Die Anordnung der farbigen Boxen (linke vs. rechte Seite) kann von Durchgang 
+               zu Durchgang variieren.<br><br>
+               Die Frage wird durch eine kurze Video Sequenz mit “ja” oder “nein”
+               beantwortet. Dies kann durch eine Geste, verbal oder beides
+               gleichzeitig ausgedrückt werden.<br><br>
+               Gib danach per Tastendruck an, ob sich der Ball in der linken oder
+               rechten Box befindet.<br><br>
+               Wenn der Ball in der linken Box ist, drücke die Taste F.<br>
+               Wenn der Ball in der rechten Box ist, drücke die Taste J.<br><br>
+               Das Experiment beginnt mit 8 Durchgängen zur Einstellung der
+               Ton-Lautstärke. Danach folgen 8 Übungsdurchgänge. Im Anschluss beginnt
+               das eigentliche Experiment, es besteht aus 5 Blöcken, maximal dauert
+               es 30 Minuten.<br><br>
+               Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "Black",
         fontsize: 30,
@@ -414,13 +423,13 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
-    exp.push(resize_browser());
-    exp.push(PRELOAD);
-    exp.push(welcome_message());
-    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
-    exp.push(mouseCursor(false));
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(PRMS.screenRes));
+    // exp.push(resize_browser());
+    // exp.push(PRELOAD);
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    // exp.push(mouseCursor(false));
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
     
