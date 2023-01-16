@@ -314,7 +314,7 @@ const BLOCK_END = {
         }).length;
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
-             Dein aktueller Punktestand beträgt: POINTS: 1000 - ${nReward * 10}! <br><br>
+             Dein aktueller Punktestand beträgt: POINTS: ${1000 - (nReward * 10)}! <br><br>
              Kurze Pause.<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
