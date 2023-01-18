@@ -1,7 +1,14 @@
 // RedundantGestures
 // VPs respond to the auditory/visual presentation of the following stimuli:
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function() {
+        window.location.assign(
+            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=168&credit_token=448faca39a11447cba1b35d6a9a4bc37&survey_code=" +
+            jsPsych.data.urlVariables().sona_id,
+        );
+    },
+});
 
 const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
 const CANVAS_SIZE = [1280, 720];
@@ -55,9 +62,10 @@ const TASK_INSTRUCTIONS1 = {
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "Black",
-        fontsize: 30,
+        fontsize: 28,
     }),
 };
+
 
 const TASK_INSTRUCTIONS2 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -65,27 +73,48 @@ const TASK_INSTRUCTIONS2 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `In jedem Durchgang siehst du zwei farbige Boxen sowie eine 
-               Fragestellung (“Ist der Ball in der blauen Box?” oder “Ist der Ball in
-               der grünen Box?”). Die Anordnung der farbigen Boxen (linke vs. rechte Seite) kann von Durchgang 
-               zu Durchgang variieren.<br><br>
-               Die Frage wird durch eine kurze Video Sequenz mit “ja” oder “nein”
-               beantwortet. Dies kann durch eine Geste, verbal oder beides
-               gleichzeitig ausgedrückt werden.<br><br>
-               Gib danach per Tastendruck an, ob sich der Ball in der linken oder
-               rechten Box befindet.<br><br>
-               Wenn der Ball in der linken Box ist, drücke die Taste F.<br>
-               Wenn der Ball in der rechten Box ist, drücke die Taste J.<br><br>
-               Das Experiment beginnt mit 8 Durchgängen zur Einstellung der
-               Ton-Lautstärke. Danach folgen 8 Übungsdurchgänge. Im Anschluss beginnt
-               das eigentliche Experiment, es besteht aus 5 Blöcken, maximal dauert
-               es 30 Minuten.<br><br>
+        text: `In jedem Durchgang siehst du eine Frage bezüglich der Position eines
+               Balls (z.B., „Ist der Ball in der blauen Box?“), danach siehst du
+               einen kurzen Video-Clip und zwei farbige Boxen auf dem Bildschirm.<br><br>
+               Deine Aufgabe ist es, die Position des Balls durch einen Tastendruck
+               [Taste „F“ (linke Box) oder Taste „J“ (rechte Box)] richtig zu
+               markieren.<br><br>
+               Der Ablauf ist folgender:<br><br>
+               Frage: „Ist der Ball in der blauen Box?“<br>
+               Video: bejahende („ja“) oder verneinende („nein“) <br>
+               Antwort -> dies kann durch Geste (Mimik), verbal oder durch beides ausgedrückt werden.<br>
+               Reaktion: Jetzt drückst du die Taste „F“ oder die Taste „J“.<br><br>
+               Drücke eine beliebige Taste, für ein paar Beispiele.`,
+        align: "left",
+        colour: "Black",
+        fontsize: 28,
+    }),
+};
+
+const TASK_INSTRUCTIONS3 = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: generate_formatted_html({
+        text: `Hier ein paar Beispiele:<br><br>
+               Frage: „Ist der Ball in der blauen Box?“<br><br>
+               * Die blaue Box ist auf der linken Seite und im Video war eine 
+               bejahende Antwort zu sehen -> du drückst die Taste „F“ (links)<br><br>
+               * Die blaue Box ist auf der linken Seite und im Video war eine 
+               verneinde Antwort zu sehen -> du drückst die Taste „J“ (rechts)<br><br>
+               * Die blaue Box ist auf der rechten Seite und im Video war eine 
+               bejahende Antwort zu sehen -> du drückst die Taste „J“ (rechts)<br><br>
+               * Die blaue Box ist auf der rechten Seite und im Video war eine 
+               verneinende Antwort zu sehen -> du drückst die Taste „F“ (links)<br><br><br>
+               Die Aufgabe wird nach ein paar Übungsdurchgängen sicher nochmals verständlich.<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "Black",
-        fontsize: 30,
+        fontsize: 28,
     }),
 };
+
 
 const TASK_INSTRUCTIONS_CALIBRATION = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -101,7 +130,7 @@ const TASK_INSTRUCTIONS_CALIBRATION = {
         Bereit? Drücke eine beliebige Taste, um die Töne abzuspielen!`,
         align: "left",
         colour: "Black",
-        fontsize: 30,
+        fontsize: 28,
     }),
 };
 
@@ -127,20 +156,19 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
-
 const VIDEOS = [
-    "../videos/Exp1/f_thumb_ja.mp4",
-    "../videos/Exp1/f_thumb_no.mp4",
-    "../videos/Exp1/f_thumb_verbal_ja.mp4",
-    "../videos/Exp1/f_thumb_verbal_no.mp4",
-    "../videos/Exp1/f_verbal_ja.mp4",
-    "../videos/Exp1/f_verbal_no.mp4",
-    "../videos/Exp1/m_thumb_ja.mp4",
-    "../videos/Exp1/m_thumb_no.mp4",
-    "../videos/Exp1/m_thumb_verbal_ja.mp4",
-    "../videos/Exp1/m_thumb_verbal_no.mp4",
-    "../videos/Exp1/m_verbal_ja.mp4",
-    "../videos/Exp1/m_verbal_no.mp4",
+    "../videos/exp1_f_thumb_ja.mp4",
+    "../videos/exp1_f_thumb_no.mp4",
+    "../videos/exp1_f_thumb_verbal_ja.mp4",
+    "../videos/exp1_f_thumb_verbal_no.mp4",
+    "../videos/exp1_f_verbal_ja.mp4",
+    "../videos/exp1_f_verbal_no.mp4",
+    "../videos/exp1_m_thumb_ja.mp4",
+    "../videos/exp1_m_thumb_no.mp4",
+    "../videos/exp1_m_thumb_verbal_ja.mp4",
+    "../videos/exp1_m_thumb_verbal_no.mp4",
+    "../videos/exp1_m_verbal_ja.mp4",
+    "../videos/exp1_m_verbal_no.mp4"
 ];
 
 const PRELOAD = {
@@ -423,15 +451,16 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(resize_browser());
-    // exp.push(PRELOAD);
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
-    // exp.push(mouseCursor(false));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(PRELOAD);
+    exp.push(welcome_message());
+    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    exp.push(mouseCursor(false));
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
     
     exp.push(TASK_INSTRUCTIONS_CALIBRATION);
     exp.push(TRIAL_TIMELINE_CALIBRATION);

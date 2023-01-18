@@ -259,6 +259,7 @@ var jsPsychVideoKeyboardResponse = (function(jspsych) {
                         allow_held_key: false,
                     });
                 }
+                video_element.style.visibility = "hidden";
             };
             video_element.playbackRate = trial.rate;
             // if video start time is specified, hide the video and set the starting time
