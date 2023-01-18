@@ -43,7 +43,7 @@ const PRMS = {
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
-    fbText: ["Richtig, aber - 10 Punkte!", "Richtig! Keine Minuspunkte!", "Falsch! -10 Punkte!"],
+    fbText: ["Richtig, aber -10 Punkte!", "Richtig! Keine Minuspunkte!", "Falsch! -10 Punkte!"],
     iti: 500, // duration of the inter-trial-interval
     feedbackDur: [0, 0, 1000], // duration of the reward screen
     rewardDur: 1000, // duration of the reward screen
@@ -256,7 +256,7 @@ const TASK_INSTRUCTIONS4 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `Zu Beginn des Experimentes hast du 1000 Punkten.<br>
+        text: `Zu Beginn des Experimentes hast du 10000 Punkte.<br>
         In manchen Durchgängen verlierst Du -10 Punkte, selbst wenn die Aufgabe richtig bearbeitet wurde.
         In Durchgängen mit Fehler verlierst du immer -10 Punkte<br><br> 
         Je mehr Punkte Du sichern kannst, desto kürzer wird das Experiment! 
@@ -314,7 +314,7 @@ const BLOCK_END = {
         }).length;
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
-             Dein aktueller Punktestand beträgt: POINTS: ${1000 - (nReward * 10)}! <br><br>
+             Dein aktueller Punktestand beträgt: ${10000 - (nReward * 10)}! <br><br>
              Kurze Pause.<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
