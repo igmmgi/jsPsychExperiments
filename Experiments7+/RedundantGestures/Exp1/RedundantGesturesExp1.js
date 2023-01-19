@@ -53,9 +53,9 @@ const CONSENT_SCREEN = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Einwilligungserklärung:<br><br>
-               Herzlich willkommen bei unserer Studie zum "Wo ist der Ball?"! Wir danken Ihnen für Ihr Interesse an dieser Studie.<br><br>
+               Herzlich willkommen bei unserer Studie "Wo ist der Ball?"! Wir danken Ihnen für Ihr Interesse an dieser Studie.<br><br>
                Wir untersuchen mit dieser Studie, wie Menschen Sprache verstehen und verarbeiten.
-               Ablauf der Studie Das folgende Experiment besteht aus sechs Blöcken, dazwischen kann man selbst entscheiden, wie lange man Pause machen möchte. Insgesamt dauert das Experiment ca. 0.5 Stunden. 
+               Ablauf der Studie: Das folgende Experiment besteht aus sechs Blöcken, dazwischen kann man selbst entscheiden, wie lange man Pause machen möchte. Insgesamt dauert das Experiment ca. 0.5 Stunden. 
                Ihre Aufgabe ist es in jedem Durchgang zu entscheiden, ob sich ein Ball in einer linken oder rechten Box befindet. Dazu lesen Sie zuerst eine Frage, dann sehen Sie einen kurzen Video-Ausschnitt, der diese Frage beantwortet, und danach drücken Sie eine Taste. 
                Wir erheben von Ihnen Angaben zu Alter, Geschlecht, Händigkeit und ob Deutsch Ihre Muttersprache ist.
                Sollten Sie noch Fragen haben oder sich technische Probleme ergeben, wenden Sie sich damit bitte per mail an den Versuchsleiter/ die Versuchsleiterin.<br><br>
