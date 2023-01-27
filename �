@@ -1,0 +1,1 @@
+        p5js.line(p5js.width / 2 + xvalues[x-1], x * yspacing, p5js.width / 2 + xvalues[x], x * yspacing);

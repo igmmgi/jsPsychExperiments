@@ -184,18 +184,18 @@ const TASK_INSTRUCTIONS_BLOCK_START = {
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
 const VIDEOS = [
-    "../videos/exp1_f_thumb_ja.mp4",
-    "../videos/exp1_f_thumb_no.mp4",
-    "../videos/exp1_f_thumb_verbal_ja.mp4",
-    "../videos/exp1_f_thumb_verbal_no.mp4",
-    "../videos/exp1_f_verbal_ja.mp4",
-    "../videos/exp1_f_verbal_no.mp4",
-    "../videos/exp1_m_thumb_ja.mp4",
-    "../videos/exp1_m_thumb_no.mp4",
-    "../videos/exp1_m_thumb_verbal_ja.mp4",
-    "../videos/exp1_m_thumb_verbal_no.mp4",
-    "../videos/exp1_m_verbal_ja.mp4",
-    "../videos/exp1_m_verbal_no.mp4",
+    "../videos/exp3_f_face_ja.mp4",
+    "../videos/exp3_f_face_no.mp4",
+    "../videos/exp3_f_face_verbal_ja.mp4",
+    "../videos/exp3_f_face_verbal_no.mp4",
+    "../videos/exp3_f_verbal_ja.mp4",
+    "../videos/exp3_f_verbal_no.mp4",
+    "../videos/exp3_m_face_ja.mp4",
+    "../videos/exp3_m_face_no.mp4",
+    "../videos/exp3_m_face_verbal_ja.mp4",
+    "../videos/exp3_m_face_verbal_no.mp4",
+    "../videos/exp3_m_verbal_ja.mp4",
+    "../videos/exp3_m_verbal_no.mp4",
 ];
 
 const PRELOAD = {
