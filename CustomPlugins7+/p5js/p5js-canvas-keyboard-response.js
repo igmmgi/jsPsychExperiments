@@ -82,24 +82,20 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
             // function to end trial when it is time
             const end_trial = () => {
                 // kill any remaining setTimeout handlers
-                this.jsPsych.pluginAPI.clearAllTimeouts();
-
-                // kill keyboard listeners
-                if (typeof keyboardListener !== "undefined") {
-                    this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-                }
-
-                // gather the data to store for the trial
+                // this.jsPsych.pluginAPI.clearAllTimeouts();
+                // // kill keyboard listeners
+                // if (typeof keyboardListener !== "undefined") {
+                //     this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+                // }
+                // // gather the data to store for the trial
                 let trial_data = {
                     rt: response.rt,
                     stimulus: trial.stimulus,
                     key_press: response.key,
                 };
-
-                // clear the display
+                // // clear the display
                 display_element.innerHTML = "";
                 p5js.removeElements();
-
                 // move on to the next trial
                 this.jsPsych.finishTrial(trial_data);
             };
@@ -114,28 +110,28 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
                 }
             };
 
-            // start the response listener
-            if (trial.choices !== "NO_KEYS") {
-                var keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
-                    callback_function: after_response,
-                    valid_responses: trial.choices,
-                    rt_method: "performance",
-                    persist: false,
-                    allow_held_key: false,
-                });
-            }
+            // // start the response listener
+            // if (trial.choices !== "NO_KEYS") {
+            //     var keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
+            //         callback_function: after_response,
+            //         valid_responses: trial.choices,
+            //         rt_method: "performance",
+            //         persist: false,
+            //         allow_held_key: false,
+            //     });
+            // }
 
-            // hide stimulus if stimulus_duration is set
-            if (trial.stimulus_duration !== null) {
-                this.jsPsych.pluginAPI.setTimeout(function () {
-                    display_element.querySelector("#stimulus").style.visibility = "hidden";
-                }, trial.stimulus_duration);
-            }
+            // // hide stimulus if stimulus_duration is set
+            // if (trial.stimulus_duration !== null) {
+            //     this.jsPsych.pluginAPI.setTimeout(function () {
+            //         display_element.querySelector("#stimulus").style.visibility = "hidden";
+            //     }, trial.stimulus_duration);
+            // }
 
-            // end trial if trial_duration is set
-            if (trial.trial_duration !== null) {
-                this.jsPsych.pluginAPI.setTimeout(end_trial, trial.trial_duration);
-            }
+            // // end trial if trial_duration is set
+            // if (trial.trial_duration !== null) {
+            //     this.jsPsych.pluginAPI.setTimeout(end_trial, trial.trial_duration);
+            // }
         }
     }
 

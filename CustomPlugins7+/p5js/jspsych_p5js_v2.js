@@ -13,10 +13,6 @@ const p5js = new p5((sketch) => {
 let font = p5js.loadFont("https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf");
 let img = p5js.loadImage("jspsych-logo.jpeg");
 
-p5js.keyPressed = function () {
-    console.log(p5js.keyCode);
-};
-
 function draw1() {
     p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
     let gridSize = 100;
@@ -124,40 +120,129 @@ function draw5() {
     p5js.pop();
 }
 
-function calcWave(xvalues) {
-    let theta;
-    let dy;
-    let nwaves = 1;
+// function calculate_coordinates(xvalues) {
+//     let theta;
+//     let amplitude;
+//     let frequency;
+//     let dy;
+//     let nwaves = 1;
+//     for (let n = 0; n < nwaves; n++) {
+//         theta = 0;
+//         amplitude = p5js.width / 4;
+//         frequency = p5js.height / 4;
+//         dy = p5js.TWO_PI / frequency;
+//         for (let i = 0; i < xvalues.length; i++) {
+//             xvalues[i] += p5js.sin(theta) * amplitude;
+//             theta += dy;
+//         }
+//     }
+//     return xvalues;
+// }
 
-    for (let n = 0; n < nwaves; n++) {
-        theta = p5js.random([-1, -0.5, 0, 0.5, 1]);
-        // amplitude = p5js.random([1, 2, 3, 4, 5]);
-        amplitude = 50;
-        frequency = p5js.random([10]);
-        //dy = p5js.TWO_PI / frequency / 4;
-        dy = 1 / (p5js.height * frequency);
-        for (let i = 0; i < xvalues.length; i++) {
-            xvalues[i] += p5js.sin(theta) * amplitude;
-            theta += dy;
+// function calculate_coordinates(xvalues) {
+//     let theta;
+//     let amplitude;
+//     let frequency;
+//     let dy;
+//     let nwaves = 20;
+//     for (let n = 0; n < nwaves; n++) {
+//         theta = 0;
+//         amplitude = p5js.random([10, 20, 30, 40]);
+//         frequency = p5js.random([200, 400, 600, 800]);
+//         dy = p5js.TWO_PI / frequency;
+//         for (let i = 0; i < xvalues.length; i++) {
+//             xvalues[i] += p5js.sin(theta) * amplitude;
+//             theta += dy;
+//         }
+//     }
+//     return xvalues;
+// }
+
+// function draw_line(xvalues) {
+//     //p5js.background(255);
+//     p5js.fill(0);
+//     p5js.strokeWeight(10);
+//     for (let x = 1; x < xvalues.length; x++) {
+//         p5js.line(p5js.width / 2 + xvalues[x - 1], x, p5js.width / 2 + xvalues[x], x);
+//     }
+// }
+
+// function draw_line(xvalues) {
+//     p5js.stroke(0);
+//     p5js.strokeWeight(10);
+//     for (let x = 1; x < xvalues.length; x++) {
+//         p5js.line(p5js.width / 2 + xvalues[x - 1], x, p5js.width / 2 + xvalues[x], x);
+//     }
+// }
+
+// let xvalues = new Array(960).fill(0);
+// xvalues = calculate_coordinates(xvalues);
+
+class Path {
+    constructor() {
+        this.xpos = new Array(960).fill(0);
+        this.calculate_coordinates();
+    }
+    calculate_coordinates() {
+        let theta;
+        let amplitude;
+        let frequency;
+        let dy;
+        let nwaves = 20;
+        for (let n = 0; n < nwaves; n++) {
+            theta = 0;
+            amplitude = p5js.random([10, 20, 30, 40]);
+            frequency = p5js.random([200, 400, 600, 800]);
+            dy = p5js.TWO_PI / frequency;
+            for (let i = 0; i < this.xpos.length; i++) {
+                this.xpos[i] += p5js.sin(theta) * amplitude;
+                theta += dy;
+            }
         }
     }
-    return xvalues;
-}
-
-function renderWave(xvalues) {
-    p5js.background(255);
-    p5js.fill(0);
-    p5js.strokeWeight(15);
-    for (let x = 1; x < xvalues.length; x++) {
-        p5js.line(p5js.width / 2 + xvalues[x - 1], x, p5js.width / 2 + xvalues[x], x);
+    draw() {
+        p5js.stroke(0);
+        p5js.strokeWeight(10);
+        for (let x = 1; x < this.xpos.length; x++) {
+            p5js.line(p5js.width / 2 + this.xpos[x - 1], x, p5js.width / 2 + this.xpos[x], x);
+        }
     }
 }
 
+class Ball {
+    constructor(xpos, ypos) {
+        this.diameter = 50;
+        this.speed = 5;
+        this.x = xpos;
+        this.y = ypos - this.diameter / 2;
+    }
+    move() {
+        if (p5js.keyIsDown(p5js.LEFT_ARROW)) {
+            this.x -= 10;
+        }
+        if (p5js.keyIsDown(p5js.RIGHT_ARROW)) {
+            this.x += 10;
+        }
+        this.y -= this.speed;
+        if (this.y < 0) {
+            this.y = 960 - this.diameter / 2;
+        }
+    }
+    draw() {
+        p5js.stroke(255, 0, 0);
+        p5js.fill(255, 0, 0);
+        p5js.circle(this.x, this.y, this.diameter);
+    }
+}
+
+const ball = new Ball(1280 / 2, 960);
+const path = new Path();
+
 function draw6() {
-    let xvalues = new Array(p5js.floor(p5js.height)).fill(0);
-    xvalues = calcWave(xvalues);
-    renderWave(xvalues);
-    p5js.noLoop();
+    p5js.background(255);
+    ball.move();
+    ball.draw();
+    path.draw();
 }
 
 //const draw_calls = [draw1, draw2, draw3, draw4, draw5];
