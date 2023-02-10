@@ -693,12 +693,6 @@ const alphaNum = {
             "<h3 style='text-align:left;'>Gesamtpunkte: " +
             numberWithCommas(prms.cPoints) +
             "</h3><br>" +
-            "<h3 style='text-align:left;'>Wenn Sie eine Versuchspersonenstunde benötigen, kopieren Sie den </h3>" +
-            "<h3 style='text-align:left;'>folgenden zufällig generierten Code und senden Sie diesen per Email an. </h3>" +
-            "<h2>hiwipibio@gmail.com</h2>" +
-            "<h2>Code: " +
-            randomString +
-            "</h2><br>" +
             "<h2 style='text-align:left;'>Drücken Sie die Leertaste, um fortzufahren!</h2>";
     },
 };
