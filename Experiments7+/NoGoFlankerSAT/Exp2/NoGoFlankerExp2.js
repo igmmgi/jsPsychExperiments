@@ -11,7 +11,19 @@
 // Version 3: First half (50% nogo), second half (10% nogo), and Accuracy, Speed, Accuracy, Speed ...
 // Version 4: First half (50% nogo), second half (10% nogo), and Speed, Accuracy, Speed, Accuracy ...
 
-var _0x11f5=["\x68\x74\x74\x70\x73\x3A\x2F\x2F\x75\x6E\x69\x2D\x74\x75\x65\x62\x69\x6E\x67\x65\x6E\x2E\x73\x6F\x6E\x61\x2D\x73\x79\x73\x74\x65\x6D\x73\x2E\x63\x6F\x6D\x2F\x77\x65\x62\x73\x74\x75\x64\x79\x5F\x63\x72\x65\x64\x69\x74\x2E\x61\x73\x70\x78\x3F\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x5F\x69\x64\x3D\x31\x32\x33\x26\x63\x72\x65\x64\x69\x74\x5F\x74\x6F\x6B\x65\x6E\x3D\x62\x33\x30\x62\x32\x38\x31\x63\x64\x37\x33\x37\x34\x39\x34\x62\x62\x38\x36\x64\x35\x65\x36\x61\x34\x66\x31\x31\x34\x61\x62\x30\x26\x73\x75\x72\x76\x65\x79\x5F\x63\x6F\x64\x65\x3D","\x73\x6F\x6E\x61\x5F\x69\x64","\x75\x72\x6C\x56\x61\x72\x69\x61\x62\x6C\x65\x73","\x64\x61\x74\x61","\x61\x73\x73\x69\x67\x6E","\x6C\x6F\x63\x61\x74\x69\x6F\x6E"];const jsPsych=initJsPsych({on_finish:function(){window[_0x11f5[5]][_0x11f5[4]](_0x11f5[0]+ jsPsych[_0x11f5[3]][_0x11f5[2]]()[_0x11f5[1]])}})
+var _0x11f5 = [
+    "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x75\x6E\x69\x2D\x74\x75\x65\x62\x69\x6E\x67\x65\x6E\x2E\x73\x6F\x6E\x61\x2D\x73\x79\x73\x74\x65\x6D\x73\x2E\x63\x6F\x6D\x2F\x77\x65\x62\x73\x74\x75\x64\x79\x5F\x63\x72\x65\x64\x69\x74\x2E\x61\x73\x70\x78\x3F\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x5F\x69\x64\x3D\x31\x32\x33\x26\x63\x72\x65\x64\x69\x74\x5F\x74\x6F\x6B\x65\x6E\x3D\x62\x33\x30\x62\x32\x38\x31\x63\x64\x37\x33\x37\x34\x39\x34\x62\x62\x38\x36\x64\x35\x65\x36\x61\x34\x66\x31\x31\x34\x61\x62\x30\x26\x73\x75\x72\x76\x65\x79\x5F\x63\x6F\x64\x65\x3D",
+    "\x73\x6F\x6E\x61\x5F\x69\x64",
+    "\x75\x72\x6C\x56\x61\x72\x69\x61\x62\x6C\x65\x73",
+    "\x64\x61\x74\x61",
+    "\x61\x73\x73\x69\x67\x6E",
+    "\x6C\x6F\x63\x61\x74\x69\x6F\x6E",
+];
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        window[_0x11f5[5]][_0x11f5[4]](_0x11f5[0] + jsPsych[_0x11f5[3]][_0x11f5[2]]()[_0x11f5[1]]);
+    },
+});
 
 const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
 const CANVAS_SIZE = [960, 720];
@@ -142,7 +154,7 @@ const TASK_INSTRUCTIONS_SPEED = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function(trial) {
+    on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br><br>
@@ -171,7 +183,7 @@ const TASK_INSTRUCTIONS_ACCURACY = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function(trial) {
+    on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br><br>
@@ -324,7 +336,7 @@ const TRIAL_FEEDBACK = {
     stimulus: "",
     trial_duration: 0,
     response_ends_trial: false,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         let fontsize = PRMS.fbTxtSizeTrial;
         let fontweight = "normal";
@@ -345,11 +357,13 @@ const TRIAL_FEEDBACK = {
             }
         }
         if (dat.type === "go") {
-            trial.stimulus = `<div style="font-size:${fontsize}px; color:Black; font-weight: ${fontweight};">${PRMS.fbTxtGo[dat.corrCode - 1]
-                }</div>`;
+            trial.stimulus = `<div style="font-size:${fontsize}px; color:Black; font-weight: ${fontweight};">${
+                PRMS.fbTxtGo[dat.corrCode - 1]
+            }</div>`;
         } else if (dat.type === "nogo") {
-            trial.stimulus = `<div style="font-size:${fontsize}px; color:Black;font-weight: ${fontweight};">${PRMS.fbTxtNoGo[dat.corrCode - 1]
-                }</div>`;
+            trial.stimulus = `<div style="font-size:${fontsize}px; color:Black;font-weight: ${fontweight};">${
+                PRMS.fbTxtNoGo[dat.corrCode - 1]
+            }</div>`;
         }
     },
 };
@@ -385,10 +399,10 @@ function calculateBlockPerformance({
     let dat = jsPsych.data.get().filter(filter_options);
     let blockType = dat.trials[0].sat;
     let nTotal = dat.count();
-    let nCorrect = dat.select(corrColumn).values.filter(function(x) {
+    let nCorrect = dat.select(corrColumn).values.filter(function (x) {
         return x === corrValue;
     }).length;
-    let nError = dat.select(corrColumn).values.filter(function(x) {
+    let nError = dat.select(corrColumn).values.filter(function (x) {
         return x === errorValue;
     }).length;
     let meanRt = Math.round(dat.select(rtColumn).mean());
@@ -405,7 +419,7 @@ const BLOCK_FEEDBACK = {
     stimulus: "",
     trial_duration: null,
     response_ends_trial: true,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let block_dvs = calculateBlockPerformance({ filter_options: { stim: "flanker", blockNum: PRMS.cBlk } });
         let text;
         if (block_dvs.blockType === "Accuracy") {
@@ -415,7 +429,7 @@ const BLOCK_FEEDBACK = {
         }
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px; font-weight: bold;">${text}</div>`;
     },
-    on_finish: function() {
+    on_finish: function () {
         PRMS.cTrl = 1;
         PRMS.cBlk += 1;
     },
@@ -443,7 +457,7 @@ const FLANKER_STIMULUS = {
         sat: jsPsych.timelineVariable("sat"),
         correct_key: jsPsych.timelineVariable("correct_key"),
     },
-    on_finish: function() {
+    on_finish: function () {
         code_trial();
         PRMS.cTrl += 1;
     },
@@ -495,7 +509,6 @@ const SAVE_DATA_BLOCKWISE = {
     func: save_blockwise,
     post_trial_gap: 1000,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
