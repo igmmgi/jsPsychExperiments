@@ -278,7 +278,7 @@ function generate_simon_combinations(ct) {
 function trial_table_flankers(version) {
     if ([1, 3].includes(version)) {
         return generate_flanker_combinations("early");
-    } else if ([2, 4].includes(versoin)) {
+    } else if ([2, 4].includes(version)) {
         return generate_flanker_combinations("late");
     }
 }
@@ -286,7 +286,7 @@ function trial_table_flankers(version) {
 function trial_table_simons(version) {
     if ([1, 3].includes(version)) {
         return generate_simon_combinations("early");
-    } else if ([2, 4].includes(versoin)) {
+    } else if ([2, 4].includes(version)) {
         return generate_simon_combinations("late");
     }
 }
