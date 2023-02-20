@@ -15,10 +15,10 @@
 // When incorrect: 1000 ms feedback screen indicating error type followed by 500 ms blank screen
 //
 // 4 counter-balanced versions
-// Version 1: Simon-Flanker and early conflict
-// Version 2: Simon-Flanker and late conflict
-// Version 3: Flanker-Simon and early conflict
-// Version 4: Flanker-Simon and late conflict
+// Version 1: Flanker-Simon and early conflict
+// Version 2: Flanker-Simon and late conflict
+// Version 3: Simon-Flanker and early conflict
+// Version 4: Simon-Flanker and late conflict
 
 const jsPsych = initJsPsych({});
 
@@ -52,7 +52,7 @@ const PRMS = {
 };
 
 // 4 counter balanced versions
-const VERSION = 3; //Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 const RESP_TEXT = generate_formatted_html({
@@ -97,7 +97,6 @@ const TASK_INSTRUCTIONS_FLANKER = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-                       Aufgabe:<br>
                        Ziel - Buchstabe erscheint in der Mitte des Bildschirms. Es gilt:`,
                 align: "left",
                 fontsize: 24,
@@ -125,7 +124,6 @@ const TASK_INSTRUCTIONS_SIMON = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-                       Aufgabe:<br>
                        Ziel - Buchstabe erscheint rechts oder links auf dem Bildschirm. Es gilt:`,
                 align: "left",
                 fontsize: 24,
@@ -157,6 +155,24 @@ const TASK_INSTRUCTIONS_BREAK = {
     }),
 };
 
+const TASK_INSTRUCTIONS_CHANGE = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: generate_formatted_html({
+        text: `ACHTUNG: NEUE INSTRUKTIONEN!!!<br><br>
+               Drücke eine beliebige Taste, um fortzufahren! `,
+        align: "center",
+        fontsize: 28,
+        bold: true,
+        lineheight: 1.5,
+    }),
+};
+
+////////////////////////////////////////////////////////////////////////
+//                      Trial Tables                                  //
+////////////////////////////////////////////////////////////////////////
 function generate_flanker_combinations(ct) {
     // prettier-ignore
     if (ct === "early") {
@@ -230,8 +246,6 @@ function generate_simon_combinations(ct) {
       { task: 'simon', stimulus: PRMS.targets[1], position: "right", foreperiod: PRMS.foreperiod[1], comp: 'comp',   correct_key: PRMS.respKeys[1]},
       { task: 'simon', stimulus: PRMS.targets[0], position: "left",  foreperiod: PRMS.foreperiod[1], comp: 'comp',   correct_key: PRMS.respKeys[0]},
       { task: 'simon', stimulus: PRMS.targets[1], position: "right", foreperiod: PRMS.foreperiod[1], comp: 'comp',   correct_key: PRMS.respKeys[1]},
-      { task: 'simon', stimulus: PRMS.targets[0], position: "left",  foreperiod: PRMS.foreperiod[1], comp: 'comp',   correct_key: PRMS.respKeys[0]},
-      { task: 'simon', stimulus: PRMS.targets[1], position: "right", foreperiod: PRMS.foreperiod[1], comp: 'comp',   correct_key: PRMS.respKeys[1]},
       { task: 'simon', stimulus: PRMS.targets[0], position: "right", foreperiod: PRMS.foreperiod[1], comp: 'incomp', correct_key: PRMS.respKeys[0]},
       { task: 'simon', stimulus: PRMS.targets[1], position: "left",  foreperiod: PRMS.foreperiod[1], comp: 'incomp', correct_key: PRMS.respKeys[1]},
     ];
@@ -279,8 +293,8 @@ function trial_table_simons(version) {
 
 const FLANKERS = trial_table_flankers(VERSION);
 const SIMONS = trial_table_simons(VERSION);
-console.table(FLANKERS);
-console.table(SIMONS);
+// console.table(FLANKERS);
+// console.table(SIMONS);
 
 ////////////////////////////////////////////////////////////////////////
 //                         Trial Parts                                //
@@ -345,11 +359,10 @@ function draw_stimulus(args) {
 function code_trial() {
     "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
-    let corrCode = 0;
 
-    let rt;
     let is_correct = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_key);
-    rt = dat.rt !== null ? dat.rt : PRMS.respDur[1];
+    let rt = dat.rt !== null ? dat.rt : PRMS.respDur[1];
+    let corrCode = 0;
     if (is_correct && rt > PRMS.respDur[0] && rt < PRMS.respDur[1]) {
         corrCode = 1; // correct
     } else if (!is_correct && rt > PRMS.respDur[0] && rt < PRMS.respDur[1]) {
@@ -382,7 +395,7 @@ const TRIAL_FEEDBACK = {
         let fontsize = PRMS.fbTxtSizeTrial;
         let fontweight = "normal";
         trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
-        `<div style="font-size:${fontsize}px; color:Black; font-weight: ${fontweight};">${
+        trial.stimulus = `<div style="font-size:${fontsize}px; color:Black; font-weight: ${fontweight};">${
             PRMS.fbTxt[dat.corrCode - 1]
         }</div>`;
     },
@@ -530,13 +543,13 @@ function genExpSeq() {
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(mouseCursor(false));
 
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(WAIT_BLANK);
 
-    // Counter-balanced SAT order (Accuracy vs. Speed)
+    // Counter-balanced flannker-simon order
     let task = [];
     if ([1, 2].includes(VERSION)) {
         task = repeatArray(["flanker"], PRMS.nBlks / 2).concat(repeatArray(["simon"], PRMS.nBlks / 2));
@@ -545,7 +558,10 @@ function genExpSeq() {
     }
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
-        // add approprite block start SAT instructions
+        if (blk === PRMS.nBlks / 2) {
+            exp.push(TASK_INSTRUCTIONS_CHANGE);
+        }
+        // add approprite block start instructions
         let blk_timeline;
         if (task[blk] === "flanker") {
             exp.push(TASK_INSTRUCTIONS_FLANKER);
