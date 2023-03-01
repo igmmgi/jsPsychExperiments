@@ -12,9 +12,9 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const CANVAS_COLOUR = 'rgba(200, 200, 200, 1)';
+const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
 const CANVAS_SIZE = [1280, 720];
-const CANVAS_BORDER = '5px solid black';
+const CANVAS_BORDER = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -33,11 +33,11 @@ const PRMS = {
     tooFast: 150, // responses faster than x ms -> too fast!
     tooSlow: 1500, // response slower than x ms -> too slow!
     targetDuration: [150, 1500],
-    respKeys: ['Q', 'P'],
-    target: shuffle(['H', 'S']),
-    stimFont: '100px Monopsace',
+    respKeys: ["Q", "P"],
+    target: shuffle(["H", "S"]),
+    stimFont: "100px Monopsace",
     stimEccentricity: 200,
-    fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
+    fbTxt: ["", "Falsch", "Zu langsam", "Zu schnell"],
     fbTxtSizeTrial: 26,
     fbTxtSizeBlock: 26,
     cTrl: 1, // count trials
@@ -65,32 +65,33 @@ const TASK_INSTRUCTIONS1 = {
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
                ruben.ellinghaus@fernuni-hagen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
-        align: 'left',
-        colour: 'black',
+        align: "left",
+        colour: "black",
         fontsize: 30,
     }),
 };
 
 function pad_me(str, npad) {
     let len = Math.floor((npad - str.length) / 2);
-    str = ' '.repeat(len) + str + ' '.repeat(len);
+    str = " ".repeat(len) + str + " ".repeat(len);
     return str
-        .split('')
-        .map(function(c) {
-            return c === ' ' ? '&nbsp;' : c;
+        .split("")
+        .map(function (c) {
+            return c === " " ? "&nbsp;" : c;
         })
-        .join('');
+        .join("");
 }
 
 // response keys
 const RESP_TEXT = generate_formatted_html({
-    text: `${pad_me(PRMS.target[0], 25) +
+    text: `${
+        pad_me(PRMS.target[0], 25) +
         pad_me(PRMS.target[1], 25) +
-        '<br>' +
-        pad_me('(Taste-' + PRMS.respKeys[0] + ')', 20) +
-        pad_me('(Taste-' + PRMS.respKeys[1] + ')', 20)
-        }`,
-    align: 'center',
+        "<br>" +
+        pad_me("(Taste-" + PRMS.respKeys[0] + ")", 20) +
+        pad_me("(Taste-" + PRMS.respKeys[1] + ")", 20)
+    }`,
+    align: "center",
     fontsize: 30,
     bold: true,
     lineheight: 1.5,
@@ -101,23 +102,23 @@ const TASK_INSTRUCTIONS_SIMON = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
-    on_start: function(trial) {
+    stimulus: "",
+    on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
                In diesem Block musst du auf in jedem Durchgang auf den
                Buchstaben reagieren welcher <span style="font-weight:bold;">rechts oder links</span> auf dem Bildschirm erscheint.
                Reagiere wie folgt:<br>`,
-                align: 'left',
-                colour: 'black',
+                align: "left",
+                colour: "black",
                 fontsize: 30,
             }) +
             RESP_TEXT +
             generate_formatted_html({
                 text: `Drücke eine beliebige Taste, um fortzufahren.`,
-                align: 'left',
-                colour: 'black',
+                align: "left",
+                colour: "black",
                 fontsize: 30,
             });
     },
@@ -128,23 +129,23 @@ const TASK_INSTRUCTIONS_FLANKER = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
-    on_start: function(trial) {
+    stimulus: "",
+    on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
                In diesem Block musst du in jedem Durchgang auf den
                Buchstaben reagieren welcher <span style="font-weight:bold;">zentral</span> auf dem Bildschirm erscheint.
                Reagiere wie folgt:<br>`,
-                align: 'left',
-                colour: 'black',
+                align: "left",
+                colour: "black",
                 fontsize: 30,
             }) +
             RESP_TEXT +
             generate_formatted_html({
                 text: `Drücke eine beliebige Taste, um fortzufahren.`,
-                align: 'left',
-                colour: 'black',
+                align: "left",
+                colour: "black",
                 fontsize: 30,
             });
     },
@@ -155,20 +156,20 @@ const TASK_REMINDER = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
-    on_start: function(trial) {
+    stimulus: "",
+    on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>Es gilt:`,
-                align: 'left',
-                colour: 'black',
+                align: "left",
+                colour: "black",
                 fontsize: 30,
             }) +
             RESP_TEXT +
             generate_formatted_html({
                 text: `<br>Drücke eine beliebige Taste, um fortzufahren.`,
-                align: 'left',
-                colour: 'black',
+                align: "left",
+                colour: "black",
                 fontsize: 30,
             });
     },
@@ -206,8 +207,8 @@ const TRIALS_FLANKER = [
 //                              Exp Parts                             //
 ////////////////////////////////////////////////////////////////////////
 function drawFixation() {
-    'use strict';
-    let ctx = document.getElementById('canvas').getContext('2d');
+    "use strict";
+    let ctx = document.getElementById("canvas").getContext("2d");
     ctx.lineWidth = PRMS.fixWidth;
     ctx.moveTo(-PRMS.fixSize, 0);
     ctx.lineTo(PRMS.fixSize, 0);
@@ -233,7 +234,7 @@ const ITI = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
+    stimulus: "",
     response_ends_trial: false,
     trial_duration: PRMS.iti,
 };
@@ -243,16 +244,16 @@ const TRIAL_FEEDBACK = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
+    stimulus: "",
     response_ends_trial: false,
     trial_duration: 0,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (dat.corrCode !== 1) {
             trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
             trial.stimulus = generate_formatted_html({
                 text: `${PRMS.fbTxt[dat.corrCode - 1]}`,
-                align: 'center',
+                align: "center",
                 fontsize: 30,
                 lineheight: 1.5,
             });
@@ -261,7 +262,7 @@ const TRIAL_FEEDBACK = {
 };
 
 function codeTrial() {
-    'use strict';
+    "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
     dat.rt = dat.rt !== null ? dat.rt : PRMS.tooSlow;
 
@@ -286,20 +287,20 @@ function codeTrial() {
 }
 
 function drawStimulus(args) {
-    'use strict';
-    let ctx = document.getElementById('canvas').getContext('2d');
+    "use strict";
+    let ctx = document.getElementById("canvas").getContext("2d");
     ctx.font = PRMS.stimFont;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'black';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "black";
 
-    if (args.type === 'simon') {
-        if (args.distractor === 'left') {
+    if (args.type === "simon") {
+        if (args.distractor === "left") {
             ctx.fillText(args.target, -PRMS.stimEccentricity, 0);
-        } else if (args.distractor === 'right') {
+        } else if (args.distractor === "right") {
             ctx.fillText(args.target, PRMS.stimEccentricity, 0);
         }
-    } else if (args.type === 'flanker') {
+    } else if (args.type === "flanker") {
         ctx.fillText(args.distractor, -PRMS.stimEccentricity, 0);
         ctx.fillText(args.target, 0, 0);
         ctx.fillText(args.distractor, PRMS.stimEccentricity, 0);
@@ -315,31 +316,31 @@ const STIMULUS = {
     response_ends_trial: true,
     trial_duration: PRMS.tooSlow,
     choices: PRMS.respKeys,
-    stimulus_duration: jsPsych.timelineVariable('duration'),
+    stimulus_duration: jsPsych.timelineVariable("duration"),
     trial_duration: PRMS.tooSlow,
     func: drawStimulus,
     func_args: null,
     data: {
-        stim: 'simon_flanker',
-        type: jsPsych.timelineVariable('type'),
-        target: jsPsych.timelineVariable('target'),
-        distractor: jsPsych.timelineVariable('distractor'),
-        duration: jsPsych.timelineVariable('duration'),
-        compatibility: jsPsych.timelineVariable('compatibility'),
-        corrResp: jsPsych.timelineVariable('key'),
+        stim: "simon_flanker",
+        type: jsPsych.timelineVariable("type"),
+        target: jsPsych.timelineVariable("target"),
+        distractor: jsPsych.timelineVariable("distractor"),
+        duration: jsPsych.timelineVariable("duration"),
+        compatibility: jsPsych.timelineVariable("compatibility"),
+        corrResp: jsPsych.timelineVariable("key"),
     },
-    on_start: function(trial) {
+    on_start: function (trial) {
         trial.func_args = [
             {
-                type: jsPsych.timelineVariable('type'),
-                target: jsPsych.timelineVariable('target'),
-                distractor: jsPsych.timelineVariable('distractor'),
-                duration: jsPsych.timelineVariable('duration'),
-                compatibility: jsPsych.timelineVariable('compatibility'),
+                type: jsPsych.timelineVariable("type"),
+                target: jsPsych.timelineVariable("target"),
+                distractor: jsPsych.timelineVariable("distractor"),
+                duration: jsPsych.timelineVariable("duration"),
+                compatibility: jsPsych.timelineVariable("compatibility"),
             },
         ];
     },
-    on_finish: function() {
+    on_finish: function () {
         codeTrial();
         PRMS.cTrl += 1;
     },
@@ -361,12 +362,12 @@ const BLOCK_FEEDBACK = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     response_ends_trial: true,
-    on_start: function(trial) {
-        let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'simon_flanker', blockNum: PRMS.cBlk } });
-        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
+    on_start: function (trial) {
+        let block_dvs = calculateBlockPerformance({ filter_options: { stim: "simon_flanker", blockNum: PRMS.cBlk } });
+        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
-    on_finish: function() {
+    on_finish: function () {
         PRMS.cTrl = 1;
         PRMS.cBlk += 1;
     },
@@ -378,16 +379,15 @@ const BLOCK_FEEDBACK = {
 const END_SCREEN = {
     type: jsPsychHtmlKeyboardResponse,
     response_ends_trial: true,
-    choices: [' '],
+    choices: [" "],
     stimulus: generate_formatted_html({
-        text:
-            `Dieser Teil des Experiments ist jetzt beendet.<br><br>
+        text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
              Nun folgen Informationen zur Versuchspersonenstunde auf Unipark.
              Drücke eine beliebige Taste, um die Weiterleitung zu Unipark zu starten.`,
         fontsize: 28,
         lineheight: 1.0,
         bold: false,
-        align: 'left',
+        align: "left",
     }),
 };
 
@@ -402,9 +402,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
-    saveData('/Common/write_data.php', fn, { stim: 'simon_flanker' });
+    saveData("/Common/write_data.php", fn, { stim: "simon_flanker" });
     // saveDataLocal(fn, { stim: 'simon' });
-
 }
 
 const SAVE_DATA = {
@@ -417,7 +416,7 @@ const SAVE_DATA = {
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-    'use strict';
+    "use strict";
 
     let exp = [];
 
@@ -431,22 +430,22 @@ function genExpSeq() {
 
     let blk_type;
     if (VERSION === 1) {
-        blk_type = repeatArray(['simon', 'flanker'], PRMS.nBlks / 2);
+        blk_type = repeatArray(["simon", "flanker"], PRMS.nBlks / 2);
     } else if (VERSION === 2) {
-        blk_type = repeatArray(['flanker', 'simon'], PRMS.nBlks / 2);
+        blk_type = repeatArray(["flanker", "simon"], PRMS.nBlks / 2);
     }
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
         let blk_timeline;
-        if (blk_type[blk] === 'simon') {
+        if (blk_type[blk] === "simon") {
             exp.push(TASK_INSTRUCTIONS_SIMON);
             blk_timeline = { ...TRIAL_TIMELINE_SIMON };
-        } else if (blk_type[blk] === 'flanker') {
+        } else if (blk_type[blk] === "flanker") {
             exp.push(TASK_INSTRUCTIONS_FLANKER);
             blk_timeline = { ...TRIAL_TIMELINE_FLANKER };
         }
         blk_timeline.sample = {
-            type: 'fixed-repetitions',
+            type: "fixed-repetitions",
             size: [0, 1].includes(blk) ? PRMS.nTrlsP / TRIALS_SIMON.length : PRMS.nTrlsE / TRIALS_SIMON.length,
         };
         exp.push(blk_timeline); // trials within a block

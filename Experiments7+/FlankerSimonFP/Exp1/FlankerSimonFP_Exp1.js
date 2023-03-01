@@ -31,7 +31,7 @@ const CANVAS_BORDER = "5px solid Black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     nTrls: 20, // number of trials in each block (req. = multiple of 20!)
-    nBlks: 2, // number of blocks
+    nBlks: 4, // number of blocks
     foreperiod: [300, 1300],
     stimDur: 150,
     respDur: [150, 1500],
