@@ -61,10 +61,10 @@ const STIM_COLS = shuffle(["red", "green", "blue", "yellow"]);
 const AUD_STIM = [
     ["../tones_exp1_2/silence.wav"],
     [
-        "../tones_exp1_2/high_" + STIM_COLS[0] + ".wav",
-        "../tones_exp1_2/high_" + STIM_COLS[1] + ".wav",
-        "../tones_exp1_2/high_" + STIM_COLS[2] + ".wav",
-        "../tones_exp1_2/high_" + STIM_COLS[3] + ".wav",
+        "../tones_exp1_4/high_" + STIM_COLS[0] + ".wav",
+        "../tones_exp1_4/high_" + STIM_COLS[1] + ".wav",
+        "../tones_exp1_4/high_" + STIM_COLS[2] + ".wav",
+        "../tones_exp1_4/high_" + STIM_COLS[3] + ".wav",
     ],
 ];
 
