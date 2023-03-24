@@ -75,10 +75,10 @@ const TASK_INSTRUCTIONS1 = {
         text: `Willkommen zu unserem Experiment:<br><br>
            Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-           um das Experiment durchzuführen. Wir bitten dich, in den nächsten cs. 40 Minuten konzentriert zu arbeiten.<br><br>
+           um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 40 Minuten konzentriert zu arbeiten.<br><br>
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            hiwipibio@gmail.com<br><br>
-           Drücke eine beliebige Taste, um fortzufahren`,
+           Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         colour: "black",
         fontsize: 30,
@@ -771,7 +771,7 @@ function genExpSeq() {
         blk_type = "SH";
     }
 
-    for (let blk = 0; blk < TRIAL_TIMELINES_FH.length; blk += 1) {
+    for (let blk = 0; blk < TRIAL_TIMELINES_FH.length * 2; blk += 1) {
         if (blk == PRMS.nBlks / 2) {
             exp.push(HALF);
             if (VERSION === 1) {
