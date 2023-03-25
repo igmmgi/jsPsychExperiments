@@ -21,7 +21,7 @@ const jsPsych = initJsPsych({
 });
 
 // 2 counter balanced versions
-const VERSION = Number(jsPsych.data.urlVariables().version);
+const VERSION = 1; //Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 ////////////////////////////////////////////////////////////////////////
@@ -765,33 +765,32 @@ function genExpSeq() {
     let blk_type;
     if (VERSION === 1) {
         exp.push(TASK_INSTRUCTIONS_1ST_HALF_FEAR_HAPPY);
-        blk_type = "FH";
+        blk_type = repeatArray(["FH"], PRMS.nBlks / 2).concat(repeatArray(["SH"], PRMS.nBlks / 2));
     } else if (VERSION === 2) {
         exp.push(TASK_INSTRUCTIONS_1ST_HALF_SAD_HAPPY);
-        blk_type = "SH";
+        blk_type = repeatArray(["SH"], PRMS.nBlks / 2).concat(repeatArray(["FH"], PRMS.nBlks / 2));
     }
-
+    let blk_type_count = 0;
     for (let blk = 0; blk < TRIAL_TIMELINES_FH.length * 2; blk += 1) {
         if (blk == PRMS.nBlks / 2) {
+            blk_type_count = 0;
             exp.push(HALF);
             if (VERSION === 1) {
                 exp.push(TASK_INSTRUCTIONS_2ND_HALF_SAD_HAPPY);
-                blk_type = "SH";
             } else if (VERSION === 2) {
                 exp.push(TASK_INSTRUCTIONS_2ND_HALF_FEAR_HAPPY);
-                blk_type = "FH";
             }
         }
-        if (blk_type === "SH") {
+        if (blk_type[blk] === "SH") {
             exp.push(BLOCK_START_SH);
-        } else if (blk_type === "FH") {
+        } else if (blk_type[blk] === "FH") {
             exp.push(BLOCK_START_FH);
         }
         let blk_timeline;
-        if (blk_type === "FH") {
-            blk_timeline = TRIAL_TIMELINES_FH[blk];
-        } else if (blk_type === "SH") {
-            blk_timeline = TRIAL_TIMELINES_SH[blk];
+        if (blk_type[blk] === "FH") {
+            blk_timeline = TRIAL_TIMELINES_FH[blk_type_count];
+        } else if (blk_type[blk] === "SH") {
+            blk_timeline = TRIAL_TIMELINES_SH[blk_type_count];
         }
         blk_timeline.sample = {
             type: "fixed-repetitions",
@@ -799,6 +798,7 @@ function genExpSeq() {
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
+        blk_type_count += 1;
     }
 
     exp.push(SAVE_DATA);
