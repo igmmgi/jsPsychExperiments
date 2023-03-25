@@ -359,7 +359,7 @@ const VIDEO_TRIAL = {
     box_size: PRMS.box_size,
     box_frame: PRMS.box_frame,
     data: {
-        stim: "rg1",
+        stim: "rg2",
         video: jsPsych.timelineVariable("video"),
         question: jsPsych.timelineVariable("question"),
         box_colour_left: jsPsych.timelineVariable("box_colour_left"),
@@ -400,7 +400,7 @@ const BLOCK_FEEDBACK = {
     stimulus: "",
     on_start: function (trial) {
         let block_dvs = calculateBlockPerformance({
-            filter_options: { stim: "rg1", blockNum: PRMS.cBlk },
+            filter_options: { stim: "rg2", blockNum: PRMS.cBlk },
             corrColumn: "error",
             corrValue: 0,
         });
@@ -523,7 +523,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-    saveData("/Common/write_data.php", data_fn, { stim: "rg1" });
+    saveData("/Common/write_data.php", data_fn, { stim: "rg2" });
     // saveDataLocal(data_fn, { stim: "rg1" });
 }
 
