@@ -21,7 +21,7 @@ const jsPsych = initJsPsych({
 });
 
 // 2 counter balanced versions
-const VERSION = Number(jsPsych.data.urlVariables().version);
+const VERSION = 2; //Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 ////////////////////////////////////////////////////////////////////////
@@ -259,7 +259,7 @@ const PRELOAD = {
     ],
 };
 
-const IMAGE_NUMBERS = {
+const IMAGE_NUMBERS_FH = {
     nimstim: randomSelection(range(0, nimstim_fear.length), 40),
     mpi_old: randomSelection(range(0, mpi_fear_old.length), 52),
     mpi_middle: randomSelection(range(0, mpi_fear_middle.length), 52),
@@ -269,11 +269,11 @@ const IMAGE_NUMBERS = {
     radiate1: randomSelection(range(0, radiate_fear.length), 52),
     radiate2: null,
 };
-IMAGE_NUMBERS.radiate2 = randomSelection(
-    range(0, radiate_fear.length).filter((x) => !IMAGE_NUMBERS.radiate1.includes(x)),
+IMAGE_NUMBERS_FH.radiate2 = randomSelection(
+    range(0, radiate_fear.length).filter((x) => !IMAGE_NUMBERS_FH.radiate1.includes(x)),
     52,
 );
-// console.log(IMAGE_NUMBERS);
+// console.log(IMAGE_NUMBERS_FH);
 
 function generateStimulusCombinationsFearHappy(dataset_fear, dataset_happy, dataset_name, image_numbers) {
     let simon_type = shuffle(
@@ -318,44 +318,44 @@ const TRIALS_NIMSTIM_FH = generateStimulusCombinationsFearHappy(
   nimstim_fear, 
   nimstim_happy, 
   'nimstim', 
-  IMAGE_NUMBERS.nimstim
+  IMAGE_NUMBERS_FH.nimstim
 );
 const TRIALS_MPI_YOUNG_FH = generateStimulusCombinationsFearHappy(
     mpi_fear_young,
     mpi_happy_young,
     "mpi_young",
-    IMAGE_NUMBERS.mpi_young,
+    IMAGE_NUMBERS_FH.mpi_young,
 );
 const TRIALS_MPI_MIDDLE_FH = generateStimulusCombinationsFearHappy(
     mpi_fear_middle,
     mpi_happy_middle,
     "mpi_middle",
-    IMAGE_NUMBERS.mpi_middle,
+    IMAGE_NUMBERS_FH.mpi_middle,
 );
 const TRIALS_MPI_OLD_FH = generateStimulusCombinationsFearHappy(
     mpi_fear_old,
     mpi_happy_old,
     "mpi_old",
-    IMAGE_NUMBERS.mpi_old,
+    IMAGE_NUMBERS_FH.mpi_old,
 );
-const TRIALS_KDEF_FH = generateStimulusCombinationsFearHappy(kdef_fear, kdef_happy, "kdef", IMAGE_NUMBERS.kdef);
+const TRIALS_KDEF_FH = generateStimulusCombinationsFearHappy(kdef_fear, kdef_happy, "kdef", IMAGE_NUMBERS_FH.kdef);
 const TRIALS_RADBOUD_FH = generateStimulusCombinationsFearHappy(
     radboud_fear,
     radboud_happy,
     "radboud",
-    IMAGE_NUMBERS.radboud,
+    IMAGE_NUMBERS_FH.radboud,
 );
 const TRIALS_RADIATE1_FH = generateStimulusCombinationsFearHappy(
     radiate_fear,
     radiate_happy,
     "radiate",
-    IMAGE_NUMBERS.radiate1,
+    IMAGE_NUMBERS_FH.radiate1,
 );
 const TRIALS_RADIATE2_FH = generateStimulusCombinationsFearHappy(
     radiate_fear,
     radiate_happy,
     "radiate",
-    IMAGE_NUMBERS.radiate2,
+    IMAGE_NUMBERS_FH.radiate2,
 );
 
 // console.log(TRIALS_NIMSTIM_FH);
@@ -366,6 +366,22 @@ const TRIALS_RADIATE2_FH = generateStimulusCombinationsFearHappy(
 // console.log(TRIALS_RADBOUD_FH);
 // console.log(TRIALS_RADIATE1_FH);
 // console.log(TRIALS_RADIATE2_FH);
+
+const IMAGE_NUMBERS_SH = {
+    nimstim: randomSelection(range(0, nimstim_sad.length), 40),
+    mpi_old: randomSelection(range(0, mpi_sad_old.length), 52),
+    mpi_middle: randomSelection(range(0, mpi_sad_middle.length), 52),
+    mpi_young: randomSelection(range(0, mpi_sad_young.length), 52),
+    kdef: randomSelection(range(0, kdef_sad.length), 52),
+    radboud: randomSelection(range(0, radboud_sad.length), 52),
+    radiate1: randomSelection(range(0, radiate_sad.length), 52),
+    radiate2: null,
+};
+IMAGE_NUMBERS_SH.radiate2 = randomSelection(
+    range(0, radiate_sad.length).filter((x) => !IMAGE_NUMBERS_SH.radiate1.includes(x)),
+    52,
+);
+// console.log(IMAGE_NUMBERS_SH);
 
 function generateStimulusCombinationsSadHappy(dataset_sad, dataset_happy, dataset_name, image_numbers) {
     let simon_type = shuffle(
@@ -410,44 +426,44 @@ const TRIALS_NIMSTIM_SH = generateStimulusCombinationsSadHappy(
   nimstim_sad, 
   nimstim_happy, 
   'nimstim', 
-  IMAGE_NUMBERS.nimstim
+  IMAGE_NUMBERS_SH.nimstim
 );
 const TRIALS_MPI_YOUNG_SH = generateStimulusCombinationsSadHappy(
     mpi_sad_young,
     mpi_happy_young,
     "mpi_young",
-    IMAGE_NUMBERS.mpi_young,
+    IMAGE_NUMBERS_SH.mpi_young,
 );
 const TRIALS_MPI_MIDDLE_SH = generateStimulusCombinationsSadHappy(
     mpi_sad_middle,
     mpi_happy_middle,
     "mpi_middle",
-    IMAGE_NUMBERS.mpi_middle,
+    IMAGE_NUMBERS_SH.mpi_middle,
 );
 const TRIALS_MPI_OLD_SH = generateStimulusCombinationsSadHappy(
     mpi_sad_old,
     mpi_happy_old,
     "mpi_old",
-    IMAGE_NUMBERS.mpi_old,
+    IMAGE_NUMBERS_SH.mpi_old,
 );
-const TRIALS_KDEF_SH = generateStimulusCombinationsSadHappy(kdef_sad, kdef_happy, "kdef", IMAGE_NUMBERS.kdef);
+const TRIALS_KDEF_SH = generateStimulusCombinationsSadHappy(kdef_sad, kdef_happy, "kdef", IMAGE_NUMBERS_SH.kdef);
 const TRIALS_RADBOUD_SH = generateStimulusCombinationsSadHappy(
     radboud_sad,
     radboud_happy,
     "radboud",
-    IMAGE_NUMBERS.radboud,
+    IMAGE_NUMBERS_SH.radboud,
 );
 const TRIALS_RADIATE1_SH = generateStimulusCombinationsSadHappy(
     radiate_sad,
     radiate_happy,
     "radiate",
-    IMAGE_NUMBERS.radiate1,
+    IMAGE_NUMBERS_SH.radiate1,
 );
 const TRIALS_RADIATE2_SH = generateStimulusCombinationsSadHappy(
     radiate_sad,
     radiate_happy,
     "radiate",
-    IMAGE_NUMBERS.radiate2,
+    IMAGE_NUMBERS_SH.radiate2,
 );
 
 // console.log(TRIALS_NIMSTIM_SH);
@@ -493,7 +509,6 @@ function codeTrial() {
     let dat = jsPsych.data.get().last(1).values()[0];
     dat.rt = dat.rt !== null ? dat.rt - PRMS.fixDur : PRMS.tooSlow;
     dat.target = baseFileName(dat.target);
-    console.log(dat.compatibility);
 
     let corrCode = 0;
     let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
@@ -566,6 +581,7 @@ const SIMON_STIMULUS = {
         corrResp: jsPsych.timelineVariable('key'),
     },
     on_start: function(trial) {
+    console.log(trial.data.target);
         trial.func_args = [
             { draw_fixation: true, draw_image: false, image: trial.data.target, side: trial.data.target_side },
             { draw_fixation: true, draw_image: true, image: trial.data.target, side: trial.data.target_side },
@@ -734,7 +750,7 @@ function save() {
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
     saveData("/Common/write_data.php", data_fn, { stim: "simon" });
-    // saveDataLocal(data_fn, { stim: 'simon' });
+    //saveDataLocal(data_fn, { stim: "simon" });
 }
 
 const SAVE_DATA = {
