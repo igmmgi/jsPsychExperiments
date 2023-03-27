@@ -58,9 +58,9 @@ const PRMS = {
 
 let idx = PRMS.target_fh.indexOf("änglichstes");
 if (idx === 0) {
-    PRMS["target_sh"] = ["traurige", "glückliches"];
+    PRMS["target_sh"] = ["trauriges", "glückliches"];
 } else if (idx === 1) {
-    PRMS["target_sh"] = ["glückliches", "traurige"];
+    PRMS["target_sh"] = ["glückliches", "trauriges"];
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -379,13 +379,13 @@ function generateStimulusCombinationsSadHappy(dataset_sad, dataset_happy, datase
             tmp.target = dataset_sad[image_numbers[i]];
             tmp.target_type = "sad";
             tmp.target_side = "left";
-            tmp.key = PRMS.respKeys[PRMS.target_sh.indexOf("traurige")];
+            tmp.key = PRMS.respKeys[PRMS.target_sh.indexOf("trauriges")];
             tmp.comp = tmp.key === PRMS.respKeys[0] ? "comp" : "incomp";
         } else if (simon_type[i] === "sad_right") {
             tmp.target = dataset_sad[image_numbers[i]];
             tmp.target_type = "sad";
             tmp.target_side = "right";
-            tmp.key = PRMS.respKeys[PRMS.target_sh.indexOf("traurige")];
+            tmp.key = PRMS.respKeys[PRMS.target_sh.indexOf("trauriges")];
             tmp.comp = tmp.key === PRMS.respKeys[1] ? "comp" : "incomp";
         } else if (simon_type[i] === "happy_left") {
             tmp.target = dataset_happy[image_numbers[i]];
