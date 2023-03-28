@@ -34,7 +34,6 @@ const kdef_sad = [
     "../images/kdef/sad/AF35SAS.png",
     "../images/kdef/sad/AM01SAS.png",
     "../images/kdef/sad/AM02SAS.png",
-    "../images/kdef/sad/AM03SAS.png",
     "../images/kdef/sad/AM04SAS.png",
     "../images/kdef/sad/AM05SAS.png",
     "../images/kdef/sad/AM06SAS.png",
