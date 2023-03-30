@@ -219,43 +219,50 @@ const TASK_INSTRUCTIONS_2ND_HALF_FEAR_HAPPY = {
 
 // console.log(nimstim_fear);
 // console.log(nimstim_happy);
+// console.log(nimstim_sad);
 // console.log(mpi_fear_old);
-// console.log(mpi_fear_middle);
-// console.log(mpi_fear_young);
 // console.log(mpi_happy_old);
+// console.log(mpi_sad_old);
+// console.log(mpi_fear_middle);
 // console.log(mpi_happy_middle);
+// console.log(mpi_sad_middle);
+// console.log(mpi_fear_young);
 // console.log(mpi_happy_young);
+// console.log(mpi_sad_young);
 // console.log(kdef_fear);
 // console.log(kdef_happy);
+// console.log(kdef_sad);
 // console.log(radboud_fear);
 // console.log(radboud_happy);
+// console.log(radboud_sad);
 // console.log(radiate_fear);
 // console.log(radiate_happy);
+// console.log(radiate_sad);
 
 const PRELOAD = {
     type: jsPsychPreload,
     images: [
-        nimstim_sad,
         nimstim_fear,
         nimstim_happy,
-        mpi_sad_old,
+        nimstim_sad,
         mpi_fear_old,
         mpi_happy_old,
-        mpi_sad_middle,
+        mpi_sad_old,
         mpi_fear_middle,
         mpi_happy_middle,
-        mpi_sad_young,
+        mpi_sad_middle,
         mpi_fear_young,
         mpi_happy_young,
-        kdef_sad,
+        mpi_sad_young,
         kdef_fear,
         kdef_happy,
-        radboud_sad,
+        kdef_sad,
         radboud_fear,
         radboud_happy,
-        radiate_sad,
+        radboud_sad,
         radiate_fear,
         radiate_happy,
+        radiate_sad,
     ],
 };
 
@@ -366,6 +373,23 @@ const TRIALS_RADIATE2_FH = generateStimulusCombinationsFearHappy(
 // console.log(TRIALS_RADBOUD_FH);
 // console.log(TRIALS_RADIATE1_FH);
 // console.log(TRIALS_RADIATE2_FH);
+// function check_comp(dataset) {
+//     let comp = 0;
+//     for (var i = 0; i < dataset.length; i++) {
+//         if (dataset[i].comp === "comp") {
+//             comp += 1;
+//         }
+//     }
+//     console.log(comp);
+// }
+// check_comp(TRIALS_NIMSTIM_FH);
+// check_comp(TRIALS_MPI_YOUNG_FH);
+// check_comp(TRIALS_MPI_MIDDLE_FH);
+// check_comp(TRIALS_MPI_OLD_FH);
+// check_comp(TRIALS_KDEF_FH);
+// check_comp(TRIALS_RADBOUD_FH);
+// check_comp(TRIALS_RADIATE1_FH);
+// check_comp(TRIALS_RADIATE2_FH);
 
 const IMAGE_NUMBERS_SH = {
     nimstim: randomSelection(range(0, nimstim_sad.length), 40),
@@ -474,6 +498,23 @@ const TRIALS_RADIATE2_SH = generateStimulusCombinationsSadHappy(
 // console.log(TRIALS_RADBOUD_SH);
 // console.log(TRIALS_RADIATE1_SH);
 // console.log(TRIALS_RADIATE2_SH);
+// function check_comp(dataset) {
+//     let comp = 0;
+//     for (var i = 0; i < dataset.length; i++) {
+//         if (dataset[i].comp === "comp") {
+//             comp += 1;
+//         }
+//     }
+//     console.log(comp);
+// }
+// check_comp(TRIALS_NIMSTIM_SH);
+// check_comp(TRIALS_MPI_YOUNG_SH);
+// check_comp(TRIALS_MPI_MIDDLE_SH);
+// check_comp(TRIALS_MPI_OLD_SH);
+// check_comp(TRIALS_KDEF_SH);
+// check_comp(TRIALS_RADBOUD_SH);
+// check_comp(TRIALS_RADIATE1_SH);
+// check_comp(TRIALS_RADIATE2_SH);
 
 ////////////////////////////////////////////////////////////////////////
 //                              Exp Parts                             //

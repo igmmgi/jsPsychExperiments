@@ -32,7 +32,6 @@ const nimstim_fear = [
     "../images/nimstim/fear/32M_FE_O.png",
     "../images/nimstim/fear/33M_FE_O.png",
     "../images/nimstim/fear/34M_FE_O.png",
-    "../images/nimstim/fear/35M_FE_O.png",
     "../images/nimstim/fear/36M_FE_O.png",
     "../images/nimstim/fear/37M_FE_O.png",
     "../images/nimstim/fear/38M_FE_O.png",
