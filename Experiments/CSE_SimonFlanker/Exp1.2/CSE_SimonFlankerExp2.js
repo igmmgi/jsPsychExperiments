@@ -220,7 +220,7 @@ function drawFeedback() {
     }
 }
 
-function codeTrial() {
+function code_trial() {
     "use strict";
 
     let dat = jsPsych.data.get().last(1).values()[0];
@@ -364,7 +364,7 @@ const sf_stimulus = {
         }
     },
     on_finish: function () {
-        codeTrial();
+        code_trial();
     },
 };
 

@@ -545,7 +545,7 @@ const TRIAL_FEEDBACK = {
     },
 };
 
-function codeTrial() {
+function code_trial() {
     "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
     dat.rt = dat.rt !== null ? dat.rt - PRMS.fixDur : PRMS.tooSlow;
@@ -629,7 +629,7 @@ const SIMON_STIMULUS = {
         ];
     },
     on_finish: function() {
-        codeTrial();
+        code_trial();
         PRMS.cTrl += 1;
     },
 };
@@ -827,6 +827,7 @@ function genExpSeq() {
         exp.push(TASK_INSTRUCTIONS_1ST_HALF_SAD_HAPPY);
         blk_type = repeatArray(["SH"], PRMS.nBlks / 2).concat(repeatArray(["FH"], PRMS.nBlks / 2));
     }
+
     let blk_type_count = 0;
     for (let blk = 0; blk < TRIAL_TIMELINES_FH.length * 2; blk += 1) {
         if (blk == PRMS.nBlks / 2) {
