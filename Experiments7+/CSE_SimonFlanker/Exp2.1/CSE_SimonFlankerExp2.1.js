@@ -39,7 +39,7 @@ const PRMS = {
 // 4 counter balanced versions
 // Version 1: irE-S -> riE-S
 // Version 2: riE-S -> irE-S
-const VERSION = 2; //Number(jsPsych.data.urlVariables().version);
+const VERSION = 1; //Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 ////////////////////////////////////////////////////////////////////////
@@ -310,7 +310,7 @@ const STIMULUS = {
     response_ends_trial: true,
     choices: PRMS.respKeys,
     clear_screen: [1, 1],
-    stimulus_onset: [1, jsPsych.timelineVariable("delay")],
+    stimulus_onset: [0, jsPsych.timelineVariable("delay")],
     trial_duration: null,
     func: [draw_stimulus, draw_stimulus],
     func_args: [
@@ -428,15 +428,15 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check(CANVAS_SIZE));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    exp.push(mouseCursor(false));
-    exp.push(TASK_INSTRUCTIONS1);
-    exp.push(TASK_INSTRUCTIONS2);
-    exp.push(TASK_INSTRUCTIONS3);
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(CANVAS_SIZE));
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    // exp.push(mouseCursor(false));
+    // exp.push(TASK_INSTRUCTIONS1);
+    // exp.push(TASK_INSTRUCTIONS2);
+    // exp.push(TASK_INSTRUCTIONS3);
 
     let blk_type;
     if (VERSION === 1) {

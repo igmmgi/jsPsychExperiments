@@ -1,0 +1,6 @@
+.underline {
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-color: Black;
+    text-decoration-thickness: 3px;
+}
