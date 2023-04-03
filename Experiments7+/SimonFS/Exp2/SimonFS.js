@@ -22,6 +22,8 @@ const PRMS = {
     stimDur: [500, 250],
     trialDur: [2500, 1450],
     simonPos: 100,
+    nTooManyErrors: 10,
+    tooManyErrorsDur: 60000,
     fbTxtSizeBlock: 20,
     respKeys: ["Q", "P"],
 };
@@ -183,6 +185,32 @@ const TASK_INSTRUCTIONS_FACE3 = {
         PRESS_TO_CONTINUE,
 };
 
+const TOO_MANY_ERRORS = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    response_ends_trial: false,
+    trial_duration: PRMS.tooManyErrorsDur,
+    stimulus:
+        generate_formatted_html({
+            text: `Zu viele Fehler (>= 10)!<br>`,
+            bold: true,
+            fontsize: 36,
+            align: "center",
+            lineheight: 1.5,
+        }) +
+        REMINDER +
+        KEYMAPPING_FACE +
+        generate_formatted_html({
+            text: `<br>Das Experiment wird automatisch in 60 Sekunden fortgesetzt!`,
+            bold: true,
+            fontsize: 26,
+            align: "center",
+            lineheight: 1.5,
+        }),
+};
+
 const REMINDER_FACE = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
@@ -307,8 +335,8 @@ function code_trial() {
 
     let comp;
     if (
-        ((dat.position === "left") & (dat.corrResp === PRMS.respKeys[0])) |
-        ((dat.position === "right") & (dat.corrResp === PRMS.respKeys[1]))
+        (dat.position === "left" && dat.corrResp === PRMS.respKeys[0]) ||
+        (dat.position === "right" && dat.corrResp === PRMS.respKeys[1])
     ) {
         comp = "comp";
     } else {
@@ -368,7 +396,7 @@ const STIMULUS = {
     },
     on_start: function (trial) {
         // different trial/stimulus durations within practice blocks
-        if ((PRMS.cBlk === 1) | (PRMS.cBlk === PRMS.nBlks / 2 + 1)) {
+        if (PRMS.cBlk === 1 || PRMS.cBlk === PRMS.nBlks / 2 + 1) {
             trial.trial_duration = PRMS.trialDur[0];
             trial.data["trial_duration"] = PRMS.trialDur[0];
             trial.stimulus_onset = [0, PRMS.stimDur[0]];
@@ -426,12 +454,22 @@ const BLOCK_FEEDBACK = {
     post_trial_gap: PRMS.waitDur,
     on_start: function (trial) {
         let block_dvs = calculateBlockPerformance({ filter_options: { stim: "simon_emotion", blockNum: PRMS.cBlk } });
-        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.nError, (language = "de"));
+        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.nError);
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
     on_finish: function () {
         PRMS.cTrl = 1;
         PRMS.cBlk += 1;
+    },
+};
+
+const IF_TOO_MANY_ERRORS = {
+    timeline: [TOO_MANY_ERRORS],
+    conditional_function: function () {
+        let block_dvs = calculateBlockPerformance({
+            filter_options: { stim: "simon_emotion", blockNum: PRMS.cBlk - 1 },
+        });
+        return block_dvs.nError >= PRMS.nTooManyErrors;
     },
 };
 
@@ -513,29 +551,41 @@ function genExpSeq() {
 
     let exp = [];
 
-    //exp.push(fullscreen(true));
-    //exp.push(browser_check(CANVAS_SIZE));
-    //exp.push(resize_browser());
-    //exp.push(welcome_message());
-    //exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    //exp.push(mouseCursor(false));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(CANVAS_SIZE));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
     exp.push(PRELOAD);
     exp.push(WELCOME);
-    exp.push(TASK_INSTRUCTIONS_FACE1);
-    exp.push(TASK_INSTRUCTIONS_FACE2);
-    exp.push(TASK_INSTRUCTIONS_FACE3);
-    exp.push(REMINDER_FACE);
-    exp.push(HALF_WAY);
-    exp.push(TASK_INSTRUCTIONS_NONFACE1);
-    exp.push(TASK_INSTRUCTIONS_NONFACE2);
-    exp.push(TASK_INSTRUCTIONS_NONFACE3);
-    exp.push(REMINDER_NONFACE);
 
     let blk_type = repeatArray(PRMS.taskOrder[0], PRMS.nBlks / 2).concat(
         repeatArray(PRMS.taskOrder[1], PRMS.nBlks / 2),
     );
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+        // Is task changing?
+        if (blk === PRMS.nBlks / 2) {
+            exp.push(HALF_WAY);
+        }
+        // Main task instructions
+        if ([0, PRMS.nBlks / 2].includes(blk) && blk_type[blk] === "face") {
+            exp.push(TASK_INSTRUCTIONS_FACE1);
+            exp.push(TASK_INSTRUCTIONS_FACE2);
+            exp.push(TASK_INSTRUCTIONS_FACE3);
+        } else if ([0, PRMS.nBlks / 2].includes(blk) && blk_type[blk] === "nonface") {
+            exp.push(TASK_INSTRUCTIONS_NONFACE1);
+            exp.push(TASK_INSTRUCTIONS_NONFACE2);
+            exp.push(TASK_INSTRUCTIONS_NONFACE3);
+        }
+        // Simple reminder at start of block
+        if (blk_type[blk] === "face") {
+            exp.push(REMINDER_FACE);
+        } else if (blk_type[blk] === "nonface") {
+            exp.push(REMINDER_NONFACE);
+        }
+
         let blk_timeline;
         if (blk_type[blk] === "face") {
             blk_timeline = TRIAL_TIMELINE_FACE_BLOCK;
@@ -548,6 +598,9 @@ function genExpSeq() {
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
+        exp.push(IF_TOO_MANY_ERRORS);
+
+        exp.push(SAVE_DATA_BLOCKWISE);
     }
 
     // save data
