@@ -36,7 +36,7 @@ const PRMS = {
     respKeys: ["Q", "P"],
 };
 
-// 4 counter balanced versions
+// 2 counter balanced versions
 // Version 1: irE-S -> riE-S
 // Version 2: riE-S -> irE-S
 const VERSION = 1; //Number(jsPsych.data.urlVariables().version);
@@ -213,13 +213,12 @@ function code_trial() {
     let comp;
     if (dat.stim_type === "simon") {
         comp =
-            ((dat.corrResp === "Q") & (dat.position < 0)) | ((dat.corrResp === "P") & (dat.position > 0))
+            (dat.corrResp === "Q" && dat.position < 0) || (dat.corrResp === "P" && dat.position > 0)
                 ? "comp"
                 : "incomp";
     } else {
-        comp = dat.stim1.includes(dat.stim2) | dat.stim2.includes(dat.stim1) ? "comp" : "incomp";
+        comp = dat.stim1.includes(dat.stim2) || dat.stim2.includes(dat.stim1) ? "comp" : "incomp";
     }
-    console.log(dat.stim_type);
 
     let correctKey;
     if (dat.response !== null) {
@@ -279,7 +278,7 @@ const BLOCK_FEEDBACK = {
     post_trial_gap: PRMS.waitDur,
     on_start: function (trial) {
         let block_dvs = calculateBlockPerformance({ filter_options: { stim: "cse_sf", blockNum: PRMS.cBlk } });
-        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
+        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate);
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
     on_finish: function () {
@@ -446,6 +445,7 @@ function genExpSeq() {
     }
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+        exp.push(TASK_INSTRUCTIONS_BLOCK);
         let blk_timeline;
         if (blk_type[blk] === "irE_S") {
             blk_timeline = TRIAL_TIMELINE_irE_S;
@@ -459,6 +459,7 @@ function genExpSeq() {
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
+        exp.push(SAVE_DATA_BLOCKWISE);
     }
 
     // save data
