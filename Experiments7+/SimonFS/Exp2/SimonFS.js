@@ -21,7 +21,8 @@ const PRMS = {
     stimSize: "40px monospace",
     stimDur: [500, 250],
     trialDur: [2500, 1450],
-    simonPos: 100,
+    wait: 1000,
+    simonPos: 200,
     nTooManyErrors: 10,
     tooManyErrorsDur: 60000,
     fbTxtSizeBlock: 20,
@@ -33,7 +34,7 @@ const PRMS = {
 // Version 2: negative_left/positive_right and nonface/face order
 // Version 3: positive_left/negative_right and face/nonface order
 // Version 4: positive_left/negative_right and nonface/face order
-const VERSION = 1; //Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 if ([1, 2].includes(VERSION)) {
@@ -473,6 +474,15 @@ const IF_TOO_MANY_ERRORS = {
     },
 };
 
+const WAIT_BLANK = {
+    type: jsPsychStaticCanvasKeyboardResponse,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    trial_duration: PRMS.wait,
+    response_ends_trial: false,
+};
+
 // prettier-ignore
 const TRIAL_TABLE_FACE_BLOCK = [
     { block_type: "face", pic_type: "face_happy", target: IMAGES[0], valance: "positive",          position: "left",  corrResp: PRMS.respKeys[PRMS.respEmotion.indexOf("positive")] },
@@ -530,19 +540,6 @@ const SAVE_DATA = {
     post_trial_gap: 3000,
 };
 
-function save_blockwise() {
-    jsPsych.data.addProperties({ vpNum: VP_NUM });
-    saveData("/Common/write_data.php", `${DIR_NAME}data/version${VERSION}/blockwise/${EXP_NAME}_${VP_NUM}`, {
-        stim: "simon_emotion",
-    });
-}
-
-const SAVE_DATA_BLOCKWISE = {
-    type: jsPsychCallFunction,
-    func: save_blockwise,
-    post_trial_gap: 1000,
-};
-
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -585,6 +582,7 @@ function genExpSeq() {
         } else if (blk_type[blk] === "nonface") {
             exp.push(REMINDER_NONFACE);
         }
+        exp.push(WAIT_BLANK);
 
         let blk_timeline;
         if (blk_type[blk] === "face") {
@@ -599,8 +597,6 @@ function genExpSeq() {
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
         exp.push(IF_TOO_MANY_ERRORS);
-
-        exp.push(SAVE_DATA_BLOCKWISE);
     }
 
     // save data
