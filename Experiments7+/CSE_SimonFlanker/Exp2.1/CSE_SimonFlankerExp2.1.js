@@ -39,7 +39,7 @@ const PRMS = {
 // 2 counter balanced versions
 // Version 1: irE-S -> riE-S
 // Version 2: riE-S -> irE-S
-const VERSION = 1; //Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 ////////////////////////////////////////////////////////////////////////
@@ -59,6 +59,13 @@ const RESP_TEXT =
         fontsize: 26,
     });
 
+const PRESS_TO_CONTINUE = generate_formatted_html({
+    text: `Drücke eine beliebige Taste, um fortzufahren!`,
+    bold: true,
+    fontsize: 26,
+    align: "center",
+});
+
 const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
@@ -66,11 +73,11 @@ const TASK_INSTRUCTIONS1 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Willkommen bei unserem Experiment:<br><br>
-        Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-        Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
-        genügend Zeit hast, um das Experiment durchzuführen.
-        Wir bitten dich die ca. 40 Minuten konzentriert zu arbeiten.<br><br>
-        Drücke eine beliebige Taste, um fortzufahren!`,
+               Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+               Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
+               genügend Zeit hast, um das Experiment durchzuführen.
+               Wir bitten dich die ca. 40 Minuten konzentriert zu arbeiten.<br><br>
+               Drücke eine beliebige Taste, um fortzufahren!`,
         bold: true,
         fontsize: 26,
         align: "left",
@@ -86,24 +93,18 @@ const TASK_INSTRUCTIONS2 = {
     stimulus:
         generate_formatted_html({
             text: `Aufgabe:<br><br>
-        In diesem Experiment musst du auf verschiedene Buchstaben
-        so schnell und so genau wie möglich reagieren. Der Ziel-Buchstabe
-        erscheint in manchen Durchgängen in der Mitte des Bildschirms (und ist
-        von irrelevanten Buchstaben umgeben) und in anderen Durchgängen links oder
-        rechts auf dem Bildschirm. Es gilt die folgende Zuordnung:<br><br>`,
+                   In diesem Experiment musst du auf verschiedene Buchstaben
+                   so schnell und so genau wie möglich reagieren. Der Ziel-Buchstabe
+                   erscheint in manchen Durchgängen in der Mitte des Bildschirms (und ist
+                   von irrelevanten Buchstaben umgeben) und in anderen Durchgängen links oder
+                   rechts auf dem Bildschirm. Es gilt die folgende Zuordnung:<br><br>`,
             bold: true,
             fontsize: 26,
             align: "left",
             lineheight: 1.5,
         }) +
         RESP_TEXT +
-        generate_formatted_html({
-            text: `<br>Drücke eine beliebige Taste, um fortzufahren!`,
-            bold: true,
-            fontsize: 26,
-            align: "left",
-            lineheight: 1.5,
-        }),
+        PRESS_TO_CONTINUE,
 };
 
 const TASK_INSTRUCTIONS3 = {
@@ -113,11 +114,11 @@ const TASK_INSTRUCTIONS3 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Reagiere immer nur auf den Ziel-Buchstaben. Das heißt:<br><br>
-        Wenn der Ziel-Buchstabe in der Mitte erscheint, dann ignoriere die umliegenden Buchstaben.<br><br>
-        Wenn nur ein Ziel-Buchstabe links oder rechts auf dem Bildschirm präsentiert wird,
-        dann ignoriere die links/rechts Position auf dem Bildschirm.<br><br>
-        Reagiere so schnell und so genau wie möglich!<br><br>
-        Drücke eine beliebige Taste, um fortzufahren.`,
+               Wenn der Ziel-Buchstabe in der Mitte erscheint, dann ignoriere die umliegenden Buchstaben.<br><br>
+               Wenn nur ein Ziel-Buchstabe links oder rechts auf dem Bildschirm präsentiert wird,
+               dann ignoriere die links/rechts Position auf dem Bildschirm.<br><br>
+               Reagiere so schnell und so genau wie möglich!<br><br>
+               Drücke eine beliebige Taste, um fortzufahren.`,
         bold: true,
         fontsize: 26,
         align: "left",
@@ -125,14 +126,36 @@ const TASK_INSTRUCTIONS3 = {
     }),
 };
 
-const TASK_INSTRUCTIONS_BLOCK = {
+const TASK_INSTRUCTIONS_BLOCK_irE_S = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus:
         generate_formatted_html({
-            text: `Wenn du bereit für den Block bist, dann positioniere
+            text: `Upcoming task requirements: IR flanker / Simon <br><br>
+                   Wenn du bereit für den Block bist, dann positioniere
+                   deine Hände auf die Tastatur.<br>
+                   Zeil - Buchstabe erscheint entweder in der Mitte des Bildschirms
+                   oder links/rechts auf dem Bildschirm. Es gilt:`,
+            bold: true,
+            fontsize: 26,
+            align: "left",
+            lineheight: 1.5,
+        }) +
+        RESP_TEXT +
+        PRESS_TO_CONTINUE,
+};
+
+const TASK_INSTRUCTIONS_BLOCK_riE_S = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus:
+        generate_formatted_html({
+            text: `Upcoming task requirements: RI flanker / Simon <br><br>
+        Wenn du bereit für den Block bist, dann positioniere
         deine Hände auf die Tastatur.<br>
         Zeil - Buchstabe erscheint entweder in der Mitte des Bildschirms
         oder links/rechts auf dem Bildschirm. Es gilt:`,
@@ -142,13 +165,7 @@ const TASK_INSTRUCTIONS_BLOCK = {
             lineheight: 1.5,
         }) +
         RESP_TEXT +
-        generate_formatted_html({
-            text: `Drücke eine beliebige Taste, um fortzufahren!`,
-            bold: true,
-            fontsize: 26,
-            align: "left",
-            lineheight: 1.5,
-        }),
+        PRESS_TO_CONTINUE,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -427,15 +444,15 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(CANVAS_SIZE));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
-    // exp.push(TASK_INSTRUCTIONS1);
-    // exp.push(TASK_INSTRUCTIONS2);
-    // exp.push(TASK_INSTRUCTIONS3);
+    exp.push(fullscreen(true));
+    exp.push(browser_check(CANVAS_SIZE));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
+    exp.push(TASK_INSTRUCTIONS1);
+    exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
 
     let blk_type;
     if (VERSION === 1) {
@@ -445,11 +462,12 @@ function genExpSeq() {
     }
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
-        exp.push(TASK_INSTRUCTIONS_BLOCK);
         let blk_timeline;
         if (blk_type[blk] === "irE_S") {
+            exp.push(TASK_INSTRUCTIONS_BLOCK_irE_S);
             blk_timeline = TRIAL_TIMELINE_irE_S;
         } else if (blk_type[blk] === "riE_S") {
+            exp.push(TASK_INSTRUCTIONS_BLOCK_riE_S);
             blk_timeline = TRIAL_TIMELINE_riE_S;
         }
         blk_timeline.sample = {
