@@ -11,8 +11,8 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     nBlks: 16,
-    //nTrls: 64, // number of trials in subsequent blocks
-    nTrls: 8, // number of trials in subsequent blocks
+    nTrlsP: 24, // number of trials in practice blocks
+    nTrlsE: 64, // number of trials in exp blocks
     iti: 500,
     cTrl: 1, // count trials
     cBlk: 1, // count blocks
@@ -24,7 +24,7 @@ const PRMS = {
     wait: 1000,
     simonPos: 200,
     nTooManyErrors: 10,
-    tooManyErrorsDur: 60000,
+    tooManyErrorsDur: 30000,
     fbTxtSizeBlock: 20,
     respKeys: ["Q", "P"],
 };
@@ -103,12 +103,14 @@ const PRESS_TO_CONTINUE = generate_formatted_html({
     align: "center",
 });
 
-const REMINDER = generate_formatted_html({
-    text: `Zur Errinnerung:`,
-    bold: true,
-    fontsize: 26,
-    align: "center",
-});
+function reminder() {
+    return generate_formatted_html({
+        text: `Beginn Block: ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>Zur Errinnerung:`,
+        bold: true,
+        fontsize: 32,
+        align: "center",
+    });
+}
 
 const WELCOME = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -181,7 +183,7 @@ const TASK_INSTRUCTIONS_FACE3 = {
             align: "left",
             lineheight: 1.5,
         }) +
-        REMINDER +
+        reminder() +
         KEYMAPPING_FACE +
         PRESS_TO_CONTINUE,
 };
@@ -201,7 +203,7 @@ const TOO_MANY_ERRORS = {
             align: "center",
             lineheight: 1.5,
         }) +
-        REMINDER +
+        reminder() +
         KEYMAPPING_FACE +
         generate_formatted_html({
             text: `<br>Das Experiment wird automatisch in 60 Sekunden fortgesetzt!`,
@@ -217,7 +219,10 @@ const REMINDER_FACE = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: REMINDER + KEYMAPPING_FACE + PRESS_TO_CONTINUE,
+    stimulus: "",
+    on_start: function (trial) {
+        trial.stimulus = reminder() + KEYMAPPING_FACE + PRESS_TO_CONTINUE;
+    },
 };
 
 const TASK_INSTRUCTIONS_NONFACE1 = {
@@ -272,7 +277,7 @@ const TASK_INSTRUCTIONS_NONFACE3 = {
             align: "left",
             lineheight: 1.5,
         }) +
-        REMINDER +
+        reminder() +
         KEYMAPPING_NONFACE +
         PRESS_TO_CONTINUE,
 };
@@ -282,7 +287,9 @@ const REMINDER_NONFACE = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: REMINDER + KEYMAPPING_NONFACE + PRESS_TO_CONTINUE,
+    on_start: function (trial) {
+        trial.stimulus = reminder() + KEYMAPPING_NONFACE + PRESS_TO_CONTINUE;
+    },
 };
 
 const HALF_WAY = {
@@ -430,7 +437,7 @@ function calculateBlockPerformance({
 
 function blockFeedbackText(cBlk, nBlks, meanRt, nError) {
     return (
-        "<h2>Block: " +
+        "<h2>Ende Block: " +
         cBlk +
         " von " +
         nBlks +
@@ -541,6 +548,29 @@ const SAVE_DATA = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                              PROLIFIC                              //
+////////////////////////////////////////////////////////////////////////
+const PROLIFIC = {
+    type: jsPsychHtmlKeyboardResponse,
+    response_ends_trial: true,
+    choices: [" "],
+    stimulus: generate_formatted_html({
+        text: `Super, du bist am Ende des Experiments!
+               Vielen Dank für deine Teilnahme :)<br><br>
+               Über folgenden Link geht es zurück zu Prolific:<br><br>
+               https://app.prolific.co/submissions/complete?cc=CM9XC6KL<br><br>
+               Drücke die Leertaste, um das Experiment abzuschließen!`,
+        align: "left",
+        fontsize: 30,
+        width: "1200px",
+        lineheight: 1.5,
+    }),
+    on_finish: function () {
+        window.location.replace("https://app.prolific.co/submissions/complete?cc=CM9XC6KL");
+    },
+};
+
+////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
@@ -552,7 +582,7 @@ function genExpSeq() {
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    //exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(mouseCursor(false));
     exp.push(PRELOAD);
     exp.push(WELCOME);
@@ -592,7 +622,7 @@ function genExpSeq() {
         }
         blk_timeline.sample = {
             type: "fixed-repetitions",
-            size: PRMS.nTrls / 8,
+            size: [0, PRMS.nBlks / 2].includes(blk) ? PRMS.nTrlsP / 8 : PRMS.nTrlsE,
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
@@ -606,6 +636,7 @@ function genExpSeq() {
     exp.push(mouseCursor(true));
     exp.push(end_message());
     exp.push(fullscreen(false));
+    exp.push(PROLIFIC);
 
     return exp;
 }
