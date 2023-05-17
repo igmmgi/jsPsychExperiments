@@ -582,7 +582,7 @@ function genExpSeq() {
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    //exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(mouseCursor(false));
     exp.push(PRELOAD);
     exp.push(WELCOME);
@@ -622,7 +622,7 @@ function genExpSeq() {
         }
         blk_timeline.sample = {
             type: "fixed-repetitions",
-            size: [0, PRMS.nBlks / 2].includes(blk) ? PRMS.nTrlsP / 8 : PRMS.nTrlsE,
+            size: [0, PRMS.nBlks / 2].includes(blk) ? PRMS.nTrlsP / 8 : PRMS.nTrlsE / 8,
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
