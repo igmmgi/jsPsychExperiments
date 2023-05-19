@@ -486,6 +486,7 @@ const WAIT_BLANK = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
+    func: function () {},
     trial_duration: PRMS.wait,
     response_ends_trial: false,
 };
@@ -616,10 +617,11 @@ function genExpSeq() {
 
         let blk_timeline;
         if (blk_type[blk] === "face") {
-            blk_timeline = TRIAL_TIMELINE_FACE_BLOCK;
+            blk_timeline = { ...TRIAL_TIMELINE_FACE_BLOCK };
         } else if (blk_type[blk] === "nonface") {
-            blk_timeline = TRIAL_TIMELINE_NONFACE_BLOCK;
+            blk_timeline = { ...TRIAL_TIMELINE_NONFACE_BLOCK };
         }
+
         blk_timeline.sample = {
             type: "fixed-repetitions",
             size: [0, PRMS.nBlks / 2].includes(blk) ? PRMS.nTrlsP / 8 : PRMS.nTrlsE / 8,
