@@ -173,19 +173,22 @@ const TASK_INSTRUCTIONS_FACE3 = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus:
-        generate_formatted_html({
-            text: `Es folgen nun insgesamt 1 Übungsblöcke.<br><br>
+    stimulus: "",
+    on_start: function (trial) {
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Es folgen nun insgesamt 1 Übungsblöcke.<br><br>
                    Versuche immer so schnell und so fehlerfrei wie möglich zu antworten!<br>
                    Nutze die Pause zwischen den Blöcken, um dich zu erholen.<br>`,
-            bold: true,
-            fontsize: 26,
-            align: "left",
-            lineheight: 1.5,
-        }) +
-        reminder() +
-        KEYMAPPING_FACE +
-        PRESS_TO_CONTINUE,
+                bold: true,
+                fontsize: 26,
+                align: "left",
+                lineheight: 1.5,
+            }) +
+            reminder() +
+            KEYMAPPING_FACE +
+            PRESS_TO_CONTINUE;
+    },
 };
 
 const TOO_MANY_ERRORS = {
@@ -195,23 +198,26 @@ const TOO_MANY_ERRORS = {
     canvas_border: CANVAS_BORDER,
     response_ends_trial: false,
     trial_duration: PRMS.tooManyErrorsDur,
-    stimulus:
-        generate_formatted_html({
-            text: `Zu viele Fehler (>= 10)!<br>`,
-            bold: true,
-            fontsize: 36,
-            align: "center",
-            lineheight: 1.5,
-        }) +
-        reminder() +
-        KEYMAPPING_FACE +
-        generate_formatted_html({
-            text: `<br>Das Experiment wird automatisch in 60 Sekunden fortgesetzt!`,
-            bold: true,
-            fontsize: 26,
-            align: "center",
-            lineheight: 1.5,
-        }),
+    stimulus: "",
+    on_start: function (trial) {
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Zu viele Fehler (>= 10)!<br>`,
+                bold: true,
+                fontsize: 36,
+                align: "center",
+                lineheight: 1.5,
+            }) +
+            reminder() +
+            KEYMAPPING_FACE +
+            generate_formatted_html({
+                text: `<br>Das Experiment wird automatisch in 30 Sekunden fortgesetzt!`,
+                bold: true,
+                fontsize: 26,
+                align: "center",
+                lineheight: 1.5,
+            });
+    },
 };
 
 const REMINDER_FACE = {
@@ -267,19 +273,22 @@ const TASK_INSTRUCTIONS_NONFACE3 = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus:
-        generate_formatted_html({
-            text: `Es folgen nun insgesamt 1 Übungsblöcke.<br><br>
+    stimulus: "",
+    on_start: function (trial) {
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Es folgen nun insgesamt 1 Übungsblöcke.<br><br>
                    Versuche immer so schnell und so fehlerfrei wie möglich zu antworten!<br>
                    Nutze die Pause zwischen den Blöcken, um dich zu erholen.<br>`,
-            bold: true,
-            fontsize: 26,
-            align: "left",
-            lineheight: 1.5,
-        }) +
-        reminder() +
-        KEYMAPPING_NONFACE +
-        PRESS_TO_CONTINUE,
+                bold: true,
+                fontsize: 26,
+                align: "left",
+                lineheight: 1.5,
+            }) +
+            reminder() +
+            KEYMAPPING_NONFACE +
+            PRESS_TO_CONTINUE;
+    },
 };
 
 const REMINDER_NONFACE = {
