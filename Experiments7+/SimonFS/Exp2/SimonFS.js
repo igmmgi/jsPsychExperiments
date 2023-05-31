@@ -77,8 +77,8 @@ const DE_EN_FACE = { negative: "TRAURIG", positive: "FRÖHLICH" };
 const DE_EN_NONFACE = { negative: "SPINNE", positive: "BLUME" };
 
 const KEYMAPPING_FACE =
-    `<span style="font-weight:bold; font-size:30px";><b class="underline">LINKE Taste</b>:</b>${"&nbsp;".repeat(30)}
-        <b class="underline">RECHTE Taste:</b><br>` +
+    `<span style="font-weight:bold; font-size:30px";><b class="underline">LINKE Taste (Q)</b>:</b>${"&nbsp;".repeat(30)}
+        <b class="underline">RECHTE Taste (P):</b><br>` +
     `Gesicht ist <b class="underline">${DE_EN_FACE[PRMS.respEmotion[0]]}</b> ${"&nbsp;".repeat(
         10,
     )} Gesicht ist <b class="underline">${DE_EN_FACE[PRMS.respEmotion[1]]}</b><br> 
@@ -87,8 +87,8 @@ const KEYMAPPING_FACE =
     )} Finger zeigt nach <b class="underline">RECHTS</b></span><br>`;
 
 const KEYMAPPING_NONFACE =
-    `<span style="font-weight:bold; font-size:30px";><b class="underline">LINKE Taste</b>:</b>${"&nbsp;".repeat(30)}
-        <b class="underline">RECHTE Taste:</b><br>` +
+    `<span style="font-weight:bold; font-size:30px";><b class="underline">LINKE Taste (Q)</b>:</b>${"&nbsp;".repeat(30)}
+        <b class="underline">RECHTE Taste (P):</b><br>` +
     `Bild ist eine <b class="underline">${DE_EN_NONFACE[PRMS.respEmotion[0]]}</b> ${"&nbsp;".repeat(
         20,
     )} Bild ist eine <b class="underline">${DE_EN_NONFACE[PRMS.respEmotion[1]]}</b><br> 
