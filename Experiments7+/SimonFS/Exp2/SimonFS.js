@@ -77,8 +77,10 @@ const DE_EN_FACE = { negative: "TRAURIG", positive: "FRÖHLICH" };
 const DE_EN_NONFACE = { negative: "SPINNE", positive: "BLUME" };
 
 const KEYMAPPING_FACE =
-    `<span style="font-weight:bold; font-size:30px";><b class="underline">LINKE Taste (Q)</b>:</b>${"&nbsp;".repeat(30)}
-        <b class="underline">RECHTE Taste (P):</b><br>` +
+    `<span style="font-weight:bold; font-size:30px";><b class="underline">LINKE Taste ("Q")</b>:</b>${"&nbsp;".repeat(
+        30,
+    )}
+        <b class="underline">RECHTE Taste ("P"):</b><br>` +
     `Gesicht ist <b class="underline">${DE_EN_FACE[PRMS.respEmotion[0]]}</b> ${"&nbsp;".repeat(
         10,
     )} Gesicht ist <b class="underline">${DE_EN_FACE[PRMS.respEmotion[1]]}</b><br> 
@@ -87,8 +89,10 @@ const KEYMAPPING_FACE =
     )} Finger zeigt nach <b class="underline">RECHTS</b></span><br>`;
 
 const KEYMAPPING_NONFACE =
-    `<span style="font-weight:bold; font-size:30px";><b class="underline">LINKE Taste (Q)</b>:</b>${"&nbsp;".repeat(30)}
-        <b class="underline">RECHTE Taste (P):</b><br>` +
+    `<span style="font-weight:bold; font-size:30px";><b class="underline">LINKE Taste ("Q")</b>:</b>${"&nbsp;".repeat(
+        30,
+    )}
+        <b class="underline">RECHTE Taste ("P"):</b><br>` +
     `Bild ist eine <b class="underline">${DE_EN_NONFACE[PRMS.respEmotion[0]]}</b> ${"&nbsp;".repeat(
         20,
     )} Bild ist eine <b class="underline">${DE_EN_NONFACE[PRMS.respEmotion[1]]}</b><br> 
@@ -324,16 +328,16 @@ function draw_stimulus(args) {
     "use strict";
     // Fixation cross is constant
     let ctx = document.getElementById("canvas").getContext("2d");
+    ctx.beginPath();
     ctx.lineWidth = PRMS.fixWidth;
     ctx.moveTo(-PRMS.fixSize, 0);
     ctx.lineTo(PRMS.fixSize, 0);
-    ctx.stroke();
     ctx.moveTo(0, -PRMS.fixSize);
     ctx.lineTo(0, PRMS.fixSize);
     ctx.stroke();
 
-    // draw lateral image
     if (args.target !== "") {
+        // draw lateral image
         let img = new Image();
         img.src = args.target;
         let xoffset = args.position === "left" ? -PRMS.simonPos : PRMS.simonPos;
