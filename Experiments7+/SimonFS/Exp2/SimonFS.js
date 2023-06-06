@@ -10,7 +10,7 @@ const CANVAS_BORDER = "5px solid black";
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    nBlks: 16,
+    nBlks: 20,
     nTrlsP: 24, // number of trials in practice blocks
     nTrlsE: 64, // number of trials in exp blocks
     iti: 500,
@@ -109,7 +109,7 @@ const PRESS_TO_CONTINUE = generate_formatted_html({
 
 function reminder() {
     return generate_formatted_html({
-        text: `Beginn Block: ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>Zur Errinnerung:`,
+        text: `Beginn Block: ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>Zur Erinnerung:`,
         bold: true,
         fontsize: 32,
         align: "center",
@@ -637,7 +637,7 @@ function genExpSeq() {
 
         blk_timeline.sample = {
             type: "fixed-repetitions",
-            size: [0, PRMS.nBlks / 2].includes(blk) ? PRMS.nTrlsP / 8 : PRMS.nTrlsE / 8,
+            size: [0, 1, PRMS.nBlks / 2, PRMS.nBlks / 2 + 1].includes(blk) ? PRMS.nTrlsP / 8 : PRMS.nTrlsE / 8,
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
