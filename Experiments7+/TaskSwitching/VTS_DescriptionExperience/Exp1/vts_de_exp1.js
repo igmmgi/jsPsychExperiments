@@ -52,10 +52,14 @@ const CANVAS_BORDER = "5px solid black";
 
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    ntrls: 128, // number of trials within a block
+    ntrls_training: 64, // number of trials within a block
+    ntrls_exp: 120, // number of trials within a block
     nblks: 10, // number of blocks
+    fixSize: 15, // duration of the fixation cross
+    fixWidth: 5, // size of fixation cross
+    fixDur: 400, // duration of the fixation cross
     fb_dur: 750, // feedback duration for reward
-    stim_font: "150px Arial",
+    stim_font: "100px Arial",
     stim_y_offset: 10,
     fb_font_size: 128,
     numbers: [1, 2, 3, 4, 6, 7, 8, 9],
@@ -64,11 +68,10 @@ const PRMS = {
     letters: ["A", "B", "C", "D", "W", "X", "Y", "Z"],
     letters_before: ["A", "B", "C", "D"],
     letters_after: ["W", "X", "Y", "Z"],
-    resp_keys: ["Q", "W", "O", "P"],
     resp_keys_left: ["Q", "W"],
     resp_keys_right: ["O", "P"],
-    rect_width: 150,
-    rect_height: 150,
+    rect_width: 100,
+    rect_height: 100,
     rect_offset: 10,
 };
 
@@ -114,42 +117,48 @@ const WELCOME_INSTRUCTIONS = {
     }),
 };
 
+function task_instructions1() {
+    if (VERSION === 1) {
+        return generate_formatted_html({
+            text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
+             Zahlenaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
+             Buchstabenaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
+             Drücke eine beliebige Taste, um fortzufahren`,
+            align: "left",
+            fontsize: 30,
+            width: "1200px",
+            lineheight: 1.5,
+            bold: true,
+        });
+    } else if (VERSION === 2) {
+        return generate_formatted_html({
+            text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
+             Buchstabenaufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf die Tasten „Q“ und „W“.<br><br>
+             Zahlenaufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten „O“ und „P“.<br><br>
+             Drücke eine beliebige Taste, um fortzufahren`,
+            align: "left",
+            fontsize: 30,
+            width: "1200px",
+            lineheight: 1.5,
+            bold: true,
+        });
+    }
+}
+
 const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: generate_formatted_html({
-        text: `TASK INSTRUCTIONS 1<br><br>
-           Drücke eine beliebige Taste um fortzufahren.`,
-        align: "left",
-        fontsize: 30,
-        width: "1200px",
-        bold: true,
-        lineheight: 1.5,
-    }),
-};
-
-// prettier-ignore
-const TASK_INSTRUCTIONS2 = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: generate_formatted_html({
-    text: `TASK INSTRUCTIONS 2<br><br>
-           Drücke eine beliebige Taste um fortzufahren.`,
-    align: 'left',
-    fontsize: 30,
-    width: '1200px',
-    bold: true,
-    lineheight: 1.5,
-  }),
+    stimulus: "",
+    on_start: function (trial) {
+        trial.stimulus = task_instructions1();
+    },
 };
 
 const RESPMAPPING_V1 = generate_formatted_html({
-    text: `Number Task&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Letter Task<br>
-          "${PRMS.resp_keys_left[0]}" (< 5) "${PRMS.resp_keys_left[1]}" (> 5) &emsp;&emsp;&emsp;&emsp; "${PRMS.resp_keys_right[0]}" (< M) "${PRMS.resp_keys_right[1]}" (> M)`,
+    text: `Zahlenaufgabe&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Buchstabenaufgabe<br>
+          "${PRMS.resp_keys_left[0]}" (< 5) "${PRMS.resp_keys_left[1]}" (> 5) &emsp;&emsp;&emsp;&emsp; "${PRMS.resp_keys_right[0]}" (vor M) "${PRMS.resp_keys_right[1]}" (nach M)`,
     align: "center",
     fontsize: 30,
     width: "1200px",
@@ -158,8 +167,8 @@ const RESPMAPPING_V1 = generate_formatted_html({
 });
 
 const RESPMAPPING_V2 = generate_formatted_html({
-    text: `Letter Task&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number Task<br>
-          "${PRMS.resp_keys_left[0]}" (< M) "${PRMS.resp_keys_left[1]}" (> M) &emsp;&emsp;&emsp;&emsp; "${PRMS.resp_keys_right[0]}" (< 5) "${PRMS.resp_keys_right[1]}" (> 5)`,
+    text: `Buchstabenaufgabe&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Zahlenaufgabe<br>
+          "${PRMS.resp_keys_left[0]}" (vor M) "${PRMS.resp_keys_left[1]}" (nach M) &emsp;&emsp;&emsp;&emsp; "${PRMS.resp_keys_right[0]}" (< 5) "${PRMS.resp_keys_right[1]}" (> 5)`,
     align: "center",
     fontsize: 30,
     width: "1200px",
@@ -188,27 +197,96 @@ const TASK_INSTRUCTIONS_MAPPING = {
     },
 };
 
+const TASK_INSTRUCTIONS2 = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: generate_formatted_html({
+        text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
+               Wenn nur eine Aufgabe präsentiert wird, dann bearbeite bitte diese. <br><br>
+               Wenn beide Aufgaben präsentiert werden, kannst Du dir frei aussuchen, welche Du bearbeitest.<br><br>
+               Drücke eine beliebige Taste, um fortzufahren.`,
+        align: "left",
+        fontsize: 30,
+        width: "1200px",
+        lineheight: 1.5,
+        bold: true,
+    }),
+};
+
+const TASK_INSTRUCTIONS3 = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: generate_formatted_html({
+        text: `In manchen Durchgängen erhälst Du Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
+               Je mehr Punkte Du sammelst, desto kürzer wird das Experiment! Dein Ziel ist es, so viele Punkte wie möglich zu sammeln.<br>
+               Du erfährst nach dem ${PRMS.nblks} Block, wieviele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>
+               Des Weiteren werden die 10% aller Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
+               von Osiander oder der deutschen Bahn erhalten.<br><br>
+               Drücke eine beliebige Taste, um fortzufahren.`,
+        align: "left",
+        fontsize: 30,
+        width: "1200px",
+        lineheight: 1.5,
+        bold: true,
+    }),
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment                                    //
 ////////////////////////////////////////////////////////////////////////
+
+function drawFixation() {
+    "use strict";
+    let ctx = document.getElementById("canvas").getContext("2d");
+    ctx.lineWidth = PRMS.fixWidth;
+    ctx.moveTo(-PRMS.fixSize, 0);
+    ctx.lineTo(PRMS.fixSize, 0);
+    ctx.stroke();
+    ctx.moveTo(0, -PRMS.fixSize);
+    ctx.lineTo(0, PRMS.fixSize);
+    ctx.stroke();
+}
+
+const FIXATION_CROSS = {
+    type: jsPsychStaticCanvasKeyboardResponse,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    translate_origin: true,
+    response_ends_trial: false,
+    trial_duration: PRMS.fixDur,
+    func: drawFixation,
+};
+
 function draw_stimulus(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
 
-    // markers
-    ctx.lineWidth = 5;
+    // // x=0, y=0 markers
+    // ctx.lineWidth = 5;
+    // ctx.beginPath();
+    // ctx.lineTo(0, CANVAS_SIZE[0] / 2);
+    // ctx.lineTo(0, -CANVAS_SIZE[0] / 2);
+    // ctx.stroke();
+    // ctx.beginPath();
+    // ctx.lineTo(CANVAS_SIZE[1] / 2, 0);
+    // ctx.lineTo(-CANVAS_SIZE[1] / 2, 0);
+    // ctx.lineTo(1000, 0);
+    // ctx.lineTo(-1000, 0);
+    // ctx.stroke();
+
+    // outer frames
     ctx.beginPath();
-    ctx.lineTo(0, CANVAS_SIZE[0] / 2);
-    ctx.lineTo(0, -CANVAS_SIZE[0] / 2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.lineTo(CANVAS_SIZE[1] / 2, 0);
-    ctx.lineTo(-CANVAS_SIZE[1] / 2, 0);
-    ctx.lineTo(1000, 0);
-    ctx.lineTo(-1000, 0);
+    ctx.lineWidth = 2;
+    ctx.rect(0 - (PRMS.rect_width + PRMS.rect_offset), 0 - PRMS.rect_height / 2, PRMS.rect_height, PRMS.rect_width);
+    ctx.rect(0 + PRMS.rect_offset, 0 - PRMS.rect_height / 2, PRMS.rect_height, PRMS.rect_width);
     ctx.stroke();
 
-    // draw left rectangle
+    // draw left colour rectangle and stimulus
     if (args.stim_left !== "na") {
         ctx.fillStyle = args.colour_left;
         ctx.fillRect(
@@ -217,7 +295,6 @@ function draw_stimulus(args) {
             PRMS.rect_height,
             PRMS.rect_width,
         );
-        // draw left stimulus
         ctx.fillStyle = "Black";
         ctx.font = PRMS.stim_font;
         ctx.textAlign = "center";
@@ -225,12 +302,10 @@ function draw_stimulus(args) {
         ctx.fillText(args.stim_left, 0 - (PRMS.rect_width / 2 + PRMS.rect_offset), PRMS.stim_y_offset);
     }
 
+    // draw right colour rectangle and stimulus
     if (args.stim_right !== "na") {
-        // draw right rectangle
         ctx.fillStyle = args.colour_right;
         ctx.fillRect(0 + PRMS.rect_offset, 0 - PRMS.rect_height / 2, PRMS.rect_height, PRMS.rect_width);
-
-        // draw right stimulus
         ctx.fillStyle = "Black";
         ctx.font = PRMS.stim_font;
         ctx.textAlign = "center";
@@ -464,10 +539,85 @@ const TRIAL_FEEDBACK = {
     response_ends_trial: false,
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
-        console.table(dat);
-        trial.stimulus = `<div style="font-size:${PRMS.fb_font_size}px;">+${dat.reward}</div>`;
+        if (dat.correct === 1) {
+            trial.stimulus = `<div style="font-size:${PRMS.fb_font_size}px;">+${dat.reward}</div>`;
+        } else {
+            trial.stimulus = `<div style="font-size:${PRMS.fb_font_size}px;">FALSCH!</div>`;
+        }
     },
 };
+
+const BLOCK_START = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: "",
+    on_start: function (trial) {
+        let resp_text = VERSION === 1 ? RESPMAPPING_V1 : RESPMAPPING_V2;
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Start Block ${VTS_DATA.cblk} von ${PRMS.nblks}<br><br>
+               Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`,
+                align: "left",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.5,
+                bold: true,
+            }) +
+            resp_text +
+            generate_formatted_html({
+                text: `Um den Block zu starten, drücke eine beliebige Taste.`,
+                align: "center",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.5,
+                bold: true,
+            });
+    },
+};
+
+const BLOCK_FEEDBACK = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: "",
+    trial_duration: null,
+    response_ends_trial: true,
+    on_start: function (trial) {
+        trial.stimulus = generate_formatted_html({
+            text: `Ende Block ${VTS_DATA.cblk} von ${PRMS.nblks} (Points: ${VTS_DATA.points})<br><br>
+                   Drücke eine beliebige Taste um fortzufahren.`,
+            align: "center",
+            fontsize: 30,
+            width: "1200px",
+            bold: true,
+            lineheight: 1.5,
+        });
+    },
+    on_finish: function () {
+        VTS_DATA.cblk++;
+    },
+};
+
+// prettier-ignore
+const TRIAL_TABLE_TRAINING_SAFE = [
+  { block_type: "training", condition: "forced_safe",  task: "letter", letter_risky_safe: "safe",  number_risky_safe: "na",    letter_outcome: "low",  number_outcome: "na"},
+  { block_type: "training", condition: "forced_safe",  task: "number", letter_risky_safe: "na",    number_risky_safe: "safe",  letter_outcome: "na",   number_outcome: "low"},
+  { block_type: "training", condition: "forced_safe",  task: "letter", letter_risky_safe: "safe",  number_risky_safe: "na",    letter_outcome: "high", number_outcome: "na"},
+  { block_type: "training", condition: "forced_safe",  task: "number", letter_risky_safe: "na",    number_risky_safe: "safe",  letter_outcome: "na",   number_outcome: "high"},
+];
+// console.table(TRIAL_TABLE_TRAINING_SAFE);
+
+// prettier-ignore
+const TRIAL_TABLE_TRAINING_RISKY = [
+  { block_type: "training", condition: "forced_risky", task: "letter", letter_risky_safe: "risky", number_risky_safe: "na",    letter_outcome: "low",  number_outcome: "na"},
+  { block_type: "training", condition: "forced_risky", task: "number", letter_risky_safe: "na",    number_risky_safe: "risky", letter_outcome: "na",   number_outcome: "low"},
+  { block_type: "training", condition: "forced_risky", task: "letter", letter_risky_safe: "risky", number_risky_safe: "na",    letter_outcome: "high", number_outcome: "na"},
+  { block_type: "training", condition: "forced_risky", task: "number", letter_risky_safe: "na",    number_risky_safe: "risky", letter_outcome: "na",   number_outcome: "high"},
+];
+// console.table(TRIAL_TABLE_TRAINING_RISKY);
 
 // prettier-ignore
 const TRIAL_TABLE_EXP = [
@@ -487,12 +637,51 @@ const TRIAL_TABLE_EXP = [
   { block_type: "exp", condition: "equal_safe_risky",   task: "both",   letter_risky_safe: "safe",  number_risky_safe: "risky", letter_outcome: "high", number_outcome: "high"},
   { block_type: "exp", condition: "equal_safe_risky",   task: "both",   letter_risky_safe: "risky", number_risky_safe: "safe",  letter_outcome: "low",  number_outcome: "low"},
   { block_type: "exp", condition: "equal_safe_risky",   task: "both",   letter_risky_safe: "risky", number_risky_safe: "safe",  letter_outcome: "high", number_outcome: "high"},
+  { block_type: "exp", condition: "unequal_safe_risky", task: "both",   letter_risky_safe: "safe",  number_risky_safe: "risky", letter_outcome: "low",  number_outcome: "high"},
+  { block_type: "exp", condition: "unequal_safe_risky", task: "both",   letter_risky_safe: "safe",  number_risky_safe: "risky", letter_outcome: "high", number_outcome: "low"},
+  { block_type: "exp", condition: "unequal_safe_risky", task: "both",   letter_risky_safe: "risky", number_risky_safe: "safe",  letter_outcome: "low",  number_outcome: "high"},
+  { block_type: "exp", condition: "unequal_safe_risky", task: "both",   letter_risky_safe: "risky", number_risky_safe: "safe",  letter_outcome: "high", number_outcome: "low"},
+  { block_type: "exp", condition: "equal_safe_risky",   task: "both",   letter_risky_safe: "safe",  number_risky_safe: "risky", letter_outcome: "low",  number_outcome: "low"},
+  { block_type: "exp", condition: "equal_safe_risky",   task: "both",   letter_risky_safe: "safe",  number_risky_safe: "risky", letter_outcome: "high", number_outcome: "high"},
+  { block_type: "exp", condition: "equal_safe_risky",   task: "both",   letter_risky_safe: "risky", number_risky_safe: "safe",  letter_outcome: "low",  number_outcome: "low"},
+  { block_type: "exp", condition: "equal_safe_risky",   task: "both",   letter_risky_safe: "risky", number_risky_safe: "safe",  letter_outcome: "high", number_outcome: "high"},
 ];
 // console.table(TRIAL_TABLE_FACE_BLOCK);
 
+const TRIAL_TIMELINE_TRAINING_SAFE = {
+    timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK],
+    timeline_variables: TRIAL_TABLE_TRAINING_SAFE,
+};
+
+const TRIAL_TIMELINE_TRAINING_RISKY = {
+    timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK],
+    timeline_variables: TRIAL_TABLE_TRAINING_RISKY,
+};
+
 const TRIAL_TIMELINE_EXP = {
-    timeline: [VTS, TRIAL_FEEDBACK],
+    timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK],
     timeline_variables: TRIAL_TABLE_EXP,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                              Save                                  //
+////////////////////////////////////////////////////////////////////////
+const DIR_NAME = getDirName();
+const EXP_NAME = getFileName();
+const VP_NUM = getTime();
+
+function save() {
+    jsPsych.data.addProperties({ vpNum: VP_NUM });
+
+    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
+    saveData("/Common/write_data.php", data_fn, { stim: "vts_de" });
+    // saveDataLocal('/Common/write_data.php', { stim: 'vts_de' });
+}
+
+const SAVE_DATA = {
+    type: jsPsychCallFunction,
+    func: save,
+    post_trial_gap: 3000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -503,23 +692,40 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(CANVAS_SIZE));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
-    // exp.push(WELCOME_INSTRUCTIONS);
-    // exp.push(TASK_INSTRUCTIONS1);
-    // exp.push(TASK_INSTRUCTIONS2);
-    // exp.push(TASK_INSTRUCTIONS_MAPPING);
-    exp.push(TRIAL_TIMELINE_EXP);
+    exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(TASK_INSTRUCTIONS1);
+    exp.push(TASK_INSTRUCTIONS_MAPPING);
+    exp.push(TASK_INSTRUCTIONS2);
 
-    for (let blk = 0; blk < PRMS.nblks; blk++) {}
+    for (let blk = 0; blk < PRMS.nblks; blk++) {
+        exp.push(BLOCK_START);
+
+        let blk_timeline;
+        if (blk === 0) {
+            blk_timeline = { ...TRIAL_TIMELINE_TRAINING_SAFE };
+        } else if (blk === 1) {
+            blk_timeline = { ...TRIAL_TIMELINE_TRAINING_RISKY };
+        } else {
+            blk_timeline = { ...TRIAL_TIMELINE_EXP };
+        }
+        let ntrls = [0, 1].includes(blk) ? PRMS.ntrls_training : PRMS.ntrls_exp;
+        blk_timeline.sample = {
+            type: "fixed-repetitions",
+            size: ntrls / blk_timeline.timeline_variables.length,
+        };
+        exp.push(blk_timeline); // trials within a block
+        exp.push(BLOCK_FEEDBACK);
+    }
 
     // save data
-    // exp.push(SAVE_DATA);
+    exp.push(SAVE_DATA);
 
     // debrief
     exp.push(mouseCursor(true));
