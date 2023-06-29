@@ -40,7 +40,14 @@
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        window.location.assign(
+            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=233&credit_token=11d96321e1494b7d8605d5b7b3ffba8c&survey_code=" +
+                jsPsych.data.urlVariables().sona_id,
+        );
+    },
+});
 
 const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
 const CANVAS_SIZE = [1280, 720];
@@ -86,7 +93,7 @@ const VTS_DATA = {
 // 2 counter balanced versions
 // Version 1: number task left, letter task right
 // Version 2: letter task left, number task right
-const VERSION = 1; //Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // Have order relate to condition
@@ -203,9 +210,10 @@ const TASK_INSTRUCTIONS2 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
-               Wenn nur eine Aufgabe präsentiert wird, dann bearbeite bitte diese. <br><br>
-               Wenn beide Aufgaben präsentiert werden, kannst Du dir frei aussuchen, welche Du bearbeitest.<br><br>
+        text: `In manchen Durchgängen erhälst Du Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
+               Dein Ziel ist es, so viele Punkte wie möglich zu sammeln.<br>
+               Die 10% aller Personen mit den höchsten Gesamtpunktzahlen werden einen 10€ Gutschein von
+               Osiander oder der deutschen Bahn erhalten.<br><br>
                Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
@@ -684,6 +692,48 @@ const SAVE_DATA = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                              VP Stunden                            //
+////////////////////////////////////////////////////////////////////////
+
+const END_SCREEN = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    response_ends_trial: true,
+    choices: [" "],
+    stimulus: generate_formatted_html({
+        text: `Im nächsten Fenster wirst Du zunächst aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
+        Falls Du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
+        wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander erhalten.<br><br>
+        Drücke die Leertaste, um fortzufahren`,
+        align: "left",
+        fontsize: 30,
+        width: "1200px",
+        lineheight: 1.5,
+    }),
+};
+
+const EMAIL_OPTION = {
+    type: jsPsychSurveyText,
+    questions: [
+        {
+            prompt: `Bitte gebe deine E-Mail Adresse ein wenn Du am Gewinnspiel teilnehmen willst.<br>
+            Ansonsten lasse das Feld einfach frei und klicke ''Weiter''`,
+            placeholder: "email@email",
+            columns: 50,
+            required: false,
+            name: "email",
+        },
+    ],
+    button_label: "Weiter",
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        jsPsych.data.addProperties({ email: dat.response.email });
+    },
+};
+
+////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
@@ -722,6 +772,11 @@ function genExpSeq() {
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK);
     }
+
+    // debrief
+    exp.push(mouseCursor(true));
+    exp.push(END_SCREEN);
+    exp.push(EMAIL_OPTION);
 
     // save data
     exp.push(SAVE_DATA);
