@@ -107,7 +107,7 @@ const WELCOME_INSTRUCTIONS = {
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 35 Minuten konzentriert zu arbeiten.<br><br>
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
-           xxx@xxx <br><br>
+           lis.fischer@student.uni-tuebingen.de<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         fontsize: 30,
@@ -222,10 +222,9 @@ const TASK_INSTRUCTIONS3 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `In manchen Durchgängen erhälst Du Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
-               Je mehr Punkte Du sammelst, desto kürzer wird das Experiment! Dein Ziel ist es, so viele Punkte wie möglich zu sammeln.<br>
-               Du erfährst nach dem ${PRMS.nblks} Block, wieviele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>
-               Des Weiteren werden die 10% aller Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
-               von Osiander oder der deutschen Bahn erhalten.<br><br>
+               Dein Ziel ist es, so viele Punkte wie möglich zu sammeln.<br>
+               Die 10% aller Personen mit den höchsten Gesamtpunktzahlen werden einen 10€ Gutschein von
+               Osiander oder der deutschen Bahn erhalten.<br><br>
                Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,

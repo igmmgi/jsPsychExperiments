@@ -15,10 +15,10 @@
 // ITI
 
 const jsPsych = initJsPsych({
-    on_finish: function() {
+    on_finish: function () {
         window.location.assign(
             "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=138&credit_token=bc4d282bd626463f8acd249ceb8f145f&survey_code=" +
-            jsPsych.data.urlVariables().sona_id,
+                jsPsych.data.urlVariables().sona_id,
         );
     },
 });
@@ -261,7 +261,7 @@ const BLOCK_START = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function(trial) {
+    on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
@@ -288,9 +288,9 @@ const BLOCK_END = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get();
-        let nReward = dat.select("reward").values.filter(function(x) {
+        let nReward = dat.select("reward").values.filter(function (x) {
             return x === true;
         }).length;
         trial.stimulus = generate_formatted_html({
@@ -304,7 +304,7 @@ const BLOCK_END = {
             lineheight: 1.5,
         });
     },
-    on_finish: function() {
+    on_finish: function () {
         PRMS.cBlk += 1;
         PRMS.cTrl = 1;
     },
@@ -400,7 +400,7 @@ const VTS = {
         free_forced: jsPsych.timelineVariable("free_forced"),
         forced_task: jsPsych.timelineVariable("forced_task"),
     },
-    on_start: function(trial) {
+    on_start: function (trial) {
         "use strict";
 
         // letter task
@@ -463,7 +463,7 @@ const VTS = {
             },
         ];
     },
-    on_finish: function() {
+    on_finish: function () {
         codeTrial();
     },
 };
@@ -518,7 +518,7 @@ const TRIAL_FEEDBACK = {
     response_ends_trial: false,
     stimulus: "",
     trial_duration: 0,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (dat.corrCode === 3) {
             trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
@@ -607,7 +607,7 @@ const TRIAL_REWARD = {
     trial_duration: PRMS.rewardDur,
     func: drawReward,
     func_args: null,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get().last(2).values()[0];
         trial.func_args = [{ corrCode: dat.corrCode }];
         if (dat.corrCode === 3) {
@@ -677,7 +677,7 @@ const EMAIL_OPTION = {
         },
     ],
     button_label: "Weiter",
-    on_finish: function() {
+    on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
         jsPsych.data.addProperties({ email: dat.response.email });
     },
