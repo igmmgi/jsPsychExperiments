@@ -123,7 +123,6 @@ const WELCOME = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Herzlich willkommen zu dieser Studie und vielen Dank für deine Teilnahme!<br><br>
-        Die Bearbeitung dieser Studie sollte in etwa eine Stunde in Anspruch nehmen.
         Du hast im Laufe der Studie immer wieder die Gelegenheit, selbstständig Pausen zu machen.
         Die Aufgaben können alle mit der Computer-Tastatur bearbeitet werden, du benötigst nur die 
         Leertaste und die Tasten "${PRMS.respKeys[0]}" und "${PRMS.respKeys[1]}".<br><br>
@@ -181,9 +180,8 @@ const TASK_INSTRUCTIONS_FACE3 = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Es folgen nun insgesamt 1 Übungsblöcke.<br><br>
-                   Versuche immer so schnell und so fehlerfrei wie möglich zu antworten!<br>
-                   Nutze die Pause zwischen den Blöcken, um dich zu erholen.<br>`,
+                text: `Versuche immer so schnell und so fehlerfrei wie möglich zu antworten!<br>
+                       WICHTIG: Du erhälst Feedback (Reaktionszeit und Fehleranzahl) immer nur nach einem Block.<br>`,
                 bold: true,
                 fontsize: 26,
                 align: "left",
