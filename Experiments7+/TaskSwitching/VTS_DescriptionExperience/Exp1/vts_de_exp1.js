@@ -477,7 +477,6 @@ const VTS = {
             if (PRMS.numbers_small.includes(stim_right)) {
                 correct_key_number = PRMS.resp_keys_right[0];
                 trial.choices = trial.choices.concat(PRMS.resp_keys_right);
-                available_keys.concat(PRMS.resp_keys_right);
             } else if (PRMS.numbers_large.includes(stim_right)) {
                 correct_key_number = PRMS.resp_keys_right[1];
                 trial.choices = trial.choices.concat(PRMS.resp_keys_right);
@@ -485,7 +484,7 @@ const VTS = {
             if (PRMS.letters_before.includes(stim_left)) {
                 correct_key_letter = PRMS.resp_keys_left[0];
                 trial.choices = trial.choices.concat(PRMS.resp_keys_left);
-            } else if (PRMS.letters_after.includes(stim_right)) {
+            } else if (PRMS.letters_after.includes(stim_left)) {
                 correct_key_letter = PRMS.resp_keys_left[1];
                 trial.choices = trial.choices.concat(PRMS.resp_keys_left);
             }
