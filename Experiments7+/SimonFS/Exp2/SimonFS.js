@@ -66,8 +66,10 @@ const IMAGES = [
 
 const PRELOAD = {
     type: jsPsychPreload,
+    auto_preload: true,
     images: IMAGES,
 };
+console.log(PRELOAD);
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -279,9 +281,8 @@ const TASK_INSTRUCTIONS_NONFACE3 = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Es folgen nun insgesamt 1 Übungsblöcke.<br><br>
-                   Versuche immer so schnell und so fehlerfrei wie möglich zu antworten!<br>
-                   Nutze die Pause zwischen den Blöcken, um dich zu erholen.<br>`,
+                text: `Versuche immer so schnell und so fehlerfrei wie möglich zu antworten!<br>
+                       WICHTIG: Du erhälst Feedback (Reaktionszeit und Fehleranzahl) immer nur nach einem Block.<br>`,
                 bold: true,
                 fontsize: 26,
                 align: "left",
@@ -337,9 +338,14 @@ function draw_stimulus(args) {
     if (args.target !== "") {
         // draw lateral image
         let img = new Image();
+        img.onload = function () {
+            // console.log("Image loaded");
+            let xoffset = args.position === "left" ? -PRMS.simonPos : PRMS.simonPos;
+            ctx.drawImage(img, -img.width / 2 + xoffset, -img.height / 2);
+        };
         img.src = args.target;
-        let xoffset = args.position === "left" ? -PRMS.simonPos : PRMS.simonPos;
-        ctx.drawImage(img, -img.width / 2 + xoffset, -img.height / 2);
+        // let xoffset = args.position === "left" ? -PRMS.simonPos : PRMS.simonPos;
+        // ctx.drawImage(img, -img.width / 2 + xoffset, -img.height / 2);
     }
 }
 
