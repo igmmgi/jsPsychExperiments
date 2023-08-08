@@ -40,58 +40,57 @@ const CANVAS_BORDER = "5px solid black";
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    screenRes: [960, 720], // minimum screen resolution requested
-    nTrls: 8, // number of trials per block
-    nBlks: 1, // number of blocks
-    taskSelectionDur: 250, // duration of the task selection screen
-    fbText: ["Correct! +10 points!", "Correct! But no points!", "Error! No points!"],
+    screen_res: [960, 720], // minimum screen resolution requested
+    n_trials: 8, // number of trials per block
+    n_blocks: 1, // number of blocks
+    task_selection_duration: 250, // duration of the task selection screen
+    feedback_text: ["Correct! +10 points!", "Correct! But no points!", "Error! No points!"],
     iti: 500, // duration of the inter-trial-interval
-    feedbackDur: [750, 750, 750], // duration of the reward screen
-    stimFont: "110px Arial",
-    fbFont: "30px Arial",
+    feedback_duration: [750, 750, 750], // duration of the reward screen
+    stimulus_font: "110px Arial",
+    feedback_font: "30px Arial",
     letters: ["A", "E", "I", "U", "G", "K", "M", "R"],
-    lettersVowel: ["A", "E", "I", "U"],
-    lettersConsonant: ["G", "K", "M", "R"],
-    taskSide: shuffle(["Letter", "Colour"]),
-    ColourTask: shuffle(["mehr Blau", "mehr Rot"]),
-    LetterTask: shuffle(["Vokal", "Konsonant"]),
+    letters_vowels: ["A", "E", "I", "U"],
+    letters_consonant: ["G", "K", "M", "R"],
+    task_side: shuffle(["Letter", "Colour"]),
+    color_task: shuffle(["mehr Blau", "mehr Rot"]),
+    letter_task: shuffle(["Vokal", "Konsonant"]),
     colours: ["rgba(0, 0, 255, 0.9)", "rgba(255, 0, 0, 0.9)"],
-    ratioNormal: 80,
-    respKeysLH: ["Q", "W"],
-    respKeysRH: ["O", "P"],
-    deactivateKeys: false, // should keys be deactivated when task not available?
-    dotRadius: 1.5,
-    dotEccentricity: 100,
-    dotGaps: 4,
-    dotBlank: 12,
-    taskChoicePosX: 200,
-    taskChoiceImageScale: 10,
-    rewardImageScale: 8,
-    cBlk: 1,
-    cTrl: 1,
+    ratio_normal: 80,
+    response_keys_lh: ["Q", "W"],
+    response_keys_rh: ["O", "P"],
+    dot_radius: 1.5,
+    dot_eccentricity: 100,
+    dot_gap: 4,
+    dot_blank: 12,
+    task_choice_pos_x: 200,
+    task_choice_image_scale: 10,
+    reward_image_scale: 8,
+    block: 1,
+    trial: 1,
 };
 
-function calculateNumberOfDots() {
+function calculate_number_of_dots() {
     // Required for ratio manipulation in VTS
-    PRMS.nDots = 0;
-    for (let rows = -PRMS.dotEccentricity; rows <= PRMS.dotEccentricity; rows += PRMS.dotGaps) {
-        for (let cols = -PRMS.dotEccentricity; cols <= PRMS.dotEccentricity; cols += PRMS.dotGaps) {
+    PRMS.n_dots = 0;
+    for (let rows = -PRMS.dot_eccentricity; rows <= PRMS.dot_eccentricity; rows += PRMS.dot_gap) {
+        for (let cols = -PRMS.dot_eccentricity; cols <= PRMS.dot_eccentricity; cols += PRMS.dot_gap) {
             if (
-                (rows > -PRMS.dotGaps * PRMS.dotBlank) &
-                (rows < PRMS.dotGaps * PRMS.dotBlank) &
-                (cols > -PRMS.dotGaps * PRMS.dotBlank) &
-                (cols < PRMS.dotGaps * PRMS.dotBlank)
+                (rows > -PRMS.dot_gap * PRMS.dot_blank) &
+                (rows < PRMS.dot_gap * PRMS.dot_blank) &
+                (cols > -PRMS.dot_gap * PRMS.dot_blank) &
+                (cols < PRMS.dot_gap * PRMS.dot_blank)
             ) {
                 continue;
             }
-            PRMS.nDots += 1;
+            PRMS.n_dots += 1;
         }
     }
 }
 
 const COUNT_DOTS = {
     type: jsPsychCallFunction,
-    func: calculateNumberOfDots,
+    func: calculate_number_of_dots,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -135,7 +134,7 @@ const TASK_INSTRUCTIONS1 = {
     choices: ["G"],
 };
 
-const RESPMAPPING = `<html>
+const RESPONSE_MAPPING = `<html>
 <head>
    <style>
       .container {
@@ -179,19 +178,23 @@ const RESPMAPPING = `<html>
 <div class="container">
 	<div class="header1 header--1">Auswahl der Aufgabe = Linke Hand</div>
 	<div class="header2 header--2">Bearbeitung der Aufgabe = Rechte Hand</div>
-	<div class="itemL item--3">Linke Aufgabe<br>(${PRMS.taskSide[0]})<br>${PRMS.respKeysLH[0]}</div>
-	<div class="itemL item--4">Rechte Aufgabe<br>(${PRMS.taskSide[1]})<br>${PRMS.respKeysLH[1]}</div>
+	<div class="itemL item--3">Linke Aufgabe<br>(${PRMS.task_side[0]})<br>${PRMS.response_keys_lh[0]}</div>
+	<div class="itemL item--4">Rechte Aufgabe<br>(${PRMS.task_side[1]})<br>${PRMS.response_keys_lh[1]}</div>
 	<div class="itemL item--5"></div>
-	<div class="itemR item--6">${PRMS.taskSide[0]}-Aufgabe:<br>${PRMS[PRMS.taskSide[0] + "Task"][0]} ${"&emsp;".repeat(2)}${
-    PRMS[PRMS.taskSide[0] + "Task"][1]
-}<br>${PRMS.respKeysRH[0]} ${"&emsp;".repeat(5)}${PRMS.respKeysRH[1]}<br></div>
+	<div class="itemR item--6">${PRMS.task_side[0]}-Aufgabe:<br>${PRMS[PRMS.task_side[0] + "Task"][0]} ${"&emsp;".repeat(
+    2,
+)}${PRMS[PRMS.task_side[0] + "Task"][1]}<br>${PRMS.response_keys_rh[0]} ${"&emsp;".repeat(5)}${
+    PRMS.response_keys_rh[1]
+}<br></div>
 	<div class="item item--7"></div>
 	<div class="item item--8"></div>
 	<div class="item item--9"></div>
 	<div class="item item--10"></div>
-<div class="itemR item--11">${PRMS.taskSide[1]}-Aufgabe:<br>${PRMS[PRMS.taskSide[1] + "Task"][0]} ${"&emsp;".repeat(
+<div class="itemR item--11">${PRMS.task_side[1]}-Aufgabe:<br>${PRMS[PRMS.task_side[1] + "Task"][0]} ${"&emsp;".repeat(
     2,
-)}${PRMS[PRMS.taskSide[1] + "Task"][1]}<br>${PRMS.respKeysRH[0]} ${"&emsp;".repeat(5)} ${PRMS.respKeysRH[1]}<br></div>
+)}${PRMS[PRMS.task_side[1] + "Task"][1]}<br>${PRMS.response_keys_rh[0]} ${"&emsp;".repeat(5)} ${
+    PRMS.response_keys_rh[1]
+}<br></div>
 	</div>
 </body>
 </html>`;
@@ -210,7 +213,7 @@ const TASK_INSTRUCTIONS2 = {
             width: "1200px",
             lineheight: 1.5,
         }) +
-        RESPMAPPING +
+        RESPONSE_MAPPING +
         generate_formatted_html({
             text: `Drücke die "X"- Taste, um fortzufahren.`,
             align: "center",
@@ -247,7 +250,7 @@ const TASK_INSTRUCTIONS4 = {
     stimulus: generate_formatted_html({
         text: `Zu Beginn des Experimentes hast du 0 Punkte.<br><br>
            In manchen Durchgängen kannst du + 10 Punkte für eine korrekte Antwort gewinnen. In Durchgängen mit Fehler bekommst Du keine Punkte.
-           Je mehr Punkte Du gewinnst, desto kürzer wird das Experiment! Du erfährst nach dem ${PRMS.nBlks} Block, wie viele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>
+           Je mehr Punkte Du gewinnst, desto kürzer wird das Experiment! Du erfährst nach dem ${PRMS.n_blocks} Block, wie viele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>
            Des Weiteren werden die 20% aller Personen mit den höchsten Gesamtpunktzahlen einen 10 % Gutschein von Osiander oder der deutschen Bahn erhalten.<br><br>
            Drücke die "K"- Taste, um fortzufahren.`,
         align: "left",
@@ -267,14 +270,14 @@ const BLOCK_START = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
+                text: `Start Block ${PRMS.block} von ${PRMS.n_blocks + 3}<br><br>
                        Wähle selbst, welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Wähle und bearbeite sonst die Aufgabe, die präsentiert ist.<br><br>`,
                 align: "left",
                 fontsize: 30,
                 width: "1200px",
                 lineheight: 1.5,
             }) +
-            RESPMAPPING +
+            RESPONSE_MAPPING +
             generate_formatted_html({
                 text: `Um den Block zu starten, drücke eine beliebige Taste.`,
                 align: "center",
@@ -293,12 +296,12 @@ const BLOCK_END = {
     stimulus: "",
     on_start: function (trial) {
         let dat = jsPsych.data.get();
-        let nReward = dat.select("reward").values.filter(function (x) {
+        let n_reward = dat.select("reward").values.filter(function (x) {
             return x === true;
         }).length;
         trial.stimulus = generate_formatted_html({
-            text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
-             Dein aktueller Punktestand beträgt: POINTS: ${nReward * 10}! <br><br>
+            text: `Ende Block ${PRMS.block} von ${PRMS.n_blocks + 3}<br><br>
+             Dein aktueller Punktestand beträgt: POINTS: ${n_reward * 10}! <br><br>
              Kurze Pause.<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
@@ -308,8 +311,8 @@ const BLOCK_END = {
         });
     },
     on_finish: function () {
-        PRMS.cBlk += 1;
-        PRMS.cTrl = 1;
+        PRMS.block += 1;
+        PRMS.trial = 1;
     },
 };
 
@@ -320,47 +323,47 @@ const PRELOAD = {
     images: IMAGES,
 };
 
-function drawTaskChoice(args) {
+function draw_task_choice(args) {
     let ctx = document.getElementById("canvas").getContext("2d");
 
     // draw text
-    ctx.font = PRMS.fbFont;
+    ctx.font = PRMS.feedback_font;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
     ctx.font = "50px Arial";
 
-    let drawImage = [false, false];
-    let drawText = [false, false];
+    let draw_image = [false, false];
+    let draw_text = [false, false];
 
     if (args.free_forced == "free") {
-        drawText = [1, 1];
-        drawImage = [true, true];
+        draw_text = [1, 1];
+        draw_image = [true, true];
     } else if (args.free_forced == "forced") {
-        drawText[PRMS.taskSide.indexOf(args.forced_task)] = true;
-        drawImage[PRMS.taskSide.indexOf(args.forced_task)] = true;
+        draw_text[PRMS.task_side.indexOf(args.forced_task)] = true;
+        draw_image[PRMS.task_side.indexOf(args.forced_task)] = true;
     }
 
     // text
-    if (drawText[0]) {
-        ctx.fillText(PRMS.taskSide[0], -PRMS.taskChoicePosX, 100);
+    if (draw_text[0]) {
+        ctx.fillText(PRMS.task_side[0], -PRMS.task_choice_pos_x, 100);
     }
-    if (drawText[1]) {
-        ctx.fillText(PRMS.taskSide[1], PRMS.taskChoicePosX, 100);
+    if (draw_text[1]) {
+        ctx.fillText(PRMS.task_side[1], PRMS.task_choice_pos_x, 100);
     }
 
     // image
     let img = new Image();
     img.src = IMAGES[2];
-    const size = PRMS.taskChoiceImageScale;
+    const size = PRMS.task_choice_image_scale;
     const width = img.width;
     const height = img.height;
 
-    if (drawImage[0]) {
-        ctx.drawImage(img, -width / size / 2 - PRMS.taskChoicePosX, -height / size / 2, width / size, height / size);
+    if (draw_image[0]) {
+        ctx.drawImage(img, -width / size / 2 - PRMS.task_choice_pos_x, -height / size / 2, width / size, height / size);
     }
-    if (drawImage[1]) {
-        ctx.drawImage(img, -width / size / 2 + PRMS.taskChoicePosX, -height / size / 2, width / size, height / size);
+    if (draw_image[1]) {
+        ctx.drawImage(img, -width / size / 2 + PRMS.task_choice_pos_x, -height / size / 2, width / size, height / size);
     }
 
     // rectangle
@@ -368,10 +371,10 @@ function drawTaskChoice(args) {
         let dat = jsPsych.data.get().last(1).values()[0];
         ctx.beginPath();
         ctx.lineWidth = 10;
-        if (dat.key_press == PRMS.respKeysLH[0].toLowerCase()) {
-            ctx.rect(-width / size / 2 - PRMS.taskChoicePosX, -height / size / 2, width / size, height / size + 50);
-        } else if (dat.key_press == PRMS.respKeysLH[1].toLowerCase()) {
-            ctx.rect(-width / size / 2 + PRMS.taskChoicePosX, -height / size / 2, width / size, height / size + 50);
+        if (dat.key_press == PRMS.response_keys_lh[0].toLowerCase()) {
+            ctx.rect(-width / size / 2 - PRMS.task_choice_pos_x, -height / size / 2, width / size, height / size + 50);
+        } else if (dat.key_press == PRMS.response_keys_lh[1].toLowerCase()) {
+            ctx.rect(-width / size / 2 + PRMS.task_choice_pos_x, -height / size / 2, width / size, height / size + 50);
         }
         ctx.stroke();
     }
@@ -386,7 +389,7 @@ const TASK_CHOICE_SELECTION = {
     response_ends_trial: true,
     choices: null,
     trial_duration: PRMS.tooSlow,
-    func: drawTaskChoice,
+    func: draw_task_choice,
     func_args: null,
     data: {
         stim_type: "vts",
@@ -397,9 +400,9 @@ const TASK_CHOICE_SELECTION = {
         "use strict";
 
         if (trial.data.free_forced == "free") {
-            trial.choices = PRMS.respKeysLH;
+            trial.choices = PRMS.response_keys_lh;
         } else if (trial.data.free_forced == "forced") {
-            trial.choices = [PRMS.respKeysLH[PRMS.taskSide.indexOf(trial.data.forced_task)]];
+            trial.choices = [PRMS.response_keys_lh[PRMS.task_side.indexOf(trial.data.forced_task)]];
         }
 
         trial.func_args = [
@@ -420,8 +423,8 @@ const TASK_CHOICE_FEEDBACK = {
     translate_origin: true,
     response_ends_trial: false,
     choices: null,
-    trial_duration: PRMS.taskSelectionDur,
-    func: drawTaskChoice,
+    trial_duration: PRMS.task_selection_duration,
+    func: draw_task_choice,
     func_args: null,
     data: {
         stim_type: "vts_tcr",
@@ -439,21 +442,21 @@ const TASK_CHOICE_FEEDBACK = {
         ];
     },
     on_finish: function () {
-        codeTrialTaskSelection();
+        code_trial_task_selection();
     },
 };
 
-function codeTrialTaskSelection() {
+function code_trial_task_selection() {
     "use strict";
 
     let dat = jsPsych.data.get().last(2).values()[0];
 
     // Which task did they choose?
     let selected_task;
-    if (dat.key_press == PRMS.respKeysLH[0].toLowerCase()) {
-        selected_task = PRMS.taskSide[0];
-    } else if (dat.key_press == PRMS.respKeysLH[1].toLowerCase()) {
-        selected_task = PRMS.taskSide[1];
+    if (dat.key_press == PRMS.response_keys_lh[0].toLowerCase()) {
+        selected_task = PRMS.task_side[0];
+    } else if (dat.key_press == PRMS.response_keys_lh[1].toLowerCase()) {
+        selected_task = PRMS.task_side[1];
     }
 
     jsPsych.data.addDataToLastTrial({
@@ -464,8 +467,8 @@ function codeTrialTaskSelection() {
         corrCode: 1,
         reward: false,
         trial_phase: "task_selection",
-        block_num: PRMS.cBlk,
-        trial_num: PRMS.cTrl,
+        block_num: PRMS.block,
+        trial_num: PRMS.trial,
         letter: "na",
         corr_resp_letter: "na",
         colour_more: "na",
@@ -473,20 +476,20 @@ function codeTrialTaskSelection() {
     });
 }
 
-function drawStimulus(args) {
+function draw_stimulus(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
 
     // draw colour dots
-    let radius = PRMS.dotRadius;
+    let radius = PRMS.dot_radius;
     let idx = 0;
-    for (let rows = -PRMS.dotEccentricity; rows <= PRMS.dotEccentricity; rows += PRMS.dotGaps) {
-        for (let cols = -PRMS.dotEccentricity; cols <= PRMS.dotEccentricity; cols += PRMS.dotGaps) {
+    for (let rows = -PRMS.dot_eccentricity; rows <= PRMS.dot_eccentricity; rows += PRMS.dot_gap) {
+        for (let cols = -PRMS.dot_eccentricity; cols <= PRMS.dot_eccentricity; cols += PRMS.dot_gap) {
             if (
-                (rows > -PRMS.dotGaps * PRMS.dotBlank) &
-                (rows < PRMS.dotGaps * PRMS.dotBlank) &
-                (cols > -PRMS.dotGaps * PRMS.dotBlank) &
-                (cols < PRMS.dotGaps * PRMS.dotBlank)
+                (rows > -PRMS.dot_gap * PRMS.dot_blank) &
+                (rows < PRMS.dot_gap * PRMS.dot_blank) &
+                (cols > -PRMS.dot_gap * PRMS.dot_blank) &
+                (cols < PRMS.dot_gap * PRMS.dot_blank)
             ) {
                 continue;
             }
@@ -502,7 +505,7 @@ function drawStimulus(args) {
 
     // draw letter
     if (args.letter !== "na") {
-        ctx.font = PRMS.stimFont;
+        ctx.font = PRMS.stimulus_font;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = "black";
@@ -517,9 +520,9 @@ const VTS = {
     canvas_border: CANVAS_BORDER,
     translate_origin: true,
     response_ends_trial: true,
-    choices: PRMS.respKeysRH,
+    choices: PRMS.response_keys_rh,
     trial_duration: null,
-    func: drawStimulus,
+    func: draw_stimulus,
     func_args: null,
     data: {
         stim_type: "vts_tcr",
@@ -540,13 +543,13 @@ const VTS = {
 
         if (dat.selected_task == "Letter") {
             trial.data.letter = shuffle(PRMS.letters)[0];
-            if (PRMS.lettersVowel.includes(trial.data.letter)) {
-                trial.data.corr_resp_letter = PRMS.respKeysRH[PRMS.LetterTask.indexOf("Vokal")];
-            } else if (PRMS.lettersConsonant.includes(trial.data.letter)) {
-                trial.data.corr_resp_letter = PRMS.respKeysRH[PRMS.LetterTask.indexOf("Konsonant")];
+            if (PRMS.letters_vowels.includes(trial.data.letter)) {
+                trial.data.corr_resp_letter = PRMS.response_keys_rh[PRMS.letter_task.indexOf("Vokal")];
+            } else if (PRMS.letters_consonant.includes(trial.data.letter)) {
+                trial.data.corr_resp_letter = PRMS.response_keys_rh[PRMS.letter_task.indexOf("Konsonant")];
             }
         } else if (dat.selected_task == "Colour") {
-            let ratio = PRMS.ratioNormal;
+            let ratio = PRMS.ratio_normal;
             trial.data.colour_more = shuffle(["mehr Blau", "mehr Rot"])[0];
             let colour_order;
             if (trial.data.colour_more === "mehr Blau") {
@@ -559,7 +562,7 @@ const VTS = {
                     repeatArray(PRMS.colours[colour_order[1]], Math.round((PRMS.nDots * (100 - ratio)) / 100)),
                 ),
             );
-            trial.data.corr_resp_colour = PRMS.respKeysRH[PRMS.ColourTask.indexOf(trial.data.colour_more)];
+            trial.data.corr_resp_colour = PRMS.response_keys_rh[PRMS.color_task.indexOf(trial.data.colour_more)];
         }
 
         trial.func_args = [
@@ -571,11 +574,11 @@ const VTS = {
         ];
     },
     on_finish: function () {
-        codeTrialTaskExecution();
+        code_trial_task_execution();
     },
 };
 
-function codeTrialTaskExecution() {
+function code_trial_task_execution() {
     "use strict";
 
     let dat = jsPsych.data.get().last(1).values()[0];
@@ -612,11 +615,11 @@ function codeTrialTaskExecution() {
         corrCode: corr_code,
         reward: reward,
         trial_phase: "task_execution",
-        block_num: PRMS.cBlk,
-        trial_num: PRMS.cTrl,
+        block_num: PRMS.block,
+        trial_num: PRMS.trial,
     });
 
-    PRMS.cTrl += 1;
+    PRMS.trial += 1;
 }
 
 const TRIAL_FEEDBACK = {
@@ -630,32 +633,32 @@ const TRIAL_FEEDBACK = {
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (dat.corrCode === 3) {
-            trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
+            trial.trial_duration = PRMS.feedback_duration[dat.corrCode - 1];
             trial.stimulus =
                 generate_formatted_html({
-                    text: PRMS.fbText[dat.corrCode - 1],
+                    text: PRMS.feedback_text[dat.corrCode - 1],
                     align: "center",
                     fontsize: 30,
                     width: "1200px",
                     lineheight: 1.5,
                     bold: true,
-                }) + RESPMAPPING;
+                }) + RESPONSE_MAPPING;
         }
     },
 };
 
-function drawReward(args) {
+function draw_reward(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
     console.log(args);
 
     // draw text
-    ctx.font = PRMS.fbFont;
+    ctx.font = PRMS.feedback_font;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
 
-    ctx.fillText(PRMS.fbText[args.corrCode - 1], 0, 100);
+    ctx.fillText(PRMS.feedback_text[args.corrCode - 1], 0, 100);
 
     // draw image
     let img = new Image();
@@ -669,7 +672,7 @@ function drawReward(args) {
     }
 
     // draw image
-    const size = PRMS.rewardImageScale;
+    const size = PRMS.reward_image_scale;
     const width = img.width;
     const height = img.height;
     ctx.drawImage(img, -width / size / 2, -height / size / 2 - 50, width / size, height / size);
@@ -683,11 +686,11 @@ const TRIAL_REWARD = {
     translate_origin: true,
     response_ends_trial: false,
     trial_duration: null,
-    func: drawReward,
+    func: draw_reward,
     func_args: null,
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
-        trial.trial_duration = PRMS.feedbackDur[dat.corrCode - 1];
+        trial.trial_duration = PRMS.feedback_duration[dat.corrCode - 1];
         trial.func_args = [{ corrCode: dat.corrCode }];
     },
 };
@@ -710,10 +713,9 @@ const TRIAL_TABLE = [
     { free_forced: 'forced', forced_task: 'Colour' },
 ];
 
-// prettier-ignore
 const TRIAL_TIMELINE = {
     timeline: [TASK_CHOICE_SELECTION, TASK_CHOICE_FEEDBACK, VTS, TRIAL_REWARD, ITI],
-    timeline_variables: TRIAL_TABLE
+    timeline_variables: TRIAL_TABLE,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -803,7 +805,7 @@ function genExpSeq() {
 
     // setup
     exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
+    exp.push(browser_check(PRMS.screen_res));
     exp.push(resize_browser());
     exp.push(welcome_message());
     exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
@@ -819,16 +821,16 @@ function genExpSeq() {
     exp.push(TASK_INSTRUCTIONS3);
     exp.push(TASK_INSTRUCTIONS4);
 
-    for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+    for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
         exp.push(BLOCK_START);
         let blk_timeline;
         blk_timeline = { ...TRIAL_TIMELINE };
         blk_timeline.sample = {
             type: "fixed-repetitions",
-            size: PRMS.nTrls / TRIAL_TABLE.length,
+            size: PRMS.n_trials / TRIAL_TABLE.length,
         };
         exp.push(blk_timeline); // trials within a block
-        if (blk < PRMS.nBlks - 1) {
+        if (blk < PRMS.n_blocks - 1) {
             exp.push(BLOCK_END);
         }
         exp.push(SAVE_DATA_BLOCKWISE);
