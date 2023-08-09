@@ -41,8 +41,8 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_trials: 8, // number of trials per block
-    n_blocks: 1, // number of blocks
+    n_trials: 4, // number of trials per block
+    n_blocks: 2, // number of blocks
     task_selection_duration: 250, // duration of the task selection screen
     feedback_text: ["Correct! +10 points!", "Correct! But no points!", "Error! No points!"],
     iti: 500, // duration of the inter-trial-interval
@@ -53,8 +53,8 @@ const PRMS = {
     letters_vowels: ["A", "E", "I", "U"],
     letters_consonant: ["G", "K", "M", "R"],
     task_side: shuffle(["Letter", "Colour"]),
-    color_task: shuffle(["mehr Blau", "mehr Rot"]),
-    letter_task: shuffle(["Vokal", "Konsonant"]),
+    Colour_task: shuffle(["mehr Blau", "mehr Rot"]),
+    Letter_task: shuffle(["Vokal", "Konsonant"]),
     colours: ["rgba(0, 0, 255, 0.9)", "rgba(255, 0, 0, 0.9)"],
     ratio_normal: 80,
     response_keys_lh: ["Q", "W"],
@@ -71,7 +71,7 @@ const PRMS = {
 };
 
 function calculate_number_of_dots() {
-    // Required for ratio manipulation in VTS
+    // required for ratio manipulation
     PRMS.n_dots = 0;
     for (let rows = -PRMS.dot_eccentricity; rows <= PRMS.dot_eccentricity; rows += PRMS.dot_gap) {
         for (let cols = -PRMS.dot_eccentricity; cols <= PRMS.dot_eccentricity; cols += PRMS.dot_gap) {
@@ -134,6 +134,7 @@ const TASK_INSTRUCTIONS1 = {
     choices: ["G"],
 };
 
+// TO DO: move to separate CSS file?
 const RESPONSE_MAPPING = `<html>
 <head>
    <style>
@@ -142,7 +143,7 @@ const RESPONSE_MAPPING = `<html>
 	width: 1000px;
 	margin: 10px auto;
 	display: grid;
-	grid-template-rows: 50px 80px 20px 80px;
+	grid-template-rows: 50px 100px 20px 80px;
 	grid-template-columns: 220px 220px 80px 220px 220px;
 }
 .header1{
@@ -180,19 +181,14 @@ const RESPONSE_MAPPING = `<html>
 	<div class="header2 header--2">Bearbeitung der Aufgabe = Rechte Hand</div>
 	<div class="itemL item--3">Linke Aufgabe<br>(${PRMS.task_side[0]})<br>${PRMS.response_keys_lh[0]}</div>
 	<div class="itemL item--4">Rechte Aufgabe<br>(${PRMS.task_side[1]})<br>${PRMS.response_keys_lh[1]}</div>
-	<div class="itemL item--5"></div>
-	<div class="itemR item--6">${PRMS.task_side[0]}-Aufgabe:<br>${PRMS[PRMS.task_side[0] + "Task"][0]} ${"&emsp;".repeat(
+	<div class="itemR item--6">${PRMS.task_side[0]}-Aufgabe:<br>${PRMS[PRMS.task_side[0] + "_task"][0]} ${"&emsp;".repeat(
     2,
-)}${PRMS[PRMS.task_side[0] + "Task"][1]}<br>${PRMS.response_keys_rh[0]} ${"&emsp;".repeat(5)}${
+)}${PRMS[PRMS.task_side[0] + "_task"][1]}<br>${PRMS.response_keys_rh[0]} ${"&emsp;".repeat(5)}${
     PRMS.response_keys_rh[1]
 }<br></div>
-	<div class="item item--7"></div>
-	<div class="item item--8"></div>
-	<div class="item item--9"></div>
-	<div class="item item--10"></div>
-<div class="itemR item--11">${PRMS.task_side[1]}-Aufgabe:<br>${PRMS[PRMS.task_side[1] + "Task"][0]} ${"&emsp;".repeat(
+<div class="itemR item--11">${PRMS.task_side[1]}-Aufgabe:<br>${PRMS[PRMS.task_side[1] + "_task"][0]} ${"&emsp;".repeat(
     2,
-)}${PRMS[PRMS.task_side[1] + "Task"][1]}<br>${PRMS.response_keys_rh[0]} ${"&emsp;".repeat(5)} ${
+)}${PRMS[PRMS.task_side[1] + "_task"][1]}<br>${PRMS.response_keys_rh[0]} ${"&emsp;".repeat(5)} ${
     PRMS.response_keys_rh[1]
 }<br></div>
 	</div>
@@ -539,14 +535,14 @@ const VTS = {
         trial.data.colour_more = "na";
         trial.data.corr_resp_colour = "na";
 
-        let dot_colours = repeatArray(CANVAS_COLOUR, Math.round(PRMS.nDots));
+        let dot_colours = repeatArray(CANVAS_COLOUR, Math.round(PRMS.n_dots));
 
         if (dat.selected_task == "Letter") {
             trial.data.letter = shuffle(PRMS.letters)[0];
             if (PRMS.letters_vowels.includes(trial.data.letter)) {
-                trial.data.corr_resp_letter = PRMS.response_keys_rh[PRMS.letter_task.indexOf("Vokal")];
+                trial.data.corr_resp_letter = PRMS.response_keys_rh[PRMS.Letter_task.indexOf("Vokal")];
             } else if (PRMS.letters_consonant.includes(trial.data.letter)) {
-                trial.data.corr_resp_letter = PRMS.response_keys_rh[PRMS.letter_task.indexOf("Konsonant")];
+                trial.data.corr_resp_letter = PRMS.response_keys_rh[PRMS.Letter_task.indexOf("Konsonant")];
             }
         } else if (dat.selected_task == "Colour") {
             let ratio = PRMS.ratio_normal;
@@ -558,11 +554,11 @@ const VTS = {
                 colour_order = [1, 0];
             }
             dot_colours = shuffle(
-                repeatArray(PRMS.colours[colour_order[0]], Math.round(PRMS.nDots * (ratio / 100))).concat(
-                    repeatArray(PRMS.colours[colour_order[1]], Math.round((PRMS.nDots * (100 - ratio)) / 100)),
+                repeatArray(PRMS.colours[colour_order[0]], Math.round(PRMS.n_dots * (ratio / 100))).concat(
+                    repeatArray(PRMS.colours[colour_order[1]], Math.round((PRMS.n_dots * (100 - ratio)) / 100)),
                 ),
             );
-            trial.data.corr_resp_colour = PRMS.response_keys_rh[PRMS.color_task.indexOf(trial.data.colour_more)];
+            trial.data.corr_resp_colour = PRMS.response_keys_rh[PRMS.Colour_task.indexOf(trial.data.colour_more)];
         }
 
         trial.func_args = [
@@ -730,7 +726,7 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br>
+        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br><br>
         Im nächsten Fenster wirst Du zunächst aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
         Falls Du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
         wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander erhalten.<br><br>
@@ -798,7 +794,7 @@ const SAVE_DATA_BLOCKWISE = {
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
-function genExpSeq() {
+function gen_exp_seq() {
     "use strict";
 
     let exp = [];
@@ -849,6 +845,6 @@ function genExpSeq() {
 
     return exp;
 }
-const EXP = genExpSeq();
+const EXP = gen_exp_seq();
 
 jsPsych.run(EXP);
