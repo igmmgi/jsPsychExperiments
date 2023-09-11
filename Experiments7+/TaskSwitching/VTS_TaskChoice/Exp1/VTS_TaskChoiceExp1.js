@@ -27,7 +27,14 @@
 // In error trials, No treasure box + message "Error! No points!"
 // Blank inter-trial-interval for 500 ms
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        window.location.assign(
+            "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=138&credit_token=bc4d282bd626463f8acd249ceb8f145f&survey_code=" +
+                jsPsych.data.urlVariables().sona_id,
+        );
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
