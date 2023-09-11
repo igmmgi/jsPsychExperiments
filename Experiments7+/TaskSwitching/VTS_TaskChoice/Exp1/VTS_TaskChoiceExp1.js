@@ -690,6 +690,54 @@ const TRIAL_TIMELINE = {
 };
 
 ////////////////////////////////////////////////////////////////////////
+//                           Questionnaires                           //
+////////////////////////////////////////////////////////////////////////
+const SCALE1 = ["Trifft gar nicht zu", "", "", "", "Trifft voll und ganz zu"];
+
+// prettier-ignore
+const QUESTIONS1 = [
+  { prompt: 'Ich habe mein Leben selbst in der Hand.',                                             name: 'q1.1', labels: SCALE1, required: true },
+  { prompt: 'Wenn ich mich anstrenge, werde ich auch Erfolg haben.',                               name: 'q1.2', labels: SCALE1, required: true },
+  { prompt: 'Egal ob privat oder im Beruf: Mein Leben wird zum großen Teil von anderen bestimmt.', name: 'q1.3', labels: SCALE1, required: true }, 
+  { prompt: 'Meine Pläne werden oft vom Schicksal durchkreuzt.',                                   name: 'q1.4', labels: SCALE1, required: true },
+];
+
+const QUESTIONNAIRE1 = {
+    type: jsPsychSurveyLikert,
+    questions: QUESTIONS1,
+    scale_width: 400,
+    button_label: "Weiter",
+    post_trial_gap: 1000,
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        for (const [key, val] of Object.entries(dat.response)) {
+            jsPsych.data.addProperties({ [key]: val + 1 });
+        }
+    },
+};
+
+const SCALE2 = ["gar nicht", "etwas", "sehr", "komplett"];
+
+// prettier-ignore
+const QUESTIONS2 = [
+  { prompt: 'Wie sehr hattest du das Gefühl, dass die Belohnung von deiner Auswahl abhing?', name: 'q2.1', labels: SCALE2, required: true },
+];
+
+const QUESTIONNAIRE2 = {
+    type: jsPsychSurveyLikert,
+    questions: QUESTIONS2,
+    scale_width: 400,
+    button_label: "Weiter",
+    post_trial_gap: 1000,
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        for (const [key, val] of Object.entries(dat.response)) {
+            jsPsych.data.addProperties({ [key]: val + 1 });
+        }
+    },
+};
+
+////////////////////////////////////////////////////////////////////////
 //                              VP Stunden                            //
 ////////////////////////////////////////////////////////////////////////
 
@@ -811,6 +859,11 @@ function gen_exp_seq() {
     // debrief
     exp.push(mouseCursor(true));
     exp.push(END_SCREEN);
+
+    // short questionnaires
+    exp.push(QUESTIONNAIRE1);
+    exp.push(QUESTIONNAIRE2);
+
     exp.push(EMAIL_OPTION);
 
     // save data
