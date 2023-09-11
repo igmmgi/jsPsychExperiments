@@ -41,24 +41,24 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_trials: 4, // number of trials per block
-    n_blocks: 2, // number of blocks
-    task_selection_duration: 250, // duration of the task selection screen
+    n_trials: 80, // number of trials per block
+    n_blocks: 8, // number of blocks
+    task_selection_duration: 500, // duration of the task selection screen
     feedback_text: ["Correct! +10 points!", "Correct! But no points!", "Error! No points!"],
     iti: 500, // duration of the inter-trial-interval
     feedback_duration: [750, 750, 750], // duration of the reward screen
     stimulus_font: "110px Arial",
-    feedback_font: "30px Arial",
+    feedback_font: "40px Arial",
     letters: ["A", "E", "I", "U", "G", "K", "M", "R"],
     letters_vowels: ["A", "E", "I", "U"],
-    letters_consonant: ["G", "K", "M", "R"],
+    letters_consonant: ["G", "T", "M", "R"],
     task_side: shuffle(["Letter", "Colour"]),
     Colour_task: shuffle(["mehr Blau", "mehr Rot"]),
     Letter_task: shuffle(["Vokal", "Konsonant"]),
     colours: ["rgba(0, 0, 255, 0.9)", "rgba(255, 0, 0, 0.9)"],
     ratio_normal: 80,
-    response_keys_lh: ["Q", "W"],
-    response_keys_rh: ["O", "P"],
+    response_keys_lh: ["S", "D"],
+    response_keys_rh: ["K", "L"],
     dot_radius: 1.5,
     dot_eccentricity: 100,
     dot_gap: 4,
@@ -123,8 +123,8 @@ const TASK_INSTRUCTIONS1 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `In diesem Experiment gibt es zwei Aufgaben. Mit der linken Hand wird zunächst die Aufgabe ausgewählt und mit der rechten Hand wird die Aufgabe bearbeitet.<br><br>
-              Auswahl der Aufgabe = Linke Hand:<br><br> 
-              Bearbeitung der Aufgabe = Rechte Hand:<br><br><br>
+              Auswahl der Aufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf den Tasten "S" und "D".<br><br> 
+              Bearbeitung der Aufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf den Tasten "K" und "L".<br><br><br>
               Drücke die "G"-Taste, um fortzufahren!`,
         align: "left",
         fontsize: 30,
@@ -246,8 +246,8 @@ const TASK_INSTRUCTIONS4 = {
     stimulus: generate_formatted_html({
         text: `Zu Beginn des Experimentes hast du 0 Punkte.<br><br>
            In manchen Durchgängen kannst du + 10 Punkte für eine korrekte Antwort gewinnen. In Durchgängen mit Fehler bekommst Du keine Punkte.
-           Je mehr Punkte Du gewinnst, desto kürzer wird das Experiment! Du erfährst nach dem ${PRMS.n_blocks} Block, wie viele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>
-           Des Weiteren werden die 20% aller Personen mit den höchsten Gesamtpunktzahlen einen 10 % Gutschein von Osiander oder der deutschen Bahn erhalten.<br><br>
+           Je mehr Punkte Du gewinnst, desto kürzer wird das Experiment! Du erfährst nach dem ${PRMS.n_blocks}. Block, wie viele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>
+           Des Weiteren werden die 15% aller Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein von Osiander oder der deutschen Bahn erhalten.<br><br>
            Drücke die "K"- Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
@@ -297,7 +297,7 @@ const BLOCK_END = {
         }).length;
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.block} von ${PRMS.n_blocks + 3}<br><br>
-             Dein aktueller Punktestand beträgt: POINTS: ${n_reward * 10}! <br><br>
+             Dein aktueller Punktestand beträgt: ${n_reward * 10}! <br><br>
              Kurze Pause.<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
@@ -618,31 +618,6 @@ function code_trial_task_execution() {
     PRMS.trial += 1;
 }
 
-const TRIAL_FEEDBACK = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    response_ends_trial: false,
-    stimulus: "",
-    trial_duration: 0,
-    on_start: function (trial) {
-        let dat = jsPsych.data.get().last(1).values()[0];
-        if (dat.corrCode === 3) {
-            trial.trial_duration = PRMS.feedback_duration[dat.corrCode - 1];
-            trial.stimulus =
-                generate_formatted_html({
-                    text: PRMS.feedback_text[dat.corrCode - 1],
-                    align: "center",
-                    fontsize: 30,
-                    width: "1200px",
-                    lineheight: 1.5,
-                    bold: true,
-                }) + RESPONSE_MAPPING;
-        }
-    },
-};
-
 function draw_reward(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
@@ -726,11 +701,12 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br><br>
-        Im nächsten Fenster wirst Du zunächst aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
-        Falls Du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
-        wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander erhalten.<br><br>
-        Drücke die Leertaste, um fortzufahren`,
+        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar
+               weiteren Klicks vorbei. Wir werden dir noch einige Fragen stellen Du dazu aufgefordert wirst, deine
+               Email-Adresse für die Gutscheinvergabe anzugeben. Falls Du zu den 15% Personen mit der höchsten
+               Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung wahlweise einen 10€ Gutschein
+               von der Deutschen Bahn oder Osiander erhalten.<br><br>
+               Drücke die Leertaste, um fortzufahren`,
         align: "left",
         fontsize: 30,
         width: "1200px",
@@ -766,10 +742,10 @@ const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
-    //saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, {
-    //    stim_type: "vts_tcr",
-    //});
-    saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vts_tcr" });
+    saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, {
+        stim_type: "vts_tcr",
+    });
+    //saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vts_tcr" });
 }
 
 const SAVE_DATA = {
