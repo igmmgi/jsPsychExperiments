@@ -50,13 +50,15 @@ const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
     n_trials: 80, // number of trials per block
     n_blocks: 8, // number of blocks
+    fixSize: 15, // duration of the fixation cross
+    fixWidth: 5, // size of fixation cross
     task_selection_duration: 500, // duration of the task selection screen
     feedback_text: ["Correct! +10 points!", "Correct! But no points!", "Error! No points!"],
     iti: 500, // duration of the inter-trial-interval
     feedback_duration: [750, 750, 750], // duration of the reward screen
     stimulus_font: "110px Arial",
     feedback_font: "40px Arial",
-    letters: ["A", "E", "I", "U", "G", "K", "M", "R"],
+    letters: ["A", "E", "I", "U", "G", "T", "M", "R"],
     letters_vowels: ["A", "E", "I", "U"],
     letters_consonant: ["G", "T", "M", "R"],
     task_side: shuffle(["Letter", "Colour"]),
@@ -70,7 +72,7 @@ const PRMS = {
     dot_eccentricity: 100,
     dot_gap: 4,
     dot_blank: 12,
-    task_choice_pos_x: 200,
+    task_choice_pos_x: 150,
     task_choice_image_scale: 10,
     reward_image_scale: 8,
     block: 1,
@@ -328,6 +330,14 @@ const PRELOAD = {
 
 function draw_task_choice(args) {
     let ctx = document.getElementById("canvas").getContext("2d");
+    // draw fixation cross
+    ctx.lineWidth = PRMS.fixWidth;
+    ctx.moveTo(-PRMS.fixSize, 0);
+    ctx.lineTo(PRMS.fixSize, 0);
+    ctx.stroke();
+    ctx.moveTo(0, -PRMS.fixSize);
+    ctx.lineTo(0, PRMS.fixSize);
+    ctx.stroke();
 
     // draw text
     ctx.font = PRMS.feedback_font;
@@ -345,14 +355,6 @@ function draw_task_choice(args) {
     } else if (args.free_forced == "forced") {
         draw_text[PRMS.task_side.indexOf(args.forced_task)] = true;
         draw_image[PRMS.task_side.indexOf(args.forced_task)] = true;
-    }
-
-    // text
-    if (draw_text[0]) {
-        ctx.fillText(PRMS.task_side[0], -PRMS.task_choice_pos_x, 100);
-    }
-    if (draw_text[1]) {
-        ctx.fillText(PRMS.task_side[1], PRMS.task_choice_pos_x, 100);
     }
 
     // image
@@ -375,11 +377,19 @@ function draw_task_choice(args) {
         ctx.beginPath();
         ctx.lineWidth = 10;
         if (dat.key_press == PRMS.response_keys_lh[0].toLowerCase()) {
-            ctx.rect(-width / size / 2 - PRMS.task_choice_pos_x, -height / size / 2, width / size, height / size + 50);
+            ctx.rect(-width / size / 2 - PRMS.task_choice_pos_x, -height / size / 2, width / size, height / size);
         } else if (dat.key_press == PRMS.response_keys_lh[1].toLowerCase()) {
-            ctx.rect(-width / size / 2 + PRMS.task_choice_pos_x, -height / size / 2, width / size, height / size + 50);
+            ctx.rect(-width / size / 2 + PRMS.task_choice_pos_x, -height / size / 2, width / size, height / size);
         }
         ctx.stroke();
+    }
+
+    // text
+    if (draw_text[0]) {
+        ctx.fillText(PRMS.task_side[0], -PRMS.task_choice_pos_x, 35);
+    }
+    if (draw_text[1]) {
+        ctx.fillText(PRMS.task_side[1], PRMS.task_choice_pos_x, 35);
     }
 }
 
@@ -757,8 +767,8 @@ const END_SCREEN = {
     choices: [" "],
     stimulus: generate_formatted_html({
         text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar
-               weiteren Klicks vorbei. Wir werden dir noch einige Fragen stellen Du dazu aufgefordert wirst, deine
-               Email-Adresse für die Gutscheinvergabe anzugeben. Falls Du zu den 15% Personen mit der höchsten
+               weiteren Klicks vorbei. Wir werden dir noch einige Fragen stellen und du kannst deine
+               Email-Adresse für die Gutscheinvergabe angeben. Falls Du zu den 15% Personen mit der höchsten
                Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung wahlweise einen 10€ Gutschein
                von der Deutschen Bahn oder Osiander erhalten.<br><br>
                Drücke die Leertaste, um fortzufahren`,
