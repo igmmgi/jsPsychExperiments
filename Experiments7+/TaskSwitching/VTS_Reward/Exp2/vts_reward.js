@@ -14,16 +14,14 @@
 // Reward screen (with/without reward picture)
 // ITI
 
-
 const jsPsych = initJsPsych({
-    on_finish: function() {
+    on_finish: function () {
         window.location.assign(
             "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=138&credit_token=bc4d282bd626463f8acd249ceb8f145f&survey_code=" +
-            jsPsych.data.urlVariables().sona_id,
+                jsPsych.data.urlVariables().sona_id,
         );
     },
 });
-
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -31,7 +29,6 @@ const jsPsych = initJsPsych({
 const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
 const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = "5px solid black";
-
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -69,11 +66,9 @@ const PRMS = {
     cTrl: 1,
 };
 
-
 // 2 counter balanced versions
 const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
-
 
 // Version 1: Colour task = left hand,  Letter task = right hand
 // Version 2: Colour task = right hand, Letter task = left hand
@@ -84,7 +79,6 @@ if (VERSION === 1) {
     PRMS.colourTaskKeys = PRMS.respKeysRH; // e.g., more red vs. more blue
     PRMS.letterTaskKeys = PRMS.respKeysLH; // e.g., vowel vs. consonant
 }
-
 
 function calculateNumberOfDots() {
     // Required for ratio manipulation in VTS
@@ -104,12 +98,10 @@ function calculateNumberOfDots() {
     }
 }
 
-
 const COUNT_DOTS = {
     type: jsPsychCallFunction,
     func: calculateNumberOfDots,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -133,7 +125,6 @@ const WELCOME_INSTRUCTIONS = {
         lineheight: 1.5,
     }),
 };
-
 
 function task_instructions1() {
     if (VERSION === 1) {
@@ -161,9 +152,7 @@ function task_instructions1() {
     }
 }
 
-
 const TASK_INSTRUCTIONS_TEXT = task_instructions1();
-
 
 const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -173,7 +162,6 @@ const TASK_INSTRUCTIONS1 = {
     stimulus: TASK_INSTRUCTIONS_TEXT,
     choices: ["G"],
 };
-
 
 let RESPMAPPING;
 // prettier-ignore
@@ -203,7 +191,6 @@ if (VERSION === 1) {
     });
 }
 
-
 const TASK_INSTRUCTIONS2 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
@@ -230,7 +217,6 @@ const TASK_INSTRUCTIONS2 = {
     choices: ["X"],
 };
 
-
 const TASK_INSTRUCTIONS3 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
@@ -248,7 +234,6 @@ const TASK_INSTRUCTIONS3 = {
     }),
     choices: ["T"],
 };
-
 
 const TASK_INSTRUCTIONS4 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -272,14 +257,13 @@ const TASK_INSTRUCTIONS4 = {
     choices: ["K"],
 };
 
-
 const BLOCK_START = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function(trial) {
+    on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
@@ -300,21 +284,20 @@ const BLOCK_START = {
     },
 };
 
-
 const BLOCK_END = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get();
-        let nReward = dat.select("reward").values.filter(function(x) {
+        let nReward = dat.select("reward").values.filter(function (x) {
             return x === true;
         }).length;
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
-             Dein aktueller Punktestand beträgt: ${10000 - (nReward * 10)}! <br><br>
+             Dein aktueller Punktestand beträgt: ${10000 - nReward * 10}! <br><br>
              Kurze Pause.<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
@@ -323,12 +306,11 @@ const BLOCK_END = {
             lineheight: 1.5,
         });
     },
-    on_finish: function() {
+    on_finish: function () {
         PRMS.cBlk += 1;
         PRMS.cTrl = 1;
     },
 };
-
 
 const TASK_INSTRUCTIONS_RESPMAPPING = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -338,15 +320,12 @@ const TASK_INSTRUCTIONS_RESPMAPPING = {
     stimulus: RESPMAPPING,
 };
 
-
 const REWARD_IMAGES = [`images/thief.png`, `images/blank.png`];
-
 
 const PRELOAD = {
     type: jsPsychPreload,
     images: REWARD_IMAGES,
 };
-
 
 function drawFixation() {
     "use strict";
@@ -360,7 +339,6 @@ function drawFixation() {
     ctx.stroke();
 }
 
-
 const FIXATION_CROSS = {
     type: jsPsychStaticCanvasKeyboardResponse,
     canvas_colour: CANVAS_COLOUR,
@@ -371,7 +349,6 @@ const FIXATION_CROSS = {
     trial_duration: PRMS.fixDur,
     func: drawFixation,
 };
-
 
 function drawStimulus(args) {
     "use strict";
@@ -408,7 +385,6 @@ function drawStimulus(args) {
     ctx.fillText(args.letter, 0, 5);
 }
 
-
 const VTS = {
     type: jsPsychStaticCanvasKeyboardResponse,
     canvas_colour: CANVAS_COLOUR,
@@ -426,7 +402,7 @@ const VTS = {
         free_forced: jsPsych.timelineVariable("free_forced"),
         forced_task: jsPsych.timelineVariable("forced_task"),
     },
-    on_start: function(trial) {
+    on_start: function (trial) {
         "use strict";
 
         // letter task
@@ -489,11 +465,10 @@ const VTS = {
             },
         ];
     },
-    on_finish: function() {
+    on_finish: function () {
         codeTrial();
     },
 };
-
 
 function codeTrial() {
     "use strict";
@@ -537,7 +512,6 @@ function codeTrial() {
     PRMS.cTrl += 1;
 }
 
-
 function drawReward(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
@@ -553,7 +527,7 @@ function drawReward(args) {
     // draw image
     let img = new Image();
 
-    if ((args.corrCode === 1) || (args.corrCode === 3)) {
+    if (args.corrCode === 1 || args.corrCode === 3) {
         img.src = REWARD_IMAGES[0];
     } else {
         img.src = REWARD_IMAGES[1];
@@ -570,18 +544,32 @@ function drawReward(args) {
         if (VERSION === 1) {
             // left hand = colour, right hand = letter
             ctx.fillText(`Farbaufgabe = Linke Hand                 Buchstabenaufgabe = Rechte Hand`, 0, 180);
-            ctx.fillText(`${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}                                   ${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}`, 0, 220);
-            ctx.fillText(`(${PRMS.colourTaskKeys[0]}-Taste)     (${PRMS.colourTaskKeys[1]}-Taste)                                 (${PRMS.letterTaskKeys[0]}-Taste)    (${PRMS.letterTaskKeys[1]}-Taste)`, 0, 250);
+            ctx.fillText(
+                `${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}                                   ${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}`,
+                0,
+                220,
+            );
+            ctx.fillText(
+                `(${PRMS.colourTaskKeys[0]}-Taste)     (${PRMS.colourTaskKeys[1]}-Taste)                                 (${PRMS.letterTaskKeys[0]}-Taste)    (${PRMS.letterTaskKeys[1]}-Taste)`,
+                0,
+                250,
+            );
         } else if (VERSION === 2) {
             // left hand = letter, right hand = colour
             ctx.fillText(`Buchstabenaufgabe = Linke Hand                 Farbaufgabe = Rechte Hand`, 0, 180);
-            ctx.fillText(`${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}                                   ${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}`, 0, 220);
-            ctx.fillText(`(${PRMS.letterTaskKeys[0]}-Taste)     (${PRMS.letterTaskKeys[1]}-Taste)                                 (${PRMS.colourTaskKeys[0]}-Taste)    (${PRMS.colourTaskKeys[1]}-Taste)`, 0, 250);
+            ctx.fillText(
+                `${PRMS.letterTask[0]} vs. ${PRMS.letterTask[1]}                                   ${PRMS.colourTask[0]} vs. ${PRMS.colourTask[1]}`,
+                0,
+                220,
+            );
+            ctx.fillText(
+                `(${PRMS.letterTaskKeys[0]}-Taste)     (${PRMS.letterTaskKeys[1]}-Taste)                                 (${PRMS.colourTaskKeys[0]}-Taste)    (${PRMS.colourTaskKeys[1]}-Taste)`,
+                0,
+                250,
+            );
         }
     }
-
 }
-
 
 const TRIAL_REWARD = {
     type: jsPsychStaticCanvasKeyboardResponse,
@@ -593,12 +581,11 @@ const TRIAL_REWARD = {
     trial_duration: PRMS.rewardDur,
     func: drawReward,
     func_args: null,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         trial.func_args = [{ corrCode: dat.corrCode }];
     },
 };
-
 
 const ITI = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -610,7 +597,6 @@ const ITI = {
     trial_duration: PRMS.iti,
 };
 
-
 // prettier-ignore
 const TRIAL_TABLE = [
     { trial_type: 1, free_forced: 'free',   forced_task: 'na' },
@@ -619,13 +605,11 @@ const TRIAL_TABLE = [
     { trial_type: 4, free_forced: 'forced', forced_task: 'colour' },
 ];
 
-
 // prettier-ignore
 const TRIAL_TIMELINE = {
     timeline: [FIXATION_CROSS, VTS, TRIAL_REWARD, ITI],
     timeline_variables: TRIAL_TABLE
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              VP Stunden                            //
@@ -651,7 +635,6 @@ const END_SCREEN = {
     }),
 };
 
-
 const EMAIL_OPTION = {
     type: jsPsychSurveyText,
     questions: [
@@ -665,12 +648,11 @@ const EMAIL_OPTION = {
         },
     ],
     button_label: "Weiter",
-    on_finish: function() {
+    on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
         jsPsych.data.addProperties({ email: dat.response.email });
     },
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
@@ -687,13 +669,11 @@ function save() {
     // saveDataLocal(data_fn, { stim_type: "vtsr" });
 }
 
-
 const SAVE_DATA = {
     type: jsPsychCallFunction,
     func: save,
     post_trial_gap: 3000,
 };
-
 
 function save_blockwise() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
@@ -702,13 +682,11 @@ function save_blockwise() {
     });
 }
 
-
 const SAVE_DATA_BLOCKWISE = {
     type: jsPsychCallFunction,
     func: save_blockwise,
     post_trial_gap: 1000,
 };
-
 
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
