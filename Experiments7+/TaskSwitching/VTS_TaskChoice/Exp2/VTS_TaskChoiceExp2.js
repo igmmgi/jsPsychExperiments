@@ -61,7 +61,7 @@ const PRMS = {
     letters: ["A", "E", "I", "U", "G", "T", "M", "R"],
     letters_vowels: ["A", "E", "I", "U"],
     letters_consonant: ["G", "T", "M", "R"],
-    task_side: shuffle(["Letter", "Colour"]),
+    task_side: ["Letter", "Colour"],
     Colour_task: shuffle(["mehr Blau", "mehr Rot"]),
     Letter_task: shuffle(["Vokal", "Konsonant"]),
     colours: ["rgba(0, 0, 255, 0.9)", "rgba(255, 0, 0, 0.9)"],
@@ -188,8 +188,8 @@ const RESPONSE_MAPPING = `<html>
 <div class="container">
 	<div class="header1 header--1">Auswahl der Aufgabe = Linke Hand</div>
 	<div class="header2 header--2">Bearbeitung der Aufgabe = Rechte Hand</div>
-	<div class="itemL item--3">Linke Aufgabe<br>(${PRMS.task_side[0]})<br>${PRMS.response_keys_lh[0]}</div>
-	<div class="itemL item--4">Rechte Aufgabe<br>(${PRMS.task_side[1]})<br>${PRMS.response_keys_lh[1]}</div>
+	<div class="itemL item--3">Linke Aufgabe<br>${PRMS.response_keys_lh[0]}</div>
+	<div class="itemL item--4">Rechte Aufgabe<br>${PRMS.response_keys_lh[1]}</div>
 	<div class="itemR item--6">${PRMS.task_side[0]}-Aufgabe:<br>${PRMS[PRMS.task_side[0] + "_task"][0]} ${"&emsp;".repeat(
     2,
 )}${PRMS[PRMS.task_side[0] + "_task"][1]}<br>${PRMS.response_keys_rh[0]} ${"&emsp;".repeat(5)}${
@@ -330,6 +330,7 @@ const PRELOAD = {
 
 function draw_task_choice(args) {
     let ctx = document.getElementById("canvas").getContext("2d");
+
     // draw fixation cross
     ctx.lineWidth = PRMS.fixWidth;
     ctx.moveTo(-PRMS.fixSize, 0);
@@ -411,6 +412,9 @@ const TASK_CHOICE_SELECTION = {
     },
     on_start: function (trial) {
         "use strict";
+
+        // shuffle trial-by-trial basis of task selection side
+        shuffle(PRMS.task_side);
 
         if (trial.data.free_forced == "free") {
             trial.choices = PRMS.response_keys_lh;
