@@ -1,4 +1,4 @@
-var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
+var jsPsychHtmlKeyboardResponseCanvas = (function(jspsych) {
   'use strict';
 
   const info = {
@@ -149,7 +149,7 @@ var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
 
       // hide stimulus if stimulus_duration is set
       if (trial.stimulus_duration !== null) {
-        this.jsPsych.pluginAPI.setTimeout(function () {
+        this.jsPsych.pluginAPI.setTimeout(function() {
           display_element.querySelector('#stimulus').style.visibility = 'hidden';
         }, trial.stimulus_duration);
       }

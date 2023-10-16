@@ -33,14 +33,14 @@ const PRMS = {
   stimDur: 150,
   respDur: [150, 1500],
   iti: 500,
-  fbDur: [0, 1000, 1000, 1000],
+  fbDur: [0, 1500, 1500, 1500],
   wait: 1000,
   fbTxt: ["", "Fehler!", "Zu langsam!", "Zu schnell!"],
   fixWidth: 3,
   fixSize: 15,
   stimSize: "40px monospace",
-  fbTxtSizeTrial: 30,
-  flankerEccentricity: 50,
+  fbTxtSizeTrial: 24,
+  flankerEccentricity: 30,
   respKeys: ["Q", "W", "I", "O"],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -55,14 +55,31 @@ const TARGETS = shuffle(["K", "L", "N", "P"]);
 const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
+// const RESP_TEXT = generate_formatted_html({
+//   text: `${TARGETS[0]} = linker Mittelfinger (Taste ${PRMS.respKeys[0]})&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp${TARGETS[2]} = rechter Zeigefinger (Taste ${PRMS.respKeys[2]})<br>
+//            ${TARGETS[1]} = linger Zeigefinger (Taste ${PRMS.respKeys[1]})&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp${TARGETS[3]} = rechter Mittelfinger (Taste ${PRMS.respKeys[3]})`,
+//   align: "center",
+//   fontsize: 22,
+//   bold: true,
+//   lineheight: 1.5,
+// });
+
 const RESP_TEXT = generate_formatted_html({
-  text: `${TARGETS[0]} = linker Mittelfinger (Taste ${PRMS.respKeys[0]})&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp${TARGETS[2]} = rechter Zeigefinger (Taste ${PRMS.respKeys[2]})<br>
-           ${TARGETS[1]} = linger Zeigefinger (Taste ${PRMS.respKeys[1]})&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp${TARGETS[3]} = rechter Mittelfinger (Taste ${PRMS.respKeys[3]})`,
+  text: ` "${TARGETS[0]}" ${"&emsp;".repeat(2)} "${TARGETS[1]}" ${"&emsp;".repeat(11)} "${TARGETS[2]}" ${"&emsp;".repeat(2)} "${TARGETS[3]}"`,
   align: "center",
-  fontsize: 22,
+  fontsize: 30,
   bold: true,
-  lineheight: 1.5,
-});
+  lineheight: 0,
+})
+  + generate_formatted_html({
+    text: `${PRMS.respKeys[0]}-Taste ${"&emsp;".repeat(2)} ${PRMS.respKeys[1]}-Taste ${"&emsp;".repeat(13)} ${PRMS.respKeys[2]}-Taste ${"&emsp;".repeat(2)} ${PRMS.respKeys[3]}-Taste<br>
+linker Mittelfinger & Zeigefinger ${"&nbsp".repeat(18)} rechter Zeigefinger & Mittelfinger<br><br>`,
+    align: "center",
+    fontsize: 22,
+    bold: true,
+    lineheight: 2,
+  });
+
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -78,7 +95,7 @@ const WELCOME_INSTRUCTIONS = {
            Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest, und genügend Zeit hast,
            um das Experiment durchzuführen. Wir bitten dich, in den nächsten ca. 40 Minuten konzentriert zu arbeiten.<br><br>
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
-           hiwipibio@gmail.com<br><br>
+           ruben.ellinghaus@fernuni-hagen.de<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
     align: "left",
     fontsize: 28,
@@ -97,7 +114,7 @@ const TASK_INSTRUCTIONS_FLANKER = {
     trial.stimulus =
       generate_formatted_html({
         text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-                       Ziel - Buchstabe erscheint in der Mitte des Bildschirms. Es gilt:`,
+                       Ziel - Buchstabe erscheint in der Mitte des Bildschirms. Es gilt:<br><br>`,
         align: "left",
         fontsize: 24,
         bold: true,
@@ -314,6 +331,25 @@ function code_trial() {
   });
 }
 
+// const TRIAL_FEEDBACK = {
+//   type: jsPsychHtmlKeyboardResponseCanvas,
+//   canvas_colour: CANVAS_COLOUR,
+//   canvas_size: CANVAS_SIZE,
+//   canvas_border: CANVAS_BORDER,
+//   stimulus: "",
+//   trial_duration: 0,
+//   response_ends_trial: false,
+//   on_start: function(trial) {
+//     let dat = jsPsych.data.get().last(1).values()[0];
+//     let fontsize = PRMS.fbTxtSizeTrial;
+//     let fontweight = "normal";
+//     trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
+//     trial.stimulus = `<div style="font-size:${fontsize}px; color:Black; font-weight: ${fontweight};">${PRMS.fbTxt[dat.corrCode - 1]
+//       }</div>`;
+//   },
+// };
+
+
 const TRIAL_FEEDBACK = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
@@ -321,16 +357,20 @@ const TRIAL_FEEDBACK = {
   canvas_border: CANVAS_BORDER,
   stimulus: "",
   trial_duration: 0,
-  response_ends_trial: false,
+  response_ends_trial: true,
   on_start: function(trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
     let fontsize = PRMS.fbTxtSizeTrial;
-    let fontweight = "normal";
+    let fontweight = "Bold";
     trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
-    trial.stimulus = `<div style="font-size:${fontsize}px; color:Black; font-weight: ${fontweight};">${PRMS.fbTxt[dat.corrCode - 1]
-      }</div>`;
-  },
+    if (dat.corrCode !== 1) {
+      trial.stimulus = `<div style="font-size:${fontsize}px; color:Black; font-weight: ${fontweight};">${PRMS.fbTxt[dat.corrCode - 1]}<br><br> 
+"${TARGETS[0]}" ${"&emsp;".repeat(3)} "${TARGETS[1]}" ${"&emsp;".repeat(8)} "${TARGETS[2]}" ${"&emsp;".repeat(3)} "${TARGETS[3]}" <br>
+${PRMS.respKeys[0]}-Taste ${"&emsp;".repeat(2)} ${PRMS.respKeys[1]}-Taste ${"&emsp;".repeat(5)} ${PRMS.respKeys[2]}-Taste ${"&emsp;".repeat(2)} ${PRMS.respKeys[3]}-Taste<br></div>`
+    };
+  }
 };
+
 
 const ITI = {
   type: jsPsychHtmlKeyboardResponseCanvas,
@@ -431,7 +471,7 @@ const VP_NUM = getTime();
 function save() {
   jsPsych.data.addProperties({ vpNum: VP_NUM });
 
-  const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
+  const data_fn = `${DIR_NAME}data / version${VERSION} / ${EXP_NAME}_${VP_NUM}`;
   saveData("/Common7+/write_data.php", data_fn, { stim: "flanker" });
   // saveDataLocal('/Common7+/write_data.php', { stim: 'flanker' });
 }
@@ -444,7 +484,7 @@ const SAVE_DATA = {
 
 function save_blockwise() {
   jsPsych.data.addProperties({ vpNum: VP_NUM });
-  saveData("/Common7+/write_data.php", `${DIR_NAME}data/version${VERSION}/blockwise/${EXP_NAME}_${VP_NUM}`, {
+  saveData("/Common7+/write_data.php", `${DIR_NAME}data / version${VERSION} / blockwise / ${EXP_NAME}_${VP_NUM}`, {
     stim_type: "flanker",
   });
 }
