@@ -471,7 +471,7 @@ const VP_NUM = getTime();
 function save() {
   jsPsych.data.addProperties({ vpNum: VP_NUM });
 
-  const data_fn = `${DIR_NAME}data / version${VERSION} / ${EXP_NAME}_${VP_NUM}`;
+  const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
   saveData("/Common7+/write_data.php", data_fn, { stim: "flanker" });
   // saveDataLocal('/Common7+/write_data.php', { stim: 'flanker' });
 }
@@ -484,7 +484,7 @@ const SAVE_DATA = {
 
 function save_blockwise() {
   jsPsych.data.addProperties({ vpNum: VP_NUM });
-  saveData("/Common7+/write_data.php", `${DIR_NAME}data / version${VERSION} / blockwise / ${EXP_NAME}_${VP_NUM}`, {
+  saveData("/Common7+/write_data.php", `${DIR_NAME}data/version${VERSION}/blockwise/${EXP_NAME}_${VP_NUM}`, {
     stim_type: "flanker",
   });
 }
