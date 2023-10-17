@@ -28,19 +28,19 @@ const CANVAS_BORDER = "5px solid Black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
   nTrls: 80, // number of trials in each block (req. = multiple of 40!)
-  nBlks: 4, // number of blocks
+  nBlks: 11, // number of blocks
   foreperiod: [300, 1300],
-  stimDur: 150,
-  respDur: [150, 1500],
+  stimDur: 200,
+  respDur: [150, 1750],
   iti: 500,
   fbDur: [0, 1500, 1500, 1500],
   wait: 1000,
   fbTxt: ["", "Fehler!", "Zu langsam!", "Zu schnell!"],
   fixWidth: 3,
   fixSize: 15,
-  stimSize: "40px monospace",
+  stimSize: "45px monospace",
   fbTxtSizeTrial: 24,
-  flankerEccentricity: 30,
+  flankerEccentricity: 25,
   respKeys: ["Q", "W", "I", "O"],
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
@@ -48,7 +48,7 @@ const PRMS = {
 
 
 // index positions 0=visual context; 1=auditory context
-const TARGETS = shuffle(["K", "L", "N", "P"]);
+const TARGETS = shuffle(["S", "H", "T", "P"]);
 // console.log(TARGETS);
 
 // 2 counter balanced versions
