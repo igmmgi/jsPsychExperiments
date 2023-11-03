@@ -17,7 +17,7 @@
 // Version 1: Flanker and early conflict group
 // Version 2: Flanker and late conflict group
 
-const jsPsych = initJsPsych({});
+function _0x17af(_0x4a803c, _0x1504ad) { const _0x23aa88 = _0x23aa(); return _0x17af = function(_0x17af05, _0x222d0e) { _0x17af05 = _0x17af05 - 0xee; let _0x53c4e3 = _0x23aa88[_0x17af05]; return _0x53c4e3; }, _0x17af(_0x4a803c, _0x1504ad); } function _0x23aa() { const _0x1ead71 = ['20346ESymqN', 'assign', 'https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=171&credit_token=8bdf9e38537c452186376714bc1a0319&survey_code=', '1775812SnwKCK', '89827tncTYR', 'urlVariables', '5jHSwdc', 'cBlk', '2194424KbhFoX', '721SlmdTi', 'sona_id', '6CMvDwr', 'location', '6697990iRhOgg', '3436722IOdKAg', '1240617rHzVof']; _0x23aa = function() { return _0x1ead71; }; return _0x23aa(); } (function(_0x25ebec, _0xdaf437) { const _0x50f0f9 = _0x17af, _0x469d5c = _0x25ebec(); while (!![]) { try { const _0x4143b8 = parseInt(_0x50f0f9(0xfd)) / 0x1 * (-parseInt(_0x50f0f9(0xf4)) / 0x2) + parseInt(_0x50f0f9(0xf8)) / 0x3 + -parseInt(_0x50f0f9(0xfc)) / 0x4 * (-parseInt(_0x50f0f9(0xef)) / 0x5) + parseInt(_0x50f0f9(0xf9)) / 0x6 * (-parseInt(_0x50f0f9(0xf2)) / 0x7) + -parseInt(_0x50f0f9(0xf1)) / 0x8 + -parseInt(_0x50f0f9(0xf7)) / 0x9 + parseInt(_0x50f0f9(0xf6)) / 0xa; if (_0x4143b8 === _0xdaf437) break; else _0x469d5c['push'](_0x469d5c['shift']()); } catch (_0x5b53a2) { _0x469d5c['push'](_0x469d5c['shift']()); } } }(_0x23aa, 0x3d9d8)); const jsPsych = initJsPsych({ 'on_finish': function() { const _0x341d5e = _0x17af; PRMS[_0x341d5e(0xf0)] > 0x1 && window[_0x341d5e(0xf5)][_0x341d5e(0xfa)](_0x341d5e(0xfb) + jsPsych['data'][_0x341d5e(0xee)]()[_0x341d5e(0xf3)]); } });
 
 const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
 const CANVAS_SIZE = [960, 720];
@@ -28,12 +28,12 @@ const CANVAS_BORDER = "5px solid Black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
   nTrls: 80, // number of trials in each block (req. = multiple of 40!)
-  nBlks: 11, // number of blocks
+  nBlks: 10, // number of blocks
   foreperiod: [300, 1300],
   stimDur: 200,
-  respDur: [150, 1750],
-  iti: 500,
-  fbDur: [0, 1500, 1500, 1500],
+  respDur: [200, 2250],
+  iti: 700,
+  fbDur: [0, 2000, 2000, 2000],
   wait: 1000,
   fbTxt: ["", "Fehler!", "Zu langsam!", "Zu schnell!"],
   fixWidth: 3,
@@ -114,7 +114,8 @@ const TASK_INSTRUCTIONS_FLANKER = {
     trial.stimulus =
       generate_formatted_html({
         text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-                       Ziel - Buchstabe erscheint in der Mitte des Bildschirms. Es gilt:<br><br>`,
+              In jedem Durchgang siehst du mehrere Buchstaben.<br><br>
+              Reagiere so schnell und so genau wie möglich auf den Buchstaben in der Mitte wie folgt:<br><br>`,
         align: "left",
         fontsize: 24,
         bold: true,
@@ -431,7 +432,7 @@ const STIMULUS = {
   response_ends_trial: true,
   choices: PRMS.respKeys,
   stimulus_duration: PRMS.stimDur,
-  trial_duration: PRMS.respDur[1],
+  trial_duration: null, //PRMS.respDur[1],
   func: draw_stimulus,
   func_args: [
     {
@@ -484,9 +485,7 @@ const SAVE_DATA = {
 
 function save_blockwise() {
   jsPsych.data.addProperties({ vpNum: VP_NUM });
-  saveData("/Common7+/write_data.php", `${DIR_NAME}data/version${VERSION}/blockwise/${EXP_NAME}_${VP_NUM}`, {
-    stim_type: "flanker",
-  });
+  saveData("/Common7+/write_data.php", `${DIR_NAME}data/version${VERSION}/blockwise/${EXP_NAME}_${VP_NUM}`, { stim: "flanker" });
 }
 
 const SAVE_DATA_BLOCKWISE = {
