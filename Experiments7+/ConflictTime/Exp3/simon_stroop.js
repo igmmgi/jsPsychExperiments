@@ -1,9 +1,10 @@
-// Simon Flanker Task:
-// Participants respond to a laterally presented letter (H/S) with
-//  left and right key-press responses, or the central letter within
-//  an array of letters (e.g., HHH, HSH).
+// Word-Simon (Direction Stroop) and Standard Stroop Task:
+// Participants respond to the colour (blue vs. green) of a centrally 
+// presented word with left and right key-press responses 
+//  Word-Simon: LINKS/RECHTS
+//  Stroop: BLAU/GRÜN 
 // Blockwise manipulation:
-// Classic Simon Task vs. Classic Flanker Task
+// Simon Task vs. Classic Flanker Task
 // Trialwise manipulation:
 // Short (150 ms) vs. Long (Until response, or 1500ms) stimulus duration
 
@@ -34,7 +35,9 @@ const PRMS = {
   tooSlow: 1500, // response slower than x ms -> too slow!
   targetDuration: [150, 1500],
   respKeys: ["Q", "P"],
-  target: shuffle(["H", "S"]),
+  target: shuffle(["Grün", "Blau"]),
+  distractor_simon: ["LINKS", "RECHTS"],
+  distractor_stroop: ["GRÜN", "BLAU"],
   stimFont: "100px Monopsace",
   stimEccentricity: 200,
   fbTxt: ["", "Falsch", "Zu langsam", "Zu schnell"],
@@ -43,6 +46,8 @@ const PRMS = {
   cTrl: 1, // count trials
   cBlk: 1, // count blocks
 };
+
+const DE_EN = { "Grün": "green", "Blau": "blue" };
 
 // 2 counter balanced versions
 const VERSION = Number(jsPsych.data.urlVariables().version);
@@ -96,7 +101,8 @@ const RESP_TEXT = generate_formatted_html({
   lineheight: 1.5,
 });
 
-const TASK_INSTRUCTIONS_SIMON = {
+
+const TASK_INSTRUCTIONS2 = {
   type: jsPsychHtmlKeyboardResponseCanvas,
   canvas_colour: CANVAS_COLOUR,
   canvas_size: CANVAS_SIZE,
@@ -106,9 +112,7 @@ const TASK_INSTRUCTIONS_SIMON = {
     trial.stimulus =
       generate_formatted_html({
         text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
-               In diesem Block musst du auf in jedem Durchgang auf den
-               Buchstaben reagieren welcher <span style="font-weight:bold;">rechts oder links</span> auf dem Bildschirm erscheint.
-               Reagiere wie folgt:<br>`,
+        Bitte reagiere immer nur auf die Farbe und ignoriere das Wort. Es gilt:<br>`,
         align: "left",
         colour: "black",
         fontsize: 30,
@@ -123,32 +127,6 @@ const TASK_INSTRUCTIONS_SIMON = {
   },
 };
 
-const TASK_INSTRUCTIONS_FLANKER = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  stimulus: "",
-  on_start: function(trial) {
-    trial.stimulus =
-      generate_formatted_html({
-        text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
-               In diesem Block musst du in jedem Durchgang auf den
-               Buchstaben reagieren welcher <span style="font-weight:bold;">zentral</span> auf dem Bildschirm erscheint.
-               Reagiere wie folgt:<br>`,
-        align: "left",
-        colour: "black",
-        fontsize: 30,
-      }) +
-      RESP_TEXT +
-      generate_formatted_html({
-        text: `Drücke eine beliebige Taste, um fortzufahren.`,
-        align: "left",
-        colour: "black",
-        fontsize: 30,
-      });
-  },
-};
 
 const TASK_REMINDER = {
   type: jsPsychHtmlKeyboardResponseCanvas,
@@ -180,27 +158,29 @@ const TASK_REMINDER = {
 
 // prettier-ignore
 const TRIALS_SIMON = [
-  { type: "simon", target: PRMS.target[0], distractor: "left", duration: PRMS.targetDuration[0], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { type: "simon", target: PRMS.target[1], distractor: "right", duration: PRMS.targetDuration[0], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { type: "simon", target: PRMS.target[0], distractor: "right", duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { type: "simon", target: PRMS.target[1], distractor: "left", duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { type: "simon", target: PRMS.target[0], distractor: "left", duration: PRMS.targetDuration[1], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { type: "simon", target: PRMS.target[1], distractor: "right", duration: PRMS.targetDuration[1], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { type: "simon", target: PRMS.target[0], distractor: "right", duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { type: "simon", target: PRMS.target[1], distractor: "left", duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { type: "simon", target: PRMS.target[0], distractor: PRMS.distractor_simon[0], duration: PRMS.targetDuration[0], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { type: "simon", target: PRMS.target[1], distractor: PRMS.distractor_simon[1], duration: PRMS.targetDuration[0], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { type: "simon", target: PRMS.target[0], distractor: PRMS.distractor_simon[1], duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { type: "simon", target: PRMS.target[1], distractor: PRMS.distractor_simon[0], duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { type: "simon", target: PRMS.target[0], distractor: PRMS.distractor_simon[0], duration: PRMS.targetDuration[1], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { type: "simon", target: PRMS.target[1], distractor: PRMS.distractor_simon[1], duration: PRMS.targetDuration[1], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { type: "simon", target: PRMS.target[0], distractor: PRMS.distractor_simon[1], duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { type: "simon", target: PRMS.target[1], distractor: PRMS.distractor_simon[0], duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
+// console.table(TRIALS_SIMON)
 
 // prettier-ignore
-const TRIALS_FLANKER = [
-  { type: "flanker", target: PRMS.target[0], distractor: PRMS.target[0], duration: PRMS.targetDuration[0], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { type: "flanker", target: PRMS.target[1], distractor: PRMS.target[1], duration: PRMS.targetDuration[0], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { type: "flanker", target: PRMS.target[0], distractor: PRMS.target[1], duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { type: "flanker", target: PRMS.target[1], distractor: PRMS.target[0], duration: PRMS.targetDuration[0], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { type: "flanker", target: PRMS.target[0], distractor: PRMS.target[0], duration: PRMS.targetDuration[1], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { type: "flanker", target: PRMS.target[1], distractor: PRMS.target[1], duration: PRMS.targetDuration[1], compatibility: "comp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { type: "flanker", target: PRMS.target[0], distractor: PRMS.target[1], duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { type: "flanker", target: PRMS.target[1], distractor: PRMS.target[0], duration: PRMS.targetDuration[1], compatibility: "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+const TRIALS_STROOP = [
+  { type: "stroop", target: PRMS.target[0], distractor: PRMS.distractor_stroop[0], duration: PRMS.targetDuration[0], compatibility: PRMS.target[0].toUpperCase() === PRMS.distractor_stroop[0].toUpperCase() ? "comp" : "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { type: "stroop", target: PRMS.target[1], distractor: PRMS.distractor_stroop[1], duration: PRMS.targetDuration[0], compatibility: PRMS.target[1].toUpperCase() === PRMS.distractor_stroop[1].toUpperCase() ? "comp" : "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { type: "stroop", target: PRMS.target[0], distractor: PRMS.distractor_stroop[1], duration: PRMS.targetDuration[0], compatibility: PRMS.target[0].toUpperCase() === PRMS.distractor_stroop[1].toUpperCase() ? "comp" : "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { type: "stroop", target: PRMS.target[1], distractor: PRMS.distractor_stroop[0], duration: PRMS.targetDuration[0], compatibility: PRMS.target[1].toUpperCase() === PRMS.distractor_stroop[0].toUpperCase() ? "comp" : "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { type: "stroop", target: PRMS.target[0], distractor: PRMS.distractor_stroop[0], duration: PRMS.targetDuration[1], compatibility: PRMS.target[0].toUpperCase() === PRMS.distractor_stroop[0].toUpperCase() ? "comp" : "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { type: "stroop", target: PRMS.target[1], distractor: PRMS.distractor_stroop[1], duration: PRMS.targetDuration[1], compatibility: PRMS.target[1].toUpperCase() === PRMS.distractor_stroop[1].toUpperCase() ? "comp" : "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { type: "stroop", target: PRMS.target[0], distractor: PRMS.distractor_stroop[1], duration: PRMS.targetDuration[1], compatibility: PRMS.target[0].toUpperCase() === PRMS.distractor_stroop[1].toUpperCase() ? "comp" : "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { type: "stroop", target: PRMS.target[1], distractor: PRMS.distractor_stroop[0], duration: PRMS.targetDuration[1], compatibility: PRMS.target[1].toUpperCase() === PRMS.distractor_stroop[0].toUpperCase() ? "comp" : "incomp", key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
+// console.table(TRIALS_STROOP)
 
 ////////////////////////////////////////////////////////////////////////
 //                              Exp Parts                             //
@@ -293,17 +273,11 @@ function drawStimulus(args) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "black";
 
-  if (args.type === "simon") {
-    if (args.distractor === "left") {
-      ctx.fillText(args.target, -PRMS.stimEccentricity, 0);
-    } else if (args.distractor === "right") {
-      ctx.fillText(args.target, PRMS.stimEccentricity, 0);
-    }
-  } else if (args.type === "flanker") {
-    ctx.fillText(args.distractor, -PRMS.stimEccentricity, 0);
-    ctx.fillText(args.target, 0, 0);
-    ctx.fillText(args.distractor, PRMS.stimEccentricity, 0);
-  }
+  // stimulus
+  ctx.fillStyle = DE_EN[args.target];
+  ctx.fillText(args.distractor, 0, 0);
+
+
 }
 
 const STIMULUS = {
@@ -320,7 +294,7 @@ const STIMULUS = {
   func: drawStimulus,
   func_args: null,
   data: {
-    stim: "simon_flanker",
+    stim: "simon_stroop",
     type: jsPsych.timelineVariable("type"),
     target: jsPsych.timelineVariable("target"),
     distractor: jsPsych.timelineVariable("distractor"),
@@ -350,9 +324,9 @@ const TRIAL_TIMELINE_SIMON = {
   timeline_variables: TRIALS_SIMON,
 };
 
-const TRIAL_TIMELINE_FLANKER = {
+const TRIAL_TIMELINE_STROOP = {
   timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, ITI],
-  timeline_variables: TRIALS_FLANKER,
+  timeline_variables: TRIALS_STROOP,
 };
 
 const BLOCK_FEEDBACK = {
@@ -362,7 +336,7 @@ const BLOCK_FEEDBACK = {
   canvas_border: CANVAS_BORDER,
   response_ends_trial: true,
   on_start: function(trial) {
-    let block_dvs = calculateBlockPerformance({ filter_options: { stim: "simon_flanker", blockNum: PRMS.cBlk } });
+    let block_dvs = calculateBlockPerformance({ filter_options: { stim: "simon_stroop", blockNum: PRMS.cBlk } });
     let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
     trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
   },
@@ -401,8 +375,8 @@ function save() {
   jsPsych.data.addProperties({ vpNum: vpNum });
 
   const fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
-  saveData("/Common/write_data.php", fn, { stim: "simon_flanker" });
-  // saveDataLocal(fn, { stim: 'simon' });
+  saveData("/Common/write_data.php", fn, { stim: "simon_stroop" });
+  // saveDataLocal(fn, { stim: 'simon_stroop' });
 }
 
 const SAVE_DATA = {
@@ -429,19 +403,19 @@ function genExpSeq() {
 
   let blk_type;
   if (VERSION === 1) {
-    blk_type = repeatArray(["simon", "flanker"], PRMS.nBlks / 2);
+    blk_type = repeatArray(["simon", "stroop"], PRMS.nBlks / 2);
   } else if (VERSION === 2) {
-    blk_type = repeatArray(["flanker", "simon"], PRMS.nBlks / 2);
+    blk_type = repeatArray(["stroop", "simon"], PRMS.nBlks / 2);
   }
 
   for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+    exp.push(TASK_INSTRUCTIONS2);
+
     let blk_timeline;
     if (blk_type[blk] === "simon") {
-      exp.push(TASK_INSTRUCTIONS_SIMON);
       blk_timeline = { ...TRIAL_TIMELINE_SIMON };
-    } else if (blk_type[blk] === "flanker") {
-      exp.push(TASK_INSTRUCTIONS_FLANKER);
-      blk_timeline = { ...TRIAL_TIMELINE_FLANKER };
+    } else if (blk_type[blk] === "stroop") {
+      blk_timeline = { ...TRIAL_TIMELINE_STROOP };
     }
     blk_timeline.sample = {
       type: "fixed-repetitions",
@@ -449,6 +423,7 @@ function genExpSeq() {
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(BLOCK_FEEDBACK); // show previous block performance
+
   }
 
   exp.push(SAVE_DATA);
