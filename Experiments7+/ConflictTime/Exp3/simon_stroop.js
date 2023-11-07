@@ -8,7 +8,16 @@
 // Trialwise manipulation:
 // Short (150 ms) vs. Long (Until response, or 1500ms) stimulus duration
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+  on_finish: function() {
+    if (prms.cBlk >= 14) {
+      window.location.assign(
+        "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=182&credit_token=d315ebcf61554bcea8f7fc0fa4e59825&survey_code=" +
+        jsPsych.data.urlVariables().sona_id
+      );
+    }
+  },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -38,7 +47,7 @@ const PRMS = {
   target: shuffle(["Grün", "Blau"]),
   distractor_simon: ["LINKS", "RECHTS"],
   distractor_stroop: ["GRÜN", "BLAU"],
-  stimFont: "100px Monopsace",
+  stimFont: "40px Monospace",
   stimEccentricity: 200,
   fbTxt: ["", "Falsch", "Zu langsam", "Zu schnell"],
   fbTxtSizeTrial: 26,

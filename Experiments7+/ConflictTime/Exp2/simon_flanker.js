@@ -35,7 +35,7 @@ const PRMS = {
   targetDuration: [150, 1500],
   respKeys: ["Q", "P"],
   target: shuffle(["H", "S"]),
-  stimFont: "100px Monopsace",
+  stimFont: "100px Monospace",
   stimEccentricity: 200,
   fbTxt: ["", "Falsch", "Zu langsam", "Zu schnell"],
   fbTxtSizeTrial: 26,
