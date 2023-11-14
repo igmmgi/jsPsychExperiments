@@ -337,7 +337,7 @@ function draw_task_choice(args) {
     if (dat.key_press === PRMS.response_keys_lh[0].toLowerCase()) {
       ctx.rect(0 - PRMS.task_choice_pos_x - text_left.width, -25, text_left.width, 50);
     } else if (dat.key_press === PRMS.response_keys_lh[1].toLowerCase()) {
-      ctx.rect( PRMS.task_choice_pos_x, -25, text_right.width, 50);
+      ctx.rect(PRMS.task_choice_pos_x, -25, text_right.width, 50);
     }
     ctx.stroke();
   }
@@ -587,31 +587,6 @@ const TRIAL_TIMELINE = {
   timeline_variables: TRIAL_TABLE,
 };
 
-////////////////////////////////////////////////////////////////////////
-//                              VP Stunden                            //
-////////////////////////////////////////////////////////////////////////
-
-const END_SCREEN = {
-  type: jsPsychHtmlKeyboardResponseCanvas,
-  canvas_colour: CANVAS_COLOUR,
-  canvas_size: CANVAS_SIZE,
-  canvas_border: CANVAS_BORDER,
-  response_ends_trial: true,
-  choices: [" "],
-  stimulus: generate_formatted_html({
-    text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar
-               weiteren Klicks vorbei. Wir werden dir noch einige Fragen stellen und du kannst deine
-               Email-Adresse für die Gutscheinvergabe angeben. Falls Du zu den 15% Personen mit der höchsten
-               Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung wahlweise einen 10€ Gutschein
-               von der Deutschen Bahn oder Osiander erhalten.<br><br>
-               Drücke die Leertaste, um fortzufahren`,
-    align: "left",
-    fontsize: 30,
-    width: "1200px",
-    lineheight: 1.5,
-  }),
-};
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
@@ -671,7 +646,6 @@ function gen_exp_seq() {
 
   // debrief
   exp.push(mouseCursor(true));
-  exp.push(END_SCREEN);
 
   // save data
   exp.push(SAVE_DATA);
