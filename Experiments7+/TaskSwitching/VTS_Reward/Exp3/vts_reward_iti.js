@@ -392,6 +392,7 @@ const VTS = {
     trial_type: jsPsych.timelineVariable("trial_type"),
     free_forced: jsPsych.timelineVariable("free_forced"),
     forced_task: jsPsych.timelineVariable("forced_task"),
+    iti: jsPsych.timelineVariable("iti"),
   },
   on_start: function(trial) {
     "use strict";
@@ -619,7 +620,6 @@ const ITI = {
   trial_duration: 0,
   on_start: function(trial) {
     trial.trial_duration = jsPsych.timelineVariable("iti");
-    console.log(jsPsych.timelineVariable("iti"));
   },
 };
 
@@ -637,7 +637,7 @@ const TRIAL_TABLE = [
 
 // prettier-ignore
 const TRIAL_TIMELINE = {
-  timeline: [FIXATION_CROSS, VTS, TRIAL_FEEDBACK, TRIAL_REWARD, ITI],
+  timeline: [ITI, FIXATION_CROSS, VTS, TRIAL_FEEDBACK, TRIAL_REWARD],
   timeline_variables: TRIAL_TABLE
 };
 
@@ -726,23 +726,23 @@ function genExpSeq() {
 
   let exp = [];
 
-  // // setup
-  // exp.push(fullscreen(true));
-  // exp.push(browser_check(PRMS.screenRes));
-  // exp.push(resize_browser());
-  // exp.push(welcome_message());
-  // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-  // exp.push(mouseCursor(false));
+  // setup
+  exp.push(fullscreen(true));
+  exp.push(browser_check(PRMS.screenRes));
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+  exp.push(mouseCursor(false));
 
   exp.push(COUNT_DOTS);
   exp.push(PRELOAD);
 
-  // // instructions
-  // exp.push(WELCOME_INSTRUCTIONS);
-  // exp.push(TASK_INSTRUCTIONS1);
-  // exp.push(TASK_INSTRUCTIONS2);
-  // exp.push(TASK_INSTRUCTIONS3);
-  // exp.push(TASK_INSTRUCTIONS4);
+  // instructions
+  exp.push(WELCOME_INSTRUCTIONS);
+  exp.push(TASK_INSTRUCTIONS1);
+  exp.push(TASK_INSTRUCTIONS2);
+  exp.push(TASK_INSTRUCTIONS3);
+  exp.push(TASK_INSTRUCTIONS4);
 
   for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
     exp.push(BLOCK_START);
