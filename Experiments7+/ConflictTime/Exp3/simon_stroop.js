@@ -10,7 +10,7 @@
 
 const jsPsych = initJsPsych({
   on_finish: function() {
-    if (prms.cBlk >= 14) {
+    if (PRMS.cBlk >= 14) {
       window.location.assign(
         "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=182&credit_token=d315ebcf61554bcea8f7fc0fa4e59825&survey_code=" +
         jsPsych.data.urlVariables().sona_id
