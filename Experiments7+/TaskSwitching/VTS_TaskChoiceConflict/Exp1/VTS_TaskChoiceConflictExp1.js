@@ -24,7 +24,18 @@
 // In correct trials -> blank ITI
 // In error trials -> 1.5 second screen showing the correct mapping followed by blank ITI
 
-const jsPsych = initJsPsych({});
+
+const jsPsych = initJsPsych({
+  on_finish: function() {
+    if (PRMS.block >= 8) {
+      window.location.assign(
+        "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=290&credit_token=1dc5aa076e294e90af2378b1cff7bd8f&survey_code=" +
+        jsPsych.data.urlVariables().sona_id
+      );
+    }
+  },
+});
+
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -38,8 +49,8 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
   screen_res: [960, 720], // minimum screen resolution requested
-  n_trials: 16, //96, // number of trials per block
-  n_blocks: 2, //8, // number of blocks
+  n_blocks: 8, // number of blocks
+  n_trials: 96, // number of trials per block
   fixSize: 15, // duration of the fixation cross
   fixWidth: 5, // size of fixation cross
   task_selection_duration: 500, // duration of the task selection screen
@@ -76,7 +87,7 @@ const WELCOME_INSTRUCTIONS = {
                Bitte stelle sicher, dass Du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
                um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 45 Minuten konzentriert zu arbeiten.<br><br>
                Bei Fragen oder Problemen wende dich bitte an:<br><br> 
-               xxx.xxx@student.uni-tuebingen.de<br><br>
+               noah.scheurer@student.uni-tuebingen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
     align: "left",
     fontsize: 30,
@@ -92,8 +103,8 @@ const TASK_INSTRUCTIONS1 = {
   canvas_border: CANVAS_BORDER,
   stimulus: generate_formatted_html({
     text: `In diesem Experiment gibt es zwei Aufgaben. Mit der linken Hand wird zunächst die Aufgabe ausgewählt und mit der rechten Hand wird die Aufgabe bearbeitet.<br><br>
-              Auswahl der Aufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf den Tasten "S" und "D".<br><br> 
-              Bearbeitung der Aufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf den Tasten "K" und "L".<br><br><br>
+              Auswahl der Aufgabe = Linke Hand: Bitte platziere hierzu den Mittelfinger und Zeigefinger auf den Tasten "${PRMS.response_keys_lh[0]}" und "${PRMS.response_keys_lh[1]}".<br><br> 
+              Bearbeitung der Aufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf den Tasten "${PRMS.response_keys_rh[0]}" und "${PRMS.response_keys_rh[1]}".<br><br><br>
               Drücke die "G"-Taste, um fortzufahren!`,
     align: "left",
     fontsize: 30,
@@ -516,8 +527,6 @@ function code_trial_task_execution() {
     distractor = PRMS.Letter_task[dat.distractor];
   }
 
-  // get current task
-  dat = jsPsych.data.get().last(1).values()[0];
   let correct = jsPsych.pluginAPI.compareKeys(dat.correct_key, dat.key_press) ? 1 : 0;
 
   jsPsych.data.addDataToLastTrial({
