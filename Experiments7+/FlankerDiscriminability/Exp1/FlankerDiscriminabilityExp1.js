@@ -1,17 +1,16 @@
-// Simon Task with manipulation of stimulus eccentricity
-// Stimuli: Squares (red vs. blue)
-// Two levels of eccentricity (manipulated blockwise)
-// Task: blue vs. red?
+// Flanker Task with manipulation of target discrimanibility
+// Stimuli: Squares filled with small red/blue dots (varying proportions)
+// Two levels of target difficulty: easy (e.g., 10 vs. 90 %) vs. hard (e.g., 37.5 vs. 62.5%)
+// Task: More blue vs. more red?
 //
 // Trial Structure
-// Cental fixation cross for 500 ms
-// Lateral stimulus until response (or 2000 ms)
+// Central fixation cross for 500 ms
+// Central stimulus until response (or 2000 ms)
 // If incorrect, feedback screen for 1500 ms
 // inter-trial-interval of 500 ms
 //
 // Block structure
 // 12 blocks of 56 trials
-// Alternating blocks of near/far eccentricity (counterbalanced across participants)
 
 const jsPsych = initJsPsych({});
 
@@ -34,26 +33,46 @@ const PRMS = {
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
     fbDur: [0, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
-    tooSlow: 2000, // response limit slow
-    tooFast: 0, // response limit fast
+    tooSlow: 2000, // feedback duration for correct and incorrect trials, respectively
+    tooFast: 0, // feedback duration for correct and incorrect trials, respectively
     fbText: ["", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 500, // duration of the inter-trial-interval
     stimFont: "110px Arial",
     fbFont: "200px Arial",
     colours: ["rgba(0, 0, 255, 0.9)", "rgba(255, 0, 0, 0.9)"],
+    ratioEasy: [10, 90], // should sum to 100!
+    ratioHard: [37.5, 62.5], // should sum to 100!
+    ratioDistractor: [5, 95],
     respKeys: ["Q", "P"],
     target: shuffle(["blue", "red"]),
-    eccentricity: [150, 300],
-    size: 50,
+    flankerEccentricity: 125,
+    dotRadius: 2,
+    squareSize: 50,
+    dotGaps: 5,
     cBlk: 1,
     cTrl: 1,
 };
 
 const EN_DE = { blue: "blau", red: "rot" };
 
-// 2 counter balanced versions (start with near vs. far)
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+// 2 counter balanced versions
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
+
+function calculateNumberOfDots() {
+    // Required for ratio manipulation in VTS
+    PRMS.nDots = 0;
+    for (let rows = -PRMS.squareSize; rows <= PRMS.squareSize; rows += PRMS.dotGaps) {
+        for (let cols = -PRMS.squareSize; cols <= PRMS.squareSize; cols += PRMS.dotGaps) {
+            PRMS.nDots += 1;
+        }
+    }
+}
+
+const COUNT_DOTS = {
+    type: jsPsychCallFunction,
+    func: calculateNumberOfDots,
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -70,7 +89,7 @@ const WELCOME_INSTRUCTIONS = {
                um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               xxx@xxx<br><br>
+               ruben.ellinghaus@fernuni-hagen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -92,8 +111,8 @@ function pad_me(str, npad) {
 // response keys
 const RESP_TEXT = generate_formatted_html({
     text: `${
-        pad_me(EN_DE[PRMS.target[0]], 20) +
-        pad_me(EN_DE[PRMS.target[1]], 20) +
+        pad_me("mehr " + EN_DE[PRMS.target[0]], 20) +
+        pad_me("mehr " + EN_DE[PRMS.target[1]], 20) +
         "<br>" +
         pad_me("(Taste-" + PRMS.respKeys[0] + ")", 20) +
         pad_me("(Taste-" + PRMS.respKeys[1] + ")", 20)
@@ -114,7 +133,7 @@ const TASK_INSTRUCTIONS = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
-               Du musst in jedem Durchgang entscheiden ob das Quadrat blau oder rote ist.
+               Du musst in jedem Durchgang entscheiden ob das Quadrat mehr blaue oder mehr rote Punkte hat.
                Reagiere wie folgt:<br>`,
                 align: "left",
                 colour: "black",
@@ -156,25 +175,37 @@ const FIXATION_CROSS = {
     func: drawFixation,
 };
 
+function draw_square(ctx, square, pos_x, pos_y) {
+    "use strict";
+    let radius = PRMS.dotRadius;
+
+    // draw central target
+    let idx = 0;
+    for (let rows = -PRMS.squareSize - pos_x; rows <= PRMS.squareSize - pos_x; rows += PRMS.dotGaps) {
+        for (let cols = -PRMS.squareSize - pos_y; cols <= PRMS.squareSize - pos_y; cols += PRMS.dotGaps) {
+            let centerX = rows;
+            let centerY = cols;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            ctx.fillStyle = square[idx];
+            ctx.fill();
+            idx += 1;
+        }
+    }
+}
+
 function drawStimulus(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
 
-    // draw fixation with stimulus
-    ctx.lineWidth = PRMS.fixWidth;
-    ctx.moveTo(-PRMS.fixSize, 0);
-    ctx.lineTo(PRMS.fixSize, 0);
-    ctx.stroke();
-    ctx.moveTo(0, -PRMS.fixSize);
-    ctx.lineTo(0, PRMS.fixSize);
-    ctx.stroke();
-
-    // draw colour square
-    ctx.fillStyle = args.colour;
-    ctx.fillRect(args.position_x - PRMS.size / 2, -PRMS.size / 2, PRMS.size, PRMS.size);
+    draw_square(ctx, args.colours_target, 0, 0);
+    draw_square(ctx, args.colours_distractor, PRMS.flankerEccentricity, 0); // left flanker
+    draw_square(ctx, args.colours_distractor, -PRMS.flankerEccentricity, 0); // right flanker
+    draw_square(ctx, args.colours_distractor, 0, PRMS.flankerEccentricity); // bottom flanker
+    draw_square(ctx, args.colours_distractor, 0, -PRMS.flankerEccentricity); // top flanker
 }
 
-const SIMON = {
+const FLANKER = {
     type: jsPsychStaticCanvasKeyboardResponse,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
@@ -186,17 +217,50 @@ const SIMON = {
     func: drawStimulus,
     func_args: null,
     data: {
-        stim_type: "sar",
-        eccentricity: jsPsych.timelineVariable("eccentricity"),
-        position: jsPsych.timelineVariable("position"),
-        position_x: jsPsych.timelineVariable("position_x"),
+        stim_type: "fd",
+        ratio: jsPsych.timelineVariable("ratio"),
         target: jsPsych.timelineVariable("target"),
         compatibility: jsPsych.timelineVariable("compatibility"),
         correct_key: jsPsych.timelineVariable("correct_key"),
     },
     on_start: function (trial) {
         "use strict";
-        trial.func_args = [{ position_x: trial.data.position_x, colour: trial.data.target }];
+
+        let ratio_target = trial.data.ratio === "easy" ? PRMS.ratioEasy : PRMS.ratioHard;
+        let dot_colours_target = repeatArray(CANVAS_COLOUR, Math.round(PRMS.nDots));
+        if (trial.data.target === "blue") {
+            dot_colours_target = shuffle(
+                repeatArray(PRMS.colours[0], Math.round(PRMS.nDots * (ratio_target[1] / 100))).concat(
+                    repeatArray(PRMS.colours[1], Math.round((PRMS.nDots * ratio_target[0]) / 100)),
+                ),
+            );
+        } else if (trial.data.target === "red") {
+            dot_colours_target = shuffle(
+                repeatArray(PRMS.colours[1], Math.round(PRMS.nDots * (ratio_target[1] / 100))).concat(
+                    repeatArray(PRMS.colours[0], Math.round((PRMS.nDots * ratio_target[0]) / 100)),
+                ),
+            );
+        }
+
+        let ratio_distractor = PRMS.ratioDistractor;
+        let dot_colours_distractor = repeatArray(CANVAS_COLOUR, Math.round(PRMS.nDots));
+        let colours_distractor =
+            trial.data.compatibility === "comp" ? PRMS.colours : [PRMS.colours[1], PRMS.colours[0]];
+        if (trial.data.target === "blue") {
+            dot_colours_distractor = shuffle(
+                repeatArray(colours_distractor[0], Math.round(PRMS.nDots * (ratio_distractor[1] / 100))).concat(
+                    repeatArray(colours_distractor[1], Math.round((PRMS.nDots * ratio_distractor[0]) / 100)),
+                ),
+            );
+        } else if (trial.data.target === "red") {
+            dot_colours_distractor = shuffle(
+                repeatArray(colours_distractor[1], Math.round(PRMS.nDots * (ratio_distractor[1] / 100))).concat(
+                    repeatArray(colours_distractor[0], Math.round((PRMS.nDots * ratio_distractor[0]) / 100)),
+                ),
+            );
+        }
+
+        trial.func_args = [{ colours_target: dot_colours_target, colours_distractor: dot_colours_distractor }];
     },
     on_finish: function () {
         codeTrial();
@@ -243,6 +307,10 @@ function codeTrial() {
     let dat = jsPsych.data.get().last(1).values()[0];
     dat.rt = dat.rt !== null ? dat.rt : PRMS.tooSlow;
 
+    // console.log(`-------`);
+    // console.log(`Compatibility: ${dat.compatibility}`);
+    // console.log(`Ratio: ${dat.ratio}`);
+
     let corrCode = 0;
     let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_key);
 
@@ -272,7 +340,7 @@ const BLOCK_FEEDBACK = {
     response_ends_trial: true,
     on_start: function (trial) {
         let block_dvs = calculateBlockPerformance({
-            filter_options: { stim_type: "sar", blockNum: PRMS.cBlk },
+            filter_options: { stim_type: "fd", blockNum: PRMS.cBlk },
         });
         let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
@@ -284,31 +352,21 @@ const BLOCK_FEEDBACK = {
 };
 
 // prettier-ignore
-const TRIAL_TABLE_NEAR = [
-  { eccentricity: "near", position: "left",  position_x: -PRMS.eccentricity[0], target: PRMS.target[0], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { eccentricity: "near", position: "left",  position_x: -PRMS.eccentricity[0], target: PRMS.target[1], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { eccentricity: "near", position: "right", position_x: PRMS.eccentricity[0],  target: PRMS.target[0], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { eccentricity: "near", position: "right", position_x: PRMS.eccentricity[0],  target: PRMS.target[1], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+const TRIAL_TABLE = [
+    { ratio: "easy", distractor: PRMS.target[0], target: PRMS.target[0], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: "easy", distractor: PRMS.target[0], target: PRMS.target[1], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { ratio: "easy", distractor: PRMS.target[1], target: PRMS.target[0], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: "easy", distractor: PRMS.target[1], target: PRMS.target[1], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { ratio: 'hard', distractor: PRMS.target[0], target: PRMS.target[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: 'hard', distractor: PRMS.target[0], target: PRMS.target[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { ratio: 'hard', distractor: PRMS.target[1], target: PRMS.target[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: 'hard', distractor: PRMS.target[1], target: PRMS.target[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
 // prettier-ignore
-const TRIAL_TABLE_FAR = [
-  { eccentricity: 'far', position: 'left',  position_x: -PRMS.eccentricity[1], target: PRMS.target[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { eccentricity: 'far', position: 'left',  position_x: -PRMS.eccentricity[1], target: PRMS.target[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { eccentricity: 'far', position: 'right', position_x: PRMS.eccentricity[1],  target: PRMS.target[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { eccentricity: 'far', position: 'right', position_x: PRMS.eccentricity[1],  target: PRMS.target[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-];
-
-// prettier-ignore
-const TRIAL_TIMELINE_NEAR = {
-  timeline: [FIXATION_CROSS, SIMON, TRIAL_FEEDBACK, ITI],
-  timeline_variables: TRIAL_TABLE_NEAR
-};
-
-// prettier-ignore
-const TRIAL_TIMELINE_FAR = {
-  timeline: [FIXATION_CROSS, SIMON, TRIAL_FEEDBACK, ITI],
-  timeline_variables: TRIAL_TABLE_FAR
+const TRIAL_TIMELINE = {
+    timeline: [FIXATION_CROSS, FLANKER, TRIAL_FEEDBACK, ITI],
+    timeline_variables: TRIAL_TABLE
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -323,7 +381,8 @@ const END_SCREEN = {
     choices: [" "],
     stimulus: generate_formatted_html({
         text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
-Drücke eine beliebige Taste, um die Weiterleitung zu Unipark zu starten.`,
+             Nun folgen Informationen zur Versuchspersonenstunde auf Unipark.
+             Drücke eine beliebige Taste, um die Weiterleitung zu Unipark zu starten.`,
         fontsize: 28,
         lineheight: 1.0,
         bold: false,
@@ -343,8 +402,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
-    saveData("/Common/write_data.php", data_fn, { stim_type: "sar" });
-    // saveDataLocal(data_fn, { stim_type: 'sar' });
+    saveData("/Common/write_data.php", data_fn, { stim_type: "fd" });
+    // saveDataLocal(data_fn, { stim_type: 'fd' });
 }
 
 const SAVE_DATA = {
@@ -361,33 +420,22 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
-    exp.push(mouseCursor(false));
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(PRMS.screenRes));
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    // exp.push(mouseCursor(false));
 
     exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(COUNT_DOTS);
     exp.push(TASK_INSTRUCTIONS);
 
-    let blk_type;
-    if (VERSION === 1) {
-        blk_type = repeatArray(["near", "far"], PRMS.nBlks / 2);
-    } else if (VERSION === 2) {
-        blk_type = repeatArray(["far", "near"], PRMS.nBlks / 2);
-    }
-
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
-        let blk_timeline;
-        if (blk_type[blk] === "near") {
-            blk_timeline = { ...TRIAL_TIMELINE_NEAR };
-        } else if (blk_type[blk] === "far") {
-            blk_timeline = { ...TRIAL_TIMELINE_FAR };
-        }
+        let blk_timeline = { ...TRIAL_TIMELINE };
         blk_timeline.sample = {
             type: "fixed-repetitions",
-            size: PRMS.nTrls / TRIAL_TABLE_NEAR.length,
+            size: PRMS.nTrls / TRIAL_TABLE.length,
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance

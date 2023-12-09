@@ -211,7 +211,7 @@ const TRIAL_FEEDBACK = {
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
-        if (dat.corrCode != 1) {
+        if (dat.corrCode !== 1) {
             trial.stimulus = generate_formatted_html({
                 text: `${PRMS.fbText[dat.corrCode - 1]}`,
                 align: "center",
@@ -347,15 +347,15 @@ function genExpSeq() {
 
     let exp = [];
 
-    /* exp.push(fullscreen(true)); */
-    /* exp.push(browser_check(PRMS.screenRes)); */
-    /* exp.push(resize_browser()); */
-    /* exp.push(welcome_message()); */
-    /* exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html')); */
-    /* exp.push(mouseCursor(false)); */
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    exp.push(mouseCursor(false));
 
-    // exp.push(WELCOME_INSTRUCTIONS);
-    // exp.push(TASK_INSTRUCTIONS);
+    exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(TASK_INSTRUCTIONS);
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
         let blk_timeline = { ...TRIAL_TIMELINE };
