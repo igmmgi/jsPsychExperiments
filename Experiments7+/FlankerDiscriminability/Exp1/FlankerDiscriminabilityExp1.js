@@ -55,10 +55,6 @@ const PRMS = {
 
 const EN_DE = { blue: "blau", red: "rot" };
 
-// 2 counter balanced versions
-const VERSION = Number(jsPsych.data.urlVariables().version);
-jsPsych.data.addProperties({ version: VERSION });
-
 function calculateNumberOfDots() {
     // Required for ratio manipulation in VTS
     PRMS.nDots = 0;
@@ -401,7 +397,7 @@ function save() {
     const vpNum = getTime();
     jsPsych.data.addProperties({ vpNum: vpNum });
 
-    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
+    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
     saveData("/Common/write_data.php", data_fn, { stim_type: "fd" });
     // saveDataLocal(data_fn, { stim_type: 'fd' });
 }
