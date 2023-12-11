@@ -45,9 +45,9 @@ const PRMS = {
     ratioDistractor: [5, 95],
     respKeys: ["Q", "P"],
     target: shuffle(["blue", "red"]),
-    flankerEccentricity: 125,
+    flankerEccentricity: 70,
     dotRadius: 2,
-    squareSize: 50,
+    squareSize: 30,
     dotGaps: 5,
     cBlk: 1,
     cTrl: 1,
@@ -89,7 +89,7 @@ const WELCOME_INSTRUCTIONS = {
                um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               ruben.ellinghaus@fernuni-hagen.de<br><br>
+               xxx.xxx<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -133,7 +133,7 @@ const TASK_INSTRUCTIONS = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
-               Du musst in jedem Durchgang entscheiden ob das Quadrat mehr blaue oder mehr rote Punkte hat.
+               Du musst in jedem Durchgang entscheiden ob das Quadrat in der Mitte mehr blaue oder mehr rote Punkte hat.
                Reagiere wie folgt:<br>`,
                 align: "left",
                 colour: "black",
@@ -420,12 +420,12 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(COUNT_DOTS);

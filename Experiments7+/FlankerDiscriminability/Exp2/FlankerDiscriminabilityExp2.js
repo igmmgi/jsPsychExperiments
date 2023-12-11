@@ -45,19 +45,15 @@ const PRMS = {
     ratioTarget: [20, 80], // should sum to 100!
     respKeys: ["Q", "P"],
     target: shuffle(["blue", "red"]),
-    flankerEccentricity: 125,
+    flankerEccentricity: 70,
     dotRadius: 2,
-    squareSize: 50,
+    squareSize: 30,
     dotGaps: 5,
     cBlk: 1,
     cTrl: 1,
 };
 
 const EN_DE = { blue: "blau", red: "rot" };
-
-// 2 counter balanced versions
-const VERSION = Number(jsPsych.data.urlVariables().version);
-jsPsych.data.addProperties({ version: VERSION });
 
 function calculateNumberOfDots() {
     // Required for ratio manipulation in VTS
@@ -133,8 +129,7 @@ const TASK_INSTRUCTIONS = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
-               Du musst in jedem Durchgang entscheiden ob das Quadrat mehr blaue oder mehr rote Punkte hat.
-               Reagiere wie folgt:<br>`,
+               Du musst in jedem Durchgang entscheiden ob das Quadrat in der Mitte mehr blaue oder mehr rote Punkte hat. Reagiere wie folgt:<br>`,
                 align: "left",
                 colour: "black",
                 fontsize: 30,
@@ -401,7 +396,7 @@ function save() {
     const vpNum = getTime();
     jsPsych.data.addProperties({ vpNum: vpNum });
 
-    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
+    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
     saveData("/Common/write_data.php", data_fn, { stim_type: "fd" });
     // saveDataLocal(data_fn, { stim_type: 'fd' });
 }
@@ -420,12 +415,12 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screenRes));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(COUNT_DOTS);

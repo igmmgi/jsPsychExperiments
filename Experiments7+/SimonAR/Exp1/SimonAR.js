@@ -43,7 +43,7 @@ const PRMS = {
     colours: ["rgba(0, 0, 255, 0.9)", "rgba(255, 0, 0, 0.9)"],
     respKeys: ["Q", "P"],
     target: shuffle(["blue", "red"]),
-    eccentricity: [150, 300],
+    eccentricity: [75, 350],
     size: 50,
     cBlk: 1,
     cTrl: 1,
@@ -52,7 +52,7 @@ const PRMS = {
 const EN_DE = { blue: "blau", red: "rot" };
 
 // 2 counter balanced versions (start with near vs. far)
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 ////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ const TASK_INSTRUCTIONS = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
-               Du musst in jedem Durchgang entscheiden ob das Quadrat blau oder rote ist.
+               Du musst in jedem Durchgang entscheiden ob das Quadrat blau oder rot ist.
                Reagiere wie folgt:<br>`,
                 align: "left",
                 colour: "black",
@@ -365,7 +365,7 @@ function genExpSeq() {
     exp.push(browser_check(PRMS.screenRes));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html'));
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(mouseCursor(false));
 
     exp.push(WELCOME_INSTRUCTIONS);
