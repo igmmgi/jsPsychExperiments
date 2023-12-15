@@ -256,7 +256,7 @@ const BLOCK_FEEDBACK = {
     response_ends_trial: true,
     post_trial_gap: PRMS.waitDur,
     on_start: function (trial) {
-        let block_dvs = calculateBlockPerformance({ filter_options: { stim: "simon", blockNum: PRMS.cBlk } });
+        let block_dvs = calculateBlockPerformance({ filter_options: { stim: "stroop", blockNum: PRMS.cBlk } });
         let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
@@ -270,7 +270,7 @@ function generate_trials_within_block(angry_set, happy_set, block_type) {
     let stroop_type = shuffle(
         repeatArray(["angry_comp", "angry_incomp", "happy_comp", "happy_incomp"], angry_set.length / 4),
     );
-    let image_numbers = [...Array(32).keys()];
+    let image_numbers = shuffle([...Array(32).keys()]);
     let trials = [];
     for (let i = 0; i < stroop_type.length; i++) {
         let tmp = {};
