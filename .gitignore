@@ -6,6 +6,7 @@
 *.png
 *.PNG
 *.mp4
+*.mp3
 *.csv
 .idea
 .directory

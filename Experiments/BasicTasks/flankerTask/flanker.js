@@ -129,7 +129,7 @@ const flanker_stimulus = {
         comp: jsPsych.timelineVariable("comp"),
         corrResp: jsPsych.timelineVariable("key"),
     },
-    on_finish: function() {
+    on_finish: function () {
         codeTrial();
         prms.cTrl += 1;
     },
@@ -141,7 +141,7 @@ const trial_feedback = {
     trial_duration: prms.fbDur,
     response_ends_trial: false,
     post_trial_gap: prms.iti,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         trial.stimulus = "<h2>" + prms.fbTxt[dat.corrCode - 1] + "</h2>";
     },
@@ -152,7 +152,7 @@ const block_feedback = {
     stimulus: "",
     response_ends_trial: true,
     post_trial_gap: prms.waitDur,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let block_dvs = calculateBlockPerformance({ filter_options: { stim: "flanker", blockNum: prms.cBlk } });
         trial.stimulus = blockFeedbackText(
             prms.cBlk,
@@ -162,7 +162,7 @@ const block_feedback = {
             (language = "en"),
         );
     },
-    on_finish: function() {
+    on_finish: function () {
         prms.cTrl = 1;
         prms.cBlk += 1;
     },
@@ -172,9 +172,9 @@ const block_feedback = {
 const trial_timeline = {
     timeline: [fixation_cross, flanker_stimulus, trial_feedback],
     timeline_variables: [
-        { flanker: flankers[0], comp: 'comp', key: prms.respKeys[0] },
+        { flanker: flankers[0], comp: 'comp',   key: prms.respKeys[0] },
         { flanker: flankers[1], comp: 'incomp', key: prms.respKeys[0] },
-        { flanker: flankers[2], comp: 'comp', key: prms.respKeys[1] },
+        { flanker: flankers[2], comp: 'comp',   key: prms.respKeys[1] },
         { flanker: flankers[3], comp: 'incomp', key: prms.respKeys[1] },
     ],
 };
