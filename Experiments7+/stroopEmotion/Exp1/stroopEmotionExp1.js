@@ -16,7 +16,6 @@ const jsPsych = initJsPsych({
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
-const CANVAS_COLOUR = "rgba(150, 150, 150, 1)";
 const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = "5px solid black";
 
@@ -31,18 +30,13 @@ const PRMS = {
     fixWidth: 5, // size of fixation cross
     fixColor: "Black", // colour of the fixation cross
     fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
-    nBlks: 28, // number of blocks
-    fixDur: 400, // duration of fixation cross
-    fixSize: 15, // duration of the fixation cross
-    fixWidth: 5, // size of fixation cross
-    fixColor: "White", // colour of the fixation cross
-    fbDur: [0, 1500, 1500, 1500], // duration of feedback for each type
     waitDur: 1000, // duration following ...
     iti: 500, // duration of inter-trial-interval
     tooFast: 0, // responses faster than x ms -> too fast!
     tooSlow: 2500, // response slower than x ms -> too slow!
     respKeys: ["Q", "P"],
-    target_position: [0, -45],
+    target_emotion: shuffle(["Wut", "Freude"]),
+    target_position: [0, -20],
     distractor_text_emotion: ["WUT", "FREUDE"],
     distractor_text_location: ["LINKS", "RECHTS"],
     distractor_text_font: "bold 55px monospace",
