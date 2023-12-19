@@ -155,12 +155,12 @@ const TASK_INSTRUCTIONS = {
 function draw_fixation_cross() {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
-    ctx.lineWidth = PRMS.fixWidth;
-    ctx.moveTo(-PRMS.fixSize, 0);
-    ctx.lineTo(PRMS.fixSize, 0);
+    ctx.lineWidth = PRMS.fixation_width;
+    ctx.moveTo(-PRMS.fixation_size, 0);
+    ctx.lineTo(PRMS.fixation_size, 0);
     ctx.stroke();
-    ctx.moveTo(0, -PRMS.fixSize);
-    ctx.lineTo(0, PRMS.fixSize);
+    ctx.moveTo(0, -PRMS.fixation_size);
+    ctx.lineTo(0, PRMS.fixation_size);
     ctx.stroke();
 }
 
@@ -171,7 +171,7 @@ const FIXATION_CROSS = {
     canvas_border: CANVAS_BORDER,
     translate_origin: true,
     response_ends_trial: false,
-    trial_duration: PRMS.fixDur,
+    trial_duration: PRMS.fixation_duration,
     func: draw_fixation_cross,
 };
 

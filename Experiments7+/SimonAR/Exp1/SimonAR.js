@@ -113,7 +113,7 @@ const TASK_INSTRUCTIONS = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
+                text: `Mini-Block ${PRMS.cblk} von ${PRMS.nBlks}:<br><br>
                Du musst in jedem Durchgang entscheiden ob das Quadrat blau oder rot ist.
                Reagiere wie folgt:<br>`,
                 align: "left",
@@ -136,12 +136,12 @@ const TASK_INSTRUCTIONS = {
 function drawFixation() {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
-    ctx.lineWidth = PRMS.fixWidth;
-    ctx.moveTo(-PRMS.fixSize, 0);
-    ctx.lineTo(PRMS.fixSize, 0);
+    ctx.lineWidth = PRMS.fixation_width;
+    ctx.moveTo(-PRMS.fixation_size, 0);
+    ctx.lineTo(PRMS.fixation_size, 0);
     ctx.stroke();
-    ctx.moveTo(0, -PRMS.fixSize);
-    ctx.lineTo(0, PRMS.fixSize);
+    ctx.moveTo(0, -PRMS.fixation_size);
+    ctx.lineTo(0, PRMS.fixation_size);
     ctx.stroke();
 }
 
@@ -152,7 +152,7 @@ const FIXATION_CROSS = {
     canvas_border: CANVAS_BORDER,
     translate_origin: true,
     response_ends_trial: false,
-    trial_duration: PRMS.fixDur,
+    trial_duration: PRMS.fixation_duration,
     func: drawFixation,
 };
 
@@ -161,12 +161,12 @@ function drawStimulus(args) {
     let ctx = document.getElementById("canvas").getContext("2d");
 
     // draw fixation with stimulus
-    ctx.lineWidth = PRMS.fixWidth;
-    ctx.moveTo(-PRMS.fixSize, 0);
-    ctx.lineTo(PRMS.fixSize, 0);
+    ctx.lineWidth = PRMS.fixation_width;
+    ctx.moveTo(-PRMS.fixation_size, 0);
+    ctx.lineTo(PRMS.fixation_size, 0);
     ctx.stroke();
-    ctx.moveTo(0, -PRMS.fixSize);
-    ctx.lineTo(0, PRMS.fixSize);
+    ctx.moveTo(0, -PRMS.fixation_size);
+    ctx.lineTo(0, PRMS.fixation_size);
     ctx.stroke();
 
     // draw colour square
@@ -200,7 +200,7 @@ const SIMON = {
     },
     on_finish: function () {
         codeTrial();
-        PRMS.cTrl += 1;
+        PRMS.ctrl += 1;
     },
 };
 
@@ -257,8 +257,8 @@ function codeTrial() {
     }
     jsPsych.data.addDataToLastTrial({
         date: Date(),
-        blockNum: PRMS.cBlk,
-        trialNum: PRMS.cTrl,
+        blockNum: PRMS.cblk,
+        trialNum: PRMS.ctrl,
         corrCode: corrCode,
     });
 }
@@ -272,14 +272,14 @@ const BLOCK_FEEDBACK = {
     response_ends_trial: true,
     on_start: function (trial) {
         let block_dvs = calculateBlockPerformance({
-            filter_options: { stim_type: "sar", blockNum: PRMS.cBlk },
+            filter_options: { stim_type: "sar", blockNum: PRMS.cblk },
         });
-        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
+        let text = blockFeedbackText(PRMS.cblk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
     on_finish: function () {
-        PRMS.cTrl = 1;
-        PRMS.cBlk += 1;
+        PRMS.ctrl = 1;
+        PRMS.cblk += 1;
     },
 };
 
