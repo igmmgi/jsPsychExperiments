@@ -504,7 +504,32 @@ function create_trial_table_forced_block() {
     return trials;
 }
 const TRIAL_TABLE_FORCED = create_trial_table_forced_block();
-console.table(TRIAL_TABLE_FORCED);
+// console.table(TRIAL_TABLE_FORCED);
+
+// function create_trial_table_hybrid_block() {
+//     trials = [];
+//     let stimuli = [1, 2, 3, 4, 6, 7, 8, 9];
+//     let correct_key;
+//     for (let i = 0; i < stimuli.length; i++) {
+//         for (let j = 0; j < TASK_HAND_MAPPING.length; j++) {
+//             if (TASK_HAND_MAPPING[j] === "magnitude") {
+//                 correct_key = stimuli[i] < 5 ? PRMS.keys_magnitude[0] : PRMS.keys_magnitude[1];
+//             } else if (TASK_HAND_MAPPING[j] === "parity") {
+//                 correct_key = [1, 3, 7, 9].includes(stimuli[i]) ? PRMS.keys_parity[0] : PRMS.keys_parity[1];
+//             }
+//             trials.push({
+//                 task_type: "hybrid",
+//                 task: "free_choice",
+//                 task_cue: "free_choice",
+//                 number: stimuli[i],
+//                 correct_key: correct_key,
+//             });
+//         }
+//     }
+//     return trials;
+// }
+// const TRIAL_TABLE_HYBRID = create_trial_table_hybrid_block();
+// // console.table(TRIAL_TABLE_HYBRID);
 
 const BLOCK_FEEDBACK = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -537,6 +562,57 @@ const TRIAL_TIMELINE_FORCED = {
   }
 };
 
+// // prettier-ignore
+// const TRIAL_TIMELINE_HYBRID = {
+//   timeline: [FIXATION_CROSS, SOUND_STIMULUS, TASK_CUE_STIMULUS, TRIAL_FEEDBACK, ITI],
+//   timeline_variables: TRIAL_TABLE_HYBRID,
+//   sample: {
+//     type: "fixed-repetitions",
+//     size: PRMS.ntrls_hybrid / TRIAL_TABLE_HYBRID.length,
+//   }
+// };
+
+////////////////////////////////////////////////////////////////////////
+//                             VP Stunden                             //
+////////////////////////////////////////////////////////////////////////
+const END_SCREEN = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    response_ends_trial: true,
+    choices: [" "],
+    stimulus: generate_formatted_html({
+        text: `Dieser Teil des Experiments ist jetzt beendet.`,
+        fontsize: 28,
+        lineheight: 1.0,
+        bold: false,
+        align: "left",
+    }),
+    on_finish: function () {},
+};
+
+////////////////////////////////////////////////////////////////////////
+//                              Save                                  //
+////////////////////////////////////////////////////////////////////////
+const DIR_NAME = getDirName();
+const EXP_NAME = getFileName();
+const VP_NUM = getTime();
+
+function save() {
+    jsPsych.data.addProperties({ vpNum: VP_NUM });
+
+    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
+    saveData("/Common7+/write_data.php", data_fn, { stim_type: "stcs" });
+    // saveDataLocal(data_fn, { stim_type: 'stcs' });
+}
+
+const SAVE_DATA = {
+    type: jsPsychCallFunction,
+    func: save,
+    post_trial_gap: 1000,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
@@ -564,6 +640,7 @@ function genExpSeq() {
     exp.push(TASK_INSTRUCTIONS_4);
     exp.push(TASK_INSTRUCTIONS_5);
 
+    // forced blocks
     for (let blk = 0; blk < PRMS.nblks_forced; blk += 1) {
         let blk_timeline = { ...TRIAL_TIMELINE_FORCED };
         blk_timeline.sample = {
@@ -574,7 +651,25 @@ function genExpSeq() {
         exp.push(BLOCK_FEEDBACK); // show previous block performance
     }
 
-    exp.push(TRIAL_TIMELINE_FORCED);
+    // // hybrid blocks
+    // for (let blk = 0; blk < PRMS.nblks_forced; blk += 1) {
+    //     let blk_timeline = { ...TRIAL_TIMELINE_FORCED };
+    //     blk_timeline.sample = {
+    //         type: "fixed-repetitions",
+    //         size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
+    //     };
+    //     exp.push(blk_timeline); // trials within a block
+    //     exp.push(BLOCK_FEEDBACK); // show previous block performance
+    // }
+
+    // save data
+    // exp.push(SAVE_DATA);
+
+    // // debrief
+    // exp.push(mouseCursor(true));
+    // exp.push(END_SCREEN);
+    // exp.push(end_message());
+    // exp.push(fullscreen(false));
 
     return exp;
 }
