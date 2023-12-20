@@ -42,16 +42,17 @@ const COLOUR_TASK_MAPPING = shuffle(["Blue", "Red"]);
 const TRANSLATE = { magnitude: "Kleiner/Gröser", parity: "Ungerade/Gerade", Blue: "Blaues", Red: "Rotes" };
 
 const PRMS = {
-    nblks_forced: 2,
-    ntrls_forced: 16,
-    nblks_hybrid: 2,
-    ntrls_hybrid: 128,
-    nblks: 2,
+    nblks_forced: 2, // number of initial "forced" only trial blocks
+    ntrls_forced: 128, // number of trials in forced blocks
+    nblks_hybrid: 2, // number of hybrid blocks
+    nptrls_hybrid: 96, // number of trials in first hybrid block
+    ntrls_hybrid: 144, // number of trials in subsequent hybrid blocks
+    nblks: 4, // total number of blocks
     fixation_duration: 500, // duration of fixation cross
     fixation_width: 5, // width fixation cross
     fixation_size: 20, // size of fixation
     fixation_colour: "Black", // colour of fixation cross
-    calibration_duration: 1000, // interval between screens (e.g. instructions)
+    calibration_duration: 500, // interval between screens (e.g. instructions)
     wait_duration: 1000, // interval between screens (e.g. instructions)
     feedback_duration: [2000, 0], // interval between screens (e.g. instructions)
     iti: 500, // interval between screens (e.g. instructions)
@@ -65,32 +66,42 @@ const PRMS = {
 };
 
 // 2 counter balanced versions (start with near vs. far)
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
+
+const CONTINUE = {
+    text: `Drücke eine beliebige Taste, um fortzufahren.`,
+    align: "left",
+    color: "Black",
+    fontsize: 28,
+    bold: true,
+    lineheight: 1.5,
+};
+
 const TASK_INSTRUCTIONS_1 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: generate_formatted_html({
-        text: `Willkommen zu unserem Experiment.<br><br>
+    stimulus:
+        generate_formatted_html({
+            text: `Willkommen zu unserem Experiment.<br><br>
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen. Bitte stelle sicher, 
 dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast, um das Experiment durchzuführen. 
 Wir bitten dich die nächsten ca. 45 Minuten
 konzentriert zu arbeiten. Du wirst am Ende des Experimentes zu SONA zurückgeleitet und erhälst
 somit automatisch deine VP-Stunde. Bei Fragen oder Probleme wende dich bitte an:<br><br>
-pui-leng.choon@student.uni-tuebingen.de<br><br>
-Drücke eine beliebige Taste, um fortzufahren.`,
-        align: "left",
-        color: "Black",
-        fontsize: 28,
-        bold: true,
-        lineheight: 1.5,
-    }),
+pui-leng.choon@student.uni-tuebingen.de<br>`,
+            align: "left",
+            color: "Black",
+            fontsize: 28,
+            bold: true,
+            lineheight: 1.5,
+        }) + generate_formatted_html(CONTINUE),
 };
 
 const TASK_INSTRUCTIONS_CALIBRATION = {
@@ -98,18 +109,19 @@ const TASK_INSTRUCTIONS_CALIBRATION = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: generate_formatted_html({
-        text: `ACHTUNG! Soundkalibierung:<br><br>
+    stimulus:
+        generate_formatted_html({
+            text: `ACHTUNG! Soundkalibierung:<br><br>
     Im Folgenden werden dir auditiv Tone präsentiert.
     Bitte stelle in dieser Zeit die Lautstärke deines Soundsystems so ein, dass du deutlich den Tönen horen kannst.<br><br>
     Anmerkung: Es geht immer automatisch weiter (d.h. du musst keine Taste drücken!).<br><br>
-    Bereit? Drücke eine beliebige Taste, um die Töne abzuspielen!`,
-        align: "left",
-        color: "Black",
-        fontsize: 28,
-        bold: true,
-        lineheight: 1.5,
-    }),
+    Bereit?`,
+            align: "left",
+            color: "Black",
+            fontsize: 28,
+            bold: true,
+            lineheight: 1.5,
+        }) + generate_formatted_html(CONTINUE),
 };
 
 const TASK_INSTRUCTIONS_2 = {
@@ -117,19 +129,19 @@ const TASK_INSTRUCTIONS_2 = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: generate_formatted_html({
-        text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
+    stimulus:
+        generate_formatted_html({
+            text: `In diesem Experiment gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
 ${TRANSLATE[TASK_HAND_MAPPING[0]]} Aufgabe = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf
 die Tasten "${PRMS.keys_left[0]}" und "${PRMS.keys_left[1]}".<br><br>
 ${TRANSLATE[TASK_HAND_MAPPING[1]]} Aufgabe = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf
-die Tasten "${PRMS.keys_right[0]}" und "${PRMS.keys_right[1]}".<br><br>
-Drücke eine beliebige Taste, um fortzufahren.`,
-        align: "left",
-        color: "Black",
-        fontsize: 28,
-        bold: true,
-        lineheight: 1.5,
-    }),
+die Tasten "${PRMS.keys_right[0]}" und "${PRMS.keys_right[1]}".<br><br>`,
+            align: "left",
+            color: "Black",
+            fontsize: 28,
+            bold: true,
+            lineheight: 1.5,
+        }) + generate_formatted_html(CONTINUE),
 };
 
 // prettier-ignore
@@ -180,14 +192,7 @@ ist. Es gilt:<br>`,
             lineheight: 1.5,
         }) +
         RESP_MAPPING +
-        generate_formatted_html({
-            text: `Drücke eine beliebige Taste, um fortzufahren.<br><br>`,
-            align: "left",
-            color: "Black",
-            fontsize: 28,
-            bold: true,
-            lineheight: 1.5,
-        }),
+        generate_formatted_html(CONTINUE),
 };
 
 // prettier-ignore
@@ -200,14 +205,13 @@ const TASK_INSTRUCTIONS_4 = {
         text: `In jedem Durchgang muss nur EINE Aufgabe bearbeitet werden.<br>
 Die Farbe eines Quadrates in der Mitte des Bildschirms zeigt dir an welche Aufgabe bearbeitet werden muss:<br><br>
 <span style="color:${COLOUR_TASK_MAPPING[0]}">${TRANSLATE[COLOUR_TASK_MAPPING[0]]} Quadrat → ${TRANSLATE[TASK_HAND_MAPPING[0]]} Aufgabe</span><br>
-<span style="color:${COLOUR_TASK_MAPPING[1]}">${TRANSLATE[COLOUR_TASK_MAPPING[1]]} Quadrat → ${TRANSLATE[TASK_HAND_MAPPING[1]]} Aufgabe</span><br><br>
-Drücke eine beliebige Taste, um fortzufahren.`,
+<span style="color:${COLOUR_TASK_MAPPING[1]}">${TRANSLATE[COLOUR_TASK_MAPPING[1]]} Quadrat → ${TRANSLATE[TASK_HAND_MAPPING[1]]} Aufgabe</span><br><br>`,
         align: "left",
         color: "Black",
         fontsize: 28,
         bold: true,
         lineheight: 1.5,
-    }),
+        }) + generate_formatted_html(CONTINUE),
 };
 
 const TASK_INSTRUCTIONS_5 = {
@@ -217,7 +221,23 @@ const TASK_INSTRUCTIONS_5 = {
     canvas_border: CANVAS_BORDER,
     stimulus:
         generate_formatted_html({
-            text: `In manchen Durchgängen ist das Quadrat in der Mitte des Bildschirms <span style="color:white">weiß</span>. In dem Fall kannst du
+            text: `***Achtung: Neue Instruktionen!***<br><br>`,
+            align: "center",
+            color: "Black",
+            fontsize: 38,
+            bold: true,
+            lineheight: 1.5,
+        }) + generate_formatted_html(CONTINUE),
+};
+
+const TASK_INSTRUCTIONS_6 = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus:
+        generate_formatted_html({
+            text: `In manchen Durchgängen ist das Quadrat in der Mitte des Bildschirms <span style="color:blue">Blau</span> und <span style="color:red">Rot</span>. In dem Fall kannst du
 frei entscheiden welche Aufgabe (Kleiner/Gröser oder Ungerade/Gerade) du bearbeiten willst.
 Verwende hierfür einfach die jeweilige Taste:<br><br>`,
             align: "left",
@@ -227,50 +247,23 @@ Verwende hierfür einfach die jeweilige Taste:<br><br>`,
             lineheight: 1.5,
         }) +
         RESP_MAPPING +
-        generate_formatted_html({
-            text: `Drücke eine beliebige Taste, um fortzufahren`,
-            align: "left",
-            color: "Black",
-            fontsize: 28,
-            bold: true,
-            lineheight: 1.5,
-        }),
+        generate_formatted_html(CONTINUE),
 };
 
-const AUDITORY_STIMULI = [
-    "./tones/DE_F_1.mp3",
-    "./tones/DE_F_2.mp3",
-    "./tones/DE_F_3.mp3",
-    "./tones/DE_F_4.mp3",
-    "./tones/DE_F_6.mp3",
-    "./tones/DE_F_7.mp3",
-    "./tones/DE_F_8.mp3",
-    "./tones/DE_F_9.mp3",
-    "./tones/DE_M_1.mp3",
-    "./tones/DE_M_2.mp3",
-    "./tones/DE_M_3.mp3",
-    "./tones/DE_M_4.mp3",
-    "./tones/DE_M_6.mp3",
-    "./tones/DE_M_7.mp3",
-    "./tones/DE_M_8.mp3",
-    "./tones/DE_M_9.mp3",
-    "./tones/EN_F_1.mp3",
-    "./tones/EN_F_2.mp3",
-    "./tones/EN_F_3.mp3",
-    "./tones/EN_F_4.mp3",
-    "./tones/EN_F_6.mp3",
-    "./tones/EN_F_7.mp3",
-    "./tones/EN_F_8.mp3",
-    "./tones/EN_F_9.mp3",
-    "./tones/EN_M_1.mp3",
-    "./tones/EN_M_2.mp3",
-    "./tones/EN_M_3.mp3",
-    "./tones/EN_M_4.mp3",
-    "./tones/EN_M_6.mp3",
-    "./tones/EN_M_7.mp3",
-    "./tones/EN_M_8.mp3",
-    "./tones/EN_M_9.mp3",
-];
+function generate_tone_list() {
+    let tone_list = [];
+    let language = ["DE", "EN"];
+    let stimuli = [1, 2, 3, 4, 6, 7, 8, 9];
+    for (i = 0; i < language.length; i++) {
+        for (j = 0; j < stimuli.length; j++) {
+            tone_list.push(`./tones/${language[i]}_${VOICE_GENDER}_${stimuli[j]}.mp3`);
+        }
+    }
+    return tone_list;
+}
+
+const AUDITORY_STIMULI = generate_tone_list();
+// console.log(AUDITORY_STIMULI);
 
 const PRELOAD = {
     type: jsPsychPreload,
@@ -350,8 +343,15 @@ const FIXATION_CROSS = {
 function draw_task_cue(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
-    ctx.fillStyle = args.task_cue_colour;
-    ctx.fillRect(-PRMS.cue_size / 2, -PRMS.cue_size / 2, PRMS.cue_size, PRMS.cue_size);
+    if (args.task_cue === "both") {
+        ctx.fillStyle = COLOUR_TASK_MAPPING[1];
+        ctx.fillRect(-PRMS.cue_size / 2, -PRMS.cue_size / 2, PRMS.cue_size, PRMS.cue_size);
+        ctx.fillStyle = COLOUR_TASK_MAPPING[0];
+        ctx.fillRect(-PRMS.cue_size / 2, -PRMS.cue_size / 2, PRMS.cue_size / 2, PRMS.cue_size);
+    } else {
+        ctx.fillStyle = args.task_cue;
+        ctx.fillRect(-PRMS.cue_size / 2, -PRMS.cue_size / 2, PRMS.cue_size, PRMS.cue_size);
+    }
 }
 
 const SOUND_STIMULUS = {
@@ -362,18 +362,24 @@ const SOUND_STIMULUS = {
     sound: null,
     trial_duration: 0,
     response_ends_trial: false,
+    data: {
+        stim_type: "stcs_sound",
+        block_type: jsPsych.timelineVariable("block_type"),
+        task: jsPsych.timelineVariable("task"),
+        task_cue: jsPsych.timelineVariable("task_cue"),
+        number: jsPsych.timelineVariable("number"),
+    },
     on_start: function (trial) {
         let language;
         let sound_file;
-        let repetition_switch;
-        if (PRMS.ctrl === 1) {
+        let dat = jsPsych.data.get().last(4).values()[0];
+        if (PRMS.ctrl === 1 || dat.task_type === "free") {
             // first trial of every block
-            repetition_switch = "na";
+            repetition_switch = "na"; // code later for free choices
             language = shuffle(["DE", "EN"])[0];
             sound_file = `./tones/${language}_${VOICE_GENDER}_${jsPsych.timelineVariable("number")}.mp3`;
         } else {
-            let dat = jsPsych.data.get().last(3).values()[0];
-            repetition_switch = dat.task === jsPsych.timelineVariable("task") ? "rep" : "switch";
+            let repetition_switch = dat.task === jsPsych.timelineVariable("task") ? "rep" : "switch";
             if (VERSION === 1) {
                 if (repetition_switch === "rep") {
                     language = Math.random() <= 0.75 ? "DE" : "EN";
@@ -390,27 +396,57 @@ const SOUND_STIMULUS = {
             sound_file = `./tones/${language}_${VOICE_GENDER}_${jsPsych.timelineVariable("number")}.mp3`;
         }
         trial.sound = sound_file;
-        trial.data = {
-            sound_file: sound_file,
-            repetition_switch: repetition_switch,
-        };
+        trial.data.sound_file = sound_file;
     },
 };
 
 function code_trial() {
     "use strict";
 
-    let dat = jsPsych.data.get().last(2).values()[0];
-    let repetition_switch = dat.repetition_switch;
+    let dat_n1 = PRMS.ctrl > 1 ? jsPsych.data.get().last(6).values()[0] : null; // previous trial
+    let sound_file = jsPsych.data.get().last(2).values()[0].sound_file; // sound
+    let dat_n = jsPsych.data.get().last(1).values()[0]; // current trial
 
-    dat = jsPsych.data.get().last(1).values()[0];
-    let correct = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_key) ? 1 : 0;
+    // Which task was selected?
+    let selected_task = PRMS.keys_left.includes(dat_n.key_press.toUpperCase())
+        ? TASK_HAND_MAPPING[0]
+        : TASK_HAND_MAPPING[1];
+
+    // Was the task a repetition or switch?
+    let repetition_switch;
+    if (PRMS.ctrl === 1) {
+        repetition_switch = "na";
+    } else {
+        repetition_switch = dat_n1.selected_task === selected_task ? "rep" : "switch";
+    }
+
+    // Was the response correct?
+    let correct_key;
+    if (selected_task === "magnitude") {
+        correct_key = dat_n.number < 5 ? PRMS.keys_magnitude[0] : PRMS.keys_magnitude[1];
+    } else if (selected_task === "parity") {
+        correct_key = [1, 3, 7, 9].includes(dat_n.number) ? PRMS.keys_parity[0] : PRMS.keys_parity[1];
+    }
+
+    let correct = jsPsych.pluginAPI.compareKeys(dat_n.key_press, correct_key) ? 1 : 0;
+
+    // let check = {
+    //     sound_file: sound_file,
+    //     number: dat_n.number,
+    //     task: dat_n.task,
+    //     repetition_switch: repetition_switch,
+    //     selected_task: selected_task,
+    //     correct: correct,
+    // };
+    // console.log(check);
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
         blockNum: PRMS.cblk,
         trialNum: PRMS.ctrl,
+        sound_file: sound_file,
         repetition_switch: repetition_switch,
+        selected_task: selected_task,
         correct: correct,
     });
 }
@@ -428,13 +464,18 @@ const TASK_CUE_STIMULUS = {
     func_args: null,
     data: {
         stim_type: "stcs",
+        block_type: jsPsych.timelineVariable("block_type"),
         task: jsPsych.timelineVariable("task"),
         task_cue: jsPsych.timelineVariable("task_cue"),
-        correct_key: jsPsych.timelineVariable("correct_key"),
+        number: jsPsych.timelineVariable("number"),
     },
     on_start: function (trial) {
-        trial.choices = jsPsych.timelineVariable("task") === "magnitude" ? PRMS.keys_magnitude : PRMS.keys_parity;
-        trial.func_args = [{ task_cue_colour: jsPsych.timelineVariable("task_cue") }];
+        if (jsPsych.timelineVariable("task") === "free") {
+            trial.choices = PRMS.keys_magnitude.concat(PRMS.keys_parity);
+        } else {
+            trial.choices = jsPsych.timelineVariable("task") === "magnitude" ? PRMS.keys_magnitude : PRMS.keys_parity;
+        }
+        trial.func_args = [{ task_cue: jsPsych.timelineVariable("task_cue") }];
     },
     on_finish: function () {
         code_trial();
@@ -484,20 +525,14 @@ const ITI = {
 function create_trial_table_forced_block() {
     trials = [];
     let stimuli = [1, 2, 3, 4, 6, 7, 8, 9];
-    let correct_key;
     for (let i = 0; i < stimuli.length; i++) {
         for (let j = 0; j < TASK_HAND_MAPPING.length; j++) {
-            if (TASK_HAND_MAPPING[j] === "magnitude") {
-                correct_key = stimuli[i] < 5 ? PRMS.keys_magnitude[0] : PRMS.keys_magnitude[1];
-            } else if (TASK_HAND_MAPPING[j] === "parity") {
-                correct_key = [1, 3, 7, 9].includes(stimuli[i]) ? PRMS.keys_parity[0] : PRMS.keys_parity[1];
-            }
             trials.push({
+                block_type: "forced",
                 task_type: "forced",
                 task: TASK_HAND_MAPPING[j],
                 task_cue: COLOUR_TASK_MAPPING[j],
                 number: stimuli[i],
-                correct_key: correct_key,
             });
         }
     }
@@ -506,30 +541,27 @@ function create_trial_table_forced_block() {
 const TRIAL_TABLE_FORCED = create_trial_table_forced_block();
 // console.table(TRIAL_TABLE_FORCED);
 
-// function create_trial_table_hybrid_block() {
-//     trials = [];
-//     let stimuli = [1, 2, 3, 4, 6, 7, 8, 9];
-//     let correct_key;
-//     for (let i = 0; i < stimuli.length; i++) {
-//         for (let j = 0; j < TASK_HAND_MAPPING.length; j++) {
-//             if (TASK_HAND_MAPPING[j] === "magnitude") {
-//                 correct_key = stimuli[i] < 5 ? PRMS.keys_magnitude[0] : PRMS.keys_magnitude[1];
-//             } else if (TASK_HAND_MAPPING[j] === "parity") {
-//                 correct_key = [1, 3, 7, 9].includes(stimuli[i]) ? PRMS.keys_parity[0] : PRMS.keys_parity[1];
-//             }
-//             trials.push({
-//                 task_type: "hybrid",
-//                 task: "free_choice",
-//                 task_cue: "free_choice",
-//                 number: stimuli[i],
-//                 correct_key: correct_key,
-//             });
-//         }
-//     }
-//     return trials;
-// }
-// const TRIAL_TABLE_HYBRID = create_trial_table_hybrid_block();
-// // console.table(TRIAL_TABLE_HYBRID);
+function create_trial_table_hybrid_block() {
+    trials = [];
+    let stimuli = [1, 2, 3, 4, 6, 7, 8, 9];
+    let task_type = ["forced", "forced", "free"];
+    for (let i = 0; i < stimuli.length; i++) {
+        for (let j = 0; j < TASK_HAND_MAPPING.length; j++) {
+            for (let k = 0; k < task_type.length; k++) {
+                trials.push({
+                    block_type: "hybrid",
+                    task_type: task_type[k],
+                    task: task_type[k] === "forced" ? TASK_HAND_MAPPING[j] : "free",
+                    task_cue: task_type[k] === "forced" ? COLOUR_TASK_MAPPING[j] : "both",
+                    number: stimuli[i],
+                });
+            }
+        }
+    }
+    return trials;
+}
+const TRIAL_TABLE_HYBRID = create_trial_table_hybrid_block();
+// console.table(TRIAL_TABLE_HYBRID);
 
 const BLOCK_FEEDBACK = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -552,25 +584,15 @@ const BLOCK_FEEDBACK = {
     },
 };
 
-// prettier-ignore
 const TRIAL_TIMELINE_FORCED = {
-  timeline: [FIXATION_CROSS, SOUND_STIMULUS, TASK_CUE_STIMULUS, TRIAL_FEEDBACK, ITI],
-  timeline_variables: TRIAL_TABLE_FORCED,
-  sample: {
-    type: "fixed-repetitions",
-    size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
-  }
+    timeline: [FIXATION_CROSS, SOUND_STIMULUS, TASK_CUE_STIMULUS, TRIAL_FEEDBACK, ITI],
+    timeline_variables: TRIAL_TABLE_FORCED,
 };
 
-// // prettier-ignore
-// const TRIAL_TIMELINE_HYBRID = {
-//   timeline: [FIXATION_CROSS, SOUND_STIMULUS, TASK_CUE_STIMULUS, TRIAL_FEEDBACK, ITI],
-//   timeline_variables: TRIAL_TABLE_HYBRID,
-//   sample: {
-//     type: "fixed-repetitions",
-//     size: PRMS.ntrls_hybrid / TRIAL_TABLE_HYBRID.length,
-//   }
-// };
+const TRIAL_TIMELINE_HYBRID = {
+    timeline: [FIXATION_CROSS, SOUND_STIMULUS, TASK_CUE_STIMULUS, TRIAL_FEEDBACK, ITI],
+    timeline_variables: TRIAL_TABLE_HYBRID,
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                             VP Stunden                             //
@@ -589,7 +611,6 @@ const END_SCREEN = {
         bold: false,
         align: "left",
     }),
-    on_finish: function () {},
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -604,7 +625,7 @@ function save() {
 
     const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
     saveData("/Common7+/write_data.php", data_fn, { stim_type: "stcs" });
-    // saveDataLocal(data_fn, { stim_type: 'stcs' });
+    // saveDataLocal(data_fn, { stim_type: "stcs" });
 }
 
 const SAVE_DATA = {
@@ -629,18 +650,17 @@ function genExpSeq() {
     exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(mouseCursor(false));
 
+    // welcome instructions
+    exp.push(TASK_INSTRUCTIONS_1);
+
     // audio calibration
     exp.push(TASK_INSTRUCTIONS_CALIBRATION);
     exp.push(TRIAL_TIMELINE_CALIBRATION);
 
-    // instructions
-    exp.push(TASK_INSTRUCTIONS_1);
+    // instructions;
     exp.push(TASK_INSTRUCTIONS_2);
     exp.push(TASK_INSTRUCTIONS_3);
     exp.push(TASK_INSTRUCTIONS_4);
-    exp.push(TASK_INSTRUCTIONS_5);
-
-    // forced blocks
     for (let blk = 0; blk < PRMS.nblks_forced; blk += 1) {
         let blk_timeline = { ...TRIAL_TIMELINE_FORCED };
         blk_timeline.sample = {
@@ -651,25 +671,30 @@ function genExpSeq() {
         exp.push(BLOCK_FEEDBACK); // show previous block performance
     }
 
-    // // hybrid blocks
-    // for (let blk = 0; blk < PRMS.nblks_forced; blk += 1) {
-    //     let blk_timeline = { ...TRIAL_TIMELINE_FORCED };
-    //     blk_timeline.sample = {
-    //         type: "fixed-repetitions",
-    //         size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
-    //     };
-    //     exp.push(blk_timeline); // trials within a block
-    //     exp.push(BLOCK_FEEDBACK); // show previous block performance
-    // }
+    // hybrid blocks
+    exp.push(TASK_INSTRUCTIONS_5);
+    exp.push(TASK_INSTRUCTIONS_6);
+    for (let blk = 0; blk < PRMS.nblks_hybrid; blk += 1) {
+        let blk_timeline = { ...TRIAL_TIMELINE_HYBRID };
+        blk_timeline.sample = {
+            type: "fixed-repetitions",
+            size:
+                blk === 0
+                    ? PRMS.nptrls_hybrid / TRIAL_TABLE_HYBRID.length
+                    : PRMS.ntrls_hybrid / TRIAL_TABLE_HYBRID.length,
+        };
+        exp.push(blk_timeline); // trials within a block
+        exp.push(BLOCK_FEEDBACK); // show previous block performance
+    }
 
     // save data
-    // exp.push(SAVE_DATA);
+    exp.push(SAVE_DATA);
 
-    // // debrief
-    // exp.push(mouseCursor(true));
-    // exp.push(END_SCREEN);
-    // exp.push(end_message());
-    // exp.push(fullscreen(false));
+    // debrief
+    exp.push(mouseCursor(true));
+    exp.push(END_SCREEN);
+    exp.push(end_message());
+    exp.push(fullscreen(false));
 
     return exp;
 }
