@@ -1,11 +1,11 @@
 // Pictorial Stroop Task with emotions:
-// VPs respond to the emotion (happy vs. sad) of a face with task-irrelevant text written on top.
+// VPs respond to the emotion (happy vs. fear) of a face with task-irrelevant text written on top.
 
 const jsPsych = initJsPsych({
     on_finish: function () {
         if (PRMS.cBlk >= 30) {
             window.location.assign(
-                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=301&credit_token=c93ff5becc384a03b7e938de45e53162&survey_code=" +
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=303&credit_token=a90afc63fd324e7da16a2693de91b961&survey_code=" +
                     jsPsych.data.urlVariables().sona_id,
             );
         }
@@ -35,9 +35,9 @@ const PRMS = {
     tooFast: 0, // responses faster than x ms -> too fast!
     tooSlow: 2500, // response slower than x ms -> too slow!
     respKeys: ["Q", "P"],
-    target_emotion: shuffle(["Wut", "Freude"]),
+    target_emotion: shuffle(["Angst", "Freude"]),
     target_position: [0, -20],
-    distractor_text_emotion: ["WUT", "FREUDE"],
+    distractor_text_emotion: ["ANGST", "FREUDE"],
     distractor_text_location: ["LINKS", "RECHTS"],
     distractor_text_font: "bold 55px monospace",
     distractor_text_position: [0, 15],
@@ -82,8 +82,9 @@ const TASK_INSTRUCTIONS2 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `In diesem Experiment siehst du Gesichter mit den Emotionen Wut oder Freude und ein Wort.
-Bitte entscheide in jedem Durchgang so schnell und so genau wie möglich, ob das Gesicht den Ausdruck "Wut" oder "Freude" zeigt und ignoriere das Wort.<br><br>
+        //NEWIAN: changed
+        text: `In diesem Experiment siehst du Gesichter mit den Emotionen Angst oder Freude und ein Wort. 
+Bitte entscheide in jedem Durchgang so schnell und so genau wie möglich, ob das Gesicht den Ausdruck "Angst" oder "Freude" zeigt und ignoriere das Wort.<br><br>
 WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit deinem rechten Zeigefinger.<br><br>
 "Q" = ${PRMS.target_emotion[0]} Gesicht &emsp; "P" = ${PRMS.target_emotion[1]} Gesicht<br><br>
 Bitte antworte so schnell und so korrekt wie möglich!<br><br>
@@ -117,7 +118,7 @@ const BLOCK_START = {
 // pre-load images
 const PRELOAD = {
     type: jsPsychPreload,
-    images: [ANGRY_IMAGES, HAPPY_IMAGES],
+    images: [FEAR_IMAGES, HAPPY_IMAGES], //NEWIAN: changed
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -265,19 +266,19 @@ const BLOCK_FEEDBACK = {
         PRMS.cBlk += 1;
     },
 };
-
-function generate_trials_within_block(angry_set, happy_set, block_type) {
+//NEWIAN: changed
+function generate_trials_within_block(fear_set, happy_set, block_type) {
     let stroop_type = shuffle(
-        repeatArray(["angry_comp", "angry_incomp", "happy_comp", "happy_incomp"], angry_set.length / 4),
+        repeatArray(["fear_comp", "fear_incomp", "happy_comp", "happy_incomp"], fear_set.length / 4),
     );
     let image_numbers = shuffle([...Array(32).keys()]);
     let trials = [];
     for (let i = 0; i < stroop_type.length; i++) {
         let tmp = {};
-        if (stroop_type[i] === "angry_comp") {
-            tmp.target = angry_set[image_numbers[i]];
-            tmp.target_type = "angry";
-            tmp.key = PRMS.respKeys[PRMS.target_emotion.indexOf("Wut")];
+        if (stroop_type[i] === "fear_comp") {
+            tmp.target = fear_set[image_numbers[i]];
+            tmp.target_type = "fear";
+            tmp.key = PRMS.respKeys[PRMS.target_emotion.indexOf("Angst")];
             tmp.comp = "comp";
             if (block_type === "emotion") {
                 tmp.distractor = PRMS.distractor_text_emotion[0];
@@ -285,10 +286,10 @@ function generate_trials_within_block(angry_set, happy_set, block_type) {
                 tmp.distractor =
                     tmp.key === PRMS.respKeys[0] ? PRMS.distractor_text_location[0] : PRMS.distractor_text_location[1];
             }
-        } else if (stroop_type[i] === "angry_incomp") {
-            tmp.target = angry_set[image_numbers[i]];
-            tmp.target_type = "angry";
-            tmp.key = PRMS.respKeys[PRMS.target_emotion.indexOf("Wut")];
+        } else if (stroop_type[i] === "fear_incomp") {
+            tmp.target = fear_set[image_numbers[i]];
+            tmp.target_type = "fear";
+            tmp.key = PRMS.respKeys[PRMS.target_emotion.indexOf("Angst")];
             tmp.comp = "incomp";
             if (block_type === "emotion") {
                 tmp.distractor = PRMS.distractor_text_emotion[1];
@@ -343,7 +344,7 @@ const TRIAL_TIMELINE = {
 ////////////////////////////////////////////////////////////////////////
 const DIR_NAME = getDirName();
 const EXP_NAME = getFileName();
-const VP_NUM = getFileName();
+const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
@@ -387,7 +388,7 @@ function genExpSeq() {
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
         exp.push(BLOCK_START);
         let blk_timeline = deepCopy(TRIAL_TIMELINE);
-        blk_timeline.timeline_variables = generate_trials_within_block(ANGRY_IMAGES, HAPPY_IMAGES, blk_type[blk]);
+        blk_timeline.timeline_variables = generate_trials_within_block(FEAR_IMAGES, HAPPY_IMAGES, blk_type[blk]);
         blk_timeline.sample = { type: "fixed-repetitions", size: 1 };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
