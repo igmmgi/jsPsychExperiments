@@ -12,7 +12,16 @@
 // Block structure
 // 12 blocks of 56 trials
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cBlk >= 12) {
+            window.location.assign(
+                "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=225&credit_token=d596c226945d4a279c6a1054a076309c&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -392,12 +401,12 @@ const END_SCREEN = {
 ////////////////////////////////////////////////////////////////////////
 const DIR_NAME = getDirName();
 const EXP_NAME = getFileName();
+const VP_NUM = getTime();
 
 function save() {
-    const vpNum = getTime();
-    jsPsych.data.addProperties({ vpNum: vpNum });
+    jsPsych.data.addProperties({ vpNum: VP_NUM });
 
-    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
+    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
     saveData("/Common/write_data.php", data_fn, { stim_type: "fd" });
     // saveDataLocal(data_fn, { stim_type: 'fd' });
 }

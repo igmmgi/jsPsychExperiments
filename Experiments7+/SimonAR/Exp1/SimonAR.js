@@ -13,7 +13,16 @@
 // 12 blocks of 56 trials
 // Alternating blocks of near/far eccentricity (counterbalanced across participants)
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cBlk >= 12) {
+            window.location.assign(
+                "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=227&credit_token=aee5fa61d77f48beba90c603cc2ce83d&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -337,12 +346,12 @@ Drücke eine beliebige Taste, um die Weiterleitung zu Unipark zu starten.`,
 ////////////////////////////////////////////////////////////////////////
 const DIR_NAME = getDirName();
 const EXP_NAME = getFileName();
+const VP_NUM = getTime();
 
 function save() {
-    const vpNum = getTime();
-    jsPsych.data.addProperties({ vpNum: vpNum });
+    jsPsych.data.addProperties({ vpNum: VP_NUM });
 
-    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${vpNum}`;
+    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
     saveData("/Common/write_data.php", data_fn, { stim_type: "sar" });
     // saveDataLocal(data_fn, { stim_type: 'sar' });
 }
