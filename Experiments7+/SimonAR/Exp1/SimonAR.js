@@ -15,7 +15,7 @@
 
 const jsPsych = initJsPsych({
     on_finish: function () {
-        if (PRMS.cBlk >= 12) {
+        if (PRMS.cblk >= 12) {
             window.location.assign(
                 "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=227&credit_token=aee5fa61d77f48beba90c603cc2ce83d&survey_code=" +
                     jsPsych.data.urlVariables().sona_id,
@@ -54,8 +54,8 @@ const PRMS = {
     target: shuffle(["blue", "red"]),
     eccentricity: [75, 350],
     size: 50,
-    cBlk: 1,
-    cTrl: 1,
+    cblk: 1,
+    ctrl: 1,
 };
 
 const EN_DE = { blue: "blau", red: "rot" };
@@ -79,7 +79,7 @@ const WELCOME_INSTRUCTIONS = {
                um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               xxx@xxx<br><br>
+               ruben.ellinghaus@fernuni-hagen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -145,12 +145,12 @@ const TASK_INSTRUCTIONS = {
 function drawFixation() {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
-    ctx.lineWidth = PRMS.fixation_width;
-    ctx.moveTo(-PRMS.fixation_size, 0);
-    ctx.lineTo(PRMS.fixation_size, 0);
+    ctx.lineWidth = PRMS.fixWidth;
+    ctx.moveTo(-PRMS.fixSize, 0);
+    ctx.lineTo(PRMS.fixSize, 0);
     ctx.stroke();
-    ctx.moveTo(0, -PRMS.fixation_size);
-    ctx.lineTo(0, PRMS.fixation_size);
+    ctx.moveTo(0, -PRMS.fixSize);
+    ctx.lineTo(0, PRMS.fixSize);
     ctx.stroke();
 }
 
@@ -161,7 +161,7 @@ const FIXATION_CROSS = {
     canvas_border: CANVAS_BORDER,
     translate_origin: true,
     response_ends_trial: false,
-    trial_duration: PRMS.fixation_duration,
+    trial_duration: PRMS.fixDur,
     func: drawFixation,
 };
 
@@ -170,12 +170,12 @@ function drawStimulus(args) {
     let ctx = document.getElementById("canvas").getContext("2d");
 
     // draw fixation with stimulus
-    ctx.lineWidth = PRMS.fixation_width;
-    ctx.moveTo(-PRMS.fixation_size, 0);
-    ctx.lineTo(PRMS.fixation_size, 0);
+    ctx.lineWidth = PRMS.fixWidth;
+    ctx.moveTo(-PRMS.fixSize, 0);
+    ctx.lineTo(PRMS.fixSize, 0);
     ctx.stroke();
-    ctx.moveTo(0, -PRMS.fixation_size);
-    ctx.lineTo(0, PRMS.fixation_size);
+    ctx.moveTo(0, -PRMS.fixSize);
+    ctx.lineTo(0, PRMS.fixSize);
     ctx.stroke();
 
     // draw colour square

@@ -29,7 +29,7 @@ const PRMS = {
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
     fixColor: "Black", // colour of the fixation cross
-    fbDur: [0, 2000, 2000, 2000], // duration of feedback for each type
+    fbDur: [0, 2250, 2250, 2250], // duration of feedback for each type
     waitDur: 1000, // duration following ...
     iti: 500, // duration of inter-trial-interval
     tooFast: 0, // responses faster than x ms -> too fast!
@@ -41,7 +41,7 @@ const PRMS = {
     distractor_text_location: ["LINKS", "RECHTS"],
     distractor_text_font: "bold 55px monospace",
     distractor_text_position: [0, 15],
-    distractor_text_colour: "White",
+    distractor_text_colour: "Blue",
     feedback_text: ["", "Falsch!", "Zu langsam!", "Zu schnell!!"],
     feedback_text_font: "30px monospace",
     feedback_text_colour: "Black",
@@ -343,7 +343,7 @@ const TRIAL_TIMELINE = {
 ////////////////////////////////////////////////////////////////////////
 const DIR_NAME = getDirName();
 const EXP_NAME = getFileName();
-const VP_NUM = getFileName();
+const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });

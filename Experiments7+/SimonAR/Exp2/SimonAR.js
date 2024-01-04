@@ -45,8 +45,8 @@ const PRMS = {
     target: shuffle(["blue", "red"]),
     eccentricity: [75, 350],
     size: 50,
-    cBlk: 1,
-    cTrl: 1,
+    cblk: 1,
+    ctrl: 1,
 };
 
 const EN_DE = { blue: "blau", red: "rot" };
@@ -66,7 +66,7 @@ const WELCOME_INSTRUCTIONS = {
                um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               xxx@xxx<br><br>
+               ruben.ellinghaus@fernuni-hagen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -109,7 +109,7 @@ const TASK_INSTRUCTIONS = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
+                text: `Mini-Block ${PRMS.cblk} von ${PRMS.nBlks}:<br><br>
                Du musst in jedem Durchgang entscheiden ob das Quadrat blau oder rot ist.
                Reagiere wie folgt:<br>`,
                 align: "left",
@@ -196,7 +196,7 @@ const SIMON = {
     },
     on_finish: function () {
         codeTrial();
-        PRMS.cTrl += 1;
+        PRMS.ctrl += 1;
     },
 };
 
@@ -253,8 +253,8 @@ function codeTrial() {
     }
     jsPsych.data.addDataToLastTrial({
         date: Date(),
-        blockNum: PRMS.cBlk,
-        trialNum: PRMS.cTrl,
+        blockNum: PRMS.cblk,
+        trialNum: PRMS.ctrl,
         corrCode: corrCode,
     });
 }
@@ -268,14 +268,14 @@ const BLOCK_FEEDBACK = {
     response_ends_trial: true,
     on_start: function (trial) {
         let block_dvs = calculateBlockPerformance({
-            filter_options: { stim_type: "sar", blockNum: PRMS.cBlk },
+            filter_options: { stim_type: "sar", blockNum: PRMS.cblk },
         });
-        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
+        let text = blockFeedbackText(PRMS.cblk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
     on_finish: function () {
-        PRMS.cTrl = 1;
-        PRMS.cBlk += 1;
+        PRMS.ctrl = 1;
+        PRMS.cblk += 1;
     },
 };
 
