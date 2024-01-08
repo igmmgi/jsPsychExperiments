@@ -26,7 +26,16 @@
 // Correct responses -> blank inter-trial-interval for 500 ms
 // Incorrect responses -> feedback "incorrect" + correct S-R mapping reminder for 2000 ms before ITI
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cblk >= 9) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=309&credit_token=6112ac5e16454dd5a1a3ca1983dd7095&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 // CANVAS
 const CANVAS_COLOUR = "rgba(150, 150, 150, 1)";
@@ -39,15 +48,15 @@ const CANVAS_BORDER = "5px solid black";
 const VOICE_GENDER = shuffle(["M", "F"])[0]; // randomly selected and constant wihin single participant
 const TASK_HAND_MAPPING = shuffle(["magnitude", "parity"]);
 const COLOUR_TASK_MAPPING = shuffle(["Blue", "Red"]);
-const TRANSLATE = { magnitude: "Kleiner/Gröser", parity: "Ungerade/Gerade", Blue: "Blaues", Red: "Rotes" };
+const TRANSLATE = { magnitude: "Kleiner/Größer", parity: "Ungerade/Gerade", Blue: "Blaues", Red: "Rotes" };
 
 const PRMS = {
     nblks_forced: 2, // number of initial "forced" only trial blocks
     ntrls_forced: 128, // number of trials in forced blocks
-    nblks_hybrid: 2, // number of hybrid blocks
+    nblks_hybrid: 7, // number of hybrid blocks
     nptrls_hybrid: 96, // number of trials in first hybrid block
     ntrls_hybrid: 144, // number of trials in subsequent hybrid blocks
-    nblks: 4, // total number of blocks
+    nblks: 9, // total number of blocks
     fixation_duration: 500, // duration of fixation cross
     fixation_width: 5, // width fixation cross
     fixation_size: 20, // size of fixation
@@ -238,7 +247,7 @@ const TASK_INSTRUCTIONS_6 = {
     stimulus:
         generate_formatted_html({
             text: `In manchen Durchgängen ist das Quadrat in der Mitte des Bildschirms <span style="color:blue">Blau</span> und <span style="color:red">Rot</span>. In dem Fall kannst du
-frei entscheiden welche Aufgabe (Kleiner/Gröser oder Ungerade/Gerade) du bearbeiten willst.
+frei entscheiden welche Aufgabe (Kleiner/Größer oder Ungerade/Gerade) du bearbeiten willst.
 Verwende hierfür einfach die jeweilige Taste:<br><br>`,
             align: "left",
             color: "Black",
@@ -670,6 +679,7 @@ function genExpSeq() {
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
     }
+    exp.push(END_SCREEN);
 
     // hybrid blocks
     exp.push(TASK_INSTRUCTIONS_5);
@@ -692,7 +702,6 @@ function genExpSeq() {
 
     // debrief
     exp.push(mouseCursor(true));
-    exp.push(END_SCREEN);
     exp.push(end_message());
     exp.push(fullscreen(false));
 
