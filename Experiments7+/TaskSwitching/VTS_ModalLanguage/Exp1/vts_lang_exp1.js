@@ -374,6 +374,7 @@ const SOUND_STIMULUS = {
     data: {
         stim_type: "stcs_sound",
         block_type: jsPsych.timelineVariable("block_type"),
+        task_type: jsPsych.timelineVariable("task_type"),
         task: jsPsych.timelineVariable("task"),
         task_cue: jsPsych.timelineVariable("task_cue"),
         number: jsPsych.timelineVariable("number"),
@@ -381,13 +382,13 @@ const SOUND_STIMULUS = {
     on_start: function (trial) {
         let language;
         let sound_file;
-        let dat = jsPsych.data.get().last(4).values()[0];
-        if (PRMS.ctrl === 1 || dat.task_type === "free") {
+        if (PRMS.ctrl === 1 || jsPsych.timelineVariable("task_type") === "free") {
             // first trial of every block
             repetition_switch = "na"; // code later for free choices
             language = shuffle(["DE", "EN"])[0];
             sound_file = `./tones/${language}_${VOICE_GENDER}_${jsPsych.timelineVariable("number")}.mp3`;
         } else {
+            let dat = jsPsych.data.get().last(4).values()[0];
             let repetition_switch = dat.task === jsPsych.timelineVariable("task") ? "rep" : "switch";
             if (VERSION === 1) {
                 if (repetition_switch === "rep") {
@@ -474,6 +475,7 @@ const TASK_CUE_STIMULUS = {
     data: {
         stim_type: "stcs",
         block_type: jsPsych.timelineVariable("block_type"),
+        task_type: jsPsych.timelineVariable("task_type"),
         task: jsPsych.timelineVariable("task"),
         task_cue: jsPsych.timelineVariable("task_cue"),
         number: jsPsych.timelineVariable("number"),
@@ -548,7 +550,7 @@ function create_trial_table_forced_block() {
     return trials;
 }
 const TRIAL_TABLE_FORCED = create_trial_table_forced_block();
-// console.table(TRIAL_TABLE_FORCED);
+//console.table(TRIAL_TABLE_FORCED);
 
 function create_trial_table_hybrid_block() {
     trials = [];
@@ -570,7 +572,7 @@ function create_trial_table_hybrid_block() {
     return trials;
 }
 const TRIAL_TABLE_HYBRID = create_trial_table_hybrid_block();
-// console.table(TRIAL_TABLE_HYBRID);
+//console.table(TRIAL_TABLE_HYBRID);
 
 const BLOCK_FEEDBACK = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -670,6 +672,8 @@ function genExpSeq() {
     exp.push(TASK_INSTRUCTIONS_2);
     exp.push(TASK_INSTRUCTIONS_3);
     exp.push(TASK_INSTRUCTIONS_4);
+
+    // forced blocks
     for (let blk = 0; blk < PRMS.nblks_forced; blk += 1) {
         let blk_timeline = { ...TRIAL_TIMELINE_FORCED };
         blk_timeline.sample = {
