@@ -389,7 +389,7 @@ const SOUND_STIMULUS = {
             sound_file = `./tones/${language}_${VOICE_GENDER}_${jsPsych.timelineVariable("number")}.mp3`;
         } else {
             let dat = jsPsych.data.get().last(4).values()[0];
-            let repetition_switch = dat.task === jsPsych.timelineVariable("task") ? "rep" : "switch";
+            let repetition_switch = dat.selected_task === jsPsych.timelineVariable("task") ? "rep" : "switch";
             if (VERSION === 1) {
                 if (repetition_switch === "rep") {
                     language = Math.random() <= 0.75 ? "DE" : "EN";
@@ -429,6 +429,7 @@ function code_trial() {
     } else {
         repetition_switch = dat_n1.selected_task === selected_task ? "rep" : "switch";
     }
+    console.log(`code_trial ${repetition_switch}`);
 
     // Was the response correct?
     let correct_key;
