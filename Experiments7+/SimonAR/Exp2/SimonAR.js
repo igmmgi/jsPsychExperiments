@@ -13,7 +13,16 @@
 // 12 blocks of 56 trials
 // Alternating blocks of easy/hard discriminability (counterbalanced across participants)
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cblk >= 12) {
+            window.location.assign(
+                "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=227&credit_token=aee5fa61d77f48beba90c603cc2ce83d&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
