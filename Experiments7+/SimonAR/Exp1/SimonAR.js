@@ -17,7 +17,7 @@ const jsPsych = initJsPsych({
     on_finish: function () {
         if (PRMS.cblk >= 12) {
             window.location.assign(
-                "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=227&credit_token=aee5fa61d77f48beba90c603cc2ce83d&survey_code=" +
+                "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=265&credit_token=8b8fea75dd334c4d860ef8b1060b536b&survey_code=" +
                     jsPsych.data.urlVariables().sona_id,
             );
         }
@@ -294,18 +294,18 @@ const BLOCK_FEEDBACK = {
 
 // prettier-ignore
 const TRIAL_TABLE_NEAR = [
-  { eccentricity: "near", position: "left",  position_x: -PRMS.eccentricity[0], target: PRMS.target[0], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { eccentricity: "near", position: "left",  position_x: -PRMS.eccentricity[0], target: PRMS.target[1], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { eccentricity: "near", position: "right", position_x: PRMS.eccentricity[0],  target: PRMS.target[0], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { eccentricity: "near", position: "right", position_x: PRMS.eccentricity[0],  target: PRMS.target[1], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { eccentricity: "near", position: "left",  position_x: -PRMS.eccentricity[0],  target: PRMS.target[0], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { eccentricity: "near", position: "left",  position_x: -PRMS.eccentricity[0],  target: PRMS.target[1], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { eccentricity: "near", position: "right", position_x:  PRMS.eccentricity[0],  target: PRMS.target[0], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { eccentricity: "near", position: "right", position_x:  PRMS.eccentricity[0],  target: PRMS.target[1], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
 // prettier-ignore
 const TRIAL_TABLE_FAR = [
-  { eccentricity: 'far', position: 'left',  position_x: -PRMS.eccentricity[1], target: PRMS.target[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { eccentricity: 'far', position: 'left',  position_x: -PRMS.eccentricity[1], target: PRMS.target[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-  { eccentricity: 'far', position: 'right', position_x: PRMS.eccentricity[1],  target: PRMS.target[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-  { eccentricity: 'far', position: 'right', position_x: PRMS.eccentricity[1],  target: PRMS.target[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { eccentricity: 'far', position: 'left',  position_x: -PRMS.eccentricity[1],  target: PRMS.target[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { eccentricity: 'far', position: 'left',  position_x: -PRMS.eccentricity[1],  target: PRMS.target[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { eccentricity: 'far', position: 'right', position_x:  PRMS.eccentricity[1],  target: PRMS.target[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { eccentricity: 'far', position: 'right', position_x:  PRMS.eccentricity[1],  target: PRMS.target[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
 // prettier-ignore
