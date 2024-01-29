@@ -14,7 +14,7 @@
 
 const jsPsych = initJsPsych({
     on_finish: function () {
-        if (PRMS.cBlk >= 12) {
+        if (PRMS.cBlk >= 11) {
             window.location.assign(
                 "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=266&credit_token=7d064454b4694b2fa7774e916f3fdf7f&survey_code=" +
                     jsPsych.data.urlVariables().sona_id,
@@ -42,7 +42,7 @@ const PRMS = {
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
     fbDur: [0, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
-    tooSlow: 20000, // feedback duration for correct and incorrect trials, respectively
+    tooSlow: 2000, // feedback duration for correct and incorrect trials, respectively
     tooFast: 0, // feedback duration for correct and incorrect trials, respectively
     fbText: ["", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 500, // duration of the inter-trial-interval
@@ -95,7 +95,7 @@ const WELCOME_INSTRUCTIONS = {
                um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               xxx.xxx<br><br>
+               ruben.ellinghaus@fernuni-hagen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
