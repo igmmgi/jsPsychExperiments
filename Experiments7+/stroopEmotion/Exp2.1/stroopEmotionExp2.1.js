@@ -5,7 +5,7 @@ const jsPsych = initJsPsych({
     on_finish: function () {
         if (PRMS.cBlk >= 26) {
             window.location.assign(
-                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=303&credit_token=a90afc63fd324e7da16a2693de91b961&survey_code=" +
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=317&credit_token=dcf14a04deea4cb5a2a669dd97cdabcc&survey_code=" +
                     jsPsych.data.urlVariables().sona_id,
             );
         }
