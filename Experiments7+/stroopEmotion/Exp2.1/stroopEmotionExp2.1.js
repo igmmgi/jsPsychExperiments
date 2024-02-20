@@ -165,7 +165,7 @@ Drücke eine beliebige Taste, um fortzufahren.`,
 // pre-load images
 const PRELOAD = {
     type: jsPsychPreload,
-    images: [FEAR_IMAGES, HAPPY_IMAGES], //NEWIAN: changed
+    images: [FEAR_IMAGES, HAPPY_IMAGES],
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -203,7 +203,6 @@ function code_trial() {
 
     let corrCode = 0;
     let correctKey = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.corrResp);
-    console.log(dat);
 
     if (correctKey && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
         corrCode = 1; // correct
