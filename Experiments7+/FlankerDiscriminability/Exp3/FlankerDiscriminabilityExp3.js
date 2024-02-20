@@ -50,8 +50,8 @@ const PRMS = {
     fbFont: "200px Arial",
     colours: ["rgba(0, 0, 255, 0.9)", "rgba(255, 0, 0, 0.9)"],
     ratioTargetEasy: [10, 90], // should sum to 100!
-    ratioTargetHard: [35, 65], // should sum to 100!
-    ratioDistractorEasy: [5, 95],
+    ratioTargetHard: [30, 70], // should sum to 100!
+    ratioDistractorEasy: [10, 90],
     ratioDistractorHard: [30, 70],
     respKeys: ["Q", "P"],
     target: shuffle(["blue", "red"]),
