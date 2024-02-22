@@ -10,9 +10,18 @@
 // inter-trial-interval of 500 ms
 //
 // Block structure
-// 11 blocks of 64 trials
+// 12 blocks of 64 trials
 
-const jsPsych = initJsPsych({ on_finish: function () {} });
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cBlk >= 12) {
+            window.location.assign(
+                "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=298&credit_token=abee7b62869f422fab01387f7953b722&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
