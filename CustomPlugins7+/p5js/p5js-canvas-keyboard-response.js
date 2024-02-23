@@ -55,6 +55,12 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
                 default: true,
                 description: "If true, then trial will end when user responds.",
             },
+            use_webgl: {
+                type: jspsych.ParameterType.BOOL,
+                pretty_name: "WEBGL",
+                default: false,
+                description: "If true, use p5js.WEBGL.",
+            },
         },
     };
 
@@ -67,7 +73,11 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
             // setup canvas
             display_element.innerHTML = "<div id='p5js_container''></div>";
             let p5js_canvas;
-            p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1]);
+            if (trial.use_webgl) {
+                p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.WEBGL);
+            } else {
+                p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1]);
+            }
             p5js_canvas.canvas.style.border = trial.canvas_border;
             p5js_canvas.parent(p5js_container);
             p5js.background(trial.canvas_background);
@@ -82,18 +92,18 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
             // function to end trial when it is time
             const end_trial = () => {
                 // kill any remaining setTimeout handlers
-                // this.jsPsych.pluginAPI.clearAllTimeouts();
-                // // kill keyboard listeners
+                this.jsPsych.pluginAPI.clearAllTimeouts();
+                // kill keyboard listeners
                 if (typeof keyboardListener !== "undefined") {
                     this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
                 }
-                // // gather the data to store for the trial
+                // gather the data to store for the trial
                 let trial_data = {
                     rt: response.rt,
                     stimulus: trial.stimulus,
                     key_press: response.key,
                 };
-                // // clear the display
+                // clear the display
                 display_element.innerHTML = "";
                 p5js.removeElements();
                 // move on to the next trial

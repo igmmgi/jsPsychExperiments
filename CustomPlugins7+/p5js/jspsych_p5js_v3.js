@@ -41,7 +41,7 @@ class Path {
 
     perlin_noice_coordinates() {
         for (let i = 0; i < CANVAS_SIZE[1]; i++) {
-            this.xpos[i] += p5js.noise(i / 200) * 1000 + CANVAS_SIZE[1] / 2 - 250;
+            this.xpos[i] += p5js.noise(i / 300) * 1000 + CANVAS_SIZE[1] / 2 - 250;
         }
     }
 
@@ -119,9 +119,9 @@ class Ball {
     }
 }
 
-//const path = new Path("perlin");
-const path = new Path("sine_waves");
-const ball = new Ball(path.xpos.slice(0)[0], 10);
+const path = new Path("perlin");
+// const path = new Path("sine_waves");
+const ball = new Ball(path.xpos.slice(0)[0], 8);
 
 function draw_trial() {
     p5js.background(200, 200, 200);

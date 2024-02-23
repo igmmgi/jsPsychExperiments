@@ -28,7 +28,6 @@ function draw1() {
 }
 
 function draw2() {
-    console.log("here");
     p5js.translate(-p5js.width / 2, -p5js.height / 2); // origin at top left
     p5js.fill(p5js.random(0, 255), p5js.random(0, 255), p5js.random(0, 255));
     p5js.ellipse(p5js.mouseX, p5js.mouseY, 25, 25);
@@ -135,6 +134,7 @@ for (let i = 0; i < draw_calls.length; i++) {
             return draw_calls[i];
         },
         response_ends_trial: true,
+        use_webgl: true,
     };
     exp.push(tmp);
 }

@@ -122,6 +122,7 @@ const example1 = {
         return draw_example1;
     },
     response_ends_trial: true,
+    use_webgl: true,
 };
 exp.push(example1);
 
@@ -132,6 +133,7 @@ const example2 = {
         return draw_example2;
     },
     response_ends_trial: true,
+    use_webgl: true,
 };
 exp.push(example2);
 
