@@ -443,7 +443,7 @@ function genExpSeq() {
             size: PRMS.nTrls / TRIAL_TABLE.length,
         };
         exp.push(blk_timeline); // trials within a block
-        exp.push(BLOCK_FEEDBACK); // show previous block performance
+        exp.push(BLOCK_END); // show previous block performance
     }
 
     // save data
