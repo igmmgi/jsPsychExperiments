@@ -125,11 +125,11 @@ class Ball {
                 this.is_moving = false;
                 this.is_complete = true;
             }
-            if (p5js.keyIsDown(p5js.LEFT_ARROW)) this.x_pos -= this.x_sensitivity;
-            if (p5js.keyIsDown(p5js.RIGHT_ARROW)) this.x_pos += this.x_sensitivity;
+            //if (p5js.keyIsDown(p5js.LEFT_ARROW)) this.x_pos -= this.x_sensitivity;
+            //if (p5js.keyIsDown(p5js.RIGHT_ARROW)) this.x_pos += this.x_sensitivity;
 
             //mouse?
-            //this.x_pos += p5js.movedX;
+            this.x_pos += p5js.movedX;
             //this.y_pos += p5js.movedY;
 
             if (this.y_pos >= CANVAS_SIZE[1] - 100) return;
@@ -261,7 +261,7 @@ const BLOCK_START = {
         console.log(trial);
         trial.stimulus = generate_formatted_html({
             text: `Start Block ${PRMS.cBlk} von 4:<br><br> 
-Press the spacebar to start the trial. Control the ball using the left and right arrow keys. Try to follow the path!<br><br>
+Press the spacebar to start the trial. Control the ball using the mouse by moving left and right. Try to follow the path!<br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
             align: "center",
             colour: "black",
