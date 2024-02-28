@@ -644,7 +644,7 @@ const VP_NUM = getTime();
 function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
     const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
-    saveData("/Common7+/write_data.php", data_fn, { stim: "vtstd" });
+    saveData("/Common7+/write_data.php", data_fn, { stim_type: "vtstd" });
     // saveDataLocal(data_fn, { stim: 'stroop' });
 }
 
