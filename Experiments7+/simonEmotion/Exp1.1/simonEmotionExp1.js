@@ -6,9 +6,9 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const CANVAS_COLOUR = 'rgba(255, 255, 255, 1)';
+const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
 const CANVAS_SIZE = [1280, 720];
-const CANVAS_BORDER = '5px solid black';
+const CANVAS_BORDER = "5px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -24,10 +24,10 @@ const PRMS = {
     iti: 500, // duration of inter-trial-interval
     tooFast: 150, // responses faster than x ms -> too fast!
     tooSlow: 1500, // response slower than x ms -> too slow!
-    respKeys: ['Q', 'P'],
-    target: shuffle(['trauriges', 'glückliches']),
+    respKeys: ["Q", "P"],
+    target: shuffle(["trauriges", "glückliches"]),
     stimEccentricity: 250,
-    fbTxt: ['', 'Falsch', 'Zu langsam', 'Zu schnell'],
+    fbTxt: ["", "Falsch", "Zu langsam", "Zu schnell"],
     fbTxtSizeTrial: 30,
     fbTxtSizeBlock: 30,
     cTrl: 1, // count trials
@@ -51,8 +51,8 @@ const TASK_INSTRUCTIONS1 = {
            Bei Fragen oder Problemen wende dich bitte an:<br><br>
            charlotte.kost@student.uni-tuebingen.de<br><br>
            Drücke eine beliebige Taste, um fortzufahren`,
-        align: 'left',
-        colour: 'black',
+        align: "left",
+        colour: "black",
         fontsize: 30,
     }),
 };
@@ -70,8 +70,8 @@ const TASK_INSTRUCTIONS2 = {
            "Q" = ${PRMS.target[0]} Gesicht &emsp; "P" = ${PRMS.target[1]} Gesicht<br><br>
            Bitte antworte so schnell und so korrekt wie möglich!<br><br>
            Drücke eine beliebige Taste, um fortzufahren.`,
-        align: 'left',
-        colour: 'black',
+        align: "left",
+        colour: "black",
         fontsize: 30,
     }),
 };
@@ -81,15 +81,15 @@ const BLOCK_START = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
-    on_start: function(trial) {
+    stimulus: "",
+    on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
              Reagiere auf die Emotion des Gesichtes wie folgt:<br><br>
              "Q" = ${PRMS.target[0]} Gesicht &emsp; "P" = ${PRMS.target[1]} Gesicht<br><br>
              Drücke eine beliebige Taste, um fortzufahren.`,
-            align: 'left',
-            colour: 'black',
+            align: "left",
+            colour: "black",
             fontsize: 30,
         });
     },
@@ -152,36 +152,36 @@ IMAGE_NUMBERS.radiate2 = randomSelection(
 // console.log(image_numbers);
 function generateStimulusCombinations(dataset_sad, dataset_happy, dataset_name, image_numbers) {
     let simon_type = shuffle(
-        repeatArray(['sad_left', 'sad_right', 'happy_left', 'happy_right'], image_numbers.length / 4),
+        repeatArray(["sad_left", "sad_right", "happy_left", "happy_right"], image_numbers.length / 4),
     );
     let trials = [];
     for (let i = 0; i < simon_type.length; i++) {
         let tmp = {};
         tmp.database = dataset_name;
-        if (simon_type[i] === 'sad_left') {
+        if (simon_type[i] === "sad_left") {
             tmp.target = dataset_sad[image_numbers[i]];
-            tmp.target_type = 'sad';
-            tmp.target_side = 'left';
-            tmp.key = PRMS.respKeys[PRMS.target.indexOf('trauriges')];
-            tmp.comp = tmp.key === PRMS.respKeys[0] ? 'comp' : 'incomp';
-        } else if (simon_type[i] === 'sad_right') {
+            tmp.target_type = "sad";
+            tmp.target_side = "left";
+            tmp.key = PRMS.respKeys[PRMS.target.indexOf("trauriges")];
+            tmp.comp = tmp.key === PRMS.respKeys[0] ? "comp" : "incomp";
+        } else if (simon_type[i] === "sad_right") {
             tmp.target = dataset_sad[image_numbers[i]];
-            tmp.target_type = 'sad';
-            tmp.target_side = 'right';
-            tmp.key = PRMS.respKeys[PRMS.target.indexOf('trauriges')];
-            tmp.comp = tmp.key === PRMS.respKeys[1] ? 'comp' : 'incomp';
-        } else if (simon_type[i] === 'happy_left') {
+            tmp.target_type = "sad";
+            tmp.target_side = "right";
+            tmp.key = PRMS.respKeys[PRMS.target.indexOf("trauriges")];
+            tmp.comp = tmp.key === PRMS.respKeys[1] ? "comp" : "incomp";
+        } else if (simon_type[i] === "happy_left") {
             tmp.target = dataset_happy[image_numbers[i]];
-            tmp.target_type = 'happy';
-            tmp.target_side = 'left';
-            tmp.key = PRMS.respKeys[PRMS.target.indexOf('glückliches')];
-            tmp.comp = tmp.key === PRMS.respKeys[0] ? 'comp' : 'incomp';
-        } else if (simon_type[i] === 'happy_right') {
+            tmp.target_type = "happy";
+            tmp.target_side = "left";
+            tmp.key = PRMS.respKeys[PRMS.target.indexOf("glückliches")];
+            tmp.comp = tmp.key === PRMS.respKeys[0] ? "comp" : "incomp";
+        } else if (simon_type[i] === "happy_right") {
             tmp.target = dataset_happy[image_numbers[i]];
-            tmp.target_type = 'happy';
-            tmp.target_side = 'right';
-            tmp.key = PRMS.respKeys[PRMS.target.indexOf('glückliches')];
-            tmp.comp = tmp.key === PRMS.respKeys[1] ? 'comp' : 'incomp';
+            tmp.target_type = "happy";
+            tmp.target_side = "right";
+            tmp.key = PRMS.respKeys[PRMS.target.indexOf("glückliches")];
+            tmp.comp = tmp.key === PRMS.respKeys[1] ? "comp" : "incomp";
         }
         trials.push(tmp);
     }
@@ -190,13 +190,23 @@ function generateStimulusCombinations(dataset_sad, dataset_happy, dataset_name, 
 
 // prettier-ignore
 const TRIALS_NIMSTIM = generateStimulusCombinations(nimstim_sad, nimstim_happy, 'nimstim', IMAGE_NUMBERS.nimstim);
-const TRIALS_MPI_YOUNG = generateStimulusCombinations(mpi_sad_young, mpi_happy_young, 'mpi_young', IMAGE_NUMBERS.mpi_young);
-const TRIALS_MPI_MIDDLE = generateStimulusCombinations(mpi_sad_middle, mpi_happy_middle, 'mpi_middle', IMAGE_NUMBERS.mpi_middle);
-const TRIALS_MPI_OLD = generateStimulusCombinations(mpi_sad_old, mpi_happy_old, 'mpi_old', IMAGE_NUMBERS.mpi_old);
-const TRIALS_KDEF = generateStimulusCombinations(kdef_sad, kdef_happy, 'kdef', IMAGE_NUMBERS.kdef);
-const TRIALS_RADBOUD = generateStimulusCombinations(radboud_sad, radboud_happy, 'radboud', IMAGE_NUMBERS.radboud);
-const TRIALS_RADIATE1 = generateStimulusCombinations(radiate_sad, radiate_happy, 'radiate', IMAGE_NUMBERS.radiate1);
-const TRIALS_RADIATE2 = generateStimulusCombinations(radiate_sad, radiate_happy, 'radiate', IMAGE_NUMBERS.radiate2);
+const TRIALS_MPI_YOUNG = generateStimulusCombinations(
+    mpi_sad_young,
+    mpi_happy_young,
+    "mpi_young",
+    IMAGE_NUMBERS.mpi_young,
+);
+const TRIALS_MPI_MIDDLE = generateStimulusCombinations(
+    mpi_sad_middle,
+    mpi_happy_middle,
+    "mpi_middle",
+    IMAGE_NUMBERS.mpi_middle,
+);
+const TRIALS_MPI_OLD = generateStimulusCombinations(mpi_sad_old, mpi_happy_old, "mpi_old", IMAGE_NUMBERS.mpi_old);
+const TRIALS_KDEF = generateStimulusCombinations(kdef_sad, kdef_happy, "kdef", IMAGE_NUMBERS.kdef);
+const TRIALS_RADBOUD = generateStimulusCombinations(radboud_sad, radboud_happy, "radboud", IMAGE_NUMBERS.radboud);
+const TRIALS_RADIATE1 = generateStimulusCombinations(radiate_sad, radiate_happy, "radiate", IMAGE_NUMBERS.radiate1);
+const TRIALS_RADIATE2 = generateStimulusCombinations(radiate_sad, radiate_happy, "radiate", IMAGE_NUMBERS.radiate2);
 
 // console.log(trials_nimstim);
 // console.log(trials_mpi_young);
@@ -216,7 +226,7 @@ const ITI = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
+    stimulus: "",
     response_ends_trial: false,
     trial_duration: PRMS.iti,
 };
@@ -226,19 +236,18 @@ const TRIAL_FEEDBACK = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
+    stimulus: "",
     response_ends_trial: false,
     trial_duration: null,
-    on_start: function(trial) {
+    on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         trial.trial_duration = PRMS.fbDur[dat.corrCode - 1];
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeTrial}px;">${PRMS.fbTxt[dat.corrCode - 1]}</div>`;
     },
 };
 
-
 function codeTrial() {
-    'use strict';
+    "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
     dat.rt = dat.rt !== null ? dat.rt - PRMS.fixDur : PRMS.tooSlow;
     dat.target = baseFileName(dat.target);
@@ -264,8 +273,8 @@ function codeTrial() {
 }
 
 function drawStimulus(args) {
-    'use strict';
-    let ctx = document.getElementById('canvas').getContext('2d');
+    "use strict";
+    let ctx = document.getElementById("canvas").getContext("2d");
 
     // fixation cross
     if (args.draw_fixation) {
@@ -282,9 +291,9 @@ function drawStimulus(args) {
     if (args.draw_image) {
         const img = new Image();
         img.src = args.image;
-        if (args.side === 'left') {
+        if (args.side === "left") {
             ctx.drawImage(img, -PRMS.stimEccentricity - img.width / 2, -img.height / 2);
-        } else if (args.side === 'right') {
+        } else if (args.side === "right") {
             ctx.drawImage(img, PRMS.stimEccentricity - img.width / 2, -img.height / 2);
         }
     }
@@ -330,15 +339,15 @@ const BLOCK_FEEDBACK = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: '',
+    stimulus: "",
     response_ends_trial: true,
     post_trial_gap: PRMS.waitDur,
-    on_start: function(trial) {
-        let block_dvs = calculateBlockPerformance({ filter_options: { stim: 'simon', blockNum: PRMS.cBlk } });
-        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = 'de'));
+    on_start: function (trial) {
+        let block_dvs = calculateBlockPerformance({ filter_options: { stim: "simon", blockNum: PRMS.cBlk } });
+        let text = blockFeedbackText(PRMS.cBlk, PRMS.nBlks, block_dvs.meanRt, block_dvs.errorRate, (language = "de"));
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
-    on_finish: function() {
+    on_finish: function () {
         PRMS.cTrl = 1;
         PRMS.cBlk += 1;
     },
@@ -400,12 +409,12 @@ const TRIAL_TIMELINES = [TRIAL_TIMELINE_NIMSTIM].concat(
 ////////////////////////////////////////////////////////////////////////
 //                              VP Stunden                            //
 ////////////////////////////////////////////////////////////////////////
-const RANDOM_CODE = generateRandomString(16, 'se1_');
+const RANDOM_CODE = generateRandomString(16, "se1_");
 
 const VP_CODE_INSTRUCTIONS = {
     type: jsPsychHtmlKeyboardResponse,
     response_ends_trial: true,
-    choices: [' '],
+    choices: [" "],
     stimulus: generate_formatted_html({
         text:
             `Vielen Dank für Ihre Teilnahme.<br><br>
@@ -420,7 +429,7 @@ const VP_CODE_INSTRUCTIONS = {
         fontsize: 28,
         lineheight: 1.0,
         bold: true,
-        align: 'left',
+        align: "left",
     }),
 };
 
@@ -429,13 +438,13 @@ const VP_CODE_INSTRUCTIONS = {
 ////////////////////////////////////////////////////////////////////////
 const PASSWORD = {
     type: jsPsychExternalHtml,
-    url: '/Common7+/password.html',
-    cont_btn: 'start',
-    check_fn: function() {
-        let password = document.getElementById('pass').value;
-        let correct = getPassword('/Common7+/password.php', password);
-        if (correct !== '0') {
-            alert('Falsch');
+    url: "/Common7+/password.html",
+    cont_btn: "start",
+    check_fn: function () {
+        let password = document.getElementById("pass").value;
+        let correct = getPassword("/Common7+/password.php", password);
+        if (correct !== "0") {
+            alert("Falsch");
             return false;
         } else {
             return true;
@@ -455,11 +464,11 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-    saveData('/Common/write_data.php', data_fn, { stim: 'simon' });
+    saveData("/Common/write_data.php", data_fn, { stim: "simon" });
     // saveDataLocal(data_fn, { stim: 'simon' });
 
     const code_fn = `${DIR_NAME}code/${EXP_NAME}`;
-    saveRandomCode('/Common/write_code.php', code_fn, RANDOM_CODE);
+    saveRandomCode("/Common/write_code.php", code_fn, RANDOM_CODE);
 }
 
 const SAVE_DATA = {
@@ -472,18 +481,18 @@ const SAVE_DATA = {
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 function genExpSeq() {
-    'use strict';
+    "use strict";
 
     let exp = [];
 
-    exp.push(PASSWORD);
+    //exp.push(PASSWORD);
 
     exp.push(fullscreen(true));
     exp.push(browser_check(PRMS.screenRes));
     exp.push(PRELOAD);
     exp.push(resize_browser());
     exp.push(welcome_message());
-    exp.push(vpInfoForm('/Common7+/vpInfoForm_de_copyright.html'));
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de_copyright.html"));
     exp.push(mouseCursor(false));
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
@@ -492,7 +501,7 @@ function genExpSeq() {
         exp.push(BLOCK_START);
         let blk_timeline = TRIAL_TIMELINES[blk];
         blk_timeline.sample = {
-            type: 'fixed-repetitions',
+            type: "fixed-repetitions",
             size: 1,
         };
         exp.push(blk_timeline); // trials within a block
