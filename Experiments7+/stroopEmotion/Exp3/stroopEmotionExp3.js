@@ -39,7 +39,7 @@ const PRMS = {
     fixColor: "Black", // colour of the fixation cross
     fbDur: 1500, // duration of feedback for each type
     waitDur: 1000, // duration following block feedback screen
-    thinkDur: 1000, // thinking duration during inital questions
+    thinkDur: 20000, // thinking duration during inital questions
     iti: 500, // duration of inter-trial-interval
     tooFast: 0, // responses faster than x ms -> too fast!
     tooSlow: 2000, // response slower than x ms -> too slow!
@@ -72,7 +72,8 @@ const TASK_INSTRUCTIONS1 = {
               Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
               Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
               um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br>
-              Bei Fragen wende dich gerne an peteer.dehner@student.uni-tuebingen.de<br><br>
+              Bei Fragen wende dich gerne an<br><br>
+                peteer.dehner@student.uni-tuebingen.de<br><br>
               Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",

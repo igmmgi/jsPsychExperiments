@@ -35,7 +35,7 @@ const CANVAS_BORDER = "5px solid black";
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    nTrls: 4, //80, // number of trials per block
+    nTrls: 80, // number of trials per block
     nBlks: 11, // number of blocks
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
@@ -83,22 +83,23 @@ if (VERSION === 1 || VERSION === 3) {
 }
 
 const PERFORMANCE = {
-    letter_repetition_free_rts: [],
-    letter_repetition_free_avg: [],
-    letter_repetition_forced_rts: [],
-    letter_repetition_forced_avg: [],
-    letter_switch_free_rts: [],
-    letter_switch_free_avg: [],
-    letter_switch_forced_rts: [],
-    letter_switch_forced_avg: [],
-    colour_repetition_free_rts: [],
-    colour_repetition_free_avg: [],
-    colour_repetition_forced_rts: [],
-    colour_repetition_forced_avg: [],
-    colour_switch_free_rts: [],
-    colour_switch_free_avg: [],
-    colour_switch_forced_rts: [],
-    colour_switch_forced_avg: [],
+    let_rep_fre_rts: [],
+    let_rep_fre_avg: null,
+    let_rep_for_rts: [],
+    let_rep_for_avg: null,
+    let_swi_fre_rts: [],
+    let_swi_fre_avg: null,
+    let_swi_for_rts: [],
+    let_swi_for_avg: null,
+    col_rep_fre_rts: [],
+    col_rep_fre_avg: null,
+    col_rep_for_rts: [],
+    col_rep_for_avg: null,
+    col_swi_fre_rts: [],
+    col_swi_fre_avg: null,
+    col_swi_for_rts: [],
+    col_swi_for_avg: null,
+    max_rt: null,
 };
 
 function calculateNumberOfDots() {
@@ -263,8 +264,6 @@ const TASK_INSTRUCTIONS4 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `In manchen Durchgängen erhälst Du +10 Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
-Je mehr Punkte Du sammelst, desto kürzer wird das Experiment! 
-Du erfährst nach dem ${PRMS.nBlks} Block, wieviele der restlichen Blöcke aufgrund deiner Punktzahl wegfallen.<br><br>
 Des Weiteren werden die 20% aller Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
 von Osiander oder der deutschen Bahn erhalten.<br><br>
 Drücke die „K“- Taste, um fortzufahren.`,
@@ -285,7 +284,7 @@ const BLOCK_START = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
+                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
 Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`,
                 align: "left",
                 fontsize: 30,
@@ -307,22 +306,25 @@ const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
 
 // prettier-ignore
 function calculate_previous_block_performance() {
-  PERFORMANCE.letter_repetition_free_avg   = average(PERFORMANCE.letter_repetition_free_rts);
-  PERFORMANCE.letter_repetition_free_rts   = [];
-  PERFORMANCE.letter_repetition_forced_avg = average(PERFORMANCE.letter_repetition_forced_rts);
-  PERFORMANCE.letter_repetition_forced_rts = [];
-  PERFORMANCE.letter_switch_free_avg       = average(PERFORMANCE.letter_switch_free_rts);
-  PERFORMANCE.letter_switch_free_rts       = [];
-  PERFORMANCE.letter_switch_forced_avg     = average(PERFORMANCE.letter_switch_forced_rts);
-  PERFORMANCE.letter_switch_forced_rts     = [];
-  PERFORMANCE.colour_repetition_free_avg   = average(PERFORMANCE.colour_repetition_free_rts);
-  PERFORMANCE.colour_repetition_free_rts   = [];
-  PERFORMANCE.colour_repetition_forced_avg = average(PERFORMANCE.colour_repetition_forced_rts);
-  PERFORMANCE.colour_repetition_forced_rts = [];
-  PERFORMANCE.colour_switch_free_avg       = average(PERFORMANCE.colour_switch_free_rts);
-  PERFORMANCE.colour_switch_free_rts       = [];
-  PERFORMANCE.colour_switch_forced_avg     = average(PERFORMANCE.colour_switch_forced_rts);
-  PERFORMANCE.colour_switch_forced_rts     = [];
+  PERFORMANCE.let_rep_fre_avg = average(PERFORMANCE.let_rep_fre_rts);
+  PERFORMANCE.let_rep_fre_rts = [];
+  PERFORMANCE.let_rep_for_avg = average(PERFORMANCE.let_rep_for_rts);
+  PERFORMANCE.let_rep_for_rts = [];
+  PERFORMANCE.let_swi_fre_avg = average(PERFORMANCE.let_swi_fre_rts);
+  PERFORMANCE.let_swi_fre_rts = [];
+  PERFORMANCE.let_swi_for_avg = average(PERFORMANCE.let_swi_for_rts);
+  PERFORMANCE.let_swi_for_rts = [];
+  PERFORMANCE.col_rep_fre_avg = average(PERFORMANCE.col_rep_fre_rts);
+  PERFORMANCE.col_rep_fre_rts = [];
+  PERFORMANCE.col_rep_for_avg = average(PERFORMANCE.col_rep_for_rts);
+  PERFORMANCE.col_rep_for_rts = [];
+  PERFORMANCE.col_swi_fre_avg = average(PERFORMANCE.col_swi_fre_rts);
+  PERFORMANCE.col_swi_fre_rts = [];
+  PERFORMANCE.col_swi_for_avg = average(PERFORMANCE.col_swi_for_rts);
+  PERFORMANCE.col_swi_for_rts = [];
+  let values = [PERFORMANCE.let_rep_fre_avg, PERFORMANCE.let_rep_for_avg, PERFORMANCE.let_swi_fre_avg, PERFORMANCE.let_swi_for_avg,
+                PERFORMANCE.col_rep_fre_avg, PERFORMANCE.col_rep_for_avg, PERFORMANCE.col_swi_fre_avg, PERFORMANCE.col_swi_for_avg].filter(value => Number.isFinite(value));
+  PERFORMANCE.max_rt = Math.max(...values);
 }
 
 const BLOCK_END = {
@@ -337,7 +339,7 @@ const BLOCK_END = {
             return x === true;
         }).length;
         trial.stimulus = generate_formatted_html({
-            text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks + 3}<br><br>
+            text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
 Dein aktueller Punktestand beträgt: POINTS: ${nReward * 10}! <br><br>
 Kurze Pause.<br><br>
 Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
@@ -519,17 +521,17 @@ function codeTrial() {
     let dat = jsPsych.data.get().last(1).values()[0];
 
     // which task did they perform?
-    let respondedLetter = PRMS.letterTaskKeys.includes(dat.key_press.toUpperCase());
-    let respondedColour = PRMS.colourTaskKeys.includes(dat.key_press.toUpperCase());
-    let responseTask = respondedLetter ? "letter" : "colour";
+    let respLetter = PRMS.letterTaskKeys.includes(dat.key_press.toUpperCase());
+    let respColour = PRMS.colourTaskKeys.includes(dat.key_press.toUpperCase());
+    let respTask = respLetter ? "letter" : "colour";
 
-    // was it switch vs. repetition
-    let repetitionSwitch;
+    // was it switch vs. repetition?
+    let repSwitch;
     if (PRMS.cTrl === 1) {
-        repetitionSwitch = "na";
+        repSwitch = "na";
     } else {
         let dat2 = jsPsych.data.get().last(6).values()[0];
-        repetitionSwitch = responseTask === dat2.responseTask ? "repetition" : "switch";
+        repSwitch = respTask === dat2.respTask ? "rep" : "switch";
     }
 
     // 1 = correct practice
@@ -537,52 +539,64 @@ function codeTrial() {
     // 11 = correct with reward experimental blocks
     // 12 = correct with no reward experimental blocks
     // 13 = incorrect with no reward experimental blocks
-    let correctResponse = true;
+    let corrResp = true;
     if (
-        respondedLetter & (dat.key_press.toUpperCase() !== dat.corr_resp_letter) ||
-        respondedColour & (dat.key_press.toUpperCase() !== dat.corr_resp_colour)
+        respLetter & (dat.key_press.toUpperCase() !== dat.corr_resp_letter) ||
+        respColour & (dat.key_press.toUpperCase() !== dat.corr_resp_colour)
     ) {
-        correctResponse = false;
+        corrResp = false;
     }
 
     let corrCode;
-    if (dat.block_type === "practice" && correctResponse) {
+    if (dat.block_type === "practice" && corrResp) {
         corrCode = 1;
-    } else if (dat.block_type === "practice" && !correctResponse) {
+    } else if (dat.block_type === "practice" && !corrResp) {
         corrCode = 2;
-    } else if (dat.block_type !== "practice" && correctResponse) {
+    } else if (dat.block_type !== "practice" && corrResp) {
         corrCode = 11;
-    } else if (dat.block_type !== "practice" && !correctResponse) {
+    } else if (dat.block_type !== "practice" && !corrResp) {
         corrCode = 13;
     }
 
     // store data to calculate performance based reward
-    let performance_reward;
-    if (responseTask === "letter" && repetitionSwitch === "repetition" && dat.free_forced === "free") {
-        PERFORMANCE.letter_repetition_free_rts.push(dat.rt);
-        performance_reward = dat.rt < PERFORMANCE.letter_repetition_free_avg; // mean from previous block
-    } else if (responseTask === "letter" && repetitionSwitch === "repetition" && dat.free_forced === "forced") {
-        PERFORMANCE.letter_repetition_forced_rts.push(dat.rt);
-        performance_reward = dat.rt < PERFORMANCE.letter_repetition_forced_avg; // mean from previous block
-    } else if (responseTask === "letter" && repetitionSwitch === "switch" && dat.free_forced === "free") {
-        PERFORMANCE.letter_switch_free_rts.push(dat.rt);
-        performance_reward = dat.rt < PERFORMANCE.letter_switch_free_avg; // mean from previous block
-    } else if (responseTask === "letter" && repetitionSwitch === "switch" && dat.free_forced === "forced") {
-        PERFORMANCE.letter_switch_forced_rts.push(dat.rt);
-        performance_reward = dat.rt < PERFORMANCE.letter_switch_forced_avg; // mean from previous block
-    } else if (responseTask === "colour" && repetitionSwitch === "repetition" && dat.free_forced === "free") {
-        PERFORMANCE.colour_repetition_free_rts.push(dat.rt);
-        performance_reward = dat.rt < PERFORMANCE.colour_repetition_free_avg; // mean from previous block
-    } else if (responseTask === "colour" && repetitionSwitch === "repetition" && dat.free_forced === "forced") {
-        PERFORMANCE.colour_repetition_forced_rts.push(dat.rt);
-        performance_reward = dat.rt < PERFORMANCE.colour_repetition_forced_avg; // mean from previous block
-    } else if (responseTask === "colour" && repetitionSwitch === "switch" && dat.free_forced === "free") {
-        PERFORMANCE.colour_switch_free_rts.push(dat.rt);
-        performance_reward = dat.rt < PERFORMANCE.colour_switch_free_avg; // mean from previous block
-    } else if (responseTask === "colour" && repetitionSwitch === "switch" && dat.free_forced === "forced") {
-        PERFORMANCE.colour_switch_forced_rts.push(dat.rt);
-        performance_reward = dat.rt < PERFORMANCE.colour_switch_forced_avg; // mean from previous block
+    let performance_reward = false;
+    let criterion = PERFORMANCE.max_rt;
+    if (corrResp && respTask === "letter" && repSwitch === "rep" && dat.free_forced === "free") {
+        PERFORMANCE.let_rep_fre_rts.push(dat.rt);
+        criterion = isNaN(PERFORMANCE.let_rep_fre_avg) ? PERFORMANCE.max_rt : PERFORMANCE.let_rep_fre_avg;
+    } else if (corrResp && respTask === "letter" && repSwitch === "rep" && dat.free_forced === "forced") {
+        PERFORMANCE.let_rep_for_rts.push(dat.rt);
+        criterion = isNaN(PERFORMANCE.let_rep_for_avg) ? PERFORMANCE.max_rt : PERFORMANCE.let_rep_for_avg;
+    } else if (corrResp && respTask === "letter" && repSwitch === "switch" && dat.free_forced === "free") {
+        PERFORMANCE.let_swi_fre_rts.push(dat.rt);
+        criterion = isNaN(PERFORMANCE.let_swi_fre_avg) ? PERFORMANCE.max_rt : PERFORMANCE.let_swi_fre_avg;
+    } else if (corrResp && respTask === "letter" && repSwitch === "switch" && dat.free_forced === "forced") {
+        PERFORMANCE.let_swi_for_rts.push(dat.rt);
+        criterion = isNaN(PERFORMANCE.let_swi_for_avg) ? PERFORMANCE.max_rt : PERFORMANCE.let_swi_for_avg;
+    } else if (corrResp && respTask === "colour" && repSwitch === "rep" && dat.free_forced === "free") {
+        PERFORMANCE.col_rep_fre_rts.push(dat.rt);
+        criterion = isNaN(PERFORMANCE.col_rep_fre_avg) ? PERFORMANCE.max_rt : PERFORMANCE.col_rep_fre_avg;
+    } else if (corrResp && respTask === "colour" && repSwitch === "rep" && dat.free_forced === "forced") {
+        PERFORMANCE.col_rep_for_rts.push(dat.rt);
+        criterion = isNaN(PERFORMANCE.col_rep_for_avg) ? PERFORMANCE.max_rt : PERFORMANCE.col_rep_for_avg;
+    } else if (corrResp && respTask === "colour" && repSwitch === "switch" && dat.free_forced === "free") {
+        PERFORMANCE.col_swi_fre_rts.push(dat.rt);
+        criterion = isNaN(PERFORMANCE.col_swi_fre_avg) ? PERFORMANCE.max_rt : PERFORMANCE.col_swi_fre_avg;
+    } else if (corrResp && respTask === "colour" && repSwitch === "switch" && dat.free_forced === "forced") {
+        PERFORMANCE.col_swi_for_rts.push(dat.rt);
+        criterion = isNaN(PERFORMANCE.col_swi_for_avg) ? PERFORMANCE.max_rt : PERFORMANCE.col_swi_for_avg;
+    } else if (corrResp && repSwitch === "na") {
+        criterion = PERFORMANCE.max_rt;
     }
+    performance_reward = dat.rt < criterion;
+
+    console.log("Block type:", dat.block_type);
+    console.log("Free vs. forced:", dat.free_forced);
+    console.log("Response task:", respTask);
+    console.log("Repetition vs. Switch:", repSwitch);
+    console.log("Criterion:", criterion);
+    console.log("RT:", dat.rt);
+    console.log("Performance Reward:", performance_reward);
 
     let reward;
     if (dat.block_type === "practice" || corrCode === 13) {
@@ -594,34 +608,20 @@ function codeTrial() {
             corrCode = 12; // correct, but no reward
         }
     } else if (dat.block_type === "high_efficacy") {
+        // performance reward
         reward = performance_reward;
-    }
-
-    // store data to calculate performance based reward
-    if (responseTask === "letter" && repetitionSwitch === "repetition" && dat.free_forced === "free") {
-        PERFORMANCE.letter_repetition_free_rts.push(dat.rt);
-    } else if (responseTask === "letter" && repetitionSwitch === "repetition" && dat.free_forced === "forced") {
-        PERFORMANCE.letter_repetition_forced_rts.push(dat.rt);
-    } else if (responseTask === "letter" && repetitionSwitch === "switch" && dat.free_forced === "free") {
-        PERFORMANCE.letter_switch_free_rts.push(dat.rt);
-    } else if (responseTask === "letter" && repetitionSwitch === "switch" && dat.free_forced === "forced") {
-        PERFORMANCE.letter_switch_forced_rts.push(dat.rt);
-    } else if (responseTask === "colour" && repetitionSwitch === "repetition" && dat.free_forced === "free") {
-        PERFORMANCE.colour_repetition_free_rts.push(dat.rt);
-    } else if (responseTask === "colour" && repetitionSwitch === "repetition" && dat.free_forced === "forced") {
-        PERFORMANCE.colour_repetition_forced_rts.push(dat.rt);
-    } else if (responseTask === "colour" && repetitionSwitch === "switch" && dat.free_forced === "free") {
-        PERFORMANCE.colour_switch_free_rts.push(dat.rt);
-    } else if (responseTask === "colour" && repetitionSwitch === "switch" && dat.free_forced === "forced") {
-        PERFORMANCE.colour_switch_forced_rts.push(dat.rt);
+        if (!reward) {
+            corrCode = 12; // correct, but no reward
+        }
     }
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
-        responseTask: responseTask,
+        respTask: respTask,
         corrCode: corrCode,
         reward: reward,
         performance_reward: performance_reward,
+        criterion: criterion,
         blockNum: PRMS.cBlk,
         trialNum: PRMS.cTrl,
     });
@@ -640,6 +640,7 @@ const TRIAL_FEEDBACK = {
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (dat.block_type === "practice" && dat.corrCode == 2) {
+            // error during practice block
             trial.trial_duration = PRMS.errorDur;
             trial.stimulus =
                 generate_formatted_html({
@@ -782,7 +783,7 @@ const END_SCREEN = {
     stimulus: generate_formatted_html({
         text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br>
 Im nächsten Fenster wirst Du zunächst aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
-Falls Du zu den 10% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
+Falls Du zu den 20% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
 wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander erhalten.<br><br>
 Drücke die Leertaste, um fortzufahren`,
         align: "left",
@@ -820,9 +821,8 @@ const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
-    saveData("/Common/write_data.php", `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`, {
-        stim_type: "vtsr",
-    });
+    var data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
+    saveData("/Common/write_data.php", data_fn, { stim_type: "vtsr" });
     // saveDataLocal(data_fn, { stim_type: "vtsr" });
 }
 
@@ -841,37 +841,44 @@ function genExpSeq() {
     let exp = [];
 
     // setup
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(CANVAS_SIZE));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(CANVAS_SIZE));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     exp.push(COUNT_DOTS);
     exp.push(PRELOAD);
 
-    // // instructions
-    // exp.push(WELCOME_INSTRUCTIONS);
-    // exp.push(TASK_INSTRUCTIONS1);
-    // exp.push(TASK_INSTRUCTIONS2);
-    // exp.push(TASK_INSTRUCTIONS3);
-    // exp.push(TASK_INSTRUCTIONS4);
+    // instructions
+    exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(TASK_INSTRUCTIONS1);
+    exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
+    exp.push(TASK_INSTRUCTIONS4);
 
-    // // practice block without reward feedback
-    // let blk_timeline;
-    // blk_timeline = { ...TRIAL_TIMELINE_PRACTICE };
-    // blk_timeline.sample = {
-    //     type: "fixed-repetitions",
-    //     size: PRMS.nTrls / TRIAL_TABLE_PRACTICE.length,
-    // };
-    // exp.push(blk_timeline);
+    // practice block without reward feedback
+    exp.push(BLOCK_START);
+    let blk_timeline;
+    blk_timeline = { ...TRIAL_TIMELINE_PRACTICE };
+    blk_timeline.sample = {
+        type: "fixed-repetitions",
+        size: PRMS.nTrls / TRIAL_TABLE_PRACTICE.length,
+    };
+    exp.push(blk_timeline);
+    exp.push(BLOCK_END);
 
+    // experimental blocks mix of low and high- efficacy
     let blk_type;
     if (VERSION === 1 || VERSION === 2) {
-        blk_type = repeatArray(["low_efficacy", "high_efficacy"], (PRMS.nBlks - 1) / 2);
+        blk_type = repeatArray(["low_efficacy"], (PRMS.nBlks - 1) / 2).concat(
+            repeatArray(["high_efficacy"], (PRMS.nBlks - 1) / 2),
+        );
     } else if (VERSION === 3 || VERSION === 4) {
-        blk_type = repeatArray(["high_efficacy", "low_efficacy"], (PRMS.nBlks - 1) / 2);
+        blk_type = repeatArray(["high_efficacy"], (PRMS.nBlks - 1) / 2).concat(
+            repeatArray(["low_efficacy"], (PRMS.nBlks - 1) / 2),
+        );
     }
 
     for (let blk = 0; blk < PRMS.nBlks - 1; blk += 1) {
