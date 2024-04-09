@@ -13,16 +13,29 @@ const p5js = new p5((sketch) => {
 });
 
 const PRMS = {
-    nTrls: 1, // number of trials per block
-    nBlks: 1, // number of blocks
+    n_trials: 2, // number of trials per block
+    n_blocks: 4, // number of blocks
     iti: 500, // duration of the inter-trial-interval
     wait: 500, // duration of the inter-trial-interval
     font: "50px Arial",
     colours: { Correct: [0, 255, 0], Incorrect: [255, 0, 0], Path: [150, 150, 150], Background: [200, 200, 200] },
-    cBlk: 1,
-    cTrl: 1,
+    count_block: 1,
+    count_trial: 1,
+    path_start: 100, // path starts X up from bottom of screen
+    path_width: 10, // width of the path in pixels
     path_difficulty: { easy: 500, hard: 100 },
-    y_speed_difficulty: { easy: 1, hard: 2 }, // controlled by frame rate
+    speed_difficulty: { easy: 1, hard: 2 }, // controlled by frame rate
+};
+
+function get_scale_factor() {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    PRMS.scale_factor = 1 / dat.scale_factor;
+    jsPsych.data.addProperties({ scale_factor: PRMS.scale_factor });
+}
+
+const SCALE_FACTOR = {
+    type: jsPsychCallFunction,
+    func: get_scale_factor,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -54,43 +67,39 @@ class Path {
     }
 
     reset(step) {
-        this.x_path = new Array((CANVAS_SIZE[1] - 100) / step).fill(0);
-        this.y_path = range(CANVAS_SIZE[1] - 100, 0, -step);
-        this.error = new Array((CANVAS_SIZE[1] - 100) / step).fill(0);
+        this.x = new Array((CANVAS_SIZE[1] - PRMS.path_start) / step).fill(0);
+        this.y = range(CANVAS_SIZE[1] - PRMS.path_start, 0, -step);
+        this.error = new Array((CANVAS_SIZE[1] - PRMS.path_start) / step).fill(0);
     }
 
+    // position within canvas and scale
     perlin_noice_coordinates(value) {
-        let start = Math.round(Math.random() * 1000);
-        for (let i = start; i < start + this.x_path.length; i++) {
-            this.x_path[i - start] = p5js.noise(i / value) * 1000 + CANVAS_SIZE[1] / 2 - 250;
+        let xpos = CANVAS_SIZE[0] * 0.75;
+        let start = Math.round(Math.random() * xpos);
+        for (let i = start; i < start + this.x.length; i++) {
+            this.x[i - start] = p5js.noise(i / value) * xpos + CANVAS_SIZE[1] / 2 - xpos / 4;
         }
     }
 
     calculate_distance(x, y, criterion) {
+        console.log(y);
         if (y >= CANVAS_SIZE[1] - 100) return;
         let tmp_x_idx = Math.round(x);
-        let tmp_y_idx = y; //CANVAS_SIZE[1] - (Math.round(y / 2) - 1);
-        let distance = Math.abs(tmp_x_idx - PATH.x_path[tmp_y_idx]);
-        if (distance < criterion) {
-            //this.error[tmp_y_idx - 50] = 1;
-            this.error[tmp_y_idx] = 1;
-        } else if (distance > criterion) {
-            //this.error[tmp_y_idx - 50] = -1;
-            this.error[tmp_y_idx] = -1;
-        }
+        let distance = Math.abs(tmp_x_idx - PATH.x[y]);
+        this.error[y - 1] = distance < criterion ? 1 : -1;
     }
 
     draw_target_path() {
-        p5js.strokeWeight(10);
-        for (let x = this.x_path.length - 1; x > 0; x--) {
+        p5js.strokeWeight(PRMS.path_width);
+        for (let x = this.x.length - 1; x > 0; x--) {
             if (this.error[x] === 0) {
-                p5js.stroke(...PRMS["colours"]["Path"]);
+                p5js.stroke(...PRMS.colours.Path);
             } else if (this.error[x] === 1) {
-                p5js.stroke(...PRMS["colours"]["Correct"]);
+                p5js.stroke(...PRMS.colours.Correct);
             } else if (this.error[x] === -1) {
-                p5js.stroke(...PRMS["colours"]["Incorrect"]);
+                p5js.stroke(...PRMS.colours.Incorrect);
             }
-            p5js.line(this.x_path[x - 1], this.y_path[x - 1], this.x_path[x], this.y_path[x]);
+            p5js.line(this.x[x - 1], this.y[x - 1], this.x[x], this.y[x]);
         }
     }
 }
@@ -104,51 +113,55 @@ class Ball {
         this.is_moving = false;
         this.is_complete = false;
         this.diameter = 30;
-        this.y_speed = null;
+        this.speed = null;
         this.step = 0;
-        this.x_sensitivity = null;
-        this.x_pos = null;
-        this.y_pos = CANVAS_SIZE[1];
+        this.x = null;
+        this.y = CANVAS_SIZE[1];
         this.x_path = [];
         this.y_path = [];
     }
 
-    set_x_position = (x_pos) => (this.x_pos = x_pos);
-    set_x_sensitivity = (x_sensitivity) => (this.x_sensitivity = x_sensitivity);
-    set_y_speed = (y_speed) => (this.y_speed = y_speed);
+    set_x_position(x_pos) {
+        this.x = x_pos;
+    }
+    set_speed(speed) {
+        this.speed = speed;
+    }
 
     move() {
-        if (p5js.keyIsDown(32)) this.is_moving = true;
-        if (this.is_moving) {
-            this.y_pos -= this.y_speed;
-            if (this.y_pos <= 0) {
-                this.is_moving = false;
-                this.is_complete = true;
-            }
-            if (p5js.keyIsDown(p5js.LEFT_ARROW)) this.x_pos -= this.x_sensitivity;
-            if (p5js.keyIsDown(p5js.RIGHT_ARROW)) this.x_pos += this.x_sensitivity;
-
-            //mouse?
-            //this.x_pos += p5js.movedX;
-            //this.y_pos += p5js.movedY;
-
-            if (this.y_pos >= CANVAS_SIZE[1] - 100) return;
-            this.step += 1;
-            this.x_path.push(this.x_pos);
-            this.y_path.push(this.y_pos);
+        // trial initiation
+        if (!this.is_moving && p5js.mouseIsPressed) {
+            let dx = p5js.mouseX * PRMS.scale_factor - this.x;
+            let dy = p5js.mouseY * PRMS.scale_factor - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            this.is_moving = distance < this.diameter / 2;
         }
+        if (!this.is_moving) return;
+
+        // ball is moving
+        this.y -= this.speed;
+        if (this.y <= 0) {
+            this.is_moving = false;
+            this.is_complete = true;
+        }
+        this.x += p5js.movedX; // only interested in x-movements
+
+        if (this.y >= CANVAS_SIZE[1] - 100) return;
+        this.step += 1;
+        this.x_path.push(this.x);
+        this.y_path.push(this.y);
     }
 
     draw_ball() {
         p5js.stroke(1);
         p5js.fill(0, 0, 0);
-        p5js.circle(this.x_pos, this.y_pos, this.diameter);
+        p5js.circle(this.x, this.y, this.diameter);
     }
 
     draw_ball_path() {
         p5js.strokeWeight(2);
+        p5js.stroke(0, 0, 0);
         for (let x = 1; x < this.x_path.length; x++) {
-            p5js.stroke(0, 0, 0);
             p5js.line(this.x_path[x - 1], this.y_path[x - 1], this.x_path[x], this.y_path[x]);
         }
     }
@@ -158,9 +171,9 @@ const PATH = new Path(1);
 const BALL = new Ball();
 
 function draw_trial() {
-    p5js.background(...PRMS["colours"]["Background"]);
+    p5js.background(...PRMS.colours.Background);
     BALL.move();
-    PATH.calculate_distance(BALL.x_pos, BALL.step, BALL.diameter); // comment/uncomment to draw green/red correctness feedback
+    PATH.calculate_distance(BALL.x, BALL.step, BALL.diameter); // comment/uncomment to draw green/red correctness feedback
     PATH.draw_target_path();
     BALL.draw_ball();
     BALL.draw_ball_path(); // comment/uncomment to draw black line representing ball path
@@ -175,24 +188,12 @@ function draw_trial() {
 
 function code_trial() {
     "use strict";
-
-    let dat = jsPsych.data.get().last(1).values()[0];
-    console.log(dat);
-
-    // console.log(`-------`);
-    // console.log(dat.rt);
-    // console.log(PATH.x_path);
-    // console.log(PATH.y_path);
-    // console.log(PATH.error);
-    // console.log(BALL.x_path);
-    // console.log(BALL.y_path);
-
     jsPsych.data.addDataToLastTrial({
         date: Date(),
-        block: PRMS.cBlk,
-        trial: PRMS.cTrl,
-        path_x: PATH.x_path,
-        path_y: PATH.y_path,
+        block: PRMS.count_block,
+        trial: PRMS.count_trial,
+        path_x: PATH.x,
+        path_y: PATH.y,
         ball_x: BALL.x_path,
         ball_y: BALL.y_path,
         error: PATH.error,
@@ -213,19 +214,18 @@ const TRIAL = {
         stim_type: "ftp",
         block_type: jsPsych.timelineVariable("block_type"),
         path_difficulty: jsPsych.timelineVariable("path_difficulty"),
-        y_speed_difficulty: jsPsych.timelineVariable("y_speed_difficulty"),
+        speed_difficulty: jsPsych.timelineVariable("speed_difficulty"),
     },
     on_start: function (trial) {
-        PATH.reset(PRMS["y_speed_difficulty"][trial.data.y_speed_difficulty]);
-        PATH.perlin_noice_coordinates(PRMS["path_difficulty"][trial.data.path_difficulty]);
+        PATH.reset(PRMS.speed_difficulty[trial.data.speed_difficulty]);
+        PATH.perlin_noice_coordinates(PRMS.path_difficulty[trial.data.path_difficulty]);
         BALL.reset();
-        BALL.set_y_speed(PRMS["y_speed_difficulty"][trial.data.y_speed_difficulty]);
-        BALL.set_x_position(PATH.x_path[0]);
-        BALL.set_x_sensitivity(8); // how sensitive should keys be?
+        BALL.set_speed(PRMS.speed_difficulty[trial.data.speed_difficulty]);
+        BALL.set_x_position(PATH.x[0]);
     },
     on_finish: function () {
         code_trial();
-        PRMS.cTrl += 1;
+        PRMS.count_trial += 1;
     },
 };
 
@@ -258,14 +258,16 @@ const BLOCK_START = {
     stimulus: "",
     response_ends_trial: true,
     on_start: function (trial) {
-        console.log(trial);
         trial.stimulus = generate_formatted_html({
-            text: `Start Block ${PRMS.cBlk} von 4:<br><br> 
-Press the spacebar to start the trial. Control the ball using the left and right arrow keys. Try to follow the path!<br><br>
+            text: `Start Block ${PRMS.count_block} von 4:<br><br> 
+Click the left mouse button inside the black ball to start the trial.<br><br>
+Control the ball using the mouse by moving left and right.<br><br>
+Try to follow the path!<br><br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
-            align: "center",
+            align: "left",
             colour: "black",
             fontsize: 30,
+            bold: true,
         });
     },
 };
@@ -279,60 +281,53 @@ const BLOCK_END = {
     response_ends_trial: true,
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `Ende Block ${PRMS.cBlk} von 4:<br><br> Drücke eine beliebige Taste, um fortzufahren`,
+            text: `Ende Block ${PRMS.count_block} von 4:<br><br> Drücke eine beliebige Taste, um fortzufahren`,
             align: "center",
             colour: "black",
             fontsize: 30,
+            bold: true,
         });
     },
     on_finish: function () {
-        PRMS.cTrl = 1;
-        PRMS.cBlk += 1;
+        PRMS.count_trial = 1;
+        PRMS.count_block += 1;
     },
 };
 
-// prettier-ignore
 const TRIAL_TABLE_EASY_PATH_EASY_SPEED = [
-    {"block_type": "easy_path_easy_speed", "path_difficulty": "easy", "y_speed_difficulty": "easy"},
+    { block_type: "easy_path_easy_speed", path_difficulty: "easy", speed_difficulty: "easy" },
 ];
 
-// prettier-ignore
 const TRIAL_TABLE_EASY_PATH_HARD_SPEED = [
-    {"block_type": "easy_path_hard_speed", "path_difficulty": "easy", "y_speed_difficulty": "hard"},
+    { block_type: "easy_path_hard_speed", path_difficulty: "easy", speed_difficulty: "hard" },
 ];
 
-// prettier-ignore
 const TRIAL_TABLE_HARD_PATH_EASY_SPEED = [
-    {"block_type": "hard_path_easy_speed", "path_difficulty": "hard", "y_speed_difficulty": "easy"},
+    { block_type: "hard_path_easy_speed", path_difficulty: "hard", speed_difficulty: "easy" },
 ];
 
-// prettier-ignore
 const TRIAL_TABLE_HARD_PATH_HARD_SPEED = [
-    {"block_type": "hard_path_hard_speed", "path_difficulty": "hard", "y_speed_difficulty": "hard"},
+    { block_type: "hard_path_hard_speed", path_difficulty: "hard", speed_difficulty: "hard" },
 ];
 
-// prettier-ignore
 const TRIAL_TIMELINE_EASY_PATH_EASY_SPEED = {
     timeline: [TRIAL, ITI],
-    timeline_variables: TRIAL_TABLE_EASY_PATH_EASY_SPEED
+    timeline_variables: TRIAL_TABLE_EASY_PATH_EASY_SPEED,
 };
 
-// prettier-ignore
 const TRIAL_TIMELINE_EASY_PATH_HARD_SPEED = {
     timeline: [TRIAL, ITI],
-    timeline_variables: TRIAL_TABLE_EASY_PATH_HARD_SPEED
+    timeline_variables: TRIAL_TABLE_EASY_PATH_HARD_SPEED,
 };
 
-// prettier-ignore
 const TRIAL_TIMELINE_HARD_PATH_EASY_SPEED = {
     timeline: [TRIAL, ITI],
-    timeline_variables: TRIAL_TABLE_HARD_PATH_EASY_SPEED
+    timeline_variables: TRIAL_TABLE_HARD_PATH_EASY_SPEED,
 };
 
-// prettier-ignore
 const TRIAL_TIMELINE_HARD_PATH_HARD_SPEED = {
     timeline: [TRIAL, ITI],
-    timeline_variables: TRIAL_TABLE_HARD_PATH_HARD_SPEED
+    timeline_variables: TRIAL_TABLE_HARD_PATH_HARD_SPEED,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -368,8 +363,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
-    //saveDataLocal(data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    // saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    saveDataLocal(data_fn, { stim_type: "ftp" }, (filetype = "json"));
 }
 
 const SAVE_DATA = {
@@ -389,14 +384,15 @@ function genExpSeq() {
     exp.push(fullscreen(true));
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
+    exp.push(SCALE_FACTOR);
     exp.push(welcome_message());
-    //exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type = ["easy_path_easy_speed", "easy_path_hard_speed", "hard_path_easy_speed", "hard_path_hard_speed"];
 
     let blk_timeline;
-    for (let blk = 0; blk < blk_type.length; blk += 1) {
+    for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
         exp.push(BLOCK_START); // trials within a block
         exp.push(WAIT_BLANK); // trials within a block
         if (blk_type[blk] === "easy_path_easy_speed") {
