@@ -46,6 +46,7 @@ const PRMS = {
     errorDur: 1000, // duration of the error screen
     rewardDur: 1000, // duration of the reward screen
     stimFont: "110px Arial",
+    pointsFont: "60px Arial",
     fbFont: "30px Arial",
     letters: ["A", "E", "G", "I", "K", "M", "R", "U"],
     lettersVowel: ["A", "E", "I", "U"],
@@ -100,6 +101,7 @@ const PERFORMANCE = {
     col_swi_for_rts: [],
     col_swi_for_avg: null,
     max_rt: null,
+    points: 0,
 };
 
 function calculateNumberOfDots() {
@@ -108,10 +110,10 @@ function calculateNumberOfDots() {
     for (let rows = -PRMS.dotEccentricity; rows <= PRMS.dotEccentricity; rows += PRMS.dotGaps) {
         for (let cols = -PRMS.dotEccentricity; cols <= PRMS.dotEccentricity; cols += PRMS.dotGaps) {
             if (
-                (rows > -PRMS.dotGaps * PRMS.dotBlank) &
-                (rows < PRMS.dotGaps * PRMS.dotBlank) &
-                (cols > -PRMS.dotGaps * PRMS.dotBlank) &
-                (cols < PRMS.dotGaps * PRMS.dotBlank)
+                rows > -PRMS.dotGaps * PRMS.dotBlank &&
+                rows < PRMS.dotGaps * PRMS.dotBlank &&
+                cols > -PRMS.dotGaps * PRMS.dotBlank &&
+                cols < PRMS.dotGaps * PRMS.dotBlank
             ) {
                 continue;
             }
@@ -138,8 +140,6 @@ const WELCOME_INSTRUCTIONS = {
 Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass Du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
 um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
-Bei Fragen oder Problemen wende dich bitte an:<br><br> 
-XXX<br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         fontsize: 30,
@@ -263,8 +263,9 @@ const TASK_INSTRUCTIONS4 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `In manchen Durchgängen erhälst Du +10 Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
-Des Weiteren werden die 20% aller Personen mit den höchsten Gesamtpunktzahlen einen 10€ Gutschein
+        text: `Übung beendet. Von nun an gibt es die Möglichkeit zur Belohnung:<br><br>
+In manchen Durchgängen erhältst du +10 Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
+Des Weiteren werden die 20% aller Personen mit der höchsten Gesamtpunktzahl einen 10€ Gutschein
 von Osiander oder der deutschen Bahn erhalten.<br><br>
 Drücke die „K“- Taste, um fortzufahren.`,
         align: "left",
@@ -275,6 +276,76 @@ Drücke die „K“- Taste, um fortzufahren.`,
     choices: ["K"],
 };
 
+const TASK_INSTRUCTIONS_LOW = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: "",
+    on_start: function (trial) {
+        if (PRMS.cBlk === (PRMS.nBlks + 3) / 2) {
+            trial.stimulus = generate_formatted_html({
+                text: `*** ACHTUNG: NEUE INSTRUKTIONEN ***<br><br>
+                       ZUFALLSBELOHNUNG: In diesem Teil des Experimentes, erhältst du zufällig (d.h., in 50% der Fälle)
+                       eine Belohnung, wenn die Aufgabe korrekt bearbeitet wurde.<br><br>
+                       Drücke eine beliebige Taste, um fortzufahren`,
+                align: "left",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.5,
+                bold: true,
+            });
+        } else {
+            trial.stimulus = generate_formatted_html({
+                text: `ZUFALLSBELOHNUNG: In diesem Teil des Experimentes, erhältst du zufällig (d.h., in 50% der Fälle)
+                       eine Belohnung, wenn die Aufgabe korrekt bearbeitet wurde.<br><br>
+                       Drücke eine beliebige Taste, um fortzufahren`,
+                align: "left",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.5,
+                bold: true,
+            });
+        }
+    },
+};
+
+const TASK_INSTRUCTIONS_HIGH = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: "",
+    on_start: function (trial) {
+        if (PRMS.cBlk === (PRMS.nBlks + 3) / 2) {
+            trial.stimulus = generate_formatted_html({
+                text: `*** ACHTUNG: NEUE INSTRUKTIONEN ***<br><br>
+                       LEISTUNGSBELOHNUNG: In diesem Teil des Experimentes, erhältst du nur eine Belohnung, wenn
+                       die Aufgabe korrekt und besonders schnell bearbeitet wurde (d.h., schneller als eine spezifische
+                       Reaktionszeitschwelle).<br><br>
+                       Drücke eine beliebige Taste, um fortzufahren`,
+                align: "left",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.5,
+                bold: true,
+            });
+        } else {
+            trial.stimulus = generate_formatted_html({
+                text: `LEISTUNGSBELOHNUNG: In diesem Teil des Experimentes, erhältst du nur eine Belohnung, wenn
+                       die Aufgabe korrekt und besonders schnell bearbeitet wurde (d.h., schneller als eine spezifische
+                       Reaktionszeitschwelle).<br><br>
+                       Drücke eine beliebige Taste, um fortzufahren`,
+                align: "left",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.5,
+                bold: true,
+            });
+        }
+    },
+};
+
 const BLOCK_START = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
@@ -282,10 +353,19 @@ const BLOCK_START = {
     canvas_border: CANVAS_BORDER,
     stimulus: "",
     on_start: function (trial) {
+        let text;
+        if (PRMS.blk_type[PRMS.cBlk - 1] === "practice") {
+            text = `Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`;
+        } else if (PRMS.blk_type[PRMS.cBlk - 1] === "low_efficacy") {
+            text = `<span style ="font-weight: bold;">ZUFALLSBELOHNUNG: Du erhältst zufällig eine Belohnung, wenn die Aufgabe korrekt bearbeitet wurde.</span><br><br>
+                    Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`;
+        } else if (PRMS.blk_type[PRMS.cBlk - 1] === "high_efficacy") {
+            text = `<span style="font-weight: bold;">LEISTUNGSBELOHNUNG: Du erhältst eine Belohnung, wenn die Aufgabe besonders schnell UND korrekt bearbeitet wurde.</span><br><br>
+                    Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`;
+        }
         trial.stimulus =
             generate_formatted_html({
-                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Bearbeite sonst die Aufgabe, die präsentiert ist. Es gilt:`,
+                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br> ${text}`,
                 align: "left",
                 fontsize: 30,
                 width: "1200px",
@@ -356,14 +436,6 @@ Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.
     },
 };
 
-const TASK_INSTRUCTIONS_RESPMAPPING = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    stimulus: RESPMAPPING,
-};
-
 const REWARD_IMAGES = [`images/treasure_box.png`, `images/blank.png`];
 
 const PRELOAD = {
@@ -381,6 +453,15 @@ function drawFixation() {
     ctx.moveTo(0, -PRMS.fixSize);
     ctx.lineTo(0, PRMS.fixSize);
     ctx.stroke();
+
+    // draw points
+    if (PRMS.blk_type[PRMS.cBlk - 1] !== "practice") {
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "black";
+        ctx.font = PRMS.pointsFont;
+        ctx.fillText(`Points: ${PERFORMANCE.points}`, 0, -300);
+    }
 }
 
 const FIXATION_CROSS = {
@@ -404,10 +485,10 @@ function drawStimulus(args) {
     for (let rows = -PRMS.dotEccentricity; rows <= PRMS.dotEccentricity; rows += PRMS.dotGaps) {
         for (let cols = -PRMS.dotEccentricity; cols <= PRMS.dotEccentricity; cols += PRMS.dotGaps) {
             if (
-                (rows > -PRMS.dotGaps * PRMS.dotBlank) &
-                (rows < PRMS.dotGaps * PRMS.dotBlank) &
-                (cols > -PRMS.dotGaps * PRMS.dotBlank) &
-                (cols < PRMS.dotGaps * PRMS.dotBlank)
+                rows > -PRMS.dotGaps * PRMS.dotBlank &&
+                rows < PRMS.dotGaps * PRMS.dotBlank &&
+                cols > -PRMS.dotGaps * PRMS.dotBlank &&
+                cols < PRMS.dotGaps * PRMS.dotBlank
             ) {
                 continue;
             }
@@ -427,6 +508,12 @@ function drawStimulus(args) {
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
     ctx.fillText(args.letter, 0, 5);
+
+    // draw points
+    if (PRMS.blk_type[PRMS.cBlk - 1] !== "practice") {
+        ctx.font = PRMS.pointsFont;
+        ctx.fillText(`Points: ${PERFORMANCE.points}`, 0, -300);
+    }
 }
 
 const VTS = {
@@ -454,7 +541,7 @@ const VTS = {
         trial.data.letter = "";
         trial.data.corr_resp_letter = "na";
 
-        if ((trial.data.forced_task === "na") | (trial.data.forced_task === "letter")) {
+        if (trial.data.forced_task === "na" || trial.data.forced_task === "letter") {
             trial.data.letter = shuffle(PRMS.letters)[0];
             if (PRMS.lettersVowel.includes(trial.data.letter)) {
                 trial.data.corr_resp_letter = PRMS.letterTaskKeys[PRMS.letterTask.indexOf("Vokal")];
@@ -467,7 +554,7 @@ const VTS = {
         trial.data.colour_more = "";
         trial.data.corr_resp_colour = "na";
         let dot_colours = repeatArray(CANVAS_COLOUR, Math.round(PRMS.nDots));
-        if ((trial.data.forced_task === "na") | (trial.data.forced_task === "colour")) {
+        if (trial.data.forced_task === "na" || trial.data.forced_task === "colour") {
             let ratio = PRMS.ratioNormal;
             trial.data.colour_more = shuffle(["mehr Blau", "mehr Rot"])[0];
             let colour_order;
@@ -490,11 +577,11 @@ const VTS = {
         // activate response keys
         if (PRMS.deactivateKeys) {
             // only available task keys activated
-            if ((trial.data.letter !== "") & (trial.data.colour_more !== "na")) {
+            if (trial.data.letter !== "" && trial.data.colour_more !== "na") {
                 trial.choices = PRMS.letterTaskKeys.concat(PRMS.colourTaskKeys);
-            } else if ((trial.data.letter !== "") & (trial.data.colour_more === "na")) {
+            } else if (trial.data.letter !== "" && trial.data.colour_more === "na") {
                 trial.choices = PRMS.letterTaskKeys;
-            } else if ((trial.data.letter === "") & (trial.data.colour_more !== "na")) {
+            } else if (trial.data.letter === "" && trial.data.colour_more !== "na") {
                 trial.choices = PRMS.colourTaskKeys;
             }
         } else {
@@ -559,7 +646,7 @@ function codeTrial() {
     }
 
     // store data to calculate performance based reward
-    let performance_reward = false;
+    let performance_reward;
     let criterion = PERFORMANCE.max_rt;
     if (corrResp && respTask === "letter" && repSwitch === "rep" && dat.free_forced === "free") {
         PERFORMANCE.let_rep_fre_rts.push(dat.rt);
@@ -590,13 +677,13 @@ function codeTrial() {
     }
     performance_reward = dat.rt < criterion;
 
-    console.log("Block type:", dat.block_type);
-    console.log("Free vs. forced:", dat.free_forced);
-    console.log("Response task:", respTask);
-    console.log("Repetition vs. Switch:", repSwitch);
-    console.log("Criterion:", criterion);
-    console.log("RT:", dat.rt);
-    console.log("Performance Reward:", performance_reward);
+    // console.log("Block type:", dat.block_type);
+    // console.log("Free vs. forced:", dat.free_forced);
+    // console.log("Response task:", respTask);
+    // console.log("Repetition vs. Switch:", repSwitch);
+    // console.log("Criterion:", criterion);
+    // console.log("RT:", dat.rt);
+    // console.log("Performance Reward:", performance_reward);
 
     let reward;
     if (dat.block_type === "practice" || corrCode === 13) {
@@ -613,6 +700,10 @@ function codeTrial() {
         if (!reward) {
             corrCode = 12; // correct, but no reward
         }
+    }
+
+    if (corrCode === 11) {
+        PERFORMANCE.points += 10;
     }
 
     jsPsych.data.addDataToLastTrial({
@@ -639,7 +730,7 @@ const TRIAL_FEEDBACK = {
     trial_duration: 0,
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
-        if (dat.block_type === "practice" && dat.corrCode == 2) {
+        if (dat.block_type === "practice" && dat.corrCode === 2) {
             // error during practice block
             trial.trial_duration = PRMS.errorDur;
             trial.stimulus =
@@ -696,6 +787,12 @@ function drawReward(args) {
     const width = img.width;
     const height = img.height;
     ctx.drawImage(img, -width / size / 2, -height / size / 2 + 35, width / size, height / size);
+
+    // draw points
+    if (PRMS.blk_type[PRMS.cBlk - 1] !== "practice") {
+        ctx.font = PRMS.pointsFont;
+        ctx.fillText(`Points: ${PERFORMANCE.points}`, 0, -300);
+    }
 }
 
 const TRIAL_REWARD = {
@@ -712,19 +809,34 @@ const TRIAL_REWARD = {
         let dat = jsPsych.data.get().last(2).values()[0];
         trial.func_args = [{ corrCode: dat.corrCode }];
         if (dat.corrCode === 13) {
-            trial_duration = 0;
+            trial.trial_duration = 0;
         }
     },
 };
 
+function drawITI() {
+    "use strict";
+    let ctx = document.getElementById("canvas").getContext("2d");
+    if (PRMS.blk_type[PRMS.cBlk - 1] !== "practice") {
+        // draw points
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "black";
+        ctx.font = PRMS.pointsFont;
+        ctx.fillText(`Points: ${PERFORMANCE.points}`, 0, -300);
+    }
+}
+
 const ITI = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
+    type: jsPsychStaticCanvasKeyboardResponse,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: "",
     response_ends_trial: false,
+    translate_origin: true,
     trial_duration: PRMS.iti,
+    func: drawITI,
+    func_args: null,
 };
 
 // prettier-ignore
@@ -781,7 +893,8 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Glückwunsch! Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br>
+        text: `Glückwunsch!<br><br>
+Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br><br>
 Im nächsten Fenster wirst Du zunächst aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
 Falls Du zu den 20% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
 wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander erhalten.<br><br>
@@ -821,7 +934,7 @@ const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
-    var data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
+    let data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
     saveData("/Common/write_data.php", data_fn, { stim_type: "vtsr" });
     // saveDataLocal(data_fn, { stim_type: "vtsr" });
 }
@@ -856,7 +969,6 @@ function genExpSeq() {
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
     exp.push(TASK_INSTRUCTIONS3);
-    exp.push(TASK_INSTRUCTIONS4);
 
     // practice block without reward feedback
     exp.push(BLOCK_START);
@@ -869,7 +981,10 @@ function genExpSeq() {
     exp.push(blk_timeline);
     exp.push(BLOCK_END);
 
-    // experimental blocks mix of low and high- efficacy
+    // end of practice instructions: now points begin
+    exp.push(TASK_INSTRUCTIONS4);
+
+    // experimental blocks mix of low and high-efficacy
     let blk_type;
     if (VERSION === 1 || VERSION === 2) {
         blk_type = repeatArray(["low_efficacy"], (PRMS.nBlks - 1) / 2).concat(
@@ -880,8 +995,18 @@ function genExpSeq() {
             repeatArray(["low_efficacy"], (PRMS.nBlks - 1) / 2),
         );
     }
+    PRMS.blk_type = ["practice"].concat(blk_type);
 
     for (let blk = 0; blk < PRMS.nBlks - 1; blk += 1) {
+        if (blk === 0 && blk_type[blk] === "low_efficacy") {
+            exp.push(TASK_INSTRUCTIONS_LOW);
+        } else if (blk === 0 && blk_type[blk] === "high_efficacy") {
+            exp.push(TASK_INSTRUCTIONS_HIGH);
+        } else if (blk === (PRMS.nBlks - 1) / 2 && blk_type[blk] === "low_efficacy") {
+            exp.push(TASK_INSTRUCTIONS_LOW);
+        } else if (blk === (PRMS.nBlks - 1) / 2 && blk_type[blk] === "high_efficacy") {
+            exp.push(TASK_INSTRUCTIONS_HIGH);
+        }
         exp.push(BLOCK_START);
         let blk_timeline;
         if (blk_type[blk] === "low_efficacy") {
