@@ -330,7 +330,7 @@ Bitte entscheide dich jetzt, welche Schriftart du möchtest:<br><br>
         } else if (dat.key_press === "3") {
             CHOICES.font_choice = "Georgia, Times, serif";
         }
-        PRMS["target_text_font"] = PRMS["target_text_font"].concat(" ", CHOICES.font_choice);
+        PRMS.target_text_font = PRMS.target_text_font.concat(" ", CHOICES.font_choice);
         jsPsych.data.addProperties({ font_choice: CHOICES.font_choice });
     },
 };
@@ -401,13 +401,13 @@ function draw_stimulus(args) {
     // image
     const img = new Image();
     img.src = args.distractor;
-    ctx.drawImage(img, PRMS["distractor_position"][0] - img.width / 2, PRMS["distractor_position"][1] - img.height / 2);
+    ctx.drawImage(img, PRMS.distractor_position[0] - img.width / 2, PRMS.distractor_position[1] - img.height / 2);
 
     // text
-    ctx.font = PRMS["target_text_font"];
+    ctx.font = PRMS.target_text_font;
     ctx.textAlign = "center";
-    ctx.fillStyle = PRMS["target_text_colour"];
-    ctx.fillText(args.target, PRMS["target_text_position"][0], PRMS["target_text_position"][1]);
+    ctx.fillStyle = PRMS.target_text_colour;
+    ctx.fillText(args.target, PRMS.target_text_position[0], PRMS.target_text_position[1]);
 
     // display task-choice text
     ctx.font = "40px".concat(" ", CHOICES.font_choice);
@@ -448,9 +448,9 @@ function draw_feedback(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
     ctx.textAlign = "center";
-    ctx.font = PRMS["feedback_text_font"].concat(" ", CHOICES.font_choice);
-    ctx.fillStyle = PRMS["feedback_text_colour"];
-    ctx.fillText(args.feedback, PRMS["feedback_text_position"][0], PRMS["feedback_text_position"][1]);
+    ctx.font = PRMS.feedback_text_font.concat(" ", CHOICES.font_choice);
+    ctx.fillStyle = PRMS.feedback_text_colour;
+    ctx.fillText(args.feedback, PRMS.feedback_text_position[0], PRMS.feedback_text_position[1]);
 
     // display task-choice text
     ctx.font = "40px".concat(" ", CHOICES.font_choice);
@@ -470,7 +470,6 @@ const TRIAL_FEEDBACK = {
     func: draw_feedback,
     func_args: null,
     stimulus: "",
-    response_ends_trial: false,
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
         trial.func_args = [{ feedback: PRMS.feedback_text[dat.corrCode - 1] }];
