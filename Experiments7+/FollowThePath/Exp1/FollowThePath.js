@@ -18,13 +18,15 @@ const PRMS = {
     iti: 500, // duration of the inter-trial-interval
     wait: 500, // duration of the inter-trial-interval
     font: "50px Arial",
-    colours: { Correct: [0, 255, 0], Incorrect: [255, 0, 0], Path: [150, 150, 150], Background: [200, 200, 200] },
+    colours: { correct: [0, 255, 0], incorrect: [255, 0, 0], path: [150, 150, 150], background: [200, 200, 200] },
     count_block: 1,
     count_trial: 1,
     path_start: 100, // path starts X up from bottom of screen
     path_width: 10, // width of the path in pixels
     path_difficulty: { easy: 500, hard: 100 },
     speed_difficulty: { easy: 1, hard: 2 }, // controlled by frame rate
+    ball_diameter: 20,
+    distance_criterion: 15,
 };
 
 function get_scale_factor() {
@@ -67,9 +69,9 @@ class Path {
     }
 
     reset(step) {
-        this.x = new Array((CANVAS_SIZE[1] - PRMS.path_start) / step).fill(0);
+        this.x = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
         this.y = range(CANVAS_SIZE[1] - PRMS.path_start, 0, -step);
-        this.error = new Array((CANVAS_SIZE[1] - PRMS.path_start) / step).fill(0);
+        this.error = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
     }
 
     // position within canvas and scale
@@ -82,8 +84,7 @@ class Path {
     }
 
     calculate_distance(x, y, criterion) {
-        console.log(y);
-        if (y >= CANVAS_SIZE[1] - 100) return;
+        if (y > CANVAS_SIZE[1] - PRMS.path_start) return;
         let tmp_x_idx = Math.round(x);
         let distance = Math.abs(tmp_x_idx - PATH.x[y]);
         this.error[y - 1] = distance < criterion ? 1 : -1;
@@ -93,11 +94,11 @@ class Path {
         p5js.strokeWeight(PRMS.path_width);
         for (let x = this.x.length - 1; x > 0; x--) {
             if (this.error[x] === 0) {
-                p5js.stroke(...PRMS.colours.Path);
+                p5js.stroke(...PRMS.colours.path);
             } else if (this.error[x] === 1) {
-                p5js.stroke(...PRMS.colours.Correct);
+                p5js.stroke(...PRMS.colours.correct);
             } else if (this.error[x] === -1) {
-                p5js.stroke(...PRMS.colours.Incorrect);
+                p5js.stroke(...PRMS.colours.incorrect);
             }
             p5js.line(this.x[x - 1], this.y[x - 1], this.x[x], this.y[x]);
         }
@@ -112,11 +113,11 @@ class Ball {
     reset() {
         this.is_moving = false;
         this.is_complete = false;
-        this.diameter = 30;
+        this.diameter = PRMS.ball_diameter;
         this.speed = null;
         this.step = 0;
         this.x = null;
-        this.y = CANVAS_SIZE[1];
+        this.y = CANVAS_SIZE[1] - PRMS.ball_diameter;
         this.x_path = [];
         this.y_path = [];
     }
@@ -171,9 +172,9 @@ const PATH = new Path(1);
 const BALL = new Ball();
 
 function draw_trial() {
-    p5js.background(...PRMS.colours.Background);
+    p5js.background(...PRMS.colours.background);
     BALL.move();
-    PATH.calculate_distance(BALL.x, BALL.step, BALL.diameter); // comment/uncomment to draw green/red correctness feedback
+    PATH.calculate_distance(BALL.x, BALL.step, PRMS.distance_criterion); // comment/uncomment to draw green/red correctness feedback
     PATH.draw_target_path();
     BALL.draw_ball();
     BALL.draw_ball_path(); // comment/uncomment to draw black line representing ball path
@@ -186,8 +187,8 @@ function draw_trial() {
     }
 }
 
-function code_trial() {
-    "use strict";
+function add_data() {
+    console.log(PATH.error);
     jsPsych.data.addDataToLastTrial({
         date: Date(),
         block: PRMS.count_block,
@@ -224,7 +225,7 @@ const TRIAL = {
         BALL.set_x_position(PATH.x[0]);
     },
     on_finish: function () {
-        code_trial();
+        add_data();
         PRMS.count_trial += 1;
     },
 };
@@ -259,11 +260,11 @@ const BLOCK_START = {
     response_ends_trial: true,
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `Start Block ${PRMS.count_block} von 4:<br><br> 
-Click the left mouse button inside the black ball to start the trial.<br><br>
-Control the ball using the mouse by moving left and right.<br><br>
-Try to follow the path!<br><br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+            text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}:<br><br> 
+                   Click the left mouse button inside the black ball to start the trial.<br><br>
+                   Control the ball using the mouse by moving left and right.<br><br>
+                   Try to follow the path!<br><br><br>
+                   Drücke eine beliebige Taste, um fortzufahren`,
             align: "left",
             colour: "black",
             fontsize: 30,
