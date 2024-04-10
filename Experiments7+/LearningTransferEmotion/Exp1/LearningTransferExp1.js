@@ -682,7 +682,6 @@ const TRIAL_TABLE_TP = [
   { exp_phase: "transfer", task_type: "free",   image: NEUTRAL_IMAGES[MN_AP[2]], emotion: "neutral", gender: "f", age: "o", proportion: "na", correct_response1: PRMS.resp_keys_tp[PRMS.finger_mapping_tp.indexOf("Weiblich")], correct_response2: PRMS.resp_keys_tp[PRMS.finger_mapping_tp.indexOf("Alt")]},
   { exp_phase: "transfer", task_type: "free",   image: NEUTRAL_IMAGES[MN_AP[3]], emotion: "neutral", gender: "f", age: "y", proportion: "na", correct_response1: PRMS.resp_keys_tp[PRMS.finger_mapping_tp.indexOf("Weiblich")], correct_response2: PRMS.resp_keys_tp[PRMS.finger_mapping_tp.indexOf("Jung")]},
 ];
-console.log(TRIAL_TABLE_TP);
 
 const TRIAL_TIMELINE_TP = {
     timeline: [FIXATION_CROSS, FACE_STIMULUS_TP, TRIAL_FEEDBACK, ITI],
