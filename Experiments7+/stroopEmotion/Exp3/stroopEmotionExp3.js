@@ -624,7 +624,6 @@ function genExpSeq() {
         let blk_timeline = deepCopy(TRIAL_TIMELINE);
         blk_timeline.timeline_variables = generate_trials_within_block(FEAR_IMAGES, HAPPY_IMAGES);
         blk_timeline.sample = { type: "fixed-repetitions", size: 1 };
-        console.log(blk_timeline);
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
     }
