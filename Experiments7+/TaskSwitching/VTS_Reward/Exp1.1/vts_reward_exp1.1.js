@@ -22,7 +22,16 @@
 // Reward screen (with/without reward picture)
 // ITI
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cBlk >= 11) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=341&credit_token=83be27640cea4e81b8862f4e90f20c3d&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -46,7 +55,7 @@ const PRMS = {
     errorDur: 1000, // duration of the error screen
     rewardDur: 1000, // duration of the reward screen
     stimFont: "110px Arial",
-    pointsFont: "60px Arial",
+    pointsFont: "50px Arial",
     fbFont: "30px Arial",
     letters: ["A", "E", "G", "I", "K", "M", "R", "U"],
     lettersVowel: ["A", "E", "I", "U"],
@@ -139,7 +148,7 @@ const WELCOME_INSTRUCTIONS = {
         text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass Du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
+um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 40 Minuten konzentriert zu arbeiten.<br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         fontsize: 30,
@@ -266,7 +275,7 @@ const TASK_INSTRUCTIONS4 = {
         text: `Übung beendet. Von nun an gibt es die Möglichkeit zur Belohnung:<br><br>
 In manchen Durchgängen erhältst du +10 Punkte, wenn die Aufgabe richtig bearbeitet wurde.<br><br>
 Des Weiteren werden die 20% aller Personen mit der höchsten Gesamtpunktzahl einen 10€ Gutschein
-von Osiander oder der deutschen Bahn erhalten.<br><br>
+von Osiander oder der Deutsche Bahn erhalten.<br><br>
 Drücke die „K“- Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
@@ -365,7 +374,9 @@ const BLOCK_START = {
         }
         trial.stimulus =
             generate_formatted_html({
-                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br> ${text}`,
+                text: `Start Block ${PRMS.cBlk} von ${PRMS.nBlks}${
+                    PRMS.blk_type[PRMS.cBlk - 1] === "practice" ? ": Übungsblock" : ""
+                }<br><br> ${text}`,
                 align: "left",
                 fontsize: 30,
                 width: "1200px",
@@ -420,7 +431,7 @@ const BLOCK_END = {
         }).length;
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.cBlk} von ${PRMS.nBlks}<br><br>
-Dein aktueller Punktestand beträgt: POINTS: ${nReward * 10}! <br><br>
+Dein aktueller Punktestand beträgt: ${nReward * 10}! <br><br>
 Kurze Pause.<br><br>
 Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
@@ -453,15 +464,6 @@ function drawFixation() {
     ctx.moveTo(0, -PRMS.fixSize);
     ctx.lineTo(0, PRMS.fixSize);
     ctx.stroke();
-
-    // draw points
-    if (PRMS.blk_type[PRMS.cBlk - 1] !== "practice") {
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = "black";
-        ctx.font = PRMS.pointsFont;
-        ctx.fillText(`Points: ${PERFORMANCE.points}`, 0, -300);
-    }
 }
 
 const FIXATION_CROSS = {
@@ -508,12 +510,6 @@ function drawStimulus(args) {
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
     ctx.fillText(args.letter, 0, 5);
-
-    // draw points
-    if (PRMS.blk_type[PRMS.cBlk - 1] !== "practice") {
-        ctx.font = PRMS.pointsFont;
-        ctx.fillText(`Points: ${PERFORMANCE.points}`, 0, -300);
-    }
 }
 
 const VTS = {
@@ -791,7 +787,7 @@ function drawReward(args) {
     // draw points
     if (PRMS.blk_type[PRMS.cBlk - 1] !== "practice") {
         ctx.font = PRMS.pointsFont;
-        ctx.fillText(`Points: ${PERFORMANCE.points}`, 0, -300);
+        ctx.fillText(`Gesamtpunkte: ${PERFORMANCE.points}`, 0, -200);
     }
 }
 
@@ -814,18 +810,7 @@ const TRIAL_REWARD = {
     },
 };
 
-function drawITI() {
-    "use strict";
-    let ctx = document.getElementById("canvas").getContext("2d");
-    if (PRMS.blk_type[PRMS.cBlk - 1] !== "practice") {
-        // draw points
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = "black";
-        ctx.font = PRMS.pointsFont;
-        ctx.fillText(`Points: ${PERFORMANCE.points}`, 0, -300);
-    }
-}
+function drawITI() {}
 
 const ITI = {
     type: jsPsychStaticCanvasKeyboardResponse,
@@ -893,11 +878,10 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Glückwunsch!<br><br>
-Durch deinen Punktestand hat sich das Experiment verkürzt und ist nach ein paar weiteren Klicks vorbei.<br><br>
+        text: `Das Experiment ist nun beendet.<br><br>
 Im nächsten Fenster wirst Du zunächst aufgefordert Deine E-Mail-Adresse für die Gutscheinvergabe anzugeben.
 Falls Du zu den 20% Personen mit der höchsten Gesamtpunktzahl gehörst, kannst Du nach Abschluss der Erhebung 
-wahlweise einen 10€-Gutschein von der Deutschen Bahn oder Osiander erhalten.<br><br>
+wahlweise einen 10€-Gutschein von der Deutsche Bahn oder Osiander erhalten.<br><br>
 Drücke die Leertaste, um fortzufahren`,
         align: "left",
         fontsize: 30,
