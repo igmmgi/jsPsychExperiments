@@ -83,6 +83,7 @@ if (PRMS.hand_mapping_tp[0] === "Altersaufgabe") {
 }
 
 const DE_EN = { gelber: "Yellow", grüner: "Green", Altersaufgabe: "age", Geschlechtsaufgabe: "gender" };
+const TASK = { Altersaufgabe: "jung ist oder alt ist", Geschlechtsaufgabe: "männlich ist oder weiblich ist" };
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -97,8 +98,6 @@ const TASK_INSTRUCTIONS1 = {
               Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
               Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
               um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br><br>
-              Bei Fragen wende dich gerne an<br><br>
-                xxx.xxx@student.uni-tuebingen.de<br><br>
               Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -215,10 +214,14 @@ const TASK_INSTRUCTIONS4 = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Für die Altersaufgabe ist das Bild einer Person von einem gelben Rahmen umgeben. Du
-musst entscheiden, ob die Person jung ist oder alt ist.<br><br>
-Für die Geschlechtsaufgabe ist das Bild einer Person von einem grünen Rahmen
-umgeben. Du musst entscheiden, ob die Person männlich ist oder weiblich ist.<br><br>
+                text: `Für die ${PRMS.hand_mapping_tp[0]} ist das Bild einer Person von einem <span style="color: ${
+                    DE_EN[PRMS.colour_mapping_tp[0]]
+                };">${PRMS.colour_mapping_tp[0]}</span> Rahmen umgeben. Du
+musst entscheiden, ob die Person ${TASK[PRMS.hand_mapping_tp[0]]}.<br><br>
+Für die ${PRMS.hand_mapping_tp[1]} ist das Bild einer Person von einem <span style="color: ${
+                    DE_EN[PRMS.colour_mapping_tp[1]]
+                };">${PRMS.colour_mapping_tp[1]}</span> Rahmen
+umgeben. Du musst entscheiden, ob die Person ${TASK[PRMS.hand_mapping_tp[1]]}.<br><br>
 Bitte reagiere wie folgt:<br>`,
                 align: "left",
                 colour: "black",
