@@ -19,7 +19,16 @@
 // Choice screen Reaction vs. Attention task (actually both the same)
 // Further selections: colour of background screen, font type + font size
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cBlk >= 13) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=342&credit_token=40cc144c18064be29b5145fb43a94e36&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -32,7 +41,7 @@ const CANVAS_BORDER = "5px solid black";
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    nBlks: 24, // number of blocks
+    nBlks: 13, // number of blocks
     fixDur: 400, // duration of fixation cross
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
@@ -71,9 +80,7 @@ const TASK_INSTRUCTIONS1 = {
         text: `Willkommen zu unserem Experiment:<br><br>
               Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
               Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-              um das Experiment durchzuführen. Wir bitten dich die ca. nächsten 40 Minuten konzentriert zu arbeiten.<br>
-              Bei Fragen wende dich gerne an<br><br>
-                peteer.dehner@student.uni-tuebingen.de<br><br>
+              um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 20 Minuten konzentriert zu arbeiten.<br><br>
               Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -90,7 +97,7 @@ const TASK_INSTRUCTIONS2 = {
     stimulus: "",
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `<span style="font-family: ${CHOICES.font_choice}">Du bearbeitest nun den <span style="font-weight: bold">${CHOICES.task_choice_de}</span><br><br>
+            text: `<span style="font-family: ${CHOICES.font_choice}">Du bearbeitest nun die <span style="font-weight: bold">${CHOICES.task_choice_de}</span><br><br>
 In diesem Experiment siehst du Gesichter mit den freudigen und ängstlichen Emotionen und ein Wort. 
 Bitte entscheide in jedem Durchgang, ob das Wort "Freude" oder "Angst" ist und ignoriere das Gesicht.<br><br>
 WICHTIG! Benutze hierfür die Q-Taste mit deinem linken Zeigefinger und die P-Taste mit deinem rechten Zeigefinger.<br><br>
@@ -163,70 +170,20 @@ const MOOD_QUESTIONNAIRE = {
     },
 };
 
-const TASK_CHOICE_SCREEN1 = {
+const CHOICE_SCREEN = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Aktuelle Forschung zeigt, dass die Möglichkeit, zu wählen, eine positive Auswirkung auf die Aufgabenleistung hat.<br><br>
-Für dieses Experiment darfst du zunächst entscheiden welche Aufgabe du für die ca. nächsten 40 min bearbeiten möchtest:<br><br>
-• Reaktions-Aufgabe: Du musst möglichst schnell reagieren.<br>
-• Aufmerksamkeits-Aufgabe: Du musst die angezeigten Reize richtig zuordnen.<br><br>
+Für dieses Experiment darfst du verschiedene Einstellungen und die Aufgabe welche du bearbeiten willst wählen:<br><br>
 Zum Weitermachen drücke bitte eine beliebige Taste.`,
         align: "left",
         colour: "black",
         fontsize: 30,
         lineheight: 1.5,
     }),
-};
-
-const TASK_CHOICE_SCREEN2 = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    response_ends_trial: false,
-    trial_duration: PRMS.thinkDur,
-    stimulus: generate_formatted_html({
-        text: `Bitte überlege nun die nächsten 20 Sekunden welche Aufgabe du bearbeiten möchtest.<br><br>
-               Es geht in 20 Sekunden automatische weiter.`,
-        align: "left",
-        colour: "black",
-        fontsize: 30,
-        lineheight: 1.5,
-    }),
-};
-
-const TASK_CHOICE_SCREEN3 = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    response_ends_trial: true,
-    choices: ["1", "2"],
-    stimulus: generate_formatted_html({
-        text: `Du hast die freie Wahl.<br>
-Bitte entscheide dich jetzt, welche Aufgabe du bearbeiten willst und drücke:<br><br>
-• Die Taste "1" für die "Reaktions-Aufgabe"<br><br>
-ODER<br><br>
-• Die Taste "2" für die "Aufmerksamkeits-Aufgabe"`,
-        align: "left",
-        colour: "black",
-        fontsize: 30,
-        lineheight: 1.5,
-    }),
-    on_finish: function () {
-        let dat = jsPsych.data.get().last(1).values()[0];
-        if (dat.key_press === "1") {
-            CHOICES.task_choice = "reaction_task";
-            CHOICES.task_choice_de = "Reaktions-Aufgabe";
-        } else if (dat.key_press === "2") {
-            CHOICES.task_choice = "attention_task";
-            CHOICES.task_choice_de = "Aufmerksamkeits-Aufgabe";
-        }
-        jsPsych.data.addProperties({ task_choice: CHOICES.task_choice });
-    },
 };
 
 const COLOUR_CHOICE_SCREEN1 = {
@@ -238,7 +195,7 @@ const COLOUR_CHOICE_SCREEN1 = {
     trial_duration: PRMS.thinkDur,
     stimulus: generate_formatted_html({
         text: `Die nächsten 20 Sekunden darfst du nun entscheiden, welche Farbe der Hintergrund in deinem Experiment haben soll:<br><br>
-Blau, Grün oder Schwarz?<br><br>
+<span style="color: Blue;">Blau</span> oder <span style="color: Green;">Grün</span>?<br><br>
 Es geht in 20 Sekunden automatisch weiter.`,
         align: "left",
         colour: "black",
@@ -253,13 +210,12 @@ const COLOUR_CHOICE_SCREEN2 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     response_ends_trial: true,
-    choices: ["1", "2", "3"],
+    choices: ["1", "2"],
     stimulus: generate_formatted_html({
         text: `Du hast die freie Wahl.<br><br>
 Bitte entscheide dich jetzt, welche Hintergrundfarbe du möchtest:<br><br>
 • Die Taste "1" für <span style="color:#0000FF; font-weight: bold">Blau</span><br>
-• Die Taste "2" für <span style="color:#259F25; font-weight: bold">Grün</span><br>
-• Die Taste "3" für <span style="color:#000000; font-weight: bold">Schwarz</span><br>`,
+• Die Taste "2" für <span style="color:#259F25; font-weight: bold">Grün</span><br>`,
         align: "left",
         colour: "black",
         fontsize: 30,
@@ -273,9 +229,6 @@ Bitte entscheide dich jetzt, welche Hintergrundfarbe du möchtest:<br><br>
         } else if (dat.key_press === "2") {
             CHOICES.colour_choice = "green";
             CHOICES.colour_choice_hex = "#259F25";
-        } else if (dat.key_press === "3") {
-            CHOICES.colour_choice = "black";
-            CHOICES.colour_choice_hex = "#000000";
         }
         document.body.style.background = CHOICES.colour_choice_hex;
         jsPsych.data.addProperties({ colour_choice: CHOICES.colour_choice });
@@ -292,9 +245,8 @@ const FONT_CHOICE_SCREEN1 = {
     stimulus: generate_formatted_html({
         text: `Im folgenden Experiment musst du Wörter klassifizieren. Die nächsten 20 Sekunden darfst du
 nun entscheiden, in welcher Schriftart die Wörter präsentiert werden sollen.<br><br>
-• <span style="font-weight: bold; font-family: Arial, Helvetica, sans-serif;">Schriftart Eins</span><br>
-• <span style="font-weight: bold; font-family: Comic Sans MS, Comic Sans, cursive;">Schriftart Zwei</span><br>
-• <span style="font-weight: bold; font-family: Georgia, Times, serif;">Schriftart Drei</span><br><br>
+• <span style="font-weight: bold; font-family: Comic Sans MS, Comic Sans, cursive;">Schriftart Eins</span><br>
+• <span style="font-weight: bold; font-family: Georgia, Times, serif;">Schriftart Zwei</span><br><br>
 Es geht in 20 Sekunden automatisch weiter.`,
         align: "left",
         colour: "black",
@@ -309,13 +261,12 @@ const FONT_CHOICE_SCREEN2 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     response_ends_trial: true,
-    choices: ["1", "2", "3"],
+    choices: ["1", "2"],
     stimulus: generate_formatted_html({
         text: `Du hast die freie Wahl.<br><br>
 Bitte entscheide dich jetzt, welche Schriftart du möchtest:<br><br>
-• Die Taste "1" für <span style="font-weight: bold; font-family: Arial, Helvetica, sans-serif;">Schriftart Eins</span><br>
-• Die Taste "2" für <span style="font-weight: bold; font-family: Comic Sans MS, Comic Sans, cursive;">Schriftart Zwei</span><br>
-• Die Taste "3" für <span style="font-weight: bold; font-family: Georgia, Times, serif;">Schriftart Drei</span>`,
+• Die Taste "1" für <span style="font-weight: bold; font-family: Comic Sans MS, Comic Sans, cursive;">Schriftart Zwei</span><br>
+• Die Taste "2" für <span style="font-weight: bold; font-family: Georgia, Times, serif;">Schriftart Drei</span>`,
         align: "left",
         colour: "black",
         fontsize: 30,
@@ -324,14 +275,70 @@ Bitte entscheide dich jetzt, welche Schriftart du möchtest:<br><br>
     on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
         if (dat.key_press === "1") {
-            CHOICES.font_choice = "Arial, Helvetica, sans-serif";
-        } else if (dat.key_press === "2") {
             CHOICES.font_choice = "Comic Sans MS, Comic Sans, cursive";
-        } else if (dat.key_press === "3") {
+        } else if (dat.key_press === "2") {
             CHOICES.font_choice = "Georgia, Times, serif";
         }
         PRMS.target_text_font = PRMS.target_text_font.concat(" ", CHOICES.font_choice);
         jsPsych.data.addProperties({ font_choice: CHOICES.font_choice });
+    },
+};
+
+const TASK_CHOICE_SCREEN1 = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    response_ends_trial: false,
+    trial_duration: PRMS.thinkDur,
+    stimulus: "",
+    on_start: function (trial) {
+        trial.stimulus = generate_formatted_html({
+            text: `<span style="font-family: ${CHOICES.font_choice}">Die Forschung zeigt auch, dass die Möglichkeit, die Aufgabe zu wählen, eine positive Auswirkung auf die Aufgabenleistung hat.<br><br> 
+Du darfst somit entscheiden, welche Aufgabe du für die nächsten ca. 20 min bearbeiten möchtest:<br><br> 
+Bitte überlege nun die nächsten 20 Sekunden welche Aufgabe du bearbeiten möchtest.<br><br>
+• Reaktions-Aufgabe: Erforderd insbesondere deine Handlungsfähigkeit heraus.<br>
+• Aufmerksamkeits-Aufgabe:  Erfordert insbesondere deine Fähigkeit zur Zuordnung von angezeigten Reizen.<br><br>
+               Es geht in 20 Sekunden automatische weiter.</span>`,
+            align: "left",
+            colour: "black",
+            fontsize: 30,
+            lineheight: 1.5,
+        });
+    },
+};
+
+const TASK_CHOICE_SCREEN2 = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    response_ends_trial: true,
+    choices: ["1", "2"],
+    stimulus: "",
+    on_start: function (trial) {
+        trial.stimulus = generate_formatted_html({
+            text: `<span style="font-family: ${CHOICES.font_choice}">Du hast die freie Wahl.<br>
+Bitte entscheide dich jetzt, welche Aufgabe du bearbeiten willst und drücke:<br><br>
+• Die Taste "1" für die "Reaktions-Aufgabe"<br><br>
+ODER<br><br>
+• Die Taste "2" für die "Aufmerksamkeits-Aufgabe"</span>`,
+            align: "left",
+            colour: "black",
+            fontsize: 30,
+            lineheight: 1.5,
+        });
+    },
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        if (dat.key_press === "1") {
+            CHOICES.task_choice = "reaction_task";
+            CHOICES.task_choice_de = "Reaktions-Aufgabe";
+        } else if (dat.key_press === "2") {
+            CHOICES.task_choice = "attention_task";
+            CHOICES.task_choice_de = "Aufmerksamkeits-Aufgabe";
+        }
+        jsPsych.data.addProperties({ task_choice: CHOICES.task_choice });
     },
 };
 
@@ -568,6 +575,25 @@ const TRIAL_TIMELINE = {
     timeline: [FIXATION_CROSS, STROOP_STIMULUS, IF_ERROR, ITI],
 };
 
+const END_SCREEN = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    response_ends_trial: true,
+    choices: [" "],
+    stimulus: generate_formatted_html({
+        text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
+             Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
+             Drücke eine beliebige Taste, um die Weiterleitung zu SONA zu starten.`,
+        fontsize: 28,
+        lineheight: 1.0,
+        bold: false,
+        align: "left",
+    }),
+    on_finish: function () {},
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
@@ -607,13 +633,13 @@ function genExpSeq() {
 
     // control manipulation questions
     exp.push(MOOD_QUESTIONNAIRE);
-    exp.push(TASK_CHOICE_SCREEN1);
-    exp.push(TASK_CHOICE_SCREEN2);
-    exp.push(TASK_CHOICE_SCREEN3);
+    exp.push(CHOICE_SCREEN);
     exp.push(COLOUR_CHOICE_SCREEN1);
     exp.push(COLOUR_CHOICE_SCREEN2);
     exp.push(FONT_CHOICE_SCREEN1);
     exp.push(FONT_CHOICE_SCREEN2);
+    exp.push(TASK_CHOICE_SCREEN1);
+    exp.push(TASK_CHOICE_SCREEN2);
 
     // experiment
     exp.push(mouseCursor(false));
@@ -632,7 +658,7 @@ function genExpSeq() {
 
     // debrief
     exp.push(mouseCursor(true));
-    exp.push(end_message());
+    exp.push(END_SCREEN);
     exp.push(fullscreen(false));
 
     return exp;
