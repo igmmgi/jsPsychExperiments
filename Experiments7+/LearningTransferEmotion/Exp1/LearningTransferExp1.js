@@ -32,7 +32,16 @@
 // Block structure:
 // 3 blocks of 96 trials (72 forced-choice with equal gender/age tasks, 24 free choice)
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.count_block >= 12) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=343&credit_token=eae38df08b874ba5af7650488dc26d17&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -48,7 +57,7 @@ const PRMS = {
     n_blocks_ap: 9, // number of blocks association phase
     n_trials_ap_practice: 16, // number of trials association phase practice block
     n_trials_ap: 120, // number of trials association phase
-    n_blocks_tp: 3, // number of blocks transfer phase
+    n_blocks_tp: 4, // number of blocks transfer phase
     n_trials_tp: 88, // number of trials association phase
     fix_dur: 300, // duration of fixation cross
     fix_size: 15, // duration of the fixation cross
@@ -161,11 +170,11 @@ const TASK_INSTRUCTIONS3 = {
         trial.stimulus = generate_formatted_html({
             text: `<span style="font-weight: bold;">Achtung: Neue Instruktionen!</span><br><br>
                    Im Folgenden gibt es zwei Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
-                   ${PRMS.resp_mapping_ap[0]} <span style="color: ${DE_EN[PRMS.colour_mapping_tp[0]]};">(${
+                   ${PRMS.hand_mapping_tp[0]} <span style="color: ${DE_EN[PRMS.colour_mapping_tp[0]]};">(${
                 PRMS.colour_mapping_tp[0]
             } Rahmen)</span> = Linke Hand: Bitte platziere hierzu Zeigefinger und
                    Mittelfinger auf die Tasten "${PRMS.resp_keys_tp[0]}" und "${PRMS.resp_keys_tp[1]}".<br><br>
-                   ${PRMS.resp_mapping_ap[1]} <span style="color: ${DE_EN[PRMS.colour_mapping_tp[1]]};">(${
+                   ${PRMS.hand_mapping_tp[1]} <span style="color: ${DE_EN[PRMS.colour_mapping_tp[1]]};">(${
                 PRMS.colour_mapping_tp[1]
             } Rahmen)</span> = Rechte Hand: Bitte platziere hierzu Zeigefinger und
                    Mittelfinger auf die Tasten "${PRMS.resp_keys_tp[2]}" und "${PRMS.resp_keys_tp[3]}".<br><br>
