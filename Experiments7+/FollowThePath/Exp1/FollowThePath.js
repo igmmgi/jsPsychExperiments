@@ -387,15 +387,16 @@ function genExpSeq() {
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
     exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    //exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type = ["easy_path_easy_speed", "easy_path_hard_speed", "hard_path_easy_speed", "hard_path_hard_speed"];
+    blk_type = repEach(blk_type, 2);
 
     let blk_timeline;
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
         exp.push(BLOCK_START); // trials within a block
-        exp.push(WAIT_BLANK); // trials within a block
+        //exp.push(WAIT_BLANK); // trials within a block
         if (blk_type[blk] === "easy_path_easy_speed") {
             blk_timeline = { ...TRIAL_TIMELINE_EASY_PATH_EASY_SPEED };
         } else if (blk_type[blk] === "easy_path_hard_speed") {
