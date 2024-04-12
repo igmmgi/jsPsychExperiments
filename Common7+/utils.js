@@ -122,6 +122,14 @@ function repeatArray(a, n) {
     return new Array(n).fill(a).flat();
 }
 
+function repEach(x, n) {
+    let out = [];
+    for (let i = 0; i < x.length; i++) {
+        out.push(...repeatArray(x[i], n));
+    }
+    return out;
+}
+
 // Array mean
 function mean(array) {
     return array.reduce((acc, cur) => acc + cur) / array.length;
