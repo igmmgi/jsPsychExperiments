@@ -1,4 +1,16 @@
 // Template for pilot SFB ironic errors series of experiments
+// Participants are required to control a ball that moves from the bottom
+// to the top of the screen by moving the mouse/trackpad left/right so that the
+// ball follows a path.
+//
+// 4 types of trials:
+// 1) Easy speed / easy path
+// 2) Hard speed / easy path
+// 3) Easy speed / hard path
+// 4) Hard speed / hard path
+//
+// Trials are presented in separate blocks
+
 const jsPsych = initJsPsych({});
 
 ////////////////////////////////////////////////////////////////////////
@@ -13,10 +25,10 @@ const p5js = new p5((sketch) => {
 });
 
 const PRMS = {
-    n_trials: 2, // number of trials per block
-    n_blocks: 4, // number of blocks
+    n_trials: 1, // number of trials per block
+    n_blocks: 4, // number of blocks (must be multiple of 4)
+    randomise_block_order: false,
     iti: 500, // duration of the inter-trial-interval
-    wait: 500, // duration of the inter-trial-interval
     font: "50px Arial",
     colours: { correct: [0, 255, 0], incorrect: [255, 0, 0], path: [150, 150, 150], background: [200, 200, 200] },
     count_block: 1,
@@ -24,9 +36,11 @@ const PRMS = {
     path_start: 100, // path starts X up from bottom of screen
     path_width: 10, // width of the path in pixels
     path_difficulty: { easy: 500, hard: 100 },
-    speed_difficulty: { easy: 1, hard: 2 }, // controlled by frame rate
+    speed_difficulty: { easy: 1, hard: 2 }, // controlled by frame rate (1px vs 2px per frame)
     ball_diameter: 20,
-    distance_criterion: 15,
+    show_ball_path: true, // the black line the ball travelled
+    show_error: true, // the red/green path feedback
+    distance_criterion: 15, // error criterion if shown
 };
 
 function get_scale_factor() {
@@ -106,11 +120,12 @@ class Path {
 }
 
 class Ball {
-    constructor() {
-        this.reset();
+    constructor(length) {
+        this.reset(length);
     }
 
-    reset() {
+    reset(length) {
+        this.length = length;
         this.is_moving = false;
         this.is_complete = false;
         this.diameter = PRMS.ball_diameter;
@@ -132,22 +147,35 @@ class Ball {
     move() {
         // trial initiation
         if (!this.is_moving && p5js.mouseIsPressed) {
-            let dx = p5js.mouseX * PRMS.scale_factor - this.x;
-            let dy = p5js.mouseY * PRMS.scale_factor - this.y;
+            console.log("----------------");
+            console.log("this.x:", this.x, "p5x", p5js.mouseX);
+            console.log("this.y:", this.x, "p5y", p5js.mouseY);
+            console.log("this.x:", this.x, "p5x", p5js.mouseX * PRMS.scale_factor);
+            console.log("this.y:", this.x, "p5y", p5js.mouseY * PRMS.scale_factor);
+            let dx = Math.abs(p5js.mouseX * PRMS.scale_factor - this.x) - this.diameter;
+            let dy = Math.abs(p5js.mouseY * PRMS.scale_factor - this.y) - this.diameter;
+            console.log("dx:", dx);
+            console.log("dy:", dy);
             let distance = Math.sqrt(dx * dx + dy * dy);
+            //console.log("mouse x: ", p5js.mouseX * PRMS.scale_factor);
+            //console.log("mouse y: ", p5js.mouseY * PRMS.scale_factor);
+            //console.log(distance);
             this.is_moving = distance < this.diameter / 2;
         }
         if (!this.is_moving) return;
 
-        // ball is moving
+        // ball is moving, only interesred in x-movements
         this.y -= this.speed;
-        if (this.y <= 0) {
-            this.is_moving = false;
-            this.is_complete = true;
-        }
         this.x += p5js.movedX; // only interested in x-movements
 
-        if (this.y >= CANVAS_SIZE[1] - 100) return;
+        if (this.y > CANVAS_SIZE[1] - 100) return;
+
+        if (this.step >= this.length) {
+            this.is_moving = false;
+            this.is_complete = true;
+            return;
+        }
+
         this.step += 1;
         this.x_path.push(this.x);
         this.y_path.push(this.y);
@@ -169,15 +197,15 @@ class Ball {
 }
 
 const PATH = new Path(1);
-const BALL = new Ball();
+const BALL = new Ball(1);
 
 function draw_trial() {
     p5js.background(...PRMS.colours.background);
     BALL.move();
-    PATH.calculate_distance(BALL.x, BALL.step, PRMS.distance_criterion); // comment/uncomment to draw green/red correctness feedback
+    if (PRMS.show_error) PATH.calculate_distance(BALL.x, BALL.step, PRMS.distance_criterion);
     PATH.draw_target_path();
     BALL.draw_ball();
-    BALL.draw_ball_path(); // comment/uncomment to draw black line representing ball path
+    if (PRMS.show_ball_path) BALL.draw_ball_path();
     if (BALL.is_complete) {
         p5js.stroke(0);
         p5js.strokeWeight(2);
@@ -220,7 +248,8 @@ const TRIAL = {
     on_start: function (trial) {
         PATH.reset(PRMS.speed_difficulty[trial.data.speed_difficulty]);
         PATH.perlin_noice_coordinates(PRMS.path_difficulty[trial.data.path_difficulty]);
-        BALL.reset();
+        console.log(PATH.y.length);
+        BALL.reset(PATH.y.length);
         BALL.set_speed(PRMS.speed_difficulty[trial.data.speed_difficulty]);
         BALL.set_x_position(PATH.x[0]);
     },
@@ -228,17 +257,6 @@ const TRIAL = {
         add_data();
         PRMS.count_trial += 1;
     },
-};
-
-const WAIT_BLANK = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    stimulus: "",
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    func: function () {},
-    trial_duration: PRMS.wait,
-    response_ends_trial: false,
 };
 
 const ITI = {
@@ -346,8 +364,8 @@ const END_SCREEN = {
              Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
              Drücke eine beliebige Taste, um die Weiterleitung zu SONA zu starten.`,
         fontsize: 28,
-        lineheight: 1.0,
-        bold: false,
+        lineheight: 1.5,
+        bold: true,
         align: "left",
     }),
     on_finish: function () {},
@@ -382,21 +400,30 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check(CANVAS_SIZE));
+    //exp.push(fullscreen(true));
+    //exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
-    exp.push(welcome_message());
+    //exp.push(welcome_message());
     //exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    exp.push(WELCOME_INSTRUCTIONS);
+    //exp.push(WELCOME_INSTRUCTIONS);
 
-    let blk_type = ["easy_path_easy_speed", "easy_path_hard_speed", "hard_path_easy_speed", "hard_path_hard_speed"];
-    blk_type = repEach(blk_type, 2);
+    let blk_type;
+    if (!PRMS.randomise_block_order) {
+        blk_type = ["easy_path_easy_speed", "easy_path_hard_speed", "hard_path_easy_speed", "hard_path_hard_speed"];
+    } else {
+        blk_type = shuffle([
+            "easy_path_easy_speed",
+            "easy_path_hard_speed",
+            "hard_path_easy_speed",
+            "hard_path_hard_speed",
+        ]);
+    }
+    blk_type = repEach(blk_type, PRMS.n_blocks / 4);
 
     let blk_timeline;
-    for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
-        exp.push(BLOCK_START); // trials within a block
-        //exp.push(WAIT_BLANK); // trials within a block
+    for (let blk = 0; blk < PRMS.n_blocks / 2; blk += 1) {
+        //exp.push(BLOCK_START); // trials within a block
         if (blk_type[blk] === "easy_path_easy_speed") {
             blk_timeline = { ...TRIAL_TIMELINE_EASY_PATH_EASY_SPEED };
         } else if (blk_type[blk] === "easy_path_hard_speed") {
@@ -408,7 +435,7 @@ function genExpSeq() {
         }
         blk_timeline.sample = {
             type: "fixed-repetitions",
-            size: 1,
+            size: PRMS.n_trials,
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_END); // trials within a block
