@@ -1,7 +1,7 @@
 // Template for pilot SFB ironic errors series of experiments
-// Participants are required to control a ball that moves from the bottom
-// to the top of the screen by moving the mouse/trackpad left/right so that the
-// ball follows a path.
+// Participants are required to control a ball (small circle) that moves from the bottom
+// to the top of the screen. The x-position is controlled  by moving the mouse/trackpad
+// left/right so that the ball follows a path.
 //
 // 4 types of trials:
 // 1) Easy speed / easy path
@@ -10,6 +10,7 @@
 // 4) Hard speed / hard path
 //
 // Trials are presented in separate blocks
+// Block order can be easy to hard 1/2/3/4 or randomised (e.g., 3/3/1/1/4/4/2/2)
 
 const jsPsych = initJsPsych({});
 
@@ -39,19 +40,8 @@ const PRMS = {
     speed_difficulty: { easy: 1, hard: 2 }, // controlled by frame rate (1px vs 2px per frame)
     ball_diameter: 20,
     show_ball_path: true, // the black line the ball travelled
-    show_error: true, // the red/green path feedback
+    show_error_path: true, // the red/green path feedback
     distance_criterion: 15, // error criterion if shown
-};
-
-function get_scale_factor() {
-    let dat = jsPsych.data.get().last(1).values()[0];
-    PRMS.scale_factor = 1 / dat.scale_factor;
-    jsPsych.data.addProperties({ scale_factor: PRMS.scale_factor });
-}
-
-const SCALE_FACTOR = {
-    type: jsPsychCallFunction,
-    func: get_scale_factor,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -77,6 +67,20 @@ const WELCOME_INSTRUCTIONS = {
     }),
 };
 
+////////////////////////////////////////////////////////////////////////
+//                      Experiment Parts                              //
+////////////////////////////////////////////////////////////////////////
+function get_scale_factor() {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    PRMS.scale_factor = 1 / dat.scale_factor;
+    jsPsych.data.addProperties({ scale_factor: PRMS.scale_factor });
+}
+
+const SCALE_FACTOR = {
+    type: jsPsychCallFunction,
+    func: get_scale_factor,
+};
+
 class Path {
     constructor(step) {
         this.reset(step);
@@ -85,7 +89,7 @@ class Path {
     reset(step) {
         this.x = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
         this.y = range(CANVAS_SIZE[1] - PRMS.path_start, 0, -step);
-        this.error = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
+        this.on_path = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
     }
 
     // position within canvas and scale
@@ -99,19 +103,18 @@ class Path {
 
     calculate_distance(x, y, criterion) {
         if (y > CANVAS_SIZE[1] - PRMS.path_start) return;
-        let tmp_x_idx = Math.round(x);
-        let distance = Math.abs(tmp_x_idx - PATH.x[y]);
-        this.error[y - 1] = distance < criterion ? 1 : -1;
+        let distance = Math.abs(Math.round(x) - PATH.x[y]);
+        this.on_path[y - 1] = distance < criterion ? 1 : -1;
     }
 
     draw_target_path() {
         p5js.strokeWeight(PRMS.path_width);
         for (let x = this.x.length - 1; x > 0; x--) {
-            if (this.error[x] === 0) {
+            if (this.on_path[x] === 0) {
                 p5js.stroke(...PRMS.colours.path);
-            } else if (this.error[x] === 1) {
+            } else if (this.on_path[x] === 1) {
                 p5js.stroke(...PRMS.colours.correct);
-            } else if (this.error[x] === -1) {
+            } else if (this.on_path[x] === -1) {
                 p5js.stroke(...PRMS.colours.incorrect);
             }
             p5js.line(this.x[x - 1], this.y[x - 1], this.x[x], this.y[x]);
@@ -147,19 +150,13 @@ class Ball {
     move() {
         // trial initiation
         if (!this.is_moving && p5js.mouseIsPressed) {
-            console.log("----------------");
-            console.log("this.x:", this.x, "p5x", p5js.mouseX);
-            console.log("this.y:", this.x, "p5y", p5js.mouseY);
-            console.log("this.x:", this.x, "p5x", p5js.mouseX * PRMS.scale_factor);
-            console.log("this.y:", this.x, "p5y", p5js.mouseY * PRMS.scale_factor);
-            let dx = Math.abs(p5js.mouseX * PRMS.scale_factor - this.x) - this.diameter;
-            let dy = Math.abs(p5js.mouseY * PRMS.scale_factor - this.y) - this.diameter;
-            console.log("dx:", dx);
-            console.log("dy:", dy);
+            let dx = Math.abs(p5js.mouseX * PRMS.scale_factor) - this.x - 5;
+            let dy = Math.abs(p5js.mouseY * PRMS.scale_factor) - this.y - 5;
             let distance = Math.sqrt(dx * dx + dy * dy);
-            //console.log("mouse x: ", p5js.mouseX * PRMS.scale_factor);
-            //console.log("mouse y: ", p5js.mouseY * PRMS.scale_factor);
-            //console.log(distance);
+            // console.log("----------------");
+            // console.log("this.x:", this.x, "p5x", p5js.mouseX, p5js.mouseX * PRMS.scale_factor);
+            // console.log("this.y:", this.x, "p5y", p5js.mouseY, p5js.mouseX * PRMS.scale_factor);
+            // console.log("dx:", dx, "dy:", dy, "distance:", distance);
             this.is_moving = distance < this.diameter / 2;
         }
         if (!this.is_moving) return;
@@ -168,7 +165,8 @@ class Ball {
         this.y -= this.speed;
         this.x += p5js.movedX; // only interested in x-movements
 
-        if (this.y > CANVAS_SIZE[1] - 100) return;
+        // wait till path start
+        if (this.y > CANVAS_SIZE[1] - PRMS.path_start) return;
 
         if (this.step >= this.length) {
             this.is_moving = false;
@@ -202,9 +200,9 @@ const BALL = new Ball(1);
 function draw_trial() {
     p5js.background(...PRMS.colours.background);
     BALL.move();
-    if (PRMS.show_error) PATH.calculate_distance(BALL.x, BALL.step, PRMS.distance_criterion);
     PATH.draw_target_path();
     BALL.draw_ball();
+    if (PRMS.show_error_path) PATH.calculate_distance(BALL.x, BALL.step, PRMS.distance_criterion);
     if (PRMS.show_ball_path) BALL.draw_ball_path();
     if (BALL.is_complete) {
         p5js.stroke(0);
@@ -216,7 +214,6 @@ function draw_trial() {
 }
 
 function add_data() {
-    console.log(PATH.error);
     jsPsych.data.addDataToLastTrial({
         date: Date(),
         block: PRMS.count_block,
@@ -225,7 +222,7 @@ function add_data() {
         path_y: PATH.y,
         ball_x: BALL.x_path,
         ball_y: BALL.y_path,
-        error: PATH.error,
+        on_path: PATH.on_path,
     });
 }
 
@@ -248,7 +245,6 @@ const TRIAL = {
     on_start: function (trial) {
         PATH.reset(PRMS.speed_difficulty[trial.data.speed_difficulty]);
         PATH.perlin_noice_coordinates(PRMS.path_difficulty[trial.data.path_difficulty]);
-        console.log(PATH.y.length);
         BALL.reset(PATH.y.length);
         BALL.set_speed(PRMS.speed_difficulty[trial.data.speed_difficulty]);
         BALL.set_x_position(PATH.x[0]);
@@ -368,7 +364,6 @@ const END_SCREEN = {
         bold: true,
         align: "left",
     }),
-    on_finish: function () {},
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -400,13 +395,13 @@ function genExpSeq() {
 
     let exp = [];
 
-    //exp.push(fullscreen(true));
-    //exp.push(browser_check(CANVAS_SIZE));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
-    //exp.push(welcome_message());
+    exp.push(welcome_message());
     //exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    //exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type;
     if (!PRMS.randomise_block_order) {
@@ -423,7 +418,7 @@ function genExpSeq() {
 
     let blk_timeline;
     for (let blk = 0; blk < PRMS.n_blocks / 2; blk += 1) {
-        //exp.push(BLOCK_START); // trials within a block
+        exp.push(BLOCK_START); // trials within a block
         if (blk_type[blk] === "easy_path_easy_speed") {
             blk_timeline = { ...TRIAL_TIMELINE_EASY_PATH_EASY_SPEED };
         } else if (blk_type[blk] === "easy_path_hard_speed") {
