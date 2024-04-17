@@ -34,9 +34,9 @@ const jsPsych = initJsPsych({});
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const CANVAS_COLOUR = "rgba(0, 0, 0, 1)";
+const CANVAS_COLOUR = "rgba(120, 120, 120, 1)";
 const CANVAS_SIZE = [1280, 720];
-const CANVAS_BORDER = "5px solid grey";
+const CANVAS_BORDER = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -51,15 +51,16 @@ const PRMS = {
     wait_duration: 1000, // duration following block feedback screen
     block_end_wait_duration: 10000, // duration following block feedback screen
     iti: 500, // duration of inter-trial-interval
+    trial_timeout: 1500, // time out duration for NoGo trials
     resp_keys: ["X", "M"],
     resp_colours: shuffle(["Red", "Blue", "Green", "Yellow"]),
-    resp_colours_rgb_low: {
+    resp_colours_low: {
         Red: "rgb(165, 128, 128)",
         Blue: "rgb(128, 128, 165)",
         Green: "rgb(128, 165, 128)",
         Yellow: "rgb(165, 165, 128)",
     },
-    resp_colours_rgb_high: {
+    resp_colours_high: {
         Red: "rgb(255, 0, 0)",
         Blue: "rgb(0, 0, 255)",
         Green: "rgb(0, 255, 0)",
@@ -68,6 +69,7 @@ const PRMS = {
     frame_size: [50, 50],
     frame_width: [1, 10],
     frame_position: [0, 0],
+    vas_font: "30px Arial",
     count_trial: 1, // count trials
     count_block: 1, // count blocks
 };
@@ -78,6 +80,7 @@ const DE_EN = { Red: "Rot", Blue: "Blau", Green: "Grün", Yellow: "Gelb" };
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
 const TASK_INSTRUCTIONS1 = {
+    //type: jsPsychHtmlKeyboardResponseCanvas,
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
@@ -309,6 +312,38 @@ const FIXATION_CROSS = {
     func: draw_fixation_cross,
 };
 
+var colors;
+
+function vas() {
+    // let ctx = document.getElementById("canvas").getContext("2d");
+    // let val = document.querySelector("#jspsych-canvas-slider-response-response").valueAsNumber;
+    // // draw text
+    // ctx.font = PRMS.vas_font;
+    // ctx.textAlign = "center";
+    // ctx.textBaseline = "middle";
+    // ctx.fillStyle = "Black";
+    // ctx.fillStyle = "Black";
+    // ctx.fillText(val, 0, 100);
+}
+
+var trial = {
+    type: jsPsychCanvasSliderResponse,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    translate_origin: true,
+    min: 0,
+    max: 1500,
+    slider_start: 750,
+    stimulus: function () {
+        vas();
+    },
+    //labels: ["0", "250", "500", "750", "1000", "1250", "1500"],
+    labels: ["0", "750", "1500"],
+    prompt: "<p>Wie lang war die Reaktion auf das farbige Quadrat?</p>",
+    button_label: "Weiter",
+};
+
 function draw_stimulus(args) {
     "use strict";
     let ctx = document.getElementById("canvas").getContext("2d");
@@ -316,10 +351,7 @@ function draw_stimulus(args) {
     // draw frame
     ctx.beginPath();
     ctx.lineWidth = args.discriminability === "low" ? PRMS.frame_width[0] : PRMS.frame_width[1];
-    ctx.strokeStyle =
-        args.discriminability === "low"
-            ? PRMS.resp_colours_rgb_low[args.colour]
-            : PRMS.resp_colours_rgb_high[args.colour];
+    ctx.strokeStyle = args.discrim === "low" ? PRMS.resp_colours_low[args.colour] : PRMS.resp_colours_high[args.colour];
     ctx.rect(
         -(PRMS.frame_size[0] / 2) + PRMS.frame_position[0],
         -PRMS.frame_size[1] / 2 + PRMS.frame_position[1],
@@ -349,7 +381,10 @@ const STIMULUS = {
     correct_response2: jsPsych.timelineVariable("correct_response2"),
   },
   on_start: function(trial) {
-    trial.func_args = [{colour: trial.data.colour, discriminability: trial.data.discriminability}];
+    if (trial.data.task_type === "catch") {
+      trial.trial_duration = PRMS.trial_timeout;
+    }
+    trial.func_args = [{colour: trial.data.colour, discrim: trial.data.discriminability}];
   },
   on_finish: function() {
     // code_trial();
@@ -391,7 +426,8 @@ const TRIAL_TABLE = [
 ];
 
 const TRIAL_TIMELINE = {
-    timeline: [FIXATION_CROSS, STIMULUS, ITI],
+    //timeline: [FIXATION_CROSS, STIMULUS, ITI],
+    timeline: [trial],
     timeline_variables: TRIAL_TABLE,
 };
 
@@ -432,7 +468,7 @@ function genExpSeq() {
     // exp.push(mouseCursor(false));
 
     // general instructions
-    // exp.push(TASK_INSTRUCTIONS1);
+    //exp.push(TASK_INSTRUCTIONS1);
     // exp.push(TASK_INSTRUCTIONS2);
     // exp.push(TASK_INSTRUCTIONS3);
     // exp.push(TASK_INSTRUCTIONS4);
