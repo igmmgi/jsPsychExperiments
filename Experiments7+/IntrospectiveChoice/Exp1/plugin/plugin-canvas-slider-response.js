@@ -47,6 +47,11 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 pretty_name: "Slider width",
                 default: null,
             },
+            slider_ticks_size: {
+                type: jspsych.ParameterType.INT,
+                pretty_name: "Slider width",
+                default: 20,
+            },
             /** Label of the button to advance. */
             button_label: {
                 type: jspsych.ParameterType.STRING,
@@ -59,12 +64,6 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 type: jspsych.ParameterType.BOOL,
                 pretty_name: "Require movement",
                 default: false,
-            },
-            /** Any content here will be displayed below the slider */
-            prompt: {
-                type: jspsych.ParameterType.HTML_STRING,
-                pretty_name: "Prompt",
-                default: null,
             },
             /** How long to show the stimulus. */
             stimulus_duration: {
@@ -136,11 +135,8 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 trial.canvas_border +
                 '; position: absolute; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%);"></canvas>' +
                 "" +
-                "</div>";
+                "</div><br><br><br><br><br><br><br>";
 
-            if (trial.prompt !== null) {
-                html += `<div <span style="font-weight:bold; font-size: 30px">${trial.prompt}</span></div>`;
-            }
             html +=
                 '<input type="range" class="slider" value="' +
                 trial.slider_start +
@@ -150,23 +146,34 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 trial.max +
                 '" step="' +
                 trial.step +
-                '" style="width: 800px;" id="jspsych-canvas-slider-response-response"></input>';
+                `" style="width: ${trial.slider_width}px;" id="jspsych-canvas-slider-response-response"></input>`;
             html += "<div>";
             for (var j = 0; j < trial.labels.length; j++) {
-                var width = 800 / (trial.labels.length - 1);
-                var left_offset = j * (800 / (trial.labels.length - 1)) - width / 2;
+                var width = trial.slider_width / (trial.labels.length - 1);
+                var left_offset = j * (trial.slider_width / (trial.labels.length - 1)) - width / 2;
                 html +=
                     '<div style="float: left; left:' +
                     left_offset +
                     "px; text-align: center; width: " +
                     width +
                     'px;">';
-                html += '<span style="text-align: center; font-size: 200%;">' + trial.labels[j] + "</span>";
+                html +=
+                    `<span style="text-align: center; font-size: ${trial.slider_ticks_size}px;">` +
+                    trial.labels[j] +
+                    "</span>";
                 html += "</div>";
             }
 
             html += "</div>";
             html += "<br></div>";
+
+            // allow spacebar to activate click button
+            window.onkeydown = function (event) {
+                if (event.keyCode === 32) {
+                    event.preventDefault();
+                    document.querySelector("#jspsych-canvas-slider-response-next").click();
+                }
+            };
 
             // add submit button
             html +=
@@ -180,10 +187,8 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
 
             let canvas = document.querySelector("canvas");
             let ctx = canvas.getContext("2d");
-
             ctx.fillStyle = trial.canvas_colour;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
             if (trial.translate_origin) {
                 ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
             }
@@ -204,6 +209,8 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                     slider_start: trial.slider_start,
                 };
                 display_element.innerHTML = "";
+                window.onkeydown = null;
+
                 // next trial
                 this.jsPsych.finishTrial(trialdata);
             };

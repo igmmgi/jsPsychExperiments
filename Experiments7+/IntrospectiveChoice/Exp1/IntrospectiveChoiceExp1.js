@@ -16,7 +16,7 @@
 // Fixation Cross 500 ms
 // Stimulus remained on screen until response (NoGo trials rerminated after 1500ms)
 // After free/forced choice trials, VAS scale presented
-// “How long was the reaction to the colored square?"
+// "How long was the reaction to the colored square?"
 // Next trial initiated with keypress (spacebar)
 // After NoGo trials: no response -> Correct (500 ms), response -> Incorrect (1000ms)
 //
@@ -47,10 +47,11 @@ const PRMS = {
     fix_duration: 500, // duration of fixation cross
     fix_size: 10, // duration of the fixation cross
     fix_width: 3, // size of fixation cross
-    fix_colour: "White", // colour of the fixation cross
-    wait_duration: 1000, // duration following block feedback screen
-    block_end_wait_duration: 10000, // duration following block feedback screen
+    fix_colour: "Black", // colour of the fixation cross
+    wait_duration: 20000, // duration following block feedback screen + errors
+    block_end_wait_duration: 20000, // duration following block feedback screen
     iti: 500, // duration of inter-trial-interval
+    rsi: 500, // duration of interval between rt response and slider scale
     trial_timeout: 1500, // time out duration for NoGo trials
     resp_keys: ["X", "M"],
     resp_colours: shuffle(["Red", "Blue", "Green", "Yellow"]),
@@ -67,20 +68,46 @@ const PRMS = {
         Yellow: "rgb(255, 255, 0)",
     },
     frame_size: [50, 50],
-    frame_width: [1, 10],
+    frame_width: [2, 10],
     frame_position: [0, 0],
-    vas_font: "30px Arial",
+    slider_prompt: "Wie lang war die Reaktion auf das farbige Quadrat?",
+    slider_prompt_size: 30,
+    slider_start: 750,
+    slider_width: 800,
+    slider_range: [0, 1500],
+    slider_labels: ["0 ms", "750 ms", "1500 ms"],
+    slider_ticks_interval: 250,
+    slider_ticks_length: 10,
+    slider_ticks_offset: -2,
+    slider_ticks_size: 30,
+    slider_prompt_position: [0, -50],
+    slider_prompt_text_font: "25px monospace",
+    slider_prompt_text_colour: "Black",
+    trial_feedback_position: [0, -100],
+    trial_feedback_text: ["Falsch!", ""],
+    trial_feedback_text_font: "50px monospace",
+    trial_feedback_text_colour: "Red",
+    trial_feedback_text_position: [0, 0],
+    trial_feedback_duration_catch: [1000, 500], // feedback duration catch trials [error, correct]
+    trial_feedback_text_catch: ["Falsch!", "Richtig!"], // feedback text catch trials [error, correct]
+    trial_feedback_text_position_catch: [0, 0],
     count_trial: 1, // count trials
     count_block: 1, // count blocks
 };
 
 const DE_EN = { Red: "Rot", Blue: "Blau", Green: "Grün", Yellow: "Gelb" };
 
+const PERFORMANCE = {
+    previous_key: null,
+    free_choice_count: { [PRMS.resp_keys[0]]: 0, [PRMS.resp_keys[1]]: 0 },
+    free_choice_sequence: { repeat: 0, switch: 0 },
+    errors: 0,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
 const TASK_INSTRUCTIONS1 = {
-    //type: jsPsychHtmlKeyboardResponseCanvas,
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
@@ -108,7 +135,7 @@ Wenn das Quadrat <span style="color:${PRMS.resp_colours[3]};">${DE_EN[PRMS.resp_
   colour: "black",
   fontsize: 28,
   lineheight: 1.25,
-})
+});
 
 const TASK_INSTRUCTIONS2 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -182,7 +209,7 @@ entscheiden, welche Antwort du wählst, ohne irgendwelche Strategien zu verwende
 Versuche, beide Antworten ungefähr gleich häufig auszuwählen, aber du sollst nicht mitzählen
 oder vorplanen. Versuche einfach, in jedem Durchgang mit freier Wahl dich spontan/zufällig
 für eine Antwort zu entscheiden.<br><br>
-Es geht in 30 Sekunden automatisch weiter.`,
+Es geht in 20 Sekunden automatisch weiter.`,
             align: "left",
             colour: "black",
             fontsize: 28,
@@ -228,62 +255,85 @@ const BLOCK_END = {
     canvas_border: CANVAS_BORDER,
     stimulus: "",
     on_start: function (trial) {
+        // calculate some block performance metrics
+        let error_bias = PERFORMANCE.errors / PRMS.n_trials > 0.1 ? true : false;
+
+        let response_bias =
+            PERFORMANCE.free_choice_count[PRMS.resp_keys[0]] /
+            (PERFORMANCE.free_choice_count[PRMS.resp_keys[0]] + PERFORMANCE.free_choice_count[PRMS.resp_keys[1]]);
+        response_bias = response_bias < 0.2 || response_bias > 0.8 ? true : false;
+
+        let sequence_bias =
+            PERFORMANCE.free_choice_sequence["repeat"] /
+            (PERFORMANCE.free_choice_sequence["repeat"] + PERFORMANCE.free_choice_sequence["switch"]);
+        sequence_bias = sequence_bias < 0.2 || sequence_bias > 0.8 ? true : false;
+
         // Option 1:
-        //        trial.stimulus = generate_formatted_html({
-        //            text: `Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-        //Kurze Pause. Drücke die Leertaste um fortzufahren.`,
-        //            align: "left",
-        //            colour: "black",
-        //            fontsize: 30,
-        //            lineheight: 1.25,
-        //        });
-        //        trial.response_ends_trial = true;
-        //        trial.choices = [" "];
-        //    },
+        if (!error_bias && !response_bias && !sequence_bias) {
+            trial.stimulus = generate_formatted_html({
+                text: `Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
+Kurze Pause. Drücke die Leertaste um fortzufahren.`,
+                align: "left",
+                colour: "black",
+                fontsize: 30,
+                lineheight: 1.25,
+            });
+            trial.response_ends_trial = true;
+            trial.choices = [" "];
+        }
         // Option 2:
-        //        trial.stimulus =
-        //            generate_formatted_html({
-        //                text: `Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-        //Achtung: Du hast relativ viele Fehler in diesem Block gemacht. Bitte schaue dir
-        //nochmal die Tastenzuordnung und Instruktionen genau an. Reagiere zunächst auf das Quadrat wie folgt:`,
-        //                align: "left",
-        //                colour: "black",
-        //                fontsize: 28,
-        //                lineheight: 1.25,
-        //            }) +
-        //            RESP_MAPPING +
-        //            generate_formatted_html({
-        //                text: `Beachte: Entscheide dich in jedem Durchgang zufällig für eine Antwort ohne irgendwelche
-        //Strategien zu verwenden, wenn du die Wahl hast.<br><br>
-        //In 20 Sekunden geht es automatisch weiter...`,
-        //                align: "left",
-        //                colour: "black",
-        //                fontsize: 28,
-        //                lineheight: 1.25,
-        //            });
-        //        trial.response_ends_trial = false;
-        //        trial.trial_duration = PRMS.block_end_wait_duration;
-        //    },
+        if (error_bias) {
+            trial.stimulus =
+                generate_formatted_html({
+                    text: `Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
+        Achtung: Du hast relativ viele Fehler in diesem Block gemacht. Bitte schaue dir
+        nochmal die Tastenzuordnung und Instruktionen genau an. Reagiere zunächst auf das Quadrat wie folgt:`,
+                    align: "left",
+                    colour: "black",
+                    fontsize: 28,
+                    lineheight: 1.25,
+                }) +
+                RESP_MAPPING +
+                generate_formatted_html({
+                    text: `Beachte: Entscheide dich in jedem Durchgang zufällig für eine Antwort ohne irgendwelche
+        Strategien zu verwenden, wenn du die Wahl hast.<br><br>
+        In 20 Sekunden geht es automatisch weiter...`,
+                    align: "left",
+                    colour: "black",
+                    fontsize: 28,
+                    lineheight: 1.25,
+                });
+            trial.response_ends_trial = false;
+            trial.trial_duration = PRMS.block_end_wait_duration;
+        }
         // Option 3:
-        trial.stimulus = generate_formatted_html({
-            text: `Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-Achtung: Du darfst zwar entscheiden, mit welcher Taste du antwortest, wenn du die
-Wahl hast, aber du sollst dich in diesen Durchgängen <span style="font-weight: bold">zufällig</span> für eine Antwort entscheiden
-und <span style="font-weight: bold">keine Strategien</span> verwenden. Versuche, beide Antworten ungefähr gleich häufig
-auszuwählen, aber du sollst nicht mitzählen oder vorplanen.<br><br>
-Versuche somit dich in jedem Durchgang mit freier Wahl spontan/zufällig für eine Antwort zu
-entscheiden.<br><br>
-In 20 Sekunden geht es automatisch weiter...`,
-            align: "left",
-            colour: "black",
-            fontsize: 28,
-            lineheight: 1.25,
-        });
-        trial.response_ends_trial = false;
-        trial.trial_duration = PRMS.block_end_wait_duration;
+        if (!response_bias || sequence_bias) {
+            trial.stimulus = generate_formatted_html({
+                text: `Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
+        Achtung: Du darfst zwar entscheiden, mit welcher Taste du antwortest, wenn du die
+        Wahl hast, aber du sollst dich in diesen Durchgängen <span style="font-weight: bold">zufällig</span> für eine Antwort entscheiden
+        und <span style="font-weight: bold">keine Strategien</span> verwenden. Versuche, beide Antworten ungefähr gleich häufig
+        auszuwählen, aber du sollst nicht mitzählen oder vorplanen.<br><br>
+        Versuche somit dich in jedem Durchgang mit freier Wahl spontan/zufällig für eine Antwort zu
+        entscheiden.<br><br>
+        In 20 Sekunden geht es automatisch weiter...`,
+                align: "left",
+                colour: "black",
+                fontsize: 28,
+                lineheight: 1.25,
+            });
+            trial.response_ends_trial = false;
+            trial.trial_duration = PRMS.block_end_wait_duration;
+        }
+    },
+    on_finish: function () {
+        // reset block performance
+        PERFORMANCE.previous_key = null;
+        PERFORMANCE.free_choice_count = { [PRMS.resp_keys[0]]: 0, [PRMS.resp_keys[1]]: 0 };
+        PERFORMANCE.free_choice_sequence = { repeat: 0, switch: 0 };
+        PERFORMANCE.errors = 0;
     },
 };
-
 ////////////////////////////////////////////////////////////////////////
 //                              Exp Parts                             //
 ////////////////////////////////////////////////////////////////////////
@@ -312,36 +362,139 @@ const FIXATION_CROSS = {
     func: draw_fixation_cross,
 };
 
-var colors;
+function display_slider(correct) {
+    let ctx = document.getElementById("canvas").getContext("2d");
 
-function vas() {
-    // let ctx = document.getElementById("canvas").getContext("2d");
-    // let val = document.querySelector("#jspsych-canvas-slider-response-response").valueAsNumber;
-    // // draw text
-    // ctx.font = PRMS.vas_font;
-    // ctx.textAlign = "center";
-    // ctx.textBaseline = "middle";
-    // ctx.fillStyle = "Black";
-    // ctx.fillStyle = "Black";
-    // ctx.fillText(val, 0, 100);
+    // show additional error
+    ctx.textAlign = "center";
+    ctx.font = PRMS.trial_feedback_text_font;
+    ctx.fillStyle = PRMS.trial_feedback_text_colour;
+    ctx.fillText(PRMS.trial_feedback_text[correct], PRMS.trial_feedback_position[0], PRMS.trial_feedback_position[1]);
+
+    ctx.font = PRMS.slider_prompt_text_font;
+    ctx.fillStyle = PRMS.slider_prompt_text_colour;
+    ctx.fillText(PRMS.slider_prompt, PRMS.slider_prompt_position[0], PRMS.slider_prompt_position[1]);
+
+    ctx.lineWidth = PRMS.fix_width;
+    ctx.strokeStyle = PRMS.fix_colour;
+    for (
+        let x = -PRMS.slider_width / 2;
+        x <= PRMS.slider_width / 2 + 1;
+        x += PRMS.slider_ticks_interval * (PRMS.slider_width / PRMS.slider_range[1])
+    ) {
+        ctx.stroke();
+        ctx.moveTo(x, PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
+        ctx.lineTo(x, -PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
+        ctx.stroke();
+    }
 }
 
-var trial = {
+const VAS = {
     type: jsPsychCanvasSliderResponse,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     translate_origin: true,
-    min: 0,
-    max: 1500,
-    slider_start: 750,
-    stimulus: function () {
-        vas();
+    min: PRMS.slider_range[0],
+    max: PRMS.slider_range[1],
+    slider_start: PRMS.slider_start,
+    slider_width: PRMS.slider_width,
+    require_movement: true,
+    data: {
+        stim: "vas",
+        task_type: jsPsych.timelineVariable("task_type"),
+        colour: jsPsych.timelineVariable("colour"),
+        discriminability: jsPsych.timelineVariable("discriminability"),
+        correct_response1: jsPsych.timelineVariable("correct_response1"),
+        correct_response2: jsPsych.timelineVariable("correct_response2"),
     },
-    //labels: ["0", "250", "500", "750", "1000", "1250", "1500"],
-    labels: ["0", "750", "1500"],
-    prompt: "<p>Wie lang war die Reaktion auf das farbige Quadrat?</p>",
-    button_label: "Weiter",
+    stimulus: function () {
+        let dat = jsPsych.data.get().last(2).values()[0];
+        display_slider(dat.correct);
+    },
+    labels: PRMS.slider_labels,
+    prompt: PRMS.slider_prompt,
+    slider_prompt_size: PRMS.slider_prompt_size,
+    slider_ticks_size: PRMS.slider_ticks_size,
+    button_label: `Nachdem Sie eine Zeit gewählt müssen Sie Ihre Zeigefinger<br> zurück auf die ${PRMS.resp_keys[0]} und ${PRMS.resp_keys[1]} Tasten legen und die Leertaste <br>drücken, um den nächsten Durchgang starten.`,
+    on_finish: function () {
+        code_trial();
+    },
+};
+
+const IF_NODE_FREE_FORCED = {
+    timeline: [VAS],
+    conditional_function: function () {
+        let dat = jsPsych.data.get().last(2).values()[0];
+        return dat.task_type !== "catch";
+    },
+};
+
+function draw_catch_feedback(args) {
+    "use strict";
+    let ctx = document.getElementById("canvas").getContext("2d");
+
+    // show additional error
+    ctx.textAlign = "center";
+    ctx.font = PRMS.trial_feedback_text_font;
+    ctx.fillStyle = PRMS.trial_feedback_text_colour;
+    ctx.fillText(
+        PRMS.trial_feedback_text_catch[args.correct],
+        PRMS.trial_feedback_text_position_catch[0],
+        PRMS.trial_feedback_text_position_catch[1],
+    );
+}
+
+const CATCH_FEEDBACK = {
+    type: jsPsychStaticCanvasKeyboardResponse,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    translate_origin: true,
+    response_ends_trial: false,
+    trial_duration: null,
+    func: draw_catch_feedback,
+    on_start: function (trial) {
+        let dat = jsPsych.data.get().last(2).values()[0];
+        trial.trial_duration = PRMS.trial_feedback_duration_catch[dat.correct];
+        trial.func_args = [{ correct: dat.correct }];
+    },
+};
+
+const IF_NODE_CATCH = {
+    timeline: [CATCH_FEEDBACK],
+    conditional_function: function () {
+        let dat = jsPsych.data.get().last(2).values()[0];
+        return dat.task_type === "catch";
+    },
+};
+
+const ERROR_MAPPING = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: "",
+    response_ends_trial: false,
+    trial_duration: PRMS.wait_duration,
+    on_start: function (trial) {
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Zur Erinnerung:<br>`,
+                align: "left",
+                colour: "black",
+                fontsize: 38,
+                lineheight: 1.25,
+            }) + RESP_MAPPING;
+    },
+};
+
+const IF_NODE_ERROR = {
+    timeline: [ERROR_MAPPING],
+    conditional_function: function () {
+        let dat = jsPsych.data.get().last(3).values()[0];
+        return dat.correct === 0;
+    },
 };
 
 function draw_stimulus(args) {
@@ -350,7 +503,7 @@ function draw_stimulus(args) {
 
     // draw frame
     ctx.beginPath();
-    ctx.lineWidth = args.discriminability === "low" ? PRMS.frame_width[0] : PRMS.frame_width[1];
+    ctx.lineWidth = args.discrim === "low" ? PRMS.frame_width[0] : PRMS.frame_width[1];
     ctx.strokeStyle = args.discrim === "low" ? PRMS.resp_colours_low[args.colour] : PRMS.resp_colours_high[args.colour];
     ctx.rect(
         -(PRMS.frame_size[0] / 2) + PRMS.frame_position[0],
@@ -359,6 +512,58 @@ function draw_stimulus(args) {
         PRMS.frame_size[1],
     );
     ctx.stroke();
+}
+
+function code_trial() {
+    "use strict";
+    let dat = jsPsych.data.get().last(1).values()[0];
+    let correct;
+    if (dat.stim === "task") {
+        if (PERFORMANCE.previous_key !== null) {
+            if (PERFORMANCE.previous_key === dat.key_press) {
+                PERFORMANCE.free_choice_sequence["repeat"] += 1;
+            } else if (PERFORMANCE.previous_key !== dat.key_press) {
+                PERFORMANCE.free_choice_sequence["switch"] += 1;
+            }
+        }
+        PERFORMANCE.previous_key = dat.key_press;
+        if (dat.task_type === "forced") {
+            // one correct response
+            correct = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_response1) ? 1 : 0;
+        } else if (dat.task_type === "free") {
+            // both responses correct
+            let correct1 = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_response1) ? 1 : 0;
+            let correct2 = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_response2) ? 1 : 0;
+            correct = correct1 || correct2;
+            PERFORMANCE.free_choice_count[dat.key_press.toUpperCase()] += 1;
+        } else if (dat.task_type === "catch") {
+            // NoGo response
+            if (dat.rt === null) {
+                dat.rt = PRMS.trial_timeout;
+                dat.key_press = "na";
+                correct = 1;
+            } else {
+                correct = 0;
+            }
+        }
+        dat.response = null;
+        dat.slider_start = null;
+    } else {
+        let datp = jsPsych.data.get().last(3).values()[0];
+        correct = datp.correct;
+        dat.task_rt = datp.rt;
+        dat.task_key = datp.key_press;
+        dat.slider_rt = dat.rt;
+    }
+    if (correct === 0) {
+        PERFORMANCE.errors += 1;
+    }
+    jsPsych.data.addDataToLastTrial({
+        date: Date(),
+        block_number: PRMS.count_block,
+        trial_number: PRMS.count_trial,
+        correct: correct,
+    });
 }
 
 // prettier-ignore
@@ -373,7 +578,7 @@ const STIMULUS = {
   func: draw_stimulus,
   func_args: null,
   data: {
-    stim: 'ic',
+    stim: 'task',
     task_type: jsPsych.timelineVariable("task_type"),
     colour: jsPsych.timelineVariable("colour"),
     discriminability: jsPsych.timelineVariable("discriminability"),
@@ -387,8 +592,7 @@ const STIMULUS = {
     trial.func_args = [{colour: trial.data.colour, discrim: trial.data.discriminability}];
   },
   on_finish: function() {
-    // code_trial();
-    PRMS.count_trial += 1;
+    code_trial();
   },
 };
 
@@ -404,6 +608,24 @@ const ITI = {
     response_ends_trial: false,
     trial_duration: PRMS.iti,
     func: draw_iti,
+    func_args: null,
+    on_finish: function () {
+        PRMS.count_trial += 1;
+    },
+};
+
+function draw_rsi() {}
+
+const RSI = {
+    type: jsPsychStaticCanvasKeyboardResponse,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: "",
+    translate_origin: true,
+    response_ends_trial: false,
+    trial_duration: PRMS.rsi,
+    func: draw_rsi,
     func_args: null,
 };
 
@@ -426,8 +648,7 @@ const TRIAL_TABLE = [
 ];
 
 const TRIAL_TIMELINE = {
-    //timeline: [FIXATION_CROSS, STIMULUS, ITI],
-    timeline: [trial],
+    timeline: [FIXATION_CROSS, STIMULUS, RSI, IF_NODE_FREE_FORCED, IF_NODE_CATCH, IF_NODE_ERROR, ITI],
     timeline_variables: TRIAL_TABLE,
 };
 
@@ -442,8 +663,24 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    saveData("/Common7+/write_data.php", data_fn, { stim: "ic" });
-    //saveDataLocal(data_fn, { stim: "ic" });
+    saveData("/Common7+/write_data.php", data_fn, [{ stim: "vas" }], "csv", [
+        "stimulus",
+        "trial_type",
+        "internal_node_id",
+        "trial_index",
+        "time_elapsed",
+        "rt",
+        "key_press",
+    ]);
+    //saveDataLocal(data_fn, [{ stim: "vas" }], "csv", [
+    //    "stimulus",
+    //    "trial_type",
+    //    "internal_node_id",
+    //    "trial_index",
+    //    "time_elapsed",
+    //    "rt",
+    //    "key_press",
+    //]);
 }
 
 const SAVE_DATA = {
@@ -460,32 +697,35 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(CANVAS_SIZE));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de_copyright.html"));
-    // exp.push(mouseCursor(false));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(CANVAS_SIZE));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de_copyright.html"));
 
     // general instructions
-    //exp.push(TASK_INSTRUCTIONS1);
-    // exp.push(TASK_INSTRUCTIONS2);
-    // exp.push(TASK_INSTRUCTIONS3);
-    // exp.push(TASK_INSTRUCTIONS4);
-    // exp.push(BLOCK_START);
-    /// exp.push(BLOCK_END);
-    exp.push(TRIAL_TIMELINE);
+    exp.push(TASK_INSTRUCTIONS1);
+    exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
+    exp.push(TASK_INSTRUCTIONS4);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
-        // let blk_timeline;
+        exp.push(BLOCK_START);
+        let blk_timeline;
+        blk_timeline = { ...TRIAL_TIMELINE };
+        blk_timeline.sample = {
+            type: "fixed-repetitions",
+            size: 1, //PRMS.n_trials / TRIAL_TABLE.length,
+        };
+        exp.push(blk_timeline); // trials within a block
+        exp.push(BLOCK_END);
     }
 
     exp.push(SAVE_DATA);
 
-    // // debrief
-    // exp.push(mouseCursor(true));
-    // exp.push(end_message());
-    // exp.push(fullscreen(false));
+    // debrief
+    exp.push(end_message());
+    exp.push(fullscreen(false));
 
     return exp;
 }
