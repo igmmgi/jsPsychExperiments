@@ -48,8 +48,8 @@ const PRMS = {
     fix_size: 10, // duration of the fixation cross
     fix_width: 3, // size of fixation cross
     fix_colour: "Black", // colour of the fixation cross
-    wait_duration: 20000, // duration following block feedback screen + errors
-    block_end_wait_duration: 20000, // duration following block feedback screen
+    wait_duration: 2000, // duration following block feedback screen + errors
+    block_end_wait_duration: 2000, // duration following block feedback screen
     iti: 500, // duration of inter-trial-interval
     rsi: 500, // duration of interval between rt response and slider scale
     trial_timeout: 1500, // time out duration for NoGo trials
