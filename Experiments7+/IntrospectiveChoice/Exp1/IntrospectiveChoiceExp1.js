@@ -42,8 +42,8 @@ const CANVAS_BORDER = "0px solid black";
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    n_blocks: 9, // number of blocks association phase
-    n_trials: 16, // number of trials association phase practice block
+    n_blocks: 9, // number of blocks
+    n_trials: 70, // number of trials
     fix_duration: 500, // duration of fixation cross
     fix_size: 10, // duration of the fixation cross
     fix_width: 3, // size of fixation cross
@@ -178,7 +178,7 @@ const TASK_INSTRUCTIONS3 = {
             text: `Nachdem du mit dem Tastendruck auf das Quadrat reagiert hast, sollst du einschätzen, wie
 lange du in diesem Durchgang gebraucht hast, um auf das Quadrat zu reagieren. Hierzu siehst
 du folgende Skala:<br><br>
-PICTURE<br><br>
+ <img src="./images/slider.png" width="100%"><br><br>
 Verwende den Cursor mit deiner Maus/Touchpad, um eine Zeit auf der Skala auszuwählen.
 Klicke dann mit der linken Maus-/Touchpad-taste auf die Zeit, von der du denkst, dass sie
 Deiner Reaktionszeit entspricht (vom Erscheinen des Quadrats bis zum Tastendruck).<br><br>
@@ -703,7 +703,6 @@ function genExpSeq() {
     exp.push(welcome_message());
     exp.push(vpInfoForm("/Common7+/vpInfoForm_de_copyright.html"));
 
-    // general instructions
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
     exp.push(TASK_INSTRUCTIONS3);
@@ -715,7 +714,7 @@ function genExpSeq() {
         blk_timeline = { ...TRIAL_TIMELINE };
         blk_timeline.sample = {
             type: "fixed-repetitions",
-            size: 1, //PRMS.n_trials / TRIAL_TABLE.length,
+            size: PRMS.n_trials / TRIAL_TABLE.length,
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_END);
