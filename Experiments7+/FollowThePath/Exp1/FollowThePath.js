@@ -26,7 +26,7 @@ const p5js = new p5((sketch) => {
 });
 
 const PRMS = {
-    n_trials: 1, // number of trials per block
+    n_trials: 4, // number of trials per block
     n_blocks: 4, // number of blocks (must be multiple of 4)
     randomise_block_order: false,
     iti: 500, // duration of the inter-trial-interval
@@ -93,11 +93,11 @@ class Path {
     }
 
     // position within canvas and scale
-    perlin_noice_coordinates(value) {
+    perlin_noise_coordinates(noise_value, speed_value) {
         let xpos = CANVAS_SIZE[0] * 0.75;
         let start = Math.round(Math.random() * xpos);
         for (let i = start; i < start + this.x.length; i++) {
-            this.x[i - start] = p5js.noise(i / value) * xpos + CANVAS_SIZE[1] / 2 - xpos / 4;
+            this.x[i - start] = p5js.noise((i / noise_value) * speed_value) * xpos + CANVAS_SIZE[1] / 2 - xpos / 4;
         }
     }
 
@@ -244,7 +244,10 @@ const TRIAL = {
     },
     on_start: function (trial) {
         PATH.reset(PRMS.speed_difficulty[trial.data.speed_difficulty]);
-        PATH.perlin_noice_coordinates(PRMS.path_difficulty[trial.data.path_difficulty]);
+        PATH.perlin_noise_coordinates(
+            PRMS.path_difficulty[trial.data.path_difficulty],
+            PRMS.speed_difficulty[trial.data.speed_difficulty],
+        );
         BALL.reset(PATH.y.length);
         BALL.set_speed(PRMS.speed_difficulty[trial.data.speed_difficulty]);
         BALL.set_x_position(PATH.x[0]);
@@ -417,7 +420,7 @@ function genExpSeq() {
     blk_type = repEach(blk_type, PRMS.n_blocks / 4);
 
     let blk_timeline;
-    for (let blk = 0; blk < PRMS.n_blocks / 2; blk += 1) {
+    for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
         exp.push(BLOCK_START); // trials within a block
         if (blk_type[blk] === "easy_path_easy_speed") {
             blk_timeline = { ...TRIAL_TIMELINE_EASY_PATH_EASY_SPEED };
