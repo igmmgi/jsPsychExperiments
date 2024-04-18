@@ -87,11 +87,11 @@ const PRMS = {
     slider_range: [0, 1500],
     slider_labels: ["0 ms", "1500 ms"],
     slider_ticks_interval: 1500,
-    slider_ticks_length: 0,
-    slider_ticks_offset: -2,
-    slider_ticks_size: 30,
-    slider_prompt_position: [0, -50],
-    slider_prompt_text_font: "25px monospace",
+    slider_ticks_length: 10,
+    slider_ticks_offset: 40,
+    slider_ticks_font: "25px monospace",
+    slider_prompt_position: [0, -100],
+    slider_prompt_text_font: "30px monospace",
     slider_prompt_text_colour: "Black",
     trial_feedback_position: [0, -100],
     trial_feedback_text: ["Falsch!", ""],
@@ -387,18 +387,22 @@ function display_slider() {
     ctx.fillStyle = PRMS.slider_prompt_text_colour;
     ctx.fillText(PRMS.slider_prompt, PRMS.slider_prompt_position[0], PRMS.slider_prompt_position[1]);
 
-    //ctx.lineWidth = PRMS.fix_width;
-    //ctx.strokeStyle = PRMS.fix_colour;
-    //for (
-    //    let x = -PRMS.slider_width / 2;
-    //    x <= PRMS.slider_width / 2 + 1;
-    //    x += PRMS.slider_ticks_interval * (PRMS.slider_width / PRMS.slider_range[1])
-    //) {
-    //    ctx.stroke();
-    //    ctx.moveTo(x, PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
-    //    ctx.lineTo(x, -PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
-    //    ctx.stroke();
-    //}
+    ctx.lineWidth = PRMS.fix_width;
+    ctx.strokeStyle = PRMS.fix_colour;
+    ctx.font = PRMS.slider_ticks_font;
+    let i = 0;
+    for (
+        let x = -PRMS.slider_width / 2;
+        x <= PRMS.slider_width / 2 + 1;
+        x += PRMS.slider_ticks_interval * (PRMS.slider_width / PRMS.slider_range[1])
+    ) {
+        ctx.stroke();
+        ctx.moveTo(x, PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
+        ctx.lineTo(x, -PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
+        ctx.stroke();
+        ctx.fillText(PRMS.slider_labels[i], x, 0);
+        i += 1;
+    }
 }
 
 const VAS = {
@@ -423,10 +427,6 @@ const VAS = {
     stimulus: function () {
         display_slider();
     },
-    labels: PRMS.slider_labels,
-    prompt: PRMS.slider_prompt,
-    slider_prompt_size: PRMS.slider_prompt_size,
-    slider_ticks_size: PRMS.slider_ticks_size,
     button_label: null,
     on_start: function (trial) {
         if (PRMS.count_block === 1) {
@@ -727,19 +727,19 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(CANVAS_SIZE));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de_copyright.html"));
+    exp.push(fullscreen(true));
+    exp.push(browser_check(CANVAS_SIZE));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de_copyright.html"));
 
-    // exp.push(TASK_INSTRUCTIONS1);
-    // exp.push(TASK_INSTRUCTIONS2);
-    // exp.push(TASK_INSTRUCTIONS3);
-    // exp.push(TASK_INSTRUCTIONS4);
+    exp.push(TASK_INSTRUCTIONS1);
+    exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
+    exp.push(TASK_INSTRUCTIONS4);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
-        //exp.push(BLOCK_START);
+        exp.push(BLOCK_START);
         let blk_timeline;
         blk_timeline = { ...TRIAL_TIMELINE };
         blk_timeline.sample = {

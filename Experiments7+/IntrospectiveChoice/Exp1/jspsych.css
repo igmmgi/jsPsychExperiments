@@ -76,17 +76,6 @@
     border-color: #787878; /*#ccc;*/
 }
 
-datalist {
-    display: flex;
-    justify-content: space-between;
-    color: Black;
-    width: 100%;
-}
-
-/* input { */
-/*     width: 100%; */
-/* } */
-
 /* only apply the hover style on devices with a mouse/pointer that can hover - issue #977 */
 @media (hover: hover) {
     .jspsych-btn:hover {
