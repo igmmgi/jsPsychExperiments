@@ -29,7 +29,16 @@
 // free choice trials for 20 seconds
 // Also, reminder if >10% errors made
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.count_block >= 9) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=348&credit_token=367cea26e45247c0b58016ab4fcfdd0a&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -42,16 +51,17 @@ const CANVAS_BORDER = "0px solid black";
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    n_blocks: 9, // number of blocks
+    n_blocks: 1, //9, // number of blocks
     n_trials: 70, // number of trials
     fix_duration: 500, // duration of fixation cross
     fix_size: 10, // duration of the fixation cross
     fix_width: 3, // size of fixation cross
     fix_colour: "Black", // colour of the fixation cross
-    wait_duration: 2000, // duration following block feedback screen + errors
-    block_end_wait_duration: 2000, // duration following block feedback screen
-    iti: 500, // duration of inter-trial-interval
-    rsi: 500, // duration of interval between rt response and slider scale
+    wait_duration: 2500, // duration following block feedback screen + errors
+    stimulus_duration: 400, // duration of stimulus
+    block_end_wait_duration: 20000, // duration following block feedback screen
+    iti: 700, // duration of inter-trial-interval
+    rsi: 100, // duration of interval between rt response and slider scale
     trial_timeout: 1500, // time out duration for NoGo trials
     resp_keys: ["X", "M"],
     resp_colours: shuffle(["Red", "Blue", "Green", "Yellow"]),
@@ -75,9 +85,9 @@ const PRMS = {
     slider_start: 750,
     slider_width: 800,
     slider_range: [0, 1500],
-    slider_labels: ["0 ms", "750 ms", "1500 ms"],
-    slider_ticks_interval: 250,
-    slider_ticks_length: 10,
+    slider_labels: ["0 ms", "1500 ms"],
+    slider_ticks_interval: 1500,
+    slider_ticks_length: 0,
     slider_ticks_offset: -2,
     slider_ticks_size: 30,
     slider_prompt_position: [0, -50],
@@ -86,7 +96,7 @@ const PRMS = {
     trial_feedback_position: [0, -100],
     trial_feedback_text: ["Falsch!", ""],
     trial_feedback_text_font: "50px monospace",
-    trial_feedback_text_colour: "Red",
+    trial_feedback_text_colour: "Black",
     trial_feedback_text_position: [0, 0],
     trial_feedback_duration_catch: [1000, 500], // feedback duration catch trials [error, correct]
     trial_feedback_text_catch: ["Falsch!", "Richtig!"], // feedback text catch trials [error, correct]
@@ -102,6 +112,7 @@ const PERFORMANCE = {
     free_choice_count: { [PRMS.resp_keys[0]]: 0, [PRMS.resp_keys[1]]: 0 },
     free_choice_sequence: { repeat: 0, switch: 0 },
     errors: 0,
+    task_correct: null,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -173,16 +184,19 @@ const TASK_INSTRUCTIONS3 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
+    response_ends_trial: false,
+    trial_duration: PRMS.block_end_wait_duration,
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `Nachdem du mit dem Tastendruck auf das Quadrat reagiert hast, sollst du einschätzen, wie
-lange du in diesem Durchgang gebraucht hast, um auf das Quadrat zu reagieren. Hierzu siehst
-du folgende Skala:<br><br>
- <img src="./images/slider.png" width="100%"><br><br>
-Verwende den Cursor mit deiner Maus/Touchpad, um eine Zeit auf der Skala auszuwählen.
-Klicke dann mit der linken Maus-/Touchpad-taste auf die Zeit, von der du denkst, dass sie
-Deiner Reaktionszeit entspricht (vom Erscheinen des Quadrats bis zum Tastendruck).<br><br>
-                  Drücke eine beliebige Taste, um fortzufahren.`,
+            text: `WICHTIG: Wie beschrieben, darfst du zwar entscheiden, mit welchem Finger/Taste du
+antwortest, wenn das Quadrat <span style="color:${PRMS.resp_colours[2]};">${
+                DE_EN[PRMS.resp_colours[2]]
+            }</span> ist, aber du sollst in jedem Durchgang zufällig
+entscheiden, welche Antwort du wählst, ohne irgendwelche Strategien zu verwenden.
+Versuche, beide Antworten ungefähr gleich häufig auszuwählen, aber du sollst nicht mitzählen
+oder vorplanen. Versuche einfach, in jedem Durchgang mit freier Wahl dich spontan/zufällig
+für eine Antwort zu entscheiden.<br><br>
+Es geht in 20 Sekunden automatisch weiter.`,
             align: "left",
             colour: "black",
             fontsize: 28,
@@ -197,19 +211,16 @@ const TASK_INSTRUCTIONS4 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: "",
-    response_ends_trial: false,
-    trial_duration: PRMS.wait_duration,
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `WICHTIG: Wie beschrieben, darfst du zwar entscheiden, mit welchem Finger/Taste du
-antwortest, wenn das Quadrat <span style="color:${PRMS.resp_colours[2]};">${
-                DE_EN[PRMS.resp_colours[2]]
-            }</span> ist, aber du sollst in jedem Durchgang zufällig
-entscheiden, welche Antwort du wählst, ohne irgendwelche Strategien zu verwenden.
-Versuche, beide Antworten ungefähr gleich häufig auszuwählen, aber du sollst nicht mitzählen
-oder vorplanen. Versuche einfach, in jedem Durchgang mit freier Wahl dich spontan/zufällig
-für eine Antwort zu entscheiden.<br><br>
-Es geht in 20 Sekunden automatisch weiter.`,
+            text: `Nachdem du mit dem Tastendruck auf das Quadrat reagiert hast, sollst du einschätzen, wie
+lange du in diesem Durchgang gebraucht hast, um auf das Quadrat zu reagieren. Hierzu siehst
+du folgende Skala:<br><br>
+ <img src="./images/slider.png" width="100%"><br><br>
+Verwende den Cursor mit deiner Maus/Touchpad, um eine Zeit auf der Skala auszuwählen.
+Klicke dann mit der linken Maus-/Touchpad-taste auf die Zeit, von der du denkst, dass sie
+Deiner Reaktionszeit entspricht (vom Erscheinen des Quadrats bis zum Tastendruck).<br><br>
+                  Drücke eine beliebige Taste, um fortzufahren.`,
             align: "left",
             colour: "black",
             fontsize: 28,
@@ -236,9 +247,9 @@ Reagiere zunächst auf das Quadrat wie folgt:`,
             }) +
             RESP_MAPPING +
             generate_formatted_html({
-                text: `Beachte: Entscheide dich in jedem Durchgang zufällig für eine Antwort ohne irgendwelche
-Strategien zu verwenden, wenn du die Wahl hast.Mit der linken Maus/Touchpad-taste sollst Du nach jedem Durchgang einschätzen, wie lange
-du für deine Reaktion gebraucht hast.<br><br>
+                text: `<span style="font-weight: bold;">Beachte:</span> Entscheide dich in jedem Durchgang zufällig für eine Antwort ohne irgendwelche
+Strategien zu verwenden, wenn du die Wahl hast.<br><span style="font-weight: bold;">Beachte auch: </span>Mit der linken Maus/Touchpad-taste sollst Du nach jedem Durchgang einschätzen, wie lange
+du für deine Reaktion gebraucht hast.Nachdem Du eine Zeit gewählt hast, müssen die Finger wieder auf der ${PRMS.resp_keys[0]} bzw. ${PRMS.resp_keys[1]} Taste liegen, bevor Du den nächsten Durchgang mit der Leertaste startest.<br><br>
              Drücke eine beliebige Taste, um fortzufahren.</span>`,
                 align: "left",
                 colour: "black",
@@ -332,6 +343,7 @@ Kurze Pause. Drücke die Leertaste um fortzufahren.`,
         PERFORMANCE.free_choice_count = { [PRMS.resp_keys[0]]: 0, [PRMS.resp_keys[1]]: 0 };
         PERFORMANCE.free_choice_sequence = { repeat: 0, switch: 0 };
         PERFORMANCE.errors = 0;
+        PERFORMANCE.task_correct = null;
     },
 };
 ////////////////////////////////////////////////////////////////////////
@@ -362,31 +374,31 @@ const FIXATION_CROSS = {
     func: draw_fixation_cross,
 };
 
-function display_slider(correct) {
+function display_slider() {
     let ctx = document.getElementById("canvas").getContext("2d");
 
-    // show additional error
-    ctx.textAlign = "center";
-    ctx.font = PRMS.trial_feedback_text_font;
-    ctx.fillStyle = PRMS.trial_feedback_text_colour;
-    ctx.fillText(PRMS.trial_feedback_text[correct], PRMS.trial_feedback_position[0], PRMS.trial_feedback_position[1]);
+    // // show additional error
+    // ctx.font = PRMS.trial_feedback_text_font;
+    // ctx.fillStyle = PRMS.trial_feedback_text_colour;
+    // ctx.fillText(PRMS.trial_feedback_text[correct], PRMS.trial_feedback_position[0], PRMS.trial_feedback_position[1]);
 
+    ctx.textAlign = "center";
     ctx.font = PRMS.slider_prompt_text_font;
     ctx.fillStyle = PRMS.slider_prompt_text_colour;
     ctx.fillText(PRMS.slider_prompt, PRMS.slider_prompt_position[0], PRMS.slider_prompt_position[1]);
 
-    ctx.lineWidth = PRMS.fix_width;
-    ctx.strokeStyle = PRMS.fix_colour;
-    for (
-        let x = -PRMS.slider_width / 2;
-        x <= PRMS.slider_width / 2 + 1;
-        x += PRMS.slider_ticks_interval * (PRMS.slider_width / PRMS.slider_range[1])
-    ) {
-        ctx.stroke();
-        ctx.moveTo(x, PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
-        ctx.lineTo(x, -PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
-        ctx.stroke();
-    }
+    //ctx.lineWidth = PRMS.fix_width;
+    //ctx.strokeStyle = PRMS.fix_colour;
+    //for (
+    //    let x = -PRMS.slider_width / 2;
+    //    x <= PRMS.slider_width / 2 + 1;
+    //    x += PRMS.slider_ticks_interval * (PRMS.slider_width / PRMS.slider_range[1])
+    //) {
+    //    ctx.stroke();
+    //    ctx.moveTo(x, PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
+    //    ctx.lineTo(x, -PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
+    //    ctx.stroke();
+    //}
 }
 
 const VAS = {
@@ -409,14 +421,20 @@ const VAS = {
         correct_response2: jsPsych.timelineVariable("correct_response2"),
     },
     stimulus: function () {
-        let dat = jsPsych.data.get().last(2).values()[0];
-        display_slider(dat.correct);
+        display_slider();
     },
     labels: PRMS.slider_labels,
     prompt: PRMS.slider_prompt,
     slider_prompt_size: PRMS.slider_prompt_size,
     slider_ticks_size: PRMS.slider_ticks_size,
-    button_label: `Nachdem Sie eine Zeit gewählt müssen Sie Ihre Zeigefinger<br> zurück auf die ${PRMS.resp_keys[0]} und ${PRMS.resp_keys[1]} Tasten legen und die Leertaste <br>drücken, um den nächsten Durchgang starten.`,
+    button_label: null,
+    on_start: function (trial) {
+        if (PRMS.count_block === 1) {
+            trial.button_label = `Nachdem Du eine Zeit gewählt hast, müssen die Finger wieder auf der <br>${PRMS.resp_keys[0]} bzw. ${PRMS.resp_keys[1]} Taste liegen, bevor Du den nächsten Durchgang mit der Leertaste startest.`;
+        } else {
+            trial.button_label = `<br><br><br>`;
+        }
+    },
     on_finish: function () {
         code_trial();
     },
@@ -425,7 +443,12 @@ const VAS = {
 const IF_NODE_FREE_FORCED = {
     timeline: [VAS],
     conditional_function: function () {
-        let dat = jsPsych.data.get().last(2).values()[0];
+        let dat;
+        if (PERFORMANCE.task_correct === 1) {
+            dat = jsPsych.data.get().last(2).values()[0];
+        } else {
+            dat = jsPsych.data.get().last(3).values()[0];
+        }
         return dat.task_type !== "catch";
     },
 };
@@ -441,7 +464,7 @@ function draw_catch_feedback(args) {
     ctx.fillText(
         PRMS.trial_feedback_text_catch[args.correct],
         PRMS.trial_feedback_text_position_catch[0],
-        PRMS.trial_feedback_text_position_catch[1],
+        PRMS.trial_feedback_text_position_catch[1] + 20,
     );
 }
 
@@ -480,7 +503,7 @@ const ERROR_MAPPING = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Zur Erinnerung:<br>`,
+                text: `Falsch!<br>`,
                 align: "left",
                 colour: "black",
                 fontsize: 38,
@@ -492,7 +515,7 @@ const ERROR_MAPPING = {
 const IF_NODE_ERROR = {
     timeline: [ERROR_MAPPING],
     conditional_function: function () {
-        let dat = jsPsych.data.get().last(3).values()[0];
+        let dat = jsPsych.data.get().last(2).values()[0];
         return dat.correct === 0;
     },
 };
@@ -548,8 +571,14 @@ function code_trial() {
         }
         dat.response = null;
         dat.slider_start = null;
+        PERFORMANCE.task_correct = correct;
     } else {
-        let datp = jsPsych.data.get().last(3).values()[0];
+        let datp;
+        if (PERFORMANCE.task_correct) {
+            datp = jsPsych.data.get().last(3).values()[0];
+        } else {
+            datp = jsPsych.data.get().last(4).values()[0];
+        }
         correct = datp.correct;
         dat.task_rt = datp.rt;
         dat.task_key = datp.key_press;
@@ -574,6 +603,7 @@ const STIMULUS = {
   canvas_border: CANVAS_BORDER,
   translate_origin: true,
   response_ends_trial: true,
+  stimulus_duration: PRMS.stimulus_duration,
   choices: PRMS.resp_keys,
   func: draw_stimulus,
   func_args: null,
@@ -648,7 +678,7 @@ const TRIAL_TABLE = [
 ];
 
 const TRIAL_TIMELINE = {
-    timeline: [FIXATION_CROSS, STIMULUS, RSI, IF_NODE_FREE_FORCED, IF_NODE_CATCH, IF_NODE_ERROR, ITI],
+    timeline: [FIXATION_CROSS, STIMULUS, RSI, IF_NODE_ERROR, IF_NODE_FREE_FORCED, IF_NODE_CATCH, ITI],
     timeline_variables: TRIAL_TABLE,
 };
 
@@ -672,7 +702,7 @@ function save() {
         "rt",
         "key_press",
     ]);
-    //saveDataLocal(data_fn, [{ stim: "vas" }], "csv", [
+    //saveDataLocal(data_fn, [{ stim: "task" }, { stim: "vas" }], "csv", [
     //    "stimulus",
     //    "trial_type",
     //    "internal_node_id",
@@ -697,19 +727,19 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check(CANVAS_SIZE));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de_copyright.html"));
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(CANVAS_SIZE));
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de_copyright.html"));
 
-    exp.push(TASK_INSTRUCTIONS1);
-    exp.push(TASK_INSTRUCTIONS2);
-    exp.push(TASK_INSTRUCTIONS3);
-    exp.push(TASK_INSTRUCTIONS4);
+    // exp.push(TASK_INSTRUCTIONS1);
+    // exp.push(TASK_INSTRUCTIONS2);
+    // exp.push(TASK_INSTRUCTIONS3);
+    // exp.push(TASK_INSTRUCTIONS4);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
-        exp.push(BLOCK_START);
+        //exp.push(BLOCK_START);
         let blk_timeline;
         blk_timeline = { ...TRIAL_TIMELINE };
         blk_timeline.sample = {

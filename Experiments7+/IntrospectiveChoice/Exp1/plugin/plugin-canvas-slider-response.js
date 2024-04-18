@@ -137,32 +137,69 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 "" +
                 "</div><br><br><br><br><br><br><br>";
 
-            html +=
-                '<input type="range" class="slider" value="' +
-                trial.slider_start +
-                '" min="' +
-                trial.min +
-                '" max="' +
-                trial.max +
-                '" step="' +
-                trial.step +
-                `" style="width: ${trial.slider_width}px;" id="jspsych-canvas-slider-response-response"></input>`;
-            html += "<div>";
-            for (var j = 0; j < trial.labels.length; j++) {
-                var width = trial.slider_width / (trial.labels.length - 1);
-                var left_offset = j * (trial.slider_width / (trial.labels.length - 1)) - width / 2;
-                html +=
-                    '<div style="float: left; left:' +
-                    left_offset +
-                    "px; text-align: center; width: " +
-                    width +
-                    'px;">';
-                html +=
-                    `<span style="text-align: center; font-size: ${trial.slider_ticks_size}px;">` +
-                    trial.labels[j] +
-                    "</span>";
-                html += "</div>";
-            }
+            // html +=
+            //     '<input type="range" class="jspsych-slider" value="' +
+            //     trial.slider_start +
+            //     '" min="' +
+            //     trial.min +
+            //     '" max="' +
+            //     trial.max +
+            //     '" step="' +
+            //     trial.step +
+            //     `" style="width: ${trial.slider_width}px;" id="jspsych-canvas-slider-response-response"></input>`;
+            // html += "<div>";
+
+            html += `<input type="range" min=0 max = 1500 style="width: 100%;" id="jspsych-canvas-slider-response-response" list="tickmarks"> 
+            <datalist id="tickmarks">
+                <option value="0" label="0 ms"></option>
+                <option value="1500" label="1500 ms"></option>
+            </datalist>`;
+
+            // html +=
+            //     `<label for "test" class="pull-left">test</label>` +
+            //     `<label for "" class="pull-right">1500ms</label>` +
+            //     '<input type="range" class="jspsych-slider" value="' +
+            //     trial.slider_start +
+            //     '" min="' +
+            //     trial.min +
+            //     '" max="' +
+            //     trial.max +
+            //     '" step="' +
+            //     trial.step +
+            //     '" style="width: 50%;" id="jspsych-canvas-slider-response-response"></input>';
+            // html += "<div>" + `<label for "test" class="pull-right">test</label>`;
+
+            //for (var j = 0; j < trial.labels.length; j++) {
+            //    var width = 100 / (trial.labels.length - 1);
+            //    var left_offset = j * (100 / (trial.labels.length - 1)) - width / 2;
+            //    html +=
+            //        '<div style="display: inline-block; position: absolute; left:' +
+            //        left_offset +
+            //        "%; text-align: center; width: " +
+            //        width +
+            //        '%;">';
+            //    html += '<span style="text-align: center; font-size: 80%;">' + trial.labels[j] + "</span>";
+            //    html += "</div>";
+            //}
+            //html += "</div>";
+            //html += "</div>";
+            //html += "</div>";
+
+            //for (var j = 0; j < trial.labels.length; j++) {
+            //    var width = trial.slider_width / (trial.labels.length - 1);
+            //    var left_offset = j * (trial.slider_width / (trial.labels.length - 1)) - width / 2;
+            //    html +=
+            //        '<div style="float: left; left:' +
+            //        left_offset +
+            //        "px; text-align: center; width: " +
+            //        width +
+            //        'px;">';
+            //    html +=
+            //        `<span style="text-align: center; font-size: ${trial.slider_ticks_size}px;">` +
+            //        trial.labels[j] +
+            //        "</span>";
+            //    html += "</div>";
+            //}
 
             html += "</div>";
             html += "<br></div>";
