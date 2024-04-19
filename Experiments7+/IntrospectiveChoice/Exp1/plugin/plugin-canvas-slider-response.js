@@ -131,7 +131,7 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 trial.max +
                 '" step="' +
                 trial.step +
-                `" style="width: ${trial.slider_width}px;" id="jspsych-canvas-slider-response-response"></input></div>`;
+                `" style="width: ${trial.slider_width}px; cursor: none;" id="jspsych-canvas-slider-response-response"></input></div>`;
 
             // allow spacebar to activate click button
             window.onkeydown = function (event) {
@@ -159,6 +159,13 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 ctx.translate(canvas.width / 2, canvas.height / 2); // make center (0, 0)
             }
 
+            function onmousemove() {
+                console.log("moving");
+                $("body").css("cursor", true ? "pointer" : "none");
+                document.getElementById("jspsych-canvas-slider-response-response").style.cursor = "pointer";
+            }
+
+            addEventListener("mousemove", onmousemove);
             // draw
             let c = document.getElementById("jspsych-canvas-stimulus");
             trial.stimulus(c);
@@ -177,7 +184,10 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 display_element.innerHTML = "";
                 window.onkeydown = null;
 
+                removeEventListener("mousemove", onmousemove);
+
                 // next trial
+                $("body").css("cursor", false ? "default" : "none");
                 this.jsPsych.finishTrial(trialdata);
             };
             if (trial.require_movement) {

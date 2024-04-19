@@ -51,7 +51,7 @@ const CANVAS_BORDER = "0px solid black";
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    n_blocks: 1, //9, // number of blocks
+    n_blocks: 9, // number of blocks
     n_trials: 70, // number of trials
     fix_duration: 500, // duration of fixation cross
     fix_size: 10, // duration of the fixation cross
@@ -618,6 +618,8 @@ const STIMULUS = {
   on_start: function(trial) {
     if (trial.data.task_type === "catch") {
       trial.trial_duration = PRMS.trial_timeout;
+    } else {
+      trial.trial_duration = null;
     }
     trial.func_args = [{colour: trial.data.colour, discrim: trial.data.discriminability}];
   },
@@ -665,16 +667,16 @@ const TRIAL_TABLE = [
     { task_type: "forced", colour: PRMS.resp_colours[1], discriminability: "low",  correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[1])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[0], discriminability: "high", correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[0])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[1], discriminability: "high", correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[1])], correct_response2: "na"},
-    { task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "low",  correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
-    { task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "high", correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
+    //{ task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "low",  correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
+    //{ task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "high", correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
     { task_type: "forced", colour: PRMS.resp_colours[0], discriminability: "low",  correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[0])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[1], discriminability: "low",  correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[1])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[0], discriminability: "high", correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[0])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[1], discriminability: "high", correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[1])], correct_response2: "na"},
-    { task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "low",  correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
-    { task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "high", correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
-    { task_type: "catch",  colour: PRMS.resp_colours[3], discriminability: "low",  correct_response1: "na",                                                            correct_response2: "na"},
-    { task_type: "catch",  colour: PRMS.resp_colours[3], discriminability: "high", correct_response1: "na",                                                            correct_response2: "na"},
+    //{ task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "low",  correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
+    //{ task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "high", correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
+    //{ task_type: "catch",  colour: PRMS.resp_colours[3], discriminability: "low",  correct_response1: "na",                                                            correct_response2: "na"},
+    //{ task_type: "catch",  colour: PRMS.resp_colours[3], discriminability: "high", correct_response1: "na",                                                            correct_response2: "na"},
 ];
 
 const TRIAL_TIMELINE = {
@@ -737,6 +739,7 @@ function genExpSeq() {
     exp.push(TASK_INSTRUCTIONS2);
     exp.push(TASK_INSTRUCTIONS3);
     exp.push(TASK_INSTRUCTIONS4);
+    exp.push(mouseCursor(false));
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
         exp.push(BLOCK_START);
@@ -754,6 +757,7 @@ function genExpSeq() {
 
     // debrief
     exp.push(end_message());
+    exp.push(mouseCursor(true));
     exp.push(fullscreen(false));
 
     return exp;
