@@ -78,7 +78,7 @@ const PRMS = {
         Yellow: "rgb(255, 255, 0)",
     },
     frame_size: [50, 50],
-    frame_width: [2, 10],
+    frame_width: [4, 10],
     frame_position: [0, 0],
     slider_prompt: "Wie lang war die Reaktion auf das farbige Quadrat?",
     slider_prompt_size: 30,
@@ -138,10 +138,10 @@ const TASK_INSTRUCTIONS1 = {
 
 // prettier-ignore
 const RESP_MAPPING = generate_formatted_html({
-  text: `<span style="color:${PRMS.resp_colours[0]};">${DE_EN[PRMS.resp_colours[0]]}</span>: Linke Taste (${PRMS.resp_keys[0]}-Taste)<br>
-<span style="color:${PRMS.resp_colours[1]};">${DE_EN[PRMS.resp_colours[1]]}</span>: Rechte Taste (${PRMS.resp_keys[1]}-Taste)<br>
-<span style="color:${PRMS.resp_colours[2]};">${DE_EN[PRMS.resp_colours[2]]}</span>: Freie Zufallswahl Linke oder Rechte Taste (${PRMS.resp_keys[0]}- od. ${PRMS.resp_keys[1]}-Taste)<br><br>
-Wenn das Quadrat <span style="color:${PRMS.resp_colours[3]};">${DE_EN[PRMS.resp_colours[3]]}</span> ist dann sollst du KEINE Taste drücken (es geht automatisch weiter)<br>`,
+  text: `<span style="color:${PRMS.resp_colours[0]};">${DE_EN[PRMS.resp_colours[0]]}</span>/<span style="color:${PRMS.resp_colours_low[PRMS.resp_colours[0]]};">${DE_EN[PRMS.resp_colours[0]]}</span>: Linke Taste (${PRMS.resp_keys[0]}-Taste)<br>
+<span style="color:${PRMS.resp_colours[1]};">${DE_EN[PRMS.resp_colours[1]]}</span>/<span style="color:${PRMS.resp_colours_low[PRMS.resp_colours[1]]};">${DE_EN[PRMS.resp_colours[1]]}</span>: Rechte Taste (${PRMS.resp_keys[1]}-Taste)<br>
+<span style="color:${PRMS.resp_colours[2]};">${DE_EN[PRMS.resp_colours[2]]}</span>/<span style="color:${PRMS.resp_colours_low[PRMS.resp_colours[2]]};">${DE_EN[PRMS.resp_colours[2]]}</span>: Freie Zufallswahl Linke oder Rechte Taste (${PRMS.resp_keys[0]}- od. ${PRMS.resp_keys[1]}-Taste)<br><br>
+Wenn das Quadrat <span style="color:${PRMS.resp_colours[3]};">${DE_EN[PRMS.resp_colours[3]]}</span> /<span style="color:${PRMS.resp_colours_low[PRMS.resp_colours[3]]};">${DE_EN[PRMS.resp_colours[3]]}</span> ist dann sollst du KEINE Taste drücken (es geht automatisch weiter)<br>`,
   align: "left",
   colour: "black",
   fontsize: 28,
@@ -667,16 +667,16 @@ const TRIAL_TABLE = [
     { task_type: "forced", colour: PRMS.resp_colours[1], discriminability: "low",  correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[1])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[0], discriminability: "high", correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[0])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[1], discriminability: "high", correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[1])], correct_response2: "na"},
-    //{ task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "low",  correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
-    //{ task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "high", correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
+    { task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "low",  correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
+    { task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "high", correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
     { task_type: "forced", colour: PRMS.resp_colours[0], discriminability: "low",  correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[0])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[1], discriminability: "low",  correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[1])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[0], discriminability: "high", correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[0])], correct_response2: "na"},
     { task_type: "forced", colour: PRMS.resp_colours[1], discriminability: "high", correct_response1: PRMS.resp_keys[PRMS.resp_colours.indexOf(PRMS.resp_colours[1])], correct_response2: "na"},
-    //{ task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "low",  correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
-    //{ task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "high", correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
-    //{ task_type: "catch",  colour: PRMS.resp_colours[3], discriminability: "low",  correct_response1: "na",                                                            correct_response2: "na"},
-    //{ task_type: "catch",  colour: PRMS.resp_colours[3], discriminability: "high", correct_response1: "na",                                                            correct_response2: "na"},
+    { task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "low",  correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
+    { task_type: "free",   colour: PRMS.resp_colours[2], discriminability: "high", correct_response1: PRMS.resp_keys[0],                                               correct_response2: PRMS.resp_keys[1]},
+    { task_type: "catch",  colour: PRMS.resp_colours[3], discriminability: "low",  correct_response1: "na",                                                            correct_response2: "na"},
+    { task_type: "catch",  colour: PRMS.resp_colours[3], discriminability: "high", correct_response1: "na",                                                            correct_response2: "na"},
 ];
 
 const TRIAL_TIMELINE = {
