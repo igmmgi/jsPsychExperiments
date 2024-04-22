@@ -26,8 +26,8 @@ const p5js = new p5((sketch) => {
 });
 
 const PRMS = {
-    n_trials: 4, // number of trials per block
-    n_blocks: 4, // number of blocks (must be multiple of 4)
+    n_trials: 20, // number of trials per block
+    n_blocks: 8, // number of blocks (must be multiple of 4)
     randomise_block_order: false,
     iti: 500, // duration of the inter-trial-interval
     font: "50px Arial",
@@ -369,6 +369,31 @@ const END_SCREEN = {
     }),
 };
 
+const SURVEY = {
+    type: jsPsychSurveyLikert,
+    scale_width: CANVAS_SIZE[0] * 0.9,
+    questions: [
+        {
+            prompt: `<span style="font-weight: bold; font: 36px Arial;">Rate “your level of mental effort on this part of the task” on a 9-point scale <br>ranging from 1 (extremely low mental effort) to 9 (extremely high mental effort).</span>`,
+            name: "effort",
+            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        },
+        {
+            prompt: `<span style="font-weight: bold; font: 36px Arial;">Rate “how difficult this task was” on a 9-point scale ranging<br> from 1 (extremely easy) to 9 (extremely difficult).</span>`,
+            name: "difficulty",
+            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        },
+    ],
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        jsPsych.data.addProperties({
+            [`rt_survey_block_${PRMS.count_block - 1}`]: dat.rt,
+            [`effort_block_${PRMS.count_block - 1}`]: dat.response.effort,
+            [`difficulty_block_${PRMS.count_block - 1}`]: dat.response.difficulty,
+        });
+    },
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
@@ -380,7 +405,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    // saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    //saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
     saveDataLocal(data_fn, { stim_type: "ftp" }, (filetype = "json"));
 }
 
@@ -403,7 +428,7 @@ function genExpSeq() {
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
     exp.push(welcome_message());
-    //exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type;
@@ -437,6 +462,9 @@ function genExpSeq() {
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_END); // trials within a block
+        if ((blk + 1) % (PRMS.n_blocks / 4) === 0) {
+            exp.push(SURVEY); // survey asked once after each series of same type blocks
+        }
     }
 
     // save data

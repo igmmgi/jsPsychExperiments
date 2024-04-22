@@ -5,15 +5,13 @@ library(dplyr)
 library(ggplot2)
 
 # Data
-datDir   <- "/home/ian/Downloads/"
+datDir   <- "/home/ian/Downloads"
 datFiles <- list.files(path = datDir, pattern = ("*.json"), full.names = TRUE)
 dat      <- do.call(rbind, lapply(datFiles, jsonlite::fromJSON, flatten = TRUE))
-
 
 SCREEN_HEIGHT <- 720
 SCREEN_WIDTH <- 1280
 PATH_HEIGHT <- 620
-
 
 dat <- dat %>%
   rowwise() %>%
@@ -38,7 +36,7 @@ plot_trial_path <- function(dat, subject_number, block_number, trial_number) {
   lines(tmp_dat$ball_x, tmp_dat$ball_y, type = "l", xlim = c(0, SCREEN_WIDTH), ylim = rev(c(0, SCREEN_HEIGHT)),
         lwd = 2, col = "Green")
 }
-plot_trial_path(dat, 1, 1, 1)
+plot_trial_path(dat, 1, 3, 1)
 
 
 plot_trial_error <- function(dat, subject_number, block_number, trial_number) {
@@ -106,15 +104,3 @@ plt <- ggplot(dat_avg, aes(x = position_distance_mean, y = path_y)) +
   theme_bw() +
   theme(legend.position = "none")
 plt
-
-
-
-
-
-
-
-
-
-
-
-
