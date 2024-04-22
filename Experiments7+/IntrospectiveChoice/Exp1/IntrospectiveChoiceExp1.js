@@ -275,8 +275,8 @@ const BLOCK_END = {
         response_bias = response_bias < 0.2 || response_bias > 0.8 ? true : false;
 
         let sequence_bias =
-            PERFORMANCE.free_choice_sequence["repeat"] /
-            (PERFORMANCE.free_choice_sequence["repeat"] + PERFORMANCE.free_choice_sequence["switch"]);
+            PERFORMANCE.free_choice_sequence.repeat /
+            (PERFORMANCE.free_choice_sequence.repeat + PERFORMANCE.free_choice_sequence.switch);
         sequence_bias = sequence_bias < 0.2 || sequence_bias > 0.8 ? true : false;
 
         // Option 1:
@@ -544,9 +544,9 @@ function code_trial() {
     if (dat.stim === "task") {
         if (PERFORMANCE.previous_key !== null) {
             if (PERFORMANCE.previous_key === dat.key_press) {
-                PERFORMANCE.free_choice_sequence["repeat"] += 1;
+                PERFORMANCE.free_choice_sequence.repeat += 1;
             } else if (PERFORMANCE.previous_key !== dat.key_press) {
-                PERFORMANCE.free_choice_sequence["switch"] += 1;
+                PERFORMANCE.free_choice_sequence.switch += 1;
             }
         }
         PERFORMANCE.previous_key = dat.key_press;
