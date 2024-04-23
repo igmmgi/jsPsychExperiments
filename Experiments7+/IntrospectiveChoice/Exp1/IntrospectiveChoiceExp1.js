@@ -78,7 +78,7 @@ const PRMS = {
         Yellow: "rgb(255, 255, 0)",
     },
     frame_size: [50, 50],
-    frame_width: [4, 10],
+    frame_width: [2, 10],
     frame_position: [0, 0],
     slider_prompt: "Wie lang war die Reaktion auf das farbige Quadrat?",
     slider_prompt_size: 30,
