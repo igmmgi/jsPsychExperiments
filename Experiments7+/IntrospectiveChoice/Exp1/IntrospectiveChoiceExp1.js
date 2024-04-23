@@ -291,6 +291,7 @@ Kurze Pause. Drücke die Leertaste um fortzufahren.`,
             });
             trial.response_ends_trial = true;
             trial.choices = [" "];
+            return;
         }
         // Option 2:
         if (error_bias) {
@@ -316,9 +317,10 @@ Kurze Pause. Drücke die Leertaste um fortzufahren.`,
                 });
             trial.response_ends_trial = false;
             trial.trial_duration = PRMS.block_end_wait_duration;
+            return;
         }
         // Option 3:
-        if (!response_bias || sequence_bias) {
+        if (response_bias || sequence_bias) {
             trial.stimulus = generate_formatted_html({
                 text: `Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
         Achtung: Du darfst zwar entscheiden, mit welcher Taste du antwortest, wenn du die
@@ -335,6 +337,7 @@ Kurze Pause. Drücke die Leertaste um fortzufahren.`,
             });
             trial.response_ends_trial = false;
             trial.trial_duration = PRMS.block_end_wait_duration;
+            return;
         }
     },
     on_finish: function () {
