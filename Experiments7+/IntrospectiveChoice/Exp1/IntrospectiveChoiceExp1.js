@@ -344,6 +344,7 @@ Kurze Pause. Drücke die Leertaste um fortzufahren.`,
         PERFORMANCE.free_choice_sequence = { repeat: 0, switch: 0 };
         PERFORMANCE.errors = 0;
         PERFORMANCE.task_correct = null;
+        PRMS.count_block += 1;
     },
 };
 ////////////////////////////////////////////////////////////////////////
