@@ -557,24 +557,31 @@ function code_trial() {
         if (dat.task_type === "forced") {
             // one correct response
             correct = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_response1) ? 1 : 0;
+            dat.task_rt = dat.rt;
+            dat.task_key = dat.key_press;
         } else if (dat.task_type === "free") {
             // both responses correct
             let correct1 = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_response1) ? 1 : 0;
             let correct2 = jsPsych.pluginAPI.compareKeys(dat.key_press, dat.correct_response2) ? 1 : 0;
             correct = correct1 || correct2;
+            dat.task_rt = dat.rt;
+            dat.task_key = dat.key_press;
             PERFORMANCE.free_choice_count[dat.key_press.toUpperCase()] += 1;
         } else if (dat.task_type === "catch") {
+            dat.stim = "catch";
             // NoGo response
+            dat.task_key = dat.key_press;
             if (dat.rt === null) {
-                dat.rt = PRMS.trial_timeout;
-                dat.key_press = "na";
+                dat.task_rt = PRMS.trial_timeout;
                 correct = 1;
             } else {
                 correct = 0;
+                dat.task_rt = dat.rt;
             }
         }
         dat.response = null;
         dat.slider_start = null;
+        dat.slider_rt = null;
         PERFORMANCE.task_correct = correct;
     } else {
         let datp;
@@ -612,7 +619,7 @@ const STIMULUS = {
   func: draw_stimulus,
   func_args: null,
   data: {
-    stim: 'task',
+    stim: "task",
     task_type: jsPsych.timelineVariable("task_type"),
     colour: jsPsych.timelineVariable("colour"),
     discriminability: jsPsych.timelineVariable("discriminability"),
@@ -699,7 +706,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    saveData("/Common7+/write_data.php", data_fn, [{ stim: "vas" }], "csv", [
+    saveData("/Common7+/write_data.php", data_fn, [{ stim: "catch" }, { stim: "vas" }], "csv", [
         "stimulus",
         "trial_type",
         "internal_node_id",
@@ -708,7 +715,7 @@ function save() {
         "rt",
         "key_press",
     ]);
-    //saveDataLocal(data_fn, [{ stim: "task" }, { stim: "vas" }], "csv", [
+    //saveDataLocal(data_fn, [{ stim: "catch" }, { stim: "vas" }], "csv", [
     //    "stimulus",
     //    "trial_type",
     //    "internal_node_id",

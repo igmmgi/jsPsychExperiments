@@ -160,7 +160,6 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
             }
 
             function onmousemove() {
-                console.log("moving");
                 $("body").css("cursor", true ? "pointer" : "none");
                 document.getElementById("jspsych-canvas-slider-response-response").style.cursor = "pointer";
             }
