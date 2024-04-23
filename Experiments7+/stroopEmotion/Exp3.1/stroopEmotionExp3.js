@@ -48,7 +48,7 @@ const PRMS = {
     fixColor: "Black", // colour of the fixation cross
     fbDur: 1500, // duration of feedback for each type
     waitDur: 1000, // duration following block feedback screen
-    thinkDur: 1000, // thinking duration during inital questions
+    thinkDur: 20000, // thinking duration during inital questions
     iti: 500, // duration of inter-trial-interval
     tooFast: 0, // responses faster than x ms -> too fast!
     tooSlow: 2000, // response slower than x ms -> too slow!
