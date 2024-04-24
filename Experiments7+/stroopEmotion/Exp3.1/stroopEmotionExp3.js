@@ -295,9 +295,9 @@ const TASK_CHOICE_SCREEN1 = {
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `<span style="font-family: ${CHOICES.font_choice}">Die nächsten 20 Sekunden wird bestimmt, welche Aufgabe du bearbeiten sollst.<br><br>
-• Reaktions-Aufgabe: Erforderd insbesondere deine Handlungsfähigkeit heraus.<br>
-• Aufmerksamkeits-Aufgabe:  Erfordert insbesondere deine Fähigkeit zur Zuordnung von angezeigten Reizen.<br><br>
-               Es geht in 20 Sekunden automatische weiter.</span>`,
+• Reaktions-Aufgabe: Erfordert insbesondere deine Handlungsfähigkeit.<br>
+• Aufmerksamkeits-Aufgabe: Erfordert insbesondere deine Fähigkeit zur Zuordnung von angezeigten Reizen.<br><br>
+               Es geht in 20 Sekunden automatisch weiter.</span>`,
             align: "left",
             colour: "black",
             fontsize: 30,
