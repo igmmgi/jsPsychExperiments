@@ -32,7 +32,7 @@ const CANVAS_BORDER = "5px solid black";
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
     n_blocks: 2,
-    n_trials: 16,
+    n_trials: 8,
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
     fixation_duration: 500, // duration of the fixation cross
@@ -221,6 +221,19 @@ Wähle selbst, welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügb
     },
 };
 
+function calculate_block_performance({ filter_options = {} } = {}) {
+    let dat = jsPsych.data.get().filter(filter_options);
+
+    let n_total = dat.count();
+    let n_error = dat.select("error").values.filter(function (x) {
+        return x === 1;
+    }).length;
+    let total_rt = Math.round(dat.select("rt").sum());
+    let error_rate = Math.round((n_error / n_total) * 100);
+
+    return { total_rt: total_rt, error_rate: error_rate };
+}
+
 const BLOCK_END = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
@@ -228,9 +241,25 @@ const BLOCK_END = {
     canvas_border: CANVAS_BORDER,
     stimulus: "",
     on_start: function (trial) {
+        let block_dvs = calculate_block_performance({
+            filter_options: {
+                stim_type: "vtse",
+                block: PRMS.count_block,
+            },
+        });
+
+        let additional_text = "";
+        if (block_dvs["error_rate"] < 15) {
+            additional_text = "Respond Faster!";
+        } else if (block_dvs["error_rate"] > 30) {
+            additional_text = "Respond Slower!";
+        }
+
         trial.stimulus = generate_formatted_html({
-            text: `Ende Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-             Kurze Pause.<br><br>
+            text: `Ende Block ${PRMS.count_block} von ${PRMS.n_blocks}: Kurze Pause<br><br>
+            Block Duration: ${Math.round(block_dvs["total_rt"] / 1000)} S<br>
+            Error Rate: ${block_dvs["error_rate"]} %<br><br>
+            ${additional_text}<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
             fontsize: 30,
@@ -320,7 +349,6 @@ function draw_stimulus(args) {
         centerX = -(((PRMS.grid_size[1] - 1) / 2) * PRMS.grid_gaps[1]);
         for (let cols = 0; cols < PRMS.grid_size[1]; cols += 1) {
             // draw dots
-            console.log(args.draw_dots);
             if (args.draw_dots) {
                 ctx.beginPath();
                 ctx.arc(centerX, centerY + PRMS.colour_task_offset, PRMS.colour_task_dot_size, 0, 2 * Math.PI, false);
@@ -374,29 +402,17 @@ function code_trial() {
         error = 1;
     }
 
-    console.log(
-        "Response task:",
-        response_task,
-        "S1:",
-        dat.s1,
-        "S2:",
-        dat.s2,
-        "SOA:",
-        PERFORMANCE.soa,
-        "error:",
-        error,
-        "Repetitions:",
-        PERFORMANCE.n_repetitions,
-        "Switches:",
-        PERFORMANCE.n_switches,
-    );
+    let repetition_switch = "na";
+    if (PERFORMANCE.previous_task !== null) {
+        repetition_switch = response_task === PERFORMANCE.previous_task ? "repetition" : "switch";
+    }
 
     // get current trial soa
     let soa = PERFORMANCE.soa;
-    if (response_task === PERFORMANCE.previous_task) {
+    if (repetition_switch === "repetition") {
         PERFORMANCE.n_repetitions += 1;
         PERFORMANCE.soa += PRMS.soa_step;
-    } else if (response_task !== PERFORMANCE.previous_task && PERFORMANCE.previous_task !== null) {
+    } else if (repetition_switch === "switch") {
         PERFORMANCE.n_switches += 1;
         PERFORMANCE.soa -= PRMS.soa_step;
     }
@@ -405,6 +421,7 @@ function code_trial() {
     jsPsych.data.addDataToLastTrial({
         date: Date(),
         response_task: response_task,
+        repetition_switch: repetition_switch,
         n_repetitions: PERFORMANCE.n_repetitions,
         n_switches: PERFORMANCE.n_switches,
         soa: soa,
@@ -557,10 +574,10 @@ const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
-    saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, {
-        stim_type: "vtse",
-    });
-    //saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtse" });
+    //saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, {
+    //    stim_type: "vtse",
+    //});
+    saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtse" });
 }
 
 const SAVE_DATA = {
