@@ -25,19 +25,34 @@ const PRMS = {
     dotRadius: 4,
     squareSize: 120,
     dotGaps: 15,
+  n_rows: 5,
+  n_cols: 5,
 };
 
 const EN_DE = { blue: "blau", red: "rot" };
 
+// function calculateNumberOfDots() {
+//     // Required for ratio manipulation in VTS
+//     PRMS.nDots = 0;
+//     for (let rows = -PRMS.squareSize; rows <= PRMS.squareSize; rows += PRMS.dotGaps) {
+//         for (let cols = -PRMS.squareSize; cols <= PRMS.squareSize; cols += PRMS.dotGaps) {
+//             PRMS.nDots += 1;
+//         }
+//     }
+// }
+
+
 function calculateNumberOfDots() {
     // Required for ratio manipulation in VTS
     PRMS.nDots = 0;
-    for (let rows = -PRMS.squareSize; rows <= PRMS.squareSize; rows += PRMS.dotGaps) {
-        for (let cols = -PRMS.squareSize; cols <= PRMS.squareSize; cols += PRMS.dotGaps) {
+    for (let rows = 0; rows <= PRMS.n_rows; rows += 1) {
+        for (let cols = 0; cols <= PRMS.n_cols; cols += 1) {
             PRMS.nDots += 1;
         }
     }
 }
+
+
 
 const COUNT_DOTS = {
     type: jsPsychCallFunction,
@@ -87,8 +102,8 @@ function drawStimulus(args) {
     // draw colour dors
     let radius = PRMS.dotRadius;
     let idx = 0;
-    for (let rows = -PRMS.squareSize; rows <= PRMS.squareSize; rows += PRMS.dotGaps) {
-        for (let cols = -PRMS.squareSize; cols <= PRMS.squareSize; cols += PRMS.dotGaps * 2) {
+    for (let rows = -PRMS.n_cols * PRMS.squareSize; rows <= PRMS.squareSize; rows += PRMS.dotGaps) {
+        for (let cols = -PRMS.n_rows * PRMS.squareSize; cols <= PRMS.squareSize; cols += PRMS.dotGaps * 2) {
             let centerX = rows;
             let centerY = cols;
             ctx.beginPath();
@@ -212,10 +227,11 @@ const TRIAL_TIMELINE = {
 function genExpSeq() {
     "use strict";
 
-    let exp = [];
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
-    exp.push(resize_browser());
+  console.log("here")
+    // let exp = [];
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(PRMS.screenRes));
+    // exp.push(resize_browser());
 
     exp.push(COUNT_DOTS);
     exp.push(TRIAL_TIMELINE);
