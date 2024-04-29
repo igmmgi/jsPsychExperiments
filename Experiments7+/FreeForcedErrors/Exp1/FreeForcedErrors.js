@@ -36,18 +36,21 @@ const PRMS = {
     colour_task_ratio: [20, 80], // should sum to 100!
     letter_task_ratio: [20, 80], // should sum to 100!
     colour_task_colours: shuffle(["blue", "red"]),
-    colour_task_nogo: "grey",
+    colour_task_nogo: ["grey"],
     letter_task_font: "20px Bold Monospace",
     letter_task_colour: "Black",
     letter_task_offset: 22,
     letter_task_letters: shuffle(["X", "O"]),
-    letter_task_nogo: "#",
+    letter_task_nogo: ["#"],
     dot_radius: 4,
-    square_size: 120,
-    dot_gaps: 15,
+    stimulus_size: [90, 10],
+    dot_gaps: 20,
     task_side: shuffle(["Colour", "Letter"]),
     response_keys_lh: ["Q", "W"],
     response_keys_rh: ["O", "P"],
+    response_keys: ["Q", "W", "O", "P"],
+    count_block: 1,
+    count_trial: 1,
 };
 
 const EN_DE = { blue: "blau", red: "rot" };
@@ -55,11 +58,12 @@ const EN_DE = { blue: "blau", red: "rot" };
 function calculate_number_of_dots() {
     // Required for ratio manipulation in VTS
     PRMS.n_dots = 0;
-    for (let rows = -PRMS.square_size; rows <= PRMS.square_size; rows += PRMS.dot_gaps) {
-        for (let cols = -PRMS.square_size; cols <= PRMS.square_size; cols += PRMS.dot_gaps) {
+    for (let rows = -PRMS.stimulus_size[0]; rows <= PRMS.stimulus_size[0]; rows += PRMS.dot_gaps) {
+        for (let cols = -PRMS.stimulus_size[1]; cols <= PRMS.stimulus_size[1]; cols += PRMS.dot_gaps) {
             PRMS.n_dots += 1;
         }
     }
+  PRMS.n_dots /= 2; // two tasks
 }
 
 const COUNT_DOTS = {
@@ -68,16 +72,34 @@ const COUNT_DOTS = {
 };
 
 function stimulus_to_key_mapping() {
-    console.log(PRMS.task_side);
     let key_mapping = {};
     if (PRMS.task_side[0] === "Colour") {
-        key_mapping[(PRMS.colour_task_colours[0] = PRMS.response_keys_lh[0])];
-    }
+        PRMS.response_keys_colour = PRMS.response_keys_lh;
+        PRMS.response_keys_letter = PRMS.response_keys_rh;
+        key_mapping[PRMS.colour_task_colours[0]] = PRMS.response_keys_lh[0];
+        key_mapping[PRMS.colour_task_colours[1]] = PRMS.response_keys_lh[1];
+        key_mapping[PRMS.letter_task_letters[0]] = PRMS.response_keys_rh[0];
+        key_mapping[PRMS.letter_task_letters[1]] = PRMS.response_keys_rh[1];
+    } else if (PRMS.task_side[0] === "Letter") {
+        PRMS.response_keys_letter = PRMS.response_keys_lh;
+        PRMS.response_keys_colour = PRMS.response_keys_rh;
+        key_mapping[PRMS.letter_task_letters[0]] = PRMS.response_keys_lh[0];
+        key_mapping[PRMS.letter_task_letters[1]] = PRMS.response_keys_lh[1];
+        key_mapping[PRMS.colour_task_colours[0]] = PRMS.response_keys_rh[0];
+        key_mapping[PRMS.colour_task_colours[1]] = PRMS.response_keys_rh[1];
+  }
     return key_mapping;
 }
 
 const KEY_MAPPING = stimulus_to_key_mapping();
-console.log(KEY_MAPPING);
+// console.log(KEY_MAPPING);
+
+const PERFORMANCE = {
+  n_repetitions: 0,
+  n_switches: 0,
+  soa: 0,
+  previous_task: null
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -93,8 +115,6 @@ const WELCOME_INSTRUCTIONS = {
                Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
                um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
-               Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               ruben.ellinghaus@fernuni-hagen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -121,8 +141,8 @@ function drawStimulus(args) {
     let ctx = document.getElementById("canvas").getContext("2d");
 
     let idx = 0;
-    for (let rows = -PRMS.square_size; rows <= PRMS.square_size; rows += PRMS.dot_gaps) {
-        for (let cols = -PRMS.square_size; cols <= PRMS.square_size; cols += PRMS.dot_gaps * 2) {
+    for (let rows = -PRMS.stimulus_size[0]; rows <= PRMS.stimulus_size[0]; rows += PRMS.dot_gaps) {
+        for (let cols = -PRMS.stimulus_size[1]; cols <= PRMS.stimulus_size[1]; cols += PRMS.dot_gaps * 2) {
             let centerX = rows;
             let centerY = cols;
 
@@ -147,6 +167,52 @@ function drawStimulus(args) {
     }
 }
 
+function code_trial() {
+  "use strict";
+
+  let dat = jsPsych.data.get().last(1).values()[0];
+
+  // which task did they perform?
+  let responded_letter = PRMS.response_keys_letter.includes(dat.key_press.toUpperCase());
+  let responded_colour = PRMS.response_keys_colour.includes(dat.key_press.toUpperCase());
+  let response_task    = responded_letter && !responded_colour ? "letter" : "colour";
+
+  let error = 0;
+  if (responded_letter & (dat.key_press.toUpperCase() !== dat.letter_task_key)) {
+    error = 1;
+  } else if (responded_colour & (dat.key_press.toUpperCase() !== dat.colour_task_key)) {
+    error = 1;
+  }
+
+  // get current trial soa
+  let soa = PERFORMANCE.soa;
+
+  if (PRMS.count_trial > 1) {
+    if (response_task === PERFORMANCE.previous_task) {
+      PERFORMANCE.n_repetitions += 1;
+      PERFORMANCE.soa += 50;
+    } else {
+      PERFORMANCE.n_switches += 1;
+      PERFORMANCE.soa -= 50;
+    }
+  }
+  PERFORMANCE.previous_task = response_task;
+
+  console.log(PERFORMANCE);
+
+  jsPsych.data.addDataToLastTrial({
+    date: Date(),
+    response_task: response_task,
+    soa: soa,
+    error: error,
+    blockNum: PRMS.count_block,
+    trialNum: PRMS.count_trial,
+  });
+
+}
+
+
+
 const STIMULUS = {
     type: jsPsychStaticCanvasKeyboardResponse,
     canvas_colour: CANVAS_COLOUR,
@@ -154,7 +220,7 @@ const STIMULUS = {
     canvas_border: CANVAS_BORDER,
     translate_origin: true,
     response_ends_trial: true,
-    choices: null,
+    choices: PRMS.response_keys,
     trial_duration: null,
     func: [drawStimulus, drawStimulus],
     func_args: null,
@@ -162,9 +228,7 @@ const STIMULUS = {
     clear_screen: [1, 1],
     data: {
         stim_type: "grid",
-        colour_task_ratio: jsPsych.timelineVariable("colour_task_ratio"),
         colour_task_colour: jsPsych.timelineVariable("colour_task_colour"),
-        letter_task_ratio: jsPsych.timelineVariable("letter_task_ratio"),
         letter_task_letter: jsPsych.timelineVariable("letter_task_letter"),
     },
     on_start: function (trial) {
@@ -223,29 +287,33 @@ const STIMULUS = {
             );
         }
 
-        trial.stimulus_onset = [0, 300];
+        trial.stimulus_onset = [0, PERFORMANCE.soa];
+
+    console.log(PERFORMANCE);
 
         trial.func_args = [
             { draw_dots: true, dots: colours, draw_letters: false, letters: letters },
-            { draw_dots: true, dots: colours, draw_letters: true, letters: letters },
+            { draw_dots: true, dots: colours, draw_letters: true,  letters: letters },
         ];
     },
     on_finish: function () {
-        PRMS.cTrl += 1;
+        code_trial();
+        PRMS.count_trial += 1;
     },
 };
 
 // prettier-ignore
 const TRIAL_TABLE = [
-    { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0]},
-    { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0]},
-    { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1]},
-    { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1]},
-    { colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0]},
-    { colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1]},
-    { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0]},
-    { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0]},
+    { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: KEY_MAPPING[PRMS.colour_task_colours[0]], letter_task_key: KEY_MAPPING[PRMS.letter_task_letters[0]]},
+    { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: KEY_MAPPING[PRMS.colour_task_colours[1]], letter_task_key: KEY_MAPPING[PRMS.letter_task_letters[0]]},
+    { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: KEY_MAPPING[PRMS.colour_task_colours[0]], letter_task_key: KEY_MAPPING[PRMS.letter_task_letters[1]]},
+    { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: KEY_MAPPING[PRMS.colour_task_colours[1]], letter_task_key: KEY_MAPPING[PRMS.letter_task_letters[1]]},
+    { colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                     letter_task_key: KEY_MAPPING[PRMS.letter_task_letters[0]]},
+    { colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                     letter_task_key: KEY_MAPPING[PRMS.letter_task_letters[1]]},
+    { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: KEY_MAPPING[PRMS.colour_task_colours[0]], letter_task_key: "na"},
+    { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: KEY_MAPPING[PRMS.colour_task_colours[1]], letter_task_key: "na"},
 ];
+// console.table(TRIAL_TABLE);
 
 // prettier-ignore
 const TRIAL_TIMELINE = {
