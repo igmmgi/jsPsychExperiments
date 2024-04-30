@@ -40,7 +40,7 @@ const PRMS = {
     feedback_duration_experiment: 0, // duration of the feedback experiment
     feedback_text: ["Richtig!", "Falsch!"], // feedback text
     iti: 1000,
-    grid_size: [1, 10], // rows, cols
+    grid_size: [1, 10], // rows, cols (1 row but with two tasks)
     grid_gaps: [40, 20], // rows, cols
     task_side: shuffle(["Colour", "Letter"]),
     colour_task_colours: shuffle(["blue", "red"]),
@@ -82,7 +82,15 @@ if (PRMS.task_side[0] === "Colour") {
 }
 PRMS.response_keys = PRMS.response_keys_lh.concat(PRMS.response_keys_rh);
 
-const EN_DE = { blue: "Blau", red: "Rot", X: "X", O: "O", Letter: "Buchstabeaufgabe", Colour: "Farbaufgabe" };
+const EN_DE = {
+    blue: "Blau",
+    red: "Rot",
+    grey: "Grau",
+    X: "X",
+    O: "O",
+    Letter: "Buchstabeaufgabe",
+    Colour: "Farbaufgabe",
+};
 
 const PERFORMANCE = {
     n_repetitions: 0,
@@ -104,7 +112,7 @@ const WELCOME_INSTRUCTIONS = {
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
 um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
-Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
+Du wirst nach dem Experiment auf SONA zurückgeleitet um die VP-Stunde zu erhalten.
 Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -125,8 +133,8 @@ function pad_me(str, npad) {
 
 const TASK_INSTRUCTIONS_TEXT = generate_formatted_html({
     text: `In diesem Experiment gibt es <span style="font-weight: bold;">zwei</span> Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
-<span style="font-weight: bold;">${EN_DE[PRMS.task_side[0]]}</span> = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten "${PRMS.response_keys_lh[0]}" und "${PRMS.response_keys_lh[1]}".<br><br>
-<span style="font-weight: bold;">${EN_DE[PRMS.task_side[1]]}</span> = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten "${PRMS.response_keys_rh[0]}" und "${PRMS.response_keys_rh[1]}".<br><br>
+<span style="font-weight: bold;">${EN_DE[PRMS.task_side[0]]}</span> = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_lh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_lh[1]}"</span>.<br><br>
+<span style="font-weight: bold;">${EN_DE[PRMS.task_side[1]]}</span> = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_rh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_rh[1]}"</span>.<br><br>
 Drücke eine beliebige Taste, um fortzufahren!`,
     align: "left",
     fontsize: 30,
@@ -160,8 +168,8 @@ const TASK_INSTRUCTIONS2 = {
     canvas_border: CANVAS_BORDER,
     stimulus:
         generate_formatted_html({
-            text: `Für die Buchstabenaufgabe musst Du entscheiden, ob der Mehrheit der Buchstabe "${PRMS.letter_task_letters[0]}" oder "${PRMS.letter_task_letters[1]}" ist.<br><br>
-Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte ${EN_DE[PRMS.colour_task_colours[0]]} oder ${EN_DE[PRMS.colour_task_colours[1]]} ist.`,
+            text: `Für die Buchstabenaufgabe musst Du entscheiden, ob der Mehrheit der Buchstabe "${PRMS.letter_task_letters[0]}" oder "${PRMS.letter_task_letters[1]}" ist. Wenn die Buchstaben "${PRMS.letter_task_nogo[0]}" sind, erfolgt keine Antwort!<br><br>
+Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte ${EN_DE[PRMS.colour_task_colours[0]]} oder ${EN_DE[PRMS.colour_task_colours[1]]} ist. Wenn die Farben ${EN_DE[PRMS.colour_task_nogo[0]]} sind, erfolgt keine Antwort!`,
             align: "left",
             fontsize: 30,
             width: "1200px",
@@ -311,6 +319,25 @@ const ITI = {
     trial_duration: PRMS.iti,
 };
 
+const END_SCREEN = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    response_ends_trial: true,
+    choices: [" "],
+    stimulus: generate_formatted_html({
+        text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
+             Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
+             Drücke eine beliebige Taste, um die Weiterleitung zu SONA zu starten.`,
+        fontsize: 28,
+        lineheight: 1.0,
+        bold: false,
+        align: "left",
+    }),
+    on_finish: function () {},
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                              Stimuli                               //
 ////////////////////////////////////////////////////////////////////////
@@ -409,12 +436,14 @@ function code_trial() {
 
     // get current trial soa
     let soa = PERFORMANCE.soa;
+
+    // adjust soa for next trial
     if (repetition_switch === "repetition") {
         PERFORMANCE.n_repetitions += 1;
-        PERFORMANCE.soa += PRMS.soa_step;
+        PERFORMANCE.soa += dat.free_forced === "free" ? PRMS.soa_step : 0;
     } else if (repetition_switch === "switch") {
         PERFORMANCE.n_switches += 1;
-        PERFORMANCE.soa -= PRMS.soa_step;
+        PERFORMANCE.soa -= dat.free_forced === "free" ? PRMS.soa_step : 0;
     }
     PERFORMANCE.previous_task = response_task;
 
@@ -446,6 +475,7 @@ const STIMULUS = {
     clear_screen: [1, 1],
     data: {
         stim_type: "vtse",
+        free_forced: jsPsych.timelineVariable("free_forced"),
         colour_task_colour: jsPsych.timelineVariable("colour_task_colour"),
         colour_task_key: jsPsych.timelineVariable("colour_task_key"),
         letter_task_letter: jsPsych.timelineVariable("letter_task_letter"),
@@ -548,14 +578,14 @@ const STIMULUS = {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-  { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na"},
-  { colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na"},
+  { free_forced: "free",   colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+  { free_forced: "free",   colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+  { free_forced: "free",   colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+  { free_forced: "free",   colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+  { free_forced: "forced", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+  { free_forced: "forced", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+  { free_forced: "forced", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na"},
+  { free_forced: "forced", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na"},
 ];
 // console.table(TRIAL_TABLE);
 
@@ -574,10 +604,8 @@ const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
-    //saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, {
-    //    stim_type: "vtse",
-    //});
-    saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtse" });
+    saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtse" });
+    //saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtse" });
 }
 
 const SAVE_DATA = {
@@ -628,7 +656,8 @@ function genExpSeq() {
     // save data
     exp.push(SAVE_DATA);
 
-    exp.push(end_message());
+    // end
+    exp.push(END_SCREEN);
     exp.push(fullscreen(false));
 
     return exp;
