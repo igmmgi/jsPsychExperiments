@@ -40,20 +40,22 @@ const PRMS = {
     feedback_duration_experiment: 0, // duration of the feedback experiment
     feedback_text: ["Richtig!", "Falsch!"], // feedback text
     iti: 1000,
-    grid_size: [1, 10], // rows, cols (1 row but with two tasks)
-    grid_gaps: [40, 20], // rows, cols
+    grid_size: [1, 8], // rows, cols (1 row but with two tasks)
+    grid_gaps: [0, 30], // rows, cols
     task_side: shuffle(["Colour", "Letter"]),
     colour_task_colours: shuffle(["blue", "red"]),
     colour_task_nogo: ["grey"],
-    colour_task_ratio: [20, 80], // should sum to 100!
-    colour_task_offset: -10,
-    colour_task_dot_size: 8,
+    colour_task_ratio: [25, 75], // should sum to 100!
+    colour_task_offset: -15,
+    colour_task_dot_size: 12,
+    colour_task_dot_size_nogo: 6,
     letter_task_letters: shuffle(["X", "O"]),
     letter_task_nogo: ["#"],
     letter_task_ratio: [20, 80], // should sum to 100!
-    letter_task_font: "24px Bold Monospace",
+    letter_task_font: "bold 28px Monospace",
+    letter_task_font_nogo: "bold 14px Monospace",
     letter_task_colour: "Black",
-    letter_task_offset: 18,
+    letter_task_offset: 2,
     soa_step: 50,
     response_keys_lh: ["Q", "W"],
     response_keys_rh: ["O", "P"],
@@ -62,6 +64,8 @@ const PRMS = {
     count_block: 1,
     count_trial: 1,
 };
+
+const COLOUR_VALUES = { blue: "rgb(0, 0, 150)", red: "rgb(150, 0, 0)", grey: "rgb(120, 120, 120)" };
 
 if (PRMS.task_side[0] === "Colour") {
     PRMS.response_keys_colour = PRMS.response_keys_lh;
@@ -168,20 +172,23 @@ const TASK_INSTRUCTIONS2 = {
     canvas_border: CANVAS_BORDER,
     stimulus:
         generate_formatted_html({
-            text: `Für die Buchstabenaufgabe musst Du entscheiden, ob der Mehrheit der Buchstabe "${PRMS.letter_task_letters[0]}" oder "${PRMS.letter_task_letters[1]}" ist. Wenn die Buchstaben "${PRMS.letter_task_nogo[0]}" sind, erfolgt keine Antwort!<br><br>
-Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte ${EN_DE[PRMS.colour_task_colours[0]]} oder ${EN_DE[PRMS.colour_task_colours[1]]} ist. Wenn die Farben ${EN_DE[PRMS.colour_task_nogo[0]]} sind, erfolgt keine Antwort!`,
+            text: `Für die Buchstabenaufgabe musst Du entscheiden, ob der Mehrheit der Buchstabe "${PRMS.letter_task_letters[0]}" oder "${PRMS.letter_task_letters[1]}" ist.<br><br>
+Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte ${EN_DE[PRMS.colour_task_colours[0]]} oder ${EN_DE[PRMS.colour_task_colours[1]]} ist. Es gilt: `,
             align: "left",
-            fontsize: 30,
+            fontsize: 26,
             width: "1200px",
-            lineheight: 1.5,
+            lineheight: 1.25,
         }) +
         RESPONSE_MAPPING +
         generate_formatted_html({
-            text: `Drücke eine beliebige Taste, um fortzufahren.`,
-            align: "center",
-            fontsize: 30,
+            text: `Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest wenn beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
+Wenn statt den Buchstabe jedoch "###" erscheinen, dann musst du die Farbaufgabe bearbeiten.<br><br>
+Wenn statt den farbigen Punkte graue Punkte erscheinen, dann musst du die Buchstabenaufgabe bearbeiten.<br><br>
+Drücke eine beliebige Taste, um fortzufahren!`,
+            align: "left",
+            fontsize: 26,
             width: "1200px",
-            lineheight: 1.5,
+            lineheight: 1.25,
         }),
 };
 
@@ -192,13 +199,14 @@ const TASK_INSTRUCTIONS3 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
-Wenn nur eine Aufgabe präsentiert wird, dann bearbeite bitte diese aufgabe.<br><br>
-Wenn beide Aufgaben präsentiert werden, kannst du dir frei aussuchen, welche du bearbeitest.<br><br>
+Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, wenn beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
+Wenn jedoch nur ein Aufgabe eine Antwort erfordert, dann musst du diese Aufgabe bearbeiten.<br><br>
+Die ersten zwei Blöcken hast du Gelegenheit zu üben.<br><br>
 Drücke eine beliebige Taste um fortzufahren.`,
         align: "left",
         fontsize: 30,
         width: "1200px",
-        lineheight: 1.5,
+        lineheight: 1.25,
     }),
 };
 
@@ -212,7 +220,8 @@ const BLOCK_START = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-Wähle selbst, welche Aufgabe du bearbeiten willst, wenn beide Aufgaben verfügbar sind. Wähle und bearbeite sonst die Aufgabe, die präsentiert ist.<br><br>`,
+Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben eine Antwort erfordern.<br><br>
+Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 align: "left",
                 fontsize: 30,
                 width: "1200px",
@@ -258,15 +267,17 @@ const BLOCK_END = {
 
         let additional_text = "";
         if (block_dvs["error_rate"] < 15) {
-            additional_text = "Respond Faster!";
+            additional_text = "Versuche im nächsten Block schneller zu sein!";
         } else if (block_dvs["error_rate"] > 30) {
-            additional_text = "Respond Slower!";
+            additional_text =
+                "Versuche im nächsten Block etwas weniger Fehler zu machen und weiterhin aber so schnell wie möglich zu sein!";
+        } else {
+            additional_text = "Super—du bist schnell und machst nicht zuviele Fehler!";
         }
 
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.count_block} von ${PRMS.n_blocks}: Kurze Pause<br><br>
-            Block Duration: ${Math.round(block_dvs["total_rt"] / 1000)} S<br>
-            Error Rate: ${block_dvs["error_rate"]} %<br><br>
+Du hast für diesen Block ${Math.round(block_dvs["total_rt"] / 1000)}s gebraucht und dabei ${block_dvs["error_rate"]}% Fehler gemacht.
             ${additional_text}<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
@@ -371,6 +382,12 @@ function draw_stimulus(args) {
     let idx = 0;
     let centerX;
     let centerY = ((PRMS.grid_size[0] - 1) / 2) * PRMS.grid_gaps[0];
+    let dot_size = args.free_forced === "forced_letter" ? PRMS.colour_task_dot_size_nogo : PRMS.colour_task_dot_size;
+
+    // some canvas text properties
+    ctx.font = args.free_forced === "forced_colour" ? PRMS.letter_task_font_nogo : PRMS.letter_task_font;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
 
     for (let rows = 0; rows < PRMS.grid_size[0]; rows += 1) {
         centerX = -(((PRMS.grid_size[1] - 1) / 2) * PRMS.grid_gaps[1]);
@@ -378,16 +395,14 @@ function draw_stimulus(args) {
             // draw dots
             if (args.draw_dots) {
                 ctx.beginPath();
-                ctx.arc(centerX, centerY + PRMS.colour_task_offset, PRMS.colour_task_dot_size, 0, 2 * Math.PI, false);
-                ctx.fillStyle = args.dots[idx];
+                ctx.arc(centerX, centerY + PRMS.colour_task_offset, dot_size, 0, 2 * Math.PI, false);
+                ctx.fillStyle = COLOUR_VALUES[args.dots[idx]];
                 ctx.fill();
             }
 
             // draw letters
             if (args.draw_letters) {
-                ctx.font = PRMS.letter_task_font;
                 ctx.fillStyle = PRMS.letter_task_colour;
-                ctx.textAlign = "center";
                 ctx.fillText(args.letters[idx], centerX, centerY + PRMS.letter_task_offset);
             }
 
@@ -535,36 +550,96 @@ const STIMULUS = {
 
         if (PERFORMANCE.soa > 0 && PERFORMANCE.previous_task === "Letter") {
             trial.func_args = [
-                { draw_dots: true, dots: colours, draw_letters: false, letters: letters },
-                { draw_dots: true, dots: colours, draw_letters: true, letters: letters },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: true,
+                    dots: colours,
+                    draw_letters: false,
+                    letters: letters,
+                },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: true,
+                    dots: colours,
+                    draw_letters: true,
+                    letters: letters,
+                },
             ];
             trial.data.s1 = "Colour";
             trial.data.s2 = "Letter";
         } else if (PERFORMANCE.soa > 0 && PERFORMANCE.previous_task === "Colour") {
             trial.func_args = [
-                { draw_dots: false, dots: colours, draw_letters: true, letters: letters },
-                { draw_dots: true, dots: colours, draw_letters: true, letters: letters },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: false,
+                    dots: colours,
+                    draw_letters: true,
+                    letters: letters,
+                },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: true,
+                    dots: colours,
+                    draw_letters: true,
+                    letters: letters,
+                },
             ];
             trial.data.s1 = "Letter";
             trial.data.s2 = "Colour";
         } else if (PERFORMANCE.soa < 0 && PERFORMANCE.previous_task === "Colour") {
             trial.func_args = [
-                { draw_dots: true, dots: colours, draw_letters: false, letters: letters },
-                { draw_dots: true, dots: colours, draw_letters: true, letters: letters },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: true,
+                    dots: colours,
+                    draw_letters: false,
+                    letters: letters,
+                },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: true,
+                    dots: colours,
+                    draw_letters: true,
+                    letters: letters,
+                },
             ];
             trial.data.s1 = "Colour";
             trial.data.s2 = "Letter";
         } else if (PERFORMANCE.soa < 0 && PERFORMANCE.previous_task === "Letter") {
             trial.func_args = [
-                { draw_dots: false, dots: colours, draw_letters: true, letters: letters },
-                { draw_dots: true, dots: colours, draw_letters: true, letters: letters },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: false,
+                    dots: colours,
+                    draw_letters: true,
+                    letters: letters,
+                },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: true,
+                    dots: colours,
+                    draw_letters: true,
+                    letters: letters,
+                },
             ];
             trial.data.s1 = "Letter";
             trial.data.s2 = "Colour";
         } else if (PERFORMANCE.soa === 0) {
             trial.func_args = [
-                { draw_dots: true, dots: colours, draw_letters: true, letters: letters },
-                { draw_dots: true, dots: colours, draw_letters: true, letters: letters },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: true,
+                    dots: colours,
+                    draw_letters: true,
+                    letters: letters,
+                },
+                {
+                    free_forced: trial.data.free_forced,
+                    draw_dots: true,
+                    dots: colours,
+                    draw_letters: true,
+                    letters: letters,
+                },
             ];
             trial.data.s1 = "Simultaneous";
             trial.data.s2 = "Simultaneous";
@@ -578,14 +653,14 @@ const STIMULUS = {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-  { free_forced: "free",   colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { free_forced: "free",   colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { free_forced: "free",   colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { free_forced: "free",   colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { free_forced: "forced", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { free_forced: "forced", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { free_forced: "forced", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na"},
-  { free_forced: "forced", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na"},
+  { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+  { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+  { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+  { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+  { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+  { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+  { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na"},
+  { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na"},
 ];
 // console.table(TRIAL_TABLE);
 
