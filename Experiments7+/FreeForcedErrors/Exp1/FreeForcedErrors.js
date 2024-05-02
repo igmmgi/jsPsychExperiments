@@ -31,7 +31,7 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_blocks: 8,
+    n_blocks: 10,
     n_trials: 64,
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
