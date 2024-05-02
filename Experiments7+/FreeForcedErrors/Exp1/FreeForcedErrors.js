@@ -31,29 +31,29 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_blocks: 2,
-    n_trials: 8,
+    n_blocks: 8,
+    n_trials: 64,
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
     fixation_duration: 500, // duration of the fixation cross
-    feedback_duration_practice: 1000, // duration of the feedback practice
+    feedback_duration_practice: 2000, // duration of the feedback practice
     feedback_duration_experiment: 0, // duration of the feedback experiment
     feedback_text: ["Richtig!", "Falsch!"], // feedback text
     iti: 1000,
-    grid_size: [1, 8], // rows, cols (1 row but with two tasks)
-    grid_gaps: [0, 30], // rows, cols
+    grid_size: [1, 5], // rows, cols (1 row but with two tasks)
+    grid_gaps: [0, 26], // rows, cols
     task_side: shuffle(["Colour", "Letter"]),
     colour_task_colours: shuffle(["blue", "red"]),
     colour_task_nogo: ["grey"],
-    colour_task_ratio: [25, 75], // should sum to 100!
+    colour_task_ratio: [35, 65], // should sum to 100!
     colour_task_offset: -15,
     colour_task_dot_size: 12,
-    colour_task_dot_size_nogo: 6,
+    colour_task_dot_size_nogo: 8,
     letter_task_letters: shuffle(["X", "O"]),
     letter_task_nogo: ["#"],
-    letter_task_ratio: [20, 80], // should sum to 100!
-    letter_task_font: "bold 28px Monospace",
-    letter_task_font_nogo: "bold 14px Monospace",
+    letter_task_ratio: [35, 65], // should sum to 100!
+    letter_task_font: "bold 34px Monospace",
+    letter_task_font_nogo: "bold 24px Monospace",
     letter_task_colour: "Black",
     letter_task_offset: 2,
     soa_step: 50,
@@ -65,7 +65,7 @@ const PRMS = {
     count_trial: 1,
 };
 
-const COLOUR_VALUES = { blue: "rgb(0, 0, 150)", red: "rgb(150, 0, 0)", grey: "rgb(120, 120, 120)" };
+const COLOUR_VALUES = { blue: "rgb(0, 0, 130)", red: "rgb(130, 0, 0)", grey: "rgb(120, 120, 120)" };
 
 if (PRMS.task_side[0] === "Colour") {
     PRMS.response_keys_colour = PRMS.response_keys_lh;
@@ -413,13 +413,13 @@ function draw_stimulus(args) {
     }
 
     // fixation cross for piloting positions
-    ctx.beginPath();
-    ctx.moveTo(-200, 0);
-    ctx.lineTo(200, 0);
-    ctx.stroke();
-    ctx.moveTo(0, -200);
-    ctx.lineTo(0, 200);
-    ctx.stroke();
+    // ctx.beginPath();
+    // ctx.moveTo(-200, 0);
+    // ctx.lineTo(200, 0);
+    // ctx.stroke();
+    // ctx.moveTo(0, -200);
+    // ctx.lineTo(0, 200);
+    // ctx.stroke();
 }
 
 function code_trial() {
@@ -653,14 +653,14 @@ const STIMULUS = {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-  { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na"},
-  { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na"},
+   { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+   { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+   { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+   { free_forced: "free",          colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+   { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
+   { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+   { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na"},
+   { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na"},
 ];
 // console.table(TRIAL_TABLE);
 
