@@ -17,7 +17,16 @@
 // Blocks 1 and 2- Trial feedback for 1000 ms (correct vs. incorrect)
 // Blank inter-trial-interval for 1000 ms
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.count_block >= 10) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=353&credit_token=53fd0370d86f474d9604675615ba7bec&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
