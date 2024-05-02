@@ -36,7 +36,7 @@ const PRMS = {
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
     fixation_duration: 500, // duration of the fixation cross
-    feedback_duration_practice: 2000, // duration of the feedback practice
+    feedback_duration_practice: 1600, // duration of the feedback practice
     feedback_duration_experiment: 0, // duration of the feedback experiment
     feedback_text: ["Richtig!", "Falsch!"], // feedback text
     iti: 1000,
