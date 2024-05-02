@@ -101,6 +101,7 @@ const PERFORMANCE = {
     n_switches: 0,
     soa: 0,
     previous_task: null,
+    time: new Date(),
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -236,6 +237,9 @@ Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 lineheight: 1.5,
             });
     },
+    on_finish: function () {
+        PERFORMANCE.time = new Date();
+    },
 };
 
 function calculate_block_performance({ filter_options = {} } = {}) {
@@ -275,9 +279,10 @@ const BLOCK_END = {
             additional_text = "Super—du bist schnell und machst nicht zuviele Fehler!";
         }
 
+        let time = (new Date() - PERFORMANCE.time) / 1000;
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.count_block} von ${PRMS.n_blocks}: Kurze Pause<br><br>
-Du hast für diesen Block ${Math.round(block_dvs["total_rt"] / 1000)}s gebraucht und dabei ${block_dvs["error_rate"]}% Fehler gemacht.
+Du hast für diesen Block ${Math.round(time)}s gebraucht und dabei ${block_dvs["error_rate"]}% Fehler gemacht.
             ${additional_text}<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
@@ -697,13 +702,13 @@ function genExpSeq() {
 
     let exp = [];
 
-    // setup
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screen_res));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    exp.push(mouseCursor(false));
+    // // setup
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(PRMS.screen_res));
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    // exp.push(mouseCursor(false));
 
     // instructions
     exp.push(WELCOME_INSTRUCTIONS);
