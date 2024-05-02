@@ -43,10 +43,11 @@ const PRMS = {
     grid_size: [1, 5], // rows, cols (1 row but with two tasks)
     grid_gaps: [0, 26], // rows, cols
     task_side: shuffle(["Colour", "Letter"]),
+    task_position: shuffle(["Colour", "Letter"]),
     colour_task_colours: shuffle(["blue", "red"]),
     colour_task_nogo: ["grey"],
     colour_task_ratio: [35, 65], // should sum to 100!
-    colour_task_offset: -15,
+    colour_task_offset: null,
     colour_task_dot_size: 12,
     colour_task_dot_size_nogo: 8,
     letter_task_letters: shuffle(["X", "O"]),
@@ -55,7 +56,7 @@ const PRMS = {
     letter_task_font: "bold 34px Monospace",
     letter_task_font_nogo: "bold 24px Monospace",
     letter_task_colour: "Black",
-    letter_task_offset: 2,
+    letter_task_offset: null,
     soa_step: 50,
     response_keys_lh: ["Q", "W"],
     response_keys_rh: ["O", "P"],
@@ -85,6 +86,16 @@ if (PRMS.task_side[0] === "Colour") {
     PRMS.key_mapping[PRMS.colour_task_colours[1]] = PRMS.response_keys_rh[1];
 }
 PRMS.response_keys = PRMS.response_keys_lh.concat(PRMS.response_keys_rh);
+
+if (PRMS.task_position[0] === "Colour") {
+    PRMS.colour_task_offset = -15;
+    PRMS.letter_task_offset = 2;
+} else if (PRMS.task_position[1] === "Colour") {
+    PRMS.colour_task_offset = 15;
+    PRMS.letter_task_offset = -28;
+}
+
+jsPsych.data.addProperties({ task_left_hand: PRMS.task_side[0], task_top_position: PRMS.task_position[0] });
 
 const EN_DE = {
     blue: "Blau",
@@ -417,7 +428,7 @@ function draw_stimulus(args) {
         centerY -= PRMS.grid_gaps[0];
     }
 
-    // fixation cross for piloting positions
+    // // fixation cross for piloting positions
     // ctx.beginPath();
     // ctx.moveTo(-200, 0);
     // ctx.lineTo(200, 0);
@@ -685,13 +696,13 @@ const VP_NUM = getTime();
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
     saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtse" });
-    //saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtse" });
+    // saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtse" });
 }
 
 const SAVE_DATA = {
     type: jsPsychCallFunction,
     func: save,
-    post_trial_gap: 3000,
+    post_trial_gap: 2000,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -702,13 +713,13 @@ function genExpSeq() {
 
     let exp = [];
 
-    // // setup
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screen_res));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    // setup
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screen_res));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     // instructions
     exp.push(WELCOME_INSTRUCTIONS);
