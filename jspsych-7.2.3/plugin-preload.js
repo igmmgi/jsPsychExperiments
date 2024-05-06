@@ -1,4 +1,4 @@
-var jsPsychPreload = (function(jspsych) {
+var jsPsychPreload = (function (jspsych) {
     "use strict";
 
     const info = {
@@ -202,8 +202,8 @@ var jsPsychPreload = (function(jspsych) {
                     after_error("timeout"); // call trial's on_error event handler here, in case loading timed out with no file errors
                     detailed_errors.push(
                         "<p><strong>Loading timed out.</strong><br>" +
-                        "Consider compressing your stimuli files, loading your files in smaller batches,<br>" +
-                        "and/or increasing the <i>max_load_time</i> parameter.</p>",
+                            "Consider compressing your stimuli files, loading your files in smaller batches,<br>" +
+                            "and/or increasing the <i>max_load_time</i> parameter.</p>",
                     );
                     if (trial.continue_after_error) {
                         end_trial();
@@ -235,6 +235,7 @@ var jsPsychPreload = (function(jspsych) {
                     failed_audio: failed_audio,
                     failed_video: failed_video,
                 };
+                console.log(trial_data);
                 // clear the display
                 display_element.innerHTML = "";
                 this.jsPsych.finishTrial(trial_data);
@@ -259,13 +260,13 @@ var jsPsychPreload = (function(jspsych) {
                     this.jsPsych.pluginAPI.preloadImages(images, cb, file_loading_success, file_loading_error);
                 };
                 if (video.length > 0) {
-                    load_video(() => { });
+                    load_video(() => {});
                 }
                 if (audio.length > 0) {
-                    load_audio(() => { });
+                    load_audio(() => {});
                 }
                 if (images.length > 0) {
-                    load_images(() => { });
+                    load_images(() => {});
                 }
             }
             // helper functions and callbacks
