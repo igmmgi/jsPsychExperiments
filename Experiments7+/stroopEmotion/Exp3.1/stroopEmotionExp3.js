@@ -633,6 +633,7 @@ function genExpSeq() {
     exp.push(TASK_INSTRUCTIONS2);
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+        exp.push(PRELOAD);
         exp.push(BLOCK_START);
         let blk_timeline = deepCopy(TRIAL_TIMELINE);
         blk_timeline.timeline_variables = generate_trials_within_block(FEAR_IMAGES, HAPPY_IMAGES);
