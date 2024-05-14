@@ -403,12 +403,12 @@ function genExpSeq() {
 
     let exp = [];
 
-    /* exp.push(fullscreen(true)); */
-    /* exp.push(browser_check(PRMS.screenRes)); */
-    /* exp.push(resize_browser()); */
-    /* exp.push(welcome_message()); */
-    /* exp.push(vpInfoForm('/Common7+/vpInfoForm_de.html')); */
-    /* exp.push(mouseCursor(false)); */
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screenRes));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(COUNT_DOTS);
