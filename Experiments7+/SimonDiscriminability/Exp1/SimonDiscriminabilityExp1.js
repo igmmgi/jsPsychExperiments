@@ -323,18 +323,18 @@ const BLOCK_FEEDBACK = {
 
 // prettier-ignore
 const TRIAL_TABLE_EASY = [
-    { ratio: "easy", position: "left",  target: PRMS.target_emotion[0], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target_emotion.indexOf(PRMS.target_emotion[0])] },
-    { ratio: "easy", position: "left",  target: PRMS.target_emotion[1], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target_emotion.indexOf(PRMS.target_emotion[1])] },
-    { ratio: "easy", position: "right", target: PRMS.target_emotion[0], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target_emotion.indexOf(PRMS.target_emotion[0])] },
-    { ratio: "easy", position: "right", target: PRMS.target_emotion[1], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target_emotion.indexOf(PRMS.target_emotion[1])] },
+    { ratio: "easy", position: "left",  target: PRMS.target[0], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: "easy", position: "left",  target: PRMS.target[1], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { ratio: "easy", position: "right", target: PRMS.target[0], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: "easy", position: "right", target: PRMS.target[1], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
 // prettier-ignore
 const TRIAL_TABLE_HARD = [
-  { ratio: 'hard', position: 'left',  target: PRMS.target_emotion[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target_emotion.indexOf(PRMS.target_emotion[0])] },
-  { ratio: 'hard', position: 'left',  target: PRMS.target_emotion[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target_emotion.indexOf(PRMS.target_emotion[1])] },
-  { ratio: 'hard', position: 'right', target: PRMS.target_emotion[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target_emotion.indexOf(PRMS.target_emotion[0])] },
-  { ratio: 'hard', position: 'right', target: PRMS.target_emotion[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target_emotion.indexOf(PRMS.target_emotion[1])] },
+  { ratio: 'hard', position: 'left',  target: PRMS.target[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { ratio: 'hard', position: 'left',  target: PRMS.target[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+  { ratio: 'hard', position: 'right', target: PRMS.target[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+  { ratio: 'hard', position: 'right', target: PRMS.target[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
 // prettier-ignore
