@@ -47,7 +47,7 @@ const PRMS = {
     fixation_duration: 500, // duration of the fixation cross
     feedback_duration_practice: 1600, // duration of the feedback practice
     feedback_duration_experiment: 0, // duration of the feedback experiment
-    feedback_text: ["Richtig!", "Falsch!"], // feedback text
+    feedback_text: ["Richtig!", "Falsch!", "Zu Schnell!"], // feedback text
     iti: 1000,
     grid_size: [1, 5], // rows, cols (1 row but with two tasks)
     grid_gaps: [0, 26], // rows, cols
@@ -267,7 +267,7 @@ function calculate_block_performance({ filter_options = {} } = {}) {
 
     let n_total = dat.count();
     let n_error = dat.select("error").values.filter(function (x) {
-        return x === 1;
+        return x !== 0;
     }).length;
     let total_rt = Math.round(dat.select("rt").sum());
     let error_rate = Math.round((n_error / n_total) * 100);
@@ -291,18 +291,19 @@ const BLOCK_END = {
 
         let additional_text = "";
         if (block_dvs["error_rate"] < 15) {
-            additional_text = "Versuche im nächsten Block schneller zu sein!";
+            additional_text =
+                "Du machst zwar wenige Fehler, aber du bist zu langsam! WICHTIG: Versuche im nächsten Block schneller zu sein auch wenn du dabei etwas mehr Fehler machst";
         } else if (block_dvs["error_rate"] > 30) {
             additional_text =
-                "Versuche im nächsten Block etwas weniger Fehler zu machen und weiterhin aber so schnell wie möglich zu sein!";
+                "Du bist zwar schnell, aber du machst etwas zu viele Fehler! WICHTIG: Versuche im nächsten Block etwas weniger Fehler zu machen auch wenn du dabei etwas langsamer bist!";
         } else {
-            additional_text = "Super—du bist schnell und machst nicht zuviele Fehler!";
+            additional_text = "*** Super!!! ***--—du bist schnell und machst nicht zuviele Fehler! Weiter so!";
         }
 
         let time = (new Date() - PERFORMANCE.time) / 1000;
         trial.stimulus = generate_formatted_html({
             text: `Ende Block ${PRMS.count_block} von ${PRMS.n_blocks}: Kurze Pause<br><br>
-Du hast für diesen Block ${Math.round(time)}s gebraucht und dabei ${block_dvs["error_rate"]}% Fehler gemacht.
+Dein Feedback:
             ${additional_text}<br><br>
              Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
@@ -469,6 +470,10 @@ function code_trial() {
         error = 1;
     }
 
+    if (dat.rt < 0) {
+        error = 2; // too fast
+    }
+
     let repetition_switch = "na";
     if (PERFORMANCE.previous_task !== null) {
         repetition_switch = response_task === PERFORMANCE.previous_task ? "repetition" : "switch";
@@ -571,7 +576,6 @@ const STIMULUS = {
 
         // task order
         trial.stimulus_onset = [0, Math.abs(PERFORMANCE.soa)];
-        trial.stimulus_onset = [0, 400];
 
         if (PERFORMANCE.soa > 0 && PERFORMANCE.previous_task === "Letter") {
             trial.func_args = [
