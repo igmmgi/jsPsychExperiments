@@ -726,22 +726,22 @@ function genExpSeq() {
 
     let exp = [];
 
-    // setup
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screen_res));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    exp.push(mouseCursor(false));
+    // // setup
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(PRMS.screen_res));
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    // exp.push(mouseCursor(false));
 
-    // instructions
-    exp.push(WELCOME_INSTRUCTIONS);
-    exp.push(TASK_INSTRUCTIONS1);
-    exp.push(TASK_INSTRUCTIONS2);
-    exp.push(TASK_INSTRUCTIONS3);
+    // // instructions
+    // exp.push(WELCOME_INSTRUCTIONS);
+    // exp.push(TASK_INSTRUCTIONS1);
+    // exp.push(TASK_INSTRUCTIONS2);
+    // exp.push(TASK_INSTRUCTIONS3);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
-        exp.push(BLOCK_START);
+        // exp.push(BLOCK_START);
         let blk_timeline;
         blk_timeline = { ...TRIAL_TIMELINE };
         blk_timeline.sample = {
