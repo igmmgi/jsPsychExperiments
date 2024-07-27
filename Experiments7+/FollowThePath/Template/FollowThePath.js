@@ -14,26 +14,6 @@
 
 const jsPsych = initJsPsych({});
 
-/* show declaration of consent */
-const check_consent_form = function (elem) {
-    if (document.getElementById("consent_checkbox").checked) {
-        return true;
-    } else {
-        alert(
-            "Vielen Dank für Ihr Interesse an unserem Experiment. Wenn Sie teilnehmen möchten, geben Sie uns bitte Ihr Einverständnis.",
-        );
-        return false;
-    }
-    return false;
-};
-
-const HTML_CONSENT_FORM = {
-    type: jsPsychExternalHtml,
-    url: "consent.html",
-    cont_btn: "start_experiment",
-    check_fn: check_consent_form,
-};
-
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
@@ -46,8 +26,8 @@ const p5js = new p5((sketch) => {
 });
 
 const PRMS = {
-    n_trials: 20, // number of trials per block
-    n_blocks: 8, // number of blocks (must be multiple of 4)
+    n_trials: 1, // number of trials per block
+    n_blocks: 4, // number of blocks (must be multiple of 4)
     randomise_block_order: false,
     iti: 500, // duration of the inter-trial-interval
     font: "50px Arial",
@@ -73,18 +53,17 @@ const WELCOME_INSTRUCTIONS = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `Willkommen zum Experiment:<br><br>
-               Die Teilnahme ist freiwillig und Sie können das Experiment jederzeit abbrechen.
-               Bitte stellen Sie sicher, dass Sie sich in einer ruhigen Umgebung befinden und genügend Zeit haben
-               um das Experiment durchzuführen. Wir bitten Sie, sich für die nächsten 30-35 Minuten zu konzentrieren.<br><br>
-               Sie erhalten einen Code für Prolific, um die Zahlung nach dem Experiment zu erhalten.
-               Wenn Sie Fragen oder Probleme haben, wenden Sie sich bitte an:<br><br>
-               parker.smith@psycho.uni-tuebingen.de<br><br>
-               Drücken Sie eine beliebige Taste, um fortzufahren`,
+        text: `Willkommen zu unserem Experiment:<br><br>
+               Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
+               Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+               um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
+               Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
+               Bei Fragen oder Problemen wende dich bitte an:<br><br>
+               xxx.xxx<br><br>
+               Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
         fontsize: 30,
-        bold: true,
     }),
 };
 
@@ -230,7 +209,7 @@ function draw_trial() {
         p5js.strokeWeight(2);
         p5js.textAlign(p5js.CENTER);
         p5js.textSize(50);
-        p5js.text("Drücken Sie 'n', um den nächsten Versuch zu starten", CANVAS_SIZE[0] / 2, CANVAS_SIZE[1] / 2);
+        p5js.text("Press 'n' to start the next trial", CANVAS_SIZE[0] / 2, CANVAS_SIZE[1] / 2);
     }
 }
 
@@ -257,7 +236,6 @@ const TRIAL = {
     },
     response_ends_trial: true,
     choices: ["n"],
-    minimum_valid_rt: 7000,
     data: {
         stim_type: "ftp",
         block_type: jsPsych.timelineVariable("block_type"),
@@ -300,10 +278,10 @@ const BLOCK_START = {
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}:<br><br> 
-                   Klicken Sie mit der linken Maustaste in die schwarze Kugel, um den Versuch zu starten.<br><br>
-                   Steuere den Ball mit der Maus, indem du ihn nach links und rechts bewegst.<br><br>
-                   Halte den Ball auf dem Weg, bis er den oberen Rand der Leinwand erreicht. Fehler werden mit rot markiert, Erfolge mit grün.<br><br><br>
-                   Drücken Sie eine beliebige Taste, um fortzufahren`,
+                   Click the left mouse button inside the black ball to start the trial.<br><br>
+                   Control the ball using the mouse by moving left and right.<br><br>
+                   Try to follow the path!<br><br><br>
+                   Drücke eine beliebige Taste, um fortzufahren`,
             align: "left",
             colour: "black",
             fontsize: 30,
@@ -321,7 +299,7 @@ const BLOCK_END = {
     response_ends_trial: true,
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `End von Block ${PRMS.count_block} aus ${PRMS.n_blocks}:<br><br> Drücken Sie eine beliebige Taste, um fortzufahren`,
+            text: `Ende Block ${PRMS.count_block} von 4:<br><br> Drücke eine beliebige Taste, um fortzufahren`,
             align: "center",
             colour: "black",
             fontsize: 30,
@@ -381,10 +359,9 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Dieser Teil des Experiments ist nun abgeschlossen.<br><br>
-             Im Folgenden finden Sie Informationen über die Zahlung von Prolific.
-             Bitte kopieren Sie diesen Code per Foto oder schriftlich für Prolific, um zu beweisen, dass Sie das Ende erreicht haben:
-             C1O307TB`,
+        text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
+             Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
+             Drücke eine beliebige Taste, um die Weiterleitung zu SONA zu starten.`,
         fontsize: 28,
         lineheight: 1.5,
         bold: true,
@@ -397,24 +374,22 @@ const SURVEY = {
     scale_width: CANVAS_SIZE[0] * 0.9,
     questions: [
         {
-            prompt: `<span style="font-weight: bold; font: 36px Arial;">Bewerten Sie "den Grad Ihrer erforderlichen Konzentration auf diesen Teil der Aufgabe" auf einer 9-Punkte-Skala <br>von 1 (extrem geringe Konzentration erforderlich) bis 9 (extrem hohe Konzentration erforderlich).</span>`,
+            prompt: `<span style="font-weight: bold; font: 36px Arial;">Rate “your level of mental effort on this part of the task” on a 9-point scale <br>ranging from 1 (extremely low mental effort) to 9 (extremely high mental effort).</span>`,
             name: "effort",
             labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-            required: true,
         },
         {
-            prompt: `<span style="font-weight: bold; font: 36px Arial;">Bewerten Sie "wie schwierig diese Aufgabe war" auf einer 9-Punkte-Skala von 1 (extrem leicht) bis 9 (extrem schwierig).</span>`,
+            prompt: `<span style="font-weight: bold; font: 36px Arial;">Rate “how difficult this task was” on a 9-point scale ranging<br> from 1 (extremely easy) to 9 (extremely difficult).</span>`,
             name: "difficulty",
             labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-            required: true,
         },
     ],
     on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
         jsPsych.data.addProperties({
             [`rt_survey_block_${PRMS.count_block - 1}`]: dat.rt,
-            [`effort_block_${PRMS.count_block - 1}`]: dat.response.effort + 1,
-            [`difficulty_block_${PRMS.count_block - 1}`]: dat.response.difficulty + 1,
+            [`effort_block_${PRMS.count_block - 1}`]: dat.response.effort,
+            [`difficulty_block_${PRMS.count_block - 1}`]: dat.response.difficulty,
         });
     },
 };
@@ -430,8 +405,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    saveData("write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
-    //saveDataLocal(data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    //saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    saveDataLocal(data_fn, { stim_type: "ftp" }, (filetype = "json"));
 }
 
 const SAVE_DATA = {
@@ -448,13 +423,12 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(HTML_CONSENT_FORM);
-    exp.push(vpDemographics());
     exp.push(fullscreen(true));
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
     exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
     exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type;
