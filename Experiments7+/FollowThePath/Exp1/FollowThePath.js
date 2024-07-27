@@ -26,8 +26,8 @@ const p5js = new p5((sketch) => {
 });
 
 const PRMS = {
-    n_trials: 20, // number of trials per block
-    n_blocks: 8, // number of blocks (must be multiple of 4)
+    n_trials: 1, // number of trials per block
+    n_blocks: 4, // number of blocks (must be multiple of 4)
     randomise_block_order: false,
     iti: 500, // duration of the inter-trial-interval
     font: "50px Arial",
