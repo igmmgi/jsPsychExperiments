@@ -447,7 +447,7 @@ const VP_NUM = getTime();
 function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
-    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
+    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
     saveData("/Common/write_data.php", data_fn, { stim: "cse_sf" });
     // saveDataLocal(data_fn, { stim_type: 'fd' });
 }

@@ -16,9 +16,9 @@ const CANVAS_BORDER = "5px solid Black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screenRes: [960, 720],
-    nBlks: 6, // number of experimental blocks
+    nBlks: 4, // number of experimental blocks
     nTrlsP: 10, // number of practice trials
-    nTrlsE: 72, // number of experimental trials
+    nTrlsE: 96, // number of experimental trials
     fixDur: 1000, // duration of fixation cross
     fixSize: 50, // size of fixation cross
     fbDur: [1000, 1000], // duration of feedback for each type
@@ -1075,6 +1075,9 @@ const TRIAL_TABLE_PRACTICE_GESTURE = shuffle(create_trial_table_gesture()).slice
 const TRIAL_TABLE_EXP_SPEECH = create_trial_table_speech();
 const TRIAL_TABLE_EXP_GESTURE = create_trial_table_gesture();
 
+console.table(TRIAL_TABLE_EXP_SPEECH);
+console.table(TRIAL_TABLE_EXP_GESTURE);
+
 const TRIAL_TIMELINE_PRACTICE_SPEECH = {
     timeline: [FIXATION_CROSS, QUESTION, VIDEO_TRIAL_TRAINING, TRIAL_FEEDBACK, ITI],
     timeline_variables: TRIAL_TABLE_PRACTICE_SPEECH,
@@ -1162,7 +1165,7 @@ function genExpSeq() {
     exp.push(TRIAL_TIMELINE_PRACTICE_SPEECH);
     exp.push(TASK_INSTRUCTIONS5);
 
-    for (let blk_speech = 1; blk_speech < 4; blk_speech += 1) {
+    for (let blk_speech = 1; blk_speech < 3; blk_speech += 1) {
         let blk_speech_timeline = { ...TRIAL_TIMELINE_EXP_SPEECH };
         blk_speech_timeline.sample = {
             type: "fixed-repetitions",
@@ -1178,7 +1181,7 @@ function genExpSeq() {
     exp.push(TRIAL_TIMELINE_PRACTICE_GESTURE);
     exp.push(TASK_INSTRUCTIONS8);
 
-    for (let blk_gesture = 1; blk_gesture < 4; blk_gesture += 1) {
+    for (let blk_gesture = 1; blk_gesture < 3; blk_gesture += 1) {
         let blk_gesture_timeline = { ...TRIAL_TIMELINE_EXP_GESTURE };
         blk_gesture_timeline.sample = {
             type: "fixed-repetitions",
