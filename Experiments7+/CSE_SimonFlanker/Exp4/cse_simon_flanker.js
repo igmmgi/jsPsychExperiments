@@ -21,7 +21,7 @@ const PRMS = {
     nTrls: 80,
     nBlks: 9,
     fixDur: 500,
-    fbDur: [0, 1000, 1000],
+    fbDur: [0, 1500, 1500],
     iti: 500,
     tooSlow: 2500,
     cTrl: 1, // count trials
@@ -238,12 +238,14 @@ function code_trial() {
     let comp;
     if (dat.stim_type === "simon") {
         comp =
-            (dat.corrResp === "Q" && dat.position < 0) || (dat.corrResp === "P" && dat.position > 0)
+            (["W", "E"].includes(dat.corrResp) && dat.position < 0) ||
+            (["O", "P"].includes(dat.corrResp) && dat.position > 0)
                 ? "comp"
                 : "incomp";
     } else {
         comp = dat.stim1.includes(dat.stim2) || dat.stim2.includes(dat.stim1) ? "comp" : "incomp";
     }
+    console.log(comp);
 
     let correctKey;
     if (dat.response !== null) {
@@ -384,31 +386,30 @@ function trial_table() {
   if (PRMS.respTask[0] === "flanker") {
     trial_table = [
       { stim_type: "flanker_ir", target: PRMS.respLetters[0], stim1: flanker_array(PRMS.respLetters[0]), stim2: PRMS.respLetters[0], delay: 150, position: 0,              corrResp: PRMS.respLetters[0] },
-      { stim_type: "flanker_ir", target: PRMS.respLetters[1], stim1: flanker_array(PRMS.respLetters[1]), stim2: PRMS.respLetters[1], delay: 150, position: 0,              corrResp: PRMS.respLetters[1] },
-      { stim_type: "flanker_ir", target: PRMS.respLetters[0], stim1: flanker_array(PRMS.respLetters[1]), stim2: PRMS.respLetters[0], delay: 150, position: 0,              corrResp: PRMS.respLetters[0] },
-      { stim_type: "flanker_ir", target: PRMS.respLetters[1], stim1: flanker_array(PRMS.respLetters[0]), stim2: PRMS.respLetters[1], delay: 150, position: 0,              corrResp: PRMS.respLetters[1] },
+      { stim_type: "flanker_ir", target: PRMS.respLetters[3], stim1: flanker_array(PRMS.respLetters[3]), stim2: PRMS.respLetters[3], delay: 150, position: 0,              corrResp: PRMS.respLetters[3] },
+      { stim_type: "flanker_ir", target: PRMS.respLetters[0], stim1: flanker_array(PRMS.respLetters[3]), stim2: PRMS.respLetters[0], delay: 150, position: 0,              corrResp: PRMS.respLetters[0] },
+      { stim_type: "flanker_ir", target: PRMS.respLetters[3], stim1: flanker_array(PRMS.respLetters[0]), stim2: PRMS.respLetters[3], delay: 150, position: 0,              corrResp: PRMS.respLetters[3] },
+      { stim_type: "simon",      target: PRMS.respLetters[1], stim1: PRMS.respLetters[1],                stim2: PRMS.respLetters[1], delay:   0, position: -PRMS.simonPos, corrResp: PRMS.respLetters[1] },
       { stim_type: "simon",      target: PRMS.respLetters[2], stim1: PRMS.respLetters[2],                stim2: PRMS.respLetters[2], delay:   0, position: -PRMS.simonPos, corrResp: PRMS.respLetters[2] },
-      { stim_type: "simon",      target: PRMS.respLetters[3], stim1: PRMS.respLetters[3],                stim2: PRMS.respLetters[3], delay:   0, position: -PRMS.simonPos, corrResp: PRMS.respLetters[3] },
+      { stim_type: "simon",      target: PRMS.respLetters[1], stim1: PRMS.respLetters[1],                stim2: PRMS.respLetters[1], delay:   0, position:  PRMS.simonPos, corrResp: PRMS.respLetters[1] },
       { stim_type: "simon",      target: PRMS.respLetters[2], stim1: PRMS.respLetters[2],                stim2: PRMS.respLetters[2], delay:   0, position:  PRMS.simonPos, corrResp: PRMS.respLetters[2] },
-      { stim_type: "simon",      target: PRMS.respLetters[3], stim1: PRMS.respLetters[3],                stim2: PRMS.respLetters[3], delay:   0, position:  PRMS.simonPos, corrResp: PRMS.respLetters[3] },
     ];
   } else if (PRMS.respTask[0] === "simon") {
     trial_table = [
+      { stim_type: "flanker_ir", target: PRMS.respLetters[1], stim1: flanker_array(PRMS.respLetters[1]), stim2: PRMS.respLetters[1], delay: 150, position: 0,              corrResp: PRMS.respLetters[1] },
       { stim_type: "flanker_ir", target: PRMS.respLetters[2], stim1: flanker_array(PRMS.respLetters[2]), stim2: PRMS.respLetters[2], delay: 150, position: 0,              corrResp: PRMS.respLetters[2] },
-      { stim_type: "flanker_ir", target: PRMS.respLetters[3], stim1: flanker_array(PRMS.respLetters[3]), stim2: PRMS.respLetters[3], delay: 150, position: 0,              corrResp: PRMS.respLetters[3] },
-      { stim_type: "flanker_ir", target: PRMS.respLetters[2], stim1: flanker_array(PRMS.respLetters[3]), stim2: PRMS.respLetters[2], delay: 150, position: 0,              corrResp: PRMS.respLetters[2] },
-      { stim_type: "flanker_ir", target: PRMS.respLetters[3], stim1: flanker_array(PRMS.respLetters[2]), stim2: PRMS.respLetters[3], delay: 150, position: 0,              corrResp: PRMS.respLetters[3] },
+      { stim_type: "flanker_ir", target: PRMS.respLetters[1], stim1: flanker_array(PRMS.respLetters[2]), stim2: PRMS.respLetters[1], delay: 150, position: 0,              corrResp: PRMS.respLetters[1] },
+      { stim_type: "flanker_ir", target: PRMS.respLetters[2], stim1: flanker_array(PRMS.respLetters[1]), stim2: PRMS.respLetters[2], delay: 150, position: 0,              corrResp: PRMS.respLetters[2] },
       { stim_type: "simon",      target: PRMS.respLetters[0], stim1: PRMS.respLetters[0],                stim2: PRMS.respLetters[0], delay:   0, position: -PRMS.simonPos, corrResp: PRMS.respLetters[0] },
-      { stim_type: "simon",      target: PRMS.respLetters[1], stim1: PRMS.respLetters[1],                stim2: PRMS.respLetters[1], delay:   0, position: -PRMS.simonPos, corrResp: PRMS.respLetters[1] },
+      { stim_type: "simon",      target: PRMS.respLetters[3], stim1: PRMS.respLetters[3],                stim2: PRMS.respLetters[3], delay:   0, position: -PRMS.simonPos, corrResp: PRMS.respLetters[3] },
       { stim_type: "simon",      target: PRMS.respLetters[0], stim1: PRMS.respLetters[0],                stim2: PRMS.respLetters[0], delay:   0, position:  PRMS.simonPos, corrResp: PRMS.respLetters[0] },
-      { stim_type: "simon",      target: PRMS.respLetters[1], stim1: PRMS.respLetters[1],                stim2: PRMS.respLetters[1], delay:   0, position:  PRMS.simonPos, corrResp: PRMS.respLetters[1] },
+      { stim_type: "simon",      target: PRMS.respLetters[3], stim1: PRMS.respLetters[3],                stim2: PRMS.respLetters[3], delay:   0, position:  PRMS.simonPos, corrResp: PRMS.respLetters[3] },
     ];
   }
   return trial_table;
 }
 
 const TRIAL_TABLE_irE_S = trial_table();
-console.log(TRIAL_TABLE_irE_S);
 
 const TRIAL_TIMELINE_irE_S = {
     timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, ITI],
