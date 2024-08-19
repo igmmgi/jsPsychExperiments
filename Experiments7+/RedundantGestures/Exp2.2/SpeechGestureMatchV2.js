@@ -1111,7 +1111,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-    saveData("../Common7+/write_data.php", data_fn, { stim: "SpeechGestureMatch" });
+    saveData("../RequiredFiles/Common7+/write_data.php", data_fn, { stim: "SpeechGestureMatch" });
 }
 
 const SAVE_DATA = {
@@ -1150,7 +1150,7 @@ function genExpSeq() {
     exp.push(resize_browser());
     exp.push(PRELOAD_A);
     exp.push(CONSENT_SCREEN);
-    exp.push(vpInfoForm("../Common7+/vpInfoForm_de.html"));
+    exp.push(vpInfoForm("../RequiredFiles/Common7+/vpInfoForm_de.html"));
     exp.push(mouseCursor(false));
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(AUDIO_1);

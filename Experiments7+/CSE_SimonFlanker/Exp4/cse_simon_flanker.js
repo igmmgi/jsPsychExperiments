@@ -4,7 +4,14 @@
 // Predictable trial sequence e.g., Simon -> Flanker -> Simon -> Flanker
 
 const jsPsych = initJsPsych({
-    on_finish: function () {},
+    on_finish: function () {
+        if (PRMS.cBlk >= 8) {
+            window.location.assign(
+                "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=447&credit_token=90d8bbd505414b2c8fe4b4dc24313119&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
 });
 
 ////////////////////////////////////////////////////////////////////////

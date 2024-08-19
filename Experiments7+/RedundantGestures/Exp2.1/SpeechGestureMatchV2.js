@@ -1111,7 +1111,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-    saveData("../Common7+/write_data.php", data_fn, { stim: "SpeechGestureMatch" });
+    saveData("../RequiredFiles/Common7+/write_data.php", data_fn, { stim: "SpeechGestureMatch" });
 }
 
 const SAVE_DATA = {
