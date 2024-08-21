@@ -1,0 +1,17 @@
+.left {
+  width: 0;
+  height: 0;
+  border-top: 50px solid transparent;
+  border-right: 100px solid black;
+  border-bottom: 50px solid transparent;
+  margin: 20px;
+}
+
+.right {
+  width: 0;
+  height: 0;
+  border-top: 50px solid transparent;
+  border-left: 100px solid black;
+  border-bottom: 50px solid transparent;
+  margin: 20px;
+}
