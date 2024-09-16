@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Randomization</title>
+    </head>
+<body>
+<script type="text/javascript">
+var pages = ["IndexSpeechGestureMatchV1.html"];
+            
+function randomPage() {
+         return pages[Math.round(Math.random()*(pages.length - 1))];
+                      }
+
+location.href= randomPage();
+ 
+</script>	
+</body>
+</html>

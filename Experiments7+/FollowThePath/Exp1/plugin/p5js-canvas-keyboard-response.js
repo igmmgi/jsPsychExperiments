@@ -112,6 +112,7 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
 
             // function to handle responses by the subject
             let after_response = (info) => {
+
                 if (response.key == null) {
                     response = info;
                 }
@@ -128,6 +129,7 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
                     rt_method: "performance",
                     persist: false,
                     allow_held_key: false,
+                    minimum_valid_rt: 7000,
                 });
             }
 
