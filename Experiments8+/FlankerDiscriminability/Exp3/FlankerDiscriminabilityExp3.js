@@ -28,7 +28,7 @@ const CANVAS_BORDER = "5px solid grey";
 ////////////////////////////////////////////////////////////////////////
 
 const PRMS = {
-    ntrls: 8, //64, //, // number of trials per block
+    ntrls: 64, //, // number of trials per block
     nblks: 12, // number of blocks
     fix_size: 15, // duration of the fixation cross
     fix_width: 5, // size of fixation cross
