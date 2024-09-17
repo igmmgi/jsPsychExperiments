@@ -8,19 +8,19 @@ const jsPsych = initJsPsych({});
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    nTrlsP: 4, // number of trials in first block (practice)
-    nTrlsE: 4, // number of trials in subsequent blocks
-    nBlks: 1,
-    fixDur: 500,
-    fbDur: 1000,
-    waitDur: 1000,
+    ntrlsp: 4, // number of trials in first block (practice)
+    ntrlse: 4, // number of trials in subsequent blocks
+    nblks: 1,
+    fix_duration: 500,
+    feedback_duration: 1000,
+    wait_duration: 1000,
     iti: 1000,
-    tooFast: 150,
-    tooSlow: 2000,
+    too_fast: 150,
+    too_slow: 2000,
     resp_keys: ["D", "J"],
-    fbTxt: ["Correct", "Error", "Too Slow", "Too Fast"],
-    cTrl: 1, // count trials
-    cBlk: 1, // count blocks
+    feedback_text: ["Correct", "Error", "Too Slow", "Too Fast"],
+    ctrl: 1, // count trials
+    cblk: 1, // count blocks
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -100,23 +100,23 @@ function code_trial() {
     let dat = jsPsych.data.get().last(1).values()[0];
     dat.rt = dat.rt !== null ? dat.rt : PRMS.tooSlow;
 
-    let corrCode = 0;
-    let correctKey = jsPsych.pluginAPI.compareKeys(dat.response, dat.corrResp);
+    let corr_code = 0;
+    let correct_key = jsPsych.pluginAPI.compareKeys(dat.response, dat.correct_key);
 
-    if (correctKey && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
-        corrCode = 1; // correct
-    } else if (!correctKey && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
-        corrCode = 2; // choice error
+    if (correct_key && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
+        corr_code = 1; // correct
+    } else if (!correct_key && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
+        corr_code = 2; // choice error
     } else if (dat.rt >= PRMS.tooSlow) {
-        corrCode = 3; // too slow
+        corr_code = 3; // too slow
     } else if (dat.rt <= PRMS.tooFast) {
-        corrCode = 4; // too false
+        corr_code = 4; // too false
     }
     jsPsych.data.addDataToLastTrial({
         date: Date(),
-        blockNum: PRMS.cBlk,
-        trialNum: PRMS.cTrl,
-        corrCode: corrCode,
+        block_num: PRMS.cblk,
+        trial_num: PRMS.ctrl,
+        corr_code: corr_code,
     });
 }
 
@@ -129,7 +129,7 @@ const FLANKER_STIMULUS = {
     data: {
         stim: "flanker",
         comp: jsPsych.timelineVariable("comp"),
-        corrResp: jsPsych.timelineVariable("key"),
+        correct_key: jsPsych.timelineVariable("correct_key"),
     },
     on_finish: function () {
         code_trial();
@@ -145,7 +145,7 @@ const TRIAL_FEEDBACK = {
     post_trial_gap: PRMS.iti,
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
-        trial.stimulus = "<h2>" + PRMS.fbTxt[dat.corrCode - 1] + "</h2>";
+        trial.stimulus = "<h2>" + PRMS.feedback_text[dat.corr_code - 1] + "</h2>";
     },
 };
 
@@ -155,18 +155,18 @@ const BLOCK_FEEDBACK = {
     response_ends_trial: true,
     post_trial_gap: PRMS.waitDur,
     on_start: function (trial) {
-        let block_dvs = calculateBlockPerformance({ filter_options: { stim: "flanker", blockNum: PRMS.cBlk } });
-        trial.stimulus = blockFeedbackText(
-            PRMS.cBlk,
-            PRMS.nBlks,
-            block_dvs.meanRt,
-            block_dvs.errorRate,
+        let block_dvs = calculate_block_performance({ filter_options: { stim: "flanker", block_num: PRMS.cblk } });
+        trial.stimulus = block_feedback_text(
+            PRMS.cblk,
+            PRMS.nblks,
+            block_dvs.mean_rt,
+            block_dvs.error_rate,
             (language = "en"),
         );
     },
     on_finish: function () {
-        PRMS.cTrl = 1;
-        PRMS.cBlk += 1;
+        PRMS.ctrl = 1;
+        PRMS.cblk += 1;
     },
 };
 
@@ -174,24 +174,24 @@ const BLOCK_FEEDBACK = {
 const TRIAL_TIMELINE = {
     timeline: [FIXATION_CROSS, FLANKER_STIMULUS, TRIAL_FEEDBACK],
     timeline_variables: [
-        { flanker: flankers[0], comp: 'comp',   key: PRMS.resp_keys[0] },
-        { flanker: flankers[1], comp: 'incomp', key: PRMS.resp_keys[0] },
-        { flanker: flankers[2], comp: 'comp',   key: PRMS.resp_keys[1] },
-        { flanker: flankers[3], comp: 'incomp', key: PRMS.resp_keys[1] },
+        { flanker: flankers[0], comp: 'comp',   correct_key: PRMS.resp_keys[0] },
+        { flanker: flankers[1], comp: 'incomp', correct_key: PRMS.resp_keys[0] },
+        { flanker: flankers[2], comp: 'comp',   correct_key: PRMS.resp_keys[1] },
+        { flanker: flankers[3], comp: 'incomp', correct_key: PRMS.resp_keys[1] },
     ],
 };
 
 // save
-const DIR_NAME = getDirName();
-const EXP_NAME = getFileName();
-const VP_NUM = getTime();
+const DIR_NAME = get_dir_name();
+const EXP_NAME = get_file_name();
+const VP_NUM = get_time();
 
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
 
     const fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-    // saveData('/Common/write_data.php', fn, { stim: 'flanker' });
-    saveDataLocal(fn, { stim: "flanker" });
+    // save_data('/Common/write_data.php', fn, { stim: 'flanker' });
+    save_data_local(fn, { stim: "flanker" });
 }
 
 const save_data = {
@@ -203,15 +203,15 @@ const save_data = {
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
-function genExpSeq() {
+function gengenerate_exp() {
     "use strict";
 
     let exp = [];
 
     exp.push(fullscreen(true));
     exp.push(welcome_message());
-    exp.push(vpInfoForm());
-    exp.push(mouseCursor(false));
+    exp.push(vp_info_form());
+    exp.push(mouse_cursor(false));
     exp.push(TASK_INSTRUCTIONS);
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
@@ -226,11 +226,11 @@ function genExpSeq() {
 
     exp.push(save_data);
     exp.push(end_message());
-    exp.push(mouseCursor(true));
+    exp.push(mouse_cursor(true));
     exp.push(fullscreen(false));
 
     return exp;
 }
-const EXP = genExpSeq();
+const EXP = generate_exp();
 
 jsPsych.run(EXP);
