@@ -1,29 +1,29 @@
 // Random utility functions
 
 // Directories/files
-function getDirName() {
+function get_dir_name() {
     let name = document.currentScript.src;
     let server = location.protocol + "//" + document.location.host;
     name = name.slice(server.length, name.length);
     return name.substring(0, name.lastIndexOf("/") + 1);
 }
 
-function getFileName() {
+function get_file_name() {
     let name = document.currentScript.src;
     return name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."));
 }
 
-function baseFileName(file) {
+function base_file_name(file) {
     return file.replace(/^.*[\\\/]/, "");
 }
 
-function pathJoin(parts, sep) {
+function path_join(parts, sep) {
     let separator = sep || "/";
     let replace = new RegExp(separator + "{1,}", "g");
     return parts.join(separator).replace(replace, separator);
 }
 
-function getNumberOfFiles(url, datDir) {
+function get_number_of_files(url, datDir) {
     let numDataFiles = 0;
     $.ajax({
         url: url,
@@ -36,12 +36,12 @@ function getNumberOfFiles(url, datDir) {
     return numDataFiles;
 }
 
-function getTime() {
+function get_time() {
     let num = new Date();
     return num.getTime();
 }
 
-function getPassword(url, password) {
+function get_password(url, password) {
     let correct = false;
     $.ajax({
         url: url,
@@ -57,7 +57,7 @@ function getPassword(url, password) {
 }
 
 // Generate a random string with optional pre-fix
-function generateRandomString(length, prefix = "") {
+function generate_random_string(length, prefix = "") {
     let chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let randomString = "";
     for (let i = length; i > 0; --i) {
@@ -67,12 +67,12 @@ function generateRandomString(length, prefix = "") {
 }
 
 // Returns a random number between min and max
-function getRandomArbitrary(min, max) {
+function get_random_arbitary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
 // Returns a random int number between min and max
-function getRandomInt(min, max) {
+function get_random_int(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -80,7 +80,7 @@ function getRandomInt(min, max) {
 
 // Round an array
 // Adapted from: https://stackoverflow.com/questions/9671203/how-to-round-all-the-values-in-an-array-to-2-decimal-points
-function roundArray(array) {
+function round_array(array) {
     let len = array.length;
     while (len--) {
         array[len] = Math.round(array[len]);
@@ -118,11 +118,11 @@ function range(start, stop, step = 1) {
 }
 
 // Repeat array (a) a number (n) times
-function repeatArray(a, n) {
+function repeat_array(a, n) {
     return new Array(n).fill(a).flat();
 }
 
-function repEach(x, n) {
+function rep_each(x, n) {
     let out = [];
     for (let i = 0; i < x.length; i++) {
         out.push(...repeatArray(x[i], n));
@@ -136,7 +136,7 @@ function mean(array) {
 }
 
 // Random selection of n items from x
-function randomSelection(x, n) {
+function random_selection(x, n) {
     out = [];
     let idx;
     for (let i = 0; i < n; i++) {
@@ -148,7 +148,7 @@ function randomSelection(x, n) {
 
 // Deep copy of an object
 // https://medium.com/javascript-in-plain-english/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
-const deepCopy = (inObject) => {
+const deep_copy = (inObject) => {
     let outObject, value, key;
 
     if (typeof inObject !== "object" || inObject === null) {

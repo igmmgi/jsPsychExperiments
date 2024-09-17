@@ -836,7 +836,7 @@ function create_trial_table_speech() {
     // prettier-ignore
     let trial_table = [];
     for (let i = 0; i < 24; i++) {
-        if (i % 2 == 0) {
+        if (i % 2 === 0) {
             trial_table = trial_table.concat([
                 {
                     video: VIDEOS_A[i],
@@ -955,7 +955,7 @@ function create_trial_table_gesture() {
     // prettier-ignore
     let trial_table = [];
     for (let i = 0; i < 24; i++) {
-        if (i % 2 == 0) {
+        if (i % 2 === 0) {
             trial_table = trial_table.concat([
                 {
                     video: VIDEOS_B[i],
@@ -1074,9 +1074,6 @@ const TRIAL_TABLE_PRACTICE_SPEECH = shuffle(create_trial_table_speech()).slice(0
 const TRIAL_TABLE_PRACTICE_GESTURE = shuffle(create_trial_table_gesture()).slice(0, PRMS.nTrlsP);
 const TRIAL_TABLE_EXP_SPEECH = create_trial_table_speech();
 const TRIAL_TABLE_EXP_GESTURE = create_trial_table_gesture();
-
-console.table(TRIAL_TABLE_EXP_SPEECH);
-console.table(TRIAL_TABLE_EXP_GESTURE);
 
 const TRIAL_TIMELINE_PRACTICE_SPEECH = {
     timeline: [FIXATION_CROSS, QUESTION, VIDEO_TRIAL_TRAINING, TRIAL_FEEDBACK, ITI],

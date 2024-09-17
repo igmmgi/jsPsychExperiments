@@ -1,4 +1,4 @@
-function filterDataPavlovia(
+function filter_data_pavlovia(
     rows = {},
     filetype = "csv",
     colsToIgnore = ["stimulus", "trial_type", "internal_node_id", "trial_index", "time_elapsed"],
@@ -23,7 +23,7 @@ function password(psw) {
     return correct;
 }
 
-function saveData(
+function save_data(
     url,
     filename,
     rows = {},
@@ -42,20 +42,20 @@ function saveData(
     xhr.send(JSON.stringify({ filename: filename, filedata: dat }));
 }
 
-function saveDataLocal(
+function save_data_local(
     filename,
     rows = {},
     filetype = "csv",
-    colsToIgnore = ["stimulus", "trial_type", "internal_node_id", "trial_index", "time_elapsed"],
+    columns_to_ignore = ["stimulus", "trial_type", "internal_node_id", "trial_index", "time_elapsed"],
 ) {
     jsPsych.data
         .get()
         .filter(rows)
-        .ignore(colsToIgnore)
+        .ignore(columns_to_ignore)
         .localSave(filetype, filename + "." + filetype);
 }
 
-function saveRandomCode(url, filename, code) {
+function save_random_code(url, filename, code) {
     $.ajax({
         type: "post",
         cache: false,
@@ -77,7 +77,7 @@ function update_user_interaction_data(data) {
     user_interaction_data.time = data.time;
 }
 
-function saveInteractionData(url, filename) {
+function save_interaction_data(url, filename) {
     let dat = jsPsych.data.getInteractionData().csv();
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url);
@@ -88,11 +88,11 @@ function saveInteractionData(url, filename) {
 ////////////////////////////////////////////////////////////////////////
 //                          Common Variables                          //
 ////////////////////////////////////////////////////////////////////////
-function browser_check(screenRes = [1280, 960]) {
+function browser_check(screen_res = [1280, 960]) {
     return {
         type: jsPsychBrowserCheck,
-        minimum_width: screenRes[0],
-        minimum_height: screenRes[1],
+        minimum_width: screen_res[0],
+        minimum_height: screen_res[1],
         features: ["width", "height", "browser", "vsync_rate", "os"],
         on_finish: function () {
             let dat = jsPsych.data.get().last(1).values()[0];
@@ -186,7 +186,7 @@ function fullscreen(on, language = "de") {
     }
 }
 
-function mouseCursor(show) {
+function mouse_cursor(show) {
     return {
         type: jsPsychCallFunction,
         func: function () {
@@ -195,7 +195,7 @@ function mouseCursor(show) {
     };
 }
 
-function checkVpInfoForm(alert_language = "en", alert_message = "") {
+function check_vp_info_form(alert_language = "en", alert_message = "") {
     // get age, gender, handedness and VPs consent
     if (alert_message === "") {
         if (alert_language === "en") {
@@ -236,15 +236,15 @@ function checkVpInfoForm(alert_language = "en", alert_message = "") {
     }
 }
 
-function vpInfoForm(form = "/Common7+/vpInfoForm_de.html", alert_language = "de", alert_message = "") {
+function vp_info_form(form = "/Common7+/vpInfoForm_de.html", alert_language = "de", alert_message = "") {
     return {
         type: jsPsychExternalHtml,
         url: form,
         cont_btn: "start",
         check_fn: function () {
-            const vpInfo = checkVpInfoForm({ alert_language: alert_language, alert_message: alert_message });
-            if (vpInfo !== false) {
-                jsPsych.data.addProperties(vpInfo);
+            const vp_info = check_vp_info_form({ alert_language: alert_language, alert_message: alert_message });
+            if (vp_info !== false) {
+                jsPsych.data.addProperties(vp_info);
                 return true;
             } else {
                 return false;
@@ -253,54 +253,54 @@ function vpInfoForm(form = "/Common7+/vpInfoForm_de.html", alert_language = "de"
     };
 }
 
-function calculateBlockPerformance({
+function calculate_block_performance({
     filter_options = {},
-    rtColumn = "rt",
-    corrColumn = "corrCode",
-    corrValue = 1,
+    rt_column = "rt",
+    corr_column = "corr_code",
+    corr_value = 1,
 } = {}) {
     let dat = jsPsych.data.get().filter(filter_options);
 
-    let nTotal = dat.count();
-    let nError = dat.select(corrColumn).values.filter(function (x) {
-        return x !== corrValue;
+    let ntotal = dat.count();
+    let nerror = dat.select(corr_column).values.filter(function (x) {
+        return x !== corr_value;
     }).length;
-    let meanRt = Math.round(dat.select(rtColumn).mean());
-    let errorRate = Math.round((nError / nTotal) * 100);
+    let mean_rt = Math.round(dat.select(rt_column).mean());
+    let error_rate = Math.round((nerror / ntotal) * 100);
 
-    return { meanRt: meanRt, errorRate: errorRate };
+    return { mean_rt: mean_rt, error_rate: error_rate };
 }
 
-function blockFeedbackText(cBlk, nBlks, meanRt, errorRate, language = "de") {
-    let blockFbTxt;
+function block_feedback_text(cblk, nblks, mean_rt, error_rate, language = "de") {
+    let block_txt;
     if (language === "de") {
-        blockFbTxt = blockFbTxt =
+        block_txt = block_txt =
             "<h2>Block: " +
-            cBlk +
+            cblk +
             " von " +
-            nBlks +
+            nblks +
             "</h2><br>" +
             "<h2>Mittlere Reaktionszeit: " +
-            meanRt +
+            mean_rt +
             " ms </h2>" +
             "<h2>Fehlerrate: " +
-            errorRate +
+            error_rate +
             " %</h2><br>" +
             "<h2>Drücke eine beliebige Taste, um fortzufahren!</h2>";
     } else if (language === "en") {
-        blockFbTxt =
+        block_txt =
             "<h2>Block: " +
-            cBlk +
+            cblk +
             " of " +
-            nBlks +
+            nblks +
             "</h2><br>" +
             "<h2>Mean RT: " +
-            meanRt +
+            mean_rt +
             " ms </h2>" +
             "<h2>Error Rate: " +
-            errorRate +
+            error_rate +
             " %</h2><br>" +
             "<h2>Press any key to continue the experiment!</h2>";
     }
-    return blockFbTxt;
+    return block_txt;
 }

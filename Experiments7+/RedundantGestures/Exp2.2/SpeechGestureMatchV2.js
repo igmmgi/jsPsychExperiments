@@ -500,22 +500,22 @@ const VERBAL_B = [
 ];
 
 const GESTURE_A = [
-    "ThumbUp",
-    "ThumbUp",
-    "ThumbUp",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbDown",
-    "ThumbDown",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbUp",
-    "ThumbUp",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbDown",
-    "ThumbDown",
-    "ThumbDown",
+    "HeadNod",
+    "HeadNod",
+    "HeadNod",
+    "HeadNod",
+    "HeadShake",
+    "HeadShake",
+    "HeadShake",
+    "HeadShake",
+    "HeadNod",
+    "HeadNod",
+    "HeadNod",
+    "HeadNod",
+    "HeadShake",
+    "HeadShake",
+    "HeadShake",
+    "HeadShake",
     "na",
     "na",
     "na",
@@ -527,30 +527,30 @@ const GESTURE_A = [
 ];
 
 const GESTURE_B = [
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
-    "ThumbUp",
-    "ThumbDown",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
+    "HeadNod",
+    "HeadShake",
 ];
 
 const SPEAKER = [
@@ -834,8 +834,8 @@ const BLOCK_FEEDBACK_B = {
 function create_trial_table_speech() {
     // prettier-ignore
     let trial_table = [];
-    for (let i = 0; i < 16; i++) {
-        if (i % 2 == 0) {
+    for (let i = 0; i < 24; i++) {
+        if (i % 2 === 0) {
             trial_table = trial_table.concat([
                 {
                     video: VIDEOS_A[i],
@@ -953,8 +953,8 @@ function create_trial_table_speech() {
 function create_trial_table_gesture() {
     // prettier-ignore
     let trial_table = [];
-    for (let i = 0; i < 16; i++) {
-        if (i % 2 == 0) {
+    for (let i = 0; i < 24; i++) {
+        if (i % 2 === 0) {
             trial_table = trial_table.concat([
                 {
                     video: VIDEOS_B[i],
