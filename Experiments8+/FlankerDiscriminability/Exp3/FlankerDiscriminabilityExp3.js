@@ -1,6 +1,6 @@
 // ╭───────────────────────────────────────────────────────╮
 // │ Flanker Task with manipulation of target/flanker      │
-// │ discrimanibility (contrast manipulation)              │
+// │ discriminability (contrast manipulation)              │
 // │ Stimuli: Standard letter flanker task with H/S letter │
 // │ stimuli                                               │
 // │                                                       │
@@ -20,8 +20,7 @@ const jsPsych = initJsPsych({});
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const CANVAS_COLOUR = "rgba(0, 0, 0, 1)";
-const CANVAS_SIZE = [720, 1280];
-const CANVAS_BORDER = "5px solid grey";
+const CANVAS_SIZE = [720, 1280]; // height,width
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -29,22 +28,22 @@ const CANVAS_BORDER = "5px solid grey";
 
 const PRMS = {
     ntrls: 64, // number of trials per block (multiple of 8)
-    nblks: 12, // number of blocks (multiple of 2)
-    fix_size: 15, // duration of the fixation cross
-    fix_width: 5, // size of fixation cross
+    nblks: 12, // number of blocks
+    fix_size: 10, // size of the fixation cross
+    fix_width: 5, // width of fixation cross
     fix_duration: 500, // duration of the fixation cross
-    fix_colour: "rgba(170, 170, 170, 1)", // duration of the fixation cross
+    fix_colour: "rgba(145, 145, 145, 1)", // duration of the fixation cross
     feedback_duration: [0, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
     too_slow: 2000, // feedback duration for correct and incorrect trials, respectively
     too_fast: 0, // feedback duration for correct and incorrect trials, respectively
     feedback_text: ["", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 500, // duration of the inter-trial-interval
-    stim_font: "110px Arial",
-    feedback_font: "80px Arial",
-    feedback_colour: "rgba(170, 170, 170, 1)",
-    colours: { mid: "rgba(170, 170, 170, 1)", low: "rgba(85, 85, 85, 1)", high: "rgba(255, 255, 255, 1)" },
-    resp_keys: ["Q", "P"],
-    target: shuffle(["H", "S"]), // random assignment to keys
+    stim_font: "50px Arial", // before: 110px Arial
+    feedback_font: "50px Arial",
+    feedback_colour: "rgba(145, 145, 145, 1)",
+    colours: { mid: "rgba(145, 145, 145, 1)", low: "rgba(48, 48, 48, 1)", high: "rgba(255, 255, 255, 1)" },
+    resp_keys: ["S", "H"],
+    target: ["S", "H"],
     ctrl: 1,
     cblk: 1,
 };
@@ -54,16 +53,14 @@ const PRMS = {
 ////////////////////////////////////////////////////////////////////////
 const WELCOME_INSTRUCTIONS = {
     type: jsPsychHtmlKeyboardResponse,
-    canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `Willkommen zu unserem Experiment:<br><br>
-Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
-Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
-Bei Fragen oder Problemen wende dich bitte an:<br><br>
+Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
+Bitte stelle sicher, dass Du Dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+um das Experiment durchzuführen. Wir bitten Dich, die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
+Informationen zur Versuchspersonenstunde erhälst Du nach dem Experiment.
+Bei Fragen oder Problemen wende Dich bitte an:<br><br>
 ruben.ellinghaus@fernuni-hagen.de<br><br>
 Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
@@ -72,8 +69,7 @@ Drücke eine beliebige Taste, um fortzufahren`,
         bold: false,
     }),
     on_start: function () {
-        // change background now ?
-        document.body.style.background = "#303030";
+        document.body.style.background = "#000000";
     },
     post_trial_gap: 1000,
 };
@@ -95,8 +91,8 @@ const RESP_TEXT = generate_formatted_html({
         pad_me(PRMS.target[0], 20) +
         pad_me(PRMS.target[1], 20) +
         "<br>" +
-        pad_me("(Taste-" + PRMS.resp_keys[0] + ")", 20) +
-        pad_me("(Taste-" + PRMS.resp_keys[1] + ")", 20)
+        pad_me(PRMS.resp_keys[0] + "-Taste", 20) +
+        pad_me(PRMS.resp_keys[1] + "-Taste", 20)
     }`,
     align: "center",
     color: PRMS.colours.mid,
@@ -112,7 +108,7 @@ const TASK_INSTRUCTIONS = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Mini-Block ${PRMS.cblk} von ${PRMS.nblks}:<br><br>
-               Du musst in jedem Durchgang entscheiden ob das Buchstabe in der Mitte ${PRMS.target[0]} oder ${PRMS.target[1]} ist.
+               Du musst in jedem Durchgang entscheiden, ob der Buchstabe in der Mitte ein ${PRMS.target[0]} oder ein ${PRMS.target[1]} ist.
                Reagiere wie folgt:<br>`,
                 align: "left",
                 color: PRMS.colours.mid,
@@ -134,7 +130,6 @@ function canvas_style(ctx) {
     ctx.fillStyle = CANVAS_COLOUR;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2); // make center (0, 0) for easier positioning!
-    ctx.canvas.style.border = CANVAS_BORDER;
     return ctx;
 }
 
@@ -178,7 +173,7 @@ function draw_flanker(c, args) {
 
     // draw flanker
     ctx.fillStyle = PRMS.colours[args.flanker_intensity];
-    ctx.fillText(`${args.flanker}${args.flanker}  ${args.flanker}${args.flanker}`, 0, 40);
+    ctx.fillText(`${args.flanker}${args.flanker}   ${args.flanker}${args.flanker}`, 0, 40);
 }
 
 const FLANKER = {
@@ -344,16 +339,14 @@ const TRIAL_TABLE_DISTRACTOR = [
   { block: "distractor", target_intensity: "mid", flanker_intensity: "high", target: PRMS.target[1], flanker: PRMS.target[0], comp: "incomp", correct_key: PRMS.resp_keys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
-// prettier-ignore
 const TRIAL_TIMELINE_TARGET = {
     timeline: [FIXATION_CROSS, FLANKER, TRIAL_FEEDBACK, ITI],
-    timeline_variables: TRIAL_TABLE_TARGET
+    timeline_variables: TRIAL_TABLE_TARGET,
 };
 
-// prettier-ignore
 const TRIAL_TIMELINE_DISTRACTOR = {
     timeline: [FIXATION_CROSS, FLANKER, TRIAL_FEEDBACK, ITI],
-    timeline_variables: TRIAL_TABLE_DISTRACTOR
+    timeline_variables: TRIAL_TABLE_DISTRACTOR,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -388,8 +381,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    saveData("/Common8+/write_data.php", data_fn, { stim_type: "fd" });
-    // saveDataLocal(data_fn, { stim_type: 'fd' });
+    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "fd" });
+    // save_data_local(data_fn, { stim_type: 'fd' });
 }
 
 const SAVE_DATA = {
@@ -450,4 +443,5 @@ function generate_exp() {
     return exp;
 }
 const EXP = generate_exp();
+
 jsPsych.run(EXP);

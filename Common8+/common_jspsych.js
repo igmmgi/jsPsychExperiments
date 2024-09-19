@@ -23,7 +23,7 @@ function password(psw) {
     return correct;
 }
 
-function save_data(
+function save_data_server(
     url,
     filename,
     rows = {},
