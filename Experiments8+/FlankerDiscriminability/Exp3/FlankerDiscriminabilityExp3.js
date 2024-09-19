@@ -169,11 +169,11 @@ function draw_flanker(c, args) {
 
     // draw target
     ctx.fillStyle = PRMS.colours[args.target_intensity];
-    ctx.fillText(`  ${args.target}  `, 0, 40);
+    ctx.fillText(`  ${args.target}  `, 0, 20);
 
     // draw flanker
     ctx.fillStyle = PRMS.colours[args.flanker_intensity];
-    ctx.fillText(`${args.flanker}${args.flanker}   ${args.flanker}${args.flanker}`, 0, 40);
+    ctx.fillText(`${args.flanker}${args.flanker}   ${args.flanker}${args.flanker}`, 0, 20);
 }
 
 const FLANKER = {
@@ -220,7 +220,7 @@ function draw_trial_feedback(c, args) {
 
     // draw target
     ctx.fillStyle = PRMS.feedback_colour;
-    ctx.fillText(`${args.feedback_text}`, 0, 40);
+    ctx.fillText(`${args.feedback_text}`, 0, 15);
 }
 
 const TRIAL_FEEDBACK = {
@@ -378,11 +378,11 @@ const EXP_NAME = get_file_name();
 const VP_NUM = get_time();
 
 function save() {
-    jsPsych.data.addProperties({ vpNum: VP_NUM });
+    jsPsych.data.addProperties({ vp_num: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
     save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "fd" });
-    // save_data_local(data_fn, { stim_type: 'fd' });
+    // save_data_local(data_fn, { stim_type: "fd" });
 }
 
 const SAVE_DATA = {
@@ -444,4 +444,6 @@ function generate_exp() {
 }
 const EXP = generate_exp();
 
+// jsPsych.simulate(EXP, "data-only");
+// jsPsych.simulate(EXP, "visual");
 jsPsych.run(EXP);
