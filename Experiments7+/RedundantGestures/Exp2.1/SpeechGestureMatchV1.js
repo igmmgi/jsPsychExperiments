@@ -5,7 +5,16 @@
 //         Initialize JsPsych and Define Canvas Properties            //
 ////////////////////////////////////////////////////////////////////////
 
-const jsPsych = initJsPsych();
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cBlk >= 4) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=425&credit_token=90d5ef4a12344afd9a94624d0ec246e1&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
 const CANVAS_SIZE = [1280, 720];
@@ -52,20 +61,37 @@ const CONSENT_SCREEN = {
     stimulus: generate_formatted_html({
         text: `Allgemeine Teilnahmeinformationen:<br><br>
                Herzlich willkommen bei unserer Studie zur Verarbeitung von verbaler und gestischer Affirmation und Negation!<br><br>
-               Ablauf der Studie: Das folgende Experiment besteht aus sechs Experimentalblöcken, zwischen denen Sie die Möglichkeit haben, eine Pause zu machen. Insgesamt dauert das Experiment 60 bis 70 Minuten. 
+               Ablauf der Studie: Das folgende Experiment besteht aus vier Experimentalblöcken, zwischen denen Sie die Möglichkeit haben, eine Pause zu machen. Insgesamt dauert das Experiment ungefähr 50 Minuten. 
                Ihre Aufgabe ist es, in jedem Durchgang zu entscheiden, ob sich ein Ball in einer linken oder rechten Box befindet. Dazu lesen Sie zuerst eine Frage, dann sehen Sie einen kurzen Video-Ausschnitt, der diese Frage beantwortet, und danach drücken Sie eine Taste. 
                Wir erheben von Ihnen außerdem Angaben zu Alter, Geschlecht und Händigkeit.
-               Sollten Sie noch Fragen haben oder sich technische Probleme ergeben, schreiben Sie uns bitte via Prolific eine Nachricht.<br><br>
+               Sollten Sie noch Fragen haben oder sich technische Probleme ergeben, dann schreiben Sie uns bitte eine Nachricht an die auf Sona vermerkte Adresse.<br><br>
                Freiwilligkeit und Anonymität: Die Teilnahme an der Studie ist freiwillig. Sie können jederzeit und ohne Angabe von Gründen die Teilnahme an dieser Studie beenden. Wird die Studie vor Beendigung abgebrochen, werden die bis dahin erhobenen Daten nicht gespeichert. 
                Die im Rahmen dieser Studie erhobenen, oben beschriebenen Daten und persönlichen Mitteilungen werden vertraulich behandelt. So unterliegen diejenigen Projektmitarbeiter, die über personenbezogene Daten verfügen, der Schweigepflicht bzw. dem Datengeheimnis. Des Weiteren wird die Veröffentlichung der Ergebnisse der Studie in anonymisierter Form erfolgen, d. h. ohne dass Ihre Daten Ihrer Person zugeordnet werden können.<br><br>
                Datenschutz: Die Erhebung und Verarbeitung Ihrer oben beschriebenen persönlichen Daten erfolgt anonym unter Verwendung einer zufällig zugewiesenen Nummer und ohne Angabe Ihres Namens in der Abteilung Sprache & Kognition des Psychologischen Instituts der Universität Tübingen. IP-Adressen und/oder IDs der Erhebungsplattform werden nicht mit den Daten gespeichert. Damit ist es niemandem möglich, die erhobenen Daten mit Ihrem Namen in Verbindung zu bringen. Eine Löschung der Daten nach Abschluss des Experiments ist somit nicht möglich. Daten in digitaler Form werden auf dem passwortgeschützten Laufwerk der Arbeitsgruppe von Prof. Dr. Barbara Kaup an der Universität Tübingen gelagert. Sollten ausnahmsweise Daten in digitaler Form auf privaten PCs, zu denen sonst niemand anders Zugang hat, gespeichert werden, werden diese nach Beenden der Datenanalysen von den privaten PCs wieder gelöscht. Die anonymen Daten dieser Studie werden als offene Daten im Internet zugänglich gemacht. Damit folgt diese Studie den Empfehlungen der Deutschen Forschungsgemeinschaft (DFG) und der Deutschen Gesellschaft für Psychologie (DGPs) zur Qualitätssicherung in der Forschung.<br><br>
-               Vergütung: Für die Teilnahme am Experiment erhalten Sie 9.00 GBP. Die Auszahlung des Betrags erfolgt ausschließlich über Prolific. 
-               Sollte das Experiment während der Bearbeitung abbrechen, senden Sie bitte via Prolific eine Nachricht mit der ungefähren Bearbeitungsdauer an uns.<br><br>
+               Vergütung: Für die Teilnahme am Experiment erhalten Sie 1.00 Versuchspersonenstunden.
+               Sollte das Experiment während der Bearbeitung abbrechen, senden Sie bitte eine Email mit der ungefähren Bearbeitungsdauer an die auf Sona vermerkte Adresse.<br><br>
                Drücken Sie nun eine beliebige Taste, um fortzufahren.`,
         align: "left",
         colour: "Black",
         fontsize: 20,
         width: "1250px",
+    }),
+};
+
+const SONA_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: generate_formatted_html({
+        text: `<b>WICHTIG</b>:<br><br> Sie werden am Ende des Experiments 
+              automatisch zu Sona weitergeleitet, wo Sie Ihre Versuchspersonenstunde 
+              erhalten. Bitte beenden Sie das Experiment nicht davor und beachten 
+              Sie alle Instruktionen aufmerksam.<br><br>
+              Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        colour: "Black",
+        fontsize: 28,
     }),
 };
 
@@ -79,8 +105,8 @@ const TASK_INSTRUCTIONS1 = {
         text: `Willkommen zum Experiment!<br><br>
               Bitte bearbeiten Sie das nachfolgende Experiment ernsthaft und konzentriert. Stellen Sie außerdem sicher, 
 			  dass Sie sich in einer ruhigen Umgebung befinden und über ausreichend Zeit verfügen.<br><br>
-              Bei Fragen oder Problemen lassen Sie uns bitte eine Nachricht via Prolific zukommen.<br><br> 
-			  Drücken Sie die Leertaste, um fortzufahren.`,
+              Bei Fragen oder Problemen melden Sie sich bitte per Email.<br><br> 
+              Drücken Sie die Leertaste, um fortzufahren.`,
         align: "left",
         colour: "Black",
         fontsize: 28,
@@ -96,7 +122,7 @@ const AUDIO_1 = {
     stimulus: generate_formatted_html({
         text: `Das Experiment enthält Videos mit Audio-Inhalten. Bitte stellen Sie daher jetzt Ihre Lautsprecher an 
 		      oder setzen Sie Ihre Kopfhörer auf. Es ist entscheidend, dass die Lautsprecher bzw. Kopfhörer während 
-              des gesamten Experiments angestellt sind. Wir bitten Sie, dies unbedingt zu beachten!<br><br>			  
+              des gesamten Experiments angestellt sind. Wir bitten Sie, dies unbedingt zu beachten!<br><br>
               Drücken Sie die Leertaste, um fortzufahren.`,
         align: "left",
         colour: "Black",
@@ -132,7 +158,7 @@ const TASK_INSTRUCTIONS2 = {
 			  Ball in der grünen Box?“. Weiter unten auf dem Bildschirm erscheinen zudem nebeneinander eine blaue und eine grüne Box. <br><br>
               Abschließend sehen Sie ein Video, das eine verbale Antwort (das Wort JA oder NEIN) und eine gestische Antwort (Kopfnicken oder
 			  Kopfschütteln; Daumen hoch oder Daumen herunter) auf die Frage liefert. Verbale und gestische Antwort können übereinstimmen 
-			  oder einander widersprechen. <br><br>
+			  oder einander widersprechen. Des Weiteren gibt es trials, in denen Sie ausschließlich Ton hören oder eine Geste sehen werden.<br><br>
 			  Drücke Sie die Leertaste, um fortzufahren.`,
 
         align: "left",
@@ -188,7 +214,7 @@ const TASK_INSTRUCTIONS5 = {
     canvas_border: CANVAS_BORDER,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Ende des Übungsblocks! Das Experiment besteht aus ingesamt sechs Blöcken. Nach jedem Block haben Sie die Möglichkeit,
+        text: `Ende des Übungsblocks! Das Experiment besteht aus ingesamt vier Blöcken. Nach jedem Block haben Sie die Möglichkeit,
               eine Pause zu machen. Wenn Sie die Hälfte der Blöcke absolviert haben, werden Sie neue Instruktionen erhalten. 
 			  Denken Sie bis dahin bitte daran, ausschließlich auf die VERBALEN Antworten im Video zu reagieren! <br><br>
               Drücken Sie die Leertaste, um das Experiment zu starten!`,
@@ -1112,7 +1138,9 @@ function save() {
     jsPsych.data.addProperties({ vpNum: vpNum });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
-    saveData("../RequiredFiles/Common7+/write_data.php", data_fn, { stim: "SpeechGestureMatch" });
+    saveData("../RequiredFiles/Common7+/write_data.php", data_fn, {
+        stim: "SpeechGestureMatch",
+    });
 }
 
 const SAVE_DATA = {
@@ -1128,13 +1156,15 @@ const END_MESSAGE = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus:
         "<p><strong>Experiment beendet! Vielen Dank für Ihre Teilnahme!</strong></p>" +
-        "<p><strong>Mit der Leertaste oder über folgenden Link geht es zurück zu Prolific:</strong></p>" +
-        "<p>https://app.prolific.co/submissions/complete?cc=6E303C0A</p>",
+        "<p><strong>Mit der Leertaste gelangen Sie zurück zu Sona, wo Ihnen die Versuchspersonenstunde</strong></p>" +
+        "<p><strong>gutgeschrieben wird.</strong></p>",
+    // "<p><strong>Mit der Leertaste oder über folgenden Link geht es zurück zu Prolific:</strong></p>" +
+    // "<p>https://app.prolific.co/submissions/complete?cc=6E303C0A</p>",
     response_ends_trial: true,
     choices: [" "],
-    on_finish: function () {
-        window.location.replace("https://app.prolific.co/submissions/complete?cc=6E303C0A");
-    },
+    // on_finish: function () {
+    //     window.location.replace("https://app.prolific.co/submissions/complete?cc=6E303C0A");
+    // },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -1151,7 +1181,8 @@ function genExpSeq() {
     exp.push(resize_browser());
     exp.push(PRELOAD_A);
     exp.push(CONSENT_SCREEN);
-    exp.push(vpInfoForm("../RequiredFiles/Common7+/vpInfoForm_de.html"));
+    exp.push(SONA_INSTRUCTIONS);
+    // exp.push(vpInfoForm("../RequiredFiles/Common7+/vpInfoForm_de.html"));
     exp.push(mouseCursor(false));
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(AUDIO_1);
@@ -1159,36 +1190,37 @@ function genExpSeq() {
     exp.push(TASK_INSTRUCTIONS2);
     exp.push(TASK_INSTRUCTIONS3);
     exp.push(TASK_INSTRUCTIONS4);
-    exp.push(TRIAL_TIMELINE_PRACTICE_SPEECH);
+    // exp.push(TRIAL_TIMELINE_PRACTICE_SPEECH);
     exp.push(TASK_INSTRUCTIONS5);
 
-    for (let blk_speech = 1; blk_speech < 3; blk_speech += 1) {
-        let blk_speech_timeline = { ...TRIAL_TIMELINE_EXP_SPEECH };
-        blk_speech_timeline.sample = {
-            type: "fixed-repetitions",
-            size: 1,
-        };
-        exp.push(blk_speech_timeline);
-        exp.push(BLOCK_FEEDBACK_A);
-    }
+    // for (let blk_speech = 1; blk_speech < 3; blk_speech += 1) {
+    //   let blk_speech_timeline = { ...TRIAL_TIMELINE_EXP_SPEECH };
+    //   blk_speech_timeline.sample = {
+    //     type: "fixed-repetitions",
+    //     size: 1,
+    //   };
+    //   exp.push(blk_speech_timeline);
+    //   exp.push(BLOCK_FEEDBACK_A);
+    // }
 
     exp.push(PRELOAD_B);
     exp.push(TASK_INSTRUCTIONS6);
     exp.push(TASK_INSTRUCTIONS7);
-    exp.push(TRIAL_TIMELINE_PRACTICE_GESTURE);
+    // exp.push(TRIAL_TIMELINE_PRACTICE_GESTURE);
     exp.push(TASK_INSTRUCTIONS8);
 
-    for (let blk_gesture = 1; blk_gesture < 3; blk_gesture += 1) {
-        let blk_gesture_timeline = { ...TRIAL_TIMELINE_EXP_GESTURE };
-        blk_gesture_timeline.sample = {
-            type: "fixed-repetitions",
-            size: 1,
-        };
-        exp.push(blk_gesture_timeline);
-        exp.push(BLOCK_FEEDBACK_B);
-    }
+    // for (let blk_gesture = 1; blk_gesture < 3; blk_gesture += 1) {
+    //   let blk_gesture_timeline = { ...TRIAL_TIMELINE_EXP_GESTURE };
+    //   blk_gesture_timeline.sample = {
+    //     type: "fixed-repetitions",
+    //     size: 1,
+    //   };
+    //   exp.push(blk_gesture_timeline);
+    //   exp.push(BLOCK_FEEDBACK_B);
+    // }
 
-    exp.push(SAVE_DATA);
+    // exp.push(SAVE_DATA);
+    PRMS.cBlk = 4;
     exp.push(fullscreen(false));
     exp.push(mouseCursor(true));
     exp.push(END_MESSAGE);
