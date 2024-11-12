@@ -16,7 +16,7 @@
 //
 // Block structure:
 // 16 practice trials (50% positive, 50% negative)
-// 1 block of 120 trials
+// 1 block of 128 trials
 // global proportion 50% positive, 50% negative,
 //
 // Transfer phase:
@@ -28,10 +28,20 @@
 // In forced choice trials, a grey/yellow frame indicated which task to perform (free-choice trials had no frame)
 //
 // Block structure:
-// 2 blocks of 192 trials (64 trials age task, 64 trials gender task, 64 trials free-choice)S
-// Within each 64 trial type, each face appeared 4 times +ve, 4 times -v
+// 1 practice block of 48 trials
+// 2 blocks of 240 trials (80 trials age task, 80 trials gender task, 80 trials free-choice)S
+// Within each 80 trial type, each face appeared 5 times +ve, 5 times -v
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.count_block >= 5) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=445&credit_token=2f494591a3114494a45867402b17dc1d&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -47,8 +57,9 @@ const PRMS = {
     n_blocks_ap: 2, // number of blocks association phase
     n_trials_ap_practice: 16, // number of trials association phase practice block
     n_trials_ap: 128, // number of trials association phase
-    n_blocks_tp: 2, // number of blocks transfer phase
-    n_trials_tp: 192, // number of trials transfer phase
+    n_blocks_tp: 3, // number of blocks transfer phase
+    n_trials_tp_practice: 48, // number of trials transfer phase
+    n_trials_tp: 240, // number of trials transfer phase
     fix_dur: 300, // duration of fixation cross
     fix_size: 15, // duration of the fixation cross
     fix_width: 5, // size of fixation cross
@@ -596,6 +607,7 @@ const TRIAL_TABLE_TP = [
   { exp_phase: "transfer", task_type: "free",   image: NEGATIVE_IMAGES[6], emotion: "negative", gender: "f", age: "y", correct_response1: PRMS.resp_keys_tp[PRMS.finger_mapping_tp.indexOf("Weiblich")], correct_response2: PRMS.resp_keys_tp[PRMS.finger_mapping_tp.indexOf("Jung")]},
   { exp_phase: "transfer", task_type: "free",   image: NEGATIVE_IMAGES[7], emotion: "negative", gender: "m", age: "y", correct_response1: PRMS.resp_keys_tp[PRMS.finger_mapping_tp.indexOf("Männlich")], correct_response2: PRMS.resp_keys_tp[PRMS.finger_mapping_tp.indexOf("Jung")]},
 ];
+console.log(TRIAL_TABLE_TP);
 
 const TRIAL_TIMELINE_TP = {
     timeline: [FIXATION_CROSS, FACE_STIMULUS_TP, TRIAL_FEEDBACK, ITI],
@@ -668,7 +680,7 @@ function genExpSeq() {
         blk_timeline = { ...TRIAL_TIMELINE_TP };
         blk_timeline.sample = {
             type: "fixed-repetitions",
-            size: PRMS.n_trials_tp / TRIAL_TABLE_TP.length,
+            size: (blk === 0 ? PRMS.n_trials_tp_practice : PRMS.n_trials_tp) / TRIAL_TABLE_TP.length,
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
