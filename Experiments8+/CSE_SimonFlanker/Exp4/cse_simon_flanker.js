@@ -270,8 +270,8 @@ function draw_trial_feedback(c, args) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = PRMS.feedback_colour;
-    ctx.fillText(args.feedbaack_text, 0, 0);
-    if (dat.corr_code !== 1) {
+    ctx.fillText(PRMS.feedback_text[args.corr_code - 1], 0, 0);
+    if (args.corr_code !== 1) {
         let row1 = ` ${PRMS.resp_letters[0]}               ${PRMS.resp_letters[1]}               ${PRMS.resp_letters[2]}               ${PRMS.resp_letters[3]}`;
         let row2 = `${PRMS.resp_letters[0]}-Taste         ${PRMS.resp_letters[1]}-Taste         ${PRMS.resp_letters[2]}-Taste         ${PRMS.resp_letters[3]}-Taste`;
         let row3 = `linker Mittelfinger   linker Zeigefinger  rechte Zeigefinger   rechte Mittelfinger`;
@@ -293,7 +293,7 @@ const TRIAL_FEEDBACK = {
         trial.trial_duration = PRMS.feedback_duration[dat.corr_code - 1];
         if (dat.corrCode !== 1) {
             trial.stimulus = function (c) {
-                draw_trial_feedback(c, { feedback_text: PRMS.feedback_text[dat.corr_code - 1] });
+                draw_trial_feedback(c, { corr_code: dat.corr_code });
             };
         }
     },
@@ -371,7 +371,10 @@ const STIMULUS = {
     },
     on_start: function (trial) {
         trial.stimulus = function (c) {
-            if (jsPsych.evaluateTimelineVariable("stim_type") === "simon") {
+            if (
+                jsPsych.evaluateTimelineVariable("stim_type") === "simon1" ||
+                jsPsych.evaluateTimelineVariable("stim_type") === "simon2"
+            ) {
                 trial.trial_duration = PRMS.too_slow;
                 draw_stimulus(c, {
                     stim1: jsPsych.evaluateTimelineVariable("stim1"),
@@ -561,6 +564,6 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-jsPsych.simulate(EXP, "data-only");
+// jsPsych.simulate(EXP, "data-only");
 // jsPsych.simulate(EXP, "visual");
-// jsPsych.run(EXP);
+jsPsych.run(EXP);
