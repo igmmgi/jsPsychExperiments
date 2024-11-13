@@ -65,6 +65,7 @@ const PRMS = {
     fix_width: 5, // size of fixation cross
     fix_colour: "Black", // colour of the fixation cross
     feedback_dur: 300, // duration of feedback for each type
+    trial_feedback_tp_text_duration: [2000, 300], // feedback duration for transfer phase
     wait_dur: 1000, // duration following block feedback screen
     iti: 500, // duration of inter-trial-interval
     target_position: [0, 0],
@@ -75,7 +76,7 @@ const PRMS = {
     finger_mapping_tp: null,
     colour_mapping_tp: shuffle(["gelber", "grüner"]),
     frame_size: [275, 340],
-    frame_width: 10,
+    frame_width: 40,
     frame_position: [0, 0],
     trial_feedback_text: ["Falsch!", "Richtig!"],
     trial_feedback_text_font: "40px monospace",
@@ -462,30 +463,49 @@ const FACE_STIMULUS_TP = {
   },
 };
 
-function draw_feedback(args) {
-    "use strict";
-    let ctx = document.getElementById("canvas").getContext("2d");
-    ctx.textAlign = "center";
-    ctx.font = PRMS.trial_feedback_text_font;
-    ctx.fillStyle = PRMS.trial_feedback_text_colour;
-    ctx.fillText(args.feedback, PRMS.trial_feedback_text_position[0], PRMS.trial_feedback_text_position[1]);
-}
-
 const TRIAL_FEEDBACK = {
-    type: jsPsychStaticCanvasKeyboardResponse,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    translate_origin: true,
-    response_ends_trial: false,
-    trial_duration: PRMS.feedback_dur,
-    func: draw_feedback,
-    func_args: null,
-    stimulus: "",
-    on_start: function (trial) {
-        let dat = jsPsych.data.get().last(1).values()[0];
-        trial.func_args = [{ feedback: PRMS.trial_feedback_text[dat.correct] }];
-    },
+  type: jsPsychHtmlKeyboardResponseCanvas,
+  canvas_colour: CANVAS_COLOUR,
+  canvas_size: CANVAS_SIZE,
+  canvas_border: CANVAS_BORDER,
+  translate_origin: true,
+  response_ends_trial: false,
+  trial_duration: PRMS.feedback_dur,
+  stimulus: "",
+  on_start: function (trial) {
+    let dat = jsPsych.data.get().last(1).values()[0];
+    if (dat.exp_phase === "association") {
+      trial.stimulus = generate_formatted_html({
+          text: PRMS.trial_feedback_text[dat.correct],
+          align: "center",
+          fontsize: 30,
+          width: "1200px",
+          lineheight: 1.5,
+          bold: true,
+        });
+    } else if (dat.exp_phase === "transfer") {
+      trial.trial_duration = PRMS.trial_feedback_tp_text_duration[dat.correct];
+      if (dat.correct === 1) {
+        trial.stimulus = generate_formatted_html({
+          text: PRMS.trial_feedback_text[dat.correct],
+          align: "center",
+          fontsize: 30,
+          width: "1200px",
+          lineheight: 1.5,
+          bold: true,
+        })
+      } else {
+        trial.stimulus = trial.stimulus = generate_formatted_html({
+          text: PRMS.trial_feedback_text[dat.correct],
+          align: "center",
+          fontsize: 30,
+          width: "1200px",
+          lineheight: 1.5,
+          bold: true,
+        }) + RESP_MAPPING;
+      }
+    }
+  },
 };
 
 const BLOCK_FEEDBACK = {
