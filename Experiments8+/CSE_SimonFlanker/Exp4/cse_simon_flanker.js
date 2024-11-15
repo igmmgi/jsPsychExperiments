@@ -4,7 +4,14 @@
 // Unpredictable task sequence but response effector (middle vs. index fingers) alternates
 
 const jsPsych = initJsPsych({
-    on_finish: function () {},
+    on_finish: function () {
+        if (PRMS.count_block >= 9) {
+            window.location.assign(
+                "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=447&credit_token=90d8bbd505414b2c8fe4b4dc24313119&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
 });
 
 ////////////////////////////////////////////////////////////////////////
@@ -314,7 +321,7 @@ const ITI = {
 };
 
 const BLOCK_FEEDBACK = {
-    type: jsPsychCanvasKeyboardResponse,
+    type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: "",
     response_ends_trial: true,
@@ -323,7 +330,7 @@ const BLOCK_FEEDBACK = {
         let block_dvs = calculate_block_performance({
             filter_options: { stim: "cse_sf", block_num: PRMS.cblk },
         });
-        let text = block_feedback_text(PRMS.cblk, PRMS.nblks, block_dvs.meanRt, block_dvs.errorRate);
+        let text = block_feedback_text(PRMS.cblk, PRMS.nblks, block_dvs.mean_rt, block_dvs.error_rate);
         trial.stimulus = `<div style="font-size:${PRMS.feedback_text_size_block}px;">${text}</div>`;
     },
     on_finish: function () {
