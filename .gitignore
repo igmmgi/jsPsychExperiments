@@ -12,6 +12,5 @@
 .directory
 .idea
 coverage/
-dist.zip
 site/
 node_modules/
