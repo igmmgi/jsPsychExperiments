@@ -98,18 +98,18 @@ const flankers = [
 function code_trial() {
     "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
-    dat.rt = dat.rt !== null ? dat.rt : PRMS.tooSlow;
+    dat.rt = dat.rt !== null ? dat.rt : PRMS.too_slow;
 
     let corr_code = 0;
     let correct_key = jsPsych.pluginAPI.compareKeys(dat.response, dat.correct_key);
 
-    if (correct_key && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
+    if (correct_key && dat.rt > PRMS.too_fast && dat.rt < PRMS.too_slow) {
         corr_code = 1; // correct
-    } else if (!correct_key && dat.rt > PRMS.tooFast && dat.rt < PRMS.tooSlow) {
+    } else if (!correct_key && dat.rt > PRMS.too_fast && dat.rt < PRMS.too_slow) {
         corr_code = 2; // choice error
-    } else if (dat.rt >= PRMS.tooSlow) {
+    } else if (dat.rt >= PRMS.too_slow) {
         corr_code = 3; // too slow
-    } else if (dat.rt <= PRMS.tooFast) {
+    } else if (dat.rt <= PRMS.too_fast) {
         corr_code = 4; // too false
     }
     jsPsych.data.addDataToLastTrial({
@@ -123,7 +123,7 @@ function code_trial() {
 const FLANKER_STIMULUS = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: jsPsych.timelineVariable("flanker"),
-    trial_duration: PRMS.tooSlow,
+    trial_duration: PRMS.too_slow,
     response_ends_trial: true,
     choices: PRMS.resp_keys,
     data: {
@@ -133,14 +133,14 @@ const FLANKER_STIMULUS = {
     },
     on_finish: function () {
         code_trial();
-        PRMS.cTrl += 1;
+        PRMS.ctrl += 1;
     },
 };
 
 const TRIAL_FEEDBACK = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: "",
-    trial_duration: PRMS.fbDur,
+    trial_duration: PRMS.feedback_duration,
     response_ends_trial: false,
     post_trial_gap: PRMS.iti,
     on_start: function (trial) {
@@ -191,7 +191,7 @@ const VP_NUM = get_time();
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
 
-    const fn = `${DIR_NAME}data/${EXP_NAME}_${vpNum}`;
+    const fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
     // save_data('/Common/write_data.php', fn, { stim: 'flanker' });
     save_data_local(fn, { stim: "flanker" });
 }
@@ -205,7 +205,7 @@ const save_data = {
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
-function gengenerate_exp() {
+function generate_exp() {
     "use strict";
 
     let exp = [];
