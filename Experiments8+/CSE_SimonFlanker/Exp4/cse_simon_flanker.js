@@ -30,13 +30,12 @@ const PRMS = {
     fix_size: 10, // size of the fixation cross
     fix_width: 5, // width of fixation cross
     fix_duration: 500, // duration of the fixation cross
-    flanker_duration: 100, // duration of the initial "flanker" array
+    flanker_duration: 150, // duration of the initial "flanker" array (changed from initial value of 100)
     blank_duration: 150, // duration of the blank screen between flanker and target array
-    flanker_target_interval: 200, // total duration between onset of flanker array and target array (flanker duration + blank duration)
     fix_colour: "rgba(0, 0, 0, 1)", // colour of the fixation cross
     feedback_duration: [0, 1500, 1500],
     iti: 500,
-    too_slow: 2500,
+    too_slow: 2750, // NEWIAN: Changed to 2750. Just to be sure: This is calculated always from target onet, right?
     stim_size: "40px monospace",
     simon_pos: 100,
     feedback_size: "24px monospace",
@@ -127,10 +126,10 @@ const TASK_INSTRUCTIONS2 = {
         generate_formatted_html({
             text: `Aufgabe:<br><br>
                    In diesem Experiment musst du auf verschiedene Buchstaben
-                   so schnell und so genau wie möglich reagieren. Der Ziel-Buchstabe
-                   erscheint in manchen Durchgängen in der Mitte des Bildschirms (und ist
-                   von irrelevanten Buchstaben umgeben) und in anderen Durchgängen links oder
-                   rechts auf dem Bildschirm. Es gilt die folgende Zuordnung:<br><br>`,
+                   so schnell und so genau wie möglich reagieren.<br><br>
+In manchen Durchgängen erscheint der relevante Ziel-Buchstabe links oder rechts auf den Bildschirm.<br>
+In anderen Durchgängen erscheinen hintereinander zwei Buchstabenreihen und der relevante Ziel-Buchstabe erscheint in der Mitte der zweiten Buchstabenreihe.<br><br>
+Es gilt die folgende Zuordnung:<br><br>`,
             bold: true,
             fontsize: 26,
             align: "left",
@@ -147,9 +146,8 @@ const TASK_INSTRUCTIONS3 = {
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
         text: `Reagiere immer nur auf den Ziel-Buchstaben. Das heißt:<br><br>
-               Wenn der Ziel-Buchstabe in der Mitte erscheint, dann ignoriere die umliegenden Buchstaben.<br><br>
-               Wenn nur ein Ziel-Buchstabe links oder rechts auf dem Bildschirm präsentiert wird,
-               dann ignoriere die links/rechts Position auf dem Bildschirm.<br><br>
+Wenn nur ein Ziel-Buchstabe links oder rechts auf dem Bildschirm präsentiert wird, dann ignoriere die links/rechts Position auf dem Bildschirm.<br><br>
+Wenn der Ziel-Buchstabe in der Mitte der zweiten Buchstabenreihe erscheint, dann ignoriere die vorherigen und umliegenden Buchstaben.<br><br>
                Reagiere so schnell und so genau wie möglich!<br><br>
                Drücke eine beliebige Taste, um fortzufahren.`,
         bold: true,
@@ -168,8 +166,8 @@ const TASK_INSTRUCTIONS_BLOCK = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Block ${PRMS.cblk} von ${PRMS.nblks}<br><br>
-Der Zielbuchstabe wird abwechselnd in der Mitte des Bildschirms und links/rechts auf dem Bildschirm erscheinen.<br><br>
-Versuche dich in jedem Durchgang so gut wie möglich vorzubereiten, um immer möglichst schnell und genau zu antworten. Es gilt:<br><br>`,
+Der Zielbuchstabe wird abwechselnd in der Mitte der zweiten Buchstabenreihe oder links/rechts auf dem Bildschirm erscheinen.<br><br>
+Versuche immer möglichst schnell und genau zu antworten. Es gilt:<br><br>`,
                 bold: true,
                 fontsize: 26,
                 align: "left",
@@ -416,7 +414,7 @@ const STIMULUS = {
                         position: jsPsych.evaluateTimelineVariable("position"),
                         set_canvas: false,
                     });
-                }, PRMS.blank_duration);
+                }, PRMS.flanker_duration + PRMS.blank_duration);
             }
         };
     },
@@ -427,11 +425,11 @@ const STIMULUS = {
 };
 
 function flanker_array(letter) {
-    return letter + letter + " " + letter + letter;
+    return letter + letter + letter + letter + letter;
 }
 
-function target_array(letter) {
-    return letter + letter + letter + letter + letter;
+function target_array(letter1, letter2) {
+    return letter1 + letter1 + letter2 + letter1 + letter1;
 }
 
 // prettier-ignore
@@ -439,14 +437,14 @@ function trial_table() {
   let trial_table;
   if (PRMS.resp_task[0] === "flanker") {
     trial_table = [
-      { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[0] },
-      { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[3] },
-      { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[0] },
-      { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[3] },
-      { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[1] },
-      { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[2] },
-      { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[1] },
-      { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[2] },
+      { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[0] },
+      { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[3] },
+      { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[0] },
+      { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[3] },
+      { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[1] },
+      { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[2] },
+      { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[1] },
+      { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[2] },
       { stim_type: "simon2",      target: PRMS.resp_letters[1], stim1: PRMS.resp_letters[1],                stim2: PRMS.resp_letters[1],               delay: 0,                                           position: -PRMS.simon_pos, corr_resp: PRMS.resp_letters[1] },
       { stim_type: "simon2",      target: PRMS.resp_letters[2], stim1: PRMS.resp_letters[2],                stim2: PRMS.resp_letters[2],               delay: 0,                                           position: -PRMS.simon_pos, corr_resp: PRMS.resp_letters[2] },
       { stim_type: "simon2",      target: PRMS.resp_letters[1], stim1: PRMS.resp_letters[1],                stim2: PRMS.resp_letters[1],               delay: 0,                                           position:  PRMS.simon_pos, corr_resp: PRMS.resp_letters[1] },
@@ -458,14 +456,14 @@ function trial_table() {
     ];
   } else if (PRMS.resp_task[0] === "simon") {
     trial_table = [
-      { stim_type: "flanker_ir1", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[1] },
-      { stim_type: "flanker_ir1", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[2] },
-      { stim_type: "flanker_ir1", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[1] },
-      { stim_type: "flanker_ir1", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[2] },
-      { stim_type: "flanker_ir2", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[0] },
-      { stim_type: "flanker_ir2", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[3] },
-      { stim_type: "flanker_ir2", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[0] },
-      { stim_type: "flanker_ir2", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[3] },
+      { stim_type: "flanker_ir1", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[1] },
+      { stim_type: "flanker_ir1", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[2] },
+      { stim_type: "flanker_ir1", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[1] },
+      { stim_type: "flanker_ir1", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[2] },
+      { stim_type: "flanker_ir2", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[0] },
+      { stim_type: "flanker_ir2", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[3] },
+      { stim_type: "flanker_ir2", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[0] },
+      { stim_type: "flanker_ir2", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, position: 0,               corr_resp: PRMS.resp_letters[3] },
       { stim_type: "simon2",      target: PRMS.resp_letters[0], stim1: PRMS.resp_letters[0],                stim2: PRMS.resp_letters[0],               delay: 0,                                           position: -PRMS.simon_pos, corr_resp: PRMS.resp_letters[0] },
       { stim_type: "simon2",      target: PRMS.resp_letters[3], stim1: PRMS.resp_letters[3],                stim2: PRMS.resp_letters[3],               delay: 0,                                           position: -PRMS.simon_pos, corr_resp: PRMS.resp_letters[3] },
       { stim_type: "simon2",      target: PRMS.resp_letters[0], stim1: PRMS.resp_letters[0],                stim2: PRMS.resp_letters[0],               delay: 0,                                           position:  PRMS.simon_pos, corr_resp: PRMS.resp_letters[0] },
@@ -498,7 +496,6 @@ const END_SCREEN = {
              Nun folgen Informationen zur Versuchspersonenstunde auf Unipark.
              Drücke eine beliebige Taste, um die Weiterleitung zu Unipark zu starten.`,
         fontsize: 28,
-        color: "Black",
         lineheight: 1.0,
         bold: false,
         align: "left",
@@ -566,8 +563,8 @@ function genExpSeq() {
     // debrief
     exp.push(mouse_cursor(true));
     exp.push(END_SCREEN);
-    exp.push(fullscreen(false));
     exp.push(end_message());
+    exp.push(fullscreen(false));
 
     return exp;
 }
