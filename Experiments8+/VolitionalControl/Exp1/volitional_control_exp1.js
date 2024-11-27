@@ -21,12 +21,13 @@ const PRMS = {
   fix_duration: [800, 500], // duration of the fixation cross
   fix_colour: "Black", // colour of the fixation cross
   cue_duration: 1000, // duration of the cue
-  cue_size: 100, // size of the cue
+  cue_size: 40, // size of the cue
   cue_colours: shuffle(["Cyan", "Yellow"]),
   choice_feedback_duration: 1000,
-  image_eccentricity: 200,
+  image_eccentricity: 185,
+  image_size: 275, // image size in pixels (original image = 200)
   feedback_duration: 1000,
-  frame_size: [220, 220],
+  frame_size: [300, 300],
   frame_width: 10,
   frame_colour: "White",
   wait_duration: 1000,
@@ -35,8 +36,8 @@ const PRMS = {
   task_keys: ["E", "P"],
   task_shapes: shuffle(["circle", "diamond"]),
   task_colour: "White",
-  task_size: 100,
-  task_eccentricity: 200,
+  task_size: 80,
+  task_eccentricity: 400,
   task_duration: 300,
   too_fast: 0,
   too_slow: 1000,
@@ -45,6 +46,8 @@ const PRMS = {
   feedback_duration: [1000, 1000, 1000, 1000], // feedback duration for response type (correct, incorrect, too slow, too fast)
   ctrl: 1, // count trials
   cblk: 1, // count blocks
+  t_interval: 100,
+  t_constant: 560  // taken from paper
 };
 
 // 2 counter balanced versions
@@ -229,8 +232,11 @@ function draw_images(c, args) {
   const img_right = new Image();
   img_right.src =  args.choice_type === "free" ? IMAGES_FREE[1] : IMAGES_FORCED[1];
 
-  ctx.drawImage(img_left, -PRMS.image_eccentricity - img_left.width / 2, -img_left.height / 2);
-  ctx.drawImage(img_right, PRMS.image_eccentricity - img_left.width / 2, -img_left.height / 2);
+  //ctx.drawImage(img_left, -PRMS.image_eccentricity - img_left.width / 2, -img_left.height / 2);
+  //ctx.drawImage(img_right, PRMS.image_eccentricity - img_left.width / 2, -img_left.height / 2);
+
+  ctx.drawImage(img_left, -PRMS.image_eccentricity - PRMS.image_size/ 2, -PRMS.image_size/2, PRMS.image_size, PRMS.image_size);
+  ctx.drawImage(img_right, PRMS.image_eccentricity - PRMS.image_size/ 2, -PRMS.image_size/2, PRMS.image_size, PRMS.image_size);
 
   // hack to hide images
   if (args.hide_image) {
@@ -275,6 +281,8 @@ function code_selection_response() {
   let selection_side;
   if (dat.choice_type === "free") {
     selection_side = jsPsych.pluginAPI.compareKeys(dat.response, PRMS.choice_selection_keys[0]) ? "left" : "right";
+    // update t_interval 
+    PRMS.t_interval = Math.max(0, dat.rt - PRMS.t_constant);
   } else if (dat.choice_type === "forced") {
     selection_side = shuffle(["left", "right"])[0];
   }
@@ -285,6 +293,7 @@ function code_selection_response() {
     image_left: dat.choice_type === "free" ? IMAGES_FREE[0] : IMAGES_FORCED[0],
     image_right: dat.choice_type === "free" ? IMAGES_FREE[1] : IMAGES_FORCED[1],
     selection_side: selection_side,
+    t_interval: PRMS.t_interval,
     corr_code: 0,
   });
 }
@@ -312,7 +321,7 @@ const CHOICE_IMAGE_SELECTION_SCREEN = {
       trial.choices = PRMS.choice_selection_keys;
       trial.response_ends_trial = true;
     } else if (jsPsych.evaluateTimelineVariable("choice_type") === "forced") {
-      trial.trial_duration = 500; // Tinterval
+      trial.trial_duration = PRMS.t_interval; // Tinterval
       trial.response_ends_trial = false;
       trial.choices = [];
     }
@@ -338,7 +347,6 @@ const CHOICE_IMAGE_FEEDBACK_SCREEN1 = {
   on_start: function (trial) {
     "use strict";
     let dat = jsPsych.data.get().last(1).values()[0];
-    console.log(dat);
     if (jsPsych.evaluateTimelineVariable("choice_type") === "free") {
       trial.trial_duration = PRMS.choice_feedback_duration;
       trial.response_ends_trial = false;
@@ -409,7 +417,8 @@ function draw_images_and_task(c, args) {
   let image_number = args.selection === "left" ? 0 : 1;
   const img = new Image();
   img.src = args.choice_type === "free" ? IMAGES_FREE[image_number]: IMAGES_FORCED[image_number];
-  ctx.drawImage(img, 0 - img.width / 2, -img.height / 2);
+  // ctx.drawImage(img, 0 - img.width / 2, -img.height / 2);
+  ctx.drawImage(img, 0 - PRMS.image_size/ 2, -PRMS.image_size/2, PRMS.image_size, PRMS.image_size);
 
   // task shape
   if (args.draw_stimulus) {
@@ -524,6 +533,7 @@ function code_task_response() {
     selection_side: datp.selection_side,
     selection_response: datp.response,
     selection_rt: datp.rt,
+    t_interval: datp.t_interval,
     corr_code: corr_code,
   });
 
@@ -591,7 +601,7 @@ const BLOCK_FEEDBACK = {
   post_trial_gap: PRMS.waitDur,
   on_start: function (trial) {
     let block_dvs = calculate_block_performance({
-      filter_options: { stim: "cse_sf", block_num: PRMS.cblk },
+      filter_options: { stim_type: "vct", block_num: PRMS.cblk },
     });
     let text = block_feedback_text(PRMS.cblk, PRMS.nblks, block_dvs.mean_rt, block_dvs.error_rate);
     trial.stimulus = `<div style="font-size:${PRMS.feedback_text_size_block}px;">${text}</div>`;
@@ -609,10 +619,10 @@ const TRIAL_TABLE_IMAGE = [
   { block: "image", cue: PRMS.cue_colours[0], choice_type: "free",   task_shape: PRMS.task_shapes[1], task_position: "left",  correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[1])]},
   { block: "image", cue: PRMS.cue_colours[0], choice_type: "free",   task_shape: PRMS.task_shapes[0], task_position: "right", correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[0])]},
   { block: "image", cue: PRMS.cue_colours[0], choice_type: "free",   task_shape: PRMS.task_shapes[1], task_position: "right", correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[1])]},
-  // { block: "image", cue: PRMS.cue_colours[1], choice_type: "forced", task_shape: PRMS.task_shapes[0], task_position: "left",  correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[0])]},
-  // { block: "image", cue: PRMS.cue_colours[1], choice_type: "forced", task_shape: PRMS.task_shapes[1], task_position: "left",  correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[1])]},
-  // { block: "image", cue: PRMS.cue_colours[1], choice_type: "forced", task_shape: PRMS.task_shapes[0], task_position: "right", correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[0])]},
-  // { block: "image", cue: PRMS.cue_colours[1], choice_type: "forced", task_shape: PRMS.task_shapes[1], task_position: "right", correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[1])]},
+  { block: "image", cue: PRMS.cue_colours[1], choice_type: "forced", task_shape: PRMS.task_shapes[0], task_position: "left",  correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[0])]},
+  { block: "image", cue: PRMS.cue_colours[1], choice_type: "forced", task_shape: PRMS.task_shapes[1], task_position: "left",  correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[1])]},
+  { block: "image", cue: PRMS.cue_colours[1], choice_type: "forced", task_shape: PRMS.task_shapes[0], task_position: "right", correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[0])]},
+  { block: "image", cue: PRMS.cue_colours[1], choice_type: "forced", task_shape: PRMS.task_shapes[1], task_position: "right", correct_key: PRMS.task_keys[PRMS.task_shapes.indexOf(PRMS.task_shapes[1])]},
 ];
 
 // prettier-ignore
@@ -648,7 +658,7 @@ const VP_NUM = get_time();
 function save() {
   jsPsych.data.addProperties({ vp_num: VP_NUM });
 
-  const fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
+  const fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
   // save_data('/Common/write_data.php', fn, { stim: 'vct' });
   save_data_local(fn, { stim_type: "vct" });
 }
@@ -667,13 +677,15 @@ function generate_exp() {
 
   let exp = [];
 
-  // exp.push(fullscreen(true));
-  // exp.push(welcome_message());
-  // exp.push(vp_info_form());
-  // exp.push(mouse_cursor(false));
+  exp.push(fullscreen(true));
+  exp.push(browser_check(CANVAS_SIZE));
+  exp.push(resize_browser());
+  exp.push(welcome_message());
+  exp.push(vp_info_form());
+  exp.push(mouse_cursor(false));
   exp.push(PRELOAD);
-  // exp.push(WELCOME_INSTRUCTIONS);
-  // exp.push(TASK_INSTRUCTICCS);
+  exp.push(WELCOME_INSTRUCTIONS);
+  exp.push(TASK_INSTRUCTIONS);
 
 
   // // block by block
