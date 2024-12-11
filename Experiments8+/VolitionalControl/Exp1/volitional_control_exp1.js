@@ -213,7 +213,7 @@ function image_names() {
     return images;
 }
 
-const IMAGES = shuffle(image_names()).slice(0, 256); // we need at 256 images to only repeat across free/forced
+const IMAGES = shuffle(image_names()).slice(0, 394); // we need at 256 images to only repeat across free/forced
 const IMAGES_FREE = shuffle(structuredClone(IMAGES));
 const IMAGES_FORCED = shuffle(structuredClone(IMAGES));
 
