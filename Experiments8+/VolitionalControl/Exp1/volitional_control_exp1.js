@@ -1,7 +1,16 @@
 // Volitional Control Experiment modelled after Luo et al. (2024)
 // Volition motivates cognitive performance at the response-execution level by attenuating task-irrelevant motor activations
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cblk >= 8) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=466&credit_token=ad4b47447314412cb7bc8af613b5f095&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -764,7 +773,7 @@ function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
 
     const fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
-    save_data("/Common/write_data.php", fn, { stim: "vct" });
+    save_data("/Common8+/write_data.php", fn, { stim_type: "vct" });
     // save_data_local(fn, { stim_type: "vct" });
 }
 
