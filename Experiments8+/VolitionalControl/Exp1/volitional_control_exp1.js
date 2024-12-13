@@ -602,6 +602,7 @@ function code_task_response() {
 
     // get some variables from previous trial
     let datp = jsPsych.data.get().last(5).values()[0];
+    let datp_forced = jsPsych.data.get().last(4).values()[0];
     let dat = jsPsych.data.get().last(1).values()[0];
     dat.rt = dat.rt !== null ? dat.rt - PRMS.selected_picture_duration : PRMS.too_slow;
 
@@ -625,8 +626,8 @@ function code_task_response() {
         image_left: dat.choice_type === "free" ? IMAGES_FREE[0] : IMAGES_FORCED[0],
         image_right: dat.choice_type === "free" ? IMAGES_FREE[1] : IMAGES_FORCED[1],
         selection_side: datp.selection_side,
-        selection_response: datp.response,
-        selection_rt: datp.rt,
+        selection_response: dat.choice_type === "free" ? datp.response : datp_forced.response,
+        selection_rt: dat.choice_type === "free" ? datp.rt : datp_forced.rt,
         t_interval: datp.t_interval,
         corr_code: corr_code,
     });
@@ -773,7 +774,7 @@ function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
 
     const fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
-    save_data("/Common8+/write_data.php", fn, { stim_type: "vct" });
+    save_data_server("/Common8+/write_data.php", fn, { stim_type: "vct" });
     // save_data_local(fn, { stim_type: "vct" });
 }
 
