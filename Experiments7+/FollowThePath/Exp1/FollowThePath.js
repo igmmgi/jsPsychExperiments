@@ -24,7 +24,6 @@ const check_consent_form = function (elem) {
         );
         return false;
     }
-    return false;
 };
 
 const HTML_CONSENT_FORM = {
@@ -42,7 +41,9 @@ const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = "5px solid black";
 
 const p5js = new p5((sketch) => {
-    sketch.setup = () => {};
+    sketch.setup = () => {
+        //p5js.frameRate(60);
+    };
 });
 
 const PRMS = {
@@ -168,7 +169,7 @@ class Ball {
         this.speed = speed;
     }
 
-    move() {
+    move(dt) {
         // trial initiation
         if (!this.is_moving && p5js.mouseIsPressed) {
             let dx = Math.abs(p5js.mouseX * PRMS.scale_factor) - this.x - 5;
@@ -183,7 +184,7 @@ class Ball {
         if (!this.is_moving) return;
 
         // ball is moving, only interesred in x-movements
-        this.y -= this.speed;
+        this.y -= this.speed * dt;
         this.x += p5js.movedX; // only interested in x-movements
 
         // wait till path start
@@ -218,10 +219,14 @@ class Ball {
 const PATH = new Path(1);
 const BALL = new Ball(1);
 
+var lastupdate = Date.now();
+
 function draw_trial() {
+    var dt = Date.now() - lastupdate;
+    console.log(dt);
     p5js.background(...PRMS.colours.background);
-    BALL.move();
-    PATH.draw_target_path();
+    BALL.move(dt);
+    PATH.draw_target_path(dt);
     BALL.draw_ball();
     if (PRMS.show_error_path) PATH.calculate_distance(BALL.x, BALL.step, PRMS.distance_criterion);
     if (PRMS.show_ball_path) BALL.draw_ball_path();
@@ -232,6 +237,7 @@ function draw_trial() {
         p5js.textSize(50);
         p5js.text("Drücken Sie 'n', um den nächsten Versuch zu starten", CANVAS_SIZE[0] / 2, CANVAS_SIZE[1] / 2);
     }
+    lastupdate = Date.now();
 }
 
 function add_data() {
@@ -448,14 +454,14 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(HTML_CONSENT_FORM);
-    exp.push(vpDemographics());
-    exp.push(fullscreen(true));
+    // exp.push(HTML_CONSENT_FORM);
+    // exp.push(vpDemographics());
+    // exp.push(fullscreen(true));
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
-    exp.push(welcome_message());
-    exp.push(WELCOME_INSTRUCTIONS);
+    // exp.push(welcome_message());
+    // exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type;
     if (!PRMS.randomise_block_order) {
