@@ -1,4 +1,4 @@
-// Template for pilot SFB ironic errors series of experiments
+/// Template for pilot SFB ironic errors series of experiments
 // Participants are required to control a ball (small circle) that moves from the bottom
 // to the top of the screen. The x-position is controlled  by moving the mouse/trackpad
 // left/right so that the ball follows a path.
@@ -33,6 +33,15 @@ const HTML_CONSENT_FORM = {
     check_fn: check_consent_form,
 };
 
+var introSurvey = {
+    type: jsPsychSurveyText,
+    questions: [
+        { prompt: "Wie lautet Ihre Prolific ID?", placeholder: "XXXXXXXXXXXXXX", required: true },
+        { prompt: "Welches ist Ihr Geschlecht?", placeholder: "m/f/a", required: true },
+        { prompt: "Wie alt sind Sie?", required: true },
+    ],
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
@@ -42,11 +51,14 @@ const CANVAS_BORDER = "5px solid black";
 
 const p5js = new p5((sketch) => {
     sketch.setup = () => {
-        //p5js.frameRate(60);
+        // p5js.frameRate(60); // controlled via delta time
     };
 });
 
 const PRMS = {
+    expName: "C02WP1_2pilot",
+    n_trials: 7, // number of trials per block
+    n_blocks: 16, // number of blocks (must be multiple of 4)
     n_trials: 20, // number of trials per block
     n_blocks: 8, // number of blocks (must be multiple of 4)
     randomise_block_order: false,
@@ -58,7 +70,7 @@ const PRMS = {
     path_start: 100, // path starts X up from bottom of screen
     path_width: 10, // width of the path in pixels
     path_difficulty: { easy: 500, hard: 100 },
-    speed_difficulty: { easy: 1, hard: 2 }, // controlled by frame rate (1px vs 2px per frame)
+    speed_difficulty: { easy: 0.0625, hard: 0.0625 * 2 }, // controlled by frame rate (delta time)
     ball_diameter: 20,
     show_ball_path: true, // the black line the ball travelled
     show_error_path: true, // the red/green path feedback
@@ -103,15 +115,31 @@ const SCALE_FACTOR = {
     func: get_scale_factor,
 };
 
+function nearest_idx(values, num) {
+    let smallest_diff = Math.abs(num - values[0]);
+    let current_diff = smallest_diff;
+    let closest_idx = 0;
+    for (let idx = 1; idx < values.length; idx++) {
+        current_diff = Math.abs(num - values[idx]);
+        if (current_diff < smallest_diff) {
+            smallest_diff = current_diff;
+            closest_idx = idx;
+        }
+    }
+    return closest_idx;
+}
+
 class Path {
-    constructor(step) {
-        this.reset(step);
+    constructor() {
+        this.reset();
     }
 
-    reset(step) {
-        this.x = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
-        this.y = range(CANVAS_SIZE[1] - PRMS.path_start, 0, -step);
-        this.on_path = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
+    reset() {
+        this.x = new Array(Math.round(CANVAS_SIZE[1] - PRMS.path_start)).fill(0);
+        this.y = range(CANVAS_SIZE[1] - PRMS.path_start, 0, -1);
+        this.on_path = new Array(Math.round(CANVAS_SIZE[1] - PRMS.path_start)).fill(0);
+        this.current_idx = 0;
+        this.previous_idx = 0;
     }
 
     // position within canvas and scale
@@ -119,14 +147,19 @@ class Path {
         let xpos = CANVAS_SIZE[0] * 0.75;
         let start = Math.round(Math.random() * xpos);
         for (let i = start; i < start + this.x.length; i++) {
-            this.x[i - start] = p5js.noise((i / noise_value) * speed_value) * xpos + CANVAS_SIZE[1] / 2 - xpos / 4;
+            this.x[i - start] = p5js.noise(i / noise_value) * xpos + CANVAS_SIZE[1] / 2 - xpos / 4;
         }
     }
 
     calculate_distance(x, y, criterion) {
-        if (y > CANVAS_SIZE[1] - PRMS.path_start) return;
-        let distance = Math.abs(Math.round(x) - PATH.x[y]);
-        this.on_path[y - 1] = distance < criterion ? 1 : -1;
+        this.current_idx = nearest_idx(this.y, y);
+        if (this.current_idx > CANVAS_SIZE[1] - PRMS.path_start) return;
+        let distance = Math.abs(Math.round(x) - PATH.x[this.current_idx]);
+        let on_path = distance < criterion ? 1 : -1;
+        for (let idx = this.previous_idx; idx <= this.current_idx; idx++) {
+            this.on_path[idx - 1] = on_path;
+        }
+        this.previous_idx = this.current_idx;
     }
 
     draw_target_path() {
@@ -145,17 +178,17 @@ class Path {
 }
 
 class Ball {
-    constructor(length) {
-        this.reset(length);
+    constructor() {
+        this.reset();
     }
 
-    reset(length) {
-        this.length = length;
+    reset() {
         this.is_moving = false;
+        this.move_start_time = null;
+        this.move_end_time = null;
         this.is_complete = false;
         this.diameter = PRMS.ball_diameter;
         this.speed = null;
-        this.step = 0;
         this.x = null;
         this.y = CANVAS_SIZE[1] - PRMS.ball_diameter;
         this.x_path = [];
@@ -180,23 +213,25 @@ class Ball {
             // console.log("this.y:", this.x, "p5y", p5js.mouseY, p5js.mouseX * PRMS.scale_factor);
             // console.log("dx:", dx, "dy:", dy, "distance:", distance);
             this.is_moving = distance < this.diameter / 2;
+            this.move_start_time = Date.now();
         }
         if (!this.is_moving) return;
 
         // ball is moving, only interesred in x-movements
         this.y -= this.speed * dt;
-        this.x += p5js.movedX; // only interested in x-movements
+        this.x += p5js.movedX;
 
         // wait till path start
         if (this.y > CANVAS_SIZE[1] - PRMS.path_start) return;
 
-        if (this.step >= this.length) {
+        // reached top of screen
+        if (this.y <= 0) {
             this.is_moving = false;
             this.is_complete = true;
+            this.move_end_time = Date.now() - this.move_start_time; // actual ball movement time
             return;
         }
 
-        this.step += 1;
         this.x_path.push(this.x);
         this.y_path.push(this.y);
     }
@@ -216,19 +251,16 @@ class Ball {
     }
 }
 
-const PATH = new Path(1);
-const BALL = new Ball(1);
-
-var lastupdate = Date.now();
+const PATH = new Path();
+const BALL = new Ball();
 
 function draw_trial() {
-    var dt = Date.now() - lastupdate;
-    console.log(dt);
+    // console.log("Delta Time: ", p5js.deltaTime);
     p5js.background(...PRMS.colours.background);
-    BALL.move(dt);
-    PATH.draw_target_path(dt);
+    BALL.move(p5js.deltaTime);
+    PATH.draw_target_path();
     BALL.draw_ball();
-    if (PRMS.show_error_path) PATH.calculate_distance(BALL.x, BALL.step, PRMS.distance_criterion);
+    if (PRMS.show_error_path) PATH.calculate_distance(BALL.x, BALL.y, PRMS.distance_criterion);
     if (PRMS.show_ball_path) BALL.draw_ball_path();
     if (BALL.is_complete) {
         p5js.stroke(0);
@@ -237,7 +269,6 @@ function draw_trial() {
         p5js.textSize(50);
         p5js.text("Drücken Sie 'n', um den nächsten Versuch zu starten", CANVAS_SIZE[0] / 2, CANVAS_SIZE[1] / 2);
     }
-    lastupdate = Date.now();
 }
 
 function add_data() {
@@ -249,6 +280,7 @@ function add_data() {
         path_y: PATH.y,
         ball_x: BALL.x_path,
         ball_y: BALL.y_path,
+        move_time: BALL.move_end_time,
         on_path: PATH.on_path,
     });
 }
@@ -388,9 +420,9 @@ const END_SCREEN = {
     choices: [" "],
     stimulus: generate_formatted_html({
         text: `Dieser Teil des Experiments ist nun abgeschlossen.<br><br>
-             Im Folgenden finden Sie Informationen über die Zahlung von Prolific.
-             Bitte kopieren Sie diesen Code per Foto oder schriftlich für Prolific, um zu beweisen, dass Sie das Ende erreicht haben:
-             C1O307TB`,
+             Im Folgenden finden Sie Informationen &#252;ber die Zahlung von Prolific.
+             Bitte kopieren Sie diesen Code per Foto oder schriftlich f&#252;r Prolific, um zu beweisen, dass Sie das Ende erreicht haben:
+             CAQEQ2B7`,
         fontsize: 28,
         lineheight: 1.5,
         bold: true,
@@ -403,26 +435,39 @@ const SURVEY = {
     scale_width: CANVAS_SIZE[0] * 0.9,
     questions: [
         {
-            prompt: `<span style="font-weight: bold; font: 36px Arial;">Bewerten Sie "den Grad Ihrer erforderlichen Konzentration auf diesen Teil der Aufgabe" auf einer 9-Punkte-Skala <br>von 1 (extrem geringe Konzentration erforderlich) bis 9 (extrem hohe Konzentration erforderlich).</span>`,
+            prompt: `<span style="font-weight: bold; font: 36px Arial;">Bewerten Sie den "Umfang der wahrgenommenen geistigen Anstrengung" auf einer 9-Punkte-Skala <br>von 1 (extrem geringe geistige Anstrengung) bis 9 (extrem hohe geistige Anstrengung).</span>`,
             name: "effort",
             labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-            required: true,
         },
         {
             prompt: `<span style="font-weight: bold; font: 36px Arial;">Bewerten Sie "wie schwierig diese Aufgabe war" auf einer 9-Punkte-Skala von 1 (extrem leicht) bis 9 (extrem schwierig).</span>`,
             name: "difficulty",
             labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-            required: true,
         },
     ],
     on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
         jsPsych.data.addProperties({
             [`rt_survey_block_${PRMS.count_block - 1}`]: dat.rt,
-            [`effort_block_${PRMS.count_block - 1}`]: dat.response.effort + 1,
-            [`difficulty_block_${PRMS.count_block - 1}`]: dat.response.difficulty + 1,
+            [`effort_block_${PRMS.count_block - 1}`]: dat.response.effort,
+            [`difficulty_block_${PRMS.count_block - 1}`]: dat.response.difficulty,
         });
     },
+};
+
+const REVIEW = {
+    type: jsPsychSurveyLikert,
+    scale_width: CANVAS_SIZE[0] * 0.9,
+    data: {
+        stim_type: "ftp",
+    },
+    questions: [
+        {
+            prompt: `<span style="font-weight: bold; font: 36px Arial;">Bitte antworten Sie ehrlich, denn Ihre Erstattung wird davon nicht beeinflusst: WÃ¼rden Sie diese Daten verwenden, wenn Sie der Forscher wÃ¤ren? Ja oder nein?</span>`,
+            name: "use",
+            labels: ["Ja", "Nein"],
+        },
+    ],
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -454,14 +499,15 @@ function genExpSeq() {
 
     let exp = [];
 
-    // exp.push(HTML_CONSENT_FORM);
-    // exp.push(vpDemographics());
-    // exp.push(fullscreen(true));
+    exp.push(HTML_CONSENT_FORM);
+    exp.push(vpDemographics());
+    exp.push(fullscreen(true));
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
-    // exp.push(welcome_message());
-    // exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type;
     if (!PRMS.randomise_block_order) {
@@ -475,6 +521,7 @@ function genExpSeq() {
         ]);
     }
     blk_type = repEach(blk_type, PRMS.n_blocks / 4);
+    blk_type = shuffle(blk_type);
 
     let blk_timeline;
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
@@ -494,12 +541,11 @@ function genExpSeq() {
         };
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_END); // trials within a block
-        if ((blk + 1) % (PRMS.n_blocks / 4) === 0) {
-            exp.push(SURVEY); // survey asked once after each series of same type blocks
-        }
+        exp.push(SURVEY); // survey asked once after each series of same type blocks
     }
 
     // save data
+    exp.push(REVIEW);
     exp.push(SAVE_DATA);
 
     // debrief
