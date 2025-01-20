@@ -219,7 +219,7 @@ class Ball {
 
         // ball is moving, only interesred in x-movements
         this.y -= this.speed * dt;
-        this.x += p5js.movedX;
+        this.x = p5js.mouseX * PRMS.scale_factor;
 
         // wait till path start
         if (this.y > CANVAS_SIZE[1] - PRMS.path_start) return;
@@ -499,15 +499,15 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(HTML_CONSENT_FORM);
-    exp.push(vpDemographics());
-    exp.push(fullscreen(true));
+    //exp.push(HTML_CONSENT_FORM);
+    //exp.push(vpDemographics());
+    //exp.push(fullscreen(true));
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
-    exp.push(welcome_message());
+    //exp.push(welcome_message());
     // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    exp.push(WELCOME_INSTRUCTIONS);
+    //exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type;
     if (!PRMS.randomise_block_order) {
