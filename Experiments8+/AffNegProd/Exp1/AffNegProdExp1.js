@@ -8,27 +8,27 @@
 ////////////////////////////////////////////////////////////////////////
 
 const jsPsych = initJsPsych({
+    show_progress_bar: true,
     // can set it to return to SONA
     on_finish: function () {},
 });
 
-const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
 const CANVAS_SIZE = [720, 1280];
 
 // Experiment Parameters
 const PRMS = {
-    gap: 1000, // gap between screens
+    gap: 500, // gap between screens
     ctrl: 1,
     cblk: 1,
 };
 
-// show declaration of consent
+/* show declaration of consent */
 const check_consent_form = function (elem) {
     if (document.getElementById("consent_checkbox").checked) {
         return true;
     } else {
         alert(
-            "Thank you for your interest in our experiment. If you want to participate, please check the consnt box near the bottom of the page.",
+            "Vielen Dank für Ihr Interesse an unserem Experiment. Wenn Sie teilnehmen möchten, geben Sie uns bitte Ihr Einverständnis.",
         );
         return false;
     }
@@ -50,11 +50,8 @@ const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
-        text: `In the following experiment you will see two words presented on the screen. Please rate the words regarding how positive or negative you think the words are.<br><br>
-You rate the words via moving a slider to a position with the left side being negative (0 = very negative) and the right side being positive (100 = very positive). You can position 
-the slider anywhere on the scale.<br><br>
-Just give your spontaneous intuition without thinking too much about it.<br><br>
-Press any key to continue`,
+        text: `Du siehst immer zwei Bilder auf dem Bildschirm. Auf eins der Bilder zeigt ein Pfeil, deine Aufgabe ist es dieses Bild zu beschreiben. Stell dir dazu vor, du redest mit jemandem am Telefon und beschreibst, was genau du in diesem Bild siehst. Tippe deine Beschreibung in die Box unter den Bildern. Das andere Bild musst du NICHT beschreiben. Benutze immer ganze Sätze. Wenn du fertig bist, dann kannst du über den „Weiter“ Button direkt zum nächsten Bilderpaar. Hier kommen ein paar Beispiele, die ersten beiden haben bereits eine Antwort, danach kannst du selbst tippen.<br><br>
+Weiter mit einem Tastendruck.`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -64,48 +61,137 @@ Press any key to continue`,
     post_trial_gap: PRMS.gap,
 };
 
-const TASK_INSTRUCTIONS2 = {
-    type: jsPsychCanvasSliderResponse,
-    stimulus: function () {},
-    labels: ["Very<br>Negative", "Very<br>Positive"],
+const CONTINUE_SCREEN = {
+    type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
-    prompt: `<p>Here is an example. You read the word "MORNING", and you think "MORNING" has a positive connotation.<br>
-Thus, you click on the slider and move it towards the right.<br>
-You then repeat this rating process for the word "ALARM".<br>
-Make a rating for both of these practise words in order to activate the "Continue" button.<\p>`,
-    require_movement: true,
-    min: [0, 0],
-    max: [100, 100],
-    slider_start: [50, 50],
-    step: [1, 1],
-    slider_labels: ["MORNING", "ALARM"],
-    slider_spacing: 100,
+    stimulus: generate_formatted_html({
+        text: `Ende der Übung.<br><br>
+Es geht jetzt mit dem richtigen Experiment los.<br><br>
+Weiter mit einem Tastendruck.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+        lineheight: 1.5,
+    }),
     post_trial_gap: PRMS.gap,
+    on_finish: function () {
+        PRMS.cblk += 1;
+        PRMS.ctrl = 1;
+    },
 };
 
-const RATING_SCREEN = {
-    type: jsPsychCanvasSliderResponse,
-    stimulus: function () {},
-    labels: ["Very<br>Negative", "Very<br>Positive"],
-    canvas_size: CANVAS_SIZE,
-    prompt: "",
-    require_movement: true,
-    min: [0, 0],
-    max: [100, 100],
-    slider_start: [50, 50],
-    step: [1, 1],
-    slider_spacing: 200,
+////////////////////////////////////////////////////////////////////////
+//                              Exp Parts                             //
+////////////////////////////////////////////////////////////////////////
+
+function image_names() {
+    // 394 available images
+    let images = [];
+    for (let i = 1; i <= 60; i++) {
+        images.push(`../Images/Folie${i}_base.jpeg`);
+        images.push(`../Images/Folie${i}_alt.jpeg`);
+    }
+    return images;
+}
+
+const IMAGES = image_names();
+const IMAGES_PRACTICE = [
+    "../Images/practice/practice1_base.jpg",
+    "../Images/practice/practice1_alt.jpg",
+    "../Images/practice/practice2_base.jpg",
+    "../Images/practice/practice2_alt.jpg",
+    "../Images/practice/practice3_base.jpg",
+    "../Images/practice/practice3_alt.jpg",
+];
+
+function find_index(imageArray, fullFileName) {
+    return imageArray.findIndex((img) => {
+        const fileName = img.split("/").pop();
+        return fileName === fullFileName;
+    });
+}
+
+function create_trial_table() {
+    let image_number = shuffle(range(1, 61));
+    let image_types = ["alt", "base"];
+    let image_type = shuffle(repeat_array(image_types, 30));
+    let trial_table = [];
+    let base_arrow = shuffle(range(0, 60)).slice(30); // half for base image
+
+    for (const [index, element] of image_number.entries()) {
+        let trial = {};
+        let image_type_left = image_type[index];
+        let image_type_right;
+        if (image_type_left === "alt") {
+            image_type_right = "base";
+        } else {
+            image_type_right = "alt";
+        }
+        if (base_arrow.includes(index)) {
+            trial["relevant_image_type"] = "base";
+            if (image_type_left === "base") {
+                trial["relevant_image_side"] = "left";
+            } else {
+                trial["relevant_image_side"] = "right";
+            }
+        } else {
+            trial["relevant_image_type"] = "alt";
+            if (image_type_left === "alt") {
+                trial["relevant_image_side"] = "left";
+            } else {
+                trial["relevant_image_side"] = "right";
+            }
+        }
+        // make actual image name
+        trial["image_left"] = "Folie" + element + "_" + image_type_left + ".jpeg";
+        trial["image_left_index"] = find_index(IMAGES, trial["image_left"]);
+        trial["image_right"] = "Folie" + element + "_" + image_type_right + ".jpeg";
+        trial["image_right_index"] = find_index(IMAGES, trial["image_right"]);
+        trial_table.push(trial);
+    }
+
+    return trial_table;
+}
+
+const TRIAL_TABLE = create_trial_table();
+
+// hard-coded practice examples
+// prettier-ignore
+const TRIAL_TABLE_PRACTICE = [
+  {"image_left": "practice1_base.jpg", "image_left_index": 0, "image_right": "practice1_alt.jpg", "image_right_index": 1, "relevant_image_side": "left", "relevant_image_type": "base"},
+  {"image_left": "practice2_base.jpg", "image_left_index": 2, "image_right": "practice2_alt.jpg", "image_right_index": 3, "relevant_image_side": "right", "relevant_image_type": "alt"},
+  {"image_left": "practice3_base.jpg", "image_left_index": 4, "image_right": "practice3_alt.jpg", "image_right_index": 5, "relevant_image_side": "right", "relevant_image_type": "alt"},
+];
+
+const PRELOAD = {
+    type: jsPsychPreload,
+    images: [IMAGES],
+};
+
+const TRIAL_PRACTICE = {
+    type: jsPsychSurveyText,
+    questions: [],
     data: {
         stim_type: "affneg",
-        aff_word: jsPsych.timelineVariable("aff_word"),
-        neg_word: jsPsych.timelineVariable("neg_word"),
+        image_left: jsPsych.timelineVariable("image_left"),
+        image_right: jsPsych.timelineVariable("image_right"),
+        relevant_image_side: jsPsych.timelineVariable("relevant_image_side"),
+        relevant_image_type: jsPsych.timelineVariable("relevant_image_type"),
     },
     on_start: function (trial) {
-        var words = shuffle([
-            jsPsych.evaluateTimelineVariable("aff_word"),
-            jsPsych.evaluateTimelineVariable("neg_word"),
-        ]);
-        trial.slider_labels = [words[0], words[1]];
+        if (PRMS.cblk === 1 && PRMS.ctrl === 1) {
+            trial.questions = [{ prompt: "", rows: 4, value: "Da liegt ein aufgeschlagenes Buch." }];
+        } else if (PRMS.cblk === 1 && PRMS.ctrl === 2) {
+            trial.questions = [{ prompt: "", rows: 4, value: "Hier ist eine offene Schatzkiste ohne Inhalt." }];
+        } else {
+            trial.questions = [{ prompt: "", rows: 4, value: " " }];
+        }
+        trial.preamble = [
+            IMAGES_PRACTICE[jsPsych.evaluateTimelineVariable("image_left_index")],
+            IMAGES_PRACTICE[jsPsych.evaluateTimelineVariable("image_right_index")],
+        ];
+        trial.arrow_number = jsPsych.evaluateTimelineVariable("relevant_image_side") === "left" ? 0 : 1;
     },
     on_finish: function () {
         code_trial();
@@ -114,45 +200,51 @@ const RATING_SCREEN = {
     post_trial_gap: PRMS.gap,
 };
 
-////////////////////////////////////////////////////////////////////////
-//                              Exp Parts                             //
-////////////////////////////////////////////////////////////////////////
+const TRIAL = {
+    type: jsPsychSurveyText,
+    questions: [{ prompt: "", rows: 4, value: " " }],
+    data: {
+        stim_type: "affneg",
+        image_left: jsPsych.timelineVariable("image_left"),
+        image_right: jsPsych.timelineVariable("image_right"),
+        relevant_image_side: jsPsych.timelineVariable("relevant_image_side"),
+        relevant_image_type: jsPsych.timelineVariable("relevant_image_type"),
+    },
+    on_start: function (trial) {
+        trial.preamble = [
+            IMAGES[jsPsych.evaluateTimelineVariable("image_left_index")],
+            IMAGES[jsPsych.evaluateTimelineVariable("image_right_index")],
+        ];
+        trial.arrow_number = jsPsych.evaluateTimelineVariable("relevant_image_side") === "left" ? 0 : 1;
+    },
+    on_finish: function () {
+        code_trial();
+        PRMS.ctrl += 1;
+    },
+    post_trial_gap: PRMS.gap,
+};
 
 function code_trial() {
     "use strict";
 
     let dat = jsPsych.data.get().last(1).values()[0];
+    dat.response = dat.response.Q0;
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
-        word_left: dat.slider_labels[0],
-        rating_left: dat.response[0],
-        word_right: dat.slider_labels[1],
-        rating_right: dat.response[1],
         block_num: PRMS.cblk,
         trial_num: PRMS.ctrl,
     });
 }
 
-// prettier-ignore
-const TRIAL_TABLE = [
-  { aff_word: "YES",        neg_word: "NO"},
-  { aff_word: "WITH",       neg_word: "WITHOUT"},
-  { aff_word: "EVERYTHING", neg_word: "NOTHING"},
-  { aff_word: "EVERYBODY",  neg_word: "NOBODY"},
-  { aff_word: "NEUTRAL",    neg_word: "NOT"},
-  { aff_word: "ALWAYS",     neg_word: "NEVER"},
-  { aff_word: "EVERYWHERE", neg_word: "NOWHERE"},
-  { aff_word: "ALL",        neg_word: "NONE"},
-];
+const TRIAL_TIMELINE_PRACTICE = {
+    timeline: [TRIAL_PRACTICE],
+    timeline_variables: TRIAL_TABLE_PRACTICE,
+};
 
 const TRIAL_TIMELINE = {
-    timeline: [RATING_SCREEN],
+    timeline: [TRIAL],
     timeline_variables: TRIAL_TABLE,
-    sample: {
-        type: "fixed-repetitions",
-        size: 1,
-    },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -166,8 +258,8 @@ function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    // save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "affneg" });
-    save_data_local(data_fn, { stim_type: "affneg" });
+    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "affneg" });
+    // save_data_local(data_fn, { stim_type: "affneg" });
 }
 
 const SAVE_DATA = {
@@ -184,16 +276,13 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `The experiment has ended.<br><br>
-Press any key to continue.`,
+        text: `Das Experiment ist jetzt vorbei.<br><br>
+Vielen Dank für Ihre Teilnahme!`,
         fontsize: 28,
-        color: "black",
-        lineheight: 1.0,
+        lineheight: 1.5,
         bold: true,
-        align: "center",
+        align: "left",
     }),
-    on_finish: function () {},
-    post_trial_gap: PRMS.gap,
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -204,23 +293,24 @@ function generate_exp() {
 
     let exp = [];
 
-    exp.push(fullscreen(true, "en"));
+    exp.push(fullscreen(true));
     exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
-    exp.push(resize_browser("en"));
-    exp.push(welcome_message("en"));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
     exp.push(HTML_CONSENT_FORM);
-    exp.push(vp_info_form("/Common8+/vpInfoForm_en.html"));
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    exp.push(PRELOAD);
     exp.push(TASK_INSTRUCTIONS1);
-    exp.push(TASK_INSTRUCTIONS2);
 
+    exp.push(TRIAL_TIMELINE_PRACTICE);
+    exp.push(CONTINUE_SCREEN);
     exp.push(TRIAL_TIMELINE);
 
     // save data
     exp.push(SAVE_DATA);
 
     // debrief
-    exp.push(END_SCREEN);
-    exp.push(end_message());
+    // exp.push(END_SCREEN);
     exp.push(fullscreen(false));
 
     return exp;

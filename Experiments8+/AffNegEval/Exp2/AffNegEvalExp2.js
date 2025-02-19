@@ -48,11 +48,11 @@ const HTML_CONSENT_FORM = {
 const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: generate_formatted_html({
-        text: `In the following experiment you will see two words presented on the screen. Please rate the words regarding how positive or negative you think the words are.<br><br>
-You rate the words via moving a slider to a position with the left side being negative (0 = very negative) and the right side being positive (100 = very positive). You can position 
-the slider anywhere on the scale.<br><br>
-Just give your spontaneous intuition without thinking too much about it.<br><br>
-Press any key to continue`,
+        text: `
+Im folgenden Experiment werden Ihnen zwei Wörter auf dem Bildschirm präsentiert. Bitte bewerten Sie die Wörter danach, wie positiv oder negativ Sie sie empfinden.<br><br>
+Sie bewerten die Wörter, indem Sie einen Schieberegler bewegen. Die linke Seite steht für negativ (0 = sehr negativ) und die rechte Seite für positiv (100 = sehr positiv). Sie können den Schieberegler an beliebiger Stelle auf der Skala positionieren.<br><br>
+Verlassen Sie sich einfach auf Ihre spontane Intuition, ohne zu lange darüber nachzudenken.<br><br>
+Drücken Sie eine beliebige Taste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -65,18 +65,19 @@ Press any key to continue`,
 const TASK_INSTRUCTIONS2 = {
     type: jsPsychCanvasSliderResponse,
     stimulus: function () {},
-    labels: ["Very<br>Negative", "Very<br>Positive"],
+    labels: ["Sehr<br>negativ", "Sehr<br>positiv"],
     canvas_size: CANVAS_SIZE,
-    prompt: `<p>Here is an example. You read the word "MORNING", and you think "MORNING" has a positive connotation.<br>
-Thus, you click on the slider and move it towards the right.<br>
-You then repeat this rating process for the word "ALARM".<br>
-Make a rating for both of these practice words in order to activate the "Continue" button.<\p>`,
+    prompt: `<p>
+Hier ist ein Beispiel: Sie lesen das Wort „MORGEN“ und finden, dass „MORGEN“ eine positive Konnotation hat.<br>
+Daher klicken Sie auf den Schieberegler und bewegen ihn nach rechts.<br>
+Anschließend geben Sie eine Bewertung für das Wort „WECKER“ ab.<br>
+Machen Sie eine Bewertung für beide Wörter, um den „Weiter“-Button zu aktivieren.<\p>`,
     require_movement: true,
     min: [0, 0],
     max: [100, 100],
     slider_start: [50, 50],
     step: [1, 1],
-    slider_labels: ["MORNING", "ALARM"],
+    slider_labels: ["MORGEN", "WECKER"],
     slider_spacing: 100,
     post_trial_gap: PRMS.gap,
 };
@@ -85,9 +86,8 @@ const CONTINUE_SCREEN = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
-        text: `End of practice.<br><br>
-Now the experiment starts.<br><br>
-Press any key to continue`,
+        text: `Ende der Übung. Jetzt geht es los.<br><br>
+Drücken Sie eine beliebige Taste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -104,7 +104,7 @@ Press any key to continue`,
 const RATING_SCREEN = {
     type: jsPsychCanvasSliderResponse,
     stimulus: function () {},
-    labels: ["Very<br>Negative", "Very<br>Positive"],
+    labels: ["Sehr<br>negativ", "Sehr<br>positiv"],
     canvas_size: CANVAS_SIZE,
     prompt: "",
     require_movement: true,
@@ -154,14 +154,14 @@ function code_trial() {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-  { aff_word: "YES",        neg_word: "NO"},
-  { aff_word: "WITH",       neg_word: "WITHOUT"},
-  { aff_word: "EVERYTHING", neg_word: "NOTHING"},
-  { aff_word: "EVERYBODY",  neg_word: "NOBODY"},
-  { aff_word: "NEUTRAL",    neg_word: "NOT"},
-  { aff_word: "ALWAYS",     neg_word: "NEVER"},
-  { aff_word: "EVERYWHERE", neg_word: "NOWHERE"},
-  { aff_word: "ALL",        neg_word: "NONE"},
+  { aff_word: "JA",      neg_word: "NEIN"},
+  { aff_word: "MIT",     neg_word: "OHNE"},
+  { aff_word: "ALLES",   neg_word: "NICHTS"},
+  { aff_word: "JEDER",   neg_word: "NIEMAND"},
+  { aff_word: "NEUTRAL", neg_word: "NICHT"},
+  { aff_word: "IMMER",   neg_word: "NIE"},
+  { aff_word: "ÜBERALL", neg_word: "NIRGENDS"},
+  { aff_word: "ALLE",    neg_word: "KEIN"},
 ];
 
 const TRIAL_TIMELINE = {
@@ -202,8 +202,8 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `The experiment has ended.<br><br>
-Press any key to continue.`,
+        text: `Das Experiment ist zu Ende.<br><br>
+Weiter mit einem Tastendruck.`,
         fontsize: 28,
         color: "black",
         lineheight: 1.0,
@@ -223,14 +223,14 @@ function generate_exp() {
     let exp = [];
 
     // setup
-    exp.push(fullscreen(true, "en"));
+    exp.push(fullscreen(true));
     exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
-    exp.push(resize_browser("en"));
+    exp.push(resize_browser());
 
     // instructions/demographics
-    exp.push(welcome_message("en"));
+    exp.push(welcome_message());
     exp.push(HTML_CONSENT_FORM);
-    exp.push(vp_info_form("/Common8+/vpInfoForm_en.html"));
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
 
