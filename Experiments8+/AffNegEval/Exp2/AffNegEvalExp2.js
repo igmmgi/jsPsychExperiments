@@ -157,11 +157,11 @@ const TRIAL_TABLE = [
   { aff_word: "JA",      neg_word: "NEIN"},
   { aff_word: "MIT",     neg_word: "OHNE"},
   { aff_word: "ALLES",   neg_word: "NICHTS"},
-  { aff_word: "JEDER",   neg_word: "NIEMAND"},
+  { aff_word: "ALLE",    neg_word: "NIEMAND"},
   { aff_word: "NEUTRAL", neg_word: "NICHT"},
   { aff_word: "IMMER",   neg_word: "NIE"},
   { aff_word: "ÜBERALL", neg_word: "NIRGENDS"},
-  { aff_word: "ALLE",    neg_word: "KEIN"},
+  { aff_word: "EIN",     neg_word: "KEIN"},
 ];
 
 const TRIAL_TIMELINE = {
