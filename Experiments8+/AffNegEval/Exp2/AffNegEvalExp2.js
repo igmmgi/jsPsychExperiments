@@ -50,7 +50,9 @@ const TASK_INSTRUCTIONS1 = {
     stimulus: generate_formatted_html({
         text: `
 Im folgenden Experiment werden Ihnen zwei Wörter auf dem Bildschirm präsentiert. Bitte bewerten Sie die Wörter danach, wie positiv oder negativ Sie sie empfinden.<br><br>
-Sie bewerten die Wörter, indem Sie einen Schieberegler bewegen. Die linke Seite steht für negativ (0 = sehr negativ) und die rechte Seite für positiv (100 = sehr positiv). Sie können den Schieberegler an beliebiger Stelle auf der Skala positionieren.<br><br>
+Sie bewerten die Wörter, indem Sie einen Schieberegler bewegen. 
+Die linke Seite steht für negativ (0 = sehr negativ) und die rechte Seite für positiv (100 = sehr positiv). 
+Sie können den Schieberegler an beliebiger Stelle auf der Skala positionieren. Um ein neutrales Rating abzugeben (= 50) muss man den Schieberegler zuerst auf eine Seite bewegen und dann zurück zur Mitte (um unabsichtliche 50 Eingaben zu vermeiden).<br><br>
 Verlassen Sie sich einfach auf Ihre spontane Intuition, ohne zu lange darüber nachzudenken.<br><br>
 Drücken Sie eine beliebige Taste, um fortzufahren.`,
         align: "left",

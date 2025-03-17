@@ -50,7 +50,7 @@ const TASK_INSTRUCTIONS1 = {
     stimulus: generate_formatted_html({
         text: `In the following experiment you will see two words presented on the screen. Please rate the words regarding how positive or negative you think the words are.<br><br>
 You rate the words via moving a slider to a position with the left side being negative (0 = very negative) and the right side being positive (100 = very positive). You can position 
-the slider anywhere on the scale.<br><br>
+the slider anywhere on the scale. To submit a neutral rating (= 50) you first need to move the slider to one of the sides and then move it back to the middle (in order to avoid accidental 50 ratings).<br><br>
 Just give your spontaneous intuition without thinking too much about it.<br><br>
 Press any key to continue`,
         align: "left",
