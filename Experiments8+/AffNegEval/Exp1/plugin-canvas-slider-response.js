@@ -172,12 +172,13 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 html += '<div style="position: relative; width: 100%; height: 10px; margin-top: 5px;">';
                 const range = trial.max[i] - trial.min[i];
                 const tickCount = range / 10;
+
                 for (let j = 0; j <= tickCount; j++) {
-                    const position = (j / tickCount) * 100;
+                    const position = (j / tickCount) * 100; 
                     html +=
                         '<div style="position: absolute; left: ' +
-                        position +
-                        '%; width: 1px; height: 10px; background: black;"></div>';
+                        position + 
+                        '%; width: 2px; height: 15px; background: black;"></div>';
                 }
                 html += "</div>";
 
@@ -196,7 +197,7 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                     html +=
                         '<div style="position: absolute; left: ' +
                         initialPosition +
-                        '%; transform: translateX(-50%); bottom: 100%; font-weight: bold;">' +
+                        '%; transform: translateX(-50%); bottom: 120%; font-size: 2.0em;font-weight: bold;">' +
                         trial.slider_labels[i] +
                         "</div>";
                 }

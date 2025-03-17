@@ -162,6 +162,7 @@ const TRIAL_TABLE = [
   { aff_word: "ALWAYS",     neg_word: "NEVER"},
   { aff_word: "EVERYWHERE", neg_word: "NOWHERE"},
   { aff_word: "ONE",        neg_word: "NONE"},
+  { aff_word: "MOVE TO 40", neg_word: "MOVE TO 60"},
 ];
 
 const TRIAL_TIMELINE = {
