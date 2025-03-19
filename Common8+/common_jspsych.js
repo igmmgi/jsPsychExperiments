@@ -88,11 +88,12 @@ function save_interaction_data(url, filename) {
 ////////////////////////////////////////////////////////////////////////
 //                          Common Variables                          //
 ////////////////////////////////////////////////////////////////////////
-function browser_check(screen_res = [960, 1280]) {
+function browser_check(screen_res = [1920, 1080]) {
+    console.log(screen_res);
     return {
         type: jsPsychBrowserCheck,
-        minimum_width: screen_res[1],
-        minimum_height: screen_res[0],
+        minimum_width: screen_res[0],
+        minimum_height: screen_res[1],
         features: ["width", "height", "browser", "vsync_rate", "os"],
         on_finish: function () {
             let dat = jsPsych.data.get().last(1).values()[0];

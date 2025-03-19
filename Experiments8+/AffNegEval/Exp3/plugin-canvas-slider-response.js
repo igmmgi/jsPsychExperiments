@@ -53,22 +53,22 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
             min: {
                 type: jspsych.ParameterType.INT,
                 default: 0,
-                array: true,
+                array: false,
             },
             max: {
                 type: jspsych.ParameterType.INT,
                 default: 100,
-                array: true,
+                array: false,
             },
             slider_start: {
                 type: jspsych.ParameterType.INT,
                 default: 50,
-                array: true,
+                array: false,
             },
             step: {
                 type: jspsych.ParameterType.INT,
                 default: 1,
-                array: true,
+                array: false,
             },
             labels: {
                 type: jspsych.ParameterType.HTML_STRING,
@@ -146,7 +146,7 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 'px; width: 100%;">';
 
             // Create two slider containers
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 1; i++) {
                 html += '<div class="jspsych-canvas-slider-response-container" style="position:relative; width:';
 
                 if (trial.slider_width !== null) {
@@ -157,20 +157,20 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 html += '">';
                 html +=
                     '<input type="range" class="jspsych-slider" value="' +
-                    trial.slider_start[i] +
+                    trial.slider_start +
                     '" min="' +
-                    trial.min[i] +
+                    trial.min +
                     '" max="' +
-                    trial.max[i] +
+                    trial.max +
                     '" step="' +
-                    trial.step[i] +
+                    trial.step +
                     '" style="width: 100%;" id="jspsych-canvas-slider-response-response-' +
                     i +
                     '"></input>';
 
                 // Add tick marks
                 html += '<div style="position: relative; width: 100%; height: 10px; margin-top: 5px;">';
-                const range = trial.max[i] - trial.min[i];
+                const range = trial.max - trial.min;
                 const tickCount = range / 10;
 
                 for (let j = 0; j <= tickCount; j++) {
@@ -187,18 +187,17 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                     '<div style="text-align: center; margin-top: 0.5em; font-size: 1.2em;" id="jspsych-canvas-slider-response-value-' +
                     i +
                     '">' +
-                    trial.slider_start[i] +
+                    trial.slider_start +
                     "</div>";
 
                 // Add word above initial slider position
-                if (trial.slider_labels && trial.slider_labels[i]) {
-                    const initialPosition =
-                        ((trial.slider_start[i] - trial.min[i]) / (trial.max[i] - trial.min[i])) * 100;
+                if (trial.slider_label) {
+                    const initialPosition = ((trial.slider_start - trial.min) / (trial.max - trial.min)) * 100;
                     html +=
                         '<div style="position: absolute; left: ' +
                         initialPosition +
                         '%; transform: translateX(-50%); bottom: 120%; font-size: 2.0em;font-weight: bold;">' +
-                        trial.slider_labels[i] +
+                        trial.slider_label +
                         "</div>";
                 }
 
@@ -243,25 +242,25 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
             trial.stimulus(c);
             var response = {
                 rt: null,
-                response: [null, null],
+                response: null,
             };
             const end_trial = () => {
                 var trialdata = {
                     rt: response.rt,
                     response: response.response,
-                    slider_labels: trial.slider_labels,
+                    slider_label: trial.slider_label,
                 };
                 this.jsPsych.finishTrial(trialdata);
             };
             if (trial.require_movement) {
                 const sliders = [
                     display_element.querySelector("#jspsych-canvas-slider-response-response-0"),
-                    display_element.querySelector("#jspsych-canvas-slider-response-response-1"),
+                    //display_element.querySelector("#jspsych-canvas-slider-response-response-1"),
                 ];
 
                 const check_sliders = () => {
                     // Enable button only if both sliders have been moved
-                    if (sliders[0].value != trial.slider_start[0] && sliders[1].value != trial.slider_start[1]) {
+                    if (sliders[0].value != trial.slider_start[0]) {
                         display_element.querySelector("#jspsych-canvas-slider-response-next").disabled = false;
                     }
                 };
@@ -278,7 +277,7 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 response.rt = Math.round(endTime - startTime);
                 response.response = [
                     display_element.querySelector("#jspsych-canvas-slider-response-response-0").valueAsNumber,
-                    display_element.querySelector("#jspsych-canvas-slider-response-response-1").valueAsNumber,
+                    //display_element.querySelector("#jspsych-canvas-slider-response-response-1").valueAsNumber,
                 ];
                 if (trial.response_ends_trial) {
                     end_trial();
@@ -298,7 +297,7 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
             var startTime = performance.now();
 
             // Add event listeners to update value displays
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 1; i++) {
                 const slider = display_element.querySelector("#jspsych-canvas-slider-response-response-" + i);
                 const valueDisplay = display_element.querySelector("#jspsych-canvas-slider-response-value-" + i);
 

@@ -174,10 +174,10 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 const tickCount = range / 10;
 
                 for (let j = 0; j <= tickCount; j++) {
-                    const position = (j / tickCount) * 100;
+                    const position = (j / tickCount) * 100; 
                     html +=
                         '<div style="position: absolute; left: ' +
-                        position +
+                        position + 
                         '%; width: 2px; height: 15px; background: black;"></div>';
                 }
                 html += "</div>";

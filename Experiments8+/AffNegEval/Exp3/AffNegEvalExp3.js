@@ -1,7 +1,7 @@
 // AffNegEval Exp1
 //
-// Participants rate word pairs using a slider scale.
-// 8 pairs of words.
+// Participants rate word using a slider scale.
+// 16 words.
 
 ////////////////////////////////////////////////////////////////////////
 //         Initialize JsPsych and Define Canvas Properties            //
@@ -48,8 +48,8 @@ const HTML_CONSENT_FORM = {
 const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: generate_formatted_html({
-        text: `In the following experiment you will see two words presented on the screen. Please rate the words regarding how positive or negative you think the words are.<br><br>
-You rate the words via moving a slider to a position with the left side being negative (0 = very negative) and the right side being positive (100 = very positive). You can position 
+        text: `In the following experiment you will see a word presented on the screen. Please rate the word regarding how positive or negative you think the word is.<br><br>
+You rate the word via moving a slider to a position with the left side being negative (0 = very negative) and the right side being positive (100 = very positive). You can position 
 the slider anywhere on the scale. To submit a neutral rating (= 50) you first need to move the slider to one of the sides and then move it back to the middle (in order to avoid accidental 50 ratings).<br><br>
 Just give your spontaneous intuition without thinking too much about it.<br><br>
 Press any key to continue`,
@@ -69,15 +69,30 @@ const TASK_INSTRUCTIONS2 = {
     canvas_size: CANVAS_SIZE,
     prompt: `<p>Here is an example. You read the word "MORNING", and you think "MORNING" has a positive connotation.<br>
 Thus, you click on the slider and move it towards the right.<br>
-You then repeat this rating process for the word "ALARM".<br>
-Make a rating for both of these practice words in order to activate the "Continue" button.<\p>`,
+Make a rating for this practice word in order to activate the "Continue" button.<\p>`,
     require_movement: true,
-    min: [0, 0],
-    max: [100, 100],
-    slider_start: [50, 50],
-    step: [1, 1],
-    slider_labels: ["MORNING", "ALARM"],
-    slider_spacing: 100,
+    min: 0,
+    max: 100,
+    slider_start: 50,
+    step: 1,
+    slider_label: "MORNING",
+    post_trial_gap: PRMS.gap,
+};
+
+const TASK_INSTRUCTIONS3 = {
+    type: jsPsychCanvasSliderResponse,
+    stimulus: function () {},
+    labels: ["Very<br>Negative", "Very<br>Positive"],
+    canvas_size: CANVAS_SIZE,
+    prompt: `<p>Here is another example. You read the word "ALARM", and you think "ALARM" has a negative connotation.<br>
+Thus, you click on the slider and move it towards the left.<br>
+Make a rating for this practice word in order to activate the "Continue" button.<\p>`,
+    require_movement: true,
+    min: 0,
+    max: 100,
+    slider_start: 50,
+    step: 1,
+    slider_label: "ALARM",
     post_trial_gap: PRMS.gap,
 };
 
@@ -108,22 +123,18 @@ const RATING_SCREEN = {
     canvas_size: CANVAS_SIZE,
     prompt: "",
     require_movement: true,
-    min: [0, 0],
-    max: [100, 100],
-    slider_start: [50, 50],
-    step: [1, 1],
-    slider_spacing: 200,
+    min: 0,
+    max: 100,
+    slider_start: 50,
+    step: 1,
+    slider_label: "test",
     data: {
         stim_type: "affneg",
-        aff_word: jsPsych.timelineVariable("aff_word"),
-        neg_word: jsPsych.timelineVariable("neg_word"),
+        word: jsPsych.timelineVariable("word"),
+        word_type: jsPsych.timelineVariable("word_type"),
     },
     on_start: function (trial) {
-        var words = shuffle([
-            jsPsych.evaluateTimelineVariable("aff_word"),
-            jsPsych.evaluateTimelineVariable("neg_word"),
-        ]);
-        trial.slider_labels = [words[0], words[1]];
+        trial.slider_label = jsPsych.evaluateTimelineVariable("word");
     },
     on_finish: function () {
         code_trial();
@@ -140,13 +151,12 @@ function code_trial() {
     "use strict";
 
     let dat = jsPsych.data.get().last(1).values()[0];
+    console.log(dat);
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
-        word_left: dat.slider_labels[0],
-        rating_left: dat.response[0],
-        word_right: dat.slider_labels[1],
-        rating_right: dat.response[1],
+        word: dat.slider_label,
+        rating: dat.response[0],
         block_num: PRMS.cblk,
         trial_num: PRMS.ctrl,
     });
@@ -154,15 +164,24 @@ function code_trial() {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-  { aff_word: "YES",        neg_word: "NO"},
-  { aff_word: "WITH",       neg_word: "WITHOUT"},
-  { aff_word: "EVERYTHING", neg_word: "NOTHING"},
-  { aff_word: "EVERYBODY",  neg_word: "NOBODY"},
-  { aff_word: "NEUTRAL",    neg_word: "NOT"},
-  { aff_word: "ALWAYS",     neg_word: "NEVER"},
-  { aff_word: "EVERYWHERE", neg_word: "NOWHERE"},
-  { aff_word: "ONE",        neg_word: "NONE"},
-  { aff_word: "MOVE TO 40", neg_word: "MOVE TO 60"},
+  { word: "YES",        word_type: "aff"},        
+  { word: "NO",         word_type: "neg"},
+  { word: "WITH",       word_type: "aff"},
+  { word: "WITHOUT",    word_type: "neg"},
+  { word: "EVERYTHING", word_type: "aff"},
+  { word: "NOTHING",    word_type: "neg"},
+  { word: "EVERYBODY",  word_type: "aff"},
+  { word: "NOBODY",     word_type: "neg"},
+  { word: "NEUTRAL",    word_type: "aff"},
+  { word: "NOT",        word_type: "neg"},
+  { word: "ALWAYS",     word_type: "aff"},
+  { word: "NEVER",      word_type: "neg"},
+  { word: "EVERYWHERE", word_type: "aff"},
+  { word: "NOWHERE",    word_type: "neg"},
+  { word: "ONE",        word_type: "aff"},
+  { word: "NONE",       word_type: "neg"},
+  { word: "MOVE TO 40", word_type: "na"}, 
+  { word: "MOVE TO 60", word_type: "na"},
 ];
 
 const TRIAL_TIMELINE = {
@@ -236,6 +255,7 @@ function generate_exp() {
     exp.push(vp_info_form("/Common8+/vpInfoForm_en.html"));
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
 
     exp.push(CONTINUE_SCREEN);
 
