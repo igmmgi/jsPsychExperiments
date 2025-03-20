@@ -49,8 +49,8 @@ const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: generate_formatted_html({
         text: `
-Im folgenden Experiment werden Ihnen zwei Wörter auf dem Bildschirm präsentiert. Bitte bewerten Sie die Wörter danach, wie positiv oder negativ Sie sie empfinden.<br><br>
-Sie bewerten die Wörter, indem Sie einen Schieberegler bewegen. 
+Im folgenden Experiment wird Ihnen ein Wort auf dem Bildschirm präsentiert. Bitte bewerten Sie das Wort danach, wie positiv oder negativ Sie es empfinden.<br><br>
+Sie bewerten das Wort, indem Sie einen Schieberegler bewegen. 
 Die linke Seite steht für negativ (0 = sehr negativ) und die rechte Seite für positiv (100 = sehr positiv). 
 Sie können den Schieberegler an beliebiger Stelle auf der Skala positionieren. Um ein neutrales Rating abzugeben (= 50) muss man den Schieberegler zuerst auf eine Seite bewegen und dann zurück zur Mitte (um unabsichtliche 50 Eingaben zu vermeiden).<br><br>
 Verlassen Sie sich einfach auf Ihre spontane Intuition, ohne zu lange darüber nachzudenken.<br><br>
@@ -72,14 +72,32 @@ const TASK_INSTRUCTIONS2 = {
     prompt: `<p>
 Hier ist ein Beispiel: Sie lesen das Wort „MORGEN“ und finden, dass „MORGEN“ eine positive Konnotation hat.<br>
 Daher klicken Sie auf den Schieberegler und bewegen ihn nach rechts.<br>
-Anschließend geben Sie eine Bewertung für das Wort „WECKER“ ab.<br>
-Machen Sie eine Bewertung für beide Wörter, um den „Weiter“-Button zu aktivieren.<\p>`,
+Machen Sie eine Bewertung für das Wort, um den „Weiter“-Button zu aktivieren.<\p>`,
     require_movement: true,
-    min: [0, 0],
-    max: [100, 100],
-    slider_start: [50, 50],
-    step: [1, 1],
-    slider_labels: ["MORGEN", "WECKER"],
+    min: 0,
+    max: 100,
+    slider_start: 50,
+    step: 1,
+    slider_labels: "MORGEN",
+    slider_spacing: 100,
+    post_trial_gap: PRMS.gap,
+};
+
+const TASK_INSTRUCTIONS3 = {
+    type: jsPsychCanvasSliderResponse,
+    stimulus: function () {},
+    labels: ["Sehr<br>negativ", "Sehr<br>positiv"],
+    canvas_size: CANVAS_SIZE,
+    prompt: `<p>
+Hier ist noch ein Beispiel: Sie lesen das Wort „WECKER“ und finden, dass „WECKER“ eine negative Konnotation hat.<br>
+Daher klicken Sie auf den Schieberegler und bewegen ihn nach links.<br>
+Machen Sie eine Bewertung für das Wort, um den „Weiter“-Button zu aktivieren.<\p>`,
+    require_movement: true,
+    min: 0,
+    max: 100,
+    slider_start: 50,
+    step: 1,
+    slider_labels: "WECKER",
     slider_spacing: 100,
     post_trial_gap: PRMS.gap,
 };
@@ -110,22 +128,18 @@ const RATING_SCREEN = {
     canvas_size: CANVAS_SIZE,
     prompt: "",
     require_movement: true,
-    min: [0, 0],
-    max: [100, 100],
-    slider_start: [50, 50],
-    step: [1, 1],
-    slider_spacing: 200,
+    min: 0,
+    max: 100,
+    slider_start: 50,
+    step: 1,
+    slider_label: "test",
     data: {
         stim_type: "affneg",
-        aff_word: jsPsych.timelineVariable("aff_word"),
-        neg_word: jsPsych.timelineVariable("neg_word"),
+        word: jsPsych.timelineVariable("word"),
+        word_type: jsPsych.timelineVariable("word_type"),
     },
     on_start: function (trial) {
-        var words = shuffle([
-            jsPsych.evaluateTimelineVariable("aff_word"),
-            jsPsych.evaluateTimelineVariable("neg_word"),
-        ]);
-        trial.slider_labels = [words[0], words[1]];
+        trial.slider_label = jsPsych.evaluateTimelineVariable("word");
     },
     on_finish: function () {
         code_trial();
@@ -145,10 +159,8 @@ function code_trial() {
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
-        word_left: dat.slider_labels[0],
-        rating_left: dat.response[0],
-        word_right: dat.slider_labels[1],
-        rating_right: dat.response[1],
+        word: dat.slider_label,
+        rating: dat.response[0],
         block_num: PRMS.cblk,
         trial_num: PRMS.ctrl,
     });
@@ -156,15 +168,40 @@ function code_trial() {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-  { aff_word: "JA",              neg_word: "NEIN"},
-  { aff_word: "MIT",             neg_word: "OHNE"},
-  { aff_word: "ALLES",           neg_word: "NICHTS"},
-  { aff_word: "ALLE",            neg_word: "NIEMAND"},
-  { aff_word: "NEUTRAL",         neg_word: "NICHT"},
-  { aff_word: "IMMER",           neg_word: "NIE"},
-  { aff_word: "ÜBERALL",         neg_word: "NIRGENDS"},
-  { aff_word: "EIN",             neg_word: "KEIN"},
-  { aff_word: "Schiebe zur 40",  neg_word: "Schiebe zur 60"},
+  { word: "JA",         word_type: "aff"},        
+  { word: "NEIN",       word_type: "neg"},
+  { word: "MIT",        word_type: "aff"},
+  { word: "OHNE",       word_type: "neg"},
+  { word: "ALLES",      word_type: "aff"},
+  { word: "NICHTS",     word_type: "neg"},
+  { word: "ALLE",       word_type: "aff"},
+  { word: "NIEMAND",    word_type: "neg"},
+  { word: "NEUTRAL",    word_type: "aff"},
+  { word: "NICHT",      word_type: "neg"},
+  { word: "IMMER",      word_type: "aff"},
+  { word: "NIE",        word_type: "neg"},
+  { word: "ÜBERALL",    word_type: "aff"},
+  { word: "NIRGENDS",   word_type: "neg"},
+  { word: "EIN",        word_type: "aff"},
+  { word: "KEIN",       word_type: "neg"},
+  { word: "NEBEN",      word_type: "filler"},        
+  { word: "SO",         word_type: "filler"},
+  { word: "VON",        word_type: "filler"},
+  { word: "DAVON",      word_type: "filler"},
+  { word: "AN",         word_type: "filler"},
+  { word: "TISCH",      word_type: "filler"},
+  { word: "PAPIER",     word_type: "filler"},
+  { word: "STUHL",      word_type: "filler"},
+  { word: "DING",       word_type: "filler"},
+  { word: "SCHREIBEN ", word_type: "filler"},
+  { word: "TELLER",     word_type: "filler"},
+  { word: "MINUTE",     word_type: "filler"},
+  { word: "BEREICH",    word_type: "filler"},
+  { word: "STELLE",     word_type: "filler"},
+  { word: "KONTEXT",    word_type: "filler"},
+  { word: "DREHEN",     word_type: "filler"},
+  { word: "MOVE TO 40", word_type: "na"}, 
+  { word: "MOVE TO 60", word_type: "na"},
 ];
 
 const TRIAL_TIMELINE = {
@@ -238,6 +275,7 @@ function generate_exp() {
     exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
 
     exp.push(CONTINUE_SCREEN);
 

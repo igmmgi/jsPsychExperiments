@@ -23,14 +23,14 @@ const PRMS = {
 
 // show declaration of consent
 const check_consent_form = function (elem) {
-	if (document.getElementById("consent_checkbox").checked) {
-		return true;
-	} else {
-		alert(
-			"Thank you for your interest in our experiment. If you want to participate, please check the consent box near the bottom of the page.",
-		);
-		return false;
-	}
+    if (document.getElementById("consent_checkbox").checked) {
+        return true;
+    } else {
+        alert(
+            "Thank you for your interest in our experiment. If you want to participate, please check the consent box near the bottom of the page.",
+        );
+        return false;
+    }
 };
 
 const HTML_CONSENT_FORM = {
@@ -151,7 +151,6 @@ function code_trial() {
     "use strict";
 
     let dat = jsPsych.data.get().last(1).values()[0];
-    console.log(dat);
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
@@ -180,22 +179,22 @@ const TRIAL_TABLE = [
   { word: "NOWHERE",    word_type: "neg"},
   { word: "ONE",        word_type: "aff"},
   { word: "NONE",       word_type: "neg"},
-  { word: "FILLER",     word_type: "filler"},        
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
-  { word: "FILLER",     word_type: "filler"},
+  { word: "NEXT",       word_type: "filler"},        
+  { word: "SO",         word_type: "filler"},
+  { word: "BY",         word_type: "filler"},
+  { word: "OF",         word_type: "filler"},
+  { word: "TO",         word_type: "filler"},
+  { word: "TABLE",      word_type: "filler"},
+  { word: "PAPER",      word_type: "filler"},
+  { word: "CHAIR",      word_type: "filler"},
+  { word: "THING",      word_type: "filler"},
+  { word: "WRITE",      word_type: "filler"},
+  { word: "PLATE",      word_type: "filler"},
+  { word: "MINUTE",     word_type: "filler"},
+  { word: "REGION",     word_type: "filler"},
+  { word: "ZONE",       word_type: "filler"},
+  { word: "CONTEXT",    word_type: "filler"},
+  { word: "TURN",       word_type: "filler"},
   { word: "MOVE TO 40", word_type: "na"}, 
   { word: "MOVE TO 60", word_type: "na"},
 ];
