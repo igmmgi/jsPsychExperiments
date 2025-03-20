@@ -23,14 +23,14 @@ const PRMS = {
 
 // show declaration of consent
 const check_consent_form = function (elem) {
-    if (document.getElementById("consent_checkbox").checked) {
-        return true;
-    } else {
-        alert(
-            "Thank you for your interest in our experiment. If you want to participate, please check the consent box near the bottom of the page.",
-        );
-        return false;
-    }
+	if (document.getElementById("consent_checkbox").checked) {
+		return true;
+	} else {
+		alert(
+			"Thank you for your interest in our experiment. If you want to participate, please check the consent box near the bottom of the page.",
+		);
+		return false;
+	}
 };
 
 const HTML_CONSENT_FORM = {
@@ -180,6 +180,22 @@ const TRIAL_TABLE = [
   { word: "NOWHERE",    word_type: "neg"},
   { word: "ONE",        word_type: "aff"},
   { word: "NONE",       word_type: "neg"},
+  { word: "FILLER",     word_type: "filler"},        
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
+  { word: "FILLER",     word_type: "filler"},
   { word: "MOVE TO 40", word_type: "na"}, 
   { word: "MOVE TO 60", word_type: "na"},
 ];
