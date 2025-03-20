@@ -248,7 +248,11 @@ var DEBRIEF_SCREEN = {
     },
     on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
+        if (dat.response.response === "") {
+            dat.response.response = "No idea!";
+        }
         jsPsych.data.addDataToLastTrial({
+            response: [50],
             debrief_response: dat.response.response,
         });
     },

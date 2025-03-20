@@ -307,7 +307,7 @@ var jsPsychBrowserCheck = (function (jspsych) {
             },
             window_resize_message: {
                 type: jspsych.ParameterType.HTML_STRING,
-                default: `<p>Your browser window is too small to complete this experiment. Please maximize the size of your browser window. 
+                default: `<p>Your browser window is too small to complete this experiment. Please maximize the size of your browser window (and check zoom level). 
         If your browser window is already maximized, you will not be able to complete this experiment.</p>
         <p>The minimum window width is <span id="browser-check-min-width"></span> px.</p>
         <p>Your current window width is <span id="browser-check-actual-width"></span> px.</p>
