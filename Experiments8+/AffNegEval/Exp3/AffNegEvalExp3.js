@@ -244,7 +244,7 @@ var DEBRIEF_SCREEN = {
     on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
         jsPsych.data.addDataToLastTrial({
-            debrief_response: dat.response,
+            debrief_response: dat.response.response,
         });
     },
 };
@@ -275,6 +275,8 @@ function generate_exp() {
     "use strict";
 
     let exp = [];
+
+    exp.push(DEBRIEF_SCREEN);
 
     // setup
     exp.push(fullscreen(true, "en"));
