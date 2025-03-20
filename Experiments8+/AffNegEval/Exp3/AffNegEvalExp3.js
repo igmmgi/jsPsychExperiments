@@ -276,8 +276,6 @@ function generate_exp() {
 
     let exp = [];
 
-    exp.push(DEBRIEF_SCREEN);
-
     // setup
     exp.push(fullscreen(true, "en"));
     exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
