@@ -230,8 +230,22 @@ const SAVE_DATA = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                             VP Stunden                             //
+//                             VP DEBRIEF                             //
 ////////////////////////////////////////////////////////////////////////
+var DEBRIEF_SCREEN = {
+    type: jsPsychSurveyHtmlForm,
+    preamble:
+        '<p style="text-align: left;">What could an experiment using the words that you rated be investigating?</p>',
+    html: '<p style="text-align: left;"><input type="radio" name="response" value="no_idea"> No idea!<br><input type="radio" name="response" value="has_idea"> Yes, I have the following idea:<br><textarea id="test-resp-box" name="response" rows="4" cols="50" style="margin-left: 20px;"></textarea></p>',
+    autofocus: "test-resp-box",
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        jsPsych.data.addDataToLastTrial({
+            debrief_response: dat.response,
+        });
+    },
+};
+
 const END_SCREEN = {
     type: jsPsychHtmlKeyboardResponse,
     response_ends_trial: true,
@@ -259,6 +273,8 @@ function generate_exp() {
 
     let exp = [];
 
+    exp.push(DEBRIEF_SCREEN);
+
     // setup
     exp.push(fullscreen(true, "en"));
     exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
@@ -281,6 +297,7 @@ function generate_exp() {
     exp.push(SAVE_DATA);
 
     // debrief
+    exp.push(DEBRIEF_SCREEN);
     exp.push(END_SCREEN);
     exp.push(fullscreen(false));
 

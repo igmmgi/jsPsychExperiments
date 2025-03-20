@@ -235,8 +235,22 @@ const SAVE_DATA = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                             VP Stunden                             //
+//                             VP DEBRIEF                             //
 ////////////////////////////////////////////////////////////////////////
+var DEBRIEF_SCREEN = {
+    type: jsPsychSurveyHtmlForm,
+    preamble:
+        '<p style="text-align: left;">Was könnte eine Studie untersuchen mit diesen Wörtern, die hier gerade eingeschätzt wurden?</p>',
+    html: '<p style="text-align: left;"><input type="radio" name="response" value="no_idea"> Keine Idee!<br><input type="radio" name="response" value="has_idea"> Ja, ich habe folgende Idee:<br><textarea id="test-resp-box" name="response" rows="4" cols="50" style="margin-left: 20px;"></textarea></p>',
+    autofocus: "test-resp-box",
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        jsPsych.data.addDataToLastTrial({
+            debrief_response: dat.response,
+        });
+    },
+};
+
 const END_SCREEN = {
     type: jsPsychHtmlKeyboardResponse,
     response_ends_trial: true,
