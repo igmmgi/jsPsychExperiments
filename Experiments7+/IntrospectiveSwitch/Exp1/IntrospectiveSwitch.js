@@ -22,7 +22,7 @@
 // Blocks 1 and 2- Trial feedback for 2000 ms (correct vs. incorrect)
 // Blank inter-trial-interval for 500 ms
 //
-// In Forced-Blocks, the trial sequence the same temporal sequence from the previous block was used.
+// In Forced-Blocks, the same trial sequence from the previous block was used.
 // In blocks 3+, a VAS was presented every 2-6 trials: "How long was the reaction to the task you just performed".
 
 const jsPsych = initJsPsych({
@@ -784,16 +784,13 @@ const VAS = {
     stimulus: function () {
         display_slider();
     },
-    button_label: null,
+    button_label: "",
     on_start: function (trial) {
         // Only show slider reminder in first non-practice block
         if (PRMS.count_block === PRMS.n_blocks_practice + 1) {
             trial.button_label = `Nachdem du eine Zeit gewählt hast, müssen die Finger wieder auf den Tasten sein.<br><br>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[0]]}</span> = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_lh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_lh[1]}"</span>.<br>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[1]]}</span> = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_rh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_rh[1]}"</span>.<br><br>`;
-        } else {
-            trial.button_label = "";
-            `<br><br><br>`;
         }
     },
     on_finish: function () {
