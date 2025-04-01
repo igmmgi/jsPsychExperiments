@@ -112,6 +112,8 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
             this.jsPsych = jsPsych;
         }
         trial(display_element, trial) {
+            var startTime = performance.now();
+            
             var html = '<div id="jspsych-canvas-slider-response-wrapper" style="margin: 100px 0px;">';
             html +=
                 '<canvas id="canvas" width="' +
@@ -131,23 +133,44 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 trial.max +
                 '" step="' +
                 trial.step +
-                `" style="width: ${trial.slider_width}px; cursor: none;" id="jspsych-canvas-slider-response-response"></input></div>`;
+                `" style="width: ${trial.slider_width}px; cursor: none; margin-bottom: 100px;" id="jspsych-canvas-slider-response-response"></input>`;
 
-            // allow spacebar to activate click button
+            // Add a container for the button with fixed height
+            html += '<div id="jspsych-canvas-slider-response-button-container" style="height: 40px;">';
+            
+            // Add submit button (or placeholder if no button)
+            if (trial.button_label !== "") {
+                html +=
+                    '<button id="jspsych-canvas-slider-response-next" class="jspsych-btn" ' +
+                    (trial.require_movement ? "disabled" : "") +
+                    ">" +
+                    trial.button_label +
+                    "</button>";
+            } else {
+                // Add invisible placeholder to maintain spacing
+                html += '<div style="height: 40px;"></div>';
+            }
+            html += '</div></div>';
+
+            // allow spacebar to activate click button or continue if no button
             window.onkeydown = function (event) {
                 if (event.keyCode === 32) {
                     event.preventDefault();
-                    document.querySelector("#jspsych-canvas-slider-response-next").click();
+                    if (trial.button_label !== "") {
+                        document.querySelector("#jspsych-canvas-slider-response-next").click();
+                    } else {
+                        // measure response time
+                        var endTime = performance.now();
+                        response.rt = Math.round(endTime - startTime);
+                        response.response = display_element.querySelector(
+                            "#jspsych-canvas-slider-response-response",
+                        ).valueAsNumber;
+                        if (trial.response_ends_trial) {
+                            end_trial();
+                        }
+                    }
                 }
             };
-
-            // add submit button
-            html +=
-                '<button id="jspsych-canvas-slider-response-next" class="jspsych-btn" ' +
-                (trial.require_movement ? "disabled" : "") +
-                ">" +
-                trial.button_label +
-                "</button>";
 
             display_element.innerHTML = html;
 
@@ -226,7 +249,6 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
             if (trial.trial_duration !== null) {
                 this.jsPsych.pluginAPI.setTimeout(end_trial, trial.trial_duration);
             }
-            var startTime = performance.now();
         }
         simulate(trial, simulation_mode, simulation_options, load_callback) {
             if (simulation_mode == "data-only") {

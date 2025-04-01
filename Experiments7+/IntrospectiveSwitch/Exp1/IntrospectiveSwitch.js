@@ -43,13 +43,14 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_blocks: 10,
-    n_trials: 20,
+    n_blocks: 20, // even
+    n_blocks_practice: 2,
+    n_trials: 40, // multiple of 4
     vas_trial_interval: [2, 6], // number of trials between two vas trials
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
     fixation_duration: 500, // duration of the fixation cross
-    feedback_duration_practice: [2000, 2000, 2000], // duration of the feedback practice
+    feedback_duration_practice: [1000, 2000, 2000], // duration of the feedback practice (first two blocks)
     feedback_duration_experiment: [0, 0, 0], // duration of the feedback experiment
     feedback_text: ["Richtig!", "Falsch!", "Zu Schnell!"], // feedback text
     iti: 500,
@@ -85,7 +86,7 @@ const PRMS = {
     slider_labels: ["0 ms", "", "", "", "", "", "1500 ms"],
     slider_ticks_interval: 250,
     slider_ticks_length: 10,
-    slider_ticks_offset: 40,
+    slider_ticks_offset: 50,
     slider_ticks_font: "25px monospace",
     slider_prompt_position: [0, -100],
     slider_prompt_text_font: "30px monospace",
@@ -160,7 +161,7 @@ Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
 um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
 Du wirst nach dem Experiment auf SONA zurückgeleitet um die VP-Stunde zu erhalten.<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         colour: "black",
         fontsize: 30,
@@ -182,7 +183,7 @@ const TASK_INSTRUCTIONS_TEXT = generate_formatted_html({
     text: `In diesem Experiment gibt es <span style="font-weight: bold;">zwei</span> Aufgaben. Jede Aufgabe wird mit einer Hand bearbeitet.<br><br>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[0]]}</span> = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_lh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_lh[1]}"</span>.<br><br>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[1]]}</span> = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_rh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_rh[1]}"</span>.<br><br>
-Drücke eine beliebige Taste, um fortzufahren!`,
+Drücke eine beliebige Taste, um fortzufahren.`,
     align: "left",
     fontsize: 30,
     width: "1200px",
@@ -227,7 +228,7 @@ Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte ${EN_DE[PR
             text: `Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest wenn beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
 Wenn statt den Buchstabe jedoch "#####" erscheinen, dann musst du die Farbaufgabe bearbeiten.<br><br>
 Wenn statt den farbigen Punkte graue Punkte erscheinen, dann musst du die Buchstabenaufgabe bearbeiten.<br><br>
-Drücke eine beliebige Taste, um fortzufahren!`,
+Drücke eine beliebige Taste, um fortzufahren.`,
             align: "left",
             fontsize: 26,
             width: "1200px",
@@ -245,7 +246,7 @@ const TASK_INSTRUCTIONS3 = {
 Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, wenn beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
 Wenn jedoch nur ein Aufgabe eine Antwort erfordert, dann musst du diese Aufgabe bearbeiten.<br><br>
 Die ersten zwei Blöcken hast du Gelegenheit zu üben.<br><br>
-Drücke eine beliebige Taste um fortzufahren.`,
+Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
         width: "1200px",
@@ -535,12 +536,11 @@ function code_trial() {
 
 function code_trial_vas() {
     "use strict";
-    let dat = jsPsych.data.get().last(1).values()[0];
-    console.log(dat);
+    // let dat = jsPsych.data.get().last(1).values()[0];
     jsPsych.data.addDataToLastTrial({
         date: Date(),
         block: PRMS.count_block,
-        trial: PRMS.count_trial,
+        trial: PRMS.count_trial - 1, // the rating is for the previous letter/colour task
     });
 }
 
@@ -736,7 +736,7 @@ function display_slider() {
 
     ctx.textAlign = "center";
 
-    // show additional error message if reponse to the previous trial was not correct!
+    // show additional error message if reponse to the previous trial was incorrect/too fast!
     let dat = jsPsych.data.get().last(3).values()[0];
     if (dat.error !== 0) {
         ctx.font = PRMS.trial_feedback_text_font;
@@ -786,12 +786,13 @@ const VAS = {
     },
     button_label: null,
     on_start: function (trial) {
-        if (PRMS.count_block === 1) {
+        // Only show slider reminder in first non-practice block
+        if (PRMS.count_block === PRMS.n_blocks_practice + 1) {
             trial.button_label = `Nachdem du eine Zeit gewählt hast, müssen die Finger wieder auf den Tasten sein.<br><br>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[0]]}</span> = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_lh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_lh[1]}"</span>.<br>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[1]]}</span> = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_rh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_rh[1]}"</span>.<br><br>`;
         } else {
-            trial.button_label = null;
+            trial.button_label = "";
             `<br><br><br>`;
         }
     },
@@ -804,7 +805,7 @@ const IF_NODE_VAS = {
     timeline: [VAS],
     conditional_function: function () {
         // vas only after block 2!
-        return PRMS.count_block > 2 && vas_trials.includes(PRMS.count_trial - 1);
+        return PRMS.count_block > PRMS.n_blocks_practice && vas_trials.includes(PRMS.count_trial - 1);
     },
 };
 
@@ -817,7 +818,7 @@ const TRIAL_TABLE_FREE = [
 ];
 
 // prettier-ignore
-// Over-written on trial-by-trial basis based on previous block equivalent trial
+// Over-written on trial-by-trial basis based on previous block equivalent trial (Thus, essentially, just a place-holder)
 const TRIAL_TABLE_FORCED = [
   { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
   { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
@@ -873,8 +874,8 @@ const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
-    //saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtsvas" });
-    saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtsvas" });
+    saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtsvas" });
+    //saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtsvas" });
 }
 
 const SAVE_DATA = {
