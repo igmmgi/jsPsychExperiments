@@ -22,7 +22,7 @@
 // Blocks 1 and 2- Trial feedback for 2000 ms (correct vs. incorrect)
 // Blank inter-trial-interval for 500 ms
 //
-// In Forced-Blocks, the same trial sequence from the previous block was used.
+// In Forced-Blocks, the trial sequence the same temporal sequence from the previous block was used.
 // In blocks 3+, a VAS was presented every 2-6 trials: "How long was the reaction to the task you just performed".
 
 const jsPsych = initJsPsych({
@@ -43,16 +43,16 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_blocks: 20, // even
+    n_blocks: 20,
     n_blocks_practice: 2,
     n_trials: 40, // multiple of 4
-    vas_trial_interval: [2, 6], // number of trials between two vas trials
+    vas_trial_interval: [2, 4], // number of trials between two vas trials
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
     fixation_duration: 500, // duration of the fixation cross
     feedback_duration_practice: [1000, 2000, 2000], // duration of the feedback practice (first two blocks)
-    feedback_duration_experiment: [0, 0, 0], // duration of the feedback experiment
-    feedback_text: ["Richtig!", "Falsch!", "Zu Schnell!"], // feedback text
+    feedback_duration_experiment: [0, 2000, 2000], // duration of the feedback experiment (NB. no feedback when VAS trial)
+    feedback_text: ["Richtig!", "Falsch!", "Falsch!"], // feedback text
     iti: 500,
     grid_size: [1, 5], // rows, cols (1 row but with two tasks)
     grid_gaps: [0, 26], // rows, cols
@@ -60,41 +60,30 @@ const PRMS = {
     task_position: shuffle(["Colour", "Letter"]),
     colour_task_colours: shuffle(["blue", "red"]),
     colour_task_nogo: ["grey"],
-    colour_task_ratio: [40, 60], // should sum to 100!
+    colour_task_ratio: [20, 80], // should sum to 100!
     colour_task_offset: null,
     colour_task_dot_size: 12,
     colour_task_dot_size_nogo: 8,
     letter_task_letters: shuffle(["X", "O"]),
     letter_task_nogo: ["#"],
-    letter_task_ratio: [40, 60], // should sum to 100!
+    letter_task_ratio: [20, 80], // should sum to 100!
     letter_task_font: "bold 34px Monospace",
     letter_task_font_nogo: "bold 24px Monospace",
     letter_task_colour: "Black",
     letter_task_offset: null,
-    soa_step: 50,
+    soa_step: 100,
     response_keys_lh: ["Q", "W"],
     response_keys_rh: ["O", "P"],
     response_keys: ["Q", "W", "O", "P"],
     response_keys_colour: null,
     response_keys_letter: null,
     key_mapping: {},
-    slider_prompt: "Wie lange war die Reaktion auf die Aufgabe?",
-    slider_prompt_size: 26,
-    slider_start: 750,
+    slider_prompt:
+        "Wie lange war deine Reaktionszeit (vom Erscheinen des<br> Reize der bearbeiteten Aufgabe bis zum Tastendruck)?",
+    slider_start: 1000,
     slider_width: 800,
-    slider_range: [0, 1500],
-    slider_labels: ["0 ms", "", "", "", "", "", "1500 ms"],
-    slider_ticks_interval: 250,
-    slider_ticks_length: 10,
-    slider_ticks_offset: 50,
-    slider_ticks_font: "25px monospace",
-    slider_prompt_position: [0, -100],
-    slider_prompt_text_font: "30px monospace",
-    slider_prompt_text_colour: "Black",
-    trial_feedback_position: [0, -150],
-    trial_feedback_text: ["Falsch!", ""],
-    trial_feedback_text_font: "50px monospace",
-    trial_feedback_text_colour: "Black",
+    slider_range: [0, 2000],
+    slider_labels: ["0 ms", "2000 ms"],
     count_block: 1,
     count_trial: 1,
 };
@@ -159,7 +148,7 @@ const WELCOME_INSTRUCTIONS = {
         text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
 Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
+um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 40-45 Minuten konzentriert zu arbeiten.<br><br>
 Du wirst nach dem Experiment auf SONA zurückgeleitet um die VP-Stunde zu erhalten.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
@@ -209,6 +198,18 @@ ${EN_DE[PRMS.response_stimuli[0]]} ${pad_me("vs.", 28)} ${EN_DE[PRMS.response_st
     lineheight: 1.5,
 });
 
+const RESPONSE_MAPPING_VAS = generate_formatted_html({
+    text: `${EN_DE[PRMS.task_side[0]]} = Linke Hand ${"&emsp;".repeat(6)} ${EN_DE[PRMS.task_side[1]]} = Rechte Hand<br>
+${EN_DE[PRMS.response_stimuli[0]]} ${pad_me("vs.", 28)} ${EN_DE[PRMS.response_stimuli[1]]}${"&emsp;".repeat(12)}${EN_DE[PRMS.response_stimuli[2]]} ${pad_me("vs.", 25)} ${EN_DE[PRMS.response_stimuli[3]]}<br>
+(${PRMS.response_keys[0]}-Taste) ${"&emsp;".repeat(3)}(${PRMS.response_keys[1]}-Taste)${"&emsp;".repeat(11)}(${PRMS.response_keys[2]}-Taste)${"&emsp;".repeat(3)}(${PRMS.response_keys[3]}-Taste)`,
+    align: "center",
+    fontsize: 18,
+    width: "1200px",
+    bold: true,
+    lineheight: 1.25,
+});
+
+
 const TASK_INSTRUCTIONS2 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
@@ -225,8 +226,9 @@ Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte ${EN_DE[PR
         }) +
         RESPONSE_MAPPING +
         generate_formatted_html({
-            text: `Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest wenn beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
-Wenn statt den Buchstabe jedoch "#####" erscheinen, dann musst du die Farbaufgabe bearbeiten.<br><br>
+            text: `In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, da beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
+In den anderen Blöcken musst du in jedem Durchgang die vorgegebene Aufgabe bearbeiten, da nur eine der beiden Aufgaben (Buchstabe und Farbe) eine Antwort erfordert:<br><br>
+Wenn statt den Buchstabe "#####" erscheinen, dann musst du die Farbaufgabe bearbeiten.<br><br>
 Wenn statt den farbigen Punkte graue Punkte erscheinen, dann musst du die Buchstabenaufgabe bearbeiten.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
             align: "left",
@@ -243,8 +245,8 @@ const TASK_INSTRUCTIONS3 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
-Du darfst frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, wenn beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
-Wenn jedoch nur ein Aufgabe eine Antwort erfordert, dann musst du diese Aufgabe bearbeiten.<br><br>
+In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, da beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
+In den anderen Blöcken musst du in jedem Durchgang die vorgegebene Aufgabe bearbeiten, da nur eine der beiden Aufgaben (Buchstabe und Farbe) eine Antwort erfordert:<br><br>
 Die ersten zwei Blöcken hast du Gelegenheit zu üben.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
@@ -262,16 +264,17 @@ const TASK_INSTRUCTIONS_INTROSPECTION = {
     stimulus: "",
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `Nach einigen zufälligen Versuchen wirst du gebeten, einzuschätzen, wie lange du im vorherigen Versuch gebraucht hast, um zu reagieren. Du wirst dann eine Skala sehen:<br><br>
+            text: `*** ACHTUNG: NEUE INSTRUKTIONEN ****:<br><br>
+Du wirst nun zusätzlich nach manchen Durchgängen gebeten, einzuschätzen, wie lange du in diesem Durchgang für die Bearbeitung der gewählten/vorgegebenen Aufgabe gebraucht hast.<br><br>
+Du sollst somit die Zeit vom Erscheinen des Reizes auf den du reagiert hast (Farbe oder Buchstaben) bis zu deinem Tastendruck einschätzen. Hierzu wirst du dann eine Skala sehen:<br><br>
  <img src="./images/slider.png" width="100%"><br><br>
-Verwende den Cursor mit deiner Maus/Touchpad, um eine Zeit auf der Skala auszuwählen.
-Klicke dann mit der linken Maus-/Touchpad-taste auf die Zeit, von der du denkst, dass sie
-Deiner Reaktionszeit entspricht (vom Erscheinen des Quadrats bis zum Tastendruck).<br><br>
+Verwende den Cursor mit deiner Maus/Touchpad, um eine Zeit auf der Skala auszuwählen und bestätige diese durch klicken der linken Maus-/Touchpad-taste.
+Platziere anschließend deine Finger wieder auf die Tastatur, sodass du bereit bist für den nächsten Durchgang.<br><br>
                   Drücke eine beliebige Taste, um fortzufahren.`,
             align: "left",
             colour: "black",
-            fontsize: 28,
-            lineheight: 1.25,
+            fontsize: 26,
+            lineheight: 1,
         });
     },
 };
@@ -291,7 +294,7 @@ function generate_vas_trial_sequence() {
     }
 }
 
-const BLOCK_START = {
+const BLOCK_START_FREE = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
@@ -301,28 +304,72 @@ const BLOCK_START = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-Entscheide selbst welche Aufgabe du bearbeiten willst, wenn beide Aufgaben eine Antwort erfordern.<br><br>
+In diesem Block darfst du entscheiden entscheiden, welche der beiden Aufgabe du bearbeiten willst (in jedem Durchgang muss nur eine der beiden Aufgabe bearbeitet werden): <br><br>
 Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 align: "left",
                 fontsize: 30,
                 width: "1200px",
-                lineheight: 1.5,
+                lineheight: 1.25,
             }) +
             RESPONSE_MAPPING +
+            (PRMS.count_block > PRMS.n_blocks_practice ? generate_formatted_html({
+                text: `Nach manchen Durchgängen wirst du gefragt, wie lange du für deine Reaktion gebraucht
+hast (vom Erscheinen des Reizes bis zu deinem Tastendruck). Verwende dazu die Maus/Touchpad.`,
+                align: "left",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.25,
+            }) : "") +
             generate_formatted_html({
                 text: `Um den Block zu starten, drücke eine beliebige Taste.`,
                 align: "center",
                 fontsize: 30,
                 width: "1200px",
-                lineheight: 1.5,
+                lineheight: 1.25,
             });
-        generate_yoked_block_timeline();
         generate_vas_trial_sequence();
     },
-    on_finish: function () {
-        PERFORMANCE.time = new Date();
+};
+
+const BLOCK_START_FORCED = {
+    type: jsPsychHtmlKeyboardResponseCanvas,
+    canvas_colour: CANVAS_COLOUR,
+    canvas_size: CANVAS_SIZE,
+    canvas_border: CANVAS_BORDER,
+    stimulus: "",
+    on_start: function (trial) {
+        trial.stimulus =
+            generate_formatted_html({
+                text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
+In diesem Block musst du die vorgegebene Aufgabe bearbeiten (d.h., die Aufgabe welche in diesem
+Durchgang eine Antwort erfordert) <br><br>
+Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
+                align: "left",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.25,
+            }) +
+            RESPONSE_MAPPING +
+            (PRMS.count_block > PRMS.n_blocks_practice ? generate_formatted_html({
+                text: `Nach manchen Durchgängen wirst du gefragt, wie lange du für deine Reaktion gebraucht
+hast (vom Erscheinen des Reizes bis zu deinem Tastendruck). Verwende dazu die Maus/Touchpad.`,
+                align: "left",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.25,
+            }) : "") +
+            generate_formatted_html({
+                text: `Um den Block zu starten, drücke eine beliebige Taste.`,
+                align: "center",
+                fontsize: 30,
+                width: "1200px",
+                lineheight: 1.25,
+            });
+        generate_yoked_block_timeline();
     },
 };
+
+
 
 const BLOCK_END = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -356,6 +403,11 @@ const TRIAL_FEEDBACK = {
     trial_duration: null,
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
+        if (vas_trials.includes(PRMS.count_trial - 1)) {
+            trial.trial_duration = 0;
+            return;
+        }
+        console.log("Trial number: ", PRMS.count_trial);
         // only direct trial feedback in practice blocks
         trial.trial_duration = [1, 2].includes(PRMS.count_block)
             ? PRMS.feedback_duration_practice[dat.error]
@@ -368,7 +420,7 @@ const TRIAL_FEEDBACK = {
                 width: "1200px",
                 lineheight: 1.5,
             });
-            if (dat.error === 1) {
+            if (dat.error !== 0) {
                 trial.stimulus += RESPONSE_MAPPING;
             }
         }
@@ -383,6 +435,14 @@ const ITI = {
     stimulus: "",
     response_ends_trial: false,
     trial_duration: PRMS.iti,
+    on_start: function (trial) {
+        // Was previous trial a vas trial?
+        if (vas_trials.includes(PRMS.count_trial - 1)) {
+            console.log("VAS trial")
+        } else {
+            console.log("Not a VAS trial")
+        }
+    }
 };
 
 const END_SCREEN = {
@@ -401,7 +461,7 @@ const END_SCREEN = {
         bold: false,
         align: "left",
     }),
-    on_finish: function () {},
+    on_finish: function () { },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -510,6 +570,11 @@ function code_trial() {
 
     // get current trial soa
     let soa = PERFORMANCE.soa;
+
+    // if first trial first block, set SOA delay to 400 ms
+    if (PRMS.count_block === 1 && PRMS.count_trial === 1) {
+        PERFORMANCE.soa = 400;
+    }
 
     // adjust soa for next trial
     if (repetition_switch === "repetition") {
@@ -732,39 +797,8 @@ const STIMULUS = {
 };
 
 function display_slider() {
-    let ctx = document.getElementById("canvas").getContext("2d");
-
-    ctx.textAlign = "center";
-
-    // show additional error message if reponse to the previous trial was incorrect/too fast!
-    let dat = jsPsych.data.get().last(3).values()[0];
-    if (dat.error !== 0) {
-        ctx.font = PRMS.trial_feedback_text_font;
-        ctx.fillStyle = PRMS.trial_feedback_text_colour;
-        ctx.fillText(PRMS.feedback_text[dat.error], PRMS.trial_feedback_position[0], PRMS.trial_feedback_position[1]);
-    }
-
-    ctx.textAlign = "center";
-    ctx.font = PRMS.slider_prompt_text_font;
-    ctx.fillStyle = PRMS.slider_prompt_text_colour;
-    ctx.fillText(PRMS.slider_prompt, PRMS.slider_prompt_position[0], PRMS.slider_prompt_position[1]);
-
-    ctx.lineWidth = PRMS.fix_width;
-    ctx.strokeStyle = PRMS.fix_colour;
-    ctx.font = PRMS.slider_ticks_font;
-    let i = 0;
-    for (
-        let x = -PRMS.slider_width / 2;
-        x <= PRMS.slider_width / 2 + 1;
-        x += PRMS.slider_ticks_interval * (PRMS.slider_width / PRMS.slider_range[1])
-    ) {
-        ctx.stroke();
-        ctx.moveTo(x, PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
-        ctx.lineTo(x, -PRMS.slider_ticks_length - PRMS.slider_ticks_offset);
-        ctx.stroke();
-        ctx.fillText(PRMS.slider_labels[i], x, 0);
-        i += 1;
-    }
+    // Old code used to display additional messages but ...
+    return;
 }
 
 const VAS = {
@@ -778,19 +812,26 @@ const VAS = {
     slider_start: PRMS.slider_start,
     slider_width: PRMS.slider_width,
     require_movement: true,
+    prompt: PRMS.slider_prompt,
+    min_label: PRMS.slider_labels[0],
+    max_label: PRMS.slider_labels[1],
     data: {
         stim_type: "vtsvas",
     },
     stimulus: function () {
         display_slider();
     },
-    button_label: "",
+    button_label: null,
     on_start: function (trial) {
         // Only show slider reminder in first non-practice block
         if (PRMS.count_block === PRMS.n_blocks_practice + 1) {
-            trial.button_label = `Nachdem du eine Zeit gewählt hast, müssen die Finger wieder auf den Tasten sein.<br><br>
+            trial.button_label = `<span style="font-size: 20px;font-weight:bold;">Nachdem du eine Zeit gewählt hast, müssen die Finger wieder auf den Tasten sein.<br>Drücke anschließend die Leertaste um fortzufahren!<br><br></span>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[0]]}</span> = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_lh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_lh[1]}"</span>.<br>
-<span style="font-weight: bold;">${EN_DE[PRMS.task_side[1]]}</span> = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_rh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_rh[1]}"</span>.<br><br>`;
+<span style="font-weight: bold;">${EN_DE[PRMS.task_side[1]]}</span> = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_rh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_rh[1]}"</span>` +
+                RESPONSE_MAPPING_VAS;
+        } else {
+            trial.button_label = "";
+            `<br><br><br>`;
         }
     },
     on_finish: function () {
@@ -808,25 +849,25 @@ const IF_NODE_VAS = {
 
 // prettier-ignore
 const TRIAL_TABLE_FREE = [
-   { free_forced: "free", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-   { free_forced: "free", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-   { free_forced: "free", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-   { free_forced: "free", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
+    { free_forced: "free", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
+    { free_forced: "free", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
+    { free_forced: "free", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
+    { free_forced: "free", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
 ];
 
 // prettier-ignore
 // Over-written on trial-by-trial basis based on previous block equivalent trial (Thus, essentially, just a place-holder)
 const TRIAL_TABLE_FORCED = [
-  { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]]},
-  { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]]},
-  { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na"},
-  { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na"},
+    { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na", letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
+    { free_forced: "forced_letter", colour_task_colour: PRMS.colour_task_nogo[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na", letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
+    { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na" },
+    { free_forced: "forced_colour", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na" },
 ];
 
 // prettier-ignore
 const TRIAL_TIMELINE_FREE = {
-  timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, ITI, IF_NODE_VAS],
-  timeline_variables: TRIAL_TABLE_FREE
+    timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, ITI, IF_NODE_VAS],
+    timeline_variables: TRIAL_TABLE_FREE
 };
 
 let TRIAL_TIMELINE_FORCED = {
@@ -871,8 +912,8 @@ const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
-    saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtsvas" });
-    //saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtsvas" });
+    // saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtsvas" });
+    saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vtsvas" });
 }
 
 const SAVE_DATA = {
@@ -889,25 +930,31 @@ function genExpSeq() {
 
     let exp = [];
 
-    // setup
-    exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screen_res));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    exp.push(mouseCursor(false));
+    // // setup
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(PRMS.screen_res));
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    // exp.push(mouseCursor(false));
 
     // instructions
-    exp.push(WELCOME_INSTRUCTIONS);
-    exp.push(TASK_INSTRUCTIONS1);
-    exp.push(TASK_INSTRUCTIONS2);
-    exp.push(TASK_INSTRUCTIONS3);
-    exp.push(TASK_INSTRUCTIONS_INTROSPECTION);
+    //exp.push(WELCOME_INSTRUCTIONS);
+    //exp.push(TASK_INSTRUCTIONS1);
+    //exp.push(TASK_INSTRUCTIONS2);
+    //exp.push(TASK_INSTRUCTIONS3);
 
     let block_type = repeatArray(["free", "forced"], PRMS.n_blocks / 2);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
-        exp.push(BLOCK_START);
+        if (blk === PRMS.n_blocks_practice) {
+            exp.push(TASK_INSTRUCTIONS_INTROSPECTION);
+        };
+        if (block_type[blk] === "free") {
+            exp.push(BLOCK_START_FREE);
+        } else if (block_type[blk] === "forced") {
+            exp.push(BLOCK_START_FORCED);
+        }
         let blk_timeline;
         if (block_type[blk] === "free") {
             blk_timeline = { ...TRIAL_TIMELINE_FREE };
