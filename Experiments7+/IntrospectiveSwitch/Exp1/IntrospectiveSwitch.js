@@ -23,7 +23,7 @@
 // Blank inter-trial-interval for 500 ms
 //
 // In Forced-Blocks, the trial sequence the same temporal sequence from the previous block was used.
-// In blocks 3+, a VAS was presented every 2-6 trials: "How long was the reaction to the task you just performed".
+// In blocks 3+, a VAS was presented every 2-4 trials: "How long was the reaction to the task you just performed".
 
 const jsPsych = initJsPsych({
     on_finish: function () {
@@ -209,7 +209,6 @@ ${EN_DE[PRMS.response_stimuli[0]]} ${pad_me("vs.", 28)} ${EN_DE[PRMS.response_st
     lineheight: 1.25,
 });
 
-
 const TASK_INSTRUCTIONS2 = {
     type: jsPsychHtmlKeyboardResponseCanvas,
     canvas_colour: CANVAS_COLOUR,
@@ -312,14 +311,16 @@ Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 lineheight: 1.25,
             }) +
             RESPONSE_MAPPING +
-            (PRMS.count_block > PRMS.n_blocks_practice ? generate_formatted_html({
-                text: `Nach manchen Durchgängen wirst du gefragt, wie lange du für deine Reaktion gebraucht
+            (PRMS.count_block > PRMS.n_blocks_practice
+                ? generate_formatted_html({
+                      text: `Nach manchen Durchgängen wirst du gefragt, wie lange du für deine Reaktion gebraucht
 hast (vom Erscheinen des Reizes bis zu deinem Tastendruck). Verwende dazu die Maus/Touchpad.`,
-                align: "left",
-                fontsize: 30,
-                width: "1200px",
-                lineheight: 1.25,
-            }) : "") +
+                      align: "left",
+                      fontsize: 30,
+                      width: "1200px",
+                      lineheight: 1.25,
+                  })
+                : "") +
             generate_formatted_html({
                 text: `Um den Block zu starten, drücke eine beliebige Taste.`,
                 align: "center",
@@ -350,14 +351,16 @@ Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 lineheight: 1.25,
             }) +
             RESPONSE_MAPPING +
-            (PRMS.count_block > PRMS.n_blocks_practice ? generate_formatted_html({
-                text: `Nach manchen Durchgängen wirst du gefragt, wie lange du für deine Reaktion gebraucht
+            (PRMS.count_block > PRMS.n_blocks_practice
+                ? generate_formatted_html({
+                      text: `Nach manchen Durchgängen wirst du gefragt, wie lange du für deine Reaktion gebraucht
 hast (vom Erscheinen des Reizes bis zu deinem Tastendruck). Verwende dazu die Maus/Touchpad.`,
-                align: "left",
-                fontsize: 30,
-                width: "1200px",
-                lineheight: 1.25,
-            }) : "") +
+                      align: "left",
+                      fontsize: 30,
+                      width: "1200px",
+                      lineheight: 1.25,
+                  })
+                : "") +
             generate_formatted_html({
                 text: `Um den Block zu starten, drücke eine beliebige Taste.`,
                 align: "center",
@@ -368,8 +371,6 @@ hast (vom Erscheinen des Reizes bis zu deinem Tastendruck). Verwende dazu die Ma
         generate_yoked_block_timeline();
     },
 };
-
-
 
 const BLOCK_END = {
     type: jsPsychHtmlKeyboardResponseCanvas,
@@ -403,11 +404,10 @@ const TRIAL_FEEDBACK = {
     trial_duration: null,
     on_start: function (trial) {
         let dat = jsPsych.data.get().last(1).values()[0];
-        if (vas_trials.includes(PRMS.count_trial - 1)) {
+        if (PRMS.count_block > PRMS.n_blocks_practice && vas_trials.includes(PRMS.count_trial - 1)) {
             trial.trial_duration = 0;
             return;
         }
-        console.log("Trial number: ", PRMS.count_trial);
         // only direct trial feedback in practice blocks
         trial.trial_duration = [1, 2].includes(PRMS.count_block)
             ? PRMS.feedback_duration_practice[dat.error]
@@ -435,14 +435,6 @@ const ITI = {
     stimulus: "",
     response_ends_trial: false,
     trial_duration: PRMS.iti,
-    on_start: function (trial) {
-        // Was previous trial a vas trial?
-        if (vas_trials.includes(PRMS.count_trial - 1)) {
-            console.log("VAS trial")
-        } else {
-            console.log("Not a VAS trial")
-        }
-    }
 };
 
 const END_SCREEN = {
@@ -461,7 +453,7 @@ const END_SCREEN = {
         bold: false,
         align: "left",
     }),
-    on_finish: function () { },
+    on_finish: function () {},
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -825,7 +817,8 @@ const VAS = {
     on_start: function (trial) {
         // Only show slider reminder in first non-practice block
         if (PRMS.count_block === PRMS.n_blocks_practice + 1) {
-            trial.button_label = `<span style="font-size: 20px;font-weight:bold;">Nachdem du eine Zeit gewählt hast, müssen die Finger wieder auf den Tasten sein.<br>Drücke anschließend die Leertaste um fortzufahren!<br><br></span>
+            trial.button_label =
+                `<span style="font-size: 20px;font-weight:bold;">Nachdem du eine Zeit gewählt hast, müssen die Finger wieder auf den Tasten sein.<br>Drücke anschließend die Leertaste um fortzufahren!<br><br></span>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[0]]}</span> = Linke Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_lh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_lh[1]}"</span>.<br>
 <span style="font-weight: bold;">${EN_DE[PRMS.task_side[1]]}</span> = Rechte Hand: Bitte platziere hierzu den Zeigefinger und Mittelfinger auf die Tasten <span style="font-weight: bold;">"${PRMS.response_keys_rh[0]}"</span> und <span style="font-weight:bold;">"${PRMS.response_keys_rh[1]}"</span>` +
                 RESPONSE_MAPPING_VAS;
@@ -930,26 +923,26 @@ function genExpSeq() {
 
     let exp = [];
 
-    // // setup
-    // exp.push(fullscreen(true));
-    // exp.push(browser_check(PRMS.screen_res));
-    // exp.push(resize_browser());
-    // exp.push(welcome_message());
-    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    // exp.push(mouseCursor(false));
+    // setup
+    exp.push(fullscreen(true));
+    exp.push(browser_check(PRMS.screen_res));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    exp.push(mouseCursor(false));
 
     // instructions
-    //exp.push(WELCOME_INSTRUCTIONS);
-    //exp.push(TASK_INSTRUCTIONS1);
-    //exp.push(TASK_INSTRUCTIONS2);
-    //exp.push(TASK_INSTRUCTIONS3);
+    exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(TASK_INSTRUCTIONS1);
+    exp.push(TASK_INSTRUCTIONS2);
+    exp.push(TASK_INSTRUCTIONS3);
 
     let block_type = repeatArray(["free", "forced"], PRMS.n_blocks / 2);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
         if (blk === PRMS.n_blocks_practice) {
             exp.push(TASK_INSTRUCTIONS_INTROSPECTION);
-        };
+        }
         if (block_type[blk] === "free") {
             exp.push(BLOCK_START_FREE);
         } else if (block_type[blk] === "forced") {
