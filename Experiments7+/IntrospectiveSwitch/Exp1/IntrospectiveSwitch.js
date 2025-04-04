@@ -43,7 +43,7 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_blocks: 20,
+    n_blocks: 14,
     n_blocks_practice: 2,
     n_trials: 40, // multiple of 4
     vas_trial_interval: [2, 4], // number of trials between two vas trials
@@ -53,7 +53,7 @@ const PRMS = {
     feedback_duration_practice: [1000, 2000, 2000], // duration of the feedback practice (first two blocks)
     feedback_duration_experiment: [0, 2000, 2000], // duration of the feedback experiment (NB. no feedback when VAS trial)
     feedback_text: ["Richtig!", "Falsch!", "Falsch!"], // feedback text
-    iti: 500,
+    iti: 250,
     grid_size: [1, 5], // rows, cols (1 row but with two tasks)
     grid_gaps: [0, 26], // rows, cols
     task_side: shuffle(["Colour", "Letter"]),
@@ -79,7 +79,7 @@ const PRMS = {
     response_keys_letter: null,
     key_mapping: {},
     slider_prompt:
-        "Wie lange war deine Reaktionszeit (vom Erscheinen des<br> Reize der bearbeiteten Aufgabe bis zum Tastendruck)?",
+        "Wie lange war deine Reaktionszeit (vom Erscheinen des<br> Reizes der bearbeiteten Aufgabe bis zum Tastendruck)?",
     slider_start: 1000,
     slider_width: 800,
     slider_range: [0, 2000],
