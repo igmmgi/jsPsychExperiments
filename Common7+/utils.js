@@ -183,6 +183,10 @@ function generate_formatted_html({
     position = "relative",
     preformatted = false,
 } = {}) {
+    if (text === "") {
+        // no text to format
+        return "";
+    }
     let div =
         '<p style="width:' +
         width +
