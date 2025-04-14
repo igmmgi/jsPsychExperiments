@@ -293,14 +293,14 @@ function generate_exp() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(HTML_CONSENT_FORM);
-    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
-    exp.push(PRELOAD);
-    exp.push(TASK_INSTRUCTIONS1);
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(HTML_CONSENT_FORM);
+    // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    // exp.push(PRELOAD);
+    // exp.push(TASK_INSTRUCTIONS1);
 
     exp.push(TRIAL_TIMELINE_PRACTICE);
     exp.push(CONTINUE_SCREEN);
