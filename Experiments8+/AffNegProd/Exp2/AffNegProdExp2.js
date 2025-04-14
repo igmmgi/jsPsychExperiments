@@ -50,7 +50,7 @@ const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
-        text: `Du siehst immer zwei Bilder auf dem Bildschirm. Auf eins der Bilder zeigt ein Pfeil, deine Aufgabe ist es dieses Bild zu beschreiben. Stell dir dazu vor, du redest mit jemandem am Telefon und beschreibst, was genau du in diesem Bild siehst. Tippe deine Beschreibung in die Box unter den Bildern. Das andere Bild musst du NICHT beschreiben. Benutze immer ganze Sätze. Wenn du fertig bist, dann kannst du über den „Weiter“ Button direkt zum nächsten Bilderpaar. Hier kommen ein paar Beispiele, die ersten beiden haben bereits eine Antwort, danach kannst du selbst tippen.<br><br>
+        text: `Du siehst immer ein Bild auf dem Bildschirm. Deine Aufgabe ist es, dieses Bild so zu beschreiben, als würdest du mit jemandem am Telefon sprechen und genau erklären, was du siehst. Tippe deine Beschreibung in die Box unter dem Bild. Benutze immer ganze Sätze. Wenn du fertig bist, kannst du über den „Weiter“-Button direkt zum nächsten Bild wechseln. Hier kommen ein paar Beispiele – die ersten beiden haben bereits eine Antwort, danach kannst du selbst tippen.<br><br>
 Weiter mit einem Tastendruck.`,
         align: "left",
         color: "black",
@@ -98,10 +98,7 @@ function image_names() {
 const IMAGES = image_names();
 const IMAGES_PRACTICE = [
     "../Images/practice/practice1_base.jpg",
-    "../Images/practice/practice1_alt.jpg",
-    "../Images/practice/practice2_base.jpg",
     "../Images/practice/practice2_alt.jpg",
-    "../Images/practice/practice3_base.jpg",
     "../Images/practice/practice3_alt.jpg",
 ];
 
@@ -116,38 +113,13 @@ function create_trial_table() {
     let image_number = shuffle(range(1, 61));
     let image_types = ["alt", "base"];
     let image_type = shuffle(repeat_array(image_types, 30));
-    let trial_table = [];
-    let base_arrow = shuffle(range(0, 60)).slice(30); // half for base image
 
+    let trial_table = [];
     for (const [index, element] of image_number.entries()) {
         let trial = {};
-        let image_type_left = image_type[index];
-        let image_type_right;
-        if (image_type_left === "alt") {
-            image_type_right = "base";
-        } else {
-            image_type_right = "alt";
-        }
-        if (base_arrow.includes(index)) {
-            trial["relevant_image_type"] = "base";
-            if (image_type_left === "base") {
-                trial["relevant_image_side"] = "left";
-            } else {
-                trial["relevant_image_side"] = "right";
-            }
-        } else {
-            trial["relevant_image_type"] = "alt";
-            if (image_type_left === "alt") {
-                trial["relevant_image_side"] = "left";
-            } else {
-                trial["relevant_image_side"] = "right";
-            }
-        }
-        // make actual image name
-        trial["image_left"] = "Folie" + element + "_" + image_type_left + ".jpeg";
-        trial["image_left_index"] = find_index(IMAGES, trial["image_left"]);
-        trial["image_right"] = "Folie" + element + "_" + image_type_right + ".jpeg";
-        trial["image_right_index"] = find_index(IMAGES, trial["image_right"]);
+        trial["image_type"] = image_type[index];
+        trial["image"] = "Folie" + element + "_" + trial["image_type"] + ".jpeg";
+        trial["image_index"] = find_index(IMAGES, trial["image"]);
         trial_table.push(trial);
     }
 
@@ -159,9 +131,9 @@ const TRIAL_TABLE = create_trial_table();
 // hard-coded practice examples
 // prettier-ignore
 const TRIAL_TABLE_PRACTICE = [
-  {"image_left": "practice1_base.jpg", "image_left_index": 0, "image_right": "practice1_alt.jpg", "image_right_index": 1, "relevant_image_side": "left", "relevant_image_type": "base"},
-  {"image_left": "practice2_base.jpg", "image_left_index": 2, "image_right": "practice2_alt.jpg", "image_right_index": 3, "relevant_image_side": "right", "relevant_image_type": "alt"},
-  {"image_left": "practice3_base.jpg", "image_left_index": 4, "image_right": "practice3_alt.jpg", "image_right_index": 5, "relevant_image_side": "right", "relevant_image_type": "alt"},
+  {"image": "practice1_base.jpg", "image_index": 0, "image_type": "base"},
+  {"image": "practice2_alt.jpg",  "image_index": 1, "image_type": "alt"},
+  {"image": "practice3_alt.jpg",  "image_index": 2, "image_type": "alt"},
 ];
 
 const PRELOAD = {
@@ -174,10 +146,8 @@ const TRIAL_PRACTICE = {
     questions: [],
     data: {
         stim_type: "affneg",
-        image_left: jsPsych.timelineVariable("image_left"),
-        image_right: jsPsych.timelineVariable("image_right"),
-        relevant_image_side: jsPsych.timelineVariable("relevant_image_side"),
-        relevant_image_type: jsPsych.timelineVariable("relevant_image_type"),
+        image: jsPsych.timelineVariable("image"),
+        image_type: jsPsych.timelineVariable("image_type"),
     },
     on_start: function (trial) {
         if (PRMS.cblk === 1 && PRMS.ctrl === 1) {
@@ -187,11 +157,7 @@ const TRIAL_PRACTICE = {
         } else {
             trial.questions = [{ prompt: "", rows: 4, value: " " }];
         }
-        trial.preamble = [
-            IMAGES_PRACTICE[jsPsych.evaluateTimelineVariable("image_left_index")],
-            IMAGES_PRACTICE[jsPsych.evaluateTimelineVariable("image_right_index")],
-        ];
-        trial.arrow_number = jsPsych.evaluateTimelineVariable("relevant_image_side") === "left" ? 0 : 1;
+        trial.preamble = [IMAGES_PRACTICE[jsPsych.evaluateTimelineVariable("image_index")]];
     },
     on_finish: function () {
         code_trial();
@@ -205,17 +171,11 @@ const TRIAL = {
     questions: [{ prompt: "", rows: 4, value: " " }],
     data: {
         stim_type: "affneg",
-        image_left: jsPsych.timelineVariable("image_left"),
-        image_right: jsPsych.timelineVariable("image_right"),
-        relevant_image_side: jsPsych.timelineVariable("relevant_image_side"),
-        relevant_image_type: jsPsych.timelineVariable("relevant_image_type"),
+        image: jsPsych.timelineVariable("image"),
+        image_type: jsPsych.timelineVariable("image_type"),
     },
     on_start: function (trial) {
-        trial.preamble = [
-            IMAGES[jsPsych.evaluateTimelineVariable("image_left_index")],
-            IMAGES[jsPsych.evaluateTimelineVariable("image_right_index")],
-        ];
-        trial.arrow_number = jsPsych.evaluateTimelineVariable("relevant_image_side") === "left" ? 0 : 1;
+        trial.preamble = [IMAGES[jsPsych.evaluateTimelineVariable("image_index")]];
     },
     on_finish: function () {
         code_trial();
