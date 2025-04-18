@@ -13,7 +13,7 @@ const jsPsych = initJsPsych({
     on_finish: function () {},
 });
 
-const CANVAS_SIZE = [720, 1280];
+const CANVAS_SIZE = [960, 1280];
 
 // Experiment Parameters
 const PRMS = {
@@ -253,11 +253,11 @@ function generate_exp() {
 
     let exp = [];
 
+    exp.push(HTML_CONSENT_FORM);
     exp.push(fullscreen(true));
     exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    exp.push(HTML_CONSENT_FORM);
     exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(PRELOAD);
     exp.push(TASK_INSTRUCTIONS1);
