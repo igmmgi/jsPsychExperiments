@@ -10,7 +10,14 @@
 const jsPsych = initJsPsych({
     show_progress_bar: true,
     // can set it to return to SONA
-    on_finish: function () {},
+    on_finish: function () {
+        if (PRMS.ctrl >= 60) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=534&credit_token=9f8083761ef44706979209b004659440&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
 });
 
 const CANVAS_SIZE = [960, 1280];

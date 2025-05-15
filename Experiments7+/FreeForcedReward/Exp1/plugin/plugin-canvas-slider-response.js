@@ -101,19 +101,19 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 type: jspsych.ParameterType.HTML_STRING,
                 pretty_name: "Prompt",
                 default: null,
-                description: "Text to display above the slider",
+                description: "Text to display above the slider"
             },
             min_label: {
                 type: jspsych.ParameterType.STRING,
                 pretty_name: "Minimum label",
                 default: null,
-                description: "Label for the minimum value of the slider",
+                description: "Label for the minimum value of the slider"
             },
             max_label: {
                 type: jspsych.ParameterType.STRING,
                 pretty_name: "Maximum label",
                 default: null,
-                description: "Label for the maximum value of the slider",
+                description: "Label for the maximum value of the slider"
             },
         },
     };
@@ -144,21 +144,15 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
 
             // Add prompt if provided
             if (trial.prompt !== null) {
-                html +=
-                    '<div id="jspsych-canvas-slider-response-prompt" style="text-align: center; margin-bottom: 20px; font-size: 24px;">' +
-                    trial.prompt +
-                    "</div>";
+                html += '<div id="jspsych-canvas-slider-response-prompt" style="text-align: center; margin-bottom: 20px; font-size: 24px;">' + trial.prompt + '</div>';
             }
 
             // Add slider container with labels
-            html +=
-                '<div style="display: flex; align-items: center; justify-content: center; width: ' +
-                trial.slider_width +
-                'px; margin: 0 auto;">';
+            html += '<div style="display: flex; align-items: center; justify-content: center; width: ' + trial.slider_width + 'px; margin: 0 auto;">';
 
             // Add min label
             if (trial.min_label !== null) {
-                html += '<div style="margin-right: 10px; font-size: 18px;">' + trial.min_label + "</div>";
+                html += '<div style="margin-right: 10px; font-size: 18px;">' + trial.min_label + '</div>';
             }
 
             // Add slider
@@ -175,16 +169,13 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
 
             // Add max label
             if (trial.max_label !== null) {
-                html += '<div style="margin-left: 10px; font-size: 18px;">' + trial.max_label + "</div>";
+                html += '<div style="margin-left: 10px; font-size: 18px;">' + trial.max_label + '</div>';
             }
 
-            html += "</div>"; // Close slider container
+            html += '</div>'; // Close slider container
 
             // Add value display with initial value and custom text size
-            html +=
-                '<div id="jspsych-canvas-slider-response-value" style="text-align: center; margin-bottom: 20px; font-size: 28px;">' +
-                trial.slider_start +
-                " ms</div>";
+            html += '<div id="jspsych-canvas-slider-response-value" style="text-align: center; margin-bottom: 20px; font-size: 28px;">' + trial.slider_start + ' ms</div>';
 
             // Add button container
             html += '<div id="jspsych-canvas-slider-response-button-container" style="height: 40px;">';
@@ -201,7 +192,7 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                 // Add invisible placeholder to maintain spacing
                 html += '<div style="height: 40px;"></div>';
             }
-            html += "</div></div>";
+            html += '</div></div>';
 
             // allow spacebar to activate click button or continue if no button
             window.onkeydown = function (event) {
@@ -302,9 +293,9 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
             }
 
             // Add event listener to update value display
-            var slider = document.getElementById("jspsych-canvas-slider-response-response");
-            var valueDisplay = document.getElementById("jspsych-canvas-slider-response-value");
-            slider.addEventListener("input", function () {
+            var slider = document.getElementById('jspsych-canvas-slider-response-response');
+            var valueDisplay = document.getElementById('jspsych-canvas-slider-response-value');
+            slider.addEventListener('input', function () {
                 valueDisplay.textContent = this.value + " ms";
             });
         }
