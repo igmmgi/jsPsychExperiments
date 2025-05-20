@@ -36,21 +36,21 @@ const CANVAS_BORDER = "5px solid black";
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
     n_blocks: 12,
-    n_blocks_practice: 4,
+    n_blocks_practice: 2,
     n_trials: 48, // multiple of 4
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
-    fixation_duration: 500, // duration of the fixation cross
-    reward_cue_duration: 750, // duration of the reward cue
-    reward_feedback_duration: 750, // duration of the reward feedback
-    reward_probability: 0.8, // probability of receiving reward
+    fixation_duration: 300, // duration of the fixation cross
+    reward_cue_duration: 800, // duration of the reward cue
+    reward_feedback_duration: 800, // duration of the reward feedback
+    reward_probability: 0.7, // probability of receiving reward
     reward_value: [1, 9], // values for low and high reward
     feedback_duration_practice: [1000, 2000, 2000], // duration of the feedback practice (first two blocks)
     feedback_duration_experiment: [0, 2000, 2000], // duration of the feedback experiment
     feedback_text_practice: ["Richtig!", "Falsch!", "Falsch!"], // feedback text
     feedback_text_exp: ["", "Falsch!", "Falsch!"], // feedback text
     reward_feedback_font: "48px serif",
-    iti: 300,
+    iti: 500,
     grid_size: [1, 5], // rows, cols (1 row but with two tasks)
     grid_gaps: [0, 26], // rows, cols
     task_side: shuffle(["Colour", "Letter"]),
@@ -254,7 +254,13 @@ const TASK_INSTRUCTIONS_END_PRACTICE = {
     stimulus: "",
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `Übung beendet. Die Experimentalblöcke starten<br><br>
+            text: `Übung beendet. Ab jetzt bearbeitest du dieselben Aufgaben – aber in jedem Durchgang kannst du eine Belohnung erhalten.<br>
+Die Farbe des Geldsacks, der vor der Aufgabenpräsentation angezeigt wird, gibt an welche mögliche Belohnung du in diesem Durchgang erwarten kannst:<br><br>
+Grauer Geldsack: niedrig (+ 1 Punkte)<br>
+Rosa Geldsack: hoch (+ 9 Punkte)<br><br>
+Nach deiner Reaktion erhältst du manchmal die angekündigte Belohnung (+1 oder +9 Punkte), manchmal aber auch keine Belohnung (0 Punkte). Ob du die Belohnung erhältst, hängt manchmal von deiner Leistung ab, manchmal aber auch nicht (also ein Geschenk).<br><br>
+Je mehr Punkte du sammelst, desto kürzer wird das Experiment!<br>
+Nach dem ${PRMS.n_blocks}. Block siehst du, wie viele weitere Blöcke durch deine Punktzahl entfallen (max. 4).<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
             align: "left",
             colour: "black",
@@ -284,8 +290,8 @@ const BLOCK_START_FREE = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-In diesem Block darfst du entscheiden, welche der beiden Aufgaben du bearbeiten willst (in jedem Durchgang muss nur eine der beiden Aufgaben bearbeitet werden): <br><br>
+                text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks + 4}<br><br>
+FREIE WAHL: In diesem Block darfst du entscheiden, welche der beiden Aufgaben du bearbeiten willst (in jedem Durchgang muss nur eine der beiden Aufgaben bearbeitet werden): <br><br>
 Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 align: "left",
                 fontsize: 30,
@@ -312,8 +318,8 @@ const BLOCK_START_FORCED = {
     on_start: function (trial) {
         trial.stimulus =
             generate_formatted_html({
-                text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-In diesem Block musst du die vorgegebene Aufgabe bearbeiten (d.h., die Aufgabe welche in diesem
+                text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks + 4}<br><br>
+KEINE FREIE WAHL: In diesem Block musst du die vorgegebene Aufgabe bearbeiten (d.h., die Aufgabe welche in diesem
 Durchgang eine Antwort erfordert) <br><br>
 Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 align: "left",
@@ -406,9 +412,8 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     stimulus: generate_formatted_html({
-        text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
-Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
-Drücke eine beliebige Taste, um die Weiterleitung zu SONA zu starten.`,
+        text: `SUPER: Laut Punktestand musst du noch 0 von 4 weiteren Blöcken machen.<br><br>
+Drücke eine beliebige Taste, um fortzufahren.`,
         fontsize: 28,
         lineheight: 1.0,
         bold: false,
@@ -856,13 +861,20 @@ const TRIAL_TABLE_FORCED_REWARD = [
   { free_forced: "forced_colour", image: IMAGES[1], image_type: "high", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na" },
 ];
 
+// NEWIAN: reversed fixation cross and reward stimulus
+
+//const TRIAL_TIMELINE_FREE_REWARD = {
+//    timeline: [FIXATION_CROSS, REWARD_STIMULUS, STIMULUS, REWARD_FEEDBACK, TRIAL_FEEDBACK, ITI],
+//    timeline_variables: TRIAL_TABLE_FREE_REWARD,
+//};
+
 const TRIAL_TIMELINE_FREE_REWARD = {
-    timeline: [FIXATION_CROSS, REWARD_STIMULUS, STIMULUS, REWARD_FEEDBACK, TRIAL_FEEDBACK, ITI],
+    timeline: [REWARD_STIMULUS, ITI, STIMULUS, REWARD_FEEDBACK, TRIAL_FEEDBACK, ITI],
     timeline_variables: TRIAL_TABLE_FREE_REWARD,
 };
 
 let TRIAL_TIMELINE_FORCED_REWARD = {
-    timeline: [FIXATION_CROSS, REWARD_STIMULUS, STIMULUS, REWARD_FEEDBACK, TRIAL_FEEDBACK, ITI],
+    timeline: [REWARD_STIMULUS, ITI, STIMULUS, REWARD_FEEDBACK, TRIAL_FEEDBACK, ITI],
     timeline_variables: TRIAL_TABLE_FORCED_REWARD,
 };
 
@@ -909,8 +921,8 @@ const VP_NUM = getTime();
 
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
-    //saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vts_reward" });
-    saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vts_reward" });
+    saveData("/Common/write_data.php", `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vts_reward" });
+    //saveDataLocal(`${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`, { stim_type: "vts_reward" });
 }
 
 const SAVE_DATA = {
