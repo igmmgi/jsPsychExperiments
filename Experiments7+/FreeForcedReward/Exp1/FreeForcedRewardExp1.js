@@ -21,14 +21,23 @@
 //
 // In Forced-Blocks, the trial sequence the same temporal sequence from the previous block was used.
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.count_block >= 12) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=550&credit_token=64434a6b8a27496cb8f0dd4ee38bca40&survey_code=XXXX" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
+const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
 const CANVAS_SIZE = [1280, 720];
-const CANVAS_BORDER = "5px solid black";
+const CANVAS_BORDER = "0px solid black";
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
@@ -45,6 +54,7 @@ const PRMS = {
     reward_feedback_duration: 800, // duration of the reward feedback
     reward_probability: 0.7, // probability of receiving reward
     reward_value: [1, 9], // values for low and high reward
+    reward_cue_scale: 0.5, // image scale of the reward cue 0.5 = half original size
     feedback_duration_practice: [1000, 2000, 2000], // duration of the feedback practice (first two blocks)
     feedback_duration_experiment: [0, 2000, 2000], // duration of the feedback experiment
     feedback_text_practice: ["Richtig!", "Falsch!", "Falsch!"], // feedback text
@@ -77,6 +87,7 @@ const PRMS = {
     key_mapping: {},
     count_block: 1,
     count_trial: 1,
+    point_counter: 0,
 };
 
 const COLOUR_VALUES = { blue: "rgb(0, 0, 130)", red: "rgb(130, 0, 0)", grey: "rgb(120, 120, 120)" };
@@ -138,9 +149,9 @@ const WELCOME_INSTRUCTIONS = {
     stimulus: generate_formatted_html({
         text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 40-45 Minuten konzentriert zu arbeiten.<br><br>
-Du wirst nach dem Experiment auf SONA zurückgeleitet um die VP-Stunde zu erhalten.<br><br>
+Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und ausreichend Zeit hast,
+um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 40 bis 45 Minuten konzentriert zu arbeiten.<br><br>
+Wenn du dich auf SONA für das Experiment angemeldet hast, wird du nach Abschluss automatisch zu SONA zurückgeleitet um die VP-Stunde zu erhalten.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         colour: "black",
@@ -216,8 +227,8 @@ Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte ${EN_DE[PR
         }) +
         RESPONSE_MAPPING +
         generate_formatted_html({
-            text: `In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, da beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
-In den anderen Blöcken musst du in jedem Durchgang die vorgegebene Aufgabe bearbeiten, da nur eine der beiden Aufgaben (Buchstabe und Farbe) eine Antwort erfordert:<br><br>
+            text: `In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben (Buchstabe oder Farbe) du bearbeiten möchtest, da beide Aufgaben eine Antwort erfordern.<br><br>
+In den anderen Blöcken musst du in jedem Durchgang die vorgegebene Aufgabe (Buchstabe und Farbe) bearbeiten, da nur eine der beiden Aufgaben eine Antwort erfordert:<br><br>
 Wenn statt den Buchstabe "#####" erscheinen, dann musst du die Farbaufgabe bearbeiten.<br><br>
 Wenn statt den farbigen Punkte graue Punkte erscheinen, dann musst du die Buchstabenaufgabe bearbeiten.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
@@ -235,8 +246,8 @@ const TASK_INSTRUCTIONS3 = {
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
         text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
-In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, da beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
-In den anderen Blöcken musst du in jedem Durchgang die vorgegebene Aufgabe bearbeiten, da nur eine der beiden Aufgaben (Buchstabe und Farbe) eine Antwort erfordert:<br><br>
+In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben (Buchstabe oder Farbe) du bearbeiten möchtest, da beide Aufgaben eine Antwort erfordern.<br><br>
+In den anderen Blöcken musst du in jedem Durchgang die vorgegebene Aufgabe (Buchstabe oder Farbe) bearbeiten, da nur eine der beiden Aufgaben eine Antwort erfordert:<br><br>
 Die ersten zwei Blöcken hast du Gelegenheit zu üben.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
@@ -254,11 +265,11 @@ const TASK_INSTRUCTIONS_END_PRACTICE = {
     stimulus: "",
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `Übung beendet. Ab jetzt bearbeitest du dieselben Aufgaben – aber in jedem Durchgang kannst du eine Belohnung erhalten.<br>
-Die Farbe des Geldsacks, der vor der Aufgabenpräsentation angezeigt wird, gibt an welche mögliche Belohnung du in diesem Durchgang erwarten kannst:<br><br>
-Grauer Geldsack: niedrig (+ 1 Punkte)<br>
-Rosa Geldsack: hoch (+ 9 Punkte)<br><br>
-Nach deiner Reaktion erhältst du manchmal die angekündigte Belohnung (+1 oder +9 Punkte), manchmal aber auch keine Belohnung (0 Punkte). Ob du die Belohnung erhältst, hängt manchmal von deiner Leistung ab, manchmal aber auch nicht (also ein Geschenk).<br><br>
+            text: `Übung beendet. Ab jetzt kannst du für die Bearbeitung derselben Aufgaben in jedem Durchgang eine Belohnung erhalten.<br>
+Vor der Aufgabenpräsentation wird dir ein Geldsack in einer bestimmten Farbe angezeigt – er zeigt an, welche Belohnung du in diesem Durchgang erhalten kannst:<br><br>
+Grauer Geldsack: niedrige Belohnung (+ 1 Punkte)<br>
+Rosa Geldsack: hohe Belohnung (+ 9 Punkte)<br><br>
+Nach deiner Reaktion bekommst du entweder die angekündigte Belohnung (+1 oder +9 Punkte), oder keine Belohnung (0 Punkte). Ob du die Belohnung erhältst, hängt manchmal von deiner Leistung ab, manchmal aber auch nicht (dann ist es einfach ein Geschenk).<br><br>
 Je mehr Punkte du sammelst, desto kürzer wird das Experiment!<br>
 Nach dem ${PRMS.n_blocks}. Block siehst du, wie viele weitere Blöcke durch deine Punktzahl entfallen (max. 4).<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
@@ -270,7 +281,7 @@ Drücke eine beliebige Taste, um fortzufahren.`,
     },
 };
 
-const IMAGES = ["./images/LowReward.jpg", "./images/HighReward.jpg"];
+const IMAGES = ["./images/LowReward.png", "./images/HighReward.png"];
 
 // pre-load images
 const PRELOAD = {
@@ -347,7 +358,8 @@ const BLOCK_END = {
     stimulus: "",
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
-            text: `Ende Block ${PRMS.count_block} von ${PRMS.n_blocks}: Kurze Pause<br><br>
+            text: `Ende Block ${PRMS.count_block} von ${PRMS.n_blocks + 4}: Kurze Pause<br><br>
+Punktestand: ${PRMS.point_counter}<br><br>
 Wenn Du bereit für den nächsten Block bist, dann drücke eine beliebige Taste.`,
             align: "left",
             fontsize: 30,
@@ -455,7 +467,19 @@ function draw_reward_stimulus(args) {
     // image
     const img = new Image();
     img.src = args.image;
-    ctx.drawImage(img, 0 - img.width / 2, 0 - img.height / 2);
+
+    // Calculate scaled dimensions
+    const scaled_width = img.width * PRMS.reward_cue_scale;
+    const scaled_height = img.height * PRMS.reward_cue_scale;
+
+    // Draw centered
+    ctx.drawImage(
+        img,
+        -scaled_width / 2, // x position (centered)
+        -scaled_height / 2, // y position (centered)
+        scaled_width, // width
+        scaled_height, // height
+    );
 }
 
 // prettier-ignore
@@ -528,6 +552,8 @@ const REWARD_FEEDBACK = {
     } else { // yoking!
       reward_value = trial_table_forced_yoked[PRMS.count_trial - 2].reward_value;
     }
+    PRMS.point_counter += reward_value;
+    
     jsPsych.data.addDataToLastTrial({ reward_value: reward_value });
 
     trial.data.reward_value = reward_value;
@@ -860,13 +886,6 @@ const TRIAL_TABLE_FORCED_REWARD = [
   { free_forced: "forced_colour", image: IMAGES[1], image_type: "high", colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na" },
   { free_forced: "forced_colour", image: IMAGES[1], image_type: "high", colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na" },
 ];
-
-// NEWIAN: reversed fixation cross and reward stimulus
-
-//const TRIAL_TIMELINE_FREE_REWARD = {
-//    timeline: [FIXATION_CROSS, REWARD_STIMULUS, STIMULUS, REWARD_FEEDBACK, TRIAL_FEEDBACK, ITI],
-//    timeline_variables: TRIAL_TABLE_FREE_REWARD,
-//};
 
 const TRIAL_TIMELINE_FREE_REWARD = {
     timeline: [REWARD_STIMULUS, ITI, STIMULUS, REWARD_FEEDBACK, TRIAL_FEEDBACK, ITI],
