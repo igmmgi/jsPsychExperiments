@@ -56,6 +56,13 @@ if (VERSION === 1) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
 }
 
+let gesture_type;
+if (VERSION === 1) {
+    gesture_type = "Daumen hoch oder Daumen herunter";
+} else if (VERSION === 2) {
+    gesture_type = "Kopfnicken oder Kopfschütteln";
+}
+
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
@@ -79,13 +86,36 @@ Drücke eine beliebige Taste, um fortzufahren`,
     post_trial_gap: 1000,
 };
 
+const AUDIO_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Das Experiment enthält Videos mit Audio-Inhalten. Bitte stellen Sie daher jetzt Ihre Lautsprecher an 
+oder setzen Sie Ihre Kopfhörer auf. Es ist entscheidend, dass die Lautsprecher bzw. Kopfhörer während 
+des gesamten Experiments angestellt sind. Wir bitten Sie, dies unbedingt zu beachten!<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    post_trial_gap: 1000,
+};
+
 const TASK_INSTRUCTIONS = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
-        text: `General exp/task instructions ...<br><br>
-${PRMS.resp_keys[0]}-Taste = Left Box &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = Right Box<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+        text: `Während des Experiments wird Ihre Aufgabe darin bestehen zu beurteilen, in welcher
+der vor Ihnen präsentierten Boxen sich ein imaginärer Ball befindet. Die grundsätzliche Prämisse hierbei ist, dass
+der Ball sich stets in einer der beiden vor Ihnen präsentierten befindet.<br><br>
+In jedem Durchgang wird auf dem Bildschirm eine Frage präsentiert: Entweder „Ist der Ball in der blauen Box?“ oder „Ist der 
+Ball in der grünen Box?“. Weiter unten auf dem Bildschirm erscheinen zudem nebeneinander eine blaue und eine grüne Box. <br><br>
+Abschließend sehen Sie ein Video, das eine verbale Antwort (das Wort JA oder NEIN) und/oder eine gestische Antwort (${gesture_type}) 
+auf die Frage liefert. 
+Drücke Sie die Leertaste, um fortzufahren.<br><br>
+${PRMS.resp_keys[0]}-Taste = Linke Box &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = Rechte Box<br><br>
+Drücken Sie eine beliebige Taste, um fortzufahren`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -101,9 +131,10 @@ const BLOCK_START = {
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
-INSTRUCTIONS<br><br>
-${PRMS.resp_keys[0]}-Taste = Left Box &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = Right Box<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+Zur Erinnerung, Sie sollen in jedem Trial beurteilen in welcher der beiden Boxen sich ein imaginärer Ball befindet.
+Verwenden Sie hierfür die Ihnen präsentierten Videos.<br><br>
+${PRMS.resp_keys[0]}-Taste = Linke Box &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = Rechte Box<br><br>
+Drücken Sie eine beliebige Taste, um fortzufahren`,
             align: "left",
             color: "black",
             fontsize: 30,
@@ -128,10 +159,16 @@ function assign_video_files() {
         "../../videos/F/Deutsch/Daumen/NeinDaumenRunter_f.mp4",
         "../../videos/M/Deutsch/Daumen/JaDaumenHoch_m.mp4",
         "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m.mp4",
-        "../../videos/F/Deutsch/Ja_Nein/Ja_f.mp4",
-        "../../videos/F/Deutsch/Ja_Nein/Nein_f.mp4",
-        "../../videos/M/Deutsch/Ja_Nein/Ja_m.mp4",
-        "../../videos/M/Deutsch/Ja_Nein/Nein_m.mp4",
+        // Unimodal, Thumb in neutral position
+        "../../videos/F/Deutsch/Daumen/JaDaumenNeutral_f.mp4",
+        "../../videos/F/Deutsch/Daumen/NeinDaumenNeutral_f.mp4",
+        "../../videos/M/Deutsch/Daumen/JaDaumenNeutral_m.mp4",
+        "../../videos/M/Deutsch/Daumen/NeinDaumenNeutral_m.mp4",
+        // Unimodal, No visible hand
+        // "../../videos/F/Deutsch/Ja_Nein/Ja_f.mp4",
+        // "../../videos/F/Deutsch/Ja_Nein/Nein_f.mp4",
+        // "../../videos/M/Deutsch/Ja_Nein/Ja_m.mp4",
+        // "../../videos/M/Deutsch/Ja_Nein/Nein_m.mp4",
         "../../videos/F/Gestures/ThumbsUp_f.mp4",
         "../../videos/F/Gestures/ThumbsDown_f.mp4",
         "../../videos/M/Gestures/ThumbsUp_m.mp4",
@@ -482,6 +519,7 @@ function generate_exp() {
     exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(mouse_cursor(false));
     exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(AUDIO_INSTRUCTIONS);
     exp.push(TASK_INSTRUCTIONS);
 
     for (let blk = 0; blk < PRMS.nblks_prac + PRMS.nblks_exp; blk += 1) {
