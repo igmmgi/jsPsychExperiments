@@ -1,0 +1,514 @@
+// Gesture Conflict Exp 1
+//
+// Participants respond to information regarding the location of a ball (left vs. right box)
+// The information is either conveyed in compatible (both voice and gesture information) or a single modality
+//
+// Two versions
+// Version 1: Thumb gestures
+// Version 2: Head gestures
+
+////////////////////////////////////////////////////////////////////////
+//         Initialize JsPsych and Define Canvas Properties            //
+////////////////////////////////////////////////////////////////////////
+
+const jsPsych = initJsPsych({});
+
+const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
+const CANVAS_SIZE = [720, 1280];
+
+// Experiment Parameters
+const PRMS = {
+    ntrls_prac: 8, // number of trials per block (multiple of 8)
+    ntrls_exp: 24, // number of trials per block (multiple of 8)
+    nblks_prac: 2, // number of blocks practice
+    nblks_exp: 4, // number of blocks experimental blocks
+    fix_size: 15, // size of the fixation cross
+    fix_width: 5, // width of fixation cross
+    fix_duration: 500, // duration of the fixation cross
+    feedback_duration: [500, 1000, 1000, 1000], // feedback duration for response type (correct, incorrect, too slow, too fast)
+    too_slow: 5000, // feedback duration for correct and incorrect trials, respectively
+    too_fast: 0, // feedback duration for correct and incorrect trials, respectively
+    feedback_text: ["Richtig!", "Falsch!", "Zu langsam!", "Zu schnell!"],
+    iti: 500, // duration of the inter-trial-interval
+    feedback_font: "50px Arial",
+    resp_keys: ["Q", "P"],
+    box_colours: ["green", "blue"],
+    question: ["Ist der Ball in der grünen Box?", "Ist der Ball in der blauen Box?"],
+    prompt_font_size: "40px",
+    prompt_font_weight: "bold",
+    prompt_offset: -30,
+    video_scale: 0.5,
+    square_size: 100,
+    square_x_offset: 400,
+    square_y_offset: 60,
+    square_border_width: 5,
+    ctrl: 1,
+    cblk: 1,
+};
+
+// 2 versions (thumb gestures version 1 vs. head gestures version 2)
+// const VERSION = Number(jsPsych.data.urlVariables().version); // version is provided in the url
+// or set explicitly if testing
+const VERSION = 1;
+if (VERSION === 1) {
+    jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
+} else if (VERSION === 2) {
+    jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
+}
+
+////////////////////////////////////////////////////////////////////////
+//                      Experiment Instructions                       //
+////////////////////////////////////////////////////////////////////////
+const WELCOME_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Willkommen zu unserem Experiment:<br><br>
+Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
+Bitte stelle sicher, dass Du Dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
+um das Experiment durchzuführen. Wir bitten Dich, die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
+Informationen zur Versuchspersonenstunde erhälst Du nach dem Experiment.
+Bei Fragen oder Problemen wende Dich bitte an:<br><br>
+samuel.sonntag@uni-tuebingen.de<br><br>
+Drücke eine beliebige Taste, um fortzufahren`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    post_trial_gap: 1000,
+};
+
+const TASK_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `General exp/task instructions ...<br><br>
+${PRMS.resp_keys[0]}-Taste = Left Box &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = Right Box<br><br>
+Drücke eine beliebige Taste, um fortzufahren`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    post_trial_gap: 1000,
+};
+
+const BLOCK_START = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: null,
+    on_start: function (trial) {
+        trial.stimulus = generate_formatted_html({
+            text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
+INSTRUCTIONS<br><br>
+${PRMS.resp_keys[0]}-Taste = Left Box &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = Right Box<br><br>
+Drücke eine beliebige Taste, um fortzufahren`,
+            align: "left",
+            color: "black",
+            fontsize: 30,
+            bold: true,
+        });
+    },
+    post_trial_gap: 1000,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                              Stimuli                               //
+////////////////////////////////////////////////////////////////////////
+
+function assign_video_files() {
+    "use strict";
+    let videos_thumb = [
+        "../../videos/F/Deutsch/Daumen/JaDaumenHoch_f.mp4",
+        "../../videos/F/Deutsch/Daumen/NeinDaumenRunter_f.mp4",
+        "../../videos/M/Deutsch/Daumen/JaDaumenHoch_m.mp4",
+        "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m.mp4",
+        "../../videos/F/Deutsch/Daumen/JaDaumenHoch_f.mp4",
+        "../../videos/F/Deutsch/Daumen/NeinDaumenRunter_f.mp4",
+        "../../videos/M/Deutsch/Daumen/JaDaumenHoch_m.mp4",
+        "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m.mp4",
+        "../../videos/F/Deutsch/Ja_Nein/Ja_f.mp4",
+        "../../videos/F/Deutsch/Ja_Nein/Nein_f.mp4",
+        "../../videos/M/Deutsch/Ja_Nein/Ja_m.mp4",
+        "../../videos/M/Deutsch/Ja_Nein/Nein_m.mp4",
+        "../../videos/F/Gestures/ThumbsUp_f.mp4",
+        "../../videos/F/Gestures/ThumbsDown_f.mp4",
+        "../../videos/M/Gestures/ThumbsUp_m.mp4",
+        "../../videos/M/Gestures/ThumbsDown_m.mp4",
+    ];
+    let videos_head = [
+        "../../videos/F/Deutsch/Kopf/JaKopfJa_f.mp4",
+        "../../videos/F/Deutsch/Kopf/NeinKopfNein_f.mp4",
+        "../../videos/M/Deutsch/Kopf/JaKopfJa_m.mp4",
+        "../../videos/M/Deutsch/Kopf/NeinKopfNein_m.mp4",
+        "../../videos/F/Deutsch/Kopf/JaKopfJa_f.mp4",
+        "../../videos/F/Deutsch/Kopf/NeinKopfNein_f.mp4",
+        "../../videos/M/Deutsch/Kopf/JaKopfJa_m.mp4",
+        "../../videos/M/Deutsch/Kopf/NeinKopfNein_m.mp4",
+        "../../videos/F/Deutsch/Ja_Nein/Ja_f.mp4",
+        "../../videos/F/Deutsch/Ja_Nein/Nein_f.mp4",
+        "../../videos/M/Deutsch/Ja_Nein/Ja_m.mp4",
+        "../../videos/M/Deutsch/Ja_Nein/Nein_m.mp4",
+        "../../videos/F/Gestures/HeadYes_f.mp4",
+        "../../videos/F/Gestures/HeadNo_f.mp4",
+        "../../videos/M/Gestures/HeadYes_m.mp4",
+        "../../videos/M/Gestures/HeadNo_m.mp4",
+    ];
+    if (VERSION === 1) {
+        return videos_thumb;
+    } else if (VERSION === 2) {
+        return videos_head;
+    }
+}
+
+const VIDEOS = assign_video_files();
+// console.log(VIDEOS);
+
+const PRELOAD_VIDEOS = {
+    type: jsPsychPreload,
+    video: VIDEOS,
+};
+console.log(VIDEOS);
+
+////////////////////////////////////////////////////////////////////////
+//                              Exp Parts                             //
+////////////////////////////////////////////////////////////////////////
+
+function canvas_style(ctx) {
+    ctx.fillStyle = CANVAS_COLOUR;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2); // make center (0, 0) for easier positioning!
+    return ctx;
+}
+
+function draw_fixation(c) {
+    "use strict";
+    let ctx = c.getContext("2d");
+    ctx = canvas_style(ctx);
+
+    ctx.lineWidth = PRMS.fix_width;
+    ctx.strokeStyle = PRMS.fix_colour;
+    ctx.moveTo(-PRMS.fix_size, 0);
+    ctx.lineTo(PRMS.fix_size, 0);
+    ctx.stroke();
+    ctx.moveTo(0, -PRMS.fix_size);
+    ctx.lineTo(0, PRMS.fix_size);
+    ctx.stroke();
+}
+
+const FIXATION_CROSS = {
+    type: jsPsychCanvasKeyboardResponse,
+    stimulus: draw_fixation,
+    canvas_size: CANVAS_SIZE,
+    response_ends_trial: false,
+    trial_duration: PRMS.fix_duration,
+};
+
+// jsPsych video plugin
+const PLAY_VIDEO_1 = {
+    type: jsPsychVideoKeyboardResponse,
+    stimulus: [],
+    prompt: null,
+    prompt_font_size: PRMS.prompt_font_size,
+    prompt_font_weight: PRMS.prompt_font_weight,
+    prompt_offset: PRMS.prompt_offset,
+    show_squares: true,
+    left_square_color: null, // left square color
+    right_square_color: null, // right square color
+    square_size: PRMS.square_size,
+    square_x_offset: PRMS.square_x_offset,
+    square_y_offset: PRMS.square_y_offset,
+    square_border_width: PRMS.square_border_width,
+    mask_video: true,
+    video_scale: PRMS.video_scale,
+    data: {
+        stim_type: "gc1",
+        video: jsPsych.timelineVariable("video"),
+        voice: jsPsych.timelineVariable("voice"),
+        gesture: jsPsych.timelineVariable("gesture"),
+        aff_neg: jsPsych.timelineVariable("aff_neg"),
+        comp: jsPsych.timelineVariable("comp"),
+    },
+    on_start: function (trial) {
+        "use strict";
+        trial.stimulus = [jsPsych.evaluateTimelineVariable("video")];
+        PRMS.question = shuffle(PRMS.question);
+        trial.prompt = PRMS.question[0];
+        PRMS.box_colours = shuffle(PRMS.box_colours);
+        trial.left_square_color = PRMS.box_colours[0];
+        trial.right_square_color = PRMS.box_colours[1];
+        trial.data.question = trial.prompt;
+    },
+    choices: PRMS.resp_keys,
+    response_ends_trial: false,
+    trial_ends_after_video: false,
+    trial_duration: 1000,
+};
+
+// jsPsych video plugin
+const PLAY_VIDEO_2 = {
+    type: jsPsychVideoKeyboardResponse,
+    stimulus: [],
+    prompt: null,
+    prompt_font_size: PRMS.prompt_font_size,
+    prompt_font_weight: PRMS.prompt_font_weight,
+    prompt_offset: PRMS.prompt_offset,
+    show_squares: true,
+    left_square_color: null, // left square color
+    right_square_color: null, // right square color
+    square_size: PRMS.square_size,
+    square_x_offset: PRMS.square_x_offset,
+    square_y_offset: PRMS.square_y_offset,
+    square_border_width: PRMS.square_border_width,
+    mask_video: false,
+    video_scale: PRMS.video_scale,
+    data: {
+        stim_type: "gc2",
+        video: jsPsych.timelineVariable("video"),
+        voice: jsPsych.timelineVariable("voice"),
+        gesture: jsPsych.timelineVariable("gesture"),
+        aff_neg: jsPsych.timelineVariable("aff_neg"),
+        comp: jsPsych.timelineVariable("comp"),
+        question: null,
+    },
+    on_start: function (trial) {
+        "use strict";
+        trial.stimulus = [jsPsych.evaluateTimelineVariable("video")];
+        trial.prompt = PRMS.question[0];
+        trial.left_square_color = PRMS.box_colours[0];
+        trial.right_square_color = PRMS.box_colours[1];
+    },
+    choices: PRMS.resp_keys,
+    response_ends_trial: true,
+    trial_ends_after_video: false,
+    on_finish: function () {
+        code_trial();
+        PRMS.ctrl += 1;
+    },
+};
+
+function code_trial() {
+    "use strict";
+
+    let dat = jsPsych.data.get().last(1).values()[0];
+
+    // What would be the correct key?
+    let correct_key;
+    if (PRMS.question[0].includes("blauen") && dat.aff_neg === "aff") {
+        correct_key = PRMS.resp_keys[PRMS.box_colours.indexOf("blue")];
+    } else if (PRMS.question[0].includes("grünen") && dat.aff_neg === "aff") {
+        correct_key = PRMS.resp_keys[PRMS.box_colours.indexOf("green")];
+    } else if (PRMS.question[0].includes("blauen") && dat.aff_neg === "neg") {
+        correct_key = PRMS.resp_keys[PRMS.box_colours.indexOf("green")];
+    } else if (PRMS.question[0].includes("grünen") && dat.aff_neg === "neg") {
+        correct_key = PRMS.resp_keys[PRMS.box_colours.indexOf("blue")];
+    }
+
+    dat.rt = dat.rt !== null ? dat.rt : PRMS.too_slow;
+
+    let corr_code = 0;
+    correct_key = jsPsych.pluginAPI.compareKeys(dat.response, correct_key);
+
+    if (correct_key && dat.rt > PRMS.too_fast && dat.rt < PRMS.too_slow) {
+        corr_code = 1; // correct
+    } else if (!correct_key && dat.rt > PRMS.too_fast && dat.rt < PRMS.too_slow) {
+        corr_code = 2; // choice error
+    } else if (dat.rt >= PRMS.too_slow) {
+        corr_code = 3; // too slow
+    } else if (dat.rt <= PRMS.too_fast) {
+        corr_code = 4; // too fast
+    }
+    console.log(corr_code);
+
+    jsPsych.data.addDataToLastTrial({
+        date: Date(),
+        block_num: PRMS.cblk,
+        trial_num: PRMS.ctrl,
+        question: PRMS.question[0],
+        box_colour_left: PRMS.box_colours[0],
+        box_colour_right: PRMS.box_colours[1],
+        corr_code: corr_code,
+    });
+}
+
+function draw_trial_feedback(c, args) {
+    "use strict";
+    let ctx = c.getContext("2d");
+    ctx = canvas_style(ctx);
+
+    ctx.font = PRMS.feedback_font;
+    ctx.textAlign = "center";
+
+    // draw target
+    ctx.fillStyle = "black";
+    ctx.fillText(`${args.feedback_text}`, 0, 15);
+}
+
+const TRIAL_FEEDBACK = {
+    type: jsPsychCanvasKeyboardResponse,
+    stimulus: draw_iti,
+    canvas_size: CANVAS_SIZE,
+    response_ends_trial: false,
+    trial_duration: 0,
+    on_start: function (trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = PRMS.feedback_duration[dat.corr_code - 1];
+        trial.stimulus = function (c) {
+            draw_trial_feedback(c, { feedback_text: PRMS.feedback_text[dat.corr_code - 1] });
+        };
+    },
+};
+
+const BLOCK_FEEDBACK = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "",
+    response_ends_trial: true,
+    on_start: function (trial) {
+        let block_dvs = calculate_block_performance({
+            filter_options: { stim_type: "gc2", block_num: PRMS.cblk },
+        });
+        let text = block_feedback_text(
+            PRMS.cblk,
+            PRMS.nblks_prac + PRMS.nblks_exp,
+            block_dvs.mean_rt,
+            block_dvs.error_rate,
+            (language = "de"),
+        );
+        trial.stimulus = `<div style="color: black; font-size:30px;">${text}</div>`;
+    },
+    on_finish: function () {
+        PRMS.ctrl = 1;
+        PRMS.cblk += 1;
+    },
+    post_trial_gap: 1000,
+};
+
+function draw_iti(c) {
+    "use strict";
+    let ctx = c.getContext("2d");
+    canvas_style(ctx);
+}
+
+const ITI = {
+    type: jsPsychCanvasKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: draw_iti,
+    response_ends_trial: false,
+    trial_duration: PRMS.iti,
+};
+
+// prettier-ignore
+const TRIAL_TABLE = [
+  { video: VIDEOS[ 0], voice: "yes",  gesture: "yes", aff_neg: "aff", comp: "comp"     },
+  { video: VIDEOS[ 1], voice: "no",   gesture: "no",  aff_neg: "neg", comp: "comp"     },
+  { video: VIDEOS[ 2], voice: "yes",  gesture: "yes", aff_neg: "aff", comp: "comp"     },
+  { video: VIDEOS[ 3], voice: "no",   gesture: "no",  aff_neg: "neg", comp: "comp"     },
+  { video: VIDEOS[ 4], voice: "yes",  gesture: "yes", aff_neg: "aff", comp: "comp"     },
+  { video: VIDEOS[ 5], voice: "no",   gesture: "no",  aff_neg: "neg", comp: "comp"     },
+  { video: VIDEOS[ 6], voice: "yes",  gesture: "yes", aff_neg: "aff", comp: "comp"     },
+  { video: VIDEOS[ 7], voice: "no",   gesture: "no",  aff_neg: "neg", comp: "comp"     },
+  { video: VIDEOS[ 8], voice: "yes",  gesture: "na",  aff_neg: "aff", comp: "unimodal" },
+  { video: VIDEOS[ 9], voice: "no",   gesture: "na",  aff_neg: "neg", comp: "unimodal" },
+  { video: VIDEOS[10], voice: "yes",  gesture: "na",  aff_neg: "aff", comp: "unimodal" },
+  { video: VIDEOS[11], voice: "no",   gesture: "na",  aff_neg: "neg", comp: "unimodal" },
+  { video: VIDEOS[12], voice: "na",   gesture: "yes", aff_neg: "aff", comp: "unimodal" },
+  { video: VIDEOS[13], voice: "na",   gesture: "no",  aff_neg: "neg", comp: "unimodal" },
+  { video: VIDEOS[14], voice: "na",   gesture: "yes", aff_neg: "aff", comp: "unimodal" },
+  { video: VIDEOS[15], voice: "na",   gesture: "no",  aff_neg: "neg", comp: "unimodal" },
+];
+// useful debugging commands
+// console.table(TRIAL_TABLE);
+
+const TRIAL_TIMELINE = {
+    timeline: [FIXATION_CROSS, PLAY_VIDEO_1, PLAY_VIDEO_2, TRIAL_FEEDBACK, ITI],
+    timeline_variables: TRIAL_TABLE,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                              Save                                  //
+////////////////////////////////////////////////////////////////////////
+const DIR_NAME = get_dir_name();
+const EXP_NAME = get_file_name();
+const VP_NUM = get_time();
+
+function save() {
+    jsPsych.data.addProperties({ vp_num: VP_NUM });
+
+    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
+    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "gc2" });
+    // save_data_local(data_fn, { stim_type: "gc2" }); // saves to download folder
+}
+
+const SAVE_DATA = {
+    type: jsPsychCallFunction,
+    func: save,
+    post_trial_gap: 1000,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                             VP Stunden                             //
+////////////////////////////////////////////////////////////////////////
+const END_SCREEN = {
+    type: jsPsychHtmlKeyboardResponse,
+    response_ends_trial: true,
+    choices: [" "],
+    stimulus: generate_formatted_html({
+        text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
+Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
+Drücken Sie nun eine beliebige Taste, um fortzufahren.`,
+        fontsize: 28,
+        color: "black",
+        lineheight: 1.0,
+        bold: true,
+        align: "left",
+    }),
+    on_finish: function () {},
+    post_trial_gap: 1000,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                    Generate and run experiment                     //
+////////////////////////////////////////////////////////////////////////
+function generate_exp() {
+    "use strict";
+
+    let exp = [];
+
+    exp.push(fullscreen(true));
+    exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    exp.push(mouse_cursor(false));
+    exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(TASK_INSTRUCTIONS);
+
+    for (let blk = 0; blk < PRMS.nblks_prac + PRMS.nblks_exp; blk += 1) {
+        exp.push(BLOCK_START);
+        let blk_timeline;
+        blk_timeline = { ...TRIAL_TIMELINE };
+        blk_timeline.sample = {
+            type: "fixed-repetitions",
+            size: (blk < PRMS.nblks_prac ? PRMS.ntrls_prac : PRMS.ntrls_exp) / TRIAL_TABLE.length,
+        };
+        exp.push(blk_timeline); // trials within a block
+        exp.push(BLOCK_FEEDBACK); // show previous block performance
+    }
+
+    // save data
+    exp.push(SAVE_DATA);
+
+    // debrief
+    exp.push(mouse_cursor(true));
+    exp.push(END_SCREEN);
+    exp.push(end_message());
+    exp.push(fullscreen(false));
+
+    return exp;
+}
+const EXP = generate_exp();
+
+// jsPsych.simulate(EXP, "data-only"); // generates datafile after first click
+// jsPsych.simulate(EXP, "visual");
+jsPsych.run(EXP);
