@@ -23,14 +23,14 @@ const CANVAS_SIZE = [720, 1280];
 
 // Experiment Parameters
 const PRMS = {
-    ntrls_prac: 8, // number of trials per block (multiple of 8)
-    ntrls_exp: 24, // number of trials per block (multiple of 8)
+    ntrls_prac: 16, // number of trials per block (multiple of 8)
+    ntrls_exp: 32, // number of trials per block (multiple of 8)
     nblks_prac: 2, // number of blocks
-    nblks_exp: 4, // number of blocks
+    nblks_exp: 6, // number of blocks
     fix_size: 15, // size of the fixation cross
     fix_width: 5, // width of fixation cross
     fix_duration: 500, // duration of the fixation cross
-    feedback_duration: [500, 1000, 1000, 1000], // feedback duration for response type (correct, incorrect, too slow, too fast)
+    feedback_duration: [500, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
     too_slow: 5000, // feedback duration for correct and incorrect trials, respectively
     too_fast: 0, // feedback duration for correct and incorrect trials, respectively
     feedback_text: ["Richtig!", "Falsch!", "Zu langsam!", "Zu schnell!"],
@@ -44,9 +44,9 @@ const PRMS = {
 };
 
 // 4 versions (thumb gestures version 1 vs. head gestures version 2)
-// const VERSION = Number(jsPsych.data.urlVariables().version); // version is provided in the url
+const VERSION = Number(jsPsych.data.urlVariables().version); // version is provided in the url
 // or set explicitly if testing
-const VERSION = 1;
+// const VERSION = 1;
 if ([1, 2].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
 } else if ([3, 4].includes(VERSION)) {
@@ -446,7 +446,7 @@ function generate_exp() {
     exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(mouse_cursor(false));
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(AUDIO_INSTRUCTIONS);

@@ -47,9 +47,9 @@ const PRMS = {
 };
 
 // 2 versions (thumb gestures version 1 vs. head gestures version 2)
-// const VERSION = Number(jsPsych.data.urlVariables().version); // version is provided in the url
+const VERSION = Number(jsPsych.data.urlVariables().version); // version is provided in the url
 // or set explicitly if testing
-const VERSION = 1;
+// const VERSION = 1;
 if (VERSION === 1) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
 } else if (VERSION === 2) {
@@ -200,7 +200,6 @@ const PRELOAD_VIDEOS = {
     type: jsPsychPreload,
     video: VIDEOS,
 };
-console.log(VIDEOS);
 
 ////////////////////////////////////////////////////////////////////////
 //                              Exp Parts                             //
@@ -350,7 +349,6 @@ function code_trial() {
     } else if (dat.rt <= PRMS.too_fast) {
         corr_code = 4; // too fast
     }
-    console.log(corr_code);
 
     jsPsych.data.addDataToLastTrial({
         date: Date(),
@@ -467,8 +465,8 @@ function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    // save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "gc2" });
-    save_data_local(data_fn, { stim_type: "gc2" }); // saves to download folder
+    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "gc2" });
+    // save_data_local(data_fn, { stim_type: "gc2" }); // saves to download folder
 }
 
 const SAVE_DATA = {
@@ -541,6 +539,6 @@ function generate_exp() {
 }
 const EXP = generate_exp();
 
-jsPsych.simulate(EXP, "data-only"); // generates datafile after first click
+// jsPsych.simulate(EXP, "data-only"); // generates datafile after first click
 // jsPsych.simulate(EXP, "visual");
-// jsPsych.run(EXP);
+jsPsych.run(EXP);

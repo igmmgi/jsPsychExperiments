@@ -331,6 +331,7 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
                             );
                         }
                         video_html += '<source src="' + file_name + '" type="video/' + type + '">';
+                        // video_html += '<source src="' + file_name + '#t=1" type="video/' + type + '">';
                     }
                 }
                 video_html += "</video>";
