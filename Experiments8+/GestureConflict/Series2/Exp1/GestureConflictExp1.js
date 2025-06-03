@@ -53,6 +53,18 @@ if ([1, 2].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
 }
 
+
+let gesture_aff;
+let gesture_neg;
+
+if (VERSION === 1) {
+    gesture_aff = "Daumen hoch",
+    gesture_neg = "Daumen runter";
+} else if (VERSION === 2) {
+    gesture_aff = "Kopfnicken", 
+    gesture_neg = "Kopfschütteln";
+}
+
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
@@ -76,13 +88,33 @@ Drücke eine beliebige Taste, um fortzufahren`,
     post_trial_gap: 1000,
 };
 
+const AUDIO_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Das Experiment enthält Videos mit Audio-Inhalten. Bitte stellen Sie daher jetzt Ihre Lautsprecher an 
+oder setzen Sie Ihre Kopfhörer auf. Es ist entscheidend, dass die Lautsprecher bzw. Kopfhörer während 
+des gesamten Experiments angestellt sind. Wir bitten Sie, dies unbedingt zu beachten!<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    post_trial_gap: 1000,
+};
+
 const TASK_INSTRUCTIONS = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
-        text: `General exp/task instructions ...<br><br>
+        text: `Im folgenden Experiment wird Ihnen in jedem Trial ein Video präsentiert.
+Ihre Aufgabe ist es zu beurteilen ob die Person im Video Ja oder Nein gestikuliert oder gesagt hat.
+Das heißt, ${gesture_aff} oder das Wort JA für Ja und ${gesture_neg} oder das Wort NEIN für Nein. 
+Im Laufe des Experiments wird sich dabei abwechseln auf welche der beiden Dimensionen, Gesten oder Sprache,
+Sie achten sollen.<br><br>
 ${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]} &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -98,9 +130,10 @@ const BLOCK_START_GESTURE = {
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
-RESPOND TO GESTURE<br><br>
+Im folgenden Block sollen Sie auf die dargestellten Gesten reagieren.<br>
+Das heißt: ${gesture_aff} entspricht 'Ja' und ${gesture_neg} entspricht 'Nein'.<br><br>
 ${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]} &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren`,
             align: "left",
             color: "black",
             fontsize: 30,
@@ -117,9 +150,10 @@ const BLOCK_START_VOICE = {
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
-RESPOND TO VOICE<br><br>
+Im folgenden Block sollen Sie auf die Aussagen reagieren.<br><br>
+Das heißt: JA entspricht 'Ja' und NEIN entspricht 'Nein'.
 ${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]} &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren`,
             align: "left",
             color: "black",
             fontsize: 30,
@@ -418,6 +452,7 @@ function generate_exp() {
     // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(mouse_cursor(false));
     exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(AUDIO_INSTRUCTIONS);
     exp.push(TASK_INSTRUCTIONS);
 
     // alternating block types with random assignment of starting order
