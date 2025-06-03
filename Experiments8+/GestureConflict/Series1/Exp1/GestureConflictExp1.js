@@ -18,20 +18,20 @@ const CANVAS_SIZE = [720, 1280];
 
 // Experiment Parameters
 const PRMS = {
-    ntrls_prac: 8, // number of trials per block (multiple of 8)
-    ntrls_exp: 24, // number of trials per block (multiple of 8)
+    ntrls_prac: 16, // number of trials per block (multiple of 8)
+    ntrls_exp: 32, // number of trials per block (multiple of 8)
     nblks_prac: 2, // number of blocks practice
-    nblks_exp: 4, // number of blocks experimental blocks
+    nblks_exp: 6, // number of blocks experimental blocks
     fix_size: 15, // size of the fixation cross
     fix_width: 5, // width of fixation cross
     fix_duration: 500, // duration of the fixation cross
-    feedback_duration: [500, 1000, 1000, 1000], // feedback duration for response type (correct, incorrect, too slow, too fast)
+    feedback_duration: [500, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
     too_slow: 5000, // feedback duration for correct and incorrect trials, respectively
     too_fast: 0, // feedback duration for correct and incorrect trials, respectively
     feedback_text: ["Richtig!", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 500, // duration of the inter-trial-interval
     feedback_font: "50px Arial",
-    resp_keys: ["Q", "P"],
+    resp_keys: ["F", "J"],
     box_colours: ["green", "blue"],
     question: ["Ist der Ball in der grünen Box?", "Ist der Ball in der blauen Box?"],
     prompt_font_size: "40px",
@@ -467,8 +467,8 @@ function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "gc2" });
-    // save_data_local(data_fn, { stim_type: "gc2" }); // saves to download folder
+    // save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "gc2" });
+    save_data_local(data_fn, { stim_type: "gc2" }); // saves to download folder
 }
 
 const SAVE_DATA = {
@@ -541,6 +541,6 @@ function generate_exp() {
 }
 const EXP = generate_exp();
 
-// jsPsych.simulate(EXP, "data-only"); // generates datafile after first click
+jsPsych.simulate(EXP, "data-only"); // generates datafile after first click
 // jsPsych.simulate(EXP, "visual");
-jsPsych.run(EXP);
+// jsPsych.run(EXP);

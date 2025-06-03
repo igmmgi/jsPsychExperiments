@@ -36,7 +36,7 @@ const PRMS = {
     feedback_text: ["Richtig!", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 500, // duration of the inter-trial-interval
     feedback_font: "50px Arial",
-    resp_keys: ["Q", "P"],
+    resp_keys: ["F", "J"],
     resp_mapping: shuffle(["Nein", "Ja"]), // no/yes randomly assigned to left right/keys
     video_scale: 0.5,
     ctrl: 1,
