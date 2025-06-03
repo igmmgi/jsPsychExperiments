@@ -159,16 +159,10 @@ function assign_video_files() {
         "../../videos/F/Deutsch/Daumen/NeinDaumenRunter_f.mp4",
         "../../videos/M/Deutsch/Daumen/JaDaumenHoch_m.mp4",
         "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m.mp4",
-        // Unimodal, Thumb in neutral position
         "../../videos/F/Deutsch/Daumen/JaDaumenNeutral_f.mp4",
         "../../videos/F/Deutsch/Daumen/NeinDaumenNeutral_f.mp4",
         "../../videos/M/Deutsch/Daumen/JaDaumenNeutral_m.mp4",
         "../../videos/M/Deutsch/Daumen/NeinDaumenNeutral_m.mp4",
-        // Unimodal, No visible hand
-        // "../../videos/F/Deutsch/Ja_Nein/Ja_f.mp4",
-        // "../../videos/F/Deutsch/Ja_Nein/Nein_f.mp4",
-        // "../../videos/M/Deutsch/Ja_Nein/Ja_m.mp4",
-        // "../../videos/M/Deutsch/Ja_Nein/Nein_m.mp4",
         "../../videos/F/Gestures/ThumbsUp_f.mp4",
         "../../videos/F/Gestures/ThumbsDown_f.mp4",
         "../../videos/M/Gestures/ThumbsUp_m.mp4",

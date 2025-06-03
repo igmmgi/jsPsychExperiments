@@ -53,16 +53,13 @@ if ([1, 2].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
 }
 
-
 let gesture_aff;
 let gesture_neg;
 
 if (VERSION === 1) {
-    gesture_aff = "Daumen hoch",
-    gesture_neg = "Daumen runter";
+    (gesture_aff = "Daumen hoch"), (gesture_neg = "Daumen runter");
 } else if (VERSION === 2) {
-    gesture_aff = "Kopfnicken", 
-    gesture_neg = "Kopfschütteln";
+    (gesture_aff = "Kopfnicken"), (gesture_neg = "Kopfschütteln");
 }
 
 ////////////////////////////////////////////////////////////////////////
