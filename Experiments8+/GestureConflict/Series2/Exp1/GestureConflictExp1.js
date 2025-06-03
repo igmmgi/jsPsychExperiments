@@ -70,13 +70,13 @@ const WELCOME_INSTRUCTIONS = {
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
         text: `Willkommen zu unserem Experiment:<br><br>
-Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
-Bitte stelle sicher, dass Du Dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten Dich, die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
-Informationen zur Versuchspersonenstunde erhälst Du nach dem Experiment.
-Bei Fragen oder Problemen wende Dich bitte an:<br><br>
+Die Teilnahme ist freiwillig, Sie dürfen das Experiment jederzeit abbrechen.
+Bitte stellen Sie sicher, dass Sie sich in einer ruhigen Umgebung befinden und genügend Zeit haben,
+um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>XXX</u> Minuten konzentriert zu arbeiten.<br><br>
+Informationen zur Versuchspersonenstunde erhalten Sie nach dem Experiment.
+Bei Fragen oder Problemen wenden Sie sich bitte an:<br><br>
 samuel.sonntag@uni-tuebingen.de<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -90,9 +90,30 @@ const AUDIO_INSTRUCTIONS = {
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
         text: `Das Experiment enthält Videos mit Audio-Inhalten. Bitte stellen Sie daher jetzt Ihre Lautsprecher an 
-oder setzen Sie Ihre Kopfhörer auf. Es ist entscheidend, dass die Lautsprecher bzw. Kopfhörer während 
+oder setzen Sie Ihre Kopfhörer auf.<br><br>
+Es ist entscheidend, dass die Lautsprecher bzw. Kopfhörer während 
 des gesamten Experiments angestellt sind. Wir bitten Sie, dies unbedingt zu beachten!<br><br>
 Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    post_trial_gap: 1000,
+};
+
+const MAPPING_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Sie werden im folgenden Experiment in jedem Trial eine Antwort
+geben müssen. Dafür sollen Sie die ${PRMS.resp_keys[0]}-Taste und die ${PRMS.resp_keys[1]}-Taste 
+ihrer Tastatur verwenden.<br><br>
+Verwenden Sie dafür bitte Ihre beiden Zeigefinger wie folgt:<br><br>
+${PRMS.resp_keys[0]}-Taste = Linker Zeigefinger 
+&ensp;&ensp;
+${PRMS.resp_keys[1]}-Taste = Rechter Zeigefinger<br><br>
+Drücken Sie eine beliebige Taste, um fortzufahren`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -105,12 +126,14 @@ const TASK_INSTRUCTIONS = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
-        text: `Im folgenden Experiment wird Ihnen in jedem Trial ein Video präsentiert.
+        text: `Im folgenden Experiment wird Ihnen in jedem Trial ein Video präsentiert.<br><br>
 Ihre Aufgabe ist es zu beurteilen ob die Person im Video Ja oder Nein gestikuliert oder gesagt hat.
-Das heißt, ${gesture_aff} oder das Wort JA für Ja und ${gesture_neg} oder das Wort NEIN für Nein. 
+Das heißt, ${gesture_aff} oder das Wort JA für Ja und ${gesture_neg} oder das Wort NEIN für Nein.<br><br>
 Im Laufe des Experiments wird sich dabei abwechseln auf welche der beiden Dimensionen, Gesten oder Sprache,
 Sie achten sollen.<br><br>
-${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]} &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
+${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
+${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
 Drücken Sie eine beliebige Taste, um fortzufahren`,
         align: "left",
         color: "black",
@@ -129,7 +152,9 @@ const BLOCK_START_GESTURE = {
             text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
 Im folgenden Block sollen Sie auf die dargestellten Gesten reagieren.<br>
 Das heißt: ${gesture_aff} entspricht 'Ja' und ${gesture_neg} entspricht 'Nein'.<br><br>
-${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]} &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
+${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
+${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
 Drücken Sie eine beliebige Taste, um fortzufahren`,
             align: "left",
             color: "black",
@@ -148,8 +173,11 @@ const BLOCK_START_VOICE = {
         trial.stimulus = generate_formatted_html({
             text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
 Im folgenden Block sollen Sie auf die Aussagen reagieren.<br><br>
-Das heißt: JA entspricht 'Ja' und NEIN entspricht 'Nein'.
-${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]} &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
+Das heißt: JA entspricht 'Ja' und NEIN entspricht 'Nein'.<br><br>
+${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
+${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
+
 Drücken Sie eine beliebige Taste, um fortzufahren`,
             align: "left",
             color: "black",
@@ -450,6 +478,7 @@ function generate_exp() {
     exp.push(mouse_cursor(false));
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(AUDIO_INSTRUCTIONS);
+    exp.push(MAPPING_INSTRUCTIONS);
     exp.push(TASK_INSTRUCTIONS);
 
     // alternating block types with random assignment of starting order

@@ -71,13 +71,13 @@ const WELCOME_INSTRUCTIONS = {
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
         text: `Willkommen zu unserem Experiment:<br><br>
-Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
-Bitte stelle sicher, dass Du Dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten Dich, die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
-Informationen zur Versuchspersonenstunde erhälst Du nach dem Experiment.
-Bei Fragen oder Problemen wende Dich bitte an:<br><br>
+Die Teilnahme ist freiwillig, Sie dürfen das Experiment jederzeit abbrechen.
+Bitte stellen Sie sicher, dass Sie sich in einer ruhigen Umgebung befinden und genügend Zeit haben,
+um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>XXX</u> Minuten konzentriert zu arbeiten.<br><br>
+Informationen zur Versuchspersonenstunde erhalten Sie nach dem Experiment.
+Bei Fragen oder Problemen wenden Sie sich bitte an:<br><br>
 samuel.sonntag@uni-tuebingen.de<br><br>
-Drücke eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -91,9 +91,30 @@ const AUDIO_INSTRUCTIONS = {
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
         text: `Das Experiment enthält Videos mit Audio-Inhalten. Bitte stellen Sie daher jetzt Ihre Lautsprecher an 
-oder setzen Sie Ihre Kopfhörer auf. Es ist entscheidend, dass die Lautsprecher bzw. Kopfhörer während 
+oder setzen Sie Ihre Kopfhörer auf.<br><br>
+Es ist entscheidend, dass die Lautsprecher bzw. Kopfhörer während 
 des gesamten Experiments angestellt sind. Wir bitten Sie, dies unbedingt zu beachten!<br><br>
 Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    post_trial_gap: 1000,
+};
+
+const MAPPING_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Sie werden im folgenden Experiment in jedem Trial eine Antwort
+geben müssen. Dafür sollen Sie die ${PRMS.resp_keys[0]}-Taste und die ${PRMS.resp_keys[1]}-Taste 
+ihrer Tastatur verwenden.<br><br>
+Verwenden Sie dafür bitte Ihre beiden Zeigefinger wie folgt:<br><br>
+${PRMS.resp_keys[0]}-Taste = Linker Zeigefinger 
+&ensp;&ensp;
+${PRMS.resp_keys[1]}-Taste = Rechter Zeigefinger<br><br>
+Drücken Sie eine beliebige Taste, um fortzufahren`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -112,9 +133,10 @@ der Ball sich stets in einer der beiden vor Ihnen präsentierten befindet.<br><b
 In jedem Durchgang wird auf dem Bildschirm eine Frage präsentiert: Entweder „Ist der Ball in der blauen Box?“ oder „Ist der 
 Ball in der grünen Box?“. Weiter unten auf dem Bildschirm erscheinen zudem nebeneinander eine blaue und eine grüne Box. <br><br>
 Abschließend sehen Sie ein Video, das eine verbale Antwort (das Wort JA oder NEIN) und/oder eine gestische Antwort (${gesture_type}) 
-auf die Frage liefert. 
-Drücke Sie die Leertaste, um fortzufahren.<br><br>
-${PRMS.resp_keys[0]}-Taste = Linke Box &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = Rechte Box<br><br>
+auf die Frage liefert.<br><br>
+${PRMS.resp_keys[0]}-Taste = Linke Box 
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
+${PRMS.resp_keys[1]}-Taste = Rechte Box<br><br>
 Drücken Sie eine beliebige Taste, um fortzufahren`,
         align: "left",
         color: "black",
@@ -128,12 +150,16 @@ const BLOCK_START = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: null,
-    on_start: function (trial) {
+    on_start: function(trial) {
         trial.stimulus = generate_formatted_html({
             text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
-Zur Erinnerung, Sie sollen in jedem Trial beurteilen in welcher der beiden Boxen sich ein imaginärer Ball befindet.
+Zur Erinnerung, Sie sollen in jedem Trial beurteilen in welcher der beiden
+Boxen sich ein imaginärer Ball befindet.
 Verwenden Sie hierfür die Ihnen präsentierten Videos.<br><br>
-${PRMS.resp_keys[0]}-Taste = Linke Box &ensp;&ensp;&ensp;&ensp; ${PRMS.resp_keys[1]}-Taste = Rechte Box<br><br>
+Bedienen Sie die Tasten jeweils mit einem Zeigefinger.<br><br>
+${PRMS.resp_keys[0]}-Taste = Linke Box 
+&ensp;&ensp;&ensp;&ensp; 
+${PRMS.resp_keys[1]}-Taste = Rechte Box<br><br>
 Drücken Sie eine beliebige Taste, um fortzufahren`,
             align: "left",
             color: "black",
@@ -512,6 +538,7 @@ function generate_exp() {
     exp.push(mouse_cursor(false));
     exp.push(WELCOME_INSTRUCTIONS);
     exp.push(AUDIO_INSTRUCTIONS);
+    exp.push(MAPPING_INSTRUCTIONS);
     exp.push(TASK_INSTRUCTIONS);
 
     for (let blk = 0; blk < PRMS.nblks_prac + PRMS.nblks_exp; blk += 1) {
