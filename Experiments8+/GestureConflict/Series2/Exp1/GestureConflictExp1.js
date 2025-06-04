@@ -45,20 +45,15 @@ const PRMS = {
 
 // 4 versions (thumb gestures version 1 vs. head gestures version 2)
 const VERSION = Number(jsPsych.data.urlVariables().version); // version is provided in the url
+let gesture_aff;
+let gesture_neg;
 // or set explicitly if testing
 // const VERSION = 1;
 if ([1, 2].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
+    (gesture_aff = "Daumen hoch"), (gesture_neg = "Daumen runter");
 } else if ([3, 4].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
-}
-
-let gesture_aff;
-let gesture_neg;
-
-if (VERSION === 1) {
-    (gesture_aff = "Daumen hoch"), (gesture_neg = "Daumen runter");
-} else if (VERSION === 2) {
     (gesture_aff = "Kopfnicken"), (gesture_neg = "Kopfschütteln");
 }
 
