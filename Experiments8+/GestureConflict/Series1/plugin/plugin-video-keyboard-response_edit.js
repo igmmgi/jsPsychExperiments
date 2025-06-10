@@ -330,8 +330,8 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
                                 "Warning: video-keyboard-response plugin does not reliably support .mov files.",
                             );
                         }
-                        video_html += '<source src="' + file_name + '" type="video/' + type + '">';
-                        // video_html += '<source src="' + file_name + '#t=1" type="video/' + type + '">';
+                        //video_html += '<source src="' + file_name + '" type="video/' + type + '">';
+                        video_html += '<source src="' + file_name + '#t=1" type="video/' + type + '">';
                     }
                 }
                 video_html += "</video>";

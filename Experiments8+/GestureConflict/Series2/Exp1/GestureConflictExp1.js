@@ -57,6 +57,25 @@ if ([1, 2].includes(VERSION)) {
     (gesture_aff = "Kopfnicken"), (gesture_neg = "Kopfschütteln");
 }
 
+/* show declaration of consent */
+const check_consent_form = function (elem) {
+    if (document.getElementById("consent_checkbox").checked) {
+        return true;
+    } else {
+        alert(
+            "Vielen Dank für Ihr Interesse an unserem Experiment. Wenn Sie teilnehmen möchten, geben Sie uns bitte Ihr Einverständnis.",
+        );
+        return false;
+    }
+};
+
+const HTML_CONSENT_FORM = {
+    type: jsPsychExternalHtml,
+    url: "consent.html",
+    cont_btn: "start_experiment",
+    check_fn: check_consent_form,
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
 ////////////////////////////////////////////////////////////////////////
@@ -67,7 +86,7 @@ const WELCOME_INSTRUCTIONS = {
         text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig, Sie dürfen das Experiment jederzeit abbrechen.
 Bitte stellen Sie sicher, dass Sie sich in einer ruhigen Umgebung befinden und genügend Zeit haben,
-um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>XXX</u> Minuten konzentriert zu arbeiten.<br><br>
+um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>20</u> Minuten konzentriert zu arbeiten.<br><br>
 Informationen zur Versuchspersonenstunde erhalten Sie nach dem Experiment.
 Bei Fragen oder Problemen wenden Sie sich bitte an:<br><br>
 samuel.sonntag@uni-tuebingen.de<br><br>
@@ -94,6 +113,7 @@ Drücken Sie die Leertaste, um fortzufahren.`,
         fontsize: 30,
         bold: true,
     }),
+    choices: [" "],
     post_trial_gap: 1000,
 };
 
@@ -268,6 +288,7 @@ const PLAY_VIDEO = {
         voice: jsPsych.timelineVariable("voice"),
         gesture: jsPsych.timelineVariable("gesture"),
         comp: jsPsych.timelineVariable("comp"),
+        aff_neg: jsPsych.timelineVariable("aff_neg"),
         correct_key: jsPsych.timelineVariable("correct_key"),
     },
     video_scale: PRMS.video_scale,
@@ -379,26 +400,26 @@ const ITI = {
 
 // prettier-ignore
 const TRIAL_TABLE_VOICE = [
-  { video: VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp",   correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[1], resp_modality: "voice", voice: "yes", gesture: "no",  comp: "incomp", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[2], resp_modality: "voice", voice: "no",  gesture: "yes", comp: "incomp", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[3], resp_modality: "voice", voice: "no",  gesture: "no",  comp: "comp",   correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[4], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp",   correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[5], resp_modality: "voice", voice: "yes", gesture: "no",  comp: "incomp", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[6], resp_modality: "voice", voice: "no",  gesture: "yes", comp: "incomp", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[7], resp_modality: "voice", voice: "no",  gesture: "no",  comp: "comp",   correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+  { video: VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp",   aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
+  { video: VIDEOS[1], resp_modality: "voice", voice: "yes", gesture: "no",  comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
+  { video: VIDEOS[2], resp_modality: "voice", voice: "no",  gesture: "yes", comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+  { video: VIDEOS[3], resp_modality: "voice", voice: "no",  gesture: "no",  comp: "comp",   aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+  { video: VIDEOS[4], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp",   aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
+  { video: VIDEOS[5], resp_modality: "voice", voice: "yes", gesture: "no",  comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
+  { video: VIDEOS[6], resp_modality: "voice", voice: "no",  gesture: "yes", comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+  { video: VIDEOS[7], resp_modality: "voice", voice: "no",  gesture: "no",  comp: "comp",   aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
 ];
 
 // prettier-ignore
 const TRIAL_TABLE_GESTURE = [
-  { video: VIDEOS[0], resp_modality: "gesture", voice: "yes", gesture: "yes", comp: "comp",   correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[1], resp_modality: "gesture", voice: "yes", gesture: "no",  comp: "incomp", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[2], resp_modality: "gesture", voice: "no",  gesture: "yes", comp: "incomp", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[3], resp_modality: "gesture", voice: "no",  gesture: "no",  comp: "comp",   correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[4], resp_modality: "gesture", voice: "yes", gesture: "yes", comp: "comp",   correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[5], resp_modality: "gesture", voice: "yes", gesture: "no",  comp: "incomp", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[6], resp_modality: "gesture", voice: "no",  gesture: "yes", comp: "incomp", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[7], resp_modality: "gesture", voice: "no",  gesture: "no",  comp: "comp",   correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+  { video: VIDEOS[0], resp_modality: "gesture", voice: "yes", gesture: "yes", comp: "comp",   aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
+  { video: VIDEOS[1], resp_modality: "gesture", voice: "yes", gesture: "no",  comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+  { video: VIDEOS[2], resp_modality: "gesture", voice: "no",  gesture: "yes", comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
+  { video: VIDEOS[3], resp_modality: "gesture", voice: "no",  gesture: "no",  comp: "comp",   aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+  { video: VIDEOS[4], resp_modality: "gesture", voice: "yes", gesture: "yes", comp: "comp",   aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
+  { video: VIDEOS[5], resp_modality: "gesture", voice: "yes", gesture: "no",  comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+  { video: VIDEOS[6], resp_modality: "gesture", voice: "no",  gesture: "yes", comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
+  { video: VIDEOS[7], resp_modality: "gesture", voice: "no",  gesture: "no",  comp: "comp",   aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
 ];
 
 // useful debugging commands
@@ -465,6 +486,7 @@ function generate_exp() {
 
     let exp = [];
 
+    exp.push(HTML_CONSENT_FORM);
     exp.push(fullscreen(true));
     exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
     exp.push(resize_browser());

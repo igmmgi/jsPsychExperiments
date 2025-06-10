@@ -499,15 +499,15 @@ function genExpSeq() {
 
     let exp = [];
 
-    //exp.push(HTML_CONSENT_FORM);
-    //exp.push(vpDemographics());
-    //exp.push(fullscreen(true));
+    exp.push(HTML_CONSENT_FORM);
+    exp.push(vpDemographics());
+    exp.push(fullscreen(true));
     exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
-    //exp.push(welcome_message());
+    exp.push(welcome_message());
     // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    //exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(WELCOME_INSTRUCTIONS);
 
     let blk_type;
     if (!PRMS.randomise_block_order) {

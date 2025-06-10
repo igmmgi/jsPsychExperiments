@@ -20,7 +20,7 @@ const CANVAS_SIZE = [720, 1280];
 const PRMS = {
     ntrls_prac: 16, // number of trials per block (multiple of 8)
     ntrls_exp: 32, // number of trials per block (multiple of 8)
-    nblks_prac: 2, // number of blocks practice
+    nblks_prac: 1, // number of blocks practice
     nblks_exp: 6, // number of blocks experimental blocks
     fix_size: 15, // size of the fixation cross
     fix_width: 5, // width of fixation cross
@@ -50,18 +50,33 @@ const PRMS = {
 const VERSION = Number(jsPsych.data.urlVariables().version); // version is provided in the url
 // or set explicitly if testing
 // const VERSION = 1;
-if (VERSION === 1) {
-    jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
-} else if (VERSION === 2) {
-    jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
-}
-
 let gesture_type;
 if (VERSION === 1) {
+    jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
     gesture_type = "Daumen hoch oder Daumen herunter";
 } else if (VERSION === 2) {
+    jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
     gesture_type = "Kopfnicken oder Kopfschütteln";
 }
+
+/* show declaration of consent */
+const check_consent_form = function (elem) {
+    if (document.getElementById("consent_checkbox").checked) {
+        return true;
+    } else {
+        alert(
+            "Vielen Dank für Ihr Interesse an unserem Experiment. Wenn Sie teilnehmen möchten, geben Sie uns bitte Ihr Einverständnis.",
+        );
+        return false;
+    }
+};
+
+const HTML_CONSENT_FORM = {
+    type: jsPsychExternalHtml,
+    url: "consent.html",
+    cont_btn: "start_experiment",
+    check_fn: check_consent_form,
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -73,7 +88,7 @@ const WELCOME_INSTRUCTIONS = {
         text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig, Sie dürfen das Experiment jederzeit abbrechen.
 Bitte stellen Sie sicher, dass Sie sich in einer ruhigen Umgebung befinden und genügend Zeit haben,
-um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>XXX</u> Minuten konzentriert zu arbeiten.<br><br>
+um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>20</u> Minuten konzentriert zu arbeiten.<br><br>
 Informationen zur Versuchspersonenstunde erhalten Sie nach dem Experiment.
 Bei Fragen oder Problemen wenden Sie sich bitte an:<br><br>
 samuel.sonntag@uni-tuebingen.de<br><br>
@@ -100,6 +115,7 @@ Drücken Sie die Leertaste, um fortzufahren.`,
         fontsize: 30,
         bold: true,
     }),
+    choices: [" "],
     post_trial_gap: 1000,
 };
 
@@ -150,7 +166,7 @@ const BLOCK_START = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: null,
-    on_start: function(trial) {
+    on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
 Zur Erinnerung, Sie sollen in jedem Trial beurteilen in welcher der beiden
@@ -530,6 +546,7 @@ function generate_exp() {
 
     let exp = [];
 
+    exp.push(HTML_CONSENT_FORM);
     exp.push(fullscreen(true));
     exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
     exp.push(resize_browser());
