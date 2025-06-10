@@ -549,11 +549,8 @@ const STIMULUS = {
             trial.data.letter_task_comp = trial_table_forced_yoked[PRMS.count_trial - 1].letter_task_comp;
             trial.data.letter_task_key = trial_table_forced_yoked[PRMS.count_trial - 1].letter_task_key;
             PERFORMANCE.soa = trial_table_forced_yoked[PRMS.count_trial - 1].soa;
-            console.log("here");
         }
 
-        console.log(trial.data);
-        console.log(PRMS);
         let colours;
         if (trial.data.colour_task_comp === "comp" && trial.data.colour_task_colour === PRMS.colour_task_colours[0]) {
             colours = [
@@ -649,7 +646,6 @@ const STIMULUS = {
         // task order
         trial.stimulus_onset = [0, Math.abs(PERFORMANCE.soa)];
 
-        console.log(PERFORMANCE);
         if (PERFORMANCE.soa > 0 && PERFORMANCE.previous_task === "Letter") {
             trial.func_args = [
                 {
