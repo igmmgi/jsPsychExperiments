@@ -32,7 +32,7 @@ const PRMS = {
     fix_duration: 500, // duration of the fixation cross
     feedback_duration: [500, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
     too_slow: 5000, // feedback duration for correct and incorrect trials, respectively
-    too_fast: 0, // feedback duration for correct and incorrect trials, respectively
+    too_fast: 350, // feedback duration for correct and incorrect trials, respectively
     feedback_text: ["Richtig!", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 500, // duration of the inter-trial-interval
     feedback_font: "50px Arial",
@@ -90,7 +90,7 @@ um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>20</u> Mi
 Informationen zur Versuchspersonenstunde erhalten Sie nach dem Experiment.
 Bei Fragen oder Problemen wenden Sie sich bitte an:<br><br>
 samuel.sonntag@uni-tuebingen.de<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -128,7 +128,7 @@ Verwenden Sie dafür bitte Ihre beiden Zeigefinger wie folgt:<br><br>
 ${PRMS.resp_keys[0]}-Taste = Linker Zeigefinger 
 &ensp;&ensp;
 ${PRMS.resp_keys[1]}-Taste = Rechter Zeigefinger<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -149,7 +149,7 @@ Sie achten sollen.<br><br>
 ${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
 ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
@@ -170,7 +170,7 @@ Das heißt: ${gesture_aff} entspricht 'Ja' und ${gesture_neg} entspricht 'Nein'.
 ${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
 ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren.`,
             align: "left",
             color: "black",
             fontsize: 30,
@@ -192,8 +192,7 @@ Das heißt: JA entspricht 'Ja' und NEIN entspricht 'Nein'.<br><br>
 ${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
 ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
-
-Drücken Sie eine beliebige Taste, um fortzufahren`,
+Drücken Sie eine beliebige Taste, um fortzufahren.`,
             align: "left",
             color: "black",
             fontsize: 30,
