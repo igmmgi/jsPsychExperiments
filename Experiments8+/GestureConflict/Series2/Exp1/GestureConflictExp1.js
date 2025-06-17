@@ -38,7 +38,7 @@ const PRMS = {
     feedback_font: "50px Arial",
     resp_keys: ["F", "J"],
     resp_mapping: shuffle(["Nein", "Ja"]), // no/yes randomly assigned to left right/keys
-    video_scale: 0.5,
+    video_scale: 1,
     ctrl: 1,
     cblk: 1,
 };
@@ -210,24 +210,24 @@ Drücken Sie eine beliebige Taste, um fortzufahren`,
 function assign_video_files() {
     "use strict";
     let videos_thumb = [
-        "../../videos/F/Deutsch/Daumen/JaDaumenHoch_f.mp4",
-        "../../videos/F/Deutsch/Daumen/JaDaumenRunter_f.mp4",
-        "../../videos/F/Deutsch/Daumen/NeinDaumenHoch_f.mp4",
-        "../../videos/F/Deutsch/Daumen/NeinDaumenRunter_f.mp4",
-        "../../videos/M/Deutsch/Daumen/JaDaumenHoch_m.mp4",
-        "../../videos/M/Deutsch/Daumen/JaDaumenRunter_m.mp4",
-        "../../videos/M/Deutsch/Daumen/NeinDaumenHoch_m.mp4",
-        "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m.mp4",
+        "../../videos/F/Deutsch/Daumen/JaDaumenHoch_f_processed.mp4",
+        "../../videos/F/Deutsch/Daumen/JaDaumenRunter_f_processed.mp4",
+        "../../videos/F/Deutsch/Daumen/NeinDaumenHoch_f_processed.mp4",
+        "../../videos/F/Deutsch/Daumen/NeinDaumenRunter_f_processed.mp4",
+        "../../videos/M/Deutsch/Daumen/JaDaumenHoch_m_processed.mp4",
+        "../../videos/M/Deutsch/Daumen/JaDaumenRunter_m_processed.mp4",
+        "../../videos/M/Deutsch/Daumen/NeinDaumenHoch_m_processed.mp4",
+        "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m_processed.mp4",
     ];
     let videos_head = [
-        "../../videos/F/Deutsch/Kopf/JaKopfJa_f.mp4",
-        "../../videos/F/Deutsch/Kopf/JaKopfNein_f.mp4",
-        "../../videos/F/Deutsch/Kopf/NeinKopfJa_f.mp4",
-        "../../videos/F/Deutsch/Kopf/NeinKopfNein_f.mp4",
-        "../../videos/M/Deutsch/Kopf/JaKopfJa_m.mp4",
-        "../../videos/M/Deutsch/Kopf/JaKopfNein_m.mp4",
-        "../../videos/M/Deutsch/Kopf/NeinKopfJa_m.mp4",
-        "../../videos/M/Deutsch/Kopf/NeinKopfNein_m.mp4",
+        "../../videos/F/Deutsch/Kopf/JaKopfJa_f_processed.mp4",
+        "../../videos/F/Deutsch/Kopf/JaKopfNein_f_processed.mp4",
+        "../../videos/F/Deutsch/Kopf/NeinKopfJa_f_processed.mp4",
+        "../../videos/F/Deutsch/Kopf/NeinKopfNein_f_processed.mp4",
+        "../../videos/M/Deutsch/Kopf/JaKopfJa_m_processed.mp4",
+        "../../videos/M/Deutsch/Kopf/JaKopfNein_m_processed.mp4",
+        "../../videos/M/Deutsch/Kopf/NeinKopfJa_m_processed.mp4",
+        "../../videos/M/Deutsch/Kopf/NeinKopfNein_m_processed.mp4",
     ];
     if ([1, 2].includes(VERSION)) {
         return videos_thumb;

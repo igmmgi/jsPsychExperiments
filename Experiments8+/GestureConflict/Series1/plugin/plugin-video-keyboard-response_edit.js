@@ -243,8 +243,8 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
             }
 
             // Calculate dimensions upfront
-            const base_width = 1920; // Base video width
-            const base_height = 1080; // Base video height
+            const base_width = 960; // Base video width
+            const base_height = 540; // Base video height
             const video_width = Math.round(base_width * trial.video_scale);
             const video_height = Math.round(base_height * trial.video_scale);
             const prompt_height = trial.prompt !== null ? 120 : 0;
@@ -330,8 +330,8 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
                                 "Warning: video-keyboard-response plugin does not reliably support .mov files.",
                             );
                         }
-                        //video_html += '<source src="' + file_name + '" type="video/' + type + '">';
-                        video_html += '<source src="' + file_name + '#t=1" type="video/' + type + '">';
+                        video_html += '<source src="' + file_name + '" type="video/' + type + '">';
+                        //video_html += '<source src="' + file_name + '#t=1" type="video/' + type + '">';
                     }
                 }
                 video_html += "</video>";
