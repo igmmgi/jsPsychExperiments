@@ -133,7 +133,7 @@ var jsPsychHtmlDualSliderResponse = (function (jspsych) {
       }
       
       // First slider
-      html += '<div style="margin-bottom: 100px;">';
+      html += '<div style="margin-bottom: 60px;">';
       html += '<div style="font-weight: bold; margin-bottom: 10px; font-size: 18px;">' + trial.question1 + '</div>';
       html += '<div class="jspsych-html-dual-slider-response-container" style="position:relative; margin: 0 auto 3em auto; ';
       if (trial.slider_width !== null) {
@@ -142,7 +142,17 @@ var jsPsychHtmlDualSliderResponse = (function (jspsych) {
         html += "width:auto;";
       }
       html += '">';
-      html += '<input type="range" class="jspsych-slider" value="' + trial.slider_start1 + '" min="' + trial.min1 + '" max="' + trial.max1 + '" step="' + trial.step1 + '" id="jspsych-html-dual-slider-response-response1"></input>';
+      html += '<input type="range" class="jspsych-slider" value="' + trial.slider_start1 + '" min="' + trial.min1 + '" max="' + trial.max1 + '" step="' + trial.step1 + '" id="jspsych-html-dual-slider-response-response1" style="width: 100%;"></input>';
+      
+      // Add tick marks for slider 1
+      html += '<div style="position: relative; width: 100%; height: 20px; margin-top: 0px;">';
+      const num_ticks1 = Math.min(11, trial.max1 - trial.min1 + 1); // Max 11 ticks to avoid overcrowding
+      for (let i = 0; i < num_ticks1; i++) {
+        const tick_position = (i / (num_ticks1 - 1)) * 100 +0.1;
+        html += '<div style="position: absolute; left: ' + tick_position + '%; width: 2px; height: 10px; background-color: #666; transform: translateX(-50%); top: -5px; margin-left: 0px;"></div>';
+      }
+      html += '</div>';
+      
       html += "<div>";
       for (var j = 0; j < trial.labels1.length; j++) {
         var label_width_perc = 100 / (trial.labels1.length - 1);
@@ -167,7 +177,17 @@ var jsPsychHtmlDualSliderResponse = (function (jspsych) {
         html += "width:auto;";
       }
       html += '">';
-      html += '<input type="range" class="jspsych-slider" value="' + trial.slider_start2 + '" min="' + trial.min2 + '" max="' + trial.max2 + '" step="' + trial.step2 + '" id="jspsych-html-dual-slider-response-response2"></input>';
+      html += '<input type="range" class="jspsych-slider" value="' + trial.slider_start2 + '" min="' + trial.min2 + '" max="' + trial.max2 + '" step="' + trial.step2 + '" id="jspsych-html-dual-slider-response-response2" style="width: 100%;"></input>';
+      
+      // Add tick marks for slider 2
+      html += '<div style="position: relative; width: 100%; height: 20px; margin-top: 0px;">';
+      const num_ticks2 = Math.min(11, trial.max2 - trial.min2 + 1); // Max 11 ticks to avoid overcrowding
+      for (let i = 0; i < num_ticks2; i++) {
+        const tick_position = (i / (num_ticks2 - 1)) * 100 + 0.1;
+        html += '<div style="position: absolute; left: ' + tick_position + '%; width: 2px; height: 10px; background-color: #666; transform: translateX(-50%); top: -5px; margin-left: 0px;"></div>';
+      }
+      html += '</div>';
+      
       html += "<div>";
       for (var j = 0; j < trial.labels2.length; j++) {
         var label_width_perc = 100 / (trial.labels2.length - 1);

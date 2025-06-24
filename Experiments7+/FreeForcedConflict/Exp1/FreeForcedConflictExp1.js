@@ -96,7 +96,7 @@ if (PRMS.task_side[0] === "Colour") {
 PRMS.response_keys = PRMS.response_keys_lh.concat(PRMS.response_keys_rh);
 
 if (PRMS.task_position[0] === "Colour") {
-    PRMS.colour_task_offset = -20;
+    PRMS.colour_task_offset = -40;
     PRMS.letter_task_offset = 7;
 } else if (PRMS.task_position[1] === "Colour") {
     PRMS.colour_task_offset = 22;
@@ -441,13 +441,13 @@ function draw_stimulus(args) {
     }
 
     // // fixation cross for piloting positions
-    // ctx.beginPath();
-    // ctx.moveTo(-200, 0);
-    // ctx.lineTo(200, 0);
-    // ctx.stroke();
-    // ctx.moveTo(0, -200);
-    // ctx.lineTo(0, 200);
-    // ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-200, 0);
+    ctx.lineTo(200, 0);
+    ctx.stroke();
+    ctx.moveTo(0, -200);
+    ctx.lineTo(0, 200);
+    ctx.stroke();
 }
 
 function code_trial() {
@@ -839,20 +839,24 @@ const END_QUESTIONS = {
     question1: `1. Bitte nutzen Sie die Maus/Touchpad um mit dem Regler anzugeben wie stark Ihre Präferenz für eine der beiden Aufgaben ausfiel:`,
     question2: `2. Bitte nutzen Sie die Maus/Touchpad um mit dem Regler anzugeben ob Sie in den freien oder
 den vorgebebenen Aufgabenwahl-Blöcken motivierter waren:`,
-    require_movement: true,
-    min1: 0, 
-    max1: 100, 
+    require_movement: false,
+    min1: 0,
+    max1: 100,
     slider_start1: 50,
-    min2: 0, 
-    max2: 100, 
+    min2: 0,
+    max2: 100,
     slider_start2: 50,
-    labels1: ["Sehr Starke Präferenz Farbaufgabe", "Keine Präferenz", "Sehr Starke Präferenz Buchstabenaufgabe"],
-    labels2: ["Höhere Motivation bei freier Wahl", "Keine Präferenz", "Höhere Motivation bei vorgegebener Wahl"],
+    labels1: ["Sehr starke Präferenz Farbaufgabe", "Keine Präferenz", "Sehr starke Präferenz Buchstabenaufgabe"],
+    labels2: [
+        "Viel höhere Motivation bei freier Wahl",
+        "Keine Präferenz",
+        "Viel höhere Motivation bei vorgegebener Wahl",
+    ],
     button_label: "Weiter",
-    on_finish: function() {
+    on_finish: function () {
         let dat = jsPsych.data.get().last(1).values()[0];
-        jsPsych.data.addProperties({ Q_rt: dat.rt, Q1: dat.response1, Q2: dat.response2} );
-    }
+        jsPsych.data.addProperties({ Q_rt: dat.rt, Q1: dat.response1, Q2: dat.response2 });
+    },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -882,8 +886,8 @@ function genExpSeq() {
 
     let exp = [];
 
-
     // setup
+    exp.push(END_QUESTIONS);
     exp.push(fullscreen(true));
     exp.push(browser_check(PRMS.screen_res));
     exp.push(resize_browser());
@@ -928,7 +932,7 @@ function genExpSeq() {
 
     // debrief
     exp.push(mouseCursor(true));
-   
+
     // show end questions
     exp.push(END_QUESTIONS);
 
