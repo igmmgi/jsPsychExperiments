@@ -35,9 +35,9 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_blocks: 6, // 12,
+    n_blocks: 4, // 12,
     n_blocks_practice: 2,
-    n_trials: 32, // 64, // multiple of 4
+    n_trials: 8, // 64, // multiple of 4
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
     fixation_duration: 500, // duration of the fixation cross
@@ -96,11 +96,11 @@ if (PRMS.task_side[0] === "Colour") {
 PRMS.response_keys = PRMS.response_keys_lh.concat(PRMS.response_keys_rh);
 
 if (PRMS.task_position[0] === "Colour") {
-    PRMS.colour_task_offset = -15;
-    PRMS.letter_task_offset = 2;
+    PRMS.colour_task_offset = -20;
+    PRMS.letter_task_offset = 7;
 } else if (PRMS.task_position[1] === "Colour") {
-    PRMS.colour_task_offset = 15;
-    PRMS.letter_task_offset = -28;
+    PRMS.colour_task_offset = 22;
+    PRMS.letter_task_offset = -35;
 }
 
 jsPsych.data.addProperties({ task_left_hand: PRMS.task_side[0], task_top_position: PRMS.task_position[0] });
@@ -833,6 +833,28 @@ function generate_yoked_block_timeline() {
     }
 }
 
+const END_QUESTIONS = {
+    type: jsPsychHtmlDualSliderResponse,
+    stimulus: `Gleich geschafft – noch zwei Fragen:`,
+    question1: `1. Bitte nutzen Sie die Maus/Touchpad um mit dem Regler anzugeben wie stark Ihre Präferenz für eine der beiden Aufgaben ausfiel:`,
+    question2: `2. Bitte nutzen Sie die Maus/Touchpad um mit dem Regler anzugeben ob Sie in den freien oder
+den vorgebebenen Aufgabenwahl-Blöcken motivierter waren:`,
+    require_movement: true,
+    min1: 0, 
+    max1: 100, 
+    slider_start1: 50,
+    min2: 0, 
+    max2: 100, 
+    slider_start2: 50,
+    labels1: ["Sehr Starke Präferenz Farbaufgabe", "Keine Präferenz", "Sehr Starke Präferenz Buchstabenaufgabe"],
+    labels2: ["Höhere Motivation bei freier Wahl", "Keine Präferenz", "Höhere Motivation bei vorgegebener Wahl"],
+    button_label: "Weiter",
+    on_finish: function() {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        jsPsych.data.addProperties({ Q_rt: dat.rt, Q1: dat.response1, Q2: dat.response2} );
+    }
+};
+
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
@@ -859,6 +881,7 @@ function genExpSeq() {
     "use strict";
 
     let exp = [];
+
 
     // setup
     exp.push(fullscreen(true));
@@ -905,6 +928,9 @@ function genExpSeq() {
 
     // debrief
     exp.push(mouseCursor(true));
+   
+    // show end questions
+    exp.push(END_QUESTIONS);
 
     // save data
     exp.push(SAVE_DATA);

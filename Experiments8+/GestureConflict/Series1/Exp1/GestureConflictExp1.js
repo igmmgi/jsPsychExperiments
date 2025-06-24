@@ -506,7 +506,7 @@ const VP_NUM = get_time();
 function save() {
     jsPsych.data.addProperties({ vp_num: VP_NUM });
 
-    const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
+    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
     save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "gc2" });
     // save_data_local(data_fn, { stim_type: "gc2" }); // saves to download folder
 }
@@ -518,24 +518,16 @@ const SAVE_DATA = {
 };
 
 ////////////////////////////////////////////////////////////////////////
-//                             VP Stunden                             //
+//                    Generate End Message                            //
 ////////////////////////////////////////////////////////////////////////
 const END_SCREEN = {
     type: jsPsychHtmlKeyboardResponse,
+    stimulus:
+        "<p><strong>Experiment beendet! Vielen Dank für Ihre Teilnahme!</strong></p>" +
+        "<p><strong>Mit der Leertaste gelangen Sie zurück zu Prolific, wo Ihnen die Vergütung</strong></p>" +
+        "<p><strong>gutgeschrieben wird.</strong></p>",
     response_ends_trial: true,
     choices: [" "],
-    stimulus: generate_formatted_html({
-        text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
-Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
-Drücken Sie nun eine beliebige Taste, um fortzufahren.`,
-        fontsize: 28,
-        color: "black",
-        lineheight: 1.0,
-        bold: true,
-        align: "left",
-    }),
-    on_finish: function () {},
-    post_trial_gap: 1000,
 };
 
 ////////////////////////////////////////////////////////////////////////
