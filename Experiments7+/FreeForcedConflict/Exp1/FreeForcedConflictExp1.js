@@ -887,7 +887,6 @@ function genExpSeq() {
     let exp = [];
 
     // setup
-    exp.push(END_QUESTIONS);
     exp.push(fullscreen(true));
     exp.push(browser_check(PRMS.screen_res));
     exp.push(resize_browser());
