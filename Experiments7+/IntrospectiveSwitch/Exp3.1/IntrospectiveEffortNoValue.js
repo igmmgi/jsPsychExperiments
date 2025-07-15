@@ -48,17 +48,17 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_blocks: 16,
-    practice_blocks: [1, 2, 9, 10], // no VAS in blocks 1, 2, 7 and 8
-    slider_reminder_blocks: [3, 11], // only show slider reminder in these blocks
-    n_trials: 40, // multiple of 4
+    n_blocks: 14,
+    practice_blocks: [1, 2], // no VAS in blocks 1, 2
+    slider_reminder_blocks: [3], // only show slider reminder in these blocks
+    n_trials: 48, // multiple of 4
     vas_trial_interval: [1, 3], // number of trials between two vas trials
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
     fixation_duration: 500, // duration of the fixation cross
     feedback_duration_practice: [0, 2000, 2000], // duration of the feedback practice (first two blocks)
     feedback_duration_experiment: [0, 2000, 2000], // duration of the feedback experiment (NB. no feedback when VAS trial)
-    rsi: [200, 1200], // one of these values replaces the first value above in short/long interval blocks, respectively (mean = 700 = previous interval)
+    rsi: [200, 700, 1200], // one of these values replaces the first value in the two lines above
     feedback_text_practice: ["Richtig!", "Falsch!", "Falsch!"], // feedback text
     feedback_text_exp: ["", "Falsch!", "Falsch!"], // feedback text
     iti: 0,
@@ -284,24 +284,6 @@ Hierzu wirst du dann eine Skala sehen:<br><br>
  <img src="./images/slider.png" width="100%"><br><br>
 Verwende den Cursor mit deiner Maus/Touchpad, um den Grad deiner Anstrengung auf der Skala auszuwählen und bestätige diese durch klicken der linken Maus-/Touchpad-taste.
 Platziere anschließend deine Finger wieder auf die Tastatur, sodass du bereit bist für den nächsten Durchgang.<br><br>
-                  Drücke eine beliebige Taste, um fortzufahren.`,
-            align: "left",
-            colour: "black",
-            fontsize: 26,
-            lineheight: 1,
-        });
-    },
-};
-
-const TASK_INSTRUCTIONS_HALF_TIME = {
-    type: jsPsychHtmlKeyboardResponseCanvas,
-    canvas_colour: CANVAS_COLOUR,
-    canvas_size: CANVAS_SIZE,
-    canvas_border: CANVAS_BORDER,
-    stimulus: "",
-    on_start: function (trial) {
-        trial.stimulus = generate_formatted_html({
-            text: `*** ACHTUNG: HALF TIME! ****:<br><br>
                   Drücke eine beliebige Taste, um fortzufahren.`,
             align: "left",
             colour: "black",
@@ -927,11 +909,19 @@ const TRIAL_TABLE_FREE_SHORT = [
 ];
 
 // prettier-ignore
-const TRIAL_TABLE_FREE_LONG = [
+const TRIAL_TABLE_FREE_MED = [
     { free_forced: "free", rsi: PRMS.rsi[1], colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
     { free_forced: "free", rsi: PRMS.rsi[1], colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
     { free_forced: "free", rsi: PRMS.rsi[1], colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
     { free_forced: "free", rsi: PRMS.rsi[1], colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
+];
+
+// prettier-ignore
+const TRIAL_TABLE_FREE_LONG = [
+    { free_forced: "free", rsi: PRMS.rsi[2], colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
+    { free_forced: "free", rsi: PRMS.rsi[2], colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
+    { free_forced: "free", rsi: PRMS.rsi[2], colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
+    { free_forced: "free", rsi: PRMS.rsi[2], colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
 ];
 
 // Over-written on trial-by-trial basis based on previous block equivalent trial (Thus, essentially, just a place-holder)
@@ -944,7 +934,7 @@ const TRIAL_TABLE_FORCED_SHORT = [
 ];
 
 // prettier-ignore
-const TRIAL_TABLE_FORCED_LONG = [
+const TRIAL_TABLE_FORCED_MED = [
     { free_forced: "forced_letter", rsi: PRMS.rsi[1], colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
     { free_forced: "forced_letter", rsi: PRMS.rsi[1], colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
     { free_forced: "forced_colour", rsi: PRMS.rsi[1], colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na" },
@@ -952,9 +942,23 @@ const TRIAL_TABLE_FORCED_LONG = [
 ];
 
 // prettier-ignore
+const TRIAL_TABLE_FORCED_LONG = [
+    { free_forced: "forced_letter", rsi: PRMS.rsi[2], colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[0], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[0]] },
+    { free_forced: "forced_letter", rsi: PRMS.rsi[2], colour_task_colour: PRMS.colour_task_nogo[0],    letter_task_letter: PRMS.letter_task_letters[1], colour_task_key: "na",                                          letter_task_key: PRMS.key_mapping[PRMS.letter_task_letters[1]] },
+    { free_forced: "forced_colour", rsi: PRMS.rsi[2], colour_task_colour: PRMS.colour_task_colours[0], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[0]], letter_task_key: "na" },
+    { free_forced: "forced_colour", rsi: PRMS.rsi[2], colour_task_colour: PRMS.colour_task_colours[1], letter_task_letter: PRMS.letter_task_nogo[0],    colour_task_key: PRMS.key_mapping[PRMS.colour_task_colours[1]], letter_task_key: "na" },
+];
+
+// prettier-ignore
 const TRIAL_TIMELINE_FREE_SHORT = {
     timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, IF_NODE_VAS, ITI],
     timeline_variables: TRIAL_TABLE_FREE_SHORT
+};
+
+// prettier-ignore
+const TRIAL_TIMELINE_FREE_MED = {
+    timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, IF_NODE_VAS, ITI],
+    timeline_variables: TRIAL_TABLE_FREE_MED
 };
 
 // prettier-ignore
@@ -966,6 +970,11 @@ const TRIAL_TIMELINE_FREE_LONG = {
 let TRIAL_TIMELINE_FORCED_SHORT = {
     timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, IF_NODE_VAS, ITI],
     timeline_variables: TRIAL_TABLE_FORCED_SHORT,
+};
+
+let TRIAL_TIMELINE_FORCED_MED = {
+    timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, IF_NODE_VAS, ITI],
+    timeline_variables: TRIAL_TABLE_FORCED_MED,
 };
 
 let TRIAL_TIMELINE_FORCED_LONG = {
@@ -1049,15 +1058,17 @@ function genExpSeq() {
     let block_type = repeatArray(["free", "forced"], PRMS.n_blocks / 2);
     let rsi_type;
     if (VERSION === 1) {
-        rsi_type = repeatArray(["short"], PRMS.n_blocks / 2).concat(repeatArray(["long"], PRMS.n_blocks / 2));
+        rsi_type = ["med", "med"].concat(
+            repeatArray(["short"], (PRMS.n_blocks - 2) / 2).concat(repeatArray(["long"], (PRMS.n_blocks - 2) / 2)),
+        );
     } else if (VERSION === 2) {
-        rsi_type = repeatArray(["long"], PRMS.n_blocks / 2).concat(repeatArray(["short"], PRMS.n_blocks / 2));
+        rsi_type = ["med", "med"].concat(
+            repeatArray(["long"], (PRMS.n_blocks - 2) / 2).concat(repeatArray(["short"], (PRMS.n_blocks - 2) / 2)),
+        );
     }
+    console.log(rsi_type);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
-        if (blk === PRMS.n_blocks / 2) {
-            exp.push(TASK_INSTRUCTIONS_HALF_TIME);
-        }
         if (PRMS.practice_blocks.includes(blk)) {
             exp.push(TASK_INSTRUCTIONS_INTROSPECTION);
         }
@@ -1067,7 +1078,13 @@ function genExpSeq() {
             exp.push(BLOCK_START_FORCED);
         }
         let blk_timeline;
-        if (block_type[blk] === "free" && rsi_type[blk] === "short") {
+        if (block_type[blk] === "free" && rsi_type[blk] === "med") {
+            blk_timeline = { ...TRIAL_TIMELINE_FREE_MED };
+            blk_timeline.sample = {
+                type: "fixed-repetitions",
+                size: PRMS.n_trials / TRIAL_TABLE_FREE_MED.length,
+            };
+        } else if (block_type[blk] === "free" && rsi_type[blk] === "short") {
             blk_timeline = { ...TRIAL_TIMELINE_FREE_SHORT };
             blk_timeline.sample = {
                 type: "fixed-repetitions",
@@ -1078,6 +1095,13 @@ function genExpSeq() {
             blk_timeline.sample = {
                 type: "fixed-repetitions",
                 size: PRMS.n_trials / TRIAL_TABLE_FREE_LONG.length,
+            };
+        } else if (block_type[blk] === "forced" && rsi_type[blk] === "med") {
+            // This is essentially a place-holder as needs to be over-written for the yoked design
+            blk_timeline = { ...TRIAL_TIMELINE_FORCED_MED };
+            blk_timeline.sample = {
+                type: "fixed-repetitions",
+                size: PRMS.n_trials / TRIAL_TABLE_FORCED_MED.length,
             };
         } else if (block_type[blk] === "forced" && rsi_type[blk] === "short") {
             // This is essentially a place-holder as needs to be over-written for the yoked design

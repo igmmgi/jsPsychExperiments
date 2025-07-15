@@ -26,12 +26,12 @@ const PRMS = {
     ntrls_prac: 16, // number of trials per block (multiple of 8)
     ntrls_exp: 32, // number of trials per block (multiple of 8)
     nblks_prac: 2, // number of blocks
-    nblks_exp: 6, // number of blocks
+    nblks_exp: 8, // number of blocks
     fix_size: 15, // size of the fixation cross
     fix_width: 5, // width of fixation cross
     fix_duration: 500, // duration of the fixation cross
     feedback_duration: [500, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
-    too_slow: 5000, // feedback duration for correct and incorrect trials, respectively
+    too_slow: 3350, // feedback duration for correct and incorrect trials, respectively
     too_fast: 350, // feedback duration for correct and incorrect trials, respectively
     feedback_text: ["Richtig!", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 500, // duration of the inter-trial-interval
@@ -51,10 +51,10 @@ let gesture_neg;
 // const VERSION = 1;
 if ([1, 2].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
-    (gesture_aff = "Daumen hoch"), (gesture_neg = "Daumen runter");
+    ((gesture_aff = "Daumen hoch"), (gesture_neg = "Daumen runter"));
 } else if ([3, 4].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
-    (gesture_aff = "Kopfnicken"), (gesture_neg = "Kopfschütteln");
+    ((gesture_aff = "Kopfnicken"), (gesture_neg = "Kopfschütteln"));
 }
 
 /* show declaration of consent */
@@ -467,6 +467,9 @@ const END_SCREEN = {
         "<p><strong>gutgeschrieben wird.</strong></p>",
     response_ends_trial: true,
     choices: [" "],
+    on_finish: function () {
+        window.location.replace("https://app.prolific.com/submissions/complete?cc=C1OYPSA2");
+    },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -526,9 +529,9 @@ function generate_exp() {
 
     // debrief
     exp.push(mouse_cursor(true));
-    exp.push(END_SCREEN);
     exp.push(end_message());
     exp.push(fullscreen(false));
+    exp.push(END_SCREEN);
 
     return exp;
 }
