@@ -435,6 +435,47 @@ const TRIAL_TIMELINE_GESTURE = {
     timeline_variables: TRIAL_TABLE_GESTURE,
 };
 
+const AUDIO_QUESTION_EXPLANATION = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Fast geschafft! Wir haben nur noch eine letzte Frage. In der 
+Folge möchten wir von Ihnen wissen ob Sie zu einem Zeitpunkt des Experiments
+ihren Ton ausgeschaltet haben, oder die Geste gar nicht beobachtet haben.<br><br>
+<u><i>Ihre Antwort hat keine Auswirkung auf Ihre Vergütung.</i></u><br><br>
+Seien Sie daher bitte ehrlich in Ihrer Antwort, damit wir Ihren Datensatz 
+gegebenenfalls von der Auswertung ausschließen können.<br><br>
+Drücken Sie eine beliebige Taste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    post_trial_gap: 1000,
+};
+
+const AUDIO_QUESTION = {
+  type: jsPsychSurvey,
+    survey_json: {
+        elements: [
+          {
+            type: 'radiogroup',
+            name: 'AudioQuestion',
+            isRequired: true,
+            title: 'Haben Sie zu einem beliebigen Zeitpunkt des Experiments den Ton abgestellt?',
+            choices: ['Ja', 'Nein']
+          },
+          {
+            type: 'radiogroup',
+            name: 'VideoQuestion',
+            isRequired: true,
+            title: 'Haben Sie zu einem beliebigen Zeitpunkt des Experiments das Video nicht angeschaut?',
+            choices: ['Ja', 'Nein']
+          },
+        ]
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
 ////////////////////////////////////////////////////////////////////////
@@ -529,6 +570,8 @@ function generate_exp() {
 
     // debrief
     exp.push(mouse_cursor(true));
+    exp.push(AUDIO_QUESTION_EXPLANATION);
+    exp.push(AUDIO_QUESTION);
     exp.push(end_message());
     exp.push(fullscreen(false));
     exp.push(END_SCREEN);
