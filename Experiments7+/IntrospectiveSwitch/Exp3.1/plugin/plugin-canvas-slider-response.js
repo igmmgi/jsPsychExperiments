@@ -294,10 +294,10 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
 
             // Add event listener to update value display
             var slider = document.getElementById('jspsych-canvas-slider-response-response');
-            var valueDisplay = document.getElementById('jspsych-canvas-slider-response-value');
-            slider.addEventListener('input', function () {
-                valueDisplay.textContent = this.value + " ms";
-            });
+            //var valueDisplay = document.getElementById('jspsych-canvas-slider-response-value');
+            //slider.addEventListener('input', function () {
+            //    valueDisplay.textContent = this.value + " ms";
+            //});
         }
         simulate(trial, simulation_mode, simulation_options, load_callback) {
             if (simulation_mode == "data-only") {

@@ -73,16 +73,17 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
                 pretty_name: "Prompt",
                 default: null,
             },
-            width: {
-                type: jspsych.ParameterType.INT,
-                pretty_name: "Width",
-                default: "",
-            },
-            height: {
-                type: jspsych.ParameterType.INT,
-                pretty_name: "Height",
-                default: "",
-            },
+            // Note: width and height are now controlled by video_scale parameter
+            // width: {
+            //     type: jspsych.ParameterType.INT,
+            //     pretty_name: "Width",
+            //     default: "",
+            // },
+            // height: {
+            //     type: jspsych.ParameterType.INT,
+            //     pretty_name: "Height",
+            //     default: "",
+            // },
             autoplay: {
                 type: jspsych.ParameterType.BOOL,
                 pretty_name: "Autoplay",
@@ -162,9 +163,13 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
             const video_height = Math.round(base_height * trial.video_scale);
 
             var video_html = "<div>";
-            video_html += '<video id="jspsych-video-keyboard-response-stimulus"';
-            video_html += ' width="' + video_width + '"';
-            video_html += ' height="' + video_height + '"';
+            if (trial.maintain_aspect_ratio) {
+                video_html += '<video id="jspsych-video-keyboard-response-stimulus" style="object-fit: contain; max-width: ' + video_width + 'px; max-height: ' + video_height + 'px;"';
+            } else {
+                video_html += '<video id="jspsych-video-keyboard-response-stimulus"';
+                video_html += ' width="' + video_width + '"';
+                video_html += ' height="' + video_height + '"';
+            }
             if (trial.autoplay && trial.start == null) {
                 video_html += " autoplay ";
             }
@@ -312,7 +317,7 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
             const display_element = this.jsPsych.getDisplayElement();
             this.trial(display_element, trial);
             load_callback();
-            const video_element = display_element.querySelector("#jspsych-video-button-response-stimulus");
+            const video_element = display_element.querySelector("#jspsych-video-keyboard-response-stimulus");
             const respond = () => {
                 if (data.rt !== null) {
                     this.jsPsych.pluginAPI.pressKey(data.response, data.rt);

@@ -29,6 +29,7 @@ const PRMS = {
     nblks_exp: 8, // number of blocks
     fix_size: 15, // size of the fixation cross
     fix_width: 5, // width of fixation cross
+    fix_colour: "black", // colour of fixation cross
     fix_duration: 500, // duration of the fixation cross
     feedback_duration: [500, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
     too_slow: 3350, // feedback duration for correct and incorrect trials, respectively

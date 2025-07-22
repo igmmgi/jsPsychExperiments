@@ -125,7 +125,7 @@ function repeat_array(a, n) {
 function rep_each(x, n) {
     let out = [];
     for (let i = 0; i < x.length; i++) {
-        out.push(...repeatArray(x[i], n));
+        out.push(...repeat_array(x[i], n));
     }
     return out;
 }

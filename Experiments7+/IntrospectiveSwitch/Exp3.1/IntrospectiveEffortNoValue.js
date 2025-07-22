@@ -50,17 +50,17 @@ const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
     n_blocks: 14,
     practice_blocks: [1, 2], // no VAS in blocks 1, 2
-    slider_reminder_blocks: [3], // only show slider reminder in these blocks
+    slider_reminder_blocks: [3, 4], // only show slider reminder in these blocks
     n_trials: 48, // multiple of 4
     vas_trial_interval: [1, 3], // number of trials between two vas trials
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
-    fixation_duration: 500, // duration of the fixation cross
+    fixation_duration: 400, // duration of the fixation cross
     feedback_duration_practice: [0, 2000, 2000], // duration of the feedback practice (first two blocks)
-    feedback_duration_experiment: [0, 2000, 2000], // duration of the feedback experiment (NB. no feedback when VAS trial)
-    rsi: [200, 700, 1200], // one of these values replaces the first value in the two lines above
+    feedback_duration_experiment: [0, 1500, 1500], // duration of the feedback experiment (NB. no feedback when VAS trial)
+    rsi: [100, 500, 900], // one of these values replaces the first value in the two lines above
     feedback_text_practice: ["Richtig!", "Falsch!", "Falsch!"], // feedback text
-    feedback_text_exp: ["", "Falsch!", "Falsch!"], // feedback text
+    feedback_text_exp: ["Richtig!", "Falsch!", "Falsch!"], // feedback text (NB "Richtig!" shown in canvas colour as hack to prevent slight screen flickering with position)
     iti: 0,
     grid_size: [1, 5], // rows, cols (1 row but with two tasks)
     grid_gaps: [0, 26], // rows, cols
@@ -414,7 +414,7 @@ const TRIAL_FEEDBACK = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: "",
+    stimulus: " ",
     response_ends_trial: false,
     trial_duration: null,
     on_start: function (trial) {
@@ -429,19 +429,18 @@ const TRIAL_FEEDBACK = {
         trial.trial_duration = PRMS.practice_blocks.includes(PRMS.count_block)
             ? PRMS.feedback_duration_practice[dat.error]
             : PRMS.feedback_duration_experiment[dat.error];
-        if (trial.trial_duration !== 0) {
-            trial.stimulus = generate_formatted_html({
-                text: PRMS.practice_blocks.includes(PRMS.count_block)
-                    ? `${PRMS.feedback_text_practice[dat.error]}`
-                    : `${PRMS.feedback_text_exp[dat.error]}`,
-                align: "center",
-                fontsize: 30,
-                width: "1200px",
-                lineheight: 1.5,
-            });
-            if (dat.error !== 0) {
-                trial.stimulus += RESPONSE_MAPPING;
-            }
+        trial.stimulus = generate_formatted_html({
+            text: PRMS.practice_blocks.includes(PRMS.count_block)
+                ? `${PRMS.feedback_text_practice[dat.error]}`
+                : `${PRMS.feedback_text_exp[dat.error]}`,
+            align: "center",
+            fontsize: 30,
+            width: "1200px",
+            lineheight: 1.5,
+            color: dat.error !== 0 ? "black" : "rgba(200, 200, 200, 1)" 
+        });
+        if (dat.error !== 0) {
+            trial.stimulus += RESPONSE_MAPPING;
         }
     },
 };
@@ -451,7 +450,7 @@ const ITI = {
     canvas_colour: CANVAS_COLOUR,
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
-    stimulus: "",
+    stimulus: " ",
     response_ends_trial: false,
     trial_duration: PRMS.iti,
 };
@@ -1066,10 +1065,9 @@ function genExpSeq() {
             repeatArray(["long"], (PRMS.n_blocks - 2) / 2).concat(repeatArray(["short"], (PRMS.n_blocks - 2) / 2)),
         );
     }
-    console.log(rsi_type);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
-        if (PRMS.practice_blocks.includes(blk)) {
+        if (blk === 2) {
             exp.push(TASK_INSTRUCTIONS_INTROSPECTION);
         }
         if (block_type[blk] === "free") {
