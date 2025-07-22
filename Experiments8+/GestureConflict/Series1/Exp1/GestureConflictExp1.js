@@ -517,26 +517,34 @@ Drücken Sie eine beliebige Taste, um fortzufahren.`,
 };
 
 const AUDIO_QUESTION = {
-  type: jsPsychSurvey,
+    type: jsPsychSurvey,
     survey_json: {
         elements: [
-          {
-            type: 'radiogroup',
-            name: 'AudioQuestion',
-            isRequired: true,
-            title: 'Haben Sie zu einem beliebigen Zeitpunkt des Experiments den Ton abgestellt?',
-            choices: ['Ja', 'Nein']
-          },
-          {
-            type: 'radiogroup',
-            name: 'VideoQuestion',
-            isRequired: true,
-            title: 'Haben Sie zu einem beliebigen Zeitpunkt des Experiments das Video nicht angeschaut?',
-            choices: ['Ja', 'Nein']
-          },
-        ]
-    }
-}
+            {
+                type: "radiogroup",
+                name: "AudioQuestion",
+                isRequired: true,
+                title: "Haben Sie zu einem beliebigen Zeitpunkt des Experiments den Ton abgestellt?",
+                choices: ["Ja", "Nein"],
+            },
+            {
+                type: "radiogroup",
+                name: "VideoQuestion",
+                isRequired: true,
+                title: "Haben Sie zu einem beliebigen Zeitpunkt des Experiments das Video nicht angeschaut?",
+                choices: ["Ja", "Nein"],
+            },
+        ],
+    },
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        jsPsych.data.addProperties({
+            audio_question: dat.response["AudioQuestion"],
+            video_question: dat.response["VideoQuestion"],
+            question_rt: dat.rt,
+        });
+    },
+};
 
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
@@ -607,15 +615,17 @@ function generate_exp() {
         exp.push(BLOCK_FEEDBACK); // show previous block performance
     }
 
-    // save data
-    exp.push(SAVE_DATA);
-
     // debrief
     exp.push(mouse_cursor(true));
     exp.push(AUDIO_QUESTION_EXPLANATION);
     exp.push(AUDIO_QUESTION);
     exp.push(end_message());
     exp.push(fullscreen(false));
+
+    // save data
+    exp.push(SAVE_DATA);
+
+    // Return to Prolific
     exp.push(END_SCREEN);
 
     return exp;
