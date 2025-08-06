@@ -35,7 +35,7 @@ const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
     n_blocks: 14,
     practice_blocks: [1, 2], // no VAS in blocks 1, 2
-    n_trials: 48, // multiple of 4
+    n_trials: 4, // 48, // multiple of 4
     fixation_size: 15, // length of the fixation cross
     fixation_width: 5, // line thickness of fixation cross
     fixation_duration: 400, // duration of the fixation cross
@@ -138,9 +138,7 @@ const WELCOME_INSTRUCTIONS = {
     stimulus: generate_formatted_html({
         text: `Willkommen zu unserem Experiment:<br><br>
 Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 40-45 Minuten konzentriert zu arbeiten.<br><br>
-Du wirst nach dem Experiment auf SONA zurückgeleitet um die VP-Stunde zu erhalten.<br><br>
+Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast.
 Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         colour: "black",
@@ -216,10 +214,7 @@ Für die Farbaufgabe musst Du entscheiden, ob die Mehrheit der Punkte ${EN_DE[PR
         }) +
         RESPONSE_MAPPING +
         generate_formatted_html({
-            text: `In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, da beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
-In den anderen Blöcken musst du in jedem Durchgang die vorgegebene Aufgabe bearbeiten, da nur eine der beiden Aufgaben (Buchstabe und Farbe) eine Antwort erfordert:<br><br>
-Wenn statt den Buchstabe "#####" erscheinen, dann musst du die Farbaufgabe bearbeiten.<br><br>
-Wenn statt den farbigen Punkte graue Punkte erscheinen, dann musst du die Buchstabenaufgabe bearbeiten.<br><br>
+            text: `Diese Zuordnung wird dir vor jedem Experimentalblock sowie nach Fehlern nochmals zur Erinnerung angezeigt.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
             align: "left",
             fontsize: 26,
@@ -234,10 +229,10 @@ const TASK_INSTRUCTIONS3 = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     stimulus: generate_formatted_html({
-        text: `In jedem Durchgang muss nur eine Aufgabe bearbeitet werden.<br><br>
-In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, da beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
+        text: `***WICHTIG***: In manchen Blöcken darfst du in jedem Durchgang frei entscheiden welche der beiden Aufgaben du bearbeiten möchtest, da beide Aufgaben (Buchstabe und Farbe) eine Antwort erfordern.<br><br>
 In den anderen Blöcken musst du in jedem Durchgang die vorgegebene Aufgabe bearbeiten, da nur eine der beiden Aufgaben (Buchstabe und Farbe) eine Antwort erfordert:<br><br>
-Die ersten zwei Blöcken hast du Gelegenheit zu üben.<br><br>
+Wenn die Anzahl der Buchstaben (X und O) gleich ist,, dann musst du die Farbaufgabe bearbeiten.<br><br>
+Wenn die Anzahl der farbigen Kreise (blau und rot) gleich ist, dann musst du die Buchstabenaufgabe bearbeiten.<br><br>
 Drücke eine beliebige Taste, um fortzufahren.`,
         align: "left",
         fontsize: 30,
@@ -258,7 +253,7 @@ const BLOCK_START_FREE = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-In diesem Block darfst du entscheiden, welche der beiden Aufgaben du bearbeiten willst (in jedem Durchgang muss nur eine der beiden Aufgaben bearbeitet werden): <br><br>
+FREIE WAHL: In diesem Block darfst du entscheiden, welche der beiden Aufgaben du bearbeiten willst (in jedem Durchgang muss nur eine der beiden Aufgaben bearbeitet werden): <br><br>
 Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 align: "left",
                 fontsize: 30,
@@ -295,7 +290,7 @@ const BLOCK_START_FORCED = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}<br><br>
-In diesem Block musst du die vorgegebene Aufgabe bearbeiten (d.h., die Aufgabe welche in diesem
+KEINE WAHLMÖGLICHKEIT: In diesem Block musst du die vorgegebene Aufgabe bearbeiten (d.h., die Aufgabe welche in diesem
 Durchgang eine Antwort erfordert) <br><br>
 Versuche so schnell wie möglich zu sein ohne zuviele Fehler zu machen!<br>`,
                 align: "left",
@@ -358,7 +353,7 @@ const TRIAL_FEEDBACK = {
         let dat = jsPsych.data.get().last(1).values()[0];
         PRMS.feedback_duration_practice[0] = dat.rsi;
         PRMS.feedback_duration_experiment[0] = dat.rsi;
-        if (!PRMS.practice_blocks.includes(PRMS.count_block) && vas_trials.includes(PRMS.count_trial - 1)) {
+        if (!PRMS.practice_blocks.includes(PRMS.count_block)) {
             trial.trial_duration = 0;
             return;
         }
@@ -890,6 +885,25 @@ const SAVE_DATA = {
     post_trial_gap: 2000,
 };
 
+const PROLIFIC = {
+    type: jsPsychHtmlKeyboardResponse,
+    response_ends_trial: true,
+    choices: [" "],
+    stimulus: generate_formatted_html({
+        text: `Super, du bist am Ende des Experiments!
+               Vielen Dank für deine Teilnahme :)<br><br>
+               Über folgenden Link geht es zurück zu Prolific:<br><br>
+               https://app.prolific.com/submissions/complete?cc=CLZQML0W<br><br>
+               Drücke die Leertaste, um das Experiment abzuschließen!`,
+        align: "left",
+        fontsize: 30,
+        width: "1200px",
+        lineheight: 1.5,
+    }),
+    on_finish: function () {
+        window.location.replace("https://app.prolific.com/submissions/complete?cc=CLZQML0W");
+    },
+};
 ////////////////////////////////////////////////////////////////////////
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
