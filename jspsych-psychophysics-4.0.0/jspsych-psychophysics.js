@@ -6363,6 +6363,8 @@ ${indent}columns: ${matrix.columns}
                         if (typeof this.mask === "undefined" && typeof this.filter === "undefined") {
                             if (trial.pixi) {
                                 this.pixi_obj = PIXI__namespace.Sprite.from(this.file);
+                                // HACK BY IAN
+                                this.pixi_obj.alpha = 0.4;
                                 if (typeof this.pixi_mask !== "undefined") {
                                     this.pixi_obj.mask = this.pixi_mask;
                                 }
@@ -7525,7 +7527,9 @@ ${indent}columns: ${matrix.columns}
                 if (typeof trial.stimuli !== "undefined") {
                     for (let i = 0; i < trial.stimuli.length; i++) {
                         const stim = trial.stimuli[i].instance;
-                        if (typeof stim.pixi_obj !== "undefined") stim.pixi_obj.destroy();
+                        if (typeof stim.pixi_obj !== "undefined") {
+                             stim.pixi_obj.destroy();
+                        }
                         if (stim.obj_type === "sound") {
                             stim.stop();
                         }
