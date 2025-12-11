@@ -35,7 +35,7 @@ const jsPsych = initJsPsych({
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
-const CANVAS_COLOUR = "rgba(255, 200, 200, 1)";
+const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
 const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = "5px solid black";
 
@@ -424,15 +424,15 @@ function draw_stimulus(args) {
     // hack for only drawing single "simon" stimulus
     let simon_col;
     if (args.colour_comp === "comp" && PRMS.response_keys_lh.includes(args.colour_key)) {
-        simon_col = 0;
+        simon_col = [0];
     } else if (args.colour_comp === "comp" && PRMS.response_keys_rh.includes(args.colour_key)) {
-        simon_col = 4;
+        simon_col = [4];
     } else if (args.colour_comp === "incomp" && PRMS.response_keys_lh.includes(args.colour_key)) {
-        simon_col = 4;
+        simon_col = [4];
     } else if (args.colour_comp === "incomp" && PRMS.response_keys_rh.includes(args.colour_key)) {
-        simon_col = 0;
+        simon_col = [0];
     } else {
-        simon_col = 2;
+        simon_col = [0, 4]; // middle would be [2]
     }
 
     // some canvas text properties
@@ -445,7 +445,7 @@ function draw_stimulus(args) {
         centerX = -(((PRMS.grid_size[1] - 1) / 2) * PRMS.grid_gaps[1]);
         for (let cols = 0; cols < PRMS.grid_size[1]; cols += 1) {
             // draw dots
-            if (args.draw_dots && cols === simon_col) {
+            if (args.draw_dots && simon_col.includes(cols)) {
                 ctx.beginPath();
                 ctx.arc(centerX, centerY + PRMS.colour_task_offset, dot_size, 0, 2 * Math.PI, false);
                 ctx.fillStyle = COLOUR_VALUES[args.dots[2]];
