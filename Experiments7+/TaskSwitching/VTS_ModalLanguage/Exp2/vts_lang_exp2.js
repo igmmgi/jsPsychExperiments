@@ -96,7 +96,7 @@ dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast, um das
 Wir bitten dich die nächsten ca. 45 Minuten
 konzentriert zu arbeiten. Du wirst am Ende des Experimentes zu SONA zurückgeleitet und erhälst
 somit automatisch deine VP-Stunde. Bei Fragen oder Probleme wende dich bitte an:<br><br>
-pui-leng.choon@student.uni-tuebingen.de<br>`,
+XXX@student.uni-tuebingen.de<br>`,
             align: "left",
             color: "Black",
             fontsize: 28,
