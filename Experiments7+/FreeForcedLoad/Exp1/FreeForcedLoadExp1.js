@@ -37,7 +37,7 @@ const CANVAS_BORDER = "5px solid black";
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
     screen_res: [960, 720], // minimum screen resolution requested
-    n_blocks: 8, // 14,
+    n_blocks: 30, // 14,
     n_blocks_practice: 2, // 14,
     n_trials: 4, // 48, // multiple of 4
     fixation_size: 15, // length of the fixation cross
@@ -115,7 +115,7 @@ jsPsych.data.addProperties({ task_left_hand: PRMS.task_side[0], task_top_positio
 // Version 1: 1st half listening/2nd counting
 // Version 2: 1st half counting/2nd half listening
 // const VERSION = 1;
-const VERSION = Number(jsPsych.data.urlVariables().version);
+const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 const EN_DE = {
@@ -1271,6 +1271,7 @@ function genExpSeq() {
             .concat(repeatArray(["counting"], n_experimental_blocks / 2))
             .concat(repeatArray(["listening"], n_experimental_blocks / 2));
     }
+    console.log(load_type);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {
         let blk_timeline;

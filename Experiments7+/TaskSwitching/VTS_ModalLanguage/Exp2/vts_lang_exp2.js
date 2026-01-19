@@ -60,7 +60,7 @@ const PRMS = {
 };
 
 // 2 counter balanced versions (start with near vs. far)
-const VERSION = 1; // Number(jsPsych.data.urlVariables().version);
+const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // Track switch probability for hybrid blocks
@@ -68,7 +68,6 @@ jsPsych.data.addProperties({ version: VERSION });
 // Version 1: 75% switch in first half, 25% in second half
 PRMS.switch_prob_first_half = VERSION === 0 ? 0.25 : 0.75;
 PRMS.switch_prob_second_half = VERSION === 0 ? 0.75 : 0.25;
-
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //
@@ -457,7 +456,7 @@ const TASK_CUE_STIMULUS = {
             // Determine which half of experiment we're in
             let is_first_half = PRMS.cblk <= PRMS.nblks_total / 2;
             let switch_prob = is_first_half ? PRMS.switch_prob_first_half : PRMS.switch_prob_second_half;
-            
+
             // Get previous trial's selected task (if not first trial)
             // In on_start, previous TASK_CUE_STIMULUS is at last(3) (after ITI and TRIAL_FEEDBACK)
             let previous_selected_task = null;
@@ -467,7 +466,7 @@ const TASK_CUE_STIMULUS = {
                     previous_selected_task = previous_trial_data.selected_task;
                 }
             }
-            
+
             // Determine if this forced trial should be a switch or repetition
             let should_switch;
             if (previous_selected_task === null) {
@@ -475,28 +474,29 @@ const TASK_CUE_STIMULUS = {
             } else {
                 should_switch = Math.random() < switch_prob; // Use switch probability
             }
-            
+
             // Determine the required task
             let required_task;
             if (previous_selected_task === null) {
                 // First trial - keep original task from timeline variable
                 required_task = trial.data.task;
             } else {
-                if (should_switch) { // Switch to the other task
-                    required_task = previous_selected_task === TASK_HAND_MAPPING[0] 
-                        ? TASK_HAND_MAPPING[1] 
-                        : TASK_HAND_MAPPING[0];
-                } else { // Repeat the same task
+                if (should_switch) {
+                    // Switch to the other task
+                    required_task =
+                        previous_selected_task === TASK_HAND_MAPPING[0] ? TASK_HAND_MAPPING[1] : TASK_HAND_MAPPING[0];
+                } else {
+                    // Repeat the same task
                     required_task = previous_selected_task;
                 }
             }
-            
+
             // Override task and task_cue
             trial.data.task = required_task;
             let task_index = TASK_HAND_MAPPING.indexOf(required_task);
             trial.data.task_cue = COLOUR_TASK_MAPPING[task_index];
         }
-        
+
         // Set choices based on task type
         if (trial.data.task === "free") {
             trial.choices = PRMS.keys_magnitude.concat(PRMS.keys_parity);
@@ -693,8 +693,8 @@ function genExpSeq() {
     // practice forced block
     let blk_timeline = { ...TRIAL_TIMELINE_FORCED };
     blk_timeline.sample = {
-      type: "fixed-repetitions",
-      size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
+        type: "fixed-repetitions",
+        size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(BLOCK_FEEDBACK); // show previous block performance
@@ -702,8 +702,8 @@ function genExpSeq() {
     // practice hybrid block
     blk_timeline = { ...TRIAL_TIMELINE_HYBRID };
     blk_timeline.sample = {
-      type: "fixed-repetitions",
-      size: PRMS.ntrls_hybrid_practice / TRIAL_TABLE_HYBRID.length,
+        type: "fixed-repetitions",
+        size: PRMS.ntrls_hybrid_practice / TRIAL_TABLE_HYBRID.length,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(BLOCK_FEEDBACK); // show previous block performance
@@ -715,7 +715,7 @@ function genExpSeq() {
             type: "fixed-repetitions",
             size: PRMS.ntrls_hybrid_exp / TRIAL_TABLE_HYBRID.length,
         };
-        exp.push(blk_timeline);   // trials within a block
+        exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
     }
 
@@ -727,8 +727,8 @@ function genExpSeq() {
     // practice forced block
     blk_timeline = { ...TRIAL_TIMELINE_FORCED };
     blk_timeline.sample = {
-      type: "fixed-repetitions",
-      size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
+        type: "fixed-repetitions",
+        size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(BLOCK_FEEDBACK); // show previous block performance
@@ -736,8 +736,8 @@ function genExpSeq() {
     // practice hybrid block
     blk_timeline = { ...TRIAL_TIMELINE_HYBRID };
     blk_timeline.sample = {
-      type: "fixed-repetitions",
-      size: PRMS.ntrls_hybrid_practice / TRIAL_TABLE_HYBRID.length,
+        type: "fixed-repetitions",
+        size: PRMS.ntrls_hybrid_practice / TRIAL_TABLE_HYBRID.length,
     };
     exp.push(blk_timeline); // trials within a block
     exp.push(BLOCK_FEEDBACK); // show previous block performance
@@ -749,7 +749,7 @@ function genExpSeq() {
             type: "fixed-repetitions",
             size: PRMS.ntrls_hybrid_exp / TRIAL_TABLE_HYBRID.length,
         };
-        exp.push(blk_timeline);   // trials within a block
+        exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
     }
 
