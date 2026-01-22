@@ -11,14 +11,14 @@
 // participants, this order was reversed."
 
 const jsPsych = initJsPsych({
-    // on_finish: function () {
-    //     if (PRMS.cblk >= 9) {
-    //         window.location.assign(
-    //             "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=309&credit_token=6112ac5e16454dd5a1a3ca1983dd7095&survey_code=" +
-    //                 jsPsych.data.urlVariables().sona_id,
-    //         );
-    //     }
-    // },
+    on_finish: function () {
+        if (PRMS.cblk >= 10) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=677&credit_token=0037d3d9b17d40cf96d9ed533d7926b8&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
 });
 
 // CANVAS
@@ -36,11 +36,11 @@ const TRANSLATE = { magnitude: "Kleiner/Größer", parity: "Ungerade/Gerade", Bl
 
 const PRMS = {
     nblks_forced: 1, // number of initial "forced" only trial blocks
-    ntrls_forced: 80, // number of trials in forced blocks
+    ntrls_forced: 96, // number of trials in forced blocks
     nblks_hybrid_practice: 1, // number of hybrid blocks
-    ntrls_hybrid_practice: 80, // number of hybrid blocks
+    ntrls_hybrid_practice: 96, // number of hybrid blocks
     nblks_hybrid: 3, // 3 * exp blocks in each exp half
-    ntrls_hybrid_exp: 144,
+    ntrls_hybrid_exp: 160,
     nblks_total: 10, // above repeated first half/second half
     fixation_duration: 500, // duration of fixation cross
     fixation_width: 5, // width fixation cross
@@ -461,11 +461,12 @@ const TASK_CUE_STIMULUS = {
             // In on_start, previous TASK_CUE_STIMULUS is at last(3) (after ITI and TRIAL_FEEDBACK)
             let previous_selected_task = null;
             if (PRMS.ctrl > 1) {
-                let previous_trial_data = jsPsych.data.get().last(3).values()[0];
+                let previous_trial_data = jsPsych.data.get().last(5).values()[0];
                 if (previous_trial_data && previous_trial_data.selected_task) {
                     previous_selected_task = previous_trial_data.selected_task;
                 }
             }
+            console.log("previous selected task", previous_selected_task);
 
             // Determine if this forced trial should be a switch or repetition
             let should_switch;
@@ -670,43 +671,43 @@ function genExpSeq() {
 
     let exp = [];
 
-    exp.push(fullscreen(true));
-    exp.push(browser_check(CANVAS_SIZE));
-    exp.push(PRELOAD);
-    exp.push(resize_browser());
-    exp.push(welcome_message());
-    exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
-    exp.push(mouseCursor(false));
+    // exp.push(fullscreen(true));
+    // exp.push(browser_check(CANVAS_SIZE));
+    // exp.push(PRELOAD);
+    // exp.push(resize_browser());
+    // exp.push(welcome_message());
+    // exp.push(vpInfoForm("/Common7+/vpInfoForm_de.html"));
+    // exp.push(mouseCursor(false));
 
-    // welcome instructions
-    exp.push(TASK_INSTRUCTIONS_1);
+    // // welcome instructions
+    // exp.push(TASK_INSTRUCTIONS_1);
 
-    // audio calibration
-    exp.push(TASK_INSTRUCTIONS_CALIBRATION);
-    exp.push(TRIAL_TIMELINE_CALIBRATION);
+    // // audio calibration
+    // exp.push(TASK_INSTRUCTIONS_CALIBRATION);
+    // exp.push(TRIAL_TIMELINE_CALIBRATION);
 
-    // instructions;
-    exp.push(TASK_INSTRUCTIONS_2);
-    exp.push(TASK_INSTRUCTIONS_3);
-    exp.push(TASK_INSTRUCTIONS_4);
+    // // instructions;
+    // exp.push(TASK_INSTRUCTIONS_2);
+    // exp.push(TASK_INSTRUCTIONS_3);
+    // exp.push(TASK_INSTRUCTIONS_4);
 
-    // practice forced block
+    // // practice forced block
     let blk_timeline = { ...TRIAL_TIMELINE_FORCED };
-    blk_timeline.sample = {
-        type: "fixed-repetitions",
-        size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
-    };
-    exp.push(blk_timeline); // trials within a block
-    exp.push(BLOCK_FEEDBACK); // show previous block performance
+    // blk_timeline.sample = {
+    //     type: "fixed-repetitions",
+    //     size: PRMS.ntrls_forced / TRIAL_TABLE_FORCED.length,
+    // };
+    // exp.push(blk_timeline); // trials within a block
+    // exp.push(BLOCK_FEEDBACK); // show previous block performance
 
-    // practice hybrid block
-    blk_timeline = { ...TRIAL_TIMELINE_HYBRID };
-    blk_timeline.sample = {
-        type: "fixed-repetitions",
-        size: PRMS.ntrls_hybrid_practice / TRIAL_TABLE_HYBRID.length,
-    };
-    exp.push(blk_timeline); // trials within a block
-    exp.push(BLOCK_FEEDBACK); // show previous block performance
+    // // practice hybrid block
+    // blk_timeline = { ...TRIAL_TIMELINE_HYBRID };
+    // blk_timeline.sample = {
+    //     type: "fixed-repetitions",
+    //     size: PRMS.ntrls_hybrid_practice / TRIAL_TABLE_HYBRID.length,
+    // };
+    // exp.push(blk_timeline); // trials within a block
+    // exp.push(BLOCK_FEEDBACK); // show previous block performance
 
     // exp hybrid blocks
     for (let blk = 0; blk < PRMS.nblks_hybrid; blk += 1) {
