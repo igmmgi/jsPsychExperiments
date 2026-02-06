@@ -64,10 +64,10 @@ const VERSION = Number(jsPsych.data.urlVariables().version);
 jsPsych.data.addProperties({ version: VERSION });
 
 // Track switch probability for hybrid blocks
-// Version 0: 25% switch in first half, 75% in second half
-// Version 1: 75% switch in first half, 25% in second half
-PRMS.switch_prob_first_half = VERSION === 0 ? 0.25 : 0.75;
-PRMS.switch_prob_second_half = VERSION === 0 ? 0.75 : 0.25;
+// Version 1: 25% switch in first half, 75% in second half
+// Version 2: 75% switch in first half, 25% in second half
+PRMS.switch_prob_first_half = VERSION === 1 ? 0.25 : 0.75;
+PRMS.switch_prob_second_half = VERSION === 1 ? 0.75 : 0.25;
 
 ////////////////////////////////////////////////////////////////////////
 //                      Experiment Instructions                       //

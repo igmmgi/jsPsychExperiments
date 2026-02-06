@@ -2,7 +2,14 @@
 // Confound minimized
 
 const jsPsych = initJsPsych({
-    on_finish: function () {},
+    on_finish: function () {
+        if (PRMS.cblk >= 12) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=678&credit_token=607af7d6432b4cc88202b799af91f68a&survey_code=" +
+                    jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
 });
 
 ////////////////////////////////////////////////////////////////////////
@@ -16,7 +23,7 @@ const CANVAS_BORDER = "5px solid black";
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    ntrls: 96,
+    ntrls: 96, //96
     nblks: 12,
     fix_size: 10, // size of the fixation cross
     fix_width: 5, // width of fixation cross
@@ -380,8 +387,8 @@ const STIMULUS = {
 };
 
 function flanker_array(letter) {
-    return letter + letter + letter + letter + letter;
-    // return letter + letter + " " + letter + letter; // if not wanting centrl "flanker"
+    //return letter + letter + letter + letter + letter;
+    return letter + letter + " " + letter + letter; // if not wanting centrl "flanker"
 }
 
 function target_array(letter1, letter2) {
