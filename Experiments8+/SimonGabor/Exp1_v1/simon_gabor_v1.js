@@ -1,13 +1,13 @@
 // Simon task with Gabor patch embeded on background noise
 const jsPsych = initJsPsych({
-    // on_finish: function () {
-    //     if (PRMS.cblk >= 9) {
-    //         window.location.assign(
-    //             "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=699&credit_token=2769d6a2f059477eb4d4d8724ec02ce9&survey_code=" +
-    //             jsPsych.data.urlVariables().sona_id,
-    //         );
-    //     }
-    // },
+    on_finish: function () {
+        if (PRMS.cblk >= 9) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=699&credit_token=2769d6a2f059477eb4d4d8724ec02ce9&survey_code=" +
+                jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
 });
 
 const pixi_flag = true; //jsPsych.data.getURLVariable("pixi_flag") === "1" ? true : false;
@@ -231,7 +231,7 @@ function draw_trial_feedback(c, args) {
 
 const TRIAL_FEEDBACK = {
     type: jsPsychCanvasKeyboardResponse,
-    stimulus: function () {},
+    stimulus: function () { },
     canvas_size: CANVAS_SIZE,
     response_ends_trial: false,
     trial_duration: 0,
@@ -269,10 +269,14 @@ const BLOCK_FEEDBACK = {
     response_ends_trial: true,
     post_trial_gap: PRMS.waitDur,
     on_start: function (trial) {
-        let block_dvs = calculate_block_performance({
-            filter_options: { stim: "sg", block_num: PRMS.cblk },
-        });
-        let text = block_feedback_text(PRMS.cblk, PRMS.nblks, block_dvs.mean_rt, block_dvs.error_rate);
+        let dat = jsPsych.data.get().filterCustom(
+            t => t.stim === "sg" && t.block_num === PRMS.cblk
+        );
+        let ntotal = dat.count();
+        let nerror = dat.select("corr_code").values.filter(x => x !== 1).length;
+        let mean_rt = Math.round(dat.select("rt").mean());
+        let error_rate = Math.round((nerror / ntotal) * 100);
+        let text = block_feedback_text(PRMS.cblk, PRMS.nblks, mean_rt, error_rate);
         trial.stimulus = `<div style="font-size:${PRMS.feedback_text_size_block}px;">${text}</div>`;
     },
     on_finish: function () {
@@ -297,7 +301,7 @@ const END_SCREEN = {
         bold: false,
         align: "left",
     }),
-    on_finish: function () {},
+    on_finish: function () { },
     post_trial_gap: 1000,
 };
 
@@ -309,18 +313,44 @@ const EXP_NAME = get_file_name();
 const VP_NUM = get_time();
 
 function save() {
-    // Show first few rows of all data to see what keys exist
-    const allData = jsPsych.data.get().values();
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    // save_data_server("/Common8+/write_data.php", data_fn, { stim: "sg" }, "csv",
-    //     ["stimulus", "stimuli", "trial_type", "internal_node_id", "trial_index", "time_elapsed"]);
-    // save_data_local(data_fn, { stim: "sg" }, "csv",
-    //     ["stimulus", "stimuli", "trial_type", "internal_node_id", "trial_index", "time_elapsed"]);
-    //save_data_local(data_fn, { stim: "sg" }, "csv",
-    //    ["stimulus", "stimuli", "trial_type", "internal_node_id", "trial_index", "time_elapsed"]);
-    save_data_local(data_fn);
+
+    // Columns to exclude (including 'stimuli' which contains massive PixiJS/base64 data)
+    const columnsToIgnore = ["stimulus", "stimuli", "trial_type", "internal_node_id", "trial_index", "time_elapsed"];
+
+    // Get experiment trial data directly as array of objects
+    const allTrials = jsPsych.data.get().filterCustom(t => t.stim === "sg").values();
+
+    // Collect all unique column names, excluding ignored ones
+    const columns = [];
+    for (const trial of allTrials) {
+        for (const key of Object.keys(trial)) {
+            if (!columns.includes(key) && !columnsToIgnore.includes(key)) {
+                columns.push(key);
+            }
+        }
+    }
+
+    // Build CSV string
+    let csv = columns.map(c => '"' + c.replace(/"/g, '""') + '"').join(',') + '\r\n';
+    for (const trial of allTrials) {
+        const row = columns.map(c => {
+            let val = trial[c] !== undefined ? trial[c] : '';
+            if (typeof val === 'object') val = JSON.stringify(val);
+            return '"' + String(val).replace(/"/g, '""') + '"';
+        });
+        csv += row.join(',') + '\r\n';
+    }
+
+    // Trigger download
+    const blob = new Blob([csv], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.download = data_fn + '.csv';
+    link.href = URL.createObjectURL(blob);
+    link.click();
 }
 
 const SAVE_DATA = {
@@ -1156,6 +1186,6 @@ function genExpSeq() {
 }
 const EXP = genExpSeq();
 
-jsPsych.simulate(EXP, "data-only");
+// jsPsych.simulate(EXP, "data-only");
 // jsPsych.simulate(EXP, "visual");
-// jsPsych.run(EXP);
+jsPsych.run(EXP);

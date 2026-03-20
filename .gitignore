@@ -10,6 +10,7 @@
 *.mp3
 *.csv
 .idea
+.Rhistory
 .directory
 .idea
 coverage/
