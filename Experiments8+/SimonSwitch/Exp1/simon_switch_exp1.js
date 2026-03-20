@@ -10,10 +10,13 @@ const jsPsych = initJsPsych({});
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-    ntrls_p: 80, // number of trials in first block (practice)
-    ntrls_e: 80, // number of trials in subsequent blocks
-    nblks: 10,
-    cue_duration: 500, // fixation + cue duration
+    ntrls_s: 32, // number of trials in single-task blocks (must be multiple of 8)
+    ntrls_p: 80, // number of trials in first mixed block (practice, must be multiple of 16)
+    ntrls_e: 80, // number of trials in subsequent mixed blocks (must be multiple of 16)
+    nblks_s: 2,  // number of single-task blocks (random colour/form order)
+    nblks: 10,   // number of mixed blocks
+    single_task_order: shuffle(["FARBE", "FORM"]), // randomized order of single-task blocks
+    cue_duration: 750, // fixation + cue duration
     feedback_duration: 2000, // error feedback duration
     iti: 500, // blank inter-trial interval
     too_fast: 150,
@@ -68,10 +71,10 @@ const TASK_INSTRUCTIONS1 = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: function () {
         let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
-        html += "<h2>Willkommen zum Experiment!</h2><br>";
+        html += "<h2>Willkommen zum Experiment!</h2>";
         html += "In diesem Experiment wirst du in jedem Durchgang entweder auf die <b>Farbe</b> ";
         html += "oder die <b>Form</b> eines Objekts reagieren.<br><br>";
-        html += "Vor jedem Durchgang zeigt ein Hinweisreiz an, welche Aufgabe relevant ist:<br><br>";
+        html += "Vor jedem Durchgang zeigt ein Wort (FARBE od. FORM) an, welche Aufgabe relevant ist:<br><br>";
         html += "<b>FARBE</b> = Reagiere auf die Farbe<br>";
         html += "<b>FORM</b> = Reagiere auf die Form<br><br>";
         html += "Drücke eine beliebige Taste, um die Zuordnungen zu sehen.";
@@ -165,33 +168,69 @@ function create_stimulus_html(color, shape, position) {
 // Generate cue + fixation display
 function create_cue_html(task) {
     const cue_word = task === "FARBE" ? "FARBE" : "FORM";
-    return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:monospace;">
-        <div style="font-size:${PRMS.cue_fontsize}px; font-weight:bold; margin-bottom:10px;">${cue_word}</div>
-        <div style="font-size:${PRMS.fix_fontsize}px;">+</div>
-        <div style="font-size:${PRMS.cue_fontsize}px; font-weight:bold; margin-top:10px;">${cue_word}</div>
+    return `<div style="display:flex; align-items:center; justify-content:center; font-family:monospace;">
+        <div style="font-size:${PRMS.cue_fontsize}px; font-weight:bold;">${cue_word}</div>
     </div>`;
 }
 
 ////////////////////////////////////////////////////////////////////////
 //                         Trial Generation                          //
 ////////////////////////////////////////////////////////////////////////
+
+// Single-task trial table: 2 colors × 2 shapes × 2 positions = 8 base trials
+function generate_single_task_trial_table(ntrls, task) {
+    const colors = ["red", "green"];
+    const shapes = ["circle", "triangle"];
+    const positions = ["left", "right"];
+
+    let base_trials = [];
+    for (let color of colors) {
+        for (let shape of shapes) {
+            for (let position of positions) {
+
+                const correct_key = task === "FARBE" ? COLOR_KEY_MAP[color] : SHAPE_KEY_MAP[shape];
+                const correct_side = correct_key === PRMS.resp_keys[0] ? "left" : "right";
+                const simon_congruency = position === correct_side ? "congruent" : "incongruent";
+                const irrelevant_key = task === "FARBE" ? SHAPE_KEY_MAP[shape] : COLOR_KEY_MAP[color];
+                const stimulus_congruency = correct_key === irrelevant_key ? "congruent" : "incongruent";
+
+                base_trials.push({
+                    color: color,
+                    shape: shape,
+                    position: position,
+                    task: task,
+                    correct_key: correct_key,
+                    simon_congruency: simon_congruency,
+                    stimulus_congruency: stimulus_congruency,
+                });
+            }
+        }
+    }
+
+    const nreps = ntrls / base_trials.length;
+    let trials = [];
+    for (let r = 0; r < nreps; r++) {
+        trials = trials.concat(base_trials.map((t) => ({ ...t })));
+    }
+    return shuffle(trials);
+}
+
+// Mixed-task trial table: 2 colors × 2 shapes × 2 positions × 2 tasks = 16 base trials
 function generate_trial_table(ntrls) {
     const colors = ["red", "green"];
     const shapes = ["circle", "triangle"];
     const positions = ["left", "right"];
     const tasks = ["FARBE", "FORM"];
 
-    // Build all 16 factorial combinations
     let base_trials = [];
     for (let color of colors) {
         for (let shape of shapes) {
             for (let position of positions) {
                 for (let task of tasks) {
+
                     const correct_key = task === "FARBE" ? COLOR_KEY_MAP[color] : SHAPE_KEY_MAP[shape];
                     const correct_side = correct_key === PRMS.resp_keys[0] ? "left" : "right";
                     const simon_congruency = position === correct_side ? "congruent" : "incongruent";
-
-                    // Stimulus congruency: does the irrelevant dimension map to the same response?
                     const irrelevant_key = task === "FARBE" ? SHAPE_KEY_MAP[shape] : COLOR_KEY_MAP[color];
                     const stimulus_congruency = correct_key === irrelevant_key ? "congruent" : "incongruent";
 
@@ -209,7 +248,6 @@ function generate_trial_table(ntrls) {
         }
     }
 
-    // Repeat and shuffle for balanced design
     const nreps = ntrls / base_trials.length;
     let trials = [];
     for (let r = 0; r < nreps; r++) {
@@ -376,12 +414,61 @@ const BLOCK_FEEDBACK = {
         let block_dvs = calculate_block_performance({
             filter_options: { stim: "simon_switch", block_num: PRMS.cblk },
         });
-        trial.stimulus = block_feedback_text(PRMS.cblk, PRMS.nblks, block_dvs.mean_rt, block_dvs.error_rate, "de");
+        trial.stimulus = block_feedback_text(PRMS.cblk, PRMS.nblks + PRMS.nblks_s, block_dvs.mean_rt, block_dvs.error_rate, "de");
     },
     on_finish: function () {
         PRMS.ctrl = 1;
         PRMS.cblk += 1;
         PRMS.previous_task = null; // reset transition tracking for new block
+    },
+};
+
+const BLOCK_START = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "",
+    on_start: function (trial) {
+        let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
+        html += `<h2>Block ${PRMS.cblk} von ${PRMS.nblks + PRMS.nblks_s}</h2><br>`;
+
+        // Color mapping reminder
+        html += "<b>Farbaufgabe (FARBE):</b><br>";
+        const colors_sorted = ["red", "green"].sort((a, b) => (COLOR_KEY_MAP[a] === PRMS.resp_keys[0] ? -1 : 1));
+        for (let color of colors_sorted) {
+            html +=
+                `<span style='color:${PRMS.colors_rgb[color]}; font-weight:bold;'>` +
+                COLOR_NAMES[color] +
+                "</span> → " +
+                '"' +
+                COLOR_KEY_MAP[color] +
+                '" (' +
+                key_to_side(COLOR_KEY_MAP[color]) +
+                ")<br>";
+        }
+
+        // Shape mapping reminder with inline SVG icons
+        const s = PRMS.icon_size;
+        const shape_svgs = {
+            circle: `<svg width="${s}" height="${s}" style="vertical-align:middle; margin-right:4px;"><circle cx="${s / 2}" cy="${s / 2}" r="${s / 2 - 2}" fill="grey" /></svg>`,
+            triangle: `<svg width="${s}" height="${s}" style="vertical-align:middle; margin-right:4px;"><polygon points="${s / 2},2 2,${s - 2} ${s - 2},${s - 2}" fill="grey" /></svg>`,
+        };
+
+        html += "<br><b>Formaufgabe (FORM):</b><br>";
+        const shapes_sorted = ["circle", "triangle"].sort((a, b) => (SHAPE_KEY_MAP[a] === PRMS.resp_keys[0] ? -1 : 1));
+        for (let shape of shapes_sorted) {
+            html +=
+                shape_svgs[shape] +
+                SHAPE_NAMES[shape] +
+                " → " +
+                '"' +
+                SHAPE_KEY_MAP[shape] +
+                '" (' +
+                key_to_side(SHAPE_KEY_MAP[shape]) +
+                ")<br>";
+        }
+
+        html += "<br>Drücke eine beliebige Taste, um fortzufahren.";
+        html += "</div>";
+        trial.stimulus = html;
     },
 };
 
@@ -439,7 +526,88 @@ function generate_exp() {
     exp.push(TASK_INSTRUCTIONS1);
     exp.push(TASK_INSTRUCTIONS2);
 
+    // Single-task blocks (randomized order)
+    for (let s = 0; s < PRMS.nblks_s; s++) {
+        const single_task = PRMS.single_task_order[s];
+        // Single-task block start screen
+        const SINGLE_BLOCK_START = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: function () {
+                let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
+                html += `<h2>Block ${PRMS.cblk} von ${PRMS.nblks + PRMS.nblks_s}</h2><br>`;
+                html += `<b>Einzelaufgabe: Reagiere nur auf die ${single_task === "FARBE" ? "Farbe" : "Form"}!</b><br><br>`;
+
+                if (single_task === "FARBE") {
+                    html += "<b>Farbaufgabe (FARBE):</b><br>";
+                    const colors_sorted = ["red", "green"].sort((a, b) => (COLOR_KEY_MAP[a] === PRMS.resp_keys[0] ? -1 : 1));
+                    for (let color of colors_sorted) {
+                        html +=
+                            `<span style='color:${PRMS.colors_rgb[color]}; font-weight:bold;'>` +
+                            COLOR_NAMES[color] +
+                            "</span> → " +
+                            '"' +
+                            COLOR_KEY_MAP[color] +
+                            '" (' +
+                            key_to_side(COLOR_KEY_MAP[color]) +
+                            ")<br>";
+                    }
+                } else {
+                    const s = PRMS.icon_size;
+                    const shape_svgs = {
+                        circle: `<svg width="${s}" height="${s}" style="vertical-align:middle; margin-right:4px;"><circle cx="${s / 2}" cy="${s / 2}" r="${s / 2 - 2}" fill="grey" /></svg>`,
+                        triangle: `<svg width="${s}" height="${s}" style="vertical-align:middle; margin-right:4px;"><polygon points="${s / 2},2 2,${s - 2} ${s - 2},${s - 2}" fill="grey" /></svg>`,
+                    };
+                    html += "<b>Formaufgabe (FORM):</b><br>";
+                    const shapes_sorted = ["circle", "triangle"].sort((a, b) => (SHAPE_KEY_MAP[a] === PRMS.resp_keys[0] ? -1 : 1));
+                    for (let shape of shapes_sorted) {
+                        html +=
+                            shape_svgs[shape] +
+                            SHAPE_NAMES[shape] +
+                            " → " +
+                            '"' +
+                            SHAPE_KEY_MAP[shape] +
+                            '" (' +
+                            key_to_side(SHAPE_KEY_MAP[shape]) +
+                            ")<br>";
+                    }
+                }
+
+                html += "<br>Drücke eine beliebige Taste, um fortzufahren.";
+                html += "</div>";
+                return html;
+            },
+        };
+        exp.push(SINGLE_BLOCK_START);
+        let single_timeline = {
+            timeline: [CUE_FIXATION, SIMON_STIMULUS, TRIAL_FEEDBACK],
+            timeline_variables: generate_single_task_trial_table(PRMS.ntrls_s, single_task),
+        };
+        exp.push(single_timeline);
+        exp.push(BLOCK_FEEDBACK);
+    }
+
+    // ACHTUNG: transition to mixed blocks (only if single-task blocks were shown)
+    if (PRMS.nblks_s > 0) {
+        const MIXED_BLOCKS_INSTRUCTION = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: function () {
+                let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
+                html += "<h2>ACHTUNG!</h2><br>";
+                html += "Ab jetzt wechseln sich die beiden Aufgaben (<b>FARBE</b> und <b>FORM</b>) zufällig ab.<br><br>";
+                html += "Vor jedem Durchgang zeigt ein Hinweiswort an, welche Aufgabe relevant ist:<br><br>";
+                html += "<b>FARBE</b> = Reagiere auf die Farbe<br>";
+                html += "<b>FORM</b> = Reagiere auf die Form<br><br>";
+                html += "Drücke eine beliebige Taste, um fortzufahren.";
+                html += "</div>";
+                return html;
+            },
+        };
+        exp.push(MIXED_BLOCKS_INSTRUCTION);
+    }
+
+    // Mixed-task blocks
     for (let blk = 0; blk < PRMS.nblks; blk += 1) {
+        exp.push(BLOCK_START);
         let blk_timeline = {
             timeline: [CUE_FIXATION, SIMON_STIMULUS, TRIAL_FEEDBACK],
             timeline_variables: generate_trial_table(blk === 0 ? PRMS.ntrls_p : PRMS.ntrls_e),
