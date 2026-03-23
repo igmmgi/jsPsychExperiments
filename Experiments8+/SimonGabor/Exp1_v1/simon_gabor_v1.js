@@ -52,8 +52,8 @@ const PRMS = {
     noise_bandwidth_low: 0.2, // Fractional bandwidth for LOW noise (sigma = mu * bandwidth)
     noise_bandwidth_high: 0.2, // Fractional bandwidth for HIGH noise (sigma = mu * bandwidth)
     // Gabor patch parameters
-    gabor_size: 156, //256,                 // Gabor diameter in pixels
-    gabor_sf: [0.03, 0.06], // Spatial frequency (cycles per pixel)
+    gabor_size: 206, //256,                 // Gabor diameter in pixels
+    gabor_sf: [0.04, 0.055],//[0.03, 0.06], // Spatial frequency (cycles per pixel)
     gabor_phase: 0, // Phase offset (0-360 degrees)
     gabor_tilt: 0, // Tilt/rotation in degrees (0 = horizontal, 90 = vertical)
     gabor_contrast: 100, // Contrast multiplier (100 = full contrast, can exceed 100)
@@ -320,7 +320,8 @@ function save() {
     // Columns to exclude (including 'stimuli' which contains massive PixiJS/base64 data)
     const columnsToIgnore = ["stimulus", "stimuli", "trial_type", "internal_node_id", "trial_index", "time_elapsed"];
 
-    // Get experiment trial data directly as array of objects
+    // Get experiment trial data using filterCustom (required due to psychophysics plugin deepCopy bug
+    // which breaks the standard jsPsych .filter() method)
     const allTrials = jsPsych.data.get().filterCustom(t => t.stim === "sg").values();
 
     // Collect all unique column names, excluding ignored ones
@@ -344,13 +345,11 @@ function save() {
         csv += row.join(',') + '\r\n';
     }
 
-    // Trigger download
-    const blob = new Blob([csv], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.style.display = 'none';
-    link.download = data_fn + '.csv';
-    link.href = URL.createObjectURL(blob);
-    link.click();
+    // POST to server (same mechanism as save_data_server in common_jspsych.js)
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/Common8+/write_data.php");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({ filename: data_fn, filedata: csv }));
 }
 
 const SAVE_DATA = {
