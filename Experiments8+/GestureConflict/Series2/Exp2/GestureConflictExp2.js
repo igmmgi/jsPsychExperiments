@@ -24,10 +24,14 @@ const CANVAS_SIZE = [720, 1280];
 
 // Experiment Parameters
 const PRMS = {
-    ntrls_prac: 20, // number of trials per block
-    ntrls_exp: 80, // number of trials per block
+    ntrls_prac: 20, // number of trials per practice block
+    ntrls_exp: 80, // number of trials per experimental block
     nblks_prac: 2, // number of practice blocks (one per half)
     nblks_exp: 8, // number of experimental blocks
+    majority_prop: 0.75, // proportion of majority-congruency trials
+    minority_prop: 0.20, // proportion of minority-congruency trials
+    catch_prop: 0.05, // proportion of catch trials
+    n_videos_per_type: 4, // distinct videos for comp, incomp, and catch
     fix_size: 15, // size of the fixation cross
     fix_width: 5, // width of fixation cross
     fix_colour: "black", // colour of fixation cross
@@ -224,9 +228,9 @@ function assign_video_files() {
         "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m_processed.mp4",
     ];
     if ([1, 2].includes(VERSION)) {
-        return {std: videos_thumb, catch: videos_catch_thumb};
+        return { std: videos_thumb, catch: videos_catch_thumb };
     } else if ([3, 4].includes(VERSION)) {
-        return {std: videos_head, catch: videos_catch_head};
+        return { std: videos_head, catch: videos_catch_head };
     }
 }
 
@@ -310,7 +314,7 @@ function code_trial() {
     dat.rt = dat.rt !== null ? dat.rt : PRMS.too_slow;
 
     let corr_code = 0;
-    
+
     if (dat.correct_key === null) {
         // CATCH TRIAL
         if (dat.response === null) {
@@ -420,57 +424,98 @@ const TRIAL_TABLE_VOICE = [
 ];
 
 const TRIAL_TABLE_CATCH = [
-  { video: CATCH_VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null},
-  { video: CATCH_VIDEOS[1], resp_modality: "voice", voice: "no",  gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null},
-  { video: CATCH_VIDEOS[2], resp_modality: "voice", voice: "yes", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null},
-  { video: CATCH_VIDEOS[3], resp_modality: "voice", voice: "no",  gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null},
+    {
+        video: CATCH_VIDEOS[0],
+        resp_modality: "voice",
+        voice: "yes",
+        gesture: "no",
+        comp: "catch",
+        aff_neg: "catch",
+        correct_key: null,
+    },
+    {
+        video: CATCH_VIDEOS[1],
+        resp_modality: "voice",
+        voice: "no",
+        gesture: "no",
+        comp: "catch",
+        aff_neg: "catch",
+        correct_key: null,
+    },
+    {
+        video: CATCH_VIDEOS[2],
+        resp_modality: "voice",
+        voice: "yes",
+        gesture: "no",
+        comp: "catch",
+        aff_neg: "catch",
+        correct_key: null,
+    },
+    {
+        video: CATCH_VIDEOS[3],
+        resp_modality: "voice",
+        voice: "no",
+        gesture: "no",
+        comp: "catch",
+        aff_neg: "catch",
+        correct_key: null,
+    },
 ];
 
 function create_block_trials(condition, is_prac) {
     "use strict";
     let trials = [];
 
-    let v_comp = TRIAL_TABLE_VOICE.filter(t => t.comp === "comp");     // 4 videos
-    let v_incomp = TRIAL_TABLE_VOICE.filter(t => t.comp === "incomp"); // 4 videos
-    let v_catch = TRIAL_TABLE_CATCH;                                   // 4 videos
+    let ntrls = is_prac ? PRMS.ntrls_prac : PRMS.ntrls_exp;
+    let n_majority = Math.round(ntrls * PRMS.majority_prop);
+    let n_minority = Math.round(ntrls * PRMS.minority_prop);
+    let n_catch = Math.round(ntrls * PRMS.catch_prop);
+
+    // Sanity check: proportions must sum to the requested block size
+    console.assert(
+        n_majority + n_minority + n_catch === ntrls,
+        `Trial counts (${n_majority}+${n_minority}+${n_catch}=${n_majority + n_minority + n_catch}) != ntrls (${ntrls})`,
+    );
+
+    let v_comp = TRIAL_TABLE_VOICE.filter((t) => t.comp === "comp");
+    let v_incomp = TRIAL_TABLE_VOICE.filter((t) => t.comp === "incomp");
+    let v_catch = TRIAL_TABLE_CATCH;
+
+    // Determine which type is majority/minority based on MC vs. MI
+    let [v_major, v_minor] = condition === "MC" ? [v_comp, v_incomp] : [v_incomp, v_comp];
 
     if (is_prac) {
-        // Practice block: 20 trials (15 majority + 4 minority + 1 catch)
-        let n_majority = 15;
-        let n_minority = 4;
-        let n_catch = 1;
-
         // Build oversized pools and sample the required number
-        let pool_comp = [];
-        let pool_incomp = [];
-        for (let i = 0; i < 4; i++) pool_comp = pool_comp.concat(v_comp);
-        for (let i = 0; i < 4; i++) pool_incomp = pool_incomp.concat(v_incomp);
+        let reps = Math.ceil(n_majority / PRMS.n_videos_per_type);
+        let pool_major = [];
+        let pool_minor = [];
+        for (let i = 0; i < reps; i++) pool_major = pool_major.concat(v_major);
+        for (let i = 0; i < reps; i++) pool_minor = pool_minor.concat(v_minor);
 
-        if (condition === "MC") {
-            trials = trials.concat(shuffle(pool_comp).slice(0, n_majority));
-            trials = trials.concat(shuffle(pool_incomp).slice(0, n_minority));
-        } else {
-            trials = trials.concat(shuffle(pool_comp).slice(0, n_minority));
-            trials = trials.concat(shuffle(pool_incomp).slice(0, n_majority));
-        }
+        trials = trials.concat(shuffle(pool_major).slice(0, n_majority));
+        trials = trials.concat(shuffle(pool_minor).slice(0, n_minority));
         trials = trials.concat(shuffle(v_catch).slice(0, n_catch));
     } else {
-        // Experimental block: 80 trials (60 majority + 16 minority + 4 catch)
-        let n_comp = condition === "MC" ? 15 : 4;   // repetitions per comp video
-        let n_incomp = condition === "MC" ? 4 : 15;  // repetitions per incomp video
-        let n_catch = 1;                              // repetitions per catch video
+        // Experimental blocks: repeat each video an equal number of times
+        let reps_major = n_majority / PRMS.n_videos_per_type;
+        let reps_minor = n_minority / PRMS.n_videos_per_type;
+        let reps_catch = n_catch / PRMS.n_videos_per_type;
 
-        for (let i = 0; i < n_comp; i++) trials = trials.concat(v_comp);
-        for (let i = 0; i < n_incomp; i++) trials = trials.concat(v_incomp);
-        for (let i = 0; i < n_catch; i++) trials = trials.concat(v_catch);
+        console.assert(
+            Number.isInteger(reps_major) && Number.isInteger(reps_minor) && Number.isInteger(reps_catch),
+            `Non-integer repetitions: major=${reps_major}, minor=${reps_minor}, catch=${reps_catch}`,
+        );
+
+        for (let i = 0; i < reps_major; i++) trials = trials.concat(v_major);
+        for (let i = 0; i < reps_minor; i++) trials = trials.concat(v_minor);
+        for (let i = 0; i < reps_catch; i++) trials = trials.concat(v_catch);
     }
 
     // Tag each trial with the proportion condition
-    trials = trials.map(t => ({ ...t, proportion_condition: condition }));
+    trials = trials.map((t) => ({ ...t, proportion_condition: condition }));
 
     return shuffle(trials);
 }
-
 
 const AUDIO_QUESTION_EXPLANATION = {
     type: jsPsychHtmlKeyboardResponse,
@@ -584,12 +629,12 @@ function generate_exp() {
     let blocks;
     if ([1, 3].includes(VERSION)) {
         blocks = [
-            { condition: "MC", is_prac: true  },
+            { condition: "MC", is_prac: true },
             { condition: "MC", is_prac: false },
             { condition: "MC", is_prac: false },
             { condition: "MC", is_prac: false },
             { condition: "MC", is_prac: false },
-            { condition: "MI", is_prac: true  },
+            { condition: "MI", is_prac: true },
             { condition: "MI", is_prac: false },
             { condition: "MI", is_prac: false },
             { condition: "MI", is_prac: false },
@@ -597,12 +642,12 @@ function generate_exp() {
         ];
     } else if ([2, 4].includes(VERSION)) {
         blocks = [
-            { condition: "MI", is_prac: true  },
+            { condition: "MI", is_prac: true },
             { condition: "MI", is_prac: false },
             { condition: "MI", is_prac: false },
             { condition: "MI", is_prac: false },
             { condition: "MI", is_prac: false },
-            { condition: "MC", is_prac: true  },
+            { condition: "MC", is_prac: true },
             { condition: "MC", is_prac: false },
             { condition: "MC", is_prac: false },
             { condition: "MC", is_prac: false },
@@ -612,12 +657,12 @@ function generate_exp() {
 
     for (let blk = 0; blk < blocks.length; blk += 1) {
         exp.push(BLOCK_START);
-        
+
         let blk_timeline = {
             timeline: [FIXATION_CROSS, PLAY_VIDEO, TRIAL_FEEDBACK, ITI],
-            timeline_variables: create_block_trials(blocks[blk].condition, blocks[blk].is_prac)
+            timeline_variables: create_block_trials(blocks[blk].condition, blocks[blk].is_prac),
         };
-        
+
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
     }
