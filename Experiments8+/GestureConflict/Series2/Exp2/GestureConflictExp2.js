@@ -29,7 +29,7 @@ const PRMS = {
     nblks_prac: 2, // number of practice blocks (one per half)
     nblks_exp: 8, // number of experimental blocks
     majority_prop: 0.75, // proportion of majority-congruency trials
-    minority_prop: 0.20, // proportion of minority-congruency trials
+    minority_prop: 0.2, // proportion of minority-congruency trials
     catch_prop: 0.05, // proportion of catch trials
     n_videos_per_type: 4, // distinct videos for comp, incomp, and catch
     fix_size: 15, // size of the fixation cross
