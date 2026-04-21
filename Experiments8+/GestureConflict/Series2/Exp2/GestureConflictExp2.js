@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 const jsPsych = initJsPsych({
-    on_finish: function () {},
+    on_finish: function () { },
 });
 
 const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
@@ -99,12 +99,13 @@ um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>45</u> Mi
 Informationen zur Versuchspersonenstunde erhalten Sie nach dem Experiment.
 Bei Fragen oder Problemen wenden Sie sich bitte an:<br><br>
 samuel.sonntag@uni-tuebingen.de<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren.`,
+Drücken Sie die Leertaste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
         bold: true,
     }),
+    choices: [" "],
     post_trial_gap: 1000,
 };
 
@@ -137,12 +138,13 @@ Verwenden Sie dafür bitte Ihre beiden Zeigefinger wie folgt:<br><br>
 ${PRMS.resp_keys[0]}-Taste = Linker Zeigefinger 
 &ensp;&ensp;
 ${PRMS.resp_keys[1]}-Taste = Rechter Zeigefinger<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren.`,
+Drücken Sie die Leertaste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
         bold: true,
     }),
+    choices: [" "],
     post_trial_gap: 1000,
 };
 
@@ -158,18 +160,20 @@ Ansonsten gilt:<br>
 ${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
 ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren.`,
+Drücken Sie die Leertaste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
         bold: true,
     }),
+    choices: [" "],
     post_trial_gap: 1000,
 };
 
 const BLOCK_START = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
+    choices: [" "],
     stimulus: null,
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
@@ -179,7 +183,7 @@ Entscheiden Sie: Sagt die Person JA oder NEIN?<br><br>
 ${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
 ${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren.`,
+Drücken Sie die Leertaste, um fortzufahren.`,
             align: "center",
             color: "black",
             fontsize: 30,
@@ -376,6 +380,7 @@ const TRIAL_FEEDBACK = {
 const BLOCK_FEEDBACK = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: "",
+    choices: [" "],
     response_ends_trial: true,
     on_start: function (trial) {
         let block_dvs = calculate_block_performance({
@@ -388,6 +393,7 @@ const BLOCK_FEEDBACK = {
             block_dvs.error_rate,
             (language = "de"),
         );
+        text = text.replace("Drücke eine beliebige Taste, um fortzufahren!", "Drücken Sie die Leertaste, um fortzufahren!");
         trial.stimulus = `<div style="color: black; font-size:30px;">${text}</div>`;
     },
     on_finish: function () {
@@ -413,53 +419,22 @@ const ITI = {
 
 // prettier-ignore
 const TRIAL_TABLE_VOICE = [
-  { video: VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp",   aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[1], resp_modality: "voice", voice: "yes", gesture: "no",  comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[2], resp_modality: "voice", voice: "no",  gesture: "yes", comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[3], resp_modality: "voice", voice: "no",  gesture: "no",  comp: "comp",   aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[4], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp",   aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[5], resp_modality: "voice", voice: "yes", gesture: "no",  comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")]},
-  { video: VIDEOS[6], resp_modality: "voice", voice: "no",  gesture: "yes", comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
-  { video: VIDEOS[7], resp_modality: "voice", voice: "no",  gesture: "no",  comp: "comp",   aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")]},
+    { video: VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")] },
+    { video: VIDEOS[1], resp_modality: "voice", voice: "yes", gesture: "no", comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")] },
+    { video: VIDEOS[2], resp_modality: "voice", voice: "no", gesture: "yes", comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")] },
+    { video: VIDEOS[3], resp_modality: "voice", voice: "no", gesture: "no", comp: "comp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")] },
+    { video: VIDEOS[4], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")] },
+    { video: VIDEOS[5], resp_modality: "voice", voice: "yes", gesture: "no", comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")] },
+    { video: VIDEOS[6], resp_modality: "voice", voice: "no", gesture: "yes", comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")] },
+    { video: VIDEOS[7], resp_modality: "voice", voice: "no", gesture: "no", comp: "comp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")] },
 ];
 
+// prettier-ignore
 const TRIAL_TABLE_CATCH = [
-    {
-        video: CATCH_VIDEOS[0],
-        resp_modality: "voice",
-        voice: "yes",
-        gesture: "no",
-        comp: "catch",
-        aff_neg: "catch",
-        correct_key: null,
-    },
-    {
-        video: CATCH_VIDEOS[1],
-        resp_modality: "voice",
-        voice: "no",
-        gesture: "no",
-        comp: "catch",
-        aff_neg: "catch",
-        correct_key: null,
-    },
-    {
-        video: CATCH_VIDEOS[2],
-        resp_modality: "voice",
-        voice: "yes",
-        gesture: "no",
-        comp: "catch",
-        aff_neg: "catch",
-        correct_key: null,
-    },
-    {
-        video: CATCH_VIDEOS[3],
-        resp_modality: "voice",
-        voice: "no",
-        gesture: "no",
-        comp: "catch",
-        aff_neg: "catch",
-        correct_key: null,
-    },
+    { video: CATCH_VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[1], resp_modality: "voice", voice: "no", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[2], resp_modality: "voice", voice: "yes", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[3], resp_modality: "voice", voice: "no", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null },
 ];
 
 function create_block_trials(condition, is_prac) {
@@ -527,18 +502,21 @@ ihren Ton ausgeschaltet haben, oder die Geste gar nicht beobachtet haben.<br><br
 <u><i>Ihre Antwort hat keine Auswirkung auf Ihre Vergütung.</i></u><br><br>
 Seien Sie daher bitte ehrlich in Ihrer Antwort, damit wir Ihren Datensatz 
 gegebenenfalls von der Auswertung ausschließen können.<br><br>
-Drücken Sie eine beliebige Taste, um fortzufahren.`,
+Drücken Sie die Leertaste, um fortzufahren.`,
         align: "left",
         color: "black",
         fontsize: 30,
         bold: true,
     }),
+    choices: [" "],
     post_trial_gap: 1000,
 };
 
 const AUDIO_QUESTION = {
     type: jsPsychSurvey,
     survey_json: {
+        title: "Abschließende Fragen",
+        showQuestionNumbers: "off",
         elements: [
             {
                 type: "radiogroup",
@@ -613,7 +591,7 @@ function generate_exp() {
 
     exp.push(HTML_CONSENT_FORM);
     exp.push(fullscreen(true));
-    exp.push(browser_check([CANVAS_SIZE[1], CANVAS_SIZE[0]]));
+    exp.push(browser_check(CANVAS_SIZE));
     exp.push(resize_browser());
     exp.push(welcome_message());
     exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
