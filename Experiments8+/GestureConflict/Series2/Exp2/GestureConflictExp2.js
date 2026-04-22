@@ -61,11 +61,11 @@ let gesture_catch_text;
 if ([1, 2].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
     ((gesture_aff = "Daumen hoch"), (gesture_neg = "Daumen runter"));
-    gesture_catch_text = "Kopfschütteln";
+    gesture_catch_text = "Kopfnicken oder Kopfschütteln";
 } else if ([3, 4].includes(VERSION)) {
     jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
     ((gesture_aff = "Kopfnicken"), (gesture_neg = "Kopfschütteln"));
-    gesture_catch_text = "Daumen runter";
+    gesture_catch_text = "Daumen hoch oder Daumen runter";
 }
 
 /* show declaration of consent */
@@ -221,18 +221,8 @@ function assign_video_files() {
         "../../videos/M/Deutsch/Kopf/NeinKopfJa_m_processed.mp4",
         "../../videos/M/Deutsch/Kopf/NeinKopfNein_m_processed.mp4",
     ];
-    let videos_catch_thumb = [
-        "../../videos/F/Deutsch/Kopf/JaKopfNein_f_processed.mp4",
-        "../../videos/F/Deutsch/Kopf/NeinKopfNein_f_processed.mp4",
-        "../../videos/M/Deutsch/Kopf/JaKopfNein_m_processed.mp4",
-        "../../videos/M/Deutsch/Kopf/NeinKopfNein_m_processed.mp4",
-    ];
-    let videos_catch_head = [
-        "../../videos/F/Deutsch/Daumen/JaDaumenRunter_f_processed.mp4",
-        "../../videos/F/Deutsch/Daumen/NeinDaumenRunter_f_processed.mp4",
-        "../../videos/M/Deutsch/Daumen/JaDaumenRunter_m_processed.mp4",
-        "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m_processed.mp4",
-    ];
+    let videos_catch_thumb = videos_head;
+    let videos_catch_head = videos_thumb;
     if ([1, 2].includes(VERSION)) {
         return { std: videos_thumb, catch: videos_catch_thumb };
     } else if ([3, 4].includes(VERSION)) {
@@ -433,10 +423,14 @@ const TRIAL_TABLE_VOICE = [
 
 // prettier-ignore
 const TRIAL_TABLE_CATCH = [
-    { video: CATCH_VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null },
-    { video: CATCH_VIDEOS[1], resp_modality: "voice", voice: "no", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null },
-    { video: CATCH_VIDEOS[2], resp_modality: "voice", voice: "yes", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null },
-    { video: CATCH_VIDEOS[3], resp_modality: "voice", voice: "no", gesture: "no", comp: "catch", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[1], resp_modality: "voice", voice: "yes", gesture: "no", comp: "incomp", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[2], resp_modality: "voice", voice: "no", gesture: "yes", comp: "incomp", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[3], resp_modality: "voice", voice: "no", gesture: "no", comp: "comp", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[4], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[5], resp_modality: "voice", voice: "yes", gesture: "no", comp: "incomp", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[6], resp_modality: "voice", voice: "no", gesture: "yes", comp: "incomp", aff_neg: "catch", correct_key: null },
+    { video: CATCH_VIDEOS[7], resp_modality: "voice", voice: "no", gesture: "no", comp: "comp", aff_neg: "catch", correct_key: null },
 ];
 
 function create_block_trials(condition, is_prac) {
@@ -456,10 +450,12 @@ function create_block_trials(condition, is_prac) {
 
     let v_comp = TRIAL_TABLE_VOICE.filter((t) => t.comp === "comp");
     let v_incomp = TRIAL_TABLE_VOICE.filter((t) => t.comp === "incomp");
-    let v_catch = TRIAL_TABLE_CATCH;
+    let v_catch_comp = TRIAL_TABLE_CATCH.filter((t) => t.comp === "comp");
+    let v_catch_incomp = TRIAL_TABLE_CATCH.filter((t) => t.comp === "incomp");
 
     // Determine which type is majority/minority based on MC vs. MI
     let [v_major, v_minor] = condition === "MC" ? [v_comp, v_incomp] : [v_incomp, v_comp];
+    let v_catch = condition === "MC" ? v_catch_comp : v_catch_incomp;
 
     if (is_prac) {
         // Build oversized pools and sample the required number
@@ -498,9 +494,10 @@ const AUDIO_QUESTION_EXPLANATION = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
-        text: `Fast geschafft! Wir haben nur noch eine letzte Frage. In der 
+        text: `Fast geschafft! Wir haben nur noch ein paar letzte Fragen. In der 
 Folge möchten wir von Ihnen wissen ob Sie zu einem Zeitpunkt des Experiments
-ihren Ton ausgeschaltet haben, oder die Geste gar nicht beobachtet haben.<br><br>
+ihren Ton ausgeschaltet haben, die Geste gar nicht beobachtet haben, oder ob 
+technische Probleme auftraten.<br><br>
 <u><i>Ihre Antwort hat keine Auswirkung auf Ihre Vergütung.</i></u><br><br>
 Seien Sie daher bitte ehrlich in Ihrer Antwort, damit wir Ihren Datensatz 
 gegebenenfalls von der Auswertung ausschließen können.<br><br>
@@ -534,6 +531,13 @@ const AUDIO_QUESTION = {
                 title: "Haben Sie zu einem beliebigen Zeitpunkt des Experiments das Video nicht angeschaut?",
                 choices: ["Ja", "Nein"],
             },
+            {
+                type: "radiogroup",
+                name: "TechnicalQuestion",
+                isRequired: true,
+                title: "Hatten Sie bei vielen Trials (mindestens 10 Trials pro block) während der Teilnahme am Experiment technische Probleme (z.B. Video spielt nicht ab, kein Ton oder stark verzögerter Start der Wiedergabe)?",
+                choices: ["Ja", "Nein"],
+            },
         ],
     },
     on_finish: function () {
@@ -541,6 +545,7 @@ const AUDIO_QUESTION = {
         jsPsych.data.addProperties({
             audio_question: dat.response["AudioQuestion"],
             video_question: dat.response["VideoQuestion"],
+            technical_question: dat.response["TechnicalQuestion"],
             question_rt: dat.rt,
         });
     },
