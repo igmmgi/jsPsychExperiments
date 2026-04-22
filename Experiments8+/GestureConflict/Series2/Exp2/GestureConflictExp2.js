@@ -25,12 +25,14 @@ const CANVAS_SIZE = [720, 1280];
 // Experiment Parameters
 const PRMS = {
     ntrls_prac: 20, // number of trials per practice block
-    ntrls_exp: 80, // number of trials per experimental block
+    ntrls_exp: 84, // number of trials per experimental block
     nblks_prac: 2, // number of practice blocks (one per half)
     nblks_exp: 8, // number of experimental blocks
-    majority_prop: 0.75, // proportion of majority-congruency trials
-    minority_prop: 0.2, // proportion of minority-congruency trials
-    catch_prop: 0.05, // proportion of catch trials
+    // Note: ntrls_exp = 84 yields 64 Majority, 16 Minority, 4 Catch.
+    // After removal of catch trials, this provides an exact 80/20 split.
+    majority_prop: 16 / 21, // proportion of majority-congruency trials
+    minority_prop: 4 / 21, // proportion of minority-congruency trials
+    catch_prop: 1 / 21, // proportion of catch trials
     n_videos_per_type: 4, // distinct videos for comp, incomp, and catch
     fix_size: 15, // size of the fixation cross
     fix_width: 5, // width of fixation cross
