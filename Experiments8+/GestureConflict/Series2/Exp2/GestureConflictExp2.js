@@ -511,6 +511,27 @@ Drücken Sie die Leertaste, um fortzufahren.`,
     post_trial_gap: 1000,
 };
 
+const PRACTICE_QUESTION_EXPLANATION = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Sie haben die Übungsphase abgeschlossen!<br><br>
+Bevor das eigentliche Experiment beginnt, möchten wir kurz von Ihnen wissen, 
+ob Sie bisher Ihren Ton ausgeschaltet haben, die Geste gar nicht beobachtet haben, 
+oder ob technische Probleme auftraten.<br><br>
+<u><i>Ihre Antwort hat keine Auswirkung auf Ihre Vergütung.</i></u><br><br>
+Seien Sie daher bitte ehrlich in Ihrer Antwort, damit wir Ihren Datensatz 
+gegebenenfalls von der Auswertung ausschließen können.<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    choices: [" "],
+    post_trial_gap: 1000,
+};
+
 const AUDIO_QUESTION = {
     type: jsPsychSurvey,
     survey_json: {
@@ -584,8 +605,32 @@ const END_SCREEN = {
     response_ends_trial: true,
     choices: [" "],
     on_finish: function () {
-        window.location.replace("https://app.prolific.com/submissions/complete?cc=C1OYPSA2");
+        window.location.replace("XXX:link end for full experiment");
     },
+};
+
+const EARLY_EXIT_SCREEN = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus:
+        "<p><strong>Experiment beendet!</strong></p>" +
+        "<p><strong>Da Probleme mit dem Video aufgetreten sind, kann das Experiment leider nicht fortgesetzt werden.</strong></p>" +
+        "<p><strong>Mit der Leertaste gelangen Sie zurück zu Prolific.</strong></p>",
+    response_ends_trial: true,
+    choices: [" "],
+    on_finish: function () {
+        // Navigate to the different end link
+        window.location.replace("XXX: link for end of practice problems");
+    },
+};
+
+const EARLY_EXIT_CONDITIONAL = {
+    timeline: [SAVE_DATA, EARLY_EXIT_SCREEN],
+    conditional_function: function () {
+        let last_survey = jsPsych.data.get().last(1).values()[0];
+        // Trigger early exit if there were video/technical problems
+        // It's safer to read directly from the response object
+        return last_survey.response && last_survey.response["TechnicalQuestion"] === "Ja";
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -650,6 +695,17 @@ function generate_exp() {
 
         exp.push(blk_timeline); // trials within a block
         exp.push(BLOCK_FEEDBACK); // show previous block performance
+
+        // Ask the three questions after the initial practice block
+        if (blk === 0) {
+            exp.push(mouse_cursor(true));
+            exp.push(PRACTICE_QUESTION_EXPLANATION);
+            exp.push(AUDIO_QUESTION);
+            exp.push(EARLY_EXIT_CONDITIONAL);
+
+            // Re-hide the mouse cursor for the next block if they continue
+            exp.push(mouse_cursor(false));
+        }
     }
 
     // debrief
