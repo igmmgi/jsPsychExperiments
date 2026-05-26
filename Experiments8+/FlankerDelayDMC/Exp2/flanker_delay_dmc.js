@@ -1,15 +1,6 @@
-// Flanker Trials with interval (3 levels) between flankers and target
+// Flanker Trials with interval (2 levels) between flankers and target
 
-const jsPsych = initJsPsych({
-    on_finish: function () {
-        if (PRMS.cblk >= 12) {
-            window.location.assign(
-                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=678&credit_token=607af7d6432b4cc88202b799af91f68a&survey_code=" +
-                jsPsych.data.urlVariables().sona_id,
-            );
-        }
-    },
-});
+const jsPsych = initJsPsych({});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -27,8 +18,8 @@ const PRMS = {
     fix_size: 10, // size of the fixation cross
     fix_width: 5, // width of fixation cross
     fix_duration: 500, // duration of the fixation cross
-    flanker_duration: 100, // duration of the initial "flanker" array (changed from 150 ms on 6 Dec )
-    blank_duration: [50, 150, 300], // duration of the blank screen between flanker and target array (changed from 150 ms on 6 Dec)
+    flanker_duration: 100, // duration of the initial "flanker" array 
+    blank_duration: 50, // blank between flanker offset and target onset 
     fix_colour: "rgba(0, 0, 0, 1)", // colour of the fixation cross
     feedback_duration: [0, 1500, 1500],
     iti: 500,
@@ -354,29 +345,39 @@ const STIMULUS = {
     },
     on_start: function (trial) {
         trial.stimulus = function (c) {
-            trial.trial_duration = PRMS.too_slow + jsPsych.evaluateTimelineVariable("delay");
-            // initial flanker array
-            draw_stimulus(c, {
-                stim: jsPsych.evaluateTimelineVariable("stim1"),
-                set_canvas: true,
-            });
-            // blank
-            jsPsych.pluginAPI.setTimeout(() => {
+            let delay = jsPsych.evaluateTimelineVariable("delay");
+            trial.trial_duration = PRMS.too_slow + delay;
+            if (delay === 0) {
+                // SOA 0ms: simultaneous onset — draw target array immediately
                 draw_stimulus(c, {
-                    stim: "",
-                    set_canvas: false,
+                    stim: jsPsych.evaluateTimelineVariable("stim2"),
+                    set_canvas: true,
                 });
-            }, PRMS.flanker_duration);
-            // target array
-            jsPsych.pluginAPI.setTimeout(
-                () => {
+            } else {
+                // SOA > 0ms: flanker headstart — show flanker, blank, then target
+                // initial flanker array
+                draw_stimulus(c, {
+                    stim: jsPsych.evaluateTimelineVariable("stim1"),
+                    set_canvas: true,
+                });
+                // blank
+                jsPsych.pluginAPI.setTimeout(() => {
                     draw_stimulus(c, {
-                        stim: jsPsych.evaluateTimelineVariable("stim2"),
+                        stim: "",
                         set_canvas: false,
                     });
-                },
-                PRMS.flanker_duration + jsPsych.evaluateTimelineVariable("delay"),
-            );
+                }, PRMS.flanker_duration);
+                // target array
+                jsPsych.pluginAPI.setTimeout(
+                    () => {
+                        draw_stimulus(c, {
+                            stim: jsPsych.evaluateTimelineVariable("stim2"),
+                            set_canvas: false,
+                        });
+                    },
+                    PRMS.flanker_duration + delay,
+                );
+            }
         };
     },
     on_finish: function () {
@@ -397,36 +398,29 @@ function target_array(letter1, letter2) {
 // prettier-ignore
 function trial_table() {
     let trial_table = [
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration[0], corr_resp: PRMS.resp_letters[0] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration[0], corr_resp: PRMS.resp_letters[3] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration[0], corr_resp: PRMS.resp_letters[0] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration[0], corr_resp: PRMS.resp_letters[3] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration[0], corr_resp: PRMS.resp_letters[1] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration[0], corr_resp: PRMS.resp_letters[2] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration[0], corr_resp: PRMS.resp_letters[1] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration[0], corr_resp: PRMS.resp_letters[2] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration[1], corr_resp: PRMS.resp_letters[0] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration[1], corr_resp: PRMS.resp_letters[3] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration[1], corr_resp: PRMS.resp_letters[0] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration[1], corr_resp: PRMS.resp_letters[3] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration[1], corr_resp: PRMS.resp_letters[1] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration[1], corr_resp: PRMS.resp_letters[2] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration[1], corr_resp: PRMS.resp_letters[1] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration[1], corr_resp: PRMS.resp_letters[2] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration[2], corr_resp: PRMS.resp_letters[0] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration[2], corr_resp: PRMS.resp_letters[3] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration[2], corr_resp: PRMS.resp_letters[0] },
-        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration[2], corr_resp: PRMS.resp_letters[3] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration[2], corr_resp: PRMS.resp_letters[1] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration[2], corr_resp: PRMS.resp_letters[2] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration[2], corr_resp: PRMS.resp_letters[1] },
-        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration[2], corr_resp: PRMS.resp_letters[2] },
+        // Simultaneous onset (delay = 0)
+        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[0]), delay: 0, corr_resp: PRMS.resp_letters[0] },
+        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[3]), delay: 0, corr_resp: PRMS.resp_letters[3] },
+        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[0]), delay: 0, corr_resp: PRMS.resp_letters[0] },
+        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[3]), delay: 0, corr_resp: PRMS.resp_letters[3] },
+        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[1]), delay: 0, corr_resp: PRMS.resp_letters[1] },
+        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[2]), delay: 0, corr_resp: PRMS.resp_letters[2] },
+        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[1]), delay: 0, corr_resp: PRMS.resp_letters[1] },
+        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[2]), delay: 0, corr_resp: PRMS.resp_letters[2] },
+        // 150ms blank (distractor headstart: matches Exp1 blank_duration=150, delay=250)
+        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, corr_resp: PRMS.resp_letters[0] },
+        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, corr_resp: PRMS.resp_letters[3] },
+        { stim_type: "flanker_ir1", target: PRMS.resp_letters[0], stim1: flanker_array(PRMS.resp_letters[3]), stim2: target_array(PRMS.resp_letters[3], PRMS.resp_letters[0]), delay: PRMS.flanker_duration + PRMS.blank_duration, corr_resp: PRMS.resp_letters[0] },
+        { stim_type: "flanker_ir1", target: PRMS.resp_letters[3], stim1: flanker_array(PRMS.resp_letters[0]), stim2: target_array(PRMS.resp_letters[0], PRMS.resp_letters[3]), delay: PRMS.flanker_duration + PRMS.blank_duration, corr_resp: PRMS.resp_letters[3] },
+        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, corr_resp: PRMS.resp_letters[1] },
+        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, corr_resp: PRMS.resp_letters[2] },
+        { stim_type: "flanker_ir2", target: PRMS.resp_letters[1], stim1: flanker_array(PRMS.resp_letters[2]), stim2: target_array(PRMS.resp_letters[2], PRMS.resp_letters[1]), delay: PRMS.flanker_duration + PRMS.blank_duration, corr_resp: PRMS.resp_letters[1] },
+        { stim_type: "flanker_ir2", target: PRMS.resp_letters[2], stim1: flanker_array(PRMS.resp_letters[1]), stim2: target_array(PRMS.resp_letters[1], PRMS.resp_letters[2]), delay: PRMS.flanker_duration + PRMS.blank_duration, corr_resp: PRMS.resp_letters[2] },
     ];
     return trial_table;
 }
 
 const TRIAL_TABLE = trial_table();
-console.log(TRIAL_TABLE);
 
 const TRIAL_TIMELINE = {
     timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, ITI],
@@ -497,8 +491,8 @@ function genExpSeq() {
         blk_timeline.sample = {
             type: "alternate-groups",
             groups: [
-                repeat_array([0, 1, 2, 3, 8, 9, 10, 11, 16, 17, 18, 19], PRMS.ntrls / 24),
-                repeat_array([4, 5, 6, 7, 12, 13, 14, 15, 20, 21, 22, 23], PRMS.ntrls / 24),
+                repeat_array([0, 1, 2, 3, 8, 9, 10, 11], PRMS.ntrls / 16),
+                repeat_array([4, 5, 6, 7, 12, 13, 14, 15], PRMS.ntrls / 16),
             ],
             randomize_group_order: true,
         };
