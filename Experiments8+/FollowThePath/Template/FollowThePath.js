@@ -38,7 +38,7 @@ const PRMS = {
     path_start: 100, // path starts X up from bottom of screen
     path_width: 10, // width of the path in pixels
     path_difficulty: { easy: 500, hard: 100 },
-    speed_difficulty: { easy: 1, hard: 2 }, // controlled by frame rate (1px vs 2px per frame)
+    speed_difficulty: { easy: 0.06, hard: 0.12 }, // px/ms (0.06 = 60px/s ~10s, 0.12 = 120px/s ~5s)
     ball_diameter: 20,
     show_ball_path: true, // the black line the ball travelled
     show_error_path: true, // the red/green path feedback
@@ -92,21 +92,27 @@ class Path {
         this.x = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
         this.y = range(CANVAS_SIZE[1] - PRMS.path_start, 0, -step);
         this.on_path = new Array(Math.round((CANVAS_SIZE[1] - PRMS.path_start) / step)).fill(0);
+        this.last_path_idx = 0;
     }
 
     // position within canvas and scale
-    perlin_noise_coordinates(noise_value, speed_value) {
+    perlin_noise_coordinates(noise_value) {
         let xpos = CANVAS_SIZE[0] * 0.75;
         let start = Math.round(Math.random() * xpos);
         for (let i = start; i < start + this.x.length; i++) {
-            this.x[i - start] = p5js.noise((i / noise_value) * speed_value) * xpos + (CANVAS_SIZE[0] / 2) - (xpos / 2);
+            this.x[i - start] = p5js.noise(i / noise_value) * xpos + (CANVAS_SIZE[0] / 2) - (xpos / 2);
         }
     }
 
-    calculate_distance(x, y, criterion) {
-        if (y > CANVAS_SIZE[1] - PRMS.path_start) return;
-        let distance = Math.abs(Math.round(x) - PATH.x[y]);
-        this.on_path[y - 1] = distance < criterion ? 1 : -1;
+    calculate_distance(x, ball_y, criterion) {
+        if (ball_y > CANVAS_SIZE[1] - PRMS.path_start) return;
+        let idx = Math.round(CANVAS_SIZE[1] - PRMS.path_start - ball_y);
+        idx = Math.max(0, Math.min(idx, this.x.length - 1));
+        for (let i = this.last_path_idx; i <= idx; i++) {
+            let distance = Math.abs(Math.round(x) - this.x[i]);
+            this.on_path[i] = distance < criterion ? 1 : -1;
+        }
+        this.last_path_idx = idx + 1;
     }
 
     draw_target_path() {
@@ -149,7 +155,7 @@ class Ball {
         this.speed = speed;
     }
 
-    move() {
+    move(dt) {
         // trial initiation
         if (!this.is_moving && p5js.mouseIsPressed) {
             let dx = Math.abs(p5js.mouseX * PRMS.scale_factor) - this.x - 5;
@@ -164,13 +170,13 @@ class Ball {
         if (!this.is_moving) return;
 
         // ball is moving, only interesred in x-movements
-        this.y -= this.speed;
+        this.y -= this.speed * dt;
         this.x += p5js.movedX; // only interested in x-movements
 
         // wait till path start
         if (this.y > CANVAS_SIZE[1] - PRMS.path_start) return;
 
-        if (this.step >= this.length) {
+        if (this.y <= 0) {
             this.is_moving = false;
             this.is_complete = true;
             return;
@@ -201,10 +207,10 @@ const BALL = new Ball(1);
 
 function draw_trial() {
     p5js.background(...PRMS.colours.background);
-    BALL.move();
+    BALL.move(p5js.deltaTime);
     PATH.draw_target_path();
     BALL.draw_ball();
-    if (PRMS.show_error_path) PATH.calculate_distance(BALL.x, BALL.step, PRMS.distance_criterion);
+    if (PRMS.show_error_path) PATH.calculate_distance(BALL.x, BALL.y, PRMS.distance_criterion);
     if (PRMS.show_ball_path) BALL.draw_ball_path();
     if (BALL.is_complete) {
         p5js.stroke(0);
@@ -247,10 +253,9 @@ const TRIAL = {
     on_start: function (trial) {
         let speed_diff = jsPsych.evaluateTimelineVariable("speed_difficulty");
         let path_diff = jsPsych.evaluateTimelineVariable("path_difficulty");
-        PATH.reset(PRMS.speed_difficulty[speed_diff]);
+        PATH.reset(1);
         PATH.perlin_noise_coordinates(
             PRMS.path_difficulty[path_diff],
-            PRMS.speed_difficulty[speed_diff],
         );
         BALL.reset(PATH.y.length);
         BALL.set_speed(PRMS.speed_difficulty[speed_diff]);

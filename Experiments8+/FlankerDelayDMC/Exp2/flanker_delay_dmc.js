@@ -92,10 +92,10 @@ const TASK_INSTRUCTIONS1 = {
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
         text: `Willkommen bei unserem Experiment:<br><br>
-               Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
-               Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und
+               Die Teilnahme ist freiwillig und Du darfst das Experiment jederzeit abbrechen.
+               Bitte stelle sicher, dass Du Dich in einer ruhigen Umgebung befindest und
                genügend Zeit hast, um das Experiment durchzuführen.
-               Wir bitten dich die ca. 40 Minuten konzentriert zu arbeiten.<br><br>
+               Wir bitten Dich, die ca. 40 Minuten konzentriert zu arbeiten.<br><br>
                Drücke eine beliebige Taste, um fortzufahren!`,
         bold: true,
         fontsize: 26,
@@ -111,9 +111,8 @@ const TASK_INSTRUCTIONS2 = {
     stimulus:
         generate_formatted_html({
             text: `Aufgabe:<br><br>
-                   In diesem Experiment musst du auf verschiedene Buchstaben
-                   so schnell und so genau wie möglich reagieren.<br><br>
-Erscheinen hintereinander zwei Buchstabenreihen und der relevante Ziel-Buchstabe erscheint in der Mitte der zweiten Buchstabenreihe.<br><br>
+                   In diesem Experiment musst Du so schnell und genau wie möglich auf den zentralen Buchstaben reagieren.<br><br>
+Dabei werden gleichzeitig bzw. kurz zuvor irrelevante Buchstaben links und rechts dargeboten, die ignoriert werden sollen.<br><br>
 Es gilt die folgende Zuordnung:<br><br>`,
             bold: true,
             fontsize: 26,
@@ -130,9 +129,8 @@ const TASK_INSTRUCTIONS3 = {
     type: jsPsychHtmlKeyboardResponse,
     canvas_size: CANVAS_SIZE,
     stimulus: generate_formatted_html({
-        text: `Reagiere immer nur auf den Ziel-Buchstaben. Das heißt:<br><br>
-Wenn der Ziel-Buchstabe in der Mitte der zweiten Buchstabenreihe erscheint, dann ignoriere die vorherigen und umliegenden Buchstaben.<br><br>
-               Reagiere so schnell und so genau wie möglich!<br><br>
+        text: `Reagiere immer nur auf den Ziel-Buchstaben in der Mitte und ignoriere die vorherigen bzw. umliegenden Buchstaben.<br><br>
+               Bitte reagiere dabei so schnell und so genau wie möglich.<br><br>
                Drücke eine beliebige Taste, um fortzufahren.`,
         bold: true,
         fontsize: 26,
@@ -150,8 +148,8 @@ const TASK_INSTRUCTIONS_BLOCK = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Block ${PRMS.cblk} von ${PRMS.nblks}<br><br>
-Der Zielbuchstabe wird abwechselnd in der Mitte der zweiten Buchstabenreihe.<br><br>
-Versuche immer möglichst schnell und genau zu antworten. Es gilt:<br><br>`,
+Versuche bitte, so schnell und genau wie möglich auf den zentralen Buchstaben zu reagieren.<br><br>
+Es gilt:<br><br>`,
                 bold: true,
                 fontsize: 26,
                 align: "left",
@@ -421,6 +419,7 @@ function trial_table() {
 }
 
 const TRIAL_TABLE = trial_table();
+console.log(TRIAL_TABLE);
 
 const TRIAL_TIMELINE = {
     timeline: [FIXATION_CROSS, STIMULUS, TRIAL_FEEDBACK, ITI],

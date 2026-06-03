@@ -1,0 +1,715 @@
+// Gesture Conflict Exp 3
+//
+// Participants always respond to the VOICE (Yes/No)
+// Proportion congruency manipulation: speaker-specific (Female vs. Male)
+// Catch trials use the negative gesture from the alternative gesture type (NoGo)
+//
+// Version 1: Thumb gestures, Female = Valid, Male = Invalid
+// Version 2: Thumb gestures, Female = Invalid, Male = Valid
+// Version 3: Head gestures,  Female = Valid, Male = Invalid
+// Version 4: Head gestures,  Female = Invalid, Male = Valid
+//
+// Response keys are randomly assigned per participant
+
+////////////////////////////////////////////////////////////////////////
+//         Initialize JsPsych and Define Canvas Properties            //
+////////////////////////////////////////////////////////////////////////
+
+const jsPsych = initJsPsych({
+    on_finish: function () { },
+});
+
+const CANVAS_COLOUR = "rgba(255, 255, 255, 1)";
+const CANVAS_SIZE = [720, 1280];
+
+// Experiment Parameters
+const PRMS = {
+    ntrls_prac: 42, // number of trials per practice block
+    ntrls_exp: 84, // number of trials per experimental block
+    nblks_prac: 1, // number of practice blocks (single practice block)
+    nblks_exp: 8, // number of experimental blocks
+    // Note: ntrls_exp = 84 yields 64 Majority, 16 Minority, 4 Catch.
+    // After removal of catch trials, this provides an exact 80/20 split.
+    majority_prop: 16 / 21, // proportion of majority-congruency trials
+    minority_prop: 4 / 21, // proportion of minority-congruency trials
+    catch_prop: 1 / 21, // proportion of catch trials
+    n_videos_per_type_speaker: 2, // distinct videos for comp, incomp, and catch per speaker
+    fix_size: 15, // size of the fixation cross
+    fix_width: 5, // width of fixation cross
+    fix_colour: "black", // colour of fixation cross
+    fix_duration: 500, // duration of the fixation cross
+    feedback_duration: [500, 1500, 1500, 1500], // feedback duration for response type (correct, incorrect, too slow, too fast)
+    too_slow: 3350, // feedback duration for correct and incorrect trials, respectively
+    too_fast: 350, // feedback duration for correct and incorrect trials, respectively
+    feedback_text: ["Richtig!", "Falsch!", "Zu langsam!", "Zu schnell!"],
+    iti: 500, // duration of the inter-trial-interval
+    feedback_font: "50px Arial",
+    resp_keys: ["F", "J"],
+    resp_mapping: shuffle(["Nein", "Ja"]), // no/yes randomly assigned to left right/keys
+    video_scale: 1,
+    ctrl: 1,
+    cblk: 1,
+};
+
+// 4 versions (thumb gestures version 1 vs. head gestures version 2)
+const VERSION = Number(jsPsych.data.urlVariables().version); // version is provided in the url
+let gesture_aff;
+let gesture_neg;
+let gesture_catch_text;
+// or set explicitly if testing
+// const VERSION = 1;
+if ([1, 2].includes(VERSION)) {
+    jsPsych.data.addProperties({ version: VERSION, gesture_type: "Thumb" });
+    ((gesture_aff = "Daumen hoch"), (gesture_neg = "Daumen runter"));
+    gesture_catch_text = "Kopfnicken oder Kopfschütteln";
+} else if ([3, 4].includes(VERSION)) {
+    jsPsych.data.addProperties({ version: VERSION, gesture_type: "Head" });
+    ((gesture_aff = "Kopfnicken"), (gesture_neg = "Kopfschütteln"));
+    gesture_catch_text = "Daumen hoch oder Daumen runter";
+}
+
+/* show declaration of consent */
+const check_consent_form = function (elem) {
+    if (document.getElementById("consent_checkbox").checked) {
+        return true;
+    } else {
+        alert(
+            "Vielen Dank für Ihr Interesse an unserem Experiment. Wenn Sie teilnehmen möchten, geben Sie uns bitte Ihr Einverständnis.",
+        );
+        return false;
+    }
+};
+
+const HTML_CONSENT_FORM = {
+    type: jsPsychExternalHtml,
+    url: "consent.html",
+    cont_btn: "start_experiment",
+    check_fn: check_consent_form,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                      Experiment Instructions                       //
+////////////////////////////////////////////////////////////////////////
+const WELCOME_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Willkommen zu unserem Experiment:<br><br>
+Die Teilnahme ist freiwillig, Sie dürfen das Experiment jederzeit abbrechen.
+Bitte stellen Sie sicher, dass Sie sich in einer ruhigen Umgebung befinden und genügend Zeit haben,
+um das Experiment durchzuführen. Wir bitten Sie, die nächsten ca. <u>45</u> Minuten konzentriert zu arbeiten.<br><br>
+Informationen zur Versuchspersonenstunde erhalten Sie nach dem Experiment.
+Bei Fragen oder Problemen wenden Sie sich bitte an:<br><br>
+samuel.sonntag@uni-tuebingen.de<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    choices: [" "],
+    post_trial_gap: 1000,
+};
+
+const AUDIO_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Das Experiment enthält Videos mit Audio-Inhalten. Bitte stellen Sie daher jetzt Ihre Lautsprecher an 
+oder setzen Sie Ihre Kopfhörer auf.<br><br>
+Es ist entscheidend, dass die Lautsprecher bzw. Kopfhörer während 
+des gesamten Experiments angestellt sind. Wir bitten Sie, dies unbedingt zu beachten!<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    choices: [" "],
+    post_trial_gap: 1000,
+};
+
+const MAPPING_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Sie werden im folgenden Experiment in jedem Trial eine Antwort
+geben müssen. Dafür sollen Sie die ${PRMS.resp_keys[0]}-Taste und die ${PRMS.resp_keys[1]}-Taste 
+ihrer Tastatur verwenden.<br><br>
+Verwenden Sie dafür bitte Ihre beiden Zeigefinger wie folgt:<br><br>
+${PRMS.resp_keys[0]}-Taste = Linker Zeigefinger 
+&ensp;&ensp;
+${PRMS.resp_keys[1]}-Taste = Rechter Zeigefinger<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    choices: [" "],
+    post_trial_gap: 1000,
+};
+
+const TASK_INSTRUCTIONS = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Im folgenden Experiment wird Ihnen in jedem Trial ein Video präsentiert.<br><br>
+Ihre Aufgabe ist es zu beurteilen, ob die Person im Video das Wort JA oder NEIN <b>sagt</b>.<br><br>
+<b>WICHTIG:</b> Wenn die Person jedoch die Geste <b>${gesture_catch_text}</b> macht, 
+dann drücken Sie <b>KEINE Taste</b> und warten Sie einfach ab!<br><br>
+Ansonsten gilt:<br>
+${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
+${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    choices: [" "],
+    post_trial_gap: 1000,
+};
+
+const BLOCK_START = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    choices: [" "],
+    stimulus: null,
+    on_start: function (trial) {
+        trial.stimulus = generate_formatted_html({
+            text: `Block ${PRMS.cblk} von ${PRMS.nblks_prac + PRMS.nblks_exp}<br><br>
+Entscheiden Sie: Sagt die Person JA oder NEIN?<br><br>
+<b>AUSNAHME:</b> Bei der Geste <b>${gesture_catch_text}</b> <u>keine</u> Taste drücken!<br><br>
+${PRMS.resp_keys[0]}-Taste = ${PRMS.resp_mapping[0]}
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; 
+${PRMS.resp_keys[1]}-Taste = ${PRMS.resp_mapping[1]}<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+            align: "center",
+            color: "black",
+            fontsize: 30,
+            bold: true,
+        });
+    },
+    post_trial_gap: 1000,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                              Stimuli                               //
+////////////////////////////////////////////////////////////////////////
+
+function assign_video_files() {
+    "use strict";
+    let videos_thumb = [
+        "../../videos/F/Deutsch/Daumen/JaDaumenHoch_f_processed.mp4",
+        "../../videos/F/Deutsch/Daumen/JaDaumenRunter_f_processed.mp4",
+        "../../videos/F/Deutsch/Daumen/NeinDaumenHoch_f_processed.mp4",
+        "../../videos/F/Deutsch/Daumen/NeinDaumenRunter_f_processed.mp4",
+        "../../videos/M/Deutsch/Daumen/JaDaumenHoch_m_processed.mp4",
+        "../../videos/M/Deutsch/Daumen/JaDaumenRunter_m_processed.mp4",
+        "../../videos/M/Deutsch/Daumen/NeinDaumenHoch_m_processed.mp4",
+        "../../videos/M/Deutsch/Daumen/NeinDaumenRunter_m_processed.mp4",
+    ];
+    let videos_head = [
+        "../../videos/F/Deutsch/Kopf/JaKopfJa_f_processed.mp4",
+        "../../videos/F/Deutsch/Kopf/JaKopfNein_f_processed.mp4",
+        "../../videos/F/Deutsch/Kopf/NeinKopfJa_f_processed.mp4",
+        "../../videos/F/Deutsch/Kopf/NeinKopfNein_f_processed.mp4",
+        "../../videos/M/Deutsch/Kopf/JaKopfJa_m_processed.mp4",
+        "../../videos/M/Deutsch/Kopf/JaKopfNein_m_processed.mp4",
+        "../../videos/M/Deutsch/Kopf/NeinKopfJa_m_processed.mp4",
+        "../../videos/M/Deutsch/Kopf/NeinKopfNein_m_processed.mp4",
+    ];
+    let videos_catch_thumb = videos_head;
+    let videos_catch_head = videos_thumb;
+    if ([1, 2].includes(VERSION)) {
+        return { std: videos_thumb, catch: videos_catch_thumb };
+    } else if ([3, 4].includes(VERSION)) {
+        return { std: videos_head, catch: videos_catch_head };
+    }
+}
+
+const VIDEOS_ALL = assign_video_files();
+const VIDEOS = VIDEOS_ALL.std;
+const CATCH_VIDEOS = VIDEOS_ALL.catch;
+
+const PRELOAD_VIDEOS = {
+    type: jsPsychPreload,
+    video: VIDEOS.concat(CATCH_VIDEOS),
+};
+
+////////////////////////////////////////////////////////////////////////
+//                              Exp Parts                             //
+////////////////////////////////////////////////////////////////////////
+
+function canvas_style(ctx) {
+    ctx.fillStyle = CANVAS_COLOUR;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2); // make center (0, 0) for easier positioning!
+    return ctx;
+}
+
+function draw_fixation(c) {
+    "use strict";
+    let ctx = c.getContext("2d");
+    ctx = canvas_style(ctx);
+
+    ctx.lineWidth = PRMS.fix_width;
+    ctx.strokeStyle = PRMS.fix_colour;
+    ctx.moveTo(-PRMS.fix_size, 0);
+    ctx.lineTo(PRMS.fix_size, 0);
+    ctx.stroke();
+    ctx.moveTo(0, -PRMS.fix_size);
+    ctx.lineTo(0, PRMS.fix_size);
+    ctx.stroke();
+}
+
+const FIXATION_CROSS = {
+    type: jsPsychCanvasKeyboardResponse,
+    stimulus: draw_fixation,
+    canvas_size: CANVAS_SIZE,
+    response_ends_trial: false,
+    trial_duration: PRMS.fix_duration,
+};
+
+// jsPsych video plugin
+const PLAY_VIDEO = {
+    type: jsPsychVideoKeyboardResponse,
+    stimulus: [],
+    data: {
+        stim_type: "gc",
+        video: jsPsych.timelineVariable("video"),
+        resp_modality: jsPsych.timelineVariable("resp_modality"),
+        voice: jsPsych.timelineVariable("voice"),
+        gesture: jsPsych.timelineVariable("gesture"),
+        comp: jsPsych.timelineVariable("comp"),
+        aff_neg: jsPsych.timelineVariable("aff_neg"),
+        correct_key: jsPsych.timelineVariable("correct_key"),
+        proportion_condition: jsPsych.timelineVariable("proportion_condition"),
+        gender: jsPsych.timelineVariable("gender"),
+    },
+    video_scale: PRMS.video_scale,
+    on_start: function (trial) {
+        "use strict";
+        trial.stimulus = [jsPsych.evaluateTimelineVariable("video")];
+    },
+    choices: PRMS.resp_keys,
+    response_ends_trial: true,
+    trial_ends_after_video: false,
+    trial_duration: PRMS.too_slow,
+    on_finish: function () {
+        code_trial();
+        PRMS.ctrl += 1;
+    },
+};
+
+function code_trial() {
+    "use strict";
+
+    let dat = jsPsych.data.get().last(1).values()[0];
+    dat.rt = dat.rt !== null ? dat.rt : PRMS.too_slow;
+
+    let corr_code = 0;
+
+    if (dat.correct_key === null) {
+        // CATCH TRIAL
+        if (dat.response === null) {
+            corr_code = 1; // Correct
+        } else {
+            corr_code = 2; // False Alarm
+        }
+    } else {
+        // NORMAL TRIAL
+        let correct_key = jsPsych.pluginAPI.compareKeys(dat.response, dat.correct_key);
+
+        if (correct_key && dat.rt > PRMS.too_fast && dat.rt < PRMS.too_slow) {
+            corr_code = 1; // correct
+        } else if (!correct_key && dat.response !== null && dat.rt > PRMS.too_fast && dat.rt < PRMS.too_slow) {
+            corr_code = 2; // choice error
+        } else if (dat.rt >= PRMS.too_slow) {
+            corr_code = 3; // too slow
+        } else if (dat.rt <= PRMS.too_fast) {
+            corr_code = 4; // too fast
+        }
+    }
+
+    jsPsych.data.addDataToLastTrial({
+        date: Date(),
+        block_num: PRMS.cblk,
+        trial_num: PRMS.ctrl,
+        corr_code: corr_code,
+    });
+}
+
+function draw_trial_feedback(c, args) {
+    "use strict";
+    let ctx = c.getContext("2d");
+    ctx = canvas_style(ctx);
+
+    ctx.font = PRMS.feedback_font;
+    ctx.textAlign = "center";
+
+    // draw target
+    ctx.fillStyle = "black";
+    ctx.fillText(`${args.feedback_text}`, 0, 15);
+}
+
+const TRIAL_FEEDBACK = {
+    type: jsPsychCanvasKeyboardResponse,
+    stimulus: draw_iti,
+    canvas_size: CANVAS_SIZE,
+    response_ends_trial: false,
+    trial_duration: 0,
+    on_start: function (trial) {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        trial.trial_duration = PRMS.feedback_duration[dat.corr_code - 1];
+        trial.stimulus = function (c) {
+            draw_trial_feedback(c, { feedback_text: PRMS.feedback_text[dat.corr_code - 1] });
+        };
+    },
+};
+
+const BLOCK_FEEDBACK = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "",
+    choices: [" "],
+    response_ends_trial: true,
+    on_start: function (trial) {
+        let block_dvs = calculate_block_performance({
+            filter_options: { stim_type: "gc", block_num: PRMS.cblk },
+        });
+        let text = block_feedback_text(
+            PRMS.cblk,
+            PRMS.nblks_prac + PRMS.nblks_exp,
+            block_dvs.mean_rt,
+            block_dvs.error_rate,
+            (language = "de"),
+        );
+        text = text.replace("Drücke eine beliebige Taste, um fortzufahren!", "Drücken Sie die Leertaste, um fortzufahren!");
+        trial.stimulus = `<div style="color: black; font-size:30px;">${text}</div>`;
+    },
+    on_finish: function () {
+        PRMS.ctrl = 1;
+        PRMS.cblk += 1;
+    },
+    post_trial_gap: 1000,
+};
+
+function draw_iti(c) {
+    "use strict";
+    let ctx = c.getContext("2d");
+    canvas_style(ctx);
+}
+
+const ITI = {
+    type: jsPsychCanvasKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: draw_iti,
+    response_ends_trial: false,
+    trial_duration: PRMS.iti,
+};
+
+// prettier-ignore
+const TRIAL_TABLE_VOICE = [
+    { video: VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")], gender: "F" },
+    { video: VIDEOS[1], resp_modality: "voice", voice: "yes", gesture: "no", comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")], gender: "F" },
+    { video: VIDEOS[2], resp_modality: "voice", voice: "no", gesture: "yes", comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")], gender: "F" },
+    { video: VIDEOS[3], resp_modality: "voice", voice: "no", gesture: "no", comp: "comp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")], gender: "F" },
+    { video: VIDEOS[4], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")], gender: "M" },
+    { video: VIDEOS[5], resp_modality: "voice", voice: "yes", gesture: "no", comp: "incomp", aff_neg: "aff", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Ja")], gender: "M" },
+    { video: VIDEOS[6], resp_modality: "voice", voice: "no", gesture: "yes", comp: "incomp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")], gender: "M" },
+    { video: VIDEOS[7], resp_modality: "voice", voice: "no", gesture: "no", comp: "comp", aff_neg: "neg", correct_key: PRMS.resp_keys[PRMS.resp_mapping.indexOf("Nein")], gender: "M" },
+];
+
+// prettier-ignore
+const TRIAL_TABLE_CATCH = [
+    { video: CATCH_VIDEOS[0], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp", aff_neg: "catch", correct_key: null, gender: "F" },
+    { video: CATCH_VIDEOS[1], resp_modality: "voice", voice: "yes", gesture: "no", comp: "incomp", aff_neg: "catch", correct_key: null, gender: "F" },
+    { video: CATCH_VIDEOS[2], resp_modality: "voice", voice: "no", gesture: "yes", comp: "incomp", aff_neg: "catch", correct_key: null, gender: "F" },
+    { video: CATCH_VIDEOS[3], resp_modality: "voice", voice: "no", gesture: "no", comp: "comp", aff_neg: "catch", correct_key: null, gender: "F" },
+    { video: CATCH_VIDEOS[4], resp_modality: "voice", voice: "yes", gesture: "yes", comp: "comp", aff_neg: "catch", correct_key: null, gender: "M" },
+    { video: CATCH_VIDEOS[5], resp_modality: "voice", voice: "yes", gesture: "no", comp: "incomp", aff_neg: "catch", correct_key: null, gender: "M" },
+    { video: CATCH_VIDEOS[6], resp_modality: "voice", voice: "no", gesture: "yes", comp: "incomp", aff_neg: "catch", correct_key: null, gender: "M" },
+    { video: CATCH_VIDEOS[7], resp_modality: "voice", voice: "no", gesture: "no", comp: "comp", aff_neg: "catch", correct_key: null, gender: "M" },
+];
+
+function create_block_trials(is_prac) {
+    "use strict";
+    let trials = [];
+
+    let ntrls_per_speaker = (is_prac ? PRMS.ntrls_prac : PRMS.ntrls_exp) / 2;
+    let n_major = Math.round(ntrls_per_speaker * PRMS.majority_prop);
+    let n_minor = Math.round(ntrls_per_speaker * PRMS.minority_prop);
+    let n_catch = Math.round(ntrls_per_speaker * PRMS.catch_prop);
+
+    // Sanity check: proportions must sum to the requested block size
+    console.assert(
+        n_major + n_minor + n_catch === ntrls_per_speaker,
+        `Trial counts (${n_major}+${n_minor}+${n_catch}=${n_major + n_minor + n_catch}) != ntrls_per_speaker (${ntrls_per_speaker})`,
+    );
+
+    for (let gender of ["F", "M"]) {
+        let v_comp = TRIAL_TABLE_VOICE.filter((t) => t.comp === "comp" && t.gender === gender);
+        let v_incomp = TRIAL_TABLE_VOICE.filter((t) => t.comp === "incomp" && t.gender === gender);
+        let v_catch_comp = TRIAL_TABLE_CATCH.filter((t) => t.comp === "comp" && t.gender === gender);
+        let v_catch_incomp = TRIAL_TABLE_CATCH.filter((t) => t.comp === "incomp" && t.gender === gender);
+
+        let speaker_validity;
+        if ([1, 3].includes(VERSION)) {
+            speaker_validity = (gender === "F") ? "mainly_valid" : "mainly_invalid";
+        } else {
+            speaker_validity = (gender === "F") ? "mainly_invalid" : "mainly_valid";
+        }
+
+        let v_major = speaker_validity === "mainly_valid" ? v_comp : v_incomp;
+        let v_minor = speaker_validity === "mainly_valid" ? v_incomp : v_comp;
+        let v_catch = speaker_validity === "mainly_valid" ? v_catch_comp : v_catch_incomp;
+
+        // Tag each trial with its proportion condition
+        v_major = v_major.map(t => ({ ...t, proportion_condition: speaker_validity }));
+        v_minor = v_minor.map(t => ({ ...t, proportion_condition: speaker_validity }));
+        v_catch = v_catch.map(t => ({ ...t, proportion_condition: speaker_validity }));
+
+        if (is_prac) {
+            // Build oversized pools and sample the required number
+            let reps = Math.ceil(n_major / PRMS.n_videos_per_type_speaker);
+            let pool_major = [];
+            let pool_minor = [];
+            for (let i = 0; i < reps; i++) pool_major = pool_major.concat(v_major);
+            for (let i = 0; i < reps; i++) pool_minor = pool_minor.concat(v_minor);
+
+            trials = trials.concat(shuffle(pool_major).slice(0, n_major));
+            trials = trials.concat(shuffle(pool_minor).slice(0, n_minor));
+            trials = trials.concat(shuffle(v_catch).slice(0, n_catch));
+        } else {
+            // Experimental blocks: repeat each video an equal number of times
+            let reps_major = n_major / PRMS.n_videos_per_type_speaker;
+            let reps_minor = n_minor / PRMS.n_videos_per_type_speaker;
+            let reps_catch = n_catch / PRMS.n_videos_per_type_speaker;
+
+            console.assert(
+                Number.isInteger(reps_major) && Number.isInteger(reps_minor) && Number.isInteger(reps_catch),
+                `Non-integer repetitions: major=${reps_major}, minor=${reps_minor}, catch=${reps_catch}`,
+            );
+
+            for (let i = 0; i < reps_major; i++) trials = trials.concat(v_major);
+            for (let i = 0; i < reps_minor; i++) trials = trials.concat(v_minor);
+            for (let i = 0; i < reps_catch; i++) trials = trials.concat(v_catch);
+        }
+    }
+
+    return shuffle(trials);
+}
+
+const AUDIO_QUESTION_EXPLANATION = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Fast geschafft! Wir haben nur noch ein paar letzte Fragen. In der 
+Folge möchten wir von Ihnen wissen ob Sie zu einem Zeitpunkt des Experiments
+ihren Ton ausgeschaltet haben, die Geste gar nicht beobachtet haben, oder ob 
+technische Probleme auftraten.<br><br>
+<u><i>Ihre Antwort hat keine Auswirkung auf Ihre Vergütung.</i></u><br><br>
+Seien Sie daher bitte ehrlich in Ihrer Antwort, damit wir Ihren Datensatz 
+gegebenenfalls von der Auswertung ausschließen können.<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    choices: [" "],
+    post_trial_gap: 1000,
+};
+
+const PRACTICE_QUESTION_EXPLANATION = {
+    type: jsPsychHtmlKeyboardResponse,
+    canvas_size: CANVAS_SIZE,
+    stimulus: generate_formatted_html({
+        text: `Sie haben die Übungsphase abgeschlossen!<br><br>
+Bevor das eigentliche Experiment beginnt, möchten wir kurz von Ihnen wissen, 
+ob Sie bisher Ihren Ton ausgeschaltet haben, die Geste gar nicht beobachtet haben, 
+oder ob technische Probleme auftraten.<br><br>
+<u><i>Ihre Antwort hat keine Auswirkung auf Ihre Vergütung.</i></u><br><br>
+Seien Sie daher bitte ehrlich in Ihrer Antwort, damit wir Ihren Datensatz 
+gegebenenfalls von der Auswertung ausschließen können.<br><br>
+Drücken Sie die Leertaste, um fortzufahren.`,
+        align: "left",
+        color: "black",
+        fontsize: 30,
+        bold: true,
+    }),
+    choices: [" "],
+    post_trial_gap: 1000,
+};
+
+const AUDIO_QUESTION = {
+    type: jsPsychSurvey,
+    survey_json: {
+        title: "Abschließende Fragen",
+        showQuestionNumbers: "off",
+        elements: [
+            {
+                type: "radiogroup",
+                name: "AudioQuestion",
+                isRequired: true,
+                title: "Haben Sie zu einem beliebigen Zeitpunkt des Experiments den Ton abgestellt?",
+                choices: ["Ja", "Nein"],
+            },
+            {
+                type: "radiogroup",
+                name: "VideoQuestion",
+                isRequired: true,
+                title: "Haben Sie zu einem beliebigen Zeitpunkt des Experiments das Video nicht angeschaut?",
+                choices: ["Ja", "Nein"],
+            },
+            {
+                type: "radiogroup",
+                name: "TechnicalQuestion",
+                isRequired: true,
+                title: "Hatten Sie bei vielen Trials (mindestens 10 Trials pro block) während der Teilnahme am Experiment technische Probleme (z.B. Video spielt nicht ab, kein Ton oder stark verzögerter Start der Wiedergabe)?",
+                choices: ["Ja", "Nein"],
+            },
+        ],
+    },
+    on_finish: function () {
+        let dat = jsPsych.data.get().last(1).values()[0];
+        jsPsych.data.addProperties({
+            audio_question: dat.response["AudioQuestion"],
+            video_question: dat.response["VideoQuestion"],
+            technical_question: dat.response["TechnicalQuestion"],
+            question_rt: dat.rt,
+        });
+    },
+};
+
+////////////////////////////////////////////////////////////////////////
+//                              Save                                  //
+////////////////////////////////////////////////////////////////////////
+const DIR_NAME = get_dir_name();
+const EXP_NAME = get_file_name();
+const VP_NUM = get_time();
+
+function save() {
+    jsPsych.data.addProperties({ vp_num: VP_NUM });
+
+    const data_fn = `${DIR_NAME}data/version${VERSION}/${EXP_NAME}_${VP_NUM}`;
+    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "gc" });
+    // save_data_local(data_fn, { stim_type: "gc" }); // saves to download folder
+}
+
+const SAVE_DATA = {
+    type: jsPsychCallFunction,
+    func: save,
+    post_trial_gap: 1000,
+};
+
+////////////////////////////////////////////////////////////////////////
+//                    Generate End Message                            //
+////////////////////////////////////////////////////////////////////////
+const END_SCREEN = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus:
+        "<p><strong>Experiment beendet! Vielen Dank für Ihre Teilnahme!</strong></p>" +
+        "<p><strong>Mit der Leertaste gelangen Sie zurück zu Prolific, wo Ihnen die Vergütung</strong></p>" +
+        "<p><strong>gutgeschrieben wird.</strong></p>",
+    response_ends_trial: true,
+    choices: [" "],
+    on_finish: function () {
+        window.location.replace("XXX:link end for full experiment");
+    },
+};
+
+const EARLY_EXIT_SCREEN = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus:
+        "<p><strong>Experiment beendet!</strong></p>" +
+        "<p><strong>Da Probleme mit dem Video aufgetreten sind, kann das Experiment leider nicht fortgesetzt werden.</strong></p>" +
+        "<p><strong>Mit der Leertaste gelangen Sie zurück zu Prolific.</strong></p>",
+    response_ends_trial: true,
+    choices: [" "],
+    on_finish: function () {
+        // Navigate to the different end link
+        window.location.replace("XXX: link for end of practice problems");
+    },
+};
+
+const EARLY_EXIT_CONDITIONAL = {
+    timeline: [SAVE_DATA, EARLY_EXIT_SCREEN],
+    conditional_function: function () {
+        let last_survey = jsPsych.data.get().last(1).values()[0];
+        // Trigger early exit if there were video/technical problems
+        // It's safer to read directly from the response object
+        return last_survey.response && last_survey.response["TechnicalQuestion"] === "Ja";
+    }
+};
+
+////////////////////////////////////////////////////////////////////////
+//                    Generate and run experiment                     //
+////////////////////////////////////////////////////////////////////////
+function generate_exp() {
+    "use strict";
+
+    let exp = [];
+
+    exp.push(HTML_CONSENT_FORM);
+    exp.push(fullscreen(true));
+    exp.push(browser_check(CANVAS_SIZE));
+    exp.push(resize_browser());
+    exp.push(welcome_message());
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    exp.push(mouse_cursor(false));
+    exp.push(PRELOAD_VIDEOS);
+    exp.push(WELCOME_INSTRUCTIONS);
+    exp.push(AUDIO_INSTRUCTIONS);
+    exp.push(MAPPING_INSTRUCTIONS);
+    exp.push(TASK_INSTRUCTIONS);
+
+    let blocks = [];
+    for (let i = 0; i < PRMS.nblks_prac; i++) blocks.push({ is_prac: true });
+    for (let i = 0; i < PRMS.nblks_exp; i++) blocks.push({ is_prac: false });
+
+    for (let blk = 0; blk < blocks.length; blk += 1) {
+        exp.push(BLOCK_START);
+
+        let blk_timeline = {
+            timeline: [FIXATION_CROSS, PLAY_VIDEO, TRIAL_FEEDBACK, ITI],
+            timeline_variables: create_block_trials(blocks[blk].is_prac),
+        };
+
+        exp.push(blk_timeline); // trials within a block
+        exp.push(BLOCK_FEEDBACK); // show previous block performance
+
+        // Ask the three questions after the initial practice block
+        if (blk === 0) {
+            exp.push(mouse_cursor(true));
+            exp.push(PRACTICE_QUESTION_EXPLANATION);
+            exp.push(AUDIO_QUESTION);
+            exp.push(EARLY_EXIT_CONDITIONAL);
+
+            // Re-hide the mouse cursor for the next block if they continue
+            exp.push(mouse_cursor(false));
+        }
+    }
+
+    // debrief
+    exp.push(mouse_cursor(true));
+    exp.push(AUDIO_QUESTION_EXPLANATION);
+    exp.push(AUDIO_QUESTION);
+    exp.push(end_message());
+    exp.push(fullscreen(false));
+
+    // save data
+    exp.push(SAVE_DATA);
+
+    // Return to Prolific
+    exp.push(END_SCREEN);
+
+    return exp;
+}
+const EXP = generate_exp();
+
+// jsPsych.simulate(EXP, "data-only"); // generates datafile after first click
+// jsPsych.simulate(EXP, "visual");
+jsPsych.run(EXP);
