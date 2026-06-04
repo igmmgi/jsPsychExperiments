@@ -1,0 +1,39 @@
+PES Experiment Suite Summary
+
+Base Paradigm (but see Exp 3 for alternative): 
+Participants must determine if the central square has more red or blue dots. 
+The ratio adaptively becomes harder/easier based on their true performance using an 80% weighted accuracy staircase.
+All experiments consist of 14 Blocks (2 Practice, 12 Experimental) with fixed post-response windows of 1500 ms.
+
+Manipulation 1: Feedback Present vs. Absent
+Investigates the base effect of feedback on post-error slowing.
+Block types ("feedback" and "no_feedback") are randomized across the 14 blocks.
+In "feedback" blocks, correctness feedback is shown for 750 ms, followed by a 750 ms ITI. 
+In "no_feedback" blocks, a blank screen is shown for 750 ms instead of text, followed by the identical 750 ms ITI, preserving perfect temporal pacing.
+- Exp 1.1 (Single Target): Pure dot-ratio target.
+- Exp 1.2 (Flanker Array): Target is flanked by congruent/incongruent distractor squares.
+
+Manipulation 2: Feedback Latency (Instant vs. Delayed)
+Investigates if the timing of the feedback shifts the post-error slowing effect.
+Block types ("instant" and "delayed") are randomized across the 14 blocks. 
+In "instant" blocks, feedback appears immediately for 750 ms, followed by a 750 ms ITI.
+In "delayed" blocks, a blank delay screen appears for 750 ms, followed by feedback for 750 ms, and a 0 ms ITI. 
+The total post-response duration remains perfectly controlled at 1500 ms in both conditions.
+- Exp 2.1 (Single Target): Pure dot-ratio target.
+- Exp 2.2 (Flanker Array): Target is flanked by congruent/incongruent distractor squares.
+
+Manipulation 3: Arrow Orientation Staircase
+Replaces the dot stimuli with an Eriksen Arrow Flanker task.
+Uses the same "Feedback Present vs. Absent" block manipulations and timings as Exp 1.x.
+The adaptive staircase rotates the central arrow (and flankers, configurable via PRMS) up or down by 3-degree 
+increments to make spatial direction ambiguous based on performance. 
+- Exp 3 (Flanker Arrows): Arrow flanker array with adaptive angular deviation.
+
+Manipulation 4: Feedback Correctness (True vs. False)
+Investigates the effect of "lying" to the participant about their performance.
+All 14 blocks provide feedback. 
+A percentage (default 75%) of truthful feedback vs. false feedback. 
+This manipulation occurs independently for both actual correct responses and actual error responses, ensuring a strict 75/25 split. 
+The internal staircase continues tracking their true performance to maintain task difficulty, even when false feedback is displayed.
+- Exp 4.1 (Single Target): True vs. False Feedback on pure dot-ratio target.
+- Exp 4.2 (Flanker Array): True vs. False Feedback on dot flanker array.
