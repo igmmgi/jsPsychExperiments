@@ -21,19 +21,17 @@ const CANVAS_SIZE = [1280, 720];
 const CANVAS_BORDER = "5px solid black";
 
 const p5js = new p5((sketch) => {
-    sketch.setup = () => {
-    };
+    sketch.setup = () => {};
 });
 
 const PRMS = {
-    n_trials: 4, // number of trials per block (must be multiple of 4)
-    n_blocks: 4, // total number of mixed blocks
+    n_trials: 20, // number of trials per block (must be multiple of 4)
+    n_blocks: 8, // total number of mixed blocks
     iti: 500, // duration of the inter-trial-interval
-    survey_type: "likert", // options: "likert" or "slider"
-    survey_scale: [1, 9],
-    survey_question_1: "Question 1",
-    survey_question_2: "Question 2",
-    survey_anchors: ["Extremely Low", "Extremely High"],
+    survey_type: "slider", // options: "likert" or "slider"
+    survey_scale: [0, 100],
+    survey_question_1: "Wie viel Kontrolle hattest du über den Ball?",
+    survey_anchors: ["Sehr wenig", "Sehr viel"],
     font: "50px Arial",
     colours: { correct: [0, 255, 0], incorrect: [255, 0, 0], path: [150, 150, 150], background: [200, 200, 200] },
     count_block: 1,
@@ -42,12 +40,12 @@ const PRMS = {
     path_width: 10, // width of the path in pixels
     path_difficulty: { standard: 500 },
     speed_difficulty: { standard: 0.1 }, // px/ms (0.1 = 100px/s; path completes in ~6.2s)
-    noise_reversal_prob: { low: 0.10, high: 0.30 }, // probability of reversing mouse movement
+    noise_reversal_prob: { low: 0.1, high: 0.3 }, // probability of reversing mouse movement
     noise_gaussian_sd: { low: 2, high: 6 }, // SD of gaussian noise added to movement
     ball_diameter: 20,
-    show_ball_path: true, // the black line the ball travelled
+    show_ball_path: false, // the black line the ball travelled
     show_error_path: true, // the red/green path feedback
-    show_percentage_path: true, // display percentage time on path after trial
+    show_percentage_path: false, // display percentage time on path after trial
     show_condition_info: true, // display condition info for piloting
     hide_cursor: true, // hide the real mouse cursor when moving the ball
     distance_criterion: 15, // error criterion if shown
@@ -108,7 +106,7 @@ class Path {
         let xpos = CANVAS_SIZE[0] * 0.75;
         let start = Math.round(Math.random() * xpos);
         for (let i = start; i < start + this.x.length; i++) {
-            this.x[i - start] = p5js.noise(i / noise_value) * xpos + (CANVAS_SIZE[0] / 2) - (xpos / 2);
+            this.x[i - start] = p5js.noise(i / noise_value) * xpos + CANVAS_SIZE[0] / 2 - xpos / 2;
         }
     }
 
@@ -178,16 +176,16 @@ class Ball {
             this.is_moving = distance < this.diameter / 2;
             if (this.is_moving && PRMS.hide_cursor) {
                 p5js.noCursor();
-                document.body.style.cursor = 'none';
+                document.body.style.cursor = "none";
             }
         }
         if (!this.is_moving) return;
 
         // ball is moving, only interesred in x-movements
         this.y -= this.speed * dt;
-        
+
         let move_x = p5js.movedX;
-        
+
         if (this.noise_type === "reversal") {
             let prob = PRMS.noise_reversal_prob[this.noise_level];
             if (Math.random() < prob) {
@@ -200,7 +198,7 @@ class Ball {
             // But gaussian could just be constant jitter? Let's apply constant jitter on every frame.
             move_x += p5js.randomGaussian(0, sd);
         }
-        
+
         this.x += move_x;
 
         // wait till path start
@@ -255,7 +253,7 @@ function draw_trial() {
     if (BALL.is_complete && !BALL.trial_finished) {
         if (PRMS.hide_cursor) {
             p5js.cursor();
-            document.body.style.cursor = 'auto';
+            document.body.style.cursor = "auto";
         }
         BALL.trial_finished = true;
         jsPsych.finishTrial();
@@ -263,8 +261,8 @@ function draw_trial() {
 }
 
 function add_data() {
-    let on_path_count = PATH.on_path.filter(x => x === 1).length;
-    let total_count = PATH.on_path.filter(x => x === 1 || x === -1).length;
+    let on_path_count = PATH.on_path.filter((x) => x === 1).length;
+    let total_count = PATH.on_path.filter((x) => x === 1 || x === -1).length;
     let performance = total_count > 0 ? Math.round((on_path_count / total_count) * 100) : 0;
     PRMS.last_performance = performance;
 
@@ -303,9 +301,7 @@ const TRIAL = {
         let noise_level = jsPsych.evaluateTimelineVariable("noise_level");
 
         PATH.reset(1);
-        PATH.perlin_noise_coordinates(
-            PRMS.path_difficulty[path_diff],
-        );
+        PATH.perlin_noise_coordinates(PRMS.path_difficulty[path_diff]);
         BALL.reset(PATH.y.length);
         BALL.set_speed(PRMS.speed_difficulty[speed_diff]);
         BALL.set_x_position(PATH.x[0]);
@@ -326,7 +322,7 @@ const TRIAL_PERFORMANCE_FEEDBACK = {
     canvas_border: CANVAS_BORDER,
     response_ends_trial: false,
     trial_duration: 1500,
-    stimulus: function() {
+    stimulus: function () {
         return generate_formatted_html({
             text: `Time on Path: ${PRMS.last_performance}%`,
             align: "center",
@@ -334,14 +330,14 @@ const TRIAL_PERFORMANCE_FEEDBACK = {
             fontsize: 50,
             bold: true,
         });
-    }
+    },
 };
 
 const TRIAL_PERFORMANCE_FEEDBACK_NODE = {
     timeline: [TRIAL_PERFORMANCE_FEEDBACK],
-    conditional_function: function() {
+    conditional_function: function () {
         return PRMS.show_percentage_path;
-    }
+    },
 };
 
 const ITI = {
@@ -364,9 +360,9 @@ const BLOCK_START = {
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}:<br><br> 
-                   Click the left mouse button inside the black ball to start the trial.<br><br>
-                   Control the ball using the mouse by moving left and right.<br><br>
-                   Try to follow the path!<br><br><br>
+                   - Klicke mit der linken Maustaste auf den schwarzen Ball, um den Durchgang zu starten.<br><br>
+                   - Kontrolliere den Ball, indem du die Maus nach links und nach rechts bewegst.<br><br>
+                   - Versuche, dem Pfad zu folgen.<br><br><br>
                    Drücke eine beliebige Taste, um fortzufahren`,
             align: "left",
             colour: "black",
@@ -415,51 +411,57 @@ const SURVEY_LIKERT = {
         {
             prompt: `<span style="font-weight: bold; font: 36px Arial;">${PRMS.survey_question_1}</span>`,
             name: "question_1",
-            labels: generate_likert_labels(PRMS.survey_scale[0], PRMS.survey_scale[1], PRMS.survey_anchors[0], PRMS.survey_anchors[1]),
-        },
-        {
-            prompt: `<span style="font-weight: bold; font: 36px Arial;">${PRMS.survey_question_2}</span>`,
-            name: "question_2",
-            labels: generate_likert_labels(PRMS.survey_scale[0], PRMS.survey_scale[1], PRMS.survey_anchors[0], PRMS.survey_anchors[1]),
+            labels: generate_likert_labels(
+                PRMS.survey_scale[0],
+                PRMS.survey_scale[1],
+                PRMS.survey_anchors[0],
+                PRMS.survey_anchors[1],
+            ),
         },
     ],
 };
 
 const SURVEY_SLIDER = {
     type: jsPsychSurveyHtmlForm,
+    button_label: "Weiter",
     html: `
-        <div style="margin-bottom: 40px; text-align: center;">
-            <p><span style="font-weight: bold; font: 36px Arial;">${PRMS.survey_question_1}</span></p>
-            <input type="range" name="question_1" min="${PRMS.survey_scale[0]}" max="${PRMS.survey_scale[1]}" value="${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}" style="width: 50%;">
-            <div style="display: flex; justify-content: space-between; width: 50%; margin: 0 auto; font: 24px Arial;">
-                <span>${PRMS.survey_scale[0]}<br>${PRMS.survey_anchors[0]}</span><span>${PRMS.survey_scale[1]}<br>${PRMS.survey_anchors[1]}</span>
-            </div>
-        </div>
-        <div style="margin-bottom: 40px; text-align: center;">
-            <p><span style="font-weight: bold; font: 36px Arial;">${PRMS.survey_question_2}</span></p>
-            <input type="range" name="question_2" min="${PRMS.survey_scale[0]}" max="${PRMS.survey_scale[1]}" value="${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}" style="width: 50%;">
-            <div style="display: flex; justify-content: space-between; width: 50%; margin: 0 auto; font: 24px Arial;">
-                <span>${PRMS.survey_scale[0]}<br>${PRMS.survey_anchors[0]}</span><span>${PRMS.survey_scale[1]}<br>${PRMS.survey_anchors[1]}</span>
+        <div style="margin-bottom: 40px; text-align: center; width: 80%; margin-left: auto; margin-right: auto;">
+            <p style="margin-bottom: 40px;"><span style="font-weight: bold; font: 36px Arial;">${PRMS.survey_question_1}</span></p>
+            <input type="range" name="question_1" min="${PRMS.survey_scale[0]}" max="${PRMS.survey_scale[1]}" value="${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}" style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; width: 100%; font: 24px Arial; margin-top: 15px;">
+                <span style="text-align: center; width: 200px; margin-left: -100px;">${PRMS.survey_scale[0]}<br>${PRMS.survey_anchors[0]}</span>
+                <span style="text-align: center; width: 200px; margin-right: -100px;">${PRMS.survey_scale[1]}<br>${PRMS.survey_anchors[1]}</span>
             </div>
         </div>
     `,
-    on_finish: function(data) {
-        data.response.question_1 = Number(data.response.question_1);
-        data.response.question_2 = Number(data.response.question_2);
-    }
+    on_finish: function (data) {
+        let response = Number(data.response.question_1);
+        let rt = Math.round(data.rt);
+        data.response.question_1 = response;
+        
+        let last_trial_data = jsPsych.data.get().filter({stim_type: "ftp"}).last(1).values()[0];
+        if (last_trial_data) {
+            last_trial_data.survey_response = response;
+            last_trial_data.survey_rt = rt;
+        }
+    },
 };
 
 const SURVEY = {
     timeline: [
         {
             timeline: [SURVEY_LIKERT],
-            conditional_function: function() { return PRMS.survey_type === "likert"; }
+            conditional_function: function () {
+                return PRMS.survey_type === "likert";
+            },
         },
         {
             timeline: [SURVEY_SLIDER],
-            conditional_function: function() { return PRMS.survey_type === "slider"; }
-        }
-    ]
+            conditional_function: function () {
+                return PRMS.survey_type === "slider";
+            },
+        },
+    ],
 };
 
 const TRIAL_TABLE = [
@@ -475,7 +477,7 @@ const TRIAL_TIMELINE = {
     sample: {
         type: "fixed-repetitions",
         size: PRMS.n_trials / 4,
-    }
+    },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -498,8 +500,6 @@ const END_SCREEN = {
         align: "left",
     }),
 };
-
-
 
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
