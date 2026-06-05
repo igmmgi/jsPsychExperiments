@@ -376,7 +376,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    save_data_server("/Common/write_data.php", data_fn, { stim_type: "pes" });
+    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "pes" });
     // save_data_local(data_fn, { stim_type: 'pes' });
 }
 
@@ -400,7 +400,7 @@ function genExpSeq() {
     let exp = [];
 
     exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
+    exp.push(browser_check([PRMS.screenRes[1], PRMS.screenRes[0]]));
     exp.push(resize_browser());
     exp.push(welcome_message());
     // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));

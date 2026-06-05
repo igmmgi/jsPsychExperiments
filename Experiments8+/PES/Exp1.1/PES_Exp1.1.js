@@ -26,7 +26,7 @@ const CANVAS_SIZE = [1280, 720];
 const PRMS = {
     screenRes: [960, 720], // minimum screen resolution requested
     nTrlsPrac: 40, // number of trials per practice block
-    nTrlsExp: 80,  // number of trials per experimental block
+    nTrlsExp: 80, // number of trials per experimental block
     nBlks: 14, // 2 practice + 12 experimental // number of blocks
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
@@ -49,8 +49,6 @@ const PRMS = {
     cBlk: 1,
     cTrl: 1,
 };
-
-
 
 const EN_DE = { blue: "blau", red: "rot" };
 
@@ -89,7 +87,7 @@ const WELCOME_INSTRUCTIONS = {
     }),
     on_start: function () {
         document.body.style.backgroundColor = CANVAS_COLOUR;
-    }
+    },
 };
 
 function pad_me(str, npad) {
@@ -243,7 +241,7 @@ const TRIAL_FEEDBACK = {
         trial.trial_duration = PRMS.fbDur[dat.corr_code - 1];
 
         let block_type = BLOCK_CONDITIONS[PRMS.cBlk - 1];
-        let feedback_text = (block_type === "feedback") ? PRMS.fbText[dat.corr_code - 1] : "";
+        let feedback_text = block_type === "feedback" ? PRMS.fbText[dat.corr_code - 1] : "";
 
         trial.stimulus = generate_formatted_html({
             text: `${feedback_text}`,
@@ -313,7 +311,13 @@ const BLOCK_FEEDBACK = {
         let block_dvs = calculate_block_performance({
             filter_options: { stim_type: "pes", blockNum: PRMS.cBlk },
         });
-        let text = block_feedback_text(PRMS.cBlk, PRMS.nBlks, block_dvs.mean_rt, block_dvs.error_rate, (language = "de"));
+        let text = block_feedback_text(
+            PRMS.cBlk,
+            PRMS.nBlks,
+            block_dvs.mean_rt,
+            block_dvs.error_rate,
+            (language = "de"),
+        );
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
     on_finish: function () {
@@ -364,7 +368,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    save_data_server("/Common/write_data.php", data_fn, { stim_type: "pes" });
+    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "pes" });
     // save_data_local(data_fn, { stim_type: 'pes' });
 }
 
@@ -379,7 +383,7 @@ const SAVE_DATA = {
 ////////////////////////////////////////////////////////////////////////
 
 const BLOCK_CONDITIONS = shuffle(["feedback", "no_feedback"]).concat(
-    shuffle(repeat_array(["feedback", "no_feedback"], 6))
+    shuffle(repeat_array(["feedback", "no_feedback"], 6)),
 );
 
 function genExpSeq() {
@@ -388,7 +392,7 @@ function genExpSeq() {
     let exp = [];
 
     exp.push(fullscreen(true));
-    exp.push(browser_check(PRMS.screenRes));
+    exp.push(browser_check([PRMS.screenRes[1], PRMS.screenRes[0]]));
     exp.push(resize_browser());
     exp.push(welcome_message());
     // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
@@ -400,7 +404,7 @@ function genExpSeq() {
 
     for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
         let blk_timeline = { ...TRIAL_TIMELINE };
-        let nTrls = (blk < 2) ? PRMS.nTrlsPrac : PRMS.nTrlsExp;
+        let nTrls = blk < 2 ? PRMS.nTrlsPrac : PRMS.nTrlsExp;
         blk_timeline.sample = {
             type: "fixed-repetitions",
             size: nTrls / TRIAL_TABLE.length,
