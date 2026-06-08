@@ -15,7 +15,13 @@ PATH_HEIGHT <- 620
 
 dat <- dat %>%
   rowwise() %>%
-  unnest(., c(path_x, path_y, ball_x, ball_y, on_path))
+  mutate(
+    ball_x_interp = list(approx(x = unlist(ball_y), y = unlist(ball_x), xout = unlist(path_y), rule = 2)$y),
+    ball_y_interp = list(path_y)
+  ) %>%
+  select(-ball_x, -ball_y) %>%
+  rename(ball_x = ball_x_interp, ball_y = ball_y_interp) %>%
+  unnest(cols = c(path_x, path_y, ball_x, ball_y, on_path))
 
 dat$vpNum <- as.numeric(as.factor(dat$vpNum))
 

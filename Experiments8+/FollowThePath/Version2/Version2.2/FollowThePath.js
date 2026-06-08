@@ -185,9 +185,9 @@ class Ball {
 
         // ball is moving, only interesred in x-movements
         this.y -= this.speed * dt;
-        
+
         let move_x = p5js.movedX;
-        
+
         if (this.noise_type === "reversal") {
             let prob = PRMS.noise_reversal_prob[this.noise_level];
             if (Math.random() < prob) {
@@ -197,7 +197,7 @@ class Ball {
             let sd = PRMS.noise_gaussian_sd[this.noise_level];
             move_x += p5js.randomGaussian(0, sd);
         }
-        
+
         this.x += move_x;
 
         // wait till path start
@@ -322,7 +322,7 @@ const TRIAL_PERFORMANCE_FEEDBACK = {
     canvas_border: CANVAS_BORDER,
     response_ends_trial: false,
     trial_duration: 1500,
-    stimulus: function() {
+    stimulus: function () {
         return generate_formatted_html({
             text: `Time on Path: ${PRMS.last_performance}%`,
             align: "center",
@@ -335,7 +335,7 @@ const TRIAL_PERFORMANCE_FEEDBACK = {
 
 const TRIAL_PERFORMANCE_FEEDBACK_NODE = {
     timeline: [TRIAL_PERFORMANCE_FEEDBACK],
-    conditional_function: function() {
+    conditional_function: function () {
         return PRMS.show_percentage_path;
     }
 };
@@ -429,12 +429,12 @@ const SURVEY_SLIDER = {
             </div>
         </div>
     `,
-    on_finish: function(data) {
+    on_finish: function (data) {
         let response = Number(data.response.question_1);
         let rt = Math.round(data.rt);
         data.response.question_1 = response;
-        
-        let last_trial_data = jsPsych.data.get().filter({stim_type: "ftp"}).last(1).values()[0];
+
+        let last_trial_data = jsPsych.data.get().filter({ stim_type: "ftp" }).last(1).values()[0];
         if (last_trial_data) {
             last_trial_data.survey_response = response;
             last_trial_data.survey_rt = rt;
@@ -446,11 +446,11 @@ const SURVEY = {
     timeline: [
         {
             timeline: [SURVEY_LIKERT],
-            conditional_function: function() { return PRMS.survey_type === "likert"; }
+            conditional_function: function () { return PRMS.survey_type === "likert"; }
         },
         {
             timeline: [SURVEY_SLIDER],
-            conditional_function: function() { return PRMS.survey_type === "slider"; }
+            conditional_function: function () { return PRMS.survey_type === "slider"; }
         }
     ]
 };
@@ -504,8 +504,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    //saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
-    save_data_local(data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    // save_data_local(data_fn, { stim_type: "ftp" }, (filetype = "json"));
 }
 
 const SAVE_DATA = {
@@ -527,7 +527,7 @@ function genExpSeq() {
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
     exp.push(welcome_message());
-    // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(WELCOME_INSTRUCTIONS);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {

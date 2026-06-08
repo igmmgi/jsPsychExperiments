@@ -438,8 +438,8 @@ const SURVEY_SLIDER = {
         let response = Number(data.response.question_1);
         let rt = Math.round(data.rt);
         data.response.question_1 = response;
-        
-        let last_trial_data = jsPsych.data.get().filter({stim_type: "ftp"}).last(1).values()[0];
+
+        let last_trial_data = jsPsych.data.get().filter({ stim_type: "ftp" }).last(1).values()[0];
         if (last_trial_data) {
             last_trial_data.survey_response = response;
             last_trial_data.survey_rt = rt;
@@ -510,8 +510,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    //saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
-    save_data_local(data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    // save_data_local(data_fn, { stim_type: "ftp" }, (filetype = "json"));
 }
 
 const SAVE_DATA = {
@@ -533,7 +533,7 @@ function genExpSeq() {
     exp.push(resize_browser());
     exp.push(SCALE_FACTOR);
     exp.push(welcome_message());
-    // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(WELCOME_INSTRUCTIONS);
 
     for (let blk = 0; blk < PRMS.n_blocks; blk += 1) {

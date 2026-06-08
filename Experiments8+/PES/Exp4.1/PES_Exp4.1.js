@@ -392,8 +392,7 @@ const SAVE_DATA = {
 
 // Generate feedback pools for strict 75/25 balancing across BOTH conditions
 const N_TOTAL_TRIALS = (40 * 2) + (80 * 12); // Maximum possible correct or error trials
-let n_true = Math.round(N_TOTAL_TRIALS * (75 / 100)); // We hardcode the 75 here because PRMS isn't fully robust for global init
-// Wait, we can use PRMS.trueFeedbackProb!
+let n_true = Math.round(N_TOTAL_TRIALS * (75 / 100));
 n_true = Math.round(N_TOTAL_TRIALS * (PRMS.trueFeedbackProb / 100));
 let n_false = N_TOTAL_TRIALS - n_true;
 
@@ -409,7 +408,7 @@ function genExpSeq() {
     exp.push(browser_check([PRMS.screenRes[1], PRMS.screenRes[0]]));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(mouse_cursor(false));
 
     exp.push(WELCOME_INSTRUCTIONS);

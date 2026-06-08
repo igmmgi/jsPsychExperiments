@@ -415,7 +415,7 @@ function genExpSeq() {
     exp.push(browser_check([PRMS.screenRes[1], PRMS.screenRes[0]]));
     exp.push(resize_browser());
     exp.push(welcome_message());
-    // exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
+    exp.push(vp_info_form("/Common8+/vpInfoForm_de.html"));
     exp.push(mouse_cursor(false));
 
     exp.push(WELCOME_INSTRUCTIONS);
