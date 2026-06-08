@@ -79,7 +79,7 @@ const WELCOME_INSTRUCTIONS = {
         text: `Willkommen zu unserem Experiment:<br><br>
                Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
                Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-               um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
+               um das Experiment durchzuführen. Wir bitten dich, die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
                xxx.xxx<br><br>
@@ -125,7 +125,7 @@ const TASK_INSTRUCTIONS = {
         trial.stimulus =
             generate_formatted_html({
                 text: `Mini-Block ${PRMS.cBlk} von ${PRMS.nBlks}:<br><br>
-               Du musst in jedem Durchgang entscheiden ob das Quadrat in der Mitte mehr blaue oder mehr rote Punkte hat.
+               Du musst in jedem Durchgang entscheiden, ob das Quadrat in der Mitte mehr blaue oder mehr rote Punkte hat.
                Reagiere wie folgt:<br>`,
                 align: "left",
                 colour: "black",

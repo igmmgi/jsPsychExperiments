@@ -45,9 +45,9 @@ const PRMS = {
     noise_gaussian_sd: { low: 2, high: 6 }, // SD of gaussian noise added to movement
     ball_diameter: 20,
     show_ball_path: false, // the black line the ball travelled
-    show_error_path: true, // the red/green path feedback
+    show_error_path: false, // the red/green path feedback
     show_percentage_path: true, // display percentage time on path after trial
-    show_condition_info: true, // display condition info for piloting
+    show_condition_info: false, // display condition info for piloting
     hide_cursor: true, // hide the real mouse cursor when moving the ball
     distance_criterion: 15, // error criterion if shown
     scale_factor: 1, // default scale factor if SCALE_FACTOR trial is skipped
