@@ -304,3 +304,19 @@ function block_feedback_text(cblk, nblks, mean_rt, error_rate, language = "de") 
     }
     return block_txt;
 }
+
+// Add responsive styles for the jsPsych canvas stimulus to prevent overflow and keep it centered
+(function () {
+    const style = document.createElement("style");
+    style.textContent = `
+        #jspsych-canvas-stimulus {
+            max-width: 95vw !important;
+            max-height: 95vh !important;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
+        }
+    `;
+    document.head.appendChild(style);
+})();
+

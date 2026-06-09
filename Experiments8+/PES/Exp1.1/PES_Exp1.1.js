@@ -17,7 +17,7 @@ const jsPsych = initJsPsych({});
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const CANVAS_COLOUR = "rgba(200, 200, 200, 1)";
-const CANVAS_SIZE = [1280, 720];
+const CANVAS_SIZE = [720, 1280];
 
 ////////////////////////////////////////////////////////////////////////
 //                           Exp Parameters                           //
