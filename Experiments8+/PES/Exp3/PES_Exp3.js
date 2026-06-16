@@ -25,7 +25,7 @@ const CANVAS_SIZE = [720, 1280];
 
 const PRMS = {
     screenRes: [960, 720], // minimum screen resolution requested
-    nTrlsPrac: 40, // number of trials per practice block
+    nTrlsPrac: 20, // number of trials per practice block
     nTrlsExp: 80,  // number of trials per experimental block
     nBlks: 14, // 2 practice + 12 experimental // number of blocks
     fixSize: 15, // duration of the fixation cross

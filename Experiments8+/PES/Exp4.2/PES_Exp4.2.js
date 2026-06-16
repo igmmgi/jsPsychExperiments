@@ -25,14 +25,14 @@ const CANVAS_SIZE = [720, 1280];
 
 const PRMS = {
     screenRes: [960, 720], // minimum screen resolution requested
-    nTrlsPrac: 40, // number of trials per practice block
+    nTrlsPrac: 20, // number of trials per practice block
     nTrlsExp: 80,  // number of trials per experimental block
     nBlks: 14, // 2 practice + 12 experimental // number of blocks
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
     fbDur: [750, 750, 750, 750], // feedback duration for response type (correct, incorrect, too slow, too fast)
-    tooSlow: 2000, // feedback duration for correct and incorrect trials, respectively
+    tooSlow: 1000, // feedback duration for correct and incorrect trials, respectively
     tooFast: 0, // feedback duration for correct and incorrect trials, respectively
     fbText: ["Richtig", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 750, // duration of the inter-trial-interval
@@ -308,7 +308,7 @@ function codeTrial() {
 
     // Adaptive ratio adjustment
     if (corrCode === 1) {
-        PRMS.ratio[1] = Math.max(50, PRMS.ratio[1] - PRMS.stepSize);
+        PRMS.ratio[1] = Math.max(52, PRMS.ratio[1] - PRMS.stepSize);
     } else if (corrCode === 2) {
         let stepUp = PRMS.stepSize * ((100 - PRMS.targetError) / PRMS.targetError);
         PRMS.ratio[1] = Math.min(100, PRMS.ratio[1] + stepUp);

@@ -4,12 +4,12 @@
 //
 // Trial Structure
 // Central fixation cross for 500 ms
-// Central stimulus until response (or 2000 ms)
-// If incorrect, feedback screen for 1500 ms
-// inter-trial-interval of 500 ms
+// Central stimulus until response (or 1500 ms)
+// Feedback screen for 750 ms
+// inter-trial-interval of 750 ms
 //
 // Block structure
-// 12 blocks of 56 trials
+// 14 blocks (2 practice blocks of 40 trials, 12 exp blocks of 80 trials)
 
 const jsPsych = initJsPsych({});
 
@@ -25,14 +25,14 @@ const CANVAS_SIZE = [720, 1280];
 
 const PRMS = {
     screenRes: [960, 720], // minimum screen resolution requested
-    nTrlsPrac: 40, // number of trials per practice block
+    nTrlsPrac: 20, // number of trials per practice block
     nTrlsExp: 80,  // number of trials per experimental block
     nBlks: 14, // 2 practice + 12 experimental // number of blocks
     fixSize: 15, // duration of the fixation cross
     fixWidth: 5, // size of fixation cross
     fixDur: 500, // duration of the fixation cross
     fbDur: [750, 750, 750, 750], // feedback duration for response type (correct, incorrect, too slow, too fast)
-    tooSlow: 2000, // feedback duration for correct and incorrect trials, respectively
+    tooSlow: 1000, // feedback duration for correct and incorrect trials, respectively
     tooFast: 0, // feedback duration for correct and incorrect trials, respectively
     fbText: ["Richtig", "Falsch!", "Zu langsam!", "Zu schnell!"],
     iti: 750, // duration of the inter-trial-interval
@@ -79,10 +79,10 @@ const WELCOME_INSTRUCTIONS = {
         text: `Willkommen zu unserem Experiment:<br><br>
                Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
                Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-               um das Experiment durchzuführen. Wir bitten dich, die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
+               um das Experiment durchzuführen. Wir bitten dich, die nächsten ca. 50 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               xxx.xxx<br><br>
+               Luca.glombitza@student.uni-tuebingen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -300,7 +300,7 @@ function codeTrial() {
 
     // Adaptive ratio adjustment
     if (corrCode === 1) {
-        PRMS.ratio[1] = Math.max(50, PRMS.ratio[1] - PRMS.stepSize);
+        PRMS.ratio[1] = Math.max(52, PRMS.ratio[1] - PRMS.stepSize);
     } else if (corrCode === 2) {
         let stepUp = PRMS.stepSize * ((100 - PRMS.targetError) / PRMS.targetError);
         PRMS.ratio[1] = Math.min(100, PRMS.ratio[1] + stepUp);
@@ -325,7 +325,7 @@ const BLOCK_FEEDBACK = {
         let block_dvs = calculate_block_performance({
             filter_options: { stim_type: "pes", blockNum: PRMS.cBlk },
         });
-        let text = block_feedback_text(PRMS.cBlk, PRMS.nBlks, block_dvs.mean_rt, block_dvs.error_rate, (language = "de"));
+        let text = block_feedback_text(PRMS.cBlk, PRMS.nBlks, block_dvs.mean_rt, block_dvs.error_rate, "de");
         trial.stimulus = `<div style="font-size:${PRMS.fbTxtSizeBlock}px;">${text}</div>`;
     },
     on_finish: function () {
@@ -390,7 +390,7 @@ const SAVE_DATA = {
 //                    Generate and run experiment                     //
 ////////////////////////////////////////////////////////////////////////
 
-const BLOCK_CONDITIONS = shuffle(["instant", "delayed"]).concat(
+const BLOCK_CONDITIONS = ["instant", "delayed"].concat(
     shuffle(repeat_array(["instant", "delayed"], 6))
 );
 
