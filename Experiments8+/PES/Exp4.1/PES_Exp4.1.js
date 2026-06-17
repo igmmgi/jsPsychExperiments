@@ -11,7 +11,17 @@
 // Block structure
 // 14 blocks (2 practice blocks of 40 trials, 12 exp blocks of 80 trials)
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cBlk >= 14) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=763&credit_token=37b93d3a3ffe40ffb92a4c4bcd6bb877&survey_code=" +
+                jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
+
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //

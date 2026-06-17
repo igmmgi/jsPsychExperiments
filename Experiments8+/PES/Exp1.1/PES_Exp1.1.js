@@ -11,7 +11,16 @@
 // Block structure
 // 14 blocks (2 practice blocks of 40 trials, 12 exp blocks of 80 trials)
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cBlk >= 14) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=761&credit_token=64dd063f5f524010b06201511c2dbe74&survey_code=" +
+                jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -103,13 +112,12 @@ function pad_me(str, npad) {
 
 // response keys
 const RESP_TEXT = generate_formatted_html({
-    text: `${
-        pad_me("mehr " + EN_DE[PRMS.target[0]], 20) +
+    text: `${pad_me("mehr " + EN_DE[PRMS.target[0]], 20) +
         pad_me("mehr " + EN_DE[PRMS.target[1]], 20) +
         "<br>" +
         pad_me("(Taste-" + PRMS.respKeys[0] + ")", 20) +
         pad_me("(Taste-" + PRMS.respKeys[1] + ")", 20)
-    }`,
+        }`,
     align: "center",
     fontsize: 30,
     bold: true,
@@ -355,7 +363,7 @@ const END_SCREEN = {
         bold: false,
         align: "left",
     }),
-    on_finish: function () {},
+    on_finish: function () { },
 };
 
 ////////////////////////////////////////////////////////////////////////
