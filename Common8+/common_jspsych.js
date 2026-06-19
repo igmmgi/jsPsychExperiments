@@ -309,6 +309,18 @@ function block_feedback_text(cblk, nblks, mean_rt, error_rate, language = "de") 
 (function () {
     const style = document.createElement("style");
     style.textContent = `
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .jspsych-display-element {
+            min-height: 100vh;
+        }
+        .jspsych-content-wrapper {
+            align-items: center;
+            justify-content: center;
+        }
         #jspsych-canvas-stimulus {
             max-width: 95vw !important;
             max-height: 95vh !important;

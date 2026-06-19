@@ -10,7 +10,14 @@
 //
 // Trials are presented in mixed blocks containing all trial types.
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        // window.location.assign(
+        //    "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=XXX&credit_token=XXX&survey_code=" +
+        //        jsPsych.data.urlVariables().sona_id,
+        // );
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -21,6 +28,7 @@ const CANVAS_BORDER = "5px solid black";
 
 const p5js = new p5((sketch) => {
     sketch.setup = () => {
+        sketch.noCanvas();
     };
 });
 
@@ -65,7 +73,7 @@ const WELCOME_INSTRUCTIONS = {
         text: `Willkommen zu unserem Experiment:<br><br>
                Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
                Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-               um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 30-35 Minuten konzentriert zu arbeiten.<br><br>
+               um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 25-30 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
                xxx.xxx<br><br>
@@ -365,8 +373,8 @@ const BLOCK_START = {
     on_start: function (trial) {
         trial.stimulus = generate_formatted_html({
             text: `Start Block ${PRMS.count_block} von ${PRMS.n_blocks}:<br><br> 
-                   - Klicke mit der linken Maustaste auf den schwarzen Ball, um den Durchgang zu starten.<br><br>
-                   - Kontrolliere den Ball, indem du die Maus nach links und nach rechts bewegst.<br><br>
+                   - Klicke mit der linken Maustaste (oder dem Trackpad) auf den schwarzen Ball, um den Durchgang zu starten.<br><br>
+                   - Kontrolliere den Ball, indem du die Maus (oder das Trackpad) nach links und nach rechts bewegst.<br><br>
                    - Versuche, dem Pfad zu folgen.<br><br><br>
                    Drücke eine beliebige Taste, um fortzufahren`,
             align: "left",
@@ -427,9 +435,10 @@ const SURVEY_SLIDER = {
     html: `
         <div style="margin-bottom: 40px; text-align: center; width: 80%; margin-left: auto; margin-right: auto;">
             <p style="margin-bottom: 40px;"><span style="font-weight: bold; font: 36px Arial;">${PRMS.survey_question_1}</span></p>
-            <input type="range" name="question_1" min="${PRMS.survey_scale[0]}" max="${PRMS.survey_scale[1]}" value="${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}" style="width: 100%;">
+            <input type="range" name="question_1" min="${PRMS.survey_scale[0]}" max="${PRMS.survey_scale[1]}" value="${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}" style="width: 100%;" oninput="document.getElementById('slider_val').innerHTML = this.value">
             <div style="display: flex; justify-content: space-between; width: 100%; font: 24px Arial; margin-top: 15px;">
                 <span style="text-align: center; width: 200px; margin-left: -100px;">${PRMS.survey_scale[0]}<br>${PRMS.survey_anchors[0]}</span>
+                <span style="text-align: center; width: 200px; font-weight: bold; font-size: 28px; color: #333;">Wert: <span id="slider_val">${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}</span></span>
                 <span style="text-align: center; width: 200px; margin-right: -100px;">${PRMS.survey_scale[1]}<br>${PRMS.survey_anchors[1]}</span>
             </div>
         </div>
@@ -510,7 +519,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    saveData("/Common/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
     // save_data_local(data_fn, { stim_type: "ftp" }, (filetype = "json"));
 }
 

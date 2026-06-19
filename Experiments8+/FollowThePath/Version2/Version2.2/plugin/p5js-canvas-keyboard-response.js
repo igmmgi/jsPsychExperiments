@@ -79,7 +79,7 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
 
         trial(display_element, trial) {
             // setup canvas
-            display_element.innerHTML = "<div id='p5js_container'></div>";
+            display_element.innerHTML = "<div id='p5js_container' style='position:relative; width:" + trial.canvas_size[0] + "px; height:" + trial.canvas_size[1] + "px; display: flex; justify-content: center; align-items: center; margin: auto;'></div>";
             let p5js_canvas;
             if (trial.use_webgl) {
                 p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1], p5js.WEBGL);
@@ -87,6 +87,10 @@ var jsPsychP5JSKeyboardResponse = (function (jspsych) {
                 p5js_canvas = p5js.createCanvas(trial.canvas_size[0], trial.canvas_size[1]);
             }
             p5js_canvas.canvas.style.border = trial.canvas_border;
+            p5js_canvas.canvas.style.position = 'absolute';
+            p5js_canvas.canvas.style.zIndex = '-1';
+            p5js_canvas.canvas.style.top = '0';
+            p5js_canvas.canvas.style.left = '0';
             p5js_canvas.parent(p5js_container);
             p5js.background(trial.canvas_background);
             p5js.draw = trial.draw();

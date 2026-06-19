@@ -82,7 +82,7 @@ var jsPsychHtmlKeyboardResponseCanvas = (function (jspsych) {
     trial(display_element, trial) {
       // setup canvas
       let new_html =
-        '<div style="position:relative; width:' + trial.canvas_size[0] + 'px; height:' + trial.canvas_size[1] + 'px; display: flex; justify-content: center; align-items: center;">' +
+        '<div style="position:relative; width:' + trial.canvas_size[0] + 'px; height:' + trial.canvas_size[1] + 'px; display: flex; justify-content: center; align-items: center; margin: auto;">' +
         '<canvas id="canvas" width="' +
         trial.canvas_size[0] +
         '" height="' +
