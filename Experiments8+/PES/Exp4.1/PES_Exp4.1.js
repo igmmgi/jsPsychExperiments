@@ -362,11 +362,11 @@ const TRIAL_TIMELINE = {
 const END_SCREEN = {
     type: jsPsychHtmlKeyboardResponse,
     response_ends_trial: true,
-    choices: [" "],
+    choices: "ALL_KEYS",
     stimulus: generate_formatted_html({
         text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
-             Nun folgen Informationen zur Versuchspersonenstunde auf Unipark.
-             Drücke eine beliebige Taste, um die Weiterleitung zu Unipark zu starten.`,
+             Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
+             Drücke eine beliebige Taste, um die Weiterleitung zu SONA zu starten.`,
         fontsize: 28,
         lineheight: 1.0,
         bold: false,
