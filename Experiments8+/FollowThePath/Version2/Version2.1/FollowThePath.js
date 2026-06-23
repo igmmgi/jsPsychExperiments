@@ -522,7 +522,7 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    save_data_server("/Common8+/write_data.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    save_data_server("/Common8+/write_data_json.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
     // save_data_local(data_fn, { stim_type: "ftp" }, (filetype = "json"));
 }
 
