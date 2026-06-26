@@ -13,12 +13,15 @@
 
 const jsPsych = initJsPsych({
     on_finish: function () {
-        // window.location.assign(
-        //    "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=XXX&credit_token=XXX&survey_code=" +
-        //        jsPsych.data.urlVariables().sona_id,
-        // );
+        if (PRMS.count_block >= PRMS.n_blocks) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=769&credit_token=8d33683f71054620a0a8a0c169a9f64d&survey_code=" +
+                jsPsych.data.urlVariables().sona_id,
+            );
+        }
     },
 });
+
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
@@ -35,7 +38,7 @@ const p5js = new p5((sketch) => {
 
 const PRMS = {
     n_trials: 20, // number of trials per block (must be multiple of 4)
-    n_blocks: 8, // total number of mixed blocks
+    n_blocks: 9, // total number of mixed blocks
     iti: 500, // duration of the inter-trial-interval
     survey_type: "slider", // options: "likert" or "slider"
     survey_scale: [0, 100],
@@ -73,10 +76,10 @@ const WELCOME_INSTRUCTIONS = {
         text: `Willkommen zu unserem Experiment:<br><br>
                Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.
                Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und genügend Zeit hast,
-               um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 25-30 Minuten konzentriert zu arbeiten.<br><br>
+               um das Experiment durchzuführen. Wir bitten dich die nächsten ca. 40-45 Minuten konzentriert zu arbeiten.<br><br>
                Du erhältst Informationen zur Versuchspersonenstunde nach dem Experiment.
                Bei Fragen oder Problemen wende dich bitte an:<br><br>
-               xxx.xxx<br><br>
+               lea.laemmle@student.uni-tuebingen.de<br><br>
                Drücke eine beliebige Taste, um fortzufahren`,
         align: "left",
         colour: "black",
@@ -499,7 +502,7 @@ const END_SCREEN = {
     canvas_size: CANVAS_SIZE,
     canvas_border: CANVAS_BORDER,
     response_ends_trial: true,
-    choices: [" "],
+    choices: "ALL_KEYS",
     stimulus: generate_formatted_html({
         text: `Dieser Teil des Experiments ist jetzt beendet.<br><br>
              Nun folgen Informationen zur Versuchspersonenstunde auf SONA.
@@ -522,8 +525,8 @@ function save() {
     jsPsych.data.addProperties({ vpNum: VP_NUM });
 
     const data_fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-    save_data_server("/Common8+/write_data_json.php", data_fn, { stim_type: "ftp" }, (filetype = "json"));
-    // save_data_local(data_fn, { stim_type: "ftp" }, (filetype = "json"));
+    save_data_server("/Common8+/write_data_json.php", data_fn, { stim_type: "ftp" }, "json");
+    // save_data_local(data_fn, { stim_type: "ftp" }, "json");
 }
 
 const SAVE_DATA = {
@@ -559,7 +562,6 @@ function genExpSeq() {
 
     // debrief
     exp.push(END_SCREEN);
-    exp.push(end_message());
     exp.push(fullscreen(false));
 
     return exp;

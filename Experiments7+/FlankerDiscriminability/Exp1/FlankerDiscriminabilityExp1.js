@@ -17,7 +17,7 @@ const jsPsych = initJsPsych({
         if (PRMS.cBlk >= 12) {
             window.location.assign(
                 "https://fernuni-hagen.sona-systems.com/webstudy_credit.aspx?experiment_id=225&credit_token=d596c226945d4a279c6a1054a076309c&survey_code=" +
-                    jsPsych.data.urlVariables().sona_id,
+                jsPsych.data.urlVariables().sona_id,
             );
         }
     },
@@ -115,13 +115,12 @@ function pad_me(str, npad) {
 
 // response keys
 const RESP_TEXT = generate_formatted_html({
-    text: `${
-        pad_me("mehr " + EN_DE[PRMS.target[0]], 20) +
+    text: `${pad_me("mehr " + EN_DE[PRMS.target[0]], 20) +
         pad_me("mehr " + EN_DE[PRMS.target[1]], 20) +
         "<br>" +
         pad_me("(Taste-" + PRMS.respKeys[0] + ")", 20) +
         pad_me("(Taste-" + PRMS.respKeys[1] + ")", 20)
-    }`,
+        }`,
     align: "center",
     fontsize: 30,
     bold: true,
@@ -358,14 +357,14 @@ const BLOCK_FEEDBACK = {
 
 // prettier-ignore
 const TRIAL_TABLE = [
-    { ratio: "easy", distractor: PRMS.target[0], target: PRMS.target[0], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: "easy", distractor: PRMS.target[0], target: PRMS.target[0], compatibility: "comp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
     { ratio: "easy", distractor: PRMS.target[0], target: PRMS.target[1], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
     { ratio: "easy", distractor: PRMS.target[1], target: PRMS.target[0], compatibility: "incomp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-    { ratio: "easy", distractor: PRMS.target[1], target: PRMS.target[1], compatibility: "comp",   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
-    { ratio: 'hard', distractor: PRMS.target[0], target: PRMS.target[0], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
+    { ratio: "easy", distractor: PRMS.target[1], target: PRMS.target[1], compatibility: "comp", correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { ratio: 'hard', distractor: PRMS.target[0], target: PRMS.target[0], compatibility: 'comp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
     { ratio: 'hard', distractor: PRMS.target[0], target: PRMS.target[1], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
     { ratio: 'hard', distractor: PRMS.target[1], target: PRMS.target[0], compatibility: 'incomp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[0])] },
-    { ratio: 'hard', distractor: PRMS.target[1], target: PRMS.target[1], compatibility: 'comp',   correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
+    { ratio: 'hard', distractor: PRMS.target[1], target: PRMS.target[1], compatibility: 'comp', correct_key: PRMS.respKeys[PRMS.target.indexOf(PRMS.target[1])] },
 ];
 
 // prettier-ignore
@@ -393,7 +392,7 @@ const END_SCREEN = {
         bold: false,
         align: "left",
     }),
-    on_finish: function () {},
+    on_finish: function () { },
 };
 
 ////////////////////////////////////////////////////////////////////////

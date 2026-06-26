@@ -439,7 +439,7 @@ function genExpSeq() {
     // debrief
     exp.push(mouse_cursor(true));
     exp.push(END_SCREEN);
-    exp.push(end_message());
+    // exp.push(end_message());
     exp.push(fullscreen(false));
 
     return exp;
