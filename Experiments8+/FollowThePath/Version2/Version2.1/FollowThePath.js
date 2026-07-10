@@ -439,7 +439,7 @@ const SURVEY_SLIDER = {
     html: `
         <div style="margin-bottom: 40px; text-align: center; width: 80%; margin-left: auto; margin-right: auto;">
             <p style="margin-bottom: 40px;"><span style="font-weight: bold; font: 36px Arial;">${PRMS.survey_question_1}</span></p>
-            <input type="range" name="question_1" min="${PRMS.survey_scale[0]}" max="${PRMS.survey_scale[1]}" value="${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}" style="width: 100%;" oninput="document.getElementById('slider_val').innerHTML = this.value">
+            <input type="range" name="question_1" min="${PRMS.survey_scale[0]}" max="${PRMS.survey_scale[1]}" value="${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}" style="width: 100%;" oninput="document.getElementById('slider_val').innerHTML = this.value; document.getElementById('jspsych-survey-html-form-next').disabled = false;">
             <div style="display: flex; justify-content: space-between; width: 100%; font: 24px Arial; margin-top: 15px;">
                 <span style="text-align: center; width: 200px; margin-left: -100px;">${PRMS.survey_scale[0]}<br>${PRMS.survey_anchors[0]}</span>
                 <span style="text-align: center; width: 200px; font-weight: bold; font-size: 28px; color: #333;">Wert: <span id="slider_val">${Math.round((PRMS.survey_scale[0] + PRMS.survey_scale[1]) / 2)}</span></span>
@@ -447,6 +447,9 @@ const SURVEY_SLIDER = {
             </div>
         </div>
     `,
+    on_load: function() {
+        document.getElementById('jspsych-survey-html-form-next').disabled = true;
+    },
     on_finish: function (data) {
         let response = Number(data.response.question_1);
         let rt = Math.round(data.rt);
