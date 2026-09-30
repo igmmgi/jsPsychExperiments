@@ -110,7 +110,7 @@ const FIXATION_CROSS = {
   trial_duration: PRMS.fix_dur,
   response_ends_trial: false,
   choices: "NO_KEYS",
-  stimulus: function(c) {
+  stimulus: function (c) {
     let ctx = c.getContext('2d');
     ctx.translate(c.width / 2, c.height / 2);
     ctx.lineWidth = PRMS.fix_width;
@@ -129,7 +129,7 @@ const WORD_CUE = {
   trial_duration: PRMS.cue_dur,
   response_ends_trial: false,
   choices: "NO_KEYS",
-  stimulus: function(c) {
+  stimulus: function (c) {
     let ctx = c.getContext('2d');
     ctx.translate(c.width / 2, c.height / 2);
     ctx.font = PRMS.stim_size;
@@ -144,7 +144,7 @@ function code_trial() {
   'use strict';
   let dat = jsPsych.data.get().last(1).values()[0];
   let corrCode = 0;
-  
+
   let rt = dat.rt !== null ? dat.rt : PRMS.too_slow;
   let comp =
     (dat.position === 'left' && dat.corrResp.toLowerCase() === 'q') || (dat.position === 'right' && dat.corrResp.toLowerCase() === 'p')
@@ -183,7 +183,7 @@ const WORD_STIMULUS = {
   trial_duration: PRMS.too_slow,
   response_ends_trial: true,
   choices: ['q', 'p', 'escape'],
-  stimulus: function(c) {
+  stimulus: function (c) {
     let ctx = c.getContext('2d');
     ctx.translate(c.width / 2, c.height / 2);
     ctx.fillStyle = 'black';
@@ -222,7 +222,7 @@ const TRIAL_FEEDBACK = {
   canvas_size: CANVAS_SIZE,
   response_ends_trial: false,
   choices: "NO_KEYS",
-  stimulus: function(c) {
+  stimulus: function (c) {
     let ctx = c.getContext('2d');
     ctx.translate(c.width / 2, c.height / 2);
     let dat = jsPsych.data.get().last(1).values()[0];
@@ -244,7 +244,7 @@ const ITI = {
   trial_duration: PRMS.iti,
   response_ends_trial: false,
   choices: "NO_KEYS",
-  stimulus: function(c) {},
+  stimulus: function (c) { },
 };
 
 const BLOCK_FEEDBACK = {
@@ -529,7 +529,7 @@ const TRIAL_TIMELINE = {
       corrResp: PRMS.resp_keys_size[1],
     },
     { cue: 'GRÖßE', word: 'Kanu', size: 'large', life: 'nonliving', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-  
+
   ],
 };
 
@@ -541,7 +541,8 @@ const TRIAL_TIMELINE = {
 function save() {
   jsPsych.data.addProperties({ vpNum: VP_NUM });
   const fn = `${DIR_NAME}data/${EXP_NAME}_${VP_NUM}`;
-  save_data_local(fn, { stim: "SimonWord" });
+  save_data_server("/Common8+/write_data.php", fn, { stim: "SimonWord" });
+  // save_data_local(fn, { stim: "SimonWord" });
 }
 
 const SAVE_DATA = {
