@@ -190,7 +190,11 @@ function mouse_cursor(show) {
     return {
         type: jsPsychCallFunction,
         func: function () {
-            $("body").css("cursor", show ? "default" : "none");
+            if (typeof $ !== "undefined") {
+                $("body").css("cursor", show ? "default" : "none");
+            } else {
+                document.body.style.cursor = show ? "default" : "none";
+            }
         },
     };
 }

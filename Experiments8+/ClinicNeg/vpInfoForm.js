@@ -16,28 +16,37 @@ function check_vp_info_form_clinic(alert_language = 'de', alert_message = '') {
   let age_months = age_m_el ? age_m_el.value.trim() : '';
 
   let gender = '';
-  if ($('#male').is(':checked')) {
+  let male_el = document.getElementById('male');
+  let female_el = document.getElementById('female');
+  let divers_el = document.getElementById('divers');
+  if (male_el && male_el.checked) {
     gender = 'male';
-  } else if ($('#female').is(':checked')) {
+  } else if (female_el && female_el.checked) {
     gender = 'female';
-  } else if ($('#divers').is(':checked')) {
+  } else if (divers_el && divers_el.checked) {
     gender = 'na';
   }
 
   let hand = '';
-  if ($('#left').is(':checked')) {
+  let left_el = document.getElementById('left');
+  let right_el = document.getElementById('right');
+  if (left_el && left_el.checked) {
     hand = 'left';
-  } else if ($('#right').is(':checked')) {
+  } else if (right_el && right_el.checked) {
     hand = 'right';
   }
 
-  let consent = $('#consent_checkbox').is(':checked');
+  let consent_el = document.getElementById('consent_checkbox');
+  let consent = consent_el ? consent_el.checked : false;
 
   // Development & Lab Setup options
-  let version = $('#version').length ? parseInt($('#version').val(), 10) : 1;
-  let mode = $('#mode').length ? $('#mode').val() : 'standard';
+  let version_el = document.getElementById('version');
+  let version = version_el ? parseInt(version_el.value, 10) : 1;
+  let mode_el = document.getElementById('mode');
+  let mode = mode_el ? mode_el.value : 'standard';
   let is_debug = mode === 'debug';
-  let fullscreen_enabled = $('#fullscreen').length ? $('#fullscreen').is(':checked') : true;
+  let fullscreen_el = document.getElementById('fullscreen');
+  let fullscreen_enabled = fullscreen_el ? fullscreen_el.checked : true;
 
   if (consent && code !== '' && age_years !== '' && age_months !== '' && gender !== '' && hand !== '') {
     return {

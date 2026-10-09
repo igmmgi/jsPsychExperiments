@@ -486,7 +486,10 @@ function start_experiment(settings) {
   });
 
   // Remove setup GUI from DOM
-  $('#vpInfoWrapper').remove();
+  const vpInfoWrapper = document.getElementById('vpInfoWrapper');
+  if (vpInfoWrapper) {
+    vpInfoWrapper.remove();
+  }
 
   // Generate sequence and run
   const EXP = gen_exp_seq({ fullscreen: settings.fullscreen });
@@ -494,27 +497,38 @@ function start_experiment(settings) {
 }
 
 // Initialise GUI and handlers
-$(document).ready(function () {
+function init_gui() {
   const url_vars = jsPsych.data.urlVariables();
 
   // Pre-fill from URL parameters if given
-  if (url_vars.version && [1, 2, 3, 4, 5, 6].includes(Number(url_vars.version))) {
-    $('#version').val(url_vars.version);
+  const versionEl = document.getElementById('version');
+  if (versionEl && url_vars.version && [1, 2, 3, 4, 5, 6].includes(Number(url_vars.version))) {
+    versionEl.value = url_vars.version;
   }
-  if (url_vars.debug === '1') {
-    $('#mode').val('debug');
+  const modeEl = document.getElementById('mode');
+  if (modeEl && url_vars.debug === '1') {
+    modeEl.value = 'debug';
   }
 
   // Quick fill button for testing/development
-  $('#quick_fill').on('click', function () {
-    $('#code').val('TEST_' + Math.floor(Math.random() * 1000));
-    $('#age_years').val(10);
-    $('#age_months').val(6);
-    $('#male').prop('checked', true);
-    $('#right').prop('checked', true);
-    $('#consent_checkbox').prop('checked', true);
-    $('#mode').val('debug');
-  });
+  const quickFillBtn = document.getElementById('quick_fill');
+  if (quickFillBtn) {
+    quickFillBtn.addEventListener('click', function () {
+      const codeEl = document.getElementById('code');
+      if (codeEl) codeEl.value = 'TEST_' + Math.floor(Math.random() * 1000);
+      const ageYEl = document.getElementById('age_years');
+      if (ageYEl) ageYEl.value = 10;
+      const ageMEl = document.getElementById('age_months');
+      if (ageMEl) ageMEl.value = 6;
+      const maleEl = document.getElementById('male');
+      if (maleEl) maleEl.checked = true;
+      const rightEl = document.getElementById('right');
+      if (rightEl) rightEl.checked = true;
+      const consentEl = document.getElementById('consent_checkbox');
+      if (consentEl) consentEl.checked = true;
+      if (modeEl) modeEl.value = 'debug';
+    });
+  }
 
   // Automated bypass if skip_pretest=1 in URL
   if (url_vars.skip_pretest === '1') {
@@ -533,10 +547,19 @@ $(document).ready(function () {
   }
 
   // Start button handler
-  $('#start').on('click', function () {
-    const vpInfo = check_vp_info_form_clinic();
-    if (vpInfo !== false) {
-      start_experiment(vpInfo);
-    }
-  });
-});
+  const startBtn = document.getElementById('start');
+  if (startBtn) {
+    startBtn.addEventListener('click', function () {
+      const vpInfo = check_vp_info_form_clinic();
+      if (vpInfo !== false) {
+        start_experiment(vpInfo);
+      }
+    });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init_gui);
+} else {
+  init_gui();
+}
