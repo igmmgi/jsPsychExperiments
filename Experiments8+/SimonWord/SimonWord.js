@@ -3,15 +3,24 @@
 // Simon task with word stimuli presented
 // to the left and right screen location. VPs
 // should respond with left and right key-presses according
-// to 1) living/non-liveing or 2) small/large
+// to 1) living/non-living or 2) small/large
 
-const jsPsych = initJsPsych({});
+const jsPsych = initJsPsych({
+    on_finish: function () {
+        if (PRMS.cblk >= 8) {
+            window.location.assign(
+                "https://uni-tuebingen.sona-systems.com/webstudy_credit.aspx?experiment_id=701&credit_token=c2554fa2e44440acab23bc76944972b5&survey_code=" +
+                jsPsych.data.urlVariables().sona_id,
+            );
+        }
+    },
+});
 
 ////////////////////////////////////////////////////////////////////////
 //                         Canvas Properties                          //
 ////////////////////////////////////////////////////////////////////////
 const CANVAS_COLOUR = 'rgba(200, 200, 200, 1)';
-const CANVAS_SIZE = [720, 960]; // height, width
+const CANVAS_SIZE = [720, 1024]; // height, width (width 1024 accommodates 400px eccentricity without clipping)
 const CANVAS_BORDER = '5px solid black';
 
 ////////////////////////////////////////////////////////////////////////
@@ -25,80 +34,146 @@ const VP_NUM = get_time();
 //                           Exp Parameters                           //
 ////////////////////////////////////////////////////////////////////////
 const PRMS = {
-  nTrlsP: 80, // number of trials in first block (practice)
-  nTrlsE: 80, // number of trials in subsequent blocks
-  nBlks: 11,
-  fix_dur: 400,
-  fb_dur: [500, 1000, 1000, 1000],
-  cue_dur: 400,
-  iti: 400,
-  too_fast: 0,
+  ntrls_s: 32, // number of trials in single-task blocks (must be multiple of 8)
+  nTrlsP: 80, // number of trials in first mixed block (practice)
+  nTrlsE: 80, // number of trials in subsequent mixed blocks
+  nblks_s: 2,  // number of single-task blocks (random living/size order)
+  nBlks: 10,   // number of mixed blocks
+  single_task_order: shuffle(["LEBEN", "GRÖßE"]), // randomized order of single-task blocks
+  fix_dur: 0, // 0 as we only presented a cue in the previous study without fixation cross
+  fb_dur: [0, 2000, 2000, 2000], // error feedback 2000ms, correct feedback 0ms
+  cue_dur: 750, // cue duration in ms
+  iti: 500, // blank inter-trial interval
+  too_fast: 150,
   too_slow: 3500,
   fb_txt: ['Richtig', 'Falsch', 'Zu langsam', 'Zu schnell'],
   fb_size: '30px monospace',
+  instruction_fontsize: 24,
+  wait_duration: 1000,
   ctrl: 1, // count trials
   cblk: 1, // count blocks
   resp_keys_life: [],
   resp_keys_size: [],
   fix_width: 3,
   fix_size: 15,
-  stim_pos_x: 300,
+  stim_pos_x: 400, // eccentricity: 400 pixels
   stim_pos_y: 0,
   stim_size: '40px monospace',
+  previous_task: null, // track task transitions
 };
 
 const VERSION = Number(jsPsych.data.urlVariables().version) || (Math.random() < 0.5 ? 1 : 2);
-jsPsych.data.addProperties({ version: VERSION });
-let respText = "";
+jsPsych.data.addProperties({
+  version: VERSION,
+  single_task_order: PRMS.single_task_order.join(","),
+});
+
 if (VERSION === 1) {
   PRMS.resp_keys_life = ['q', 'p'];
   PRMS.resp_keys_size = ['q', 'p'];
-  respText =
-    "<h2 style='text-align: center;'>Leben: Lebendig = 'Q' &emsp;&emsp; Nicht Lebendig = 'P'</h2>" +
-    "<h2 style='text-align: center;'>Größe: Klein = 'Q' &emsp;&emsp; Groß = 'P'</h2><br>";
 } else if (VERSION === 2) {
   PRMS.resp_keys_life = ['p', 'q'];
   PRMS.resp_keys_size = ['q', 'p'];
-  respText =
-    "<h2 style='text-align: center;'>Leben: Nicht Lebendig = 'Q' &emsp;&emsp; Lebendig = 'P'</h2>" +
-    "<h2 style='text-align: center;'>Größe: Klein = 'Q' &emsp;&emsp; Groß = 'P'</h2><br>";
 }
 
+function get_task_mapping_html(task) {
+  let html = "";
+  if (task === "LEBEN") {
+    html += "<b>Lebensaufgabe (LEBEN):</b><br>";
+    if (VERSION === 1) {
+      html += 'Lebendig → "Q" (linker Zeigefinger)<br>';
+      html += 'Nicht Lebendig → "P" (rechter Zeigefinger)<br>';
+    } else {
+      html += 'Nicht Lebendig → "Q" (linker Zeigefinger)<br>';
+      html += 'Lebendig → "P" (rechter Zeigefinger)<br>';
+    }
+  } else if (task === "GRÖßE") {
+    html += "<b>Größenaufgabe (GRÖßE):</b><br>";
+    html += 'Klein (kleiner als ein Fußball) → "Q" (linker Zeigefinger)<br>';
+    html += 'Groß (größer als ein Fußball) → "P" (rechter Zeigefinger)<br>';
+  }
+  return html;
+}
+
+function get_full_mapping_html() {
+  return get_task_mapping_html("LEBEN") + "<br>" + get_task_mapping_html("GRÖßE");
+}
+
+////////////////////////////////////////////////////////////////////////
+//                      Experiment Instructions                       //
+////////////////////////////////////////////////////////////////////////
 const TASK_INSTRUCTIONS1 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    "<h2 style='text-align: center;'>Willkommen bei unserem Experiment:</h2><br>" +
-    "<h3 style='text-align: center;'>Diese Studie wird im Rahmen einer B.Sc. Projektarbeit durchgeführt.</h3>" +
-    "<h3 style='text-align: center;'>Die Teilnahme ist freiwillig und du darfst das Experiment jederzeit abbrechen.</h3><br>" +
-    "<h3 style='text-align: center;'>Bitte stelle sicher, dass du dich in einer ruhigen Umgebung befindest und </h3>" +
-    "<h3 style='text-align: center;'>genügend Zeit hast, um das Experiment durchzuführen.</h3><br>" +
-    "<h3 style='text-align: center;'>Wir bitten dich die ca. 45 Minuten konzentriert zu arbeiten.</h3><br>" +
-    "<h2 style='text-align: center;'>Drücke eine beliebige Taste um fortzufahren!</h2>",
+  stimulus: function () {
+    let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
+    html += "<h2>Willkommen zum Experiment!</h2>";
+    html += "In diesem Experiment wirst du in jedem Durchgang entweder auf die <b>Größe</b> ";
+    html += "oder die <b>Belebtheit</b> eines Objekts (geschrieben als Wort) reagieren.<br><br>";
+    html += "Vor jedem Durchgang zeigt ein Wort (GRÖßE od. LEBEN) an, welche Aufgabe relevant ist:<br><br>";
+    html += "<b>GRÖßE</b> = Entscheide ob das Objekt kleiner oder größer als ein Fußball ist<br>";
+    html += "<b>LEBEN</b> = Entscheide ob das Objekt lebendig ist oder nicht<br><br>";
+    html += "Drücke eine beliebige Taste, um die Zuordnungen zu sehen.";
+    html += "</div>";
+    return html;
+  },
 };
 
 const TASK_INSTRUCTIONS2 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    "<h2 style='text-align: center;'>Aufgabe:</h2>" +
-    "<h3 style='text-align: center;'>Im Folgenden musst du 2 Aufgaben bearbeiten. </h3>" +
-    "<h3 style='text-align: center;'>Wenn in der Mitte 'Größe' steht, entscheide ob das Objekt groß </h3>" +
-    "<h3 style='text-align: center;'>oder klein ist (in Relation zur Größe eines Fußballs).</h3>" +
-    "<h3 style='text-align: center;'>Wenn in der Mitte 'Leben' steht, entscheide ob das Objekt lebendig ist oder nicht.</h3>" +
-    "<h3 style='text-align: center;'>Es gilt:</h3>" +
-    respText +
-    "<h3 style='text-align: center;'>Bediene 'Q' mit deinem linken Zeigefinger und 'P' mit deinem rechten Zeigefinger.</h3><br>" +
-    "<h3 style='text-align: center;'>Bitte reagiere so schnell und korrekt wie möglich.</h3><br>" +
-    "<h2 style='text-align: center;'>Drücke eine beliebige Taste um fortzufahren!</h2>",
+  stimulus: function () {
+    let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
+    html += "<h2>Tastenzuordnung</h2><br>";
+    html += get_full_mapping_html();
+    html += "<br>Bediene 'Q' mit deinem linken Zeigefinger und 'P' mit deinem rechten Zeigefinger.<br>";
+    html += "Bitte reagiere so schnell und korrekt wie möglich.<br><br>";
+    html += "Drücke eine beliebige Taste, um zu beginnen.";
+    html += "</div>";
+    return html;
+  },
 };
 
-const TASK_REMINDER = {
+function single_block_start(task) {
+  return {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: function () {
+      let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
+      html += `<h2>Block ${PRMS.cblk} von ${PRMS.nBlks + PRMS.nblks_s}</h2><br>`;
+      const task_name = task === "LEBEN" ? "Belebtheit (Lebendig vs. Nicht Lebendig)" : "Größe (Klein vs. Groß)";
+      html += `<b>Einzelaufgabe: Reagiere in diesem Block nur auf die ${task_name}!</b><br><br>`;
+      html += get_task_mapping_html(task);
+      html += "<br>Drücke eine beliebige Taste, um fortzufahren.";
+      html += "</div>";
+      return html;
+    },
+  };
+}
+
+const MIXED_BLOCKS_INSTRUCTION = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    "<h3 style='text-align: center;'>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.</h3><br>" +
-    "<h3 style='text-align: center;'>Wenn du wieder bereit für den nächsten Block bist, dann positioniere</h3>" +
-    "<h3 style='text-align: center;'>deine Hände wieder auf der Tastatur. Es gilt weiterhin:</h3><br>" +
-    respText +
-    "<h2 style='text-align: center;'>Weiter mit beliebiger Taste!</h2>",
+  stimulus: function () {
+    let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
+    html += "<h2>ACHTUNG!</h2><br>";
+    html += "Ab jetzt wechseln sich die beiden Aufgaben (<b>LEBEN</b> und <b>GRÖßE</b>) zufällig ab.<br><br>";
+    html += "Vor jedem Durchgang zeigt ein Hinweiswort an, welche Aufgabe relevant ist:<br><br>";
+    html += "<b>LEBEN</b> = Entscheide ob das Objekt lebendig ist oder nicht<br>";
+    html += "<b>GRÖßE</b> = Entscheide ob das Objekt kleiner oder größer als ein Fußball ist<br><br>";
+    html += "Drücke eine beliebige Taste, um fortzufahren.";
+    html += "</div>";
+    return html;
+  },
+};
+
+const BLOCK_START = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: function () {
+    let html = `<div style='text-align:center; font-size:${PRMS.instruction_fontsize}px; line-height:1.8;'>`;
+    html += `<h2>Block ${PRMS.cblk} von ${PRMS.nBlks + PRMS.nblks_s}</h2><br>`;
+    html += get_full_mapping_html();
+    html += "<br>Versuche weiterhin so schnell und so genau wie möglich zu reagieren.<br><br>";
+    html += "Drücke eine beliebige Taste, um fortzufahren.";
+    html += "</div>";
+    return html;
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -137,7 +212,7 @@ const WORD_CUE = {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(jsPsych.evaluateTimelineVariable('cue'), 0, 0);
-  }
+  },
 };
 
 function code_trial() {
@@ -160,16 +235,27 @@ function code_trial() {
   } else if (rt >= PRMS.too_slow) {
     corrCode = 3; // too slow
   } else if (rt <= PRMS.too_fast) {
-    corrCode = 4; // too false
+    corrCode = 4; // too fast
   }
+
+  // Task transition (switch vs. repeat)
+  let transition = 'na';
+  if (PRMS.previous_task !== null) {
+    transition = PRMS.previous_task === dat.cue ? 'repeat' : 'switch';
+  }
+  PRMS.previous_task = dat.cue;
 
   jsPsych.data.addDataToLastTrial({
     date: Date(),
     comp: comp,
     rt: rt,
     corrCode: corrCode,
+    corr_code: corrCode,
     blockNum: PRMS.cblk,
+    block_num: PRMS.cblk,
     trialNum: PRMS.ctrl,
+    trial_num: PRMS.ctrl,
+    transition: transition,
   });
   PRMS.ctrl += 1;
   if (jsPsych.pluginAPI.compareKeys(dat.response, 'escape')) {
@@ -206,11 +292,14 @@ const WORD_STIMULUS = {
   data: {
     stim: 'SimonWord',
     cue: jsPsych.timelineVariable('cue'),
+    task: jsPsych.timelineVariable('cue'),
     word: jsPsych.timelineVariable('word'),
     size: jsPsych.timelineVariable('size'),
     life: jsPsych.timelineVariable('life'),
     position: jsPsych.timelineVariable('position'),
     corrResp: jsPsych.timelineVariable('corrResp'),
+    correct_key: jsPsych.timelineVariable('corrResp'),
+    block_type: jsPsych.timelineVariable('block_type'),
   },
   on_finish: function () {
     code_trial();
@@ -226,15 +315,17 @@ const TRIAL_FEEDBACK = {
     let ctx = c.getContext('2d');
     ctx.translate(c.width / 2, c.height / 2);
     let dat = jsPsych.data.get().last(1).values()[0];
-    ctx.font = PRMS.fb_size;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'black';
-    ctx.fillText(PRMS.fb_txt[dat.corrCode - 1], 0, 0);
+    if (dat && dat.corrCode && PRMS.fb_dur[dat.corrCode - 1] > 0) {
+      ctx.font = PRMS.fb_size;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'black';
+      ctx.fillText(PRMS.fb_txt[dat.corrCode - 1], 0, 0);
+    }
   },
   on_start: function (trial) {
     let dat = jsPsych.data.get().last(1).values()[0];
-    trial.trial_duration = PRMS.fb_dur[dat.corrCode - 1];
+    trial.trial_duration = (dat && dat.corrCode) ? PRMS.fb_dur[dat.corrCode - 1] : 0;
   },
 };
 
@@ -253,287 +344,127 @@ const BLOCK_FEEDBACK = {
   response_ends_trial: true,
   post_trial_gap: PRMS.wait_duration,
   on_start: function (trial) {
-    let block_dvs = calculate_block_performance({ filter_options: { stim: 'SimonWord', blockNum: PRMS.cblk }, corr_column: "corrCode" });
-    let text = block_feedback_text(PRMS.cblk, PRMS.nBlks, block_dvs.mean_rt, block_dvs.error_rate, "de");
+    let block_dvs = calculate_block_performance({
+      filter_options: { stim: 'SimonWord', blockNum: PRMS.cblk },
+      corr_column: "corrCode",
+    });
+    let text = block_feedback_text(PRMS.cblk, PRMS.nBlks + PRMS.nblks_s, block_dvs.mean_rt, block_dvs.error_rate, "de");
     trial.stimulus = `<div style="max-width:960px; margin:auto;">${text}</div>`;
   },
   on_finish: function () {
     PRMS.ctrl = 1;
     PRMS.cblk += 1;
+    PRMS.previous_task = null;
   },
 };
 
-const TRIAL_TIMELINE = {
-  timeline: [FIXATION_CROSS, WORD_CUE, WORD_STIMULUS, TRIAL_FEEDBACK, ITI],
-  timeline_variables: [
-
-    { cue: 'LEBEN', word: 'Spinne', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Ameise', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Mücke', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Schnecke', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Wespe', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Spinne', size: 'small', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Ameise', size: 'small', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Mücke', size: 'small', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    {
-      cue: 'LEBEN',
-      word: 'Schnecke',
-      size: 'small',
-      life: 'living',
-      position: 'right',
-      corrResp: PRMS.resp_keys_life[0],
-    },
-    { cue: 'LEBEN', word: 'Wespe', size: 'small', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'GRÖßE', word: 'Spinne', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'GRÖßE', word: 'Ameise', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'GRÖßE', word: 'Mücke', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'GRÖßE', word: 'Schnecke', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'GRÖßE', word: 'Wespe', size: 'small', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'GRÖßE', word: 'Spinne', size: 'small', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'GRÖßE', word: 'Ameise', size: 'small', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'GRÖßE', word: 'Mücke', size: 'small', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[0] },
-    {
-      cue: 'GRÖßE',
-      word: 'Schnecke',
-      size: 'small',
-      life: 'living',
-      position: 'right',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    { cue: 'GRÖßE', word: 'Wespe', size: 'small', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'LEBEN', word: 'Kamel', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Delfin', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Elefant', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Zebra', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Esel', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Kamel', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Delfin', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Elefant', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Zebra', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'LEBEN', word: 'Esel', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_life[0] },
-    { cue: 'GRÖßE', word: 'Kamel', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Delfin', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Elefant', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Zebra', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Esel', size: 'large', life: 'living', position: 'left', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Kamel', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Delfin', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Elefant', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Zebra', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Esel', size: 'large', life: 'living', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-    {
-      cue: 'LEBEN',
-      word: 'Armband',
-      size: 'small',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    { cue: 'LEBEN', word: 'Socke', size: 'small', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_life[1] },
-    { cue: 'LEBEN', word: 'Perle', size: 'small', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_life[1] },
-    {
-      cue: 'LEBEN',
-      word: 'Zigarre',
-      size: 'small',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    {
-      cue: 'LEBEN',
-      word: 'Löffel',
-      size: 'small',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    {
-      cue: 'LEBEN',
-      word: 'Armband',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    {
-      cue: 'LEBEN',
-      word: 'Socke',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    {
-      cue: 'LEBEN',
-      word: 'Perle',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    {
-      cue: 'LEBEN',
-      word: 'Zigarre',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    {
-      cue: 'LEBEN',
-      word: 'Löffel',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    {
-      cue: 'GRÖßE',
-      word: 'Armband',
-      size: 'small',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    { cue: 'GRÖßE', word: 'Socke', size: 'small', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_size[0] },
-    { cue: 'GRÖßE', word: 'Perle', size: 'small', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_size[0] },
-    {
-      cue: 'GRÖßE',
-      word: 'Zigarre',
-      size: 'small',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    {
-      cue: 'GRÖßE',
-      word: 'Löffel',
-      size: 'small',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    {
-      cue: 'GRÖßE',
-      word: 'Armband',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    {
-      cue: 'GRÖßE',
-      word: 'Socke',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    {
-      cue: 'GRÖßE',
-      word: 'Perle',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    {
-      cue: 'GRÖßE',
-      word: 'Zigarre',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    {
-      cue: 'GRÖßE',
-      word: 'Löffel',
-      size: 'small',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_size[0],
-    },
-    {
-      cue: 'LEBEN',
-      word: 'Eisberg',
-      size: 'large',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    { cue: 'LEBEN', word: 'Sofa', size: 'large', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_life[1] },
-    { cue: 'LEBEN', word: 'Tuba', size: 'large', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_life[1] },
-    {
-      cue: 'LEBEN',
-      word: 'Asteroid',
-      size: 'large',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    { cue: 'LEBEN', word: 'Kanu', size: 'large', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_life[1] },
-    {
-      cue: 'LEBEN',
-      word: 'Eisberg',
-      size: 'large',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    { cue: 'LEBEN', word: 'Sofa', size: 'large', life: 'nonliving', position: 'right', corrResp: PRMS.resp_keys_life[1] },
-    { cue: 'LEBEN', word: 'Tuba', size: 'large', life: 'nonliving', position: 'right', corrResp: PRMS.resp_keys_life[1] },
-    {
-      cue: 'LEBEN',
-      word: 'Asteroid',
-      size: 'large',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_life[1],
-    },
-    { cue: 'LEBEN', word: 'Kanu', size: 'large', life: 'nonliving', position: 'right', corrResp: PRMS.resp_keys_life[1] },
-    {
-      cue: 'GRÖßE',
-      word: 'Eisberg',
-      size: 'large',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_size[1],
-    },
-    { cue: 'GRÖßE', word: 'Sofa', size: 'large', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Tuba', size: 'large', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_size[1] },
-    {
-      cue: 'GRÖßE',
-      word: 'Asteroid',
-      size: 'large',
-      life: 'nonliving',
-      position: 'left',
-      corrResp: PRMS.resp_keys_size[1],
-    },
-    { cue: 'GRÖßE', word: 'Kanu', size: 'large', life: 'nonliving', position: 'left', corrResp: PRMS.resp_keys_size[1] },
-    {
-      cue: 'GRÖßE',
-      word: 'Eisberg',
-      size: 'large',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_size[1],
-    },
-    { cue: 'GRÖßE', word: 'Sofa', size: 'large', life: 'nonliving', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-    { cue: 'GRÖßE', word: 'Tuba', size: 'large', life: 'nonliving', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-    {
-      cue: 'GRÖßE',
-      word: 'Asteroid',
-      size: 'large',
-      life: 'nonliving',
-      position: 'right',
-      corrResp: PRMS.resp_keys_size[1],
-    },
-    { cue: 'GRÖßE', word: 'Kanu', size: 'large', life: 'nonliving', position: 'right', corrResp: PRMS.resp_keys_size[1] },
-
-  ],
+////////////////////////////////////////////////////////////////////////
+//                         Trial Generation                           //
+////////////////////////////////////////////////////////////////////////
+const WORDS = {
+  living: {
+    small: ['Spinne', 'Ameise', 'Mücke', 'Schnecke', 'Wespe'],
+    large: ['Kamel', 'Delfin', 'Elefant', 'Zebra', 'Esel'],
+  },
+  nonliving: {
+    small: ['Armband', 'Socke', 'Perle', 'Zigarre', 'Löffel'],
+    large: ['Eisberg', 'Sofa', 'Tuba', 'Asteroid', 'Kanu'],
+  },
 };
 
+function generate_single_task_trial_table(ntrls, task) {
+  const trials_per_cell = Math.floor(ntrls / 8);
+  let trials = [];
 
+  for (let life of ["living", "nonliving"]) {
+    for (let size of ["small", "large"]) {
+      for (let position of ["left", "right"]) {
+        let available_words = shuffle([...WORDS[life][size]]);
+        let chosen_words = [];
+        while (chosen_words.length < trials_per_cell) {
+          if (available_words.length === 0) {
+            available_words = shuffle([...WORDS[life][size]]);
+          }
+          chosen_words.push(available_words.pop());
+        }
+
+        for (let word of chosen_words) {
+          const corrResp =
+            task === "LEBEN"
+              ? life === "living"
+                ? PRMS.resp_keys_life[0]
+                : PRMS.resp_keys_life[1]
+              : size === "small"
+                ? PRMS.resp_keys_size[0]
+                : PRMS.resp_keys_size[1];
+
+          trials.push({
+            cue: task,
+            word: word,
+            size: size,
+            life: life,
+            position: position,
+            corrResp: corrResp,
+            block_type: "single",
+          });
+        }
+      }
+    }
+  }
+  return shuffle(trials);
+}
+
+function generate_trial_table(ntrls) {
+  let base_trials = [];
+  for (let cue of ["LEBEN", "GRÖßE"]) {
+    for (let life of ["living", "nonliving"]) {
+      for (let size of ["small", "large"]) {
+        for (let word of WORDS[life][size]) {
+          for (let position of ["left", "right"]) {
+            const corrResp =
+              cue === "LEBEN"
+                ? life === "living"
+                  ? PRMS.resp_keys_life[0]
+                  : PRMS.resp_keys_life[1]
+                : size === "small"
+                  ? PRMS.resp_keys_size[0]
+                  : PRMS.resp_keys_size[1];
+
+            base_trials.push({
+              cue: cue,
+              word: word,
+              size: size,
+              life: life,
+              position: position,
+              corrResp: corrResp,
+              block_type: "mixed",
+            });
+          }
+        }
+      }
+    }
+  }
+
+  if (ntrls < base_trials.length) {
+    return shuffle(base_trials).slice(0, ntrls);
+  }
+
+  const nreps = ntrls / base_trials.length;
+  let trials = [];
+  for (let r = 0; r < nreps; r++) {
+    trials = trials.concat(base_trials.map((t) => ({ ...t })));
+  }
+  return shuffle(trials);
+}
+
+function trial_timeline(timeline_variables) {
+  return {
+    timeline: PRMS.fix_dur > 0
+      ? [FIXATION_CROSS, WORD_CUE, WORD_STIMULUS, TRIAL_FEEDBACK, ITI]
+      : [WORD_CUE, WORD_STIMULUS, TRIAL_FEEDBACK, ITI],
+    timeline_variables: timeline_variables,
+  };
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                              Save                                  //
@@ -568,18 +499,26 @@ function generate_exp() {
   exp.push(TASK_INSTRUCTIONS1);
   exp.push(TASK_INSTRUCTIONS2);
 
-  for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
-    let blk_timeline = { ...TRIAL_TIMELINE };
-    if (blk > 0) {
-      exp.push(TASK_REMINDER);
-    }
-    blk_timeline.sample = {
-      type: "fixed-repetitions",
-      size: blk === 0 ? PRMS.nTrlsP / 80 : PRMS.nTrlsE / 80,
-    };
-    exp.push(blk_timeline); // trials within a block
-    exp.push(BLOCK_FEEDBACK); // show previous block performance
+  // Single-task blocks (randomized order)
+  for (let s = 0; s < PRMS.nblks_s; s++) {
+    const single_task = PRMS.single_task_order[s];
+    exp.push(single_block_start(single_task));
+    exp.push(trial_timeline(generate_single_task_trial_table(PRMS.ntrls_s, single_task)));
+    exp.push(BLOCK_FEEDBACK);
   }
+
+  // Transition to mixed blocks (if single-task blocks were run)
+  if (PRMS.nblks_s > 0) {
+    exp.push(MIXED_BLOCKS_INSTRUCTION);
+  }
+
+  // Mixed-task blocks
+  for (let blk = 0; blk < PRMS.nBlks; blk += 1) {
+    exp.push(BLOCK_START);
+    exp.push(trial_timeline(generate_trial_table(blk === 0 ? PRMS.nTrlsP : PRMS.nTrlsE)));
+    exp.push(BLOCK_FEEDBACK);
+  }
+
   exp.push(SAVE_DATA);
   exp.push(end_message("de_du"));
   exp.push(mouse_cursor(true));
@@ -587,6 +526,7 @@ function generate_exp() {
 
   return exp;
 }
+
 const EXP = generate_exp();
 
 jsPsych.run(EXP);
